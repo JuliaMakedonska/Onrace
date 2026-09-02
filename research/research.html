@@ -152,6 +152,18 @@
   .sources{font-size:13px; color:var(--text-faint); margin:12px 0 0}
   .sources a{color:var(--text-dim)}
 
+  /* Score anchors */
+  .anchor-list{
+    list-style:none; margin:0 0 24px; padding:4px 20px;
+    background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    font-size:13.5px; color:var(--text-dim);
+  }
+  .anchor-list li{padding:12px 0; border-bottom:1px solid var(--border)}
+  .anchor-list li:last-child{border-bottom:none}
+  .anchor-list strong{color:var(--text)}
+  .anchor-list .lo{color:var(--unconfirmed); font-weight:700}
+  .anchor-list .hi{color:var(--benchmark); font-weight:700}
+
   /* Conclusions */
   .gap-card{
     background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
@@ -542,6 +554,18 @@
     <span class="section-tag tag-benchmark">Benchmark</span>
     <h2>Ownership-credibility benchmark</h2>
     <p class="lede">Which lightweight mechanisms should Onrace’s MVP borrow to make self-reported result <em>ownership</em> credible, given there’s no manual verification team? Benchmarked against 5 products that handle self-reported/unverified ownership claims well in their own niche, scored 1–5 on 8 criteria.</p>
+
+    <h3>Score anchors — what a 1 and a 5 look like</h3>
+    <ul class="anchor-list">
+      <li><strong>Identity persistence</strong> — <span class="lo">1</span> = anonymous/throwaway identity, free to discard and remake; <span class="hi">5</span> = tied to a durable, hard-to-fake real or professional identity.</li>
+      <li><strong>Falsification cost</strong> — <span class="lo">1</span> = as easy to fake as typing a sentence; <span class="hi">5</span> = faking it takes roughly as much effort as actually doing the real thing.</li>
+      <li><strong>Independent cross-reference</strong> — <span class="lo">1</span> = no external record exists to check the claim against; <span class="hi">5</span> = a public, independently-run database anyone can search to confirm it.</li>
+      <li><strong>Peer/social visibility</strong> — <span class="lo">1</span> = no one else ever sees the claim; <span class="hi">5</span> = surfaced directly to people with the specific knowledge to catch a lie.</li>
+      <li><strong>Automatable plausibility checks</strong> — <span class="lo">1</span> = any input is accepted, no rule-based check at all; <span class="hi">5</span> = obviously implausible claims are auto-rejected with no human reviewer needed.</li>
+      <li><strong>Stakes-appropriate rigor</strong> — <span class="lo">1</span> = verification effort is badly mismatched to what a false claim would gain someone; <span class="hi">5</span> = the built-in trust-signal is well-calibrated to the actual stakes of lying.</li>
+      <li><strong>Dispute/correction mechanism</strong> — <span class="lo">1</span> = no way to flag or fix a wrong/fraudulent entry after the fact; <span class="hi">5</span> = a lightweight, self-serve way to correct or contest a claim.</li>
+      <li><strong>Source-artifact requirement</strong> — <span class="lo">1</span> = a free-text claim is accepted on its own, nothing else required; <span class="hi">5</span> = an external, independently-hosted artifact (a link or document) is mandatory before the claim is accepted.</li>
+    </ul>
 
     <div class="table-scroll">
       <table>
