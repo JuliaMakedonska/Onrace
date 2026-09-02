@@ -206,9 +206,9 @@
   <p>Compiled from <code>research/research.md</code> — desktop web research plus live browser screenshots, no user interviews yet.</p>
   <div class="meta-row">
     <span class="pill">Updated 2026-09-02</span>
-    <span class="pill">5 competitors reviewed</span>
+    <span class="pill">15 competitors reviewed</span>
     <span class="pill">5 benchmark products</span>
-    <span class="pill">5 open gaps</span>
+    <span class="pill">6 open gaps</span>
   </div>
 </header>
 
@@ -218,76 +218,194 @@
   <section class="block" id="competitors">
     <span class="section-tag tag-competitors">Competitors</span>
     <h2>Competitive landscape</h2>
-    <p class="lede">Comparison matrix and market-pattern findings for the 5 competitors selected for closer review (2026-09-02): ocrbase.com, RoxConnect, Strava (Events tab), Athlinks, and AllTrails — spanning three competitive tiers: HARD (same product/audience), SOFT (same task, different audience), ASPIRATIONAL (international benchmark).</p>
+    <p class="lede">Comparison matrix and market-pattern findings for all <strong style="color:var(--text)">15 competitors</strong> identified in the original audit (2026-09-02), spanning three competitive tiers: HARD (same product/audience), SOFT (same task, different audience), ASPIRATIONAL (international benchmark). The first 5 — ocrbase.com, RoxConnect, Strava, Athlinks, AllTrails — got an initial closer review; the remaining 10 were reviewed to the same depth in a follow-up pass. Split into three tables by tier for readability.</p>
 
-    <h3>Comparison matrix</h3>
+    <h3>HARD tier — same product, same audience</h3>
     <div class="table-scroll">
       <table>
         <thead>
-          <tr><th>Axis</th><th>ocrbase.com</th><th>RoxConnect</th><th>Strava (Events tab)</th><th>Athlinks</th><th>AllTrails</th></tr>
+          <tr><th>Axis</th><th>ocrbase.com</th><th>RoxConnect</th><th>RoxMatchUp</th><th>fitnessracingcalendar.com</th><th>RoxFit</th></tr>
         </thead>
         <tbody>
           <tr>
             <th>Audience</th>
             <td>OCR / functional-fitness / trail / rucking racers broadly — hybrid-adjacent, not hybrid-branded</td>
             <td>HYROX-specific hybrid athletes, beginner→elite, claims “+80 countries” (confirmed on-page stat)</td>
-            <td>Strava’s existing broad run/cycling base, now shown races via the Events tab</td>
-            <td>Competitive endurance athletes broadly (running / tri / swim / cycling / adventure racing)</td>
-            <td>Outdoor enthusiasts (hiking / camping / trail running), broad skill range</td>
+            <td>Hybrid/HYROX athletes, event organizers, and spectators (per its own App Store description)</td>
+            <td>Hybrid-race athletes — confirmed scope is “the UK and US, with more countries coming soon” (on-page tagline)</td>
+            <td>HYROX/hybrid athletes, training-first framing</td>
           </tr>
           <tr>
             <th>Product foundation</th>
             <td>Free web calendar, footer-credited “Made by Rebase Labs”</td>
             <td>Native mobile app (iOS / Android) — store badges shown on homepage</td>
-            <td>Mature social fitness platform (web+app); races live under Groups → Events</td>
-            <td>Web results database; footer links to “Life Time” and “ChronoTrack”</td>
-            <td>Web + mobile app; map-first trail directory</td>
+            <td>iOS app (iPad-designed) on Bubble.io (no-code); single developer credited (Hugues Dormoy)</td>
+            <td>Free web calendar, multi-format</td>
+            <td>Native iOS/Android app; footer credits “ROXFIT Limited” (registered company)</td>
           </tr>
           <tr>
             <th>Key mechanism</th>
             <td>Browse / filter races by format, date, country — map or list view</td>
             <td>Create profile → filter / match with training partners → in-app chat</td>
-            <td>Search + faceted filters (Sport / Dates / Distance / Location / Elevation / Terrain) + a “Popular Races For You” personalized rail</td>
-            <td>Search / claim your name or bib in race results → build a personal race history</td>
-            <td>Search by location / filters → trail detail → record / save an activity</td>
+            <td>Browse HYROX/hybrid events → chat-based partner matching → classifieds (tickets/partners) → rolling 1-year ATP-style leaderboard</td>
+            <td>Filter (category/country/month) + flat list of event cards with starting price + “Book now” / “Sold out” CTA; free organizer submission</td>
+            <td>Discover &amp; track races (list, live splits/rankings) + AI workout builder (HYPE) + race-day pacing plan (PACEME) + smartwatch sync + “Analyse Every Race” results/comparison</td>
           </tr>
           <tr>
             <th>Trust model</th>
             <td>None visible — listings read as self / community-submitted, no verification UI observed</td>
             <td>Minimal — self-reported profile data, no verification UI observed</td>
-            <td>Race listings sourced from Runna, not self-reported; activity data is the athlete’s own GPS-tracked activity</td>
-            <td>Results reportedly auto-matched from official timing feeds — <span class="unconfirmed">mechanism specifics</span></td>
-            <td>Community reviews + crowdsourced trail data; no personal-result verification concept observed</td>
+            <td>Self-reported profile/performance data; leaderboard claims “verified performances” — <span class="unconfirmed">mechanism</span></td>
+            <td>None visible — no verification UI observed</td>
+            <td>Results appear pulled from RoxFit’s own analyzed-race database rather than self-reported — <span class="unconfirmed">mechanism</span></td>
           </tr>
           <tr>
             <th>Monetization</th>
             <td>No pricing / paid-tier UI observed anywhere on the site</td>
             <td>Freemium: Free vs. ~$11.99/mo Premium (confirmed on-page pricing table)</td>
-            <td>Free Events tab observed; a paid tier reportedly gates training-analysis features — <span class="unconfirmed">price point</span></td>
-            <td>Free to athletes; B2B link to ChronoTrack observed in footer</td>
-            <td>Freemium positioning stated publicly — <span class="unconfirmed">gated features / price</span></td>
+            <td>Free + in-app purchases (RoxCoins micro-transactions to unlock contacts/boost listings)</td>
+            <td>No pricing/paid-tier UI observed; whether “Book now” is link-out or in-house checkout is <span class="unconfirmed">unclear</span></td>
+            <td>Free app; a new “Ultra” tier is in development (waitlist only) — <span class="unconfirmed">pricing</span></td>
           </tr>
           <tr>
             <th>Sources</th>
             <td><a href="https://www.ocrbase.com/" target="_blank" rel="noopener">ocrbase.com</a><br><a href="screens/ocrbase.md" target="_blank">screens/ocrbase.md</a></td>
             <td><a href="https://roxconnect.com" target="_blank" rel="noopener">roxconnect.com</a><br><a href="screens/roxconnect.md" target="_blank">screens/roxconnect.md</a></td>
+            <td><a href="https://apps.apple.com/ch/app/roxmatchup/id6743001913" target="_blank" rel="noopener">App Store listing</a><br><a href="screens/roxmatchup.md" target="_blank">screens/roxmatchup.md</a> — web app <span class="unconfirmed">access restricted</span></td>
+            <td><a href="https://www.fitnessracingcalendar.com/" target="_blank" rel="noopener">fitnessracingcalendar.com</a><br><a href="screens/fitnessracingcalendar.md" target="_blank">screens/fitnessracingcalendar.md</a></td>
+            <td><a href="https://roxfit.app/" target="_blank" rel="noopener">roxfit.app</a><br><a href="screens/roxfit.md" target="_blank">screens/roxfit.md</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>SOFT tier — same task, different audience</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Axis</th><th>Strava (Events tab)</th><th>Athlinks</th><th>My Race Results</th><th>DUV Ultra Marathon Statistics</th><th>Race Roster</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Audience</th>
+            <td>Strava’s existing broad run/cycling base, now shown races via the Events tab</td>
+            <td>Competitive endurance athletes broadly (running / tri / swim / cycling / adventure racing)</td>
+            <td>General endurance athletes (running/tri/swim/cycling/multisport) wanting a dedicated race-only log — not hybrid-branded</td>
+            <td>Ultra-runners specifically (single-sport)</td>
+            <td>Race organizers, timers, fundraising coordinators (B2B) — not athlete-facing</td>
+          </tr>
+          <tr>
+            <th>Product foundation</th>
+            <td>Mature social fitness platform (web+app); races live under Groups → Events</td>
+            <td>Web results database; footer links to “Life Time” and “ChronoTrack”</td>
+            <td>Free web+iOS+Android app; footer reads “© 2025,” a year stale at capture time</td>
+            <td>Free web database run by Deutsche Ultramarathon-Vereinigung e.V. (German nonprofit), all-volunteer team</td>
+            <td>Established company; confirmed offices in Sarasota, FL (USA) and London, ON (Canada)</td>
+          </tr>
+          <tr>
+            <th>Key mechanism</th>
+            <td>Search + faceted filters (Sport / Dates / Distance / Location / Elevation / Terrain) + a “Popular Races For You” personalized rail</td>
+            <td>Search / claim your name or bib in race results → build a personal race history</td>
+            <td>Manual entry, GPX import, or OCR-scan-a-screenshot to log a race; on-page counters read “0 Athletes · 0 Races Tracked · 0 Total Miles” at capture time</td>
+            <td>Race directors email results (Excel/text) to DUV → linked athlete↔event pages → auto-generated rankings for eligible events</td>
+            <td>Registration + fundraising + timing + virtual events + CRM + onsite check-in sold to organizers; athletes only arrive to complete a registration someone else set up</td>
+          </tr>
+          <tr>
+            <th>Trust model</th>
+            <td>Race listings sourced from Runna, not self-reported; activity data is the athlete’s own GPS-tracked activity</td>
+            <td>Results reportedly auto-matched from official timing feeds — <span class="unconfirmed">mechanism specifics</span></td>
+            <td>Purely self-reported (manual/GPX/OCR) — no required official source link, no auto-match</td>
+            <td>Director-submitted, not self-reported by athletes; corrections via contact form</td>
+            <td>N/A — not a results/ownership product</td>
+          </tr>
+          <tr>
+            <th>Monetization</th>
+            <td>Free Events tab observed; a paid tier reportedly gates training-analysis features — <span class="unconfirmed">price point</span></td>
+            <td>Free to athletes; B2B link to ChronoTrack observed in footer</td>
+            <td>Freemium: free tier is unlimited race logging/search/timeline/PR tracking; subscription unlocks OCR import, interactive maps, advanced analytics, data export (confirmed on-page)</td>
+            <td>None observed — an unsold “Advertise here!” banner placeholder is the only monetization UI</td>
+            <td>B2B SaaS (“Request a demo” / “Let’s talk”) — pricing specifics <span class="unconfirmed">unclear</span></td>
+          </tr>
+          <tr>
+            <th>Sources</th>
             <td><a href="screens/strava-events.md" target="_blank">screens/strava-events.md</a><br><span style="color:var(--text-faint)">(logged-in screenshots)</span></td>
             <td><a href="https://www.athlinks.com/" target="_blank" rel="noopener">athlinks.com</a><br><a href="screens/athlinks.md" target="_blank">screens/athlinks.md</a></td>
+            <td><a href="https://www.myraceresults.app/" target="_blank" rel="noopener">myraceresults.app</a><br><a href="screens/myraceresults.md" target="_blank">screens/myraceresults.md</a></td>
+            <td><a href="https://statistik.d-u-v.org/" target="_blank" rel="noopener">statistik.d-u-v.org</a><br><a href="screens/duv.md" target="_blank">screens/duv.md</a></td>
+            <td><a href="https://raceroster.com/" target="_blank" rel="noopener">raceroster.com</a><br><a href="screens/raceroster.md" target="_blank">screens/raceroster.md</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>ASPIRATIONAL tier — international benchmarks</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Axis</th><th>Parkrun</th><th>AllTrails</th><th>World Athletics</th><th>IRONMAN</th><th>Letterboxd</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Audience</th>
+            <td><span class="unconfirmed">access restricted this pass</span></td>
+            <td>Outdoor enthusiasts (hiking / camping / trail running), broad skill range</td>
+            <td>Elite/competitive track &amp; field and road-running athletes globally; the sport’s governing body</td>
+            <td>Triathletes globally, beginner to Pro Series</td>
+            <td>Film enthusiasts broadly (cross-domain benchmark, not sports)</td>
+          </tr>
+          <tr>
+            <th>Product foundation</th>
+            <td>Both <code>parkrun.com</code> and <code>parkrun.org.uk</code> returned an HTTP 405 “Human Verification” bot check; WebFetch hit the same wall</td>
+            <td>Web + mobile app; map-first trail directory</td>
+            <td>Official federation platform; news/media-led homepage with a Stats section beneath it</td>
+            <td>Established global race-series operator + retail Shop; personalization once signed in (“Hi IRONFAN!”)</td>
+            <td>Established social platform — “3,938,638,123 films watched” logged at capture time (confirmed on-page)</td>
+          </tr>
+          <tr>
+            <th>Key mechanism</th>
+            <td><span class="unconfirmed">not confirmed this session</span> — previously understood as barcode/token-scan timing, unverified this pass</td>
+            <td>Search by location/filters → trail detail → record/save an activity</td>
+            <td>Deep faceted filters (age category, timing method, wind reading, area/country, season, gender, event) over Toplists/Records/Rankings; a “Send Competition Results” nav item confirms organizer/official submission</td>
+            <td>“All Races” page = world map with clustered pin counts (161 matches total, confirmed on-screen) + a full faceted filter bar (race type/date/region/country/registration/course type) + text search</td>
+            <td>Self-log watched films → rate (5-star with halves) → write/share reviews → follow members → diary + curated lists/watchlist (confirmed exact on-page copy)</td>
+          </tr>
+          <tr>
+            <th>Trust model</th>
+            <td><span class="unconfirmed">not confirmed</span></td>
+            <td>Community reviews + crowdsourced trail data; no personal-result verification concept observed</td>
+            <td>Federation-verified, official-timing-based — the highest-trust-signal reference point in the full set, via a mechanism not replicable at Onrace’s scale</td>
+            <td>N/A for results in what was captured (a race-discovery/registration page, not a results archive)</td>
+            <td>Purely self-reported, no verification of any kind — high engagement (likes, follower graph) substitutes for it</td>
+          </tr>
+          <tr>
+            <th>Monetization</th>
+            <td><span class="unconfirmed">not confirmed</span></td>
+            <td>Freemium positioning stated publicly — <span class="unconfirmed">gated features / price</span></td>
+            <td>Sponsorship (Seiko “World Athletics Partner” badge, confirmed on-page) + merchandise Shop, not consumer subscription</td>
+            <td>Race registration fees (implied by “Registration Now Open” CTAs) + merchandise Shop — <span class="unconfirmed">exact figures</span></td>
+            <td>Freemium — “Pro” subscription referenced inline and in nav</td>
+          </tr>
+          <tr>
+            <th>Sources</th>
+            <td><a href="screens/parkrun.md" target="_blank">screens/parkrun.md</a><br><span style="color:var(--text-faint)">access restricted</span></td>
             <td><a href="https://www.alltrails.com" target="_blank" rel="noopener">alltrails.com</a><br><a href="screens/alltrails.md" target="_blank">screens/alltrails.md</a></td>
+            <td><a href="https://worldathletics.org/" target="_blank" rel="noopener">worldathletics.org</a><br><a href="screens/worldathletics.md" target="_blank">screens/worldathletics.md</a></td>
+            <td><a href="https://www.ironman.com/" target="_blank" rel="noopener">ironman.com</a><br><a href="screens/ironman.md" target="_blank">screens/ironman.md</a></td>
+            <td><a href="https://letterboxd.com/" target="_blank" rel="noopener">letterboxd.com</a><br><a href="screens/letterboxd.md" target="_blank">screens/letterboxd.md</a></td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout">
-      <strong>Sourcing note:</strong> every row above is backed by a live screenshot or the product’s own public page (linked in the Sources row). Three claims carried over from an earlier WebSearch/WebFetch pass — Strava’s Events tab being tied to a Runna acquisition, Strava’s and AllTrails’ exact paid-tier feature lists/prices, and Athlinks’ timing-feed auto-match mechanism — no longer have a retained citation link, so they’re marked <span class="unconfirmed">unconfirmed</span> above rather than re-asserted as fact.
+      <strong>Sourcing note:</strong> every cell above is backed by a live screenshot, the product’s own public page, or (for RoxMatchUp) its App Store listing — linked in each table’s Sources row. A handful of claims are marked <span class="unconfirmed">unconfirmed</span> where no citation was retained or a mechanism was implied but not directly verifiable. <strong>Parkrun is marked access restricted</strong>, not guessed: both <code>parkrun.com</code> and <code>parkrun.org.uk</code> returned an HTTP 405 bot-verification wall via Playwright and WebFetch alike, and no bypass was attempted.
     </div>
 
     <h3>Three shared market patterns</h3>
     <div class="card-grid">
       <div class="card"><strong>1. Freemium (or a B2B subsidy) is the default business model</strong>Confirmed for RoxConnect (Free / $11.99/mo) and inferred for Athlinks (ChronoTrack footer link). Nobody charges for the core “find/log a race” job itself.</div>
       <div class="card"><strong>2. Nobody uses a self-reported, required-source-link trust model</strong>Athlinks auto-matches from timing feeds; Strava’s data is GPS-tracked; ocrbase and RoxConnect carry no verification layer at all. Onrace’s “the link is the evidence” approach is genuinely novel among this set.</div>
-      <div class="card"><strong>3. Discovery and archiving are always separate products</strong>RoxConnect discovers partners, ocrbase discovers races only, Athlinks archives results only, Strava bolted discovery onto an existing activity-tracking product. No one launched both halves as one coherent product.</div>
+      <div class="card"><strong>3. Discovery and archiving are usually separate — with two single-sport exceptions</strong>RoxConnect discovers partners, ocrbase discovers races only, Athlinks archives results only, Strava bolted discovery onto an existing activity-tracking product. But RoxFit and RoxMatchUp <em>do</em> combine both halves — scoped entirely to HYROX. No competitor combines both halves <strong style="color:var(--text)">across formats</strong> the way Onrace plans to.</div>
     </div>
 
     <h3>Three differences</h3>
@@ -341,6 +459,80 @@
       <div class="gallery">
         <figure><a href="screens/alltrails-home.png" target="_blank"><img src="screens/alltrails-home.png" alt="AllTrails homepage"></a><figcaption>Marketing homepage</figcaption></figure>
         <figure><a href="screens/alltrails-explore-map.png" target="_blank"><img src="screens/alltrails-explore-map.png" alt="AllTrails explore map"></a><figcaption>/explore — split-pane list + map, distance badges on pins</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>RoxMatchUp</h4>
+      <div class="gallery">
+        <figure><a href="screens/roxmatchup-appstore.png" target="_blank"><img src="screens/roxmatchup-appstore.png" alt="RoxMatchUp App Store listing"></a><figcaption>App Store listing — primary source, no public marketing site found</figcaption></figure>
+        <figure><a href="screens/roxmatchup-home.png" target="_blank"><img src="screens/roxmatchup-home.png" alt="RoxMatchUp web app login wall"></a><figcaption>Web app — drops straight to login, access restricted</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>fitnessracingcalendar.com</h4>
+      <div class="gallery">
+        <figure><a href="screens/fitnessracingcalendar-home.png" target="_blank"><img src="screens/fitnessracingcalendar-home.png" alt="fitnessracingcalendar.com homepage"></a><figcaption>Homepage — filter bar, price-forward event cards, “Book now” CTA</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>RoxFit</h4>
+      <div class="gallery">
+        <figure><a href="screens/roxfit-home.png" target="_blank"><img src="screens/roxfit-home.png" alt="RoxFit homepage"></a><figcaption>Homepage — currently an “Ultra” waitlist teaser</figcaption></figure>
+        <figure><a href="screens/roxfit-how-it-works.png" target="_blank"><img src="screens/roxfit-how-it-works.png" alt="RoxFit how it works"></a><figcaption>How It Works — Discover &amp; Track Races + Analyse Every Race</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>My Race Results</h4>
+      <div class="gallery">
+        <figure><a href="screens/myraceresults-home.png" target="_blank"><img src="screens/myraceresults-home.png" alt="My Race Results homepage"></a><figcaption>Homepage — OCR import, freemium pricing, “0 Athletes” live counters</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>DUV Ultra Marathon Statistics</h4>
+      <div class="gallery">
+        <figure><a href="screens/duv-home.png" target="_blank"><img src="screens/duv-home.png" alt="DUV start page"></a><figcaption>Start page — 10.6M+ performances, director-submitted results</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>Race Roster</h4>
+      <div class="gallery">
+        <figure><a href="screens/raceroster-home.png" target="_blank"><img src="screens/raceroster-home.png" alt="Race Roster homepage"></a><figcaption>Homepage — B2B registration/timing/fundraising suite</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>Parkrun</h4>
+      <div class="gallery">
+        <figure><a href="screens/parkrun-blocked.png" target="_blank"><img src="screens/parkrun-blocked.png" alt="Parkrun bot verification wall"></a><figcaption>Access restricted — HTTP 405 “Human Verification” on both domains tried</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>World Athletics</h4>
+      <div class="gallery">
+        <figure><a href="screens/worldathletics-home.png" target="_blank"><img src="screens/worldathletics-home.png" alt="World Athletics homepage"></a><figcaption>Homepage — news/media-led</figcaption></figure>
+        <figure><a href="screens/worldathletics-records.png" target="_blank"><img src="screens/worldathletics-records.png" alt="World Athletics toplists"></a><figcaption>Toplists — deep faceted filters (timing, wind, area, season)</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>IRONMAN</h4>
+      <div class="gallery">
+        <figure><a href="screens/ironman-home.png" target="_blank"><img src="screens/ironman-home.png" alt="IRONMAN homepage"></a><figcaption>Homepage — black/red bold brand tone, registration CTAs</figcaption></figure>
+        <figure><a href="screens/ironman-races.png" target="_blank"><img src="screens/ironman-races.png" alt="IRONMAN All Races map"></a><figcaption>All Races — map-first + faceted filters, clustered pins (161 matches)</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>Letterboxd</h4>
+      <div class="gallery">
+        <figure><a href="screens/letterboxd-home.png" target="_blank"><img src="screens/letterboxd-home.png" alt="Letterboxd homepage"></a><figcaption>Homepage — social film-logging feed, 3.9B+ films watched</figcaption></figure>
       </div>
     </div>
   </section>
@@ -407,12 +599,13 @@
     <div class="card-grid">
       <div class="card"><strong>1. It’s the documented plan, not a competing option</strong>CLAUDE.md names the map explicitly as MVP feature 1, and the Leaflet + OSM tech-stack decision is already made, not open.</div>
       <div class="card"><strong>2. The audience is geography-driven by design</strong>Global scope from day one; both recreational athletes (“what can I travel to”) and competitive athletes (multi-region racing calendars) make geography a primary decision axis — matching ocrbase’s and AllTrails’ location-based browsing for the same “choose one of many” task.</div>
-      <div class="card"><strong>3. The scale-breakdown risk doesn’t apply yet</strong>MVP data is hand-seeded via SQL — realistically tens to low hundreds of races, well inside the range where ocrbase’s and AllTrails’ maps stay legible without clustering logic.</div>
+      <div class="card"><strong>3. The scale-breakdown risk doesn’t apply yet — and there’s now a concrete threshold to watch</strong>MVP data is hand-seeded via SQL — realistically tens to low hundreds of races, the same range where ocrbase’s and AllTrails’ maps stay legible without clustering logic. IRONMAN’s own “All Races” map needs clustering at 161 races globally — real evidence that low hundreds is roughly where clustering stops being optional, not just a theoretical ceiling.</div>
     </div>
 
     <div class="gallery" style="margin-top:20px">
       <figure><a href="screens/ocrbase-events-map.png" target="_blank"><img src="screens/ocrbase-events-map.png" alt="ocrbase map pattern reference"></a><figcaption>ocrbase — List/Map toggle, clustered pins</figcaption></figure>
       <figure><a href="screens/alltrails-explore-map.png" target="_blank"><img src="screens/alltrails-explore-map.png" alt="AllTrails split-pane pattern reference"></a><figcaption>AllTrails — split-pane list + map</figcaption></figure>
+      <figure><a href="screens/ironman-races.png" target="_blank"><img src="screens/ironman-races.png" alt="IRONMAN clustering reference"></a><figcaption>IRONMAN — map + filters, clustering needed at 161 races</figcaption></figure>
     </div>
 
     <div class="callout" style="border-left-color:var(--patterns)">
@@ -434,9 +627,9 @@
     </div>
 
     <div class="gap-card">
-      <div class="gap-title"><span class="num">2</span>Every HYROX-specific competitor monetizes via subscription</div>
-      <p><span class="label">Gap —</span> Onrace’s brief states no monetization plan, unlike every funded HYROX-specific competitor found.</p>
-      <p><span class="label">Hypothesis —</span> “No monetization” is workable through MVP validation but not indefinitely — if revenue is needed later, the two structures every funded competitor actually uses (consumer subscription, or B2B/organizer-subsidy) are the realistic options, not a novel third model.</p>
+      <div class="gap-title"><span class="num">2</span>HYROX-specific competitors' monetization is more varied than first assumed</div>
+      <p><span class="label">Gap —</span> RoxConnect confirmed subscription (~$11.99/mo), but a closer look shows RoxFit is a free app with an unpriced "Ultra" tier still in waitlist and RoxMatchUp is free with microtransactions (RoxCoins), not a subscription — while Onrace's brief states no monetization plan at all.</p>
+      <p><span class="label">Hypothesis —</span> "No monetization" is workable through MVP validation but not indefinitely — if revenue is needed later, the realistic options are a direct consumer model (subscription like RoxConnect, or micro-transactions like RoxMatchUp) or a B2B/organizer-subsidy model (like Athlinks×ChronoTrack) — there's no single obvious category default to fall back on, so this is a genuinely open design choice, not a foregone one.</p>
       <span class="follows-from ff-competitors">Follows from: Competitors</span>
     </div>
 
@@ -459,6 +652,13 @@
       <p><span class="label">Gap —</span> List/Map toggle vs. AllTrails-style split-pane, and no clustering plan for catalog growth.</p>
       <p><span class="label">Hypothesis —</span> Toggle-first (ocrbase’s pattern) is the right MVP choice given the 2-month timeline and small seed catalog, with split-pane and clustering deferred to a v2 once real usage — not assumption — shows whether users hit that friction. Data not confirmed against Onrace’s actual eventual catalog size.</p>
       <span class="follows-from ff-patterns">Follows from: Patterns</span>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-title"><span class="num">6</span>RoxFit and RoxMatchUp already combine discovery + results</div>
+      <p><span class="label">Gap —</span> Both already combine race discovery and a personal results/leaderboard view in one HYROX-specific app — is the map+archive combination still genuine whitespace for Onrace?</p>
+      <p><span class="label">Hypothesis —</span> Yes, but narrower than first stated — both existing combinations are single-sport (HYROX only); no competitor reviewed across all 15 combines discovery and archive <strong style="color:var(--text)">across</strong> HYROX + DEKA + marathons + triathlons + ultras together. Onrace's differentiation claim should be restated as cross-format breadth combined with the archive, not the discovery+archive combination alone, which two competitors already have at smaller scope.</p>
+      <span class="follows-from ff-competitors">Follows from: Competitors</span>
     </div>
   </section>
 
