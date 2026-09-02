@@ -63,7 +63,18 @@ Comparison matrix and market-pattern findings for all **15 competitors** identif
 
 ## BENCHMARK
 
-**Question:** which lightweight mechanisms should Onrace's MVP borrow to make self-reported result *ownership* credible, given there's no manual verification team? Benchmarked against 5 products that handle self-reported/unverified ownership claims well in their own niche, scored 1–5 on 8 criteria (identity persistence, falsification cost, independent cross-reference, peer/social visibility, automatable plausibility checks, stakes-appropriate rigor, dispute/correction mechanism, source-artifact requirement).
+**Question:** which lightweight mechanisms should Onrace's MVP borrow to make self-reported result *ownership* credible, given there's no manual verification team? Benchmarked against 5 products that handle self-reported/unverified ownership claims well in their own niche, scored 1–5 on 8 criteria.
+
+**Score anchors** — what a 1 and a 5 look like on each criterion:
+
+- **Identity persistence** — 1 = anonymous/throwaway identity, free to discard and remake; 5 = tied to a durable, hard-to-fake real or professional identity.
+- **Falsification cost** — 1 = as easy to fake as typing a sentence; 5 = faking it takes roughly as much effort as actually doing the real thing.
+- **Independent cross-reference** — 1 = no external record exists to check the claim against; 5 = a public, independently-run database anyone can search to confirm it.
+- **Peer/social visibility** — 1 = no one else ever sees the claim; 5 = surfaced directly to people with the specific knowledge to catch a lie.
+- **Automatable plausibility checks** — 1 = any input is accepted, no rule-based check at all; 5 = obviously implausible claims are auto-rejected with no human reviewer needed.
+- **Stakes-appropriate rigor** — 1 = verification effort is badly mismatched to what a false claim would gain someone; 5 = the built-in trust-signal is well-calibrated to the actual stakes of lying.
+- **Dispute/correction mechanism** — 1 = no way to flag or fix a wrong/fraudulent entry after the fact; 5 = a lightweight, self-serve way to correct or contest a claim.
+- **Source-artifact requirement** — 1 = a free-text claim is accepted on its own, nothing else required; 5 = an external, independently-hosted artifact (a link or document) is mandatory before the claim is accepted.
 
 | Criterion | Goodreads | Letterboxd | Strava (manual entry) | LinkedIn certifications | Chess.com FIDE field |
 |---|---|---|---|---|---|
