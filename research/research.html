@@ -63,24 +63,51 @@
     letter-spacing:.04em; text-transform:uppercase; padding:8px 12px; border-radius:6px;
   }
   .navlinks a:hover{background:var(--bg-elev-2); color:var(--text)}
+  .navlinks a.active{color:var(--text); background:var(--bg-elev-2)}
 
   /* Hero */
   header.hero{
-    max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px;
+    max-width:var(--maxw); margin:0 auto; padding:64px 24px 48px;
+  }
+  .kicker{
+    font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 14px;
   }
   header.hero h1{
-    font-size:clamp(32px,5vw,52px); margin:0 0 12px; font-weight:800; letter-spacing:-.02em;
+    font-size:clamp(36px,6vw,60px); margin:0 0 14px; font-weight:800; letter-spacing:-.02em;
   }
+  .hero-desc{color:var(--text-dim); font-size:18px; max-width:640px; margin:0 0 6px; line-height:1.5}
   header.hero p{color:var(--text-dim); font-size:17px; max-width:640px; margin:0 0 6px}
-  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin:24px 0 0}
   .pill{
     font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
     padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim);
   }
 
+  /* Takeaways ("what we learned") */
+  .takeaways{margin:40px 0 0}
+  .takeaways h2{font-size:18px; margin:0 0 4px}
+  .takeaways .lede{margin-bottom:16px}
+  .card.tw-competitors{border-left:3px solid var(--accent)}
+  .card.tw-benchmark{border-left:3px solid var(--benchmark)}
+  .card.tw-patterns{border-left:3px solid var(--patterns)}
+  .card.tw-conclusions{border-left:3px solid var(--text-faint)}
+
+  /* Section index (quick nav cards) */
+  .section-index{margin:36px 0 0}
+  .section-index .card-grid{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  a.card-link{
+    display:block; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px; text-decoration:none; transition:border-color .15s, transform .15s;
+  }
+  a.card-link:hover{border-color:var(--accent); transform:translateY(-1px)}
+  .si-tag{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:8px}
+  .si-title{color:var(--text); font-weight:700; font-size:15px; display:block; margin-bottom:4px}
+  .si-desc{color:var(--text-dim); font-size:13px; display:block}
+
   main{max-width:var(--maxw); margin:0 auto; padding:0 24px 80px}
 
-  section.block{padding:56px 0; border-top:1px solid var(--border)}
+  section.block{padding:56px 0; border-top:1px solid var(--border); scroll-margin-top:88px}
   section.block:first-of-type{border-top:none}
 
   .section-tag{
@@ -202,7 +229,7 @@
 
 <nav>
   <div class="nav-inner">
-    <div class="brand">ON<span>RACE</span> · Research</div>
+    <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Research</a>
     <div class="navlinks">
       <a href="#competitors">Competitors</a>
       <a href="#benchmark">Benchmark</a>
@@ -212,15 +239,38 @@
   </div>
 </nav>
 
+<a id="top"></a>
 <header class="hero">
-  <h1>Research</h1>
-  <p>Competitor audit, ownership-credibility benchmark, and race-discovery UX pattern analysis for Onrace's MVP.</p>
-  <p>Compiled from <code>research/research.md</code> — desktop web research plus live browser screenshots, no user interviews yet.</p>
+  <p class="kicker">Research workspace</p>
+  <h1>Onrace</h1>
+  <p class="hero-desc">An interactive map of hybrid-athlete races, plus a personal archive of official results — for athletes who need one place to find their next race and prove their last one.</p>
+  <p>This page is the competitive audit, ownership-credibility benchmark, and race-discovery UX pattern analysis behind the MVP. Compiled from <code>research/research.md</code> — desktop web research plus live browser screenshots, no user interviews yet.</p>
+
   <div class="meta-row">
     <span class="pill">Updated 2026-09-02</span>
     <span class="pill">15 competitors reviewed</span>
     <span class="pill">5 benchmark products</span>
     <span class="pill">6 open gaps</span>
+  </div>
+
+  <div class="takeaways">
+    <h2>What we learned</h2>
+    <p class="lede">The four highest-signal findings across all three research passes — see each section below for the full evidence.</p>
+    <div class="card-grid">
+      <div class="card tw-competitors"><strong>The whitespace is narrower than first assumed, not gone</strong>RoxFit and RoxMatchUp already combine race discovery with a personal results view — but both are HYROX-only. Onrace's real edge is doing that <em>across</em> formats.</div>
+      <div class="card tw-benchmark"><strong>Three cheap mechanisms cover most of the ownership-trust gap</strong>A mandatory source link, "self-reported" labeling (never "verified"), and automatable plausibility checks — but no competitor reviewed requires a source link the way Onrace will, so this remains genuinely untested.</div>
+      <div class="card tw-patterns"><strong>Map-first + faceted filters is validated three times over</strong>ocrbase, AllTrails, and IRONMAN all use it for the same "find one good option among many" problem — and IRONMAN's own map needs pin-clustering past ~161 races, a concrete threshold to watch.</div>
+      <div class="card tw-conclusions"><strong>None of this is validated with real users yet</strong>6 open gaps remain — from submission friction to monetization to whether Strava expands into HYROX/DEKA.</div>
+    </div>
+  </div>
+
+  <div class="section-index">
+    <div class="card-grid">
+      <a class="card-link" href="#competitors"><span class="si-tag" style="color:var(--accent)">Competitors</span><span class="si-title">Competitive landscape</span><span class="si-desc">15 competitors across HARD / SOFT / ASPIRATIONAL tiers, three comparison tables →</span></a>
+      <a class="card-link" href="#benchmark"><span class="si-tag" style="color:var(--benchmark)">Benchmark</span><span class="si-title">Ownership-credibility benchmark</span><span class="si-desc">5 products scored across 8 criteria, with score anchors →</span></a>
+      <a class="card-link" href="#patterns"><span class="si-tag" style="color:var(--patterns)">Patterns</span><span class="si-title">Race-discovery interaction pattern</span><span class="si-desc">The chosen pattern, and why it fits Onrace's context →</span></a>
+      <a class="card-link" href="#conclusions"><span class="si-tag" style="color:var(--text-dim)">Conclusions</span><span class="si-title">Open gaps &amp; hypotheses</span><span class="si-desc">6 gaps, each with a hypothesis and its source section →</span></a>
+    </div>
   </div>
 </header>
 
@@ -691,6 +741,28 @@
 <footer>
   Generated from <code>research/research.md</code>, 2026-09-02. Full notes, sport-taxonomy findings, seed-data sources, and next steps live in that file. Product context in <code>CLAUDE.md</code>. Live site: <a href="https://juliamakedonska.github.io/Onrace/" target="_blank" rel="noopener">juliamakedonska.github.io/Onrace</a>.
 </footer>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+  var linkByTarget = {};
+  links.forEach(function(l){ linkByTarget[l.getAttribute('href').slice(1)] = l; });
+
+  var sections = Array.prototype.slice.call(document.querySelectorAll('main > section.block[id]'));
+  if(!('IntersectionObserver' in window) || !sections.length) return;
+
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      var link = linkByTarget[entry.target.id];
+      if(!link || !entry.isIntersecting) return;
+      links.forEach(function(l){ l.classList.remove('active'); });
+      link.classList.add('active');
+    });
+  }, {rootMargin: '-35% 0px -55% 0px', threshold: 0});
+
+  sections.forEach(function(s){ observer.observe(s); });
+})();
+</script>
 
 </body>
 </html>
