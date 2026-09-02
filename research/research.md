@@ -97,7 +97,7 @@ Live browser capture (Playwright MCP) of the 5 deep-dive competitors, closing th
 1. **Two real map/list UI patterns exist, not just one.** ocrbase uses a **List/Map toggle** (map replaces the list, clustered pin counts like "78" per region). AllTrails uses a **true split-pane** (scrollable card list synced live to the map viewport, pins show a distance badge instead of a plain marker or count). Toggle is cheaper to build; split-pane is the more polished target. Given Onrace's MVP dataset will start small (hand-curated HYROX/DEKA seed set, not hundreds of pins), clustering isn't needed yet either way — worth deciding List/Map-toggle-first for MVP and treating AllTrails' split-pane as a v2 target, not a launch requirement.
 2. **RoxConnect's dark/black/high-contrast marketing site is a concrete visual match for the brief's "bold & competitive" brand tone** (`../CLAUDE.md`) — this validates that choice against a real product this exact audience already uses, not just a stated preference. Also visually confirmed RoxConnect's pricing ($0 free / $11.99/mo premium), matching the figure already in the deep-dive table.
 3. **Athlinks' staleness is now directly visible, not just inferred.** Its homepage "What's Happening" section is labeled "(COMING SOON)" but still displays a sample countdown card for a 2017 Miami Marathon — live evidence of an unmaintained legacy product, and a concrete example of what to avoid (shipping placeholder/stale content instead of an honest empty state).
-4. **Strava's Events tab is confirmed genuinely unreachable outside the app** — navigating directly to `strava.com/events` redirects to the logged-out marketing homepage, and that homepage's public nav (Activities/Features/Maps/Challenges/Subscription) has no Events entry at all. Reinforces that Strava's race-discovery threat is currently invisible to anyone not already deep in the app — good for near-term competitive risk, but means Onrace can't easily keep tabs on how that feature evolves without a logged-in test account.
+4. **Strava's Events tab is confirmed genuinely unreachable outside the app** — navigating directly to `strava.com/events` redirects to the logged-out marketing homepage, and that homepage's public nav (Activities/Features/Maps/Challenges/Subscription) has no Events entry at all. A logged-in mobile session (screenshots supplied by Julia, 2026-09-02) later closed this gap — see `screens/strava-events.md` for the real UI: Events lives under Groups, splits into social "Local Club Events" and Runna-sourced "Races," the Races browse is search + faceted filters (Sport/Dates/Distance/Location/Elevation/Terrain) plus a "Popular Races For You" personalized rail, and no map-based browsing or HYROX/DEKA listings were observed. Confirms the running/cycling-only scope already assumed in this table, now with concrete evidence instead of inference.
 
 ## User research
 
@@ -171,13 +171,13 @@ The key task for the map half of Onrace: finding a suitable race among many avai
 
 **1. Faceted filter + browse**
 *How it works:* user picks values on independent axes (region, date, sport type, distance) that progressively narrow a result set; results render as a list or grid.
-*Where used:* ocrbase.com, AllTrails' side panel, Zillow, Airbnb's filter bar.
+*Where used:* ocrbase.com, AllTrails' side panel, Strava Races (Sport/Dates/Distance/Location/Elevation/Terrain chips — see `screens/strava-events.md`), Zillow, Airbnb's filter bar.
 *When it fits:* large catalog, discrete well-defined attributes, user already knows roughly what they want on 1–3 axes.
 *When it breaks down:* user doesn't know which axes matter yet ("show me something interesting"); filters over-narrow to zero results with no fallback; catalog too small for filtering to save real effort.
 
 **2. Personalized/algorithmic recommendation feed**
 *How it works:* system ranks and surfaces items using the user's history/behavior/profile, no explicit query required — user scrolls a feed the system assembled.
-*Where used:* Strava's Events tab (matched by sport/location/distance history), Netflix, Spotify Discover Weekly.
+*Where used:* Netflix, Spotify Discover Weekly, and — as one rail among filters, not the primary interface — Strava Races' "Popular Races For You" section (see `screens/strava-events.md`; Strava's actual primary pattern there is faceted filter + browse, not a pure feed).
 *When it fits:* platform has accumulated behavioral data; decision is low-stakes/frequent enough that passive suggestion beats active search; users want to be shown rather than to look.
 *When it breaks down:* cold start — no history yet means no signal; opaque ranking undermines trust for a high-stakes, infrequent decision (choosing one race to train toward); requires an ongoing ranking pipeline to build and maintain.
 
@@ -232,6 +232,6 @@ Confirmed sources with structured, scrapable-by-hand event info for manual seedi
 
 ## Next steps
 
-1. ~~Capture reference screenshots into `screens/` for the products in the table above~~ — done 2026-09-02 (see Visual observations above). Remaining gap: account-gated personal views (Athlinks claimed-results history, AllTrails "Completed" log, Strava Events tab) need a logged-in test account to capture.
+1. ~~Capture reference screenshots into `screens/` for the products in the table above~~ — done 2026-09-02 (see Visual observations above); Strava Events tab specifically closed via Julia's logged-in mobile screenshots (see `screens/strava-events.md`). Remaining gap: account-gated personal views on Athlinks (claimed-results history) and AllTrails ("Completed" log) still need a logged-in test account to capture.
 2. Low-cost qualitative pass: skim App Store reviews for RoxFit/RoxMatchUp/HYBRD/HybridAF for recurring user complaints, before deciding whether primary interviews are worth the time given the 2-month MVP timeline.
 3. Once taxonomy + differentiation thesis feel solid, move into `../wireframes/`.
