@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onrace — Research</title>
+<style>
+  :root{
+    --bg:#0b0c0e;
+    --bg-elev:#141518;
+    --bg-elev-2:#1b1d21;
+    --border:#2a2c31;
+    --text:#eef0f2;
+    --text-dim:#9aa0a8;
+    --text-faint:#686e77;
+    --accent:#ff4d2e;
+    --accent-dim:#ff4d2e33;
+    --benchmark:#2dd4bf;
+    --benchmark-dim:#2dd4bf26;
+    --patterns:#a78bfa;
+    --patterns-dim:#a78bfa26;
+    --unconfirmed:#e6a23c;
+    --unconfirmed-dim:#e6a23c22;
+    --radius:10px;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+    font-size:16px;
+  }
+  a{color:var(--accent)}
+  a:hover{text-decoration-thickness:2px}
+  code{
+    background:var(--bg-elev-2);
+    padding:.1em .4em;
+    border-radius:4px;
+    font-size:.9em;
+    color:#d7dadf;
+  }
+
+  /* Nav */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,12,14,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .brand{font-weight:800; letter-spacing:.02em; text-transform:uppercase; font-size:14px; color:var(--text)}
+  .brand span{color:var(--accent)}
+  .navlinks{display:flex; gap:4px; margin-left:auto; flex-wrap:wrap}
+  .navlinks a{
+    color:var(--text-dim); text-decoration:none; font-size:13px; font-weight:700;
+    letter-spacing:.04em; text-transform:uppercase; padding:8px 12px; border-radius:6px;
+  }
+  .navlinks a:hover{background:var(--bg-elev-2); color:var(--text)}
+
+  /* Hero */
+  header.hero{
+    max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px;
+  }
+  header.hero h1{
+    font-size:clamp(32px,5vw,52px); margin:0 0 12px; font-weight:800; letter-spacing:-.02em;
+  }
+  header.hero p{color:var(--text-dim); font-size:17px; max-width:640px; margin:0 0 6px}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px}
+  .pill{
+    font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+    padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim);
+  }
+
+  main{max-width:var(--maxw); margin:0 auto; padding:0 24px 80px}
+
+  section.block{padding:56px 0; border-top:1px solid var(--border)}
+  section.block:first-of-type{border-top:none}
+
+  .section-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    padding:5px 12px; border-radius:999px; margin-bottom:16px;
+  }
+  .tag-competitors{background:var(--accent-dim); color:var(--accent)}
+  .tag-benchmark{background:var(--benchmark-dim); color:var(--benchmark)}
+  .tag-patterns{background:var(--patterns-dim); color:var(--patterns)}
+  .tag-conclusions{background:var(--bg-elev-2); color:var(--text-dim)}
+
+  h2{font-size:28px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em}
+  h3{font-size:18px; margin:32px 0 12px; font-weight:700}
+  .lede{color:var(--text-dim); max-width:760px; margin:0 0 28px; font-size:15px}
+
+  /* Tables */
+  .table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); margin:0 0 20px}
+  table{border-collapse:collapse; width:100%; min-width:720px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top}
+  thead th{
+    background:var(--bg-elev); color:var(--text); font-size:12px; text-transform:uppercase;
+    letter-spacing:.03em; white-space:nowrap; position:sticky; top:0;
+  }
+  tbody th{
+    background:var(--bg-elev); font-weight:700; white-space:nowrap; color:var(--text);
+  }
+  tbody tr:last-child td, tbody tr:last-child th{border-bottom:none}
+  tbody tr:hover td, tbody tr:hover th{background:var(--bg-elev)}
+  td{color:var(--text-dim)}
+  .total-row th, .total-row td{color:var(--text); font-weight:800; background:var(--bg-elev)}
+
+  .unconfirmed{color:var(--unconfirmed)}
+  .unconfirmed::after{
+    content:"data not confirmed"; display:inline-block; margin-left:6px;
+    font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.03em;
+    background:var(--unconfirmed-dim); color:var(--unconfirmed); padding:2px 6px; border-radius:5px;
+    vertical-align:middle;
+  }
+
+  .callout{
+    background:var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--unconfirmed);
+    border-radius:8px; padding:16px 18px; font-size:14px; color:var(--text-dim); margin:0 0 28px;
+  }
+  .callout strong{color:var(--text)}
+
+  /* Cards */
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin:16px 0}
+  .card{
+    background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; font-size:14px; color:var(--text-dim);
+  }
+  .card strong{color:var(--text); display:block; margin-bottom:6px; font-size:14.5px}
+  .card.warn{border-left:3px solid var(--unconfirmed)}
+
+  /* Screenshot gallery */
+  .gallery-group{margin:28px 0}
+  .gallery-group h4{
+    font-size:13px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint);
+    margin:0 0 12px; font-weight:800;
+  }
+  .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px}
+  figure{margin:0; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden}
+  figure a{display:block; line-height:0}
+  figure img{width:100%; height:160px; object-fit:cover; object-position:top; display:block; background:#000}
+  figcaption{padding:10px 12px; font-size:12px; color:var(--text-dim)}
+
+  /* Sources line */
+  .sources{font-size:13px; color:var(--text-faint); margin:12px 0 0}
+  .sources a{color:var(--text-dim)}
+
+  /* Conclusions */
+  .gap-card{
+    background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px; margin-bottom:16px;
+  }
+  .gap-card .num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:50%; background:var(--bg-elev-2); color:var(--text);
+    font-weight:800; font-size:13px; margin-right:10px;
+  }
+  .gap-card .gap-title{font-weight:700; color:var(--text); font-size:15px; display:flex; align-items:center; margin-bottom:10px}
+  .gap-card p{margin:6px 0; font-size:14px; color:var(--text-dim)}
+  .gap-card .label{color:var(--text-faint); font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:.04em}
+  .follows-from{
+    display:inline-block; margin-top:10px; font-size:11px; font-weight:800; text-transform:uppercase;
+    letter-spacing:.04em; padding:4px 10px; border-radius:999px;
+  }
+  .ff-competitors{background:var(--accent-dim); color:var(--accent)}
+  .ff-benchmark{background:var(--benchmark-dim); color:var(--benchmark)}
+  .ff-patterns{background:var(--patterns-dim); color:var(--patterns)}
+
+  footer{
+    max-width:var(--maxw); margin:0 auto; padding:32px 24px 64px; color:var(--text-faint); font-size:13px;
+    border-top:1px solid var(--border);
+  }
+  footer a{color:var(--text-dim)}
+
+  @media (max-width:640px){
+    .nav-inner{gap:10px}
+    .navlinks{gap:0}
+    header.hero{padding:44px 20px 28px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">ON<span>RACE</span> · Research</div>
+    <div class="navlinks">
+      <a href="#competitors">Competitors</a>
+      <a href="#benchmark">Benchmark</a>
+      <a href="#patterns">Patterns</a>
+      <a href="#conclusions">Conclusions</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>Research</h1>
+  <p>Competitor audit, ownership-credibility benchmark, and race-discovery UX pattern analysis for Onrace's MVP.</p>
+  <p>Compiled from <code>research/research.md</code> — desktop web research plus live browser screenshots, no user interviews yet.</p>
+  <div class="meta-row">
+    <span class="pill">Updated 2026-09-02</span>
+    <span class="pill">5 competitors reviewed</span>
+    <span class="pill">5 benchmark products</span>
+    <span class="pill">5 open gaps</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- COMPETITORS -->
+  <section class="block" id="competitors">
+    <span class="section-tag tag-competitors">Competitors</span>
+    <h2>Competitive landscape</h2>
+    <p class="lede">Comparison matrix and market-pattern findings for the 5 competitors selected for closer review (2026-09-02): ocrbase.com, RoxConnect, Strava (Events tab), Athlinks, and AllTrails — spanning three competitive tiers: HARD (same product/audience), SOFT (same task, different audience), ASPIRATIONAL (international benchmark).</p>
+
+    <h3>Comparison matrix</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Axis</th><th>ocrbase.com</th><th>RoxConnect</th><th>Strava (Events tab)</th><th>Athlinks</th><th>AllTrails</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Audience</th>
+            <td>OCR / functional-fitness / trail / rucking racers broadly — hybrid-adjacent, not hybrid-branded</td>
+            <td>HYROX-specific hybrid athletes, beginner→elite, claims “+80 countries” (confirmed on-page stat)</td>
+            <td>Strava’s existing broad run/cycling base, now shown races via the Events tab</td>
+            <td>Competitive endurance athletes broadly (running / tri / swim / cycling / adventure racing)</td>
+            <td>Outdoor enthusiasts (hiking / camping / trail running), broad skill range</td>
+          </tr>
+          <tr>
+            <th>Product foundation</th>
+            <td>Free web calendar, footer-credited “Made by Rebase Labs”</td>
+            <td>Native mobile app (iOS / Android) — store badges shown on homepage</td>
+            <td>Mature social fitness platform (web+app); races live under Groups → Events</td>
+            <td>Web results database; footer links to “Life Time” and “ChronoTrack”</td>
+            <td>Web + mobile app; map-first trail directory</td>
+          </tr>
+          <tr>
+            <th>Key mechanism</th>
+            <td>Browse / filter races by format, date, country — map or list view</td>
+            <td>Create profile → filter / match with training partners → in-app chat</td>
+            <td>Search + faceted filters (Sport / Dates / Distance / Location / Elevation / Terrain) + a “Popular Races For You” personalized rail</td>
+            <td>Search / claim your name or bib in race results → build a personal race history</td>
+            <td>Search by location / filters → trail detail → record / save an activity</td>
+          </tr>
+          <tr>
+            <th>Trust model</th>
+            <td>None visible — listings read as self / community-submitted, no verification UI observed</td>
+            <td>Minimal — self-reported profile data, no verification UI observed</td>
+            <td>Race listings sourced from Runna, not self-reported; activity data is the athlete’s own GPS-tracked activity</td>
+            <td>Results reportedly auto-matched from official timing feeds — <span class="unconfirmed">mechanism specifics</span></td>
+            <td>Community reviews + crowdsourced trail data; no personal-result verification concept observed</td>
+          </tr>
+          <tr>
+            <th>Monetization</th>
+            <td>No pricing / paid-tier UI observed anywhere on the site</td>
+            <td>Freemium: Free vs. ~$11.99/mo Premium (confirmed on-page pricing table)</td>
+            <td>Free Events tab observed; a paid tier reportedly gates training-analysis features — <span class="unconfirmed">price point</span></td>
+            <td>Free to athletes; B2B link to ChronoTrack observed in footer</td>
+            <td>Freemium positioning stated publicly — <span class="unconfirmed">gated features / price</span></td>
+          </tr>
+          <tr>
+            <th>Sources</th>
+            <td><a href="https://www.ocrbase.com/" target="_blank" rel="noopener">ocrbase.com</a><br><a href="screens/ocrbase.md" target="_blank">screens/ocrbase.md</a></td>
+            <td><a href="https://roxconnect.com" target="_blank" rel="noopener">roxconnect.com</a><br><a href="screens/roxconnect.md" target="_blank">screens/roxconnect.md</a></td>
+            <td><a href="screens/strava-events.md" target="_blank">screens/strava-events.md</a><br><span style="color:var(--text-faint)">(logged-in screenshots)</span></td>
+            <td><a href="https://www.athlinks.com/" target="_blank" rel="noopener">athlinks.com</a><br><a href="screens/athlinks.md" target="_blank">screens/athlinks.md</a></td>
+            <td><a href="https://www.alltrails.com" target="_blank" rel="noopener">alltrails.com</a><br><a href="screens/alltrails.md" target="_blank">screens/alltrails.md</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>Sourcing note:</strong> every row above is backed by a live screenshot or the product’s own public page (linked in the Sources row). Three claims carried over from an earlier WebSearch/WebFetch pass — Strava’s Events tab being tied to a Runna acquisition, Strava’s and AllTrails’ exact paid-tier feature lists/prices, and Athlinks’ timing-feed auto-match mechanism — no longer have a retained citation link, so they’re marked <span class="unconfirmed">unconfirmed</span> above rather than re-asserted as fact.
+    </div>
+
+    <h3>Three shared market patterns</h3>
+    <div class="card-grid">
+      <div class="card"><strong>1. Freemium (or a B2B subsidy) is the default business model</strong>Confirmed for RoxConnect (Free / $11.99/mo) and inferred for Athlinks (ChronoTrack footer link). Nobody charges for the core “find/log a race” job itself.</div>
+      <div class="card"><strong>2. Nobody uses a self-reported, required-source-link trust model</strong>Athlinks auto-matches from timing feeds; Strava’s data is GPS-tracked; ocrbase and RoxConnect carry no verification layer at all. Onrace’s “the link is the evidence” approach is genuinely novel among this set.</div>
+      <div class="card"><strong>3. Discovery and archiving are always separate products</strong>RoxConnect discovers partners, ocrbase discovers races only, Athlinks archives results only, Strava bolted discovery onto an existing activity-tracking product. No one launched both halves as one coherent product.</div>
+    </div>
+
+    <h3>Three differences</h3>
+    <div class="card-grid">
+      <div class="card"><strong>1. Scale and maturity vary enormously</strong>Athlinks (Life Time-linked) and Strava (established platform) versus ocrbase’s and RoxConnect’s small-team footprint. Onrace starts at the small end of this spectrum.</div>
+      <div class="card"><strong>2. Four different product shapes solve “race discovery”</strong>Pure calendar browsing (ocrbase), partner-matching (RoxConnect), filters + a personalized rail on a social app (Strava), a claimed-results database with no discovery layer (Athlinks). None matches Onrace’s planned map-first, cross-format approach.</div>
+      <div class="card"><strong>3. Revenue structure differs by category</strong>Direct consumer subscription (RoxConnect) vs. B2B-subsidizes-free-product (Athlinks) vs. no visible monetization (ocrbase). CLAUDE.md’s “no monetization plan” puts Onrace in the same bucket as the least-resourced competitor here.</div>
+    </div>
+
+    <h3>Screenshots</h3>
+
+    <div class="gallery-group">
+      <h4>ocrbase.com</h4>
+      <div class="gallery">
+        <figure><a href="screens/ocrbase-home.png" target="_blank"><img src="screens/ocrbase-home.png" alt="ocrbase homepage"></a><figcaption>Homepage — event count, upcoming/recently-added grids</figcaption></figure>
+        <figure><a href="screens/ocrbase-events-list.png" target="_blank"><img src="screens/ocrbase-events-list.png" alt="ocrbase events list view"></a><figcaption>Events — List view with organizer/format/date/country filters</figcaption></figure>
+        <figure><a href="screens/ocrbase-events-map.png" target="_blank"><img src="screens/ocrbase-events-map.png" alt="ocrbase events map view"></a><figcaption>Events — Map view, clustered pin counts</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>RoxConnect</h4>
+      <div class="gallery">
+        <figure><a href="screens/roxconnect-home.png" target="_blank"><img src="screens/roxconnect-home.png" alt="RoxConnect homepage"></a><figcaption>Marketing homepage — dark/high-contrast brand tone, pricing, FAQ</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>Strava — Events tab</h4>
+      <div class="gallery">
+        <figure><a href="screens/strava-home.png" target="_blank"><img src="screens/strava-home.png" alt="Strava logged-out homepage"></a><figcaption>Logged-out homepage — no “Events” entry in public nav</figcaption></figure>
+        <figure><a href="screens/strava%20events.PNG" target="_blank"><img src="screens/strava%20events.PNG" alt="Strava Events tab"></a><figcaption>Events tab — Local Club Events + Races rails</figcaption></figure>
+        <figure><a href="screens/strava%20races.PNG" target="_blank"><img src="screens/strava%20races.PNG" alt="Strava Races browse"></a><figcaption>Races — search + faceted filters, “For You” rail</figcaption></figure>
+        <figure><a href="screens/strava%20marathon%20page.PNG" target="_blank"><img src="screens/strava%20marathon%20page.PNG" alt="Strava race detail page"></a><figcaption>Race detail — distance chips, Register / Train with Runna</figcaption></figure>
+        <figure><a href="screens/strava%20marathon%20page%20scroll.PNG" target="_blank"><img src="screens/strava%20marathon%20page%20scroll.PNG" alt="Strava race detail scrolled"></a><figcaption>Race detail — weather stats row, drawn route map</figcaption></figure>
+        <figure><a href="screens/strava%20event%20page.PNG" target="_blank"><img src="screens/strava%20event%20page.PNG" alt="Strava local club event page"></a><figcaption>Local Club Event — host, Going list, Join CTA</figcaption></figure>
+        <figure><a href="screens/strava%20weekly%20run.PNG" target="_blank"><img src="screens/strava%20weekly%20run.PNG" alt="Strava weekly run detail"></a><figcaption>Weekly Run — Social format, recurring meetup</figcaption></figure>
+        <figure><a href="screens/strava%20run%20details.PNG" target="_blank"><img src="screens/strava%20run%20details.PNG" alt="Strava route details"></a><figcaption>Route detail (Maps tab) — elevation/terrain, active times</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>Athlinks</h4>
+      <div class="gallery">
+        <figure><a href="screens/athlinks-home.png" target="_blank"><img src="screens/athlinks-home.png" alt="Athlinks homepage"></a><figcaption>Homepage — search-first, “(COMING SOON)” newsfeed with stale 2017 sample content</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h4>AllTrails</h4>
+      <div class="gallery">
+        <figure><a href="screens/alltrails-home.png" target="_blank"><img src="screens/alltrails-home.png" alt="AllTrails homepage"></a><figcaption>Marketing homepage</figcaption></figure>
+        <figure><a href="screens/alltrails-explore-map.png" target="_blank"><img src="screens/alltrails-explore-map.png" alt="AllTrails explore map"></a><figcaption>/explore — split-pane list + map, distance badges on pins</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENCHMARK -->
+  <section class="block" id="benchmark">
+    <span class="section-tag tag-benchmark">Benchmark</span>
+    <h2>Ownership-credibility benchmark</h2>
+    <p class="lede">Which lightweight mechanisms should Onrace’s MVP borrow to make self-reported result <em>ownership</em> credible, given there’s no manual verification team? Benchmarked against 5 products that handle self-reported/unverified ownership claims well in their own niche, scored 1–5 on 8 criteria.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Criterion</th><th>Goodreads</th><th>Letterboxd</th><th>Strava (manual entry)</th><th>LinkedIn certifications</th><th>Chess.com FIDE field</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>Identity persistence</th><td>3</td><td>3</td><td>4</td><td>5</td><td>3</td></tr>
+          <tr><th>Falsification cost</th><td>1</td><td>1</td><td>2</td><td>2</td><td>1</td></tr>
+          <tr><th>Independent cross-reference</th><td>1</td><td>1</td><td>1</td><td>3</td><td>5</td></tr>
+          <tr><th>Peer/social visibility</th><td>2</td><td>3</td><td>4</td><td>4</td><td>3</td></tr>
+          <tr><th>Automatable plausibility checks</th><td>1</td><td>1</td><td>3</td><td>2</td><td>1</td></tr>
+          <tr><th>Stakes-appropriate rigor</th><td>5</td><td>5</td><td>5</td><td>2</td><td>4</td></tr>
+          <tr><th>Dispute/correction mechanism</th><td>2</td><td>2</td><td>3</td><td>2</td><td>2</td></tr>
+          <tr><th>Source-artifact requirement</th><td>1</td><td>1</td><td>1</td><td>3</td><td>2</td></tr>
+          <tr class="total-row"><th>Total (/40)</th><td>16</td><td>17</td><td>23</td><td>23</td><td>21</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sources">
+      Sources:
+      <a href="https://www.goodreads.com/group/show/58421-2026-reading-challenge" target="_blank" rel="noopener">Goodreads Reading Challenge</a> ·
+      <a href="https://letterboxd.zendesk.com/hc/en-us/articles/15178773269263" target="_blank" rel="noopener">Letterboxd diary feature</a> ·
+      <a href="https://letterboxd.com/about/faq/" target="_blank" rel="noopener">Letterboxd FAQ</a> ·
+      <a href="https://support.strava.com/en-us/articles/15401857-virtual-trainer-activities-on-strava" target="_blank" rel="noopener">Strava Help: Virtual Trainer Activities</a> ·
+      <a href="https://support.strava.com/en-us/articles/15401921-segment-leaderboard-guidelines" target="_blank" rel="noopener">Strava Help: Segment Leaderboard Guidelines</a> ·
+      <a href="https://socialrails.com/blog/how-to-add-certifications-to-linkedin" target="_blank" rel="noopener">How to add certifications on LinkedIn</a> ·
+      <a href="https://www.chess.com/forum/view/general/are-fide-ratings-on-the-profiles-verified-by-chess-com" target="_blank" rel="noopener">Chess.com forum: FIDE ratings verification</a>
+    </p>
+
+    <h3>Top 3 mechanisms for Onrace’s MVP</h3>
+    <div class="card-grid">
+      <div class="card"><strong>1. Make the source link mandatory, not optional, at submission</strong>LinkedIn scores 5/5 on identity persistence but only 3/5 on source-artifact requirement — its Credential URL field is optional, and most users skip a step that isn’t required. Onrace’s brief already plans a required link; this is direct evidence not to soften that in implementation.</div>
+      <div class="card"><strong>2. Label every result “self-reported + source-linked,” never “verified”</strong>Strava wins the table (23/40) largely via structural segregation, not verification — manual entries are excluded from leaderboards by rule. Always show “via [domain of official_result_url],” never a checkmark implying Onrace vouches for it.</div>
+      <div class="card"><strong>3. Add automatable plausibility checks at submission time</strong>The one criterion every product scored weakly on (1–3/5) — a cheap opportunity to do better than all five references at once: reject dead links, flag implausible finish times, flag exact duplicate race+time submissions.</div>
+    </div>
+
+    <h3>One mechanism that won’t work</h3>
+    <div class="card warn" style="max-width:100%">
+      <strong>Peer / social visibility</strong>
+      Letterboxd (3/5) and Strava (4/5) both lean on a critical mass of peers who know the claimant’s real skill level to organically catch false claims. Onrace’s results archive is explicitly not a social feed (no following, comments, or public sharing of results in MVP, per CLAUDE.md). With no followers and a thin launch user base, there’s no audience positioned to notice or contest a fabricated result — mechanisms 1–3 above have to substitute for the social layer this pattern actually depends on.
+    </div>
+  </section>
+
+  <!-- PATTERNS -->
+  <section class="block" id="patterns">
+    <span class="section-tag tag-patterns">Patterns</span>
+    <h2>Race-discovery interaction pattern</h2>
+    <p class="lede">Chosen pattern: <strong style="color:var(--text)">map-first spatial exploration</strong>, with faceted filtering (region, date, sport type) layered on top as its companion, not a separate feature.</p>
+
+    <p style="color:var(--text-dim); max-width:760px; font-size:15px">This isn’t a speculative pick — it’s already decided in <code>CLAUDE.md</code>: MVP feature 1 reads “Interactive map of races — filterable by region, date, and sport type,” and the tech stack section has already locked in Leaflet + OpenStreetMap as the map layer.</p>
+
+    <h3>Why it fits</h3>
+    <div class="card-grid">
+      <div class="card"><strong>1. It’s the documented plan, not a competing option</strong>CLAUDE.md names the map explicitly as MVP feature 1, and the Leaflet + OSM tech-stack decision is already made, not open.</div>
+      <div class="card"><strong>2. The audience is geography-driven by design</strong>Global scope from day one; both recreational athletes (“what can I travel to”) and competitive athletes (multi-region racing calendars) make geography a primary decision axis — matching ocrbase’s and AllTrails’ location-based browsing for the same “choose one of many” task.</div>
+      <div class="card"><strong>3. The scale-breakdown risk doesn’t apply yet</strong>MVP data is hand-seeded via SQL — realistically tens to low hundreds of races, well inside the range where ocrbase’s and AllTrails’ maps stay legible without clustering logic.</div>
+    </div>
+
+    <div class="gallery" style="margin-top:20px">
+      <figure><a href="screens/ocrbase-events-map.png" target="_blank"><img src="screens/ocrbase-events-map.png" alt="ocrbase map pattern reference"></a><figcaption>ocrbase — List/Map toggle, clustered pins</figcaption></figure>
+      <figure><a href="screens/alltrails-explore-map.png" target="_blank"><img src="screens/alltrails-explore-map.png" alt="AllTrails split-pane pattern reference"></a><figcaption>AllTrails — split-pane list + map</figcaption></figure>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--patterns)">
+      <strong>Against the alternatives:</strong> faceted filter + browse alone is the closest runner-up — CLAUDE.md’s own feature line already licenses it as the map’s companion for an athlete who already knows their date/sport constraints. A personalized recommendation feed doesn’t fit: it needs behavioral history Onrace won’t have at a cold-start launch, and no ranking pipeline is budgeted in the Supabase-only stack.
+    </div>
+  </section>
+
+  <!-- CONCLUSIONS -->
+  <section class="block" id="conclusions">
+    <span class="section-tag tag-conclusions">Conclusions</span>
+    <h2>Open gaps &amp; hypotheses</h2>
+    <p class="lede">For each open gap surfaced by the analysis above, a hypothesis and the section it follows from. None of these are validated with real user/usage data yet.</p>
+
+    <div class="gap-card">
+      <div class="gap-title"><span class="num">1</span>No competitor requires a mandatory source link</div>
+      <p><span class="label">Gap —</span> Will a required link cause submission drop-off?</p>
+      <p><span class="label">Hypothesis —</span> Friction will be measurable but survivable: the audience already produces official result links for other purposes (e.g. Boston Marathon qualifying-time proof), so the extra step is small relative to existing motivation — but net effect is likely fewer results logged per user, not zero adoption.</p>
+      <span class="follows-from ff-competitors">Follows from: Competitors</span>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-title"><span class="num">2</span>Every HYROX-specific competitor monetizes via subscription</div>
+      <p><span class="label">Gap —</span> Onrace’s brief states no monetization plan, unlike every funded HYROX-specific competitor found.</p>
+      <p><span class="label">Hypothesis —</span> “No monetization” is workable through MVP validation but not indefinitely — if revenue is needed later, the two structures every funded competitor actually uses (consumer subscription, or B2B/organizer-subsidy) are the realistic options, not a novel third model.</p>
+      <span class="follows-from ff-competitors">Follows from: Competitors</span>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-title"><span class="num">3</span>Could Strava expand into HYROX/DEKA?</div>
+      <p><span class="label">Gap —</span> Would that turn a SOFT competitor into a HARD one?</p>
+      <p><span class="label">Hypothesis —</span> Low probability inside Onrace’s 2026-11-01 MVP window — every race sampled in the logged-in screenshots was running-only, and expansion would need a new data partnership, not just a UI change. Data not confirmed beyond this one screenshot pass — worth a periodic recheck, not a blocking risk.</p>
+      <span class="follows-from ff-competitors">Follows from: Competitors</span>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-title"><span class="num">4</span>Are automated checks enough without peer visibility?</div>
+      <p><span class="label">Gap —</span> Is automatable plausibility-checking a sufficient substitute for the ruled-out peer-visibility mechanism?</p>
+      <p><span class="label">Hypothesis —</span> Sufficient to catch crude fabrications (impossible times, dead links, exact duplicates) but not a real-but-mismatched link — an acceptable residual risk given Onrace’s trust model is explicitly “the link is the evidence,” not “Onrace verifies.” A known, deliberate limit, not a hidden gap.</p>
+      <span class="follows-from ff-benchmark">Follows from: Benchmark</span>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-title"><span class="num">5</span>Map-UI implementation choice not yet decided</div>
+      <p><span class="label">Gap —</span> List/Map toggle vs. AllTrails-style split-pane, and no clustering plan for catalog growth.</p>
+      <p><span class="label">Hypothesis —</span> Toggle-first (ocrbase’s pattern) is the right MVP choice given the 2-month timeline and small seed catalog, with split-pane and clustering deferred to a v2 once real usage — not assumption — shows whether users hit that friction. Data not confirmed against Onrace’s actual eventual catalog size.</p>
+      <span class="follows-from ff-patterns">Follows from: Patterns</span>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Generated from <code>research/research.md</code>, 2026-09-02. Full notes, sport-taxonomy findings, seed-data sources, and next steps live in that file. Product context in <code>CLAUDE.md</code>. Live site: <a href="https://juliamakedonska.github.io/Onrace/" target="_blank" rel="noopener">juliamakedonska.github.io/Onrace</a>.
+</footer>
+
+</body>
+</html>
