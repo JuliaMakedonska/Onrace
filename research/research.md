@@ -163,6 +163,55 @@ Reading the table: Goodreads and Letterboxd score low almost everywhere *except*
 
 Letterboxd's engaged review community and Strava's kudos/comments culture both lean on **a critical mass of peers who know the claimant's real skill level** to organically catch false claims. Onrace's results archive is explicitly *not* a social feed — per `../CLAUDE.md`, social features, following, and public sharing of results are out of scope for MVP. With no followers, no comments, and (at launch) a thin user base, there's no audience positioned to notice or contest a fabricated result the way a training partner would on Strava. Importing "let the crowd police it" isn't viable here; the mandatory-link, labeling, and automatable-checks mechanisms above have to substitute for the social layer this pattern actually depends on.
 
+## Race-discovery UX patterns
+
+The key task for the map half of Onrace: finding a suitable race among many available hybrid competitions and marathons. Five fundamentally different UX patterns solve this kind of "find one good option among many" problem — not variations of one approach, but distinct interaction models.
+
+### The five patterns
+
+**1. Faceted filter + browse**
+*How it works:* user picks values on independent axes (region, date, sport type, distance) that progressively narrow a result set; results render as a list or grid.
+*Where used:* ocrbase.com, AllTrails' side panel, Zillow, Airbnb's filter bar.
+*When it fits:* large catalog, discrete well-defined attributes, user already knows roughly what they want on 1–3 axes.
+*When it breaks down:* user doesn't know which axes matter yet ("show me something interesting"); filters over-narrow to zero results with no fallback; catalog too small for filtering to save real effort.
+
+**2. Personalized/algorithmic recommendation feed**
+*How it works:* system ranks and surfaces items using the user's history/behavior/profile, no explicit query required — user scrolls a feed the system assembled.
+*Where used:* Strava's Events tab (matched by sport/location/distance history), Netflix, Spotify Discover Weekly.
+*When it fits:* platform has accumulated behavioral data; decision is low-stakes/frequent enough that passive suggestion beats active search; users want to be shown rather than to look.
+*When it breaks down:* cold start — no history yet means no signal; opaque ranking undermines trust for a high-stakes, infrequent decision (choosing one race to train toward); requires an ongoing ranking pipeline to build and maintain.
+
+**3. Search-by-query (text search / autocomplete)**
+*How it works:* free-text box, user types what they're looking for, system matches/ranks against a query.
+*Where used:* Google, Athlinks' homepage ("Enter an athlete name"), most e-commerce search bars.
+*When it fits:* user already has a specific target in mind (a race name, a city) — fast for someone who knows exactly what they want.
+*When it breaks down:* useless for exploratory browsing ("what's out there in my region this fall") — it assumes the query rather than generating it; vocabulary/typo mismatch; no good way to express "near me, sometime in the next 3 months, any sport."
+
+**4. Curated/editorial lists (collections)**
+*How it works:* a human editor groups items by theme or occasion ("Best beginner-friendly hybrid races in Europe," "Fall marathon picks") — the user browses judgment, not raw data.
+*Where used:* Wirecutter, travel-guide "best of" posts, IRONMAN's featured-races carousel.
+*When it fits:* catalog is large/undifferentiated and users benefit from expert framing; there's ongoing editorial capacity; trust/authority is part of the value.
+*When it breaks down:* doesn't scale to comprehensive coverage; goes stale fast; requires continuous manual upkeep; fails users with a specific need outside whatever angle was curated.
+
+**5. Map-first spatial exploration**
+*How it works:* a pan/zoom map is the primary surface; markers represent races, discovery happens by moving through geography rather than filtering or querying.
+*Where used:* AllTrails' `/explore` (see `screens/alltrails.md`), Airbnb's map view, Google Maps "things to do nearby," ocrbase's map toggle (see `screens/ocrbase.md`).
+*When it fits:* geography is a primary decision axis (traveling athletes, "what's near me"), visual/spatial thinking, supports serendipity.
+*When it breaks down:* doesn't scale globally without clustering; hard to layer multiple non-spatial facets (date + sport + distance) onto a map without clutter; weak when the user cares more about *when* than *where*; cramped on small screens.
+
+### Fit against `../CLAUDE.md`
+
+**Best fit: Map-first spatial exploration (5).**
+1. Not speculative — CLAUDE.md's MVP feature 1 literally reads "Interactive map of races — filterable by region, date, and sport type," and the tech stack section has already locked in Leaflet + OpenStreetMap as the map layer. This pattern is the decided plan, not a competing option.
+2. The audience is geography-driven by design: global scope from day one, both recreational athletes planning "what can I travel to" and competitive athletes building a multi-region racing calendar — geography is a primary axis for this specific decision, exactly matching map-first's fit condition.
+3. The scale-breakdown risk (map clutter without clustering) doesn't apply yet — MVP data is hand-seeded via SQL, likely tens to low hundreds of races, well within the range where a map stays legible with no clustering logic needed (validated against ocrbase/AllTrails in the Visual observations section above).
+
+**Second-best, under condition X = the athlete already has firm constraints (a specific date window and/or sport type) rather than browsing by location: Faceted filter + browse (1).**
+Once someone knows "HYROX, October, anywhere in Western Europe," panning a map to find pins is slower than a filtered list — this is exactly why both ocrbase and AllTrails (see Visual observations above) pair their map with a list/filter alternative rather than shipping map-only. CLAUDE.md's own feature line already licenses this — "filterable by region, date, and sport type" is filter language layered onto the map, not a separate feature — so building faceted filtering as the map's companion (list toggle or synced panel) is a natural extension, not a scope add.
+
+**Doesn't fit: Personalized/algorithmic recommendation feed (2).**
+It requires exactly what Onrace won't have at launch: behavioral history to rank against. A brand-new product with a hand-seeded catalog has a hard cold-start problem — there's no usage data for months. It also needs an ongoing ranking pipeline the stack doesn't budget for (Supabase + client-side anon key, no ML/backend layer), and it optimizes for passive engagement-time in a product explicitly not designed as a feed or social loop (per CLAUDE.md's "no social features" and free/no-ads scope) — the opposite of a free, no-monetization utility meant to get someone to a decision and out to registration.
+
 ## Race data availability (seeding)
 
 Confirmed sources with structured, scrapable-by-hand event info for manual seeding:
