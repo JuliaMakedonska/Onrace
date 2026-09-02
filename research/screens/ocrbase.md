@@ -1,7 +1,9 @@
-# ocrbase.com — screenshot unavailable
+# ocrbase.com — screenshots captured
 
-No browser automation tool was available in this session (Claude in Chrome was declined; no Playwright install found). This is a gap, not an access restriction — ocrbase.com is a public site with no login wall for browsing.
+Captured via Playwright MCP browser automation, 2026-09-02.
 
-Notes gathered via WebFetch instead, see `../research.md` → Competitor grouping / deep-dive comparison table.
+- `ocrbase-home.png` — homepage. Light theme, minimal nav (Events / Groups / Search). Hero: "Your next race starts here", live count "343 events in 32 countries", two CTAs ("Find my nearest events" / "Search events"). Below: "Upcoming events" and "Recently added" as flat 4-across image-card grids (photo, title, date range, format-tag chips like `DEKA FIT`, `Trail 50K`). Footer has plain-text link lists for "Events by country" (flag emoji + name) and "Events by organizer" (Spartan, Tough Mudder, DEKA, HYROX, etc.) — a cheap, crawlable way to expose facets without JS filtering.
+- `ocrbase-events-list.png` — `/events` list view. Left sidebar filters: Organizer (select), Event Formats (disabled until organizer chosen — dependent filter), Date (text input), Country (select), Event Types (checkboxes: Obstacle Course Racing, Fitness Racing, Trail Running, Hiking, Rucking — matches the taxonomy noted in `../research.md`). Results area has a **List/Map toggle** plus "Add to Calendar" and "Subscribe" buttons (iCal feed of filtered results — notable pattern, lets athletes subscribe to a filtered race calendar instead of checking back).
+- `ocrbase-events-map.png` — same page, Map view. Full-width Mapbox/OSM world map with **clustered pin counts** (e.g., "78" over the US, "52" over Western Europe) instead of one-pin-per-race; standard zoom/fullscreen controls, no visible list-on-side-of-map (map replaces the list rather than sitting beside it).
 
-**To capture later**: homepage map+list toggle, event card layout, filter panel (organizer/format/date/country).
+**Relevance to Onrace**: the List/Map toggle (not split-pane) and clustered counts are a lighter-weight pattern than AllTrails' split view — worth considering for Onrace v1 given a smaller initial dataset (a handful of pins per country wouldn't need clustering yet, but the toggle pattern itself is simple to build). The dependent "select organizer to unlock formats" filter is a UX cost of organizer-first modeling — Onrace's flatter sport_type field avoids that.

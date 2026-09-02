@@ -12,7 +12,7 @@ Living notes for Onrace's discovery phase. Updated 2026-09-02 with a first compe
 
 ## Competitor / reference audit
 
-_Screenshots not yet captured — see `screens/README.md`. Notes below are from live-site review._
+_Screenshots captured 2026-09-02 for the 5 deep-dive competitors below — see `screens/README.md` and the Visual observations section further down. Table notes below are from live-site/WebFetch review._
 
 | Product | What it is | Race discovery | Personal results archive | Notes vs. Onrace |
 |---|---|---|---|---|
@@ -62,7 +62,7 @@ _Screenshots not yet captured — see `screens/README.md`. Notes below are from 
 
 ### Deep-dive comparison — 5 selected competitors
 
-Selected across the three groups above for a closer read: **ocrbase.com**, **RoxConnect** (HARD), **Strava — Events tab**, **Athlinks** (SOFT), **AllTrails** (ASPIRATIONAL). Gathered via WebFetch/WebSearch — no browser-automation tool was available this session (Claude in Chrome was declined, no Playwright install found), so live screenshots weren't captured; placeholders explaining the gap (and, separately, real login walls) are in `screens/`.
+Selected across the three groups above for a closer read: **ocrbase.com**, **RoxConnect** (HARD), **Strava — Events tab**, **Athlinks** (SOFT), **AllTrails** (ASPIRATIONAL). Table below gathered via WebFetch/WebSearch; live screenshots were captured in a follow-up pass (2026-09-02, Playwright MCP) — see the Visual observations section below and `screens/`.
 
 | Axis | ocrbase.com | RoxConnect | Strava (Events tab) | Athlinks | AllTrails |
 |---|---|---|---|---|---|
@@ -89,6 +89,15 @@ Selected across the three groups above for a closer read: **ocrbase.com**, **Rox
 1. Since no competitor requires a source link the way Onrace will, is there a real risk that this becomes submission friction (versus Athlinks' zero-effort auto-claim or a free-text entry model)? Worth validating whether target users actually retain/can find an official results link months after a race, before locking the requirement in as-is.
 2. Every HYROX-specific competitor found (RoxConnect, RoxFit, RoxMatchUp) monetizes via consumer subscription — does Onrace intend to eventually monetize on the same axis, or lean toward Athlinks' B2B-subsidy model (e.g., timing/registration partnerships) instead? The brief says "no monetization plan for now," but this table suggests the category's revenue mostly comes from one of these two structures — worth a deliberate future call rather than leaving it fully open.
 3. Strava entering race discovery for free, bundled into an already-dominant platform, is a distribution threat no small independent product can outspend. Should Onrace's strategy explicitly commit to the hybrid-format-breadth + verified-archive niche rather than ever competing with Strava on general race discovery — and if Strava extends into HYROX/DEKA coverage, does that change the answer?
+
+### Visual observations (screenshot pass, 2026-09-02)
+
+Live browser capture (Playwright MCP) of the 5 deep-dive competitors, closing the gap flagged in the previous pass. Full notes per product are in `screens/*.md`; screenshots in `screens/*.png`. Four findings worth calling out here:
+
+1. **Two real map/list UI patterns exist, not just one.** ocrbase uses a **List/Map toggle** (map replaces the list, clustered pin counts like "78" per region). AllTrails uses a **true split-pane** (scrollable card list synced live to the map viewport, pins show a distance badge instead of a plain marker or count). Toggle is cheaper to build; split-pane is the more polished target. Given Onrace's MVP dataset will start small (hand-curated HYROX/DEKA seed set, not hundreds of pins), clustering isn't needed yet either way — worth deciding List/Map-toggle-first for MVP and treating AllTrails' split-pane as a v2 target, not a launch requirement.
+2. **RoxConnect's dark/black/high-contrast marketing site is a concrete visual match for the brief's "bold & competitive" brand tone** (`../CLAUDE.md`) — this validates that choice against a real product this exact audience already uses, not just a stated preference. Also visually confirmed RoxConnect's pricing ($0 free / $11.99/mo premium), matching the figure already in the deep-dive table.
+3. **Athlinks' staleness is now directly visible, not just inferred.** Its homepage "What's Happening" section is labeled "(COMING SOON)" but still displays a sample countdown card for a 2017 Miami Marathon — live evidence of an unmaintained legacy product, and a concrete example of what to avoid (shipping placeholder/stale content instead of an honest empty state).
+4. **Strava's Events tab is confirmed genuinely unreachable outside the app** — navigating directly to `strava.com/events` redirects to the logged-out marketing homepage, and that homepage's public nav (Activities/Features/Maps/Challenges/Subscription) has no Events entry at all. Reinforces that Strava's race-discovery threat is currently invisible to anyone not already deep in the app — good for near-term competitive risk, but means Onrace can't easily keep tabs on how that feature evolves without a logged-in test account.
 
 ## User research
 
@@ -174,6 +183,6 @@ Confirmed sources with structured, scrapable-by-hand event info for manual seedi
 
 ## Next steps
 
-1. Capture reference screenshots into `screens/` for the products in the table above (needs interactive browser capture — not done in this pass).
+1. ~~Capture reference screenshots into `screens/` for the products in the table above~~ — done 2026-09-02 (see Visual observations above). Remaining gap: account-gated personal views (Athlinks claimed-results history, AllTrails "Completed" log, Strava Events tab) need a logged-in test account to capture.
 2. Low-cost qualitative pass: skim App Store reviews for RoxFit/RoxMatchUp/HYBRD/HybridAF for recurring user complaints, before deciding whether primary interviews are worth the time given the 2-month MVP timeline.
 3. Once taxonomy + differentiation thesis feel solid, move into `../wireframes/`.
