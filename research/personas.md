@@ -88,7 +88,7 @@ Nothing here should be read as confirmed user behavior. Treat these as research-
 
 ## Design implication: the archiving *sub-jobs* fit a different persona than Discovery does
 
-`jtbd.md`'s JTBD × Persona matrix shows Discovery and the concrete archiving sub-jobs don't map to the same persona — stated precisely, since an earlier draft of this note blurred two different matrix rows together:
+`jtbd.md`'s JTBD × Persona matrix shows Discovery and the concrete archiving sub-jobs don't map to the same persona:
 
 - **Discovery (Main Job 1)** maps most strongly to the **Primary** persona (The HYROX-First Hybrid Athlete) — scores a clean, well-sourced 3.
 - **Logging a result with proof, and retrieving it for an elite-race application (Related Jobs 3–4)** map most strongly to the **Secondary** persona (The Qualifying-Time Archivist) — these score 3 for the Archivist, but only a caveated 2, a sourced 1, or `[?]` for the Primary persona. (Notably: retrieving proof for an elite-race application scores a sourced **1** for the Primary persona, since HYROX Worlds qualification is explicitly placement-based, not proof-of-time — see Proof-of-result findings in `research.md`.)

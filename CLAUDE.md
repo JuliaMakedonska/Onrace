@@ -27,7 +27,7 @@ Both recreational and competitive/elite hybrid athletes, roughly equally.
 1. **Discovery** — see the full range of hybrid races across countries, formats, and dates instead of checking each source separately.
 2. **Results archiving** — keep official race results, with source-link proof, in the same place discovery happens.
 
-**Top-3 MVP-core jobs** (important to the primary persona + not already covered by the market — see `research/jtbd.md` → JTBD × Persona matrix):
+**Top-3 MVP-core jobs** (only #1 is cleanly "important to the primary persona"; #2–3 rest on market whitespace + a strongly-evidenced secondary persona instead — see `research/jtbd.md` → JTBD × Persona matrix for why):
 1. Discovery (above).
 2. Log a race result with required source-link proof.
 3. Results archiving combined with discovery, across formats.
