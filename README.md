@@ -10,7 +10,8 @@ This is a living index — update it as folders fill up or their purpose shifts.
 
 | Path | Purpose | Status |
 |---|---|---|
-| [`research/`](./research/research.md) | Discovery notes: competitor/reference audit, user research, findings → decisions | Skeleton only |
+| [`research/`](./research/research.md) | Discovery notes: competitor/reference audit, findings → decisions | Drafted |
+| ↳ People | [`personas.md`](./research/personas.md) (3 personas) + [`jtbd.md`](./research/jtbd.md) (jobs to be done, JTBD × persona matrix) | Drafted from desktop research; primary interviews not started |
 | `research/screens/` | Reference screenshots gathered during research | Empty |
 | [`wireframes/`](./wireframes/README.md) | Low-fidelity layout explorations for core screens | Empty |
 | [`concept/`](./concept/README.md) | Visual direction exploration — moodboards, style tiles | Empty |

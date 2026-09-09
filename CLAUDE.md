@@ -19,6 +19,21 @@ Both recreational and competitive/elite hybrid athletes, roughly equally.
 - Discovery (map + filters) serves casual racers planning their season.
 - The results archive with source links serves anyone who eventually needs official proof of a time (e.g. applying to Boston Marathon).
 
+## People (persona & JTBD summary)
+
+**Primary persona — The HYROX-First Hybrid Athlete.** Trains HYROX as an anchor format with marathons/OCR/functional-fitness as adjacent interests. Wants to find upcoming races across those formats and, more tentatively, keep results from all of them in one place. Full persona set (plus two secondary personas) and sourcing in `research/personas.md`.
+
+**Two main jobs** (co-equal, not one main + related — see `research/jtbd.md`):
+1. **Discovery** — see the full range of hybrid races across countries, formats, and dates instead of checking each source separately.
+2. **Results archiving** — keep official race results, with source-link proof, in the same place discovery happens.
+
+**Top-3 MVP-core jobs** (important to the primary persona + not already covered by the market — see `research/jtbd.md` → JTBD × Persona matrix):
+1. Discovery (above).
+2. Log a race result with required source-link proof.
+3. Results archiving combined with discovery, across formats.
+
+Much of this is still `[?]`-flagged hypothesis, not confirmed by real users — see `research/personas.md` and `research/jtbd.md` for exactly which parts.
+
 ## Geographic scope
 
 Global from day one — races seeded from multiple countries/continents, filters support international regions.
