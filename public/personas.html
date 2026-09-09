@@ -211,7 +211,7 @@
     transition:transform .12s ease;
   }
   .rate-badge:hover{transform:scale(1.1)}
-  .rate-badge:focus-visible{outline:2px solid var(--text); outline-offset:2px}
+  .rate-badge:focus-visible{outline:2px solid currentColor; outline-offset:2px}
   .rate-badge.r3{background:var(--rate-3-dim); color:var(--rate-3)}
   .rate-badge.r2{background:var(--rate-2-dim); color:var(--rate-2)}
   .rate-badge.r1{background:var(--rate-1-dim); color:var(--rate-1)}
@@ -482,6 +482,10 @@
     <span class="section-tag tag-matrix">Matrix</span>
     <h2>JTBD × Persona matrix</h2>
     <p class="lede">Rows = the two main jobs and four related jobs. Columns = the three personas. Each rating badge below is a raw score (1 low – 3 high, or <span class="flag q">[?]</span> where no support exists) — <strong style="color:var(--text)">tap a badge to reveal its <code>research.md</code> reasoning and source</strong>; nothing is a guess.</p>
+
+    <div class="callout">
+      <strong>At a glance, this matrix is mostly amber</strong> — that's expected at the desk-research stage, not a gap to hide. Every <span class="flag q">[?]</span> marks a cell no <code>research.md</code> finding supports yet; tap it to see exactly what's missing and where the next validation pass should look.
+    </div>
 
     <div class="jtbd-matrix">
       <div class="table-scroll">
