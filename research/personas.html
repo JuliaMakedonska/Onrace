@@ -21,6 +21,12 @@
     --patterns-dim:#a78bfa26;
     --unconfirmed:#e6a23c;
     --unconfirmed-dim:#e6a23c22;
+    --rate-3:#4ade80;
+    --rate-3-dim:#4ade8026;
+    --rate-2:#8ea3c9;
+    --rate-2-dim:#8ea3c926;
+    --rate-1:#7d8590;
+    --rate-1-dim:#7d859022;
     --radius:10px;
     --maxw:1080px;
   }
@@ -195,6 +201,43 @@
     margin-right:8px;
   }
   .job-title{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); margin:0 0 10px}
+
+  /* JTBD matrix — rating badges, click-to-expand reasoning, responsive card fallback */
+  .rate-cell{text-align:center; vertical-align:middle}
+  .rate-badge{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border-radius:50%; border:none; cursor:pointer;
+    font-weight:800; font-size:14px; font-family:inherit; padding:0; line-height:1;
+    transition:transform .12s ease;
+  }
+  .rate-badge:hover{transform:scale(1.1)}
+  .rate-badge:focus-visible{outline:2px solid var(--text); outline-offset:2px}
+  .rate-badge.r3{background:var(--rate-3-dim); color:var(--rate-3)}
+  .rate-badge.r2{background:var(--rate-2-dim); color:var(--rate-2)}
+  .rate-badge.r1{background:var(--rate-1-dim); color:var(--rate-1)}
+  .rate-badge.rq{background:var(--unconfirmed-dim); color:var(--unconfirmed); font-family:monospace; font-size:15px}
+  .rate-badge[aria-expanded="true"]{box-shadow:0 0 0 2px currentColor}
+  .rate-detail{margin-top:8px; font-size:12px; color:var(--text-dim); text-align:left; line-height:1.5}
+  .rate-cell .rate-detail{max-width:230px; margin-left:auto; margin-right:auto}
+  .rate-flag-inline{display:inline-block; margin-top:6px}
+
+  .matrix-cards{display:none}
+  .matrix-card{
+    background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px; margin-bottom:14px;
+  }
+  .matrix-card h4{margin:0 0 12px; color:var(--text); font-size:15px; text-transform:none; letter-spacing:0; font-weight:700}
+  .rate-row{margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--border)}
+  .rate-row:last-of-type{border-bottom:none; margin-bottom:0; padding-bottom:0}
+  .rate-row-top{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .rate-row-label{font-size:13px; color:var(--text-dim); font-weight:600}
+  .matrix-card-field{font-size:13px; color:var(--text-dim); margin-top:10px; padding-top:10px; border-top:1px solid var(--border)}
+  .matrix-card-field strong{display:block; color:var(--text); font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px}
+
+  @media (max-width:760px){
+    .jtbd-matrix > .table-scroll{display:none}
+    .jtbd-matrix .matrix-cards{display:block}
+  }
 
   footer{
     max-width:var(--maxw); margin:0 auto; padding:32px 24px 64px; color:var(--text-faint); font-size:13px;
@@ -438,64 +481,122 @@
   <section class="block" id="matrix">
     <span class="section-tag tag-matrix">Matrix</span>
     <h2>JTBD × Persona matrix</h2>
-    <p class="lede">Rows = the two main jobs and four related jobs. Columns = the three personas. Each cell is an importance rating (1 low – 3 high) with its <code>research.md</code> support named inline — where no support exists, the cell reads <span class="flag q">[?]</span>, not a guess.</p>
+    <p class="lede">Rows = the two main jobs and four related jobs. Columns = the three personas. Each rating badge below is a raw score (1 low – 3 high, or <span class="flag q">[?]</span> where no support exists) — <strong style="color:var(--text)">tap a badge to reveal its <code>research.md</code> reasoning and source</strong>; nothing is a guess.</p>
 
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr><th>Job</th><th>Primary — HYROX-First</th><th>Secondary — Archivist</th><th>Secondary — Season Planner</th><th>Feature</th><th>Competitors</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Main Job 1 — Discovery</th>
-            <td><strong style="color:var(--text)">3</strong> — HYROX ecosystem built around this (Sport taxonomy; COMPETITORS HARD tier)</td>
-            <td><span class="flag q">[?]</span> no discovery-behavior evidence; sourced job is proof/credentialing</td>
-            <td><strong style="color:var(--text)">3</strong> — PATTERNS: geography is this persona's defining axis</td>
-            <td>Map + region/date/sport-type filters</td>
-            <td><strong>Partially</strong> — every product covers only a slice; no single source covers the full range</td>
-          </tr>
-          <tr>
-            <th>Main Job 2 — Results archiving</th>
-            <td><strong style="color:var(--text)">2</strong> — inferred from RoxFit/RoxMatchUp existing as combined HYROX-only products (revealed-preference, not survey data). <span class="flag">RE-RESEARCH 09-09: INCONCLUSIVE</span></td>
-            <td><span class="flag q">[?]</span> evidenced to want archiving (see Related 3–4), not the combined product itself</td>
-            <td><span class="flag q">[?]</span> no evidence this persona values archiving at all</td>
-            <td>Discovery + personal results archive as one product</td>
-            <td><strong>Partially</strong> — RoxFit/RoxMatchUp combine both, HYROX-only; none cross-format</td>
-          </tr>
-          <tr>
-            <th>Related 1 — plan by format</th>
-            <td><strong style="color:var(--text)">3</strong> — Sport taxonomy findings; COMPETITORS HARD tier</td>
-            <td><span class="flag q">[?]</span> no data</td>
-            <td><span class="flag q">[?]</span> this persona's axis is location, not format</td>
-            <td>sport_type filter</td>
-            <td><strong>Yes, within HYROX</strong> — RoxConnect/RoxFit/RoxMatchUp</td>
-          </tr>
-          <tr>
-            <th>Related 2 — choose by location</th>
-            <td><span class="flag q">[?]</span> no evidence ties geography-weighting to this persona</td>
-            <td><span class="flag q">[?]</span> no data</td>
-            <td><strong style="color:var(--text)">3</strong> — PATTERNS, direct persona definition <span class="flag q">[?]</span> caveat: borrows CLAUDE.md's scope</td>
-            <td>region/location filter + map view</td>
-            <td><strong>Yes, adjacent</strong> — ocrbase, AllTrails, IRONMAN; none cross-format</td>
-          </tr>
-          <tr>
-            <th>Related 3 — log result with proof</th>
-            <td><strong style="color:var(--text)">2</strong> <span class="flag">weak/general</span> — BENCHMARK reasoning applies broadly, not persona-specific</td>
-            <td><strong style="color:var(--text)">3</strong> — Proof-of-result findings; BENCHMARK</td>
-            <td><span class="flag q">[?]</span> no data</td>
-            <td>Entry form, required <code>official_result_url</code></td>
-            <td><strong>No</strong> — "genuinely novel," nobody uses this trust model</td>
-          </tr>
-          <tr>
-            <th>Related 4 — retrieve proof</th>
-            <td><strong style="color:var(--text)">1</strong> — HYROX Worlds is placement-based, "no analogous proof-of-time flow"</td>
-            <td><strong style="color:var(--text)">3</strong> — Proof-of-result findings; "Trust model validated"</td>
-            <td><span class="flag q">[?]</span> no data</td>
-            <td>Results-archive detail view</td>
-            <td><strong>Partially</strong> — Athlinks/DUV archive results, not via required-link</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="jtbd-matrix">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Job</th><th>Primary — HYROX-First</th><th>Secondary — Archivist</th><th>Secondary — Season Planner</th><th>Feature</th><th>Competitors</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Main Job 1 — Discovery</th>
+              <td class="rate-cell"><button class="rate-badge r3" aria-expanded="false">3</button><div class="rate-detail" hidden>HYROX ecosystem built around this (Sport taxonomy; COMPETITORS HARD tier).</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>No research.md evidence on this persona's discovery behavior; their sourced job is proof/credentialing.</div></td>
+              <td class="rate-cell"><button class="rate-badge r3" aria-expanded="false">3</button><div class="rate-detail" hidden>PATTERNS: geography is this persona's defining axis.</div></td>
+              <td>Map + region/date/sport-type filters</td>
+              <td><strong>Partially</strong> — every product covers only a slice; no single source covers the full range</td>
+            </tr>
+            <tr>
+              <th>Main Job 2 — Results archiving</th>
+              <td class="rate-cell"><button class="rate-badge r2" aria-expanded="false">2</button><span class="flag rate-flag-inline">RE-RESEARCH 09-09</span><div class="rate-detail" hidden>Inferred from RoxFit/RoxMatchUp existing as combined HYROX-only products (revealed-preference, not survey data). A direct 2026-09-09 re-research attempt (App Store reviews, Reddit, Facebook) left this premise inconclusive, not confirmed.</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>Evidenced to want archiving (see Related 3–4), not the combined product itself.</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>No evidence this persona values archiving at all.</div></td>
+              <td>Discovery + personal results archive as one product</td>
+              <td><strong>Partially</strong> — RoxFit/RoxMatchUp combine both, HYROX-only; none cross-format</td>
+            </tr>
+            <tr>
+              <th>Related 1 — plan by format</th>
+              <td class="rate-cell"><button class="rate-badge r3" aria-expanded="false">3</button><div class="rate-detail" hidden>Sport taxonomy findings; COMPETITORS HARD tier.</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>No data.</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>This persona's axis is location, not format.</div></td>
+              <td>sport_type filter</td>
+              <td><strong>Yes, within HYROX</strong> — RoxConnect/RoxFit/RoxMatchUp</td>
+            </tr>
+            <tr>
+              <th>Related 2 — choose by location</th>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>No evidence ties geography-weighting to this persona.</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>No data.</div></td>
+              <td class="rate-cell"><button class="rate-badge r3" aria-expanded="false">3</button><div class="rate-detail" hidden>PATTERNS, direct persona definition. Caveat: borrows CLAUDE.md's scope, not independently gathered evidence.</div></td>
+              <td>region/location filter + map view</td>
+              <td><strong>Yes, adjacent</strong> — ocrbase, AllTrails, IRONMAN; none cross-format</td>
+            </tr>
+            <tr>
+              <th>Related 3 — log result with proof</th>
+              <td class="rate-cell"><button class="rate-badge r2" aria-expanded="false">2</button><div class="rate-detail" hidden>Weak/general — BENCHMARK reasoning applies broadly to any self-reported result, not persona-specific evidence.</div></td>
+              <td class="rate-cell"><button class="rate-badge r3" aria-expanded="false">3</button><div class="rate-detail" hidden>Proof-of-result findings; BENCHMARK.</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>No data.</div></td>
+              <td>Entry form, required <code>official_result_url</code></td>
+              <td><strong>No</strong> — "genuinely novel," nobody uses this trust model</td>
+            </tr>
+            <tr>
+              <th>Related 4 — retrieve proof</th>
+              <td class="rate-cell"><button class="rate-badge r1" aria-expanded="false">1</button><div class="rate-detail" hidden>HYROX Worlds is placement-based — "no analogous proof-of-time flow" — an actual disconfirmation, not just missing evidence.</div></td>
+              <td class="rate-cell"><button class="rate-badge r3" aria-expanded="false">3</button><div class="rate-detail" hidden>Proof-of-result findings; "Trust model validated."</div></td>
+              <td class="rate-cell"><button class="rate-badge rq" aria-expanded="false">?</button><div class="rate-detail" hidden>No data.</div></td>
+              <td>Results-archive detail view</td>
+              <td><strong>Partially</strong> — Athlinks/DUV archive results, not via required-link</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="matrix-cards">
+        <div class="matrix-card">
+          <h4>Main Job 1 — Discovery</h4>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Primary — HYROX-First</span><button class="rate-badge r3" aria-expanded="false">3</button></div><div class="rate-detail" hidden>HYROX ecosystem built around this (Sport taxonomy; COMPETITORS HARD tier).</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Archivist</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>No research.md evidence on this persona's discovery behavior; their sourced job is proof/credentialing.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Season Planner</span><button class="rate-badge r3" aria-expanded="false">3</button></div><div class="rate-detail" hidden>PATTERNS: geography is this persona's defining axis.</div></div>
+          <div class="matrix-card-field"><strong>Feature</strong>Map + region/date/sport-type filters</div>
+          <div class="matrix-card-field"><strong>Competitors</strong>Partially — every product covers only a slice; no single source covers the full range</div>
+        </div>
+
+        <div class="matrix-card">
+          <h4>Main Job 2 — Results archiving</h4>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Primary — HYROX-First <span class="flag rate-flag-inline" style="margin:0 0 0 6px">RE-RESEARCH 09-09</span></span><button class="rate-badge r2" aria-expanded="false">2</button></div><div class="rate-detail" hidden>Inferred from RoxFit/RoxMatchUp existing as combined HYROX-only products (revealed-preference, not survey data). A direct 2026-09-09 re-research attempt (App Store reviews, Reddit, Facebook) left this premise inconclusive, not confirmed.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Archivist</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>Evidenced to want archiving (see Related 3–4), not the combined product itself.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Season Planner</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>No evidence this persona values archiving at all.</div></div>
+          <div class="matrix-card-field"><strong>Feature</strong>Discovery + personal results archive as one product</div>
+          <div class="matrix-card-field"><strong>Competitors</strong>Partially — RoxFit/RoxMatchUp combine both, HYROX-only; none cross-format</div>
+        </div>
+
+        <div class="matrix-card">
+          <h4>Related 1 — plan by format</h4>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Primary — HYROX-First</span><button class="rate-badge r3" aria-expanded="false">3</button></div><div class="rate-detail" hidden>Sport taxonomy findings; COMPETITORS HARD tier.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Archivist</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>No data.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Season Planner</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>This persona's axis is location, not format.</div></div>
+          <div class="matrix-card-field"><strong>Feature</strong>sport_type filter</div>
+          <div class="matrix-card-field"><strong>Competitors</strong>Yes, within HYROX — RoxConnect/RoxFit/RoxMatchUp</div>
+        </div>
+
+        <div class="matrix-card">
+          <h4>Related 2 — choose by location</h4>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Primary — HYROX-First</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>No evidence ties geography-weighting to this persona.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Archivist</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>No data.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Season Planner</span><button class="rate-badge r3" aria-expanded="false">3</button></div><div class="rate-detail" hidden>PATTERNS, direct persona definition. Caveat: borrows CLAUDE.md's scope, not independently gathered evidence.</div></div>
+          <div class="matrix-card-field"><strong>Feature</strong>region/location filter + map view</div>
+          <div class="matrix-card-field"><strong>Competitors</strong>Yes, adjacent — ocrbase, AllTrails, IRONMAN; none cross-format</div>
+        </div>
+
+        <div class="matrix-card">
+          <h4>Related 3 — log result with proof</h4>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Primary — HYROX-First</span><button class="rate-badge r2" aria-expanded="false">2</button></div><div class="rate-detail" hidden>Weak/general — BENCHMARK reasoning applies broadly to any self-reported result, not persona-specific evidence.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Archivist</span><button class="rate-badge r3" aria-expanded="false">3</button></div><div class="rate-detail" hidden>Proof-of-result findings; BENCHMARK.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Season Planner</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>No data.</div></div>
+          <div class="matrix-card-field"><strong>Feature</strong>Entry form, required <code>official_result_url</code></div>
+          <div class="matrix-card-field"><strong>Competitors</strong>No — "genuinely novel," nobody uses this trust model</div>
+        </div>
+
+        <div class="matrix-card">
+          <h4>Related 4 — retrieve proof</h4>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Primary — HYROX-First</span><button class="rate-badge r1" aria-expanded="false">1</button></div><div class="rate-detail" hidden>HYROX Worlds is placement-based — "no analogous proof-of-time flow" — an actual disconfirmation, not just missing evidence.</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Archivist</span><button class="rate-badge r3" aria-expanded="false">3</button></div><div class="rate-detail" hidden>Proof-of-result findings; "Trust model validated."</div></div>
+          <div class="rate-row"><div class="rate-row-top"><span class="rate-row-label">Secondary — Season Planner</span><button class="rate-badge rq" aria-expanded="false">?</button></div><div class="rate-detail" hidden>No data.</div></div>
+          <div class="matrix-card-field"><strong>Feature</strong>Results-archive detail view</div>
+          <div class="matrix-card-field"><strong>Competitors</strong>Partially — Athlinks/DUV archive results, not via required-link</div>
+        </div>
+      </div>
     </div>
 
     <div class="callout">
@@ -587,6 +688,20 @@
   }, {rootMargin: '-35% 0px -55% 0px', threshold: 0});
 
   sections.forEach(function(s){ observer.observe(s); });
+})();
+
+(function(){
+  var badges = Array.prototype.slice.call(document.querySelectorAll('.rate-badge'));
+  badges.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var container = btn.closest('.rate-cell, .rate-row');
+      var detail = container && container.querySelector('.rate-detail');
+      if(!detail) return;
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      detail.hidden = expanded;
+    });
+  });
 })();
 </script>
 
