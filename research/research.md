@@ -127,6 +127,31 @@ For each open gap surfaced by the analysis above, a hypothesis and the section i
 
 _Not started — no interviews or surveys conducted yet._ Given the app ecosystem found above (RoxFit, RoxMatchUp, HybridAF, HYBRD), a cheap next step would be reading their App Store reviews for recurring complaints (a form of low-cost qualitative research) before committing to primary interviews.
 
+## Re-research after personas (2026-09-09)
+
+**Question tested:** a rigor audit of `personas.md`/`jtbd.md` flagged one claim as an unvalidated inference riding on a market-structure finding rather than a reported user want: does a HYROX-anchored hybrid athlete who also competes in marathons/OCR/functional fitness actually want **one tool** that both finds races and logs results across all those formats — or is that just a researcher's inference from "no competitor combines this," dressed up as a job (`jtbd.md` → Main Job 2)? This is the low-cost qualitative pass this document's own "User research" section (above) already proposed — now attempted.
+
+**Method:**
+- Fetched RoxFit's App Store listing (`apps.apple.com/us/app/roxfit/id6476465403`) and read its reviews for marathon/OCR/cross-format complaints or requests.
+- Attempted RoxFit's Google Play listing (`play.google.com/store/apps/details?id=app.roxfit.app`).
+- Fetched RoxMatchUp's App Store listing (`apps.apple.com/ch/app/roxmatchup/id6743001913`).
+- Attempted r/Hyrox searches on Reddit via three different URL forms (`www.reddit.com`, `old.reddit.com`, and the `reddit.com` JSON search endpoint).
+- Attempted to fetch a HYROX Facebook community-group post surfaced by search, titled "which apps do you use to track your HYROX races."
+- Ran several targeted web searches for quoted complaint language ("only HYROX," "wish it tracked my marathon," "no app does this") across both channels.
+
+**What was accessible, and what wasn't:**
+- **Reddit (r/Hyrox): fully inaccessible.** All three URL forms were blocked at the fetch level in this session — Reddit content could only be seen through search-engine summaries, and no summary surfaced actual quoted thread content answering this question either way.
+- **Facebook HYROX community group: inaccessible.** The one directly relevant post found by search returned only its header on fetch — the post/comment content sits behind Facebook's logged-in app shell and didn't render.
+- **RoxFit App Store reviews: accessible**, read in full.
+- **RoxMatchUp App Store reviews: accessible, but empty.** The page reports (in German) that the app "hasn't received enough ratings or reviews yet to display an overview" — there's no review data to check for this app at all.
+- **RoxMatchUp on Google Play: doesn't exist to check** — consistent with the original COMPETITORS finding that it's an iPad-only Bubble.io app.
+
+**What was found:** none of the retrieved RoxFit reviews mention marathon, OCR, triathlon, or cross-format tracking at all — neither as a complaint about HYROX-only scope nor as a feature request. The one substantive complaint found is unrelated to format scope (workouts logging as generic "runs" in Apple Health regardless of activity type; a wish for Garmin/Apple Watch support, not for other race formats).
+
+**One incidental fact worth logging, though it doesn't answer the question:** RoxFit's own App Store description states it supports training programs "for CrossFit, marathons, and obstacle course racing" alongside HYROX. This is about training-*program* breadth, not race-*discovery-or-archiving* breadth, so it doesn't contradict the original COMPETITORS finding that RoxFit's discovery+archive combination is "scoped entirely to HYROX" (that finding was specifically about races/results, not training content). Logged here only so this document doesn't understate RoxFit's actual footprint if it comes up again.
+
+**Conclusion: inconclusive — neither confirmed nor disconfirmed.** The two channels best positioned to actually answer this (Reddit, a relevant Facebook community) were both inaccessible in this pass — the same kind of access restriction already logged for Parkrun in the original COMPETITORS audit. The one channel that was reachable (RoxFit reviews) is silent on the question rather than answering it, and the other candidate app (RoxMatchUp) has no review data at all to draw from. Main Job 2's premise in `jtbd.md` stays exactly as uncertain as it was — this attempt just replaces an untested assumption with a documented, specific, and specifically-blocked one. HYBRD and HybridAF (also named in the original "User research" proposal above) were not yet checked — still open for a future pass.
+
 ## Sport taxonomy findings
 
 - "Hybrid athlete" is a training-methodology term (formally systematized by Alex Viada, *The Hybrid Athlete*, 2013): someone deliberately training strength + endurance together, not casually cross-training. This matches the brief's framing — confirms "hybrid athlete" describes the **audience**, not a race format, exactly as `../CLAUDE.md` already states.

@@ -56,7 +56,8 @@ MVP by **2026-11-01** (2 months from brief date, 2026-09-01).
 ## Data model (high-level)
 
 - `races` (public catalog): name, sport_type, event_date, city/region/country, lat/lng, official_url, registration_url, description.
-- `results` (personal per-user archive, owner-only via RLS): race_name/date/sport_type (optionally linked to a catalog race), finish_time, category, official_result_url (required), notes.
+- `results` (personal per-user archive, owner-only via RLS): race_name/date/sport_type (optionally linked to a catalog race), finish_time, official_result_url (required).
+  - `category` and `notes` — removed — no job maps to this; reconsider if the archiving job proves more central after validation.
 
 ## Repo / infra already set up
 
