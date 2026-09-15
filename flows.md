@@ -8,6 +8,8 @@ Shape convention, held consistent across all three diagrams:
 - `("State: ...")` — a loading/empty/error state, not its own screen
 - `(("..."))` — a terminal: either a success exit or a dead end
 
+Direction is picked per diagram for legibility, not held fixed at `TD`: Discovery below uses `flowchart LR` because "Race browse" is revisited from six different edges (entry, filter change, two dead-end retries, "back," and the no-branch of the final decision) — top-down forced those into crossing arcs; left-to-right resolves them into a clean horizontal fan with no logic change. Log Result and Retrieve Proof stay `TD` — neither revisits a single node anywhere near that often, so top-down already reads cleanly for them.
+
 ## Revision note (detail-level audit)
 
 A pass against a stricter reference pattern found three gaps, now fixed everywhere they applied:
@@ -20,6 +22,10 @@ A pass against a stricter reference pattern found three gaps, now fixed everywhe
    - Flow 3's new `DetailError2` give-up merges into `DeadEnd4` for the same reason — same downstream outcome ("no proof in hand, deadline at risk"), whatever the internal cause.
    - Kept **separate**, on purpose, after considering the merge: Flow 2's `DeadEnd2` (auth failure) vs. `DeadEnd3` (save failure, now also covering the validation-error give-up) — different root causes with different real fixes (an auth problem vs. a forms/data problem). And Flow 3's `DeadEnd4` (can't reach the archive at all) vs. `DeadEnd5` (reached it, but the evidence itself is dead) — the second is a categorically different, more specific gap (points at the missing edit/re-link feature already flagged in the Navigation section's "Deep: none yet"), not a rewording of the first.
 
+## Revision note (Discovery layout)
+
+The Discovery diagram's top-down layout was visually tangled — arrows crossing around "Race browse," and the three retry/give-up paths converging on one dead-end node from awkward angles. Rendered four candidates (`TD`/`LR` × merged/split dead end) and compared them directly before choosing: switching only the direction to `flowchart LR`, with the dead-end node left exactly as merged, resolved both problems — same nodes, same edges, same single dead-end outcome, just laid out left-to-right instead of top-down. Splitting the dead end into three nodes was rejected even though it also read cleanly, because it would have reversed the merge decision from the audit above for a purely cosmetic reason, duplicating one outcome into three identical-meaning circles.
+
 ---
 
 ## Main Job 1 — Discovery (Primary persona — The HYROX-First Hybrid Athlete)
@@ -27,7 +33,7 @@ A pass against a stricter reference pattern found three gaps, now fixed everywhe
 > "See the full range of options — across countries, formats, and dates — instead of checking each source separately... so that I can compare them in one place." (`jtbd.md`)
 
 ```mermaid
-flowchart TD
+flowchart LR
     Start(("App opens")) --> Browse["Race browse"]
     Browse --> Loading("Loading: fetching races")
     Loading --> HasResults{"Any races match current filters?"}
