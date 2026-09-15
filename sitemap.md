@@ -166,4 +166,45 @@ Sign in / Sign up  [ORPHAN]
 
 ---
 
+## Navigation
+
+Built only from the screens already named in the Screens section above — no new screen is introduced here, only how the existing ones are entered and reached.
+
+### 1. Global navigation — 3 items
+
+`jtbd.md`'s own framing ("Why two main jobs, not one main + related") justifies co-equal top-level status by *trigger*, not by feature symmetry: Discovery is triggered by planning ahead, Archiving by "the opposite moment — after competing." That same trigger-difference logic, applied one level down, also separates the two Archive-cluster sub-jobs from each other — Related Job 3 (log right after finishing a race) and Related Job 4 (retrieve proof later, on demand) are triggered at different moments too. That's the basis for 3 global items, not 2 or 4:
+
+| Item → screen | Job behind it | Persona |
+|---|---|---|
+| **Discover** → Race browse | Main Job 1 — Discovery: "see the full range of options... instead of checking each source separately" (`jtbd.md`) | Primary (core) + Secondary — Season Planner |
+| **Log Result** → Log result | Related Job 3 — "log the result along with where it came from... proof ready without having to redo the work later," triggered right after finishing a race (`jtbd.md`) | Secondary — Archivist (core); Primary only weak/general (matrix: "2, weak/general") |
+| **My Results** → Results list | Related Job 4 — "pull that proof up quickly" when an elite race asks for it, triggered later, on demand (`jtbd.md`) | Secondary — Archivist (core); Primary weak/caveated only (Main Job 2 = 2) |
+
+**Deliberately excluded from global nav:** Sign in/Sign up. It's the one `[ORPHAN]` screen from Step 2 — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of 3–5 precious nav items on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It surfaces contextually instead (see below).
+
+### 2. Depth to the primary persona's core job
+
+**Target:** Main Job 1 — Discovery, for the Primary persona (The HYROX-First Hybrid Athlete) — reaching a race worth entering.
+
+- **App launch → Race browse: 0 taps.** Discover is set as the default/home tab, not just a nav item — justified because `jtbd.md`'s own conclusion names Main Job 1 as the one job in the whole matrix with "no caveats needed... satisfies both halves of the filter without qualification" (clean primary-persona importance + the strongest market gap). The one clean job gets the one screen that costs nothing to reach.
+- **Race browse → Race detail: 1 tap.** Tapping a race card/pin is where the job's own "so that I can compare them in one place" (`jtbd.md`) actually resolves into a specific decision (view official_url/registration_url and decide to enter).
+
+**Total: 1 tap** to go from opening the app to viewing a specific race worth entering — under the 3-tap ceiling, so no restructuring is needed. The tradeoff of defaulting to Discover: **Log Result** and **My Results** are never zero-tap — the Archivist persona always spends at least 1 tap to reach their core screens, and an unauthenticated user attempting either immediately meets the Sign in/Sign up gate (see below). That's an intentional bias toward the persona and job with the cleanest evidence (`jtbd.md`'s Tier 1 pick), at a small, bounded cost to the two jobs justified on weaker, Tier-2 grounds.
+
+### 3. Global / contextual / deep
+
+- **Global (always visible — the 3-item nav bar):**
+  - Discover (Race browse)
+  - Log Result
+  - My Results (Results list)
+
+- **Contextual (appears in-flow, reached by drilling into something, not from the nav bar):**
+  - **Race detail** — opened from within Race browse (tap a card/pin); no independent entry point.
+  - **Result detail (proof view)** — opened from within My Results (tap a logged entry); Secondary–Archivist only, per Step 2's persona note.
+  - **Sign in / Sign up** — surfaces only when an unauthenticated person taps Log Result or My Results (both owner-only per `../CLAUDE.md`'s RLS model); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global, despite being reachable from two of the three nav items.
+
+- **Deep (rare, buried actions):** **None yet.** Every screen named in Step 2 is either global or one tap from a global item — there's no third tier in the current screen set. Rare actions that would naturally land here later (editing or deleting a logged result, signing out, account settings) aren't in Step 2's screen list, so they're not fabricated here just to fill this bucket — this stays empty honestly rather than invented.
+
+---
+
 *Depth kept minimal deliberately — additional levels (e.g. within Log result, within Race detail) are Step 3, not this pass.*
