@@ -92,4 +92,78 @@ Not included above because no job in `jtbd.md` produces or requires them directl
 
 ---
 
-*Screens and navigation intentionally not proposed yet — next step per the working method.*
+## Screens
+
+Grouped by the two entity clusters from the Entities section above (Discovery = Race listing + Search/filter criteria; Archive = Logged result + Source-link proof), not by generic "site sections." Every screen is tagged with the `jtbd.md` job it serves; `[ORPHAN]` marks a screen with no job behind it. Loading/empty/error states are noted inline as *states*, not listed as their own screens.
+
+```
+Onrace — entry point (Main Job 2 — jtbd.md: "I want that in one product, so that I'm
+│                      not maintaining two separate habits or tools"
+│                      — CAVEAT: scores only a caveated 2 for Primary, `[?]`
+│                      unscored for the Archivist, per jtbd.md's JTBD × Persona matrix.
+│                      Included because the entry point is where "one product" is
+│                      actually experienced, not because this job is strongly evidenced.)
+│                      → Primary: weak/inferred. Secondary (Archivist): unconfirmed [?].
+│                      Secondary (Season Planner): not evidenced for this screen.
+│
+├── Discovery  [object: Race listing + Search/filter criteria]
+│   │
+│   ├── Race browse (map + list)
+│   │     Job: Main Job 1 — "see the full range of options — across countries,
+│   │     formats, and dates — instead of checking each source separately"
+│   │     (jtbd.md); + Related Job 1 (plan season by format); + Related Job 2
+│   │     (choose races by location).
+│   │     Persona: Primary (core) + Secondary — Season Planner (core, Related Job 2).
+│   │     States (not separate screens): loading · no races match current
+│   │     filters · fetch error.
+│   │
+│   └── Race detail
+│         Job: Main Job 1 (jtbd.md: "...so that I can compare them in one
+│         place" — viewing one listing's official_url/registration_url/
+│         description is how that comparison actually happens).
+│         Persona: Primary + Secondary — Season Planner.
+│
+└── My Results (Archive)  [object: Logged result + Source-link proof]
+    │
+    ├── Results list ("my archive")
+    │     Job: Related Job 4 — retrieve proof for an elite-race application
+    │     (jtbd.md); + Main Job 2 (caveated, see entry-point note above).
+    │     Persona: Secondary — Archivist (core, Related Job 4 scores a clean 3).
+    │     Primary: weak/caveated only (Main Job 2 = 2 for Primary).
+    │
+    ├── Log result
+    │     Job: Related Job 3 — "log the result along with where it came from,
+    │     so that I have proof ready without having to redo the work later"
+    │     (jtbd.md).
+    │     Persona: Secondary — Archivist (core, scores 3). Primary: weak/general
+    │     only — jtbd.md's matrix explicitly labels the Primary-persona cell here
+    │     "2 (weak/general)," i.e. generic trust-mechanism reasoning, not
+    │     persona-specific evidence.
+    │     States (not separate screens): empty form · submit error (e.g.
+    │     unreachable source link).
+    │
+    └── Result detail (proof view)
+          Job: Related Job 4 — "pull that proof up quickly" (jtbd.md).
+          Persona: Secondary — Archivist ONLY. jtbd.md scores this job a
+          sourced **1** for the Primary persona — an actual disconfirmation,
+          not just an absence of evidence — because HYROX Worlds qualification
+          is placement-based, not proof-of-time. Do not design this screen
+          around the Primary persona's framing (see personas.md/jtbd.md's own
+          design-implication note).
+
+Sign in / Sign up  [ORPHAN]
+  No job in jtbd.md calls for account creation or login. Included here only
+  because "Logged result" is owner-only per ../CLAUDE.md's data model, and
+  the underlying "Athlete account" entity itself was already flagged `[?]`
+  under question in this file's Entities section — this screen inherits that
+  same lack of sourcing. Needed for both personas technically (to make
+  ownership work), but not sourced to any stated job.
+```
+
+**Jobs with no screen of their own:** the Emotional job ("recognized as what I actually am — a hybrid athlete") and the Social job ("the proof itself to stand on its own") don't produce distinct screens — per `jtbd.md`, they describe how existing screens should read (tone/framing on Discovery; the self-reported-source-linked display convention on Result detail), not separate destinations. Not listed as screens or orphans for that reason.
+
+**Not included:** a screen for the Results map idea flagged under Entities → Under question — it stays unbuilt until it's traced to a job.
+
+---
+
+*Depth kept minimal deliberately — additional levels (e.g. within Log result, within Race detail) are Step 3, not this pass.*
