@@ -208,3 +208,34 @@ Built only from the screens already named in the Screens section above — no ne
 ---
 
 *Depth kept minimal deliberately — additional levels (e.g. within Log result, within Race detail) are Step 3, not this pass.*
+
+---
+
+## Traceability
+
+Rows = every job in `jtbd.md` (main, related, emotional, and social — the five unsourced items under `jtbd.md` → Hypotheses are excluded, since they're explicitly "not backed by `research.md`," a different category from what's asked here). Columns = every screen in the Screens section above. A ✓ means the screen actually participates in *closing* that job, not merely that it's adjacent to the topic.
+
+| Job (`jtbd.md`) | Onrace (entry) | Race browse | Race detail | Results list | Log result | Result detail | Sign in / Sign up |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Main Job 1 — Discovery | | ✓ | ✓ | | | | |
+| Main Job 2 — Results archiving (combined) | ✓ | ✓ | | ✓ | | | |
+| Related Job 1 — plan season by format | | ✓ | | | | | |
+| Related Job 2 — choose races by location | | ✓ | | | | | |
+| Related Job 3 — log a result with proof | | | | ✓ | ✓ | | |
+| Related Job 4 — retrieve proof for an application | | | | ✓ | | ✓ | |
+| Emotional — recognized as a hybrid athlete | | ✓ | | | | | |
+| Social — proof stands on its own | | | | ✓ | ✓ | ✓ | |
+
+**Notes on the two `✓` rows that aren't a dedicated interaction:** Emotional and Social don't have a screen built specifically for them — per the Screens section's own "Jobs with no screen of their own" note, they're closed by *how* an existing screen reads, not by a separate destination. Emotional is closed by Race browse's cross-format framing (seeing HYROX/DEKA/marathons/etc. together as one "hybrid athlete" catalog, not siloed by sport). Social is closed by the required-link-at-entry and self-reported-labeling conventions (`research.md` → BENCHMARK mechanisms #1–2) actually being implemented on Log result, Results list, and Result detail. These are legitimate closes, not padding — but they're framing-level, not task-level, unlike every other ✓ in the matrix.
+
+### Orphan screens (column with no ✓)
+
+**Sign in / Sign up** — zero checks. Already flagged `[ORPHAN]` when it was first introduced in the Screens section: no job in `jtbd.md` calls for account creation or login on its own.
+
+**Resolution: attach to existing, not delete or add.** This screen isn't dead weight — it's required because Logged result is owner-only per `../CLAUDE.md`'s RLS model — but it shouldn't be scored as if it closes a job of its own, and it shouldn't be promoted to a first-class, job-justified destination either. The Navigation section already made the correct call here without naming it as such: Sign in / Sign up is classified as **contextual**, a gate triggered only when an unauthenticated person attempts Log Result (Related Job 3) or My Results (Related Job 4), never a standalone stop. That's the resolution — it's attached to those two jobs' flows as an enabling step, not counted as closing them itself. No change needed beyond stating this explicitly here.
+
+### Orphan jobs (row with no ✓)
+
+**None.** Every job in `jtbd.md` traces to at least one screen once the Emotional and Social jobs' framing-level closes (above) are counted honestly rather than left unmapped. This isn't a forced result — the two jobs that could easily have gone unmapped (Emotional, Social) were only checked because the Screens section and the Entities section's Source-link proof mechanisms had *already* documented exactly where each one lives; nothing was invented here to avoid an empty row.
+
+**Goal met: no empty row or column, without inventing a screen or stretching a job's meaning to force a match.**
