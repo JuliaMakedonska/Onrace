@@ -45,6 +45,14 @@ A fresh-session review of the prior pass's *reasoning*, not just its diagrams, c
 
 (A third correction — relocating rather than deleting the "Onrace — entry" screen's underlying rationale — applies to `sitemap.md` only; see that file's Navigation § 1.)
 
+## Revision note (success-endpoint precision, 2026-09-17)
+
+Audited every flow's `Success` endpoint against one question: is it a verifiable condition, or a vague destination like "lands on X screen"? Found two gaps and one asymmetry worth stating outright:
+
+1. **Flow 2 (Log Result) had no `Success` terminal at all** — `SubmitOK`'s "yes" edge just landed on the `ResultsList` screen node, exactly the "lands on X screen" vagueness this check was looking for. Added an explicit `Success2` terminal stating the actual condition: a `results` row now exists for this user with `official_result_url` populated (the one field `../CLAUDE.md` requires), plus the other fields per this flow's `[?]`-flagged check.
+2. **Flow 3 (Retrieve Proof)'s `Success3` said "ready to submit to the elite race"** — not verifiable by Onrace, since whether a given application accepts the proof isn't knowable here. Tightened to the condition the flow actually confirms: this specific row's `official_result_url` opened successfully just now.
+3. **Flow 1 (Discovery)'s `Success` was already reasonably specific** (names the exact field, `registration_url`), but its prose now says explicitly what it lacks compared to the other two: an Onrace-side data-model record. Opening `registration_url` changes nothing in Onrace's own data — completion happens entirely on an external site, outside Onrace's visibility, unlike the other two endpoints, which are both about a `results` row's confirmed state.
+
 ---
 
 ## Main Job 1 — Discovery (Primary persona — The HYROX-First Hybrid Athlete)
@@ -74,7 +82,7 @@ flowchart LR
     Detail -->|"back / compares another race"| Browse
     Detail --> WantsToEnter{"Worth entering?"}
     WantsToEnter -->|"yes"| RegLinkCheck{"Registration link opens?"}
-    RegLinkCheck -->|"yes"| Success(("Success: opens registration_url — leaves Onrace to register"))
+    RegLinkCheck -->|"yes"| Success(("Success: this race's registration_url opened — Onrace records nothing further"))
     RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link")
     RegLinkError -->|"back to race detail, tries again later"| Detail
     RegLinkError -->|"gives up"| DeadEnd6(("Dead end: decided to enter, but the registration link is broken"))
@@ -97,7 +105,7 @@ flowchart LR
 - Error: couldn't open registration link (added — lighter-weight than the source-link failure in the Retrieve Proof flow, per the data-provenance reasoning above; no retry loop — a direct back-edge to Race detail, or a distinct give-up outcome, `DeadEnd6`, kept separate from `DeadEnd1`).
 
 **Endpoints:**
-- **Success:** opens the race's `registration_url` externally and leaves Onrace to register — per `../CLAUDE.md`, Onrace only ever links out, it never handles registration itself.
+- **Success:** the race's `registration_url` has opened in the browser — that's the entire condition. Per `../CLAUDE.md`, Onrace only ever links out, never handles registration, so no Onrace-side record (no row, no flag, nothing in the data model) is created or changed by this. Unlike the other two flows' success endpoints, this one isn't verifiable from Onrace's own data — the job's completion happens entirely on the registration site, outside Onrace's visibility.
 - **Dead ends:** two, kept distinct on purpose.
   - *Leaves without deciding on a race* (`DeadEnd1`) — one merged outcome reachable from three different causes (gives up on an empty result, gives up after a failed list fetch, gives up after a failed detail fetch). All three leave the primary persona in the same place: no race decided on, job unresolved. Kept as a single node rather than three, since the *cause* is already visible from which edge leads in, and the *outcome* genuinely doesn't differ.
   - *Decided to enter, but the registration link is broken* (`DeadEnd6`) — kept separate from `DeadEnd1` on purpose, even though both are give-up outcomes. This person already made the decision the job's own "so that I can compare them in one place" resolves into — the failure here is a broken external link discovered *after* deciding, not indecision or an earlier fetch failure. Folding it into `DeadEnd1` would misrepresent what actually happened.
@@ -137,7 +145,7 @@ flowchart TD
     SubmitError --> SubmitRetry{"Retry?"}
     SubmitRetry -->|"yes"| LogForm
     SubmitRetry -->|"no"| DeadEnd3
-    SubmitOK -->|"yes"| ResultsList["Results list (my archive)"]
+    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated (required)"))
 ```
 
 **Decisions:**
@@ -160,7 +168,7 @@ flowchart TD
 - Error: link unreachable / submission failed.
 
 **Endpoints:**
-- **Success:** the result lands in Results list ("my archive") — the proof is now stored for later retrieval (feeds directly into the next flow below).
+- **Success:** tightened from "lands in Results list" (a screen, not a condition) to the actual verifiable state: a new row now exists in `results`, owned by this user via RLS, with `official_result_url` populated — the one field `../CLAUDE.md`'s data model explicitly requires — and, per this flow's `[?]`-flagged validation, `race_name`, `date`, `sport_type`, and `finish_time` populated too (though that requirement is only assumed here, not confirmed at the schema level — see the `[?]` on `HasOtherRequired` above). That row is what now appears on Results list ("my archive") and is what the next flow below retrieves.
 - **Dead ends:** two, kept distinct on purpose.
   - *Leaves without logging the result* — reachable from a failed sign-in (after exhausting retries) or from closing the Sign in / Sign up screen without attempting at all (added — previously the only modeled exit from that screen was through a failed attempt). Root cause: never got signed in.
   - *No result saved, proof lost for later* — reachable from the source-link validation failing, the other-required-fields validation failing `[?]`, or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
@@ -201,7 +209,7 @@ flowchart TD
     DetailRetry2 -->|"yes"| DetailLoading2
     DetailRetry2 -->|"no"| DeadEnd4
     ResultDetail --> LinkWorks{"Source link still opens?"}
-    LinkWorks -->|"yes"| Success3(("Success: official proof retrieved, ready to submit to the elite race"))
+    LinkWorks -->|"yes"| Success3(("Success: this results row's official_result_url opened successfully, just now"))
     LinkWorks -->|"no"| LinkError("Error: source link unreachable")
     LinkError --> LinkRetry{"Try again?"}
     LinkRetry -->|"yes"| ResultDetail
@@ -229,7 +237,7 @@ flowchart TD
 - Error: source link unreachable.
 
 **Endpoints:**
-- **Success:** proof is retrieved and ready to submit to the elite race. What happens after that — whether the race accepts it — is outside Onrace's scope by design: Onrace's job ends at retrieval, since the product's trust model is "self-reported, source-linked," not "Onrace verifies" (`research.md` → CONCLUSIONS gap 4).
+- **Success:** tightened from "ready to submit to the elite race" — not something Onrace can actually verify, since whether a specific application accepts the proof isn't knowable from here — to the condition the flow itself confirms: the selected `results` row's `official_result_url`, the required proof link per `../CLAUDE.md`'s Result trust model, opened successfully in this session. What happens after that — whether the race accepts it — is outside Onrace's scope by design: Onrace's job ends at confirming the link is live, since the product's trust model is "self-reported, source-linked," not "Onrace verifies" (`research.md` → CONCLUSIONS gap 4).
 - **Dead ends:** two, kept distinct on purpose.
   - *Leaves without proof, application deadline at risk* — one merged outcome reachable from five causes: a failed sign-in, closing the Sign in / Sign up screen without attempting at all (added), an empty archive (nothing was ever logged), a failed fetch of the logged-results list (added), or a failed fetch of a specific result's details. All five share the same downstream reality — no proof in hand, right when it's needed — so they're one node, not five.
   - *Proof inaccessible, nothing in-app to correct it* — kept separate from the node above on purpose. This one is reached only after everything else worked (signed in, archive has entries, the specific result loaded fine) and the source link itself turns out to be dead even after a retry. That's a materially different, more specific problem — the evidence itself has rotted — pointing at a real, currently-missing product gap (an edit/re-link flow for a logged result), which ties directly to the Navigation section's honest "Deep: none yet" note.
