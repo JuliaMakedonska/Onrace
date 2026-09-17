@@ -36,6 +36,15 @@ A rigorous critique against this file and `sitemap.md` found further gaps, fixed
 4. **Flow 1's `registration_url` had no failure handling**, unlike `official_result_url`'s treatment in Flow 3. Added a lightweight, lower-stakes check (`RegLinkCheck` → error → back-edge to Race detail) — deliberately without a `Retry?` diamond, since this is an outbound link to someone else's site, not Onrace's own trust mechanism.
 5. **`DeadEnd5`** (source link dead even after retry, Flow 3) **is left as-is by decision** — see the note at that dead end below. Closing it would require an edit/re-link capability not backed by any job in `jtbd.md`; logged as a post-MVP backlog item rather than built speculatively.
 
+## Revision note (fresh-session corrections, 2026-09-17)
+
+A fresh-session review of the prior pass's *reasoning*, not just its diagrams, caught two mischaracterizations:
+
+1. **`registration_url`'s lighter treatment was justified on the wrong grounds.** The prior note framed it as "not Onrace's own trust mechanism" — true, but not the actual reason for lighter handling. The real reason is data provenance: `registration_url` is Onrace's own curated, manually-seeded catalog data (`../CLAUDE.md` → Race data), so it's low rot risk; `official_result_url` is an arbitrary user-submitted link, high rot risk. Reasoning corrected in Flow 1's notes below. Separately, the broken-registration-link give-up path now has its own distinct terminal, `DeadEnd6`, rather than any risk of reading as the same outcome as `DeadEnd1` — this person already decided the race was worth entering; the failure is an external link rotting *after* that decision, not indecision, and merging the two would misrepresent what happened.
+2. **Flow 2's required-field check over-generalized.** The prior pass folded `official_result_url` and `race_name`/`date`/`sport_type`/`finish_time` into one "all required fields filled in?" check with one generic error label. That flattened a real distinction: `../CLAUDE.md`'s data model only explicitly marks `official_result_url` as required — the other fields are just listed, not stated as required. Split back into two checks: the original source-link check (unflagged, since it's actually sourced) and a second, explicitly `[?]`-flagged check for the other fields, each with its own specific error label instead of one generic "required fields missing" message.
+
+(A third correction — relocating rather than deleting the "Onrace — entry" screen's underlying rationale — applies to `sitemap.md` only; see that file's Navigation § 1.)
+
 ---
 
 ## Main Job 1 — Discovery (Primary persona — The HYROX-First Hybrid Athlete)
@@ -67,7 +76,8 @@ flowchart LR
     WantsToEnter -->|"yes"| RegLinkCheck{"Registration link opens?"}
     RegLinkCheck -->|"yes"| Success(("Success: opens registration_url — leaves Onrace to register"))
     RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link")
-    RegLinkError -->|"back to race detail"| Detail
+    RegLinkError -->|"back to race detail, tries again later"| Detail
+    RegLinkError -->|"gives up"| DeadEnd6(("Dead end: decided to enter, but the registration link is broken"))
     WantsToEnter -->|"no"| Browse
 ```
 
@@ -76,7 +86,7 @@ flowchart LR
 - *Retry?* (after a race-list fetch fails) — genuine choice between trying the same fetch again or giving up.
 - *Retry?* (after a race-detail fetch fails) — same choice, one level down, for opening a specific race.
 - *Worth entering?* — on Race detail, this is where the job's own "so that I can compare them in one place" actually resolves into a decision.
-- *Registration link opens?* (added — Race detail previously assumed opening `registration_url` always succeeds) — checked at lighter weight than the Retrieve Proof flow's equivalent check on `official_result_url`: no retry diamond, just a direct back-edge to Race detail, since this is an outbound link to someone else's registration page, not Onrace's own trust mechanism.
+- *Registration link opens?* (added — Race detail previously assumed opening `registration_url` always succeeds) — checked at lighter weight than the Retrieve Proof flow's equivalent check on `official_result_url`: no retry diamond, just two direct edges (mirroring how `Empty`/`Empty2` are already handled elsewhere in this document — a legitimate outcome gets two edges, not a formal retry loop). The lighter weight is about data provenance, not job/trust-mechanism importance: `registration_url` is Onrace's own curated, manually-seeded catalog data (`../CLAUDE.md` → Race data: "manually curated/seeded, no scraping in MVP"), so Onrace controls when it's entered and it's low rot risk. `official_result_url` is an arbitrary link a user pastes in themselves, with no curation at all — genuinely higher rot risk, which is why it gets the heavier, retry-capable treatment in Flow 3.
 
 **States:**
 - Loading: fetching races (the list).
@@ -84,11 +94,13 @@ flowchart LR
 - Empty: no races match the current filters.
 - Error: could not load races (list fetch/connection failure).
 - Error: could not load race details (detail fetch/connection failure).
-- Error: couldn't open registration link (added — lighter-weight than the source-link failure in the Retrieve Proof flow; no retry loop, just a back-edge to Race detail).
+- Error: couldn't open registration link (added — lighter-weight than the source-link failure in the Retrieve Proof flow, per the data-provenance reasoning above; no retry loop — a direct back-edge to Race detail, or a distinct give-up outcome, `DeadEnd6`, kept separate from `DeadEnd1`).
 
 **Endpoints:**
 - **Success:** opens the race's `registration_url` externally and leaves Onrace to register — per `../CLAUDE.md`, Onrace only ever links out, it never handles registration itself.
-- **Dead end:** one merged outcome — "leaves without deciding on a race" — reachable from three different causes (gives up on an empty result, gives up after a failed list fetch, gives up after a failed detail fetch). All three leave the primary persona in the same place: no race decided on, job unresolved. Kept as a single node rather than three, since the *cause* is already visible from which edge leads in, and the *outcome* genuinely doesn't differ.
+- **Dead ends:** two, kept distinct on purpose.
+  - *Leaves without deciding on a race* (`DeadEnd1`) — one merged outcome reachable from three different causes (gives up on an empty result, gives up after a failed list fetch, gives up after a failed detail fetch). All three leave the primary persona in the same place: no race decided on, job unresolved. Kept as a single node rather than three, since the *cause* is already visible from which edge leads in, and the *outcome* genuinely doesn't differ.
+  - *Decided to enter, but the registration link is broken* (`DeadEnd6`) — kept separate from `DeadEnd1` on purpose, even though both are give-up outcomes. This person already made the decision the job's own "so that I can compare them in one place" resolves into — the failure here is a broken external link discovered *after* deciding, not indecision or an earlier fetch failure. Folding it into `DeadEnd1` would misrepresent what actually happened.
 
 ---
 
@@ -109,12 +121,17 @@ flowchart TD
     AuthRetry -->|"no"| DeadEnd2(("Dead end: leaves without logging the result"))
     AuthResult -->|"yes"| LogForm["Log result"]
     AuthCheck -->|"yes"| LogForm
-    LogForm --> HasRequired{"All required fields filled in?"}
-    HasRequired -->|"no"| ValidationError("Error: required field(s) missing")
+    LogForm --> HasLink{"official_result_url filled in?"}
+    HasLink -->|"no"| ValidationError("Error: source link is required")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}
     ValidationRetry -->|"yes"| LogForm
     ValidationRetry -->|"no"| DeadEnd3(("Dead end: no result saved, proof lost for later"))
-    HasRequired -->|"yes"| Submitting("Loading: saving result")
+    HasLink -->|"yes"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?]"}
+    HasOtherRequired -->|"no"| OtherFieldError("Error: required field missing (race_name / date / sport_type / finish_time) [?]")
+    OtherFieldError --> OtherFieldRetry{"Fix and resubmit?"}
+    OtherFieldRetry -->|"yes"| LogForm
+    OtherFieldRetry -->|"no"| DeadEnd3
+    HasOtherRequired -->|"yes"| Submitting("Loading: saving result")
     Submitting --> SubmitOK{"Submission succeeded?"}
     SubmitOK -->|"no — link unreachable"| SubmitError("Error: link unreachable, submission failed")
     SubmitError --> SubmitRetry{"Retry?"}
@@ -127,15 +144,18 @@ flowchart TD
 - *Signed in?* — Log Result is owner-only per `../CLAUDE.md`'s RLS model; gates into Sign in / Sign up if not, per the Navigation section's contextual-gate design.
 - *Sign-in succeeded?*
 - *Retry?* (after a failed sign-in) — previously just an edge label; now an explicit diamond, same as every other error in this flow.
-- *All required fields filled in?* (generalized from *official_result_url filled in?*) — checks every required field on `results` per `../CLAUDE.md`'s data model (race_name, date, sport_type, finish_time, official_result_url), not just the source link in isolation. The source link's requiredness is still the trust-model-critical one (`../CLAUDE.md` → Result trust model), but the other fields are just as required by the schema and previously had no modeled validation at all — a blank `finish_time` would have silently surfaced as "link unreachable" via `SubmitError`, which was never accurate.
-- *Fix and resubmit?* (after a required-fields validation failure) — previously this error only looped back to the form with no give-up path at all; now it's a real choice, same as the other two errors in this flow.
+- *official_result_url filled in?* — enforces the required-source-link trust model (`../CLAUDE.md` → Result trust model) before the form can be submitted at all. This is the one field `../CLAUDE.md`'s data model explicitly marks "(required)."
+- *race_name/date/sport_type/finish_time all filled in?* `[?]` — added as a second, separate check, deliberately flagged. Unlike `official_result_url`, `../CLAUDE.md`'s data model doesn't actually say these fields are required — it just lists them (`race_name/date/sport_type ..., finish_time, official_result_url (required)`). Modeled here as an assumed requirement (a result with no finish time or date is hard to imagine as useful) and flagged `[?]`, per this document set's own convention for assumed-not-sourced parts (see `sitemap.md`'s Entities section), not presented as settled fact. Previously this had no modeled validation at all — a blank `finish_time` would have silently surfaced as "link unreachable" via `SubmitError`, which was never accurate.
+- *Fix and resubmit?* (after the source-link validation fails) — previously this error only looped back to the form with no give-up path at all; now it's a real choice, same as the other errors in this flow.
+- *Fix and resubmit?* (after the other-required-fields validation fails) `[?]` — same retry-or-give-up choice, one level down; inherits the same `[?]` status as the check above it.
 - *Submission succeeded?*
 - *Retry?* (after a failed submission)
 
 **States:**
 - Loading: signing in (previously missing — sign-in was drawn as instant even though form submission, an equivalent network call, already had its own loading state).
 - Error: sign-in failed.
-- Error: required field(s) missing (client-side validation, before submission — covers race_name, date, sport_type, finish_time, and official_result_url; generalized from checking only the source link).
+- Error: source link is required (client-side validation, before submission).
+- Error: required field missing (race_name / date / sport_type / finish_time) `[?]` (client-side validation, before submission — flagged, since these aren't explicitly marked required in `../CLAUDE.md`'s data model the way `official_result_url` is).
 - Loading: saving result.
 - Error: link unreachable / submission failed.
 
@@ -143,7 +163,7 @@ flowchart TD
 - **Success:** the result lands in Results list ("my archive") — the proof is now stored for later retrieval (feeds directly into the next flow below).
 - **Dead ends:** two, kept distinct on purpose.
   - *Leaves without logging the result* — reachable from a failed sign-in (after exhausting retries) or from closing the Sign in / Sign up screen without attempting at all (added — previously the only modeled exit from that screen was through a failed attempt). Root cause: never got signed in.
-  - *No result saved, proof lost for later* — reachable from either the required-fields validation failing or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
+  - *No result saved, proof lost for later* — reachable from the source-link validation failing, the other-required-fields validation failing `[?]`, or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
 
 ---
 

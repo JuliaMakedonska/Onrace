@@ -94,12 +94,13 @@ Not included above because no job in `jtbd.md` produces or requires them directl
 
 ## Screens
 
-Grouped by the two entity clusters from the Entities section above (Discovery = Race listing + Search/filter criteria; Archive = Logged result + Source-link proof), not by generic "site sections." Every screen is tagged with the `jtbd.md` job it serves; `[ORPHAN]` marks a screen with no job behind it. Loading/empty/error states are noted inline as *states*, not listed as their own screens. Main Job 2 ("one product... not maintaining two separate habits or tools") is closed at the app/navigation level — by Discover and My Results coexisting under one global nav (see Navigation, below) — not by a dedicated entry screen; an earlier draft modeled a distinct "Onrace — entry" screen for this, which the Navigation section's own "0 taps to Race browse" claim already contradicted, so it's been removed in favor of Race browse being the literal landing screen (corrected 2026-09-17).
+Grouped by the two entity clusters from the Entities section above (Discovery = Race listing + Search/filter criteria; Archive = Logged result + Source-link proof), not by generic "site sections." Every screen is tagged with the `jtbd.md` job it serves; `[ORPHAN]` marks a screen with no job behind it. Loading/empty/error states are noted inline as *states*, not listed as their own screens. An earlier draft modeled a distinct "Onrace — entry" screen to carry Main Job 2; that screen never actually existed as separate UI (Race browse is the real 0-tap landing screen, per Navigation → Depth below) and has been removed. Its rationale wasn't wrong, just misplaced — see Navigation § 1 for where it actually lives now (corrected 2026-09-17).
 
 ```
 Onrace (app — not a separate screen or job-closing destination; Race browse is the
 │        actual landing screen at 0 taps, see Navigation → Depth below. Main Job 2's
-│        "one product" framing is closed at the nav level, not here — see note above.)
+│        "one product" framing is closed at the nav level, not here — see
+│        Navigation § 1, "Why Main Job 2 lives here, not on a screen.")
 │
 ├── Discovery  [object: Race listing + Search/filter criteria]
 │   │
@@ -134,9 +135,12 @@ Onrace (app — not a separate screen or job-closing destination; Race browse is
     │     only — jtbd.md's matrix explicitly labels the Primary-persona cell here
     │     "2 (weak/general)," i.e. generic trust-mechanism reasoning, not
     │     persona-specific evidence.
-    │     States (not separate screens): empty form · required-field validation
-    │     error (race_name, date, sport_type, finish_time, official_result_url —
-    │     see flows.md, Flow "Related Job 3") · submit error (e.g. unreachable
+    │     States (not separate screens): empty form · source-link-required
+    │     validation error (official_result_url — the one field `../CLAUDE.md`'s
+    │     data model explicitly marks required) · other-required-field
+    │     validation error (race_name/date/sport_type/finish_time `[?]` —
+    │     assumed required, not explicitly marked so in the data model; see
+    │     flows.md, Flow "Related Job 3") · submit error (e.g. unreachable
     │     source link).
     │
     └── Result detail (proof view)
@@ -176,6 +180,8 @@ Built only from the screens already named in the Screens section above — no ne
 | **Discover** → Race browse | Main Job 1 — Discovery: "see the full range of options... instead of checking each source separately" (`jtbd.md`) | Primary (core) + Secondary — Season Planner |
 | **Log Result** → Log result | Related Job 3 — "log the result along with where it came from... proof ready without having to redo the work later," triggered right after finishing a race (`jtbd.md`) | Secondary — Archivist (core); Primary only weak/general (matrix: "2, weak/general") |
 | **My Results** → Results list | Related Job 4 — "pull that proof up quickly" when an elite race asks for it, triggered later, on demand (`jtbd.md`) | Secondary — Archivist (core); Primary weak/caveated only (Main Job 2 = 2) |
+
+**Why Main Job 2 lives here, not on a screen (relocated 2026-09-17):** an earlier draft of this document modeled a distinct "Onrace — entry" screen to carry Main Job 2 (jtbd.md: "I want that in one product, so that I'm not maintaining two separate habits or tools"), reasoning that "the entry point is where 'one product' is actually experienced." That screen didn't hold up — Race browse is the actual 0-tap landing screen (see Depth, below), not a separate entry point — so it was removed from the Screens tree and the Traceability matrix. But the reasoning itself was sound, just aimed at the wrong artifact: it's *this nav structure* — Discover and My Results sitting as two of three co-equal, always-visible items in one global nav, rather than two separate apps or tabs a person has to consciously switch mental models between — that's where "one product" is actually experienced. That's what the Traceability matrix's Main Job 2 checkmarks on Race browse and Results list are really pointing at.
 
 **Deliberately excluded from global nav:** Sign in/Sign up. It's the one `[ORPHAN]` screen from Step 2 — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of 3–5 precious nav items on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It surfaces contextually instead (see below).
 
@@ -225,7 +231,7 @@ Rows = every job in `jtbd.md` (main, related, emotional, and social — the five
 
 **Notes on the two `✓` rows that aren't a dedicated interaction:** Emotional and Social don't have a screen built specifically for them — per the Screens section's own "Jobs with no screen of their own" note, they're closed by *how* an existing screen reads, not by a separate destination. Emotional is closed by Race browse's cross-format framing (seeing HYROX/DEKA/marathons/etc. together as one "hybrid athlete" catalog, not siloed by sport). Social is closed by the required-link-at-entry and self-reported-labeling conventions (`research.md` → BENCHMARK mechanisms #1–2) actually being implemented on Log result, Results list, and Result detail. These are legitimate closes, not padding — but they're framing-level, not task-level, unlike every other ✓ in the matrix.
 
-**Correction (2026-09-17):** an earlier draft of this matrix included an `Onrace (entry)` column, treating app launch as its own screen that closed Main Job 2. That contradicted the Navigation section's own claim that Race browse is the 0-tap landing screen — there is no separate entry screen to close a job. The column has been removed (see also the Screens section's opening note and the corrected tree above); Main Job 2's coverage is unaffected, since Race browse and Results list were already checked independently of it.
+**Correction (2026-09-17):** an earlier draft of this matrix included an `Onrace (entry)` column, treating app launch as its own screen that closed Main Job 2. That contradicted the Navigation section's own claim that Race browse is the 0-tap landing screen — there is no separate entry screen to close a job. The column has been removed (see also the Screens section's opening note and the corrected tree above); Main Job 2's coverage is unaffected, since Race browse and Results list were already checked independently of it. The removed screen's rationale — why Main Job 2 matters at the IA level at all — wasn't discarded, just relocated to Navigation § 1.
 
 ### Orphan screens (column with no ✓)
 
