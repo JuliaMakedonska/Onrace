@@ -26,6 +26,16 @@ A pass against a stricter reference pattern found three gaps, now fixed everywhe
 
 The Discovery diagram's top-down layout was visually tangled — arrows crossing around "Race browse," and the three retry/give-up paths converging on one dead-end node from awkward angles. Rendered four candidates (`TD`/`LR` × merged/split dead end) and compared them directly before choosing: switching only the direction to `flowchart LR`, with the dead-end node left exactly as merged, resolved both problems — same nodes, same edges, same single dead-end outcome, just laid out left-to-right instead of top-down. Splitting the dead end into three nodes was rejected even though it also read cleanly, because it would have reversed the merge decision from the audit above for a purely cosmetic reason, duplicating one outcome into three identical-meaning circles.
 
+## Revision note (post-critique fixes, 2026-09-17)
+
+A rigorous critique against this file and `sitemap.md` found further gaps, fixed here:
+
+1. **Flow 3's logged-results fetch (`Loading2`) had no failure branch** — the one network step in the whole document without one. Added `FetchError2`/`Retry?`, mirroring Flow 1's `Loading`/`FetchError` pattern, merging its give-up edge into `DeadEnd4`.
+2. **Both auth gates (Flow 2, Flow 3) had no way to back out before attempting sign-in** — the only modeled exits were through a failed attempt. Added a direct "closes without attempting" edge from `SignIn`/`SignIn2` into `DeadEnd2`/`DeadEnd4` respectively.
+3. **Flow 2's form validation only checked `official_result_url`**, even though `race_name`, `date`, `sport_type`, and `finish_time` are equally required by `../CLAUDE.md`'s data model. Generalized `HasLink` into `HasRequired` ("All required fields filled in?"), reusing the existing `ValidationError`/`ValidationRetry` pattern rather than adding new nodes.
+4. **Flow 1's `registration_url` had no failure handling**, unlike `official_result_url`'s treatment in Flow 3. Added a lightweight, lower-stakes check (`RegLinkCheck` → error → back-edge to Race detail) — deliberately without a `Retry?` diamond, since this is an outbound link to someone else's site, not Onrace's own trust mechanism.
+5. **`DeadEnd5`** (source link dead even after retry, Flow 3) **is left as-is by decision** — see the note at that dead end below. Closing it would require an edit/re-link capability not backed by any job in `jtbd.md`; logged as a post-MVP backlog item rather than built speculatively.
+
 ---
 
 ## Main Job 1 — Discovery (Primary persona — The HYROX-First Hybrid Athlete)
@@ -54,7 +64,10 @@ flowchart LR
     DetailRetry -->|"no"| DeadEnd1
     Detail -->|"back / compares another race"| Browse
     Detail --> WantsToEnter{"Worth entering?"}
-    WantsToEnter -->|"yes"| Success(("Success: opens registration_url — leaves Onrace to register"))
+    WantsToEnter -->|"yes"| RegLinkCheck{"Registration link opens?"}
+    RegLinkCheck -->|"yes"| Success(("Success: opens registration_url — leaves Onrace to register"))
+    RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link")
+    RegLinkError -->|"back to race detail"| Detail
     WantsToEnter -->|"no"| Browse
 ```
 
@@ -63,6 +76,7 @@ flowchart LR
 - *Retry?* (after a race-list fetch fails) — genuine choice between trying the same fetch again or giving up.
 - *Retry?* (after a race-detail fetch fails) — same choice, one level down, for opening a specific race.
 - *Worth entering?* — on Race detail, this is where the job's own "so that I can compare them in one place" actually resolves into a decision.
+- *Registration link opens?* (added — Race detail previously assumed opening `registration_url` always succeeds) — checked at lighter weight than the Retrieve Proof flow's equivalent check on `official_result_url`: no retry diamond, just a direct back-edge to Race detail, since this is an outbound link to someone else's registration page, not Onrace's own trust mechanism.
 
 **States:**
 - Loading: fetching races (the list).
@@ -70,6 +84,7 @@ flowchart LR
 - Empty: no races match the current filters.
 - Error: could not load races (list fetch/connection failure).
 - Error: could not load race details (detail fetch/connection failure).
+- Error: couldn't open registration link (added — lighter-weight than the source-link failure in the Retrieve Proof flow; no retry loop, just a back-edge to Race detail).
 
 **Endpoints:**
 - **Success:** opens the race's `registration_url` externally and leaves Onrace to register — per `../CLAUDE.md`, Onrace only ever links out, it never handles registration itself.
@@ -85,7 +100,8 @@ flowchart LR
 flowchart TD
     Start2(("Global nav: taps Log Result")) --> AuthCheck{"Signed in?"}
     AuthCheck -->|"no"| SignIn["Sign in / Sign up"]
-    SignIn --> SigningIn("Loading: signing in")
+    SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
+    SignIn -->|"closes without attempting"| DeadEnd2
     SigningIn --> AuthResult{"Sign-in succeeded?"}
     AuthResult -->|"no"| AuthError("Error: sign-in failed")
     AuthError --> AuthRetry{"Retry?"}
@@ -93,12 +109,12 @@ flowchart TD
     AuthRetry -->|"no"| DeadEnd2(("Dead end: leaves without logging the result"))
     AuthResult -->|"yes"| LogForm["Log result"]
     AuthCheck -->|"yes"| LogForm
-    LogForm --> HasLink{"official_result_url filled in?"}
-    HasLink -->|"no"| ValidationError("Error: source link is required")
+    LogForm --> HasRequired{"All required fields filled in?"}
+    HasRequired -->|"no"| ValidationError("Error: required field(s) missing")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}
     ValidationRetry -->|"yes"| LogForm
     ValidationRetry -->|"no"| DeadEnd3(("Dead end: no result saved, proof lost for later"))
-    HasLink -->|"yes"| Submitting("Loading: saving result")
+    HasRequired -->|"yes"| Submitting("Loading: saving result")
     Submitting --> SubmitOK{"Submission succeeded?"}
     SubmitOK -->|"no — link unreachable"| SubmitError("Error: link unreachable, submission failed")
     SubmitError --> SubmitRetry{"Retry?"}
@@ -111,23 +127,23 @@ flowchart TD
 - *Signed in?* — Log Result is owner-only per `../CLAUDE.md`'s RLS model; gates into Sign in / Sign up if not, per the Navigation section's contextual-gate design.
 - *Sign-in succeeded?*
 - *Retry?* (after a failed sign-in) — previously just an edge label; now an explicit diamond, same as every other error in this flow.
-- *official_result_url filled in?* — enforces the required-source-link trust model (`../CLAUDE.md` → Result trust model) before the form can be submitted at all.
-- *Fix and resubmit?* (after the required-link validation fails) — previously this error only looped back to the form with no give-up path at all; now it's a real choice, same as the other two errors in this flow.
+- *All required fields filled in?* (generalized from *official_result_url filled in?*) — checks every required field on `results` per `../CLAUDE.md`'s data model (race_name, date, sport_type, finish_time, official_result_url), not just the source link in isolation. The source link's requiredness is still the trust-model-critical one (`../CLAUDE.md` → Result trust model), but the other fields are just as required by the schema and previously had no modeled validation at all — a blank `finish_time` would have silently surfaced as "link unreachable" via `SubmitError`, which was never accurate.
+- *Fix and resubmit?* (after a required-fields validation failure) — previously this error only looped back to the form with no give-up path at all; now it's a real choice, same as the other two errors in this flow.
 - *Submission succeeded?*
 - *Retry?* (after a failed submission)
 
 **States:**
 - Loading: signing in (previously missing — sign-in was drawn as instant even though form submission, an equivalent network call, already had its own loading state).
 - Error: sign-in failed.
-- Error: source link is required (client-side validation, before submission).
+- Error: required field(s) missing (client-side validation, before submission — covers race_name, date, sport_type, finish_time, and official_result_url; generalized from checking only the source link).
 - Loading: saving result.
 - Error: link unreachable / submission failed.
 
 **Endpoints:**
 - **Success:** the result lands in Results list ("my archive") — the proof is now stored for later retrieval (feeds directly into the next flow below).
 - **Dead ends:** two, kept distinct on purpose.
-  - *Leaves without logging the result* — reachable only from a failed sign-in. Root cause: an auth/account problem.
-  - *No result saved, proof lost for later* — reachable from either the required-link validation failing or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
+  - *Leaves without logging the result* — reachable from a failed sign-in (after exhausting retries) or from closing the Sign in / Sign up screen without attempting at all (added — previously the only modeled exit from that screen was through a failed attempt). Root cause: never got signed in.
+  - *No result saved, proof lost for later* — reachable from either the required-fields validation failing or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
 
 ---
 
@@ -139,7 +155,8 @@ flowchart TD
 flowchart TD
     Start3(("Global nav: taps My Results")) --> AuthCheck2{"Signed in?"}
     AuthCheck2 -->|"no"| SignIn2["Sign in / Sign up"]
-    SignIn2 --> SigningIn2("Loading: signing in")
+    SignIn2 -->|"submits credentials"| SigningIn2("Loading: signing in")
+    SignIn2 -->|"closes without attempting"| DeadEnd4
     SigningIn2 --> AuthResult2{"Sign-in succeeded?"}
     AuthResult2 -->|"no"| AuthError2("Error: sign-in failed")
     AuthError2 --> AuthRetry2{"Retry?"}
@@ -153,6 +170,10 @@ flowchart TD
     Empty2 -->|"goes to log one instead"| LogForm2["Log result"]
     Empty2 -->|"gives up"| DeadEnd4
     HasLogged -->|"yes"| ResultsList2
+    Loading2 -->|"connection fails"| FetchError2("Error: could not load logged results")
+    FetchError2 --> FetchRetry2{"Retry?"}
+    FetchRetry2 -->|"yes"| Loading2
+    FetchRetry2 -->|"no"| DeadEnd4
     ResultsList2 -->|"taps a logged entry"| DetailLoading2("Loading: fetching result details")
     DetailLoading2 -->|"loads successfully"| ResultDetail["Result detail (proof view)"]
     DetailLoading2 -->|"connection fails"| DetailError2("Error: could not load result details")
@@ -171,6 +192,7 @@ flowchart TD
 - *Signed in?* — same owner-only gate as the Log Result flow.
 - *Sign-in succeeded?*
 - *Retry?* (after a failed sign-in)
+- *Retry?* (after a failed fetch of the logged-results list — added; this was the one network fetch in the whole document that previously had no paired failure branch, unlike every other fetch here).
 - *Any results logged yet?* — branches between the archive and an empty state.
 - *Retry?* (after a failed fetch of a specific result's details — previously this step wasn't modeled at all; opening a result was drawn as instant).
 - *Source link still opens?* — the moment the "the link is the evidence" trust model (`../CLAUDE.md` → Result trust model) actually gets tested by an outside party.
@@ -180,6 +202,7 @@ flowchart TD
 - Loading: signing in (previously missing, same gap as Flow 2).
 - Error: sign-in failed.
 - Loading: fetching logged results.
+- Error: could not load logged results (added — previously this fetch had no failure branch at all, unlike every other fetch in this document).
 - Empty: no results logged yet.
 - Loading: fetching result details (previously missing — a specific result's detail fetch was collapsed into an instant transition).
 - Error: could not load result details.
@@ -188,5 +211,6 @@ flowchart TD
 **Endpoints:**
 - **Success:** proof is retrieved and ready to submit to the elite race. What happens after that — whether the race accepts it — is outside Onrace's scope by design: Onrace's job ends at retrieval, since the product's trust model is "self-reported, source-linked," not "Onrace verifies" (`research.md` → CONCLUSIONS gap 4).
 - **Dead ends:** two, kept distinct on purpose.
-  - *Leaves without proof, application deadline at risk* — one merged outcome reachable from three causes: a failed sign-in, an empty archive (nothing was ever logged), or a failed fetch of a specific result's details. All three share the same downstream reality — no proof in hand, right when it's needed — so they're one node, not three.
+  - *Leaves without proof, application deadline at risk* — one merged outcome reachable from five causes: a failed sign-in, closing the Sign in / Sign up screen without attempting at all (added), an empty archive (nothing was ever logged), a failed fetch of the logged-results list (added), or a failed fetch of a specific result's details. All five share the same downstream reality — no proof in hand, right when it's needed — so they're one node, not five.
   - *Proof inaccessible, nothing in-app to correct it* — kept separate from the node above on purpose. This one is reached only after everything else worked (signed in, archive has entries, the specific result loaded fine) and the source link itself turns out to be dead even after a retry. That's a materially different, more specific problem — the evidence itself has rotted — pointing at a real, currently-missing product gap (an edit/re-link flow for a logged result), which ties directly to the Navigation section's honest "Deep: none yet" note.
+    - **Decision (2026-09-17): left as a known, accepted MVP gap.** Closing it (an edit/re-link capability for a logged result) would be new scope not backed by any job in `jtbd.md` — no job asks to *correct* a logged result, only to log one (Related Job 3) and retrieve one (Related Job 4). Tracked here as a post-MVP backlog item rather than built speculatively; revisit if a "fix a stale result" job is ever sourced.
