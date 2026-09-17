@@ -251,6 +251,7 @@
   .ff-competitors{background:var(--accent-dim); color:var(--accent)}
   .ff-benchmark{background:var(--benchmark-dim); color:var(--benchmark)}
   .ff-patterns{background:var(--patterns-dim); color:var(--patterns)}
+  .ff-design{background:var(--bg-elev-2); color:var(--text-dim)}
 
   /* Inline flags (personas/jtbd) */
   .flag{
@@ -411,7 +412,7 @@
           <span class="pill">Updated 2026-09-02</span>
           <span class="pill">15 competitors reviewed</span>
           <span class="pill">5 benchmark products</span>
-          <span class="pill">6 open gaps</span>
+          <span class="pill">7 open gaps</span>
         </div>
 
         <div class="takeaways">
@@ -421,7 +422,7 @@
             <div class="card tw-competitors"><strong>The whitespace is narrower than first assumed, not gone</strong>RoxFit and RoxMatchUp already combine race discovery with a personal results view — but both are HYROX-only. Onrace's real edge is doing that <em>across</em> formats.</div>
             <div class="card tw-benchmark"><strong>Three cheap mechanisms cover most of the ownership-trust gap</strong>A mandatory source link, "self-reported" labeling (never "verified"), and automatable plausibility checks — but no competitor reviewed requires a source link the way Onrace will, so this remains genuinely untested.</div>
             <div class="card tw-patterns"><strong>Map-first + faceted filters is validated three times over</strong>ocrbase, AllTrails, and IRONMAN all use it for the same "find one good option among many" problem — and IRONMAN's own map needs pin-clustering past ~161 races, a concrete threshold to watch.</div>
-            <div class="card tw-conclusions"><strong>None of this is validated with real users yet</strong>6 open gaps remain — from submission friction to monetization to whether Strava expands into HYROX/DEKA.</div>
+            <div class="card tw-conclusions"><strong>None of this is validated with real users yet</strong>7 open gaps remain — from submission friction to monetization to whether Strava expands into HYROX/DEKA. One (link rot on a logged result) surfaced from building the IA, not from this research pass.</div>
           </div>
         </div>
 
@@ -430,7 +431,7 @@
             <a class="card-link" href="#competitors"><span class="si-tag" style="color:var(--accent)">Competitors</span><span class="si-title">Competitive landscape</span><span class="si-desc">15 competitors across HARD / SOFT / ASPIRATIONAL tiers, three comparison tables →</span></a>
             <a class="card-link" href="#benchmark"><span class="si-tag" style="color:var(--benchmark)">Benchmark</span><span class="si-title">Ownership-credibility benchmark</span><span class="si-desc">5 products scored across 8 criteria, with score anchors →</span></a>
             <a class="card-link" href="#patterns"><span class="si-tag" style="color:var(--patterns)">Patterns</span><span class="si-title">Race-discovery interaction pattern</span><span class="si-desc">The chosen pattern, and why it fits Onrace's context →</span></a>
-            <a class="card-link" href="#conclusions"><span class="si-tag" style="color:var(--text-dim)">Conclusions</span><span class="si-title">Open gaps &amp; hypotheses</span><span class="si-desc">6 gaps, each with a hypothesis and its source section →</span></a>
+            <a class="card-link" href="#conclusions"><span class="si-tag" style="color:var(--text-dim)">Conclusions</span><span class="si-title">Open gaps &amp; hypotheses</span><span class="si-desc">7 gaps, each with a hypothesis and its source section →</span></a>
           </div>
         </div>
       </header>
@@ -892,6 +893,13 @@
           <p><span class="label">Gap —</span> Both already combine race discovery and a personal results/leaderboard view in one HYROX-specific app — is the map+archive combination still genuine whitespace for Onrace?</p>
           <p><span class="label">Hypothesis —</span> Yes, but narrower than first stated — both existing combinations are single-sport (HYROX only); no competitor reviewed across all 15 combines discovery and archive <strong style="color:var(--text)">across</strong> HYROX + DEKA + marathons + triathlons + ultras together. Onrace's differentiation claim should be restated as cross-format breadth combined with the archive, not the discovery+archive combination alone, which two competitors already have at smaller scope.</p>
           <span class="follows-from ff-competitors">Follows from: Competitors</span>
+        </div>
+
+        <div class="gap-card">
+          <div class="gap-title"><span class="num">7</span>A logged result's source link can go dead before it's needed</div>
+          <p><span class="label">Gap —</span> What happens when an already-logged <code>official_result_url</code> goes dead by the time a person needs it for an elite-race application? Surfaced while building the Retrieve Proof flow (<code>../flows.md</code>, <code>DeadEnd5</code>) — there's no in-app way to edit or re-link a logged result, only to create one or retrieve one.</p>
+          <p><span class="label">Hypothesis —</span> An acceptable MVP gap, not a launch blocker — the self-reported-link trust model already accepts that Onrace doesn't police a link's ongoing validity (see gap 4, above), and no job in <code>jtbd.md</code> currently asks to <em>correct</em> a result after logging it. Revisit if a "fix a stale result" job is ever validated, or if link rot proves common in practice.</p>
+          <span class="follows-from ff-design">Follows from: sitemap.md / flows.md (design, not this research pass)</span>
         </div>
       </section>
 

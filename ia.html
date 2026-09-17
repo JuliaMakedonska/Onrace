@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onrace — Information Architecture</title>
+<style>
+  :root{
+    --bg:#0b0c0e;
+    --bg-elev:#141518;
+    --bg-elev-2:#1b1d21;
+    --border:#2a2c31;
+    --text:#eef0f2;
+    --text-dim:#9aa0a8;
+    --text-faint:#686e77;
+    --accent:#ff4d2e;
+    --accent-dim:#ff4d2e33;
+    --benchmark:#2dd4bf;
+    --benchmark-dim:#2dd4bf26;
+    --patterns:#a78bfa;
+    --patterns-dim:#a78bfa26;
+    --unconfirmed:#e6a23c;
+    --unconfirmed-dim:#e6a23c22;
+    --ok:#4ade80;
+    --ok-dim:#4ade8026;
+    --job-loc:#60a5fa;
+    --job-loc-dim:#60a5fa26;
+    --job-log:#f472b6;
+    --job-log-dim:#f472b626;
+    --job-retrieve:#fbbf24;
+    --job-retrieve-dim:#fbbf2426;
+    --radius:10px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+    font-size:16px;
+  }
+  a{color:var(--accent)}
+  a:hover{text-decoration-thickness:2px}
+  code{
+    background:var(--bg-elev-2);
+    padding:.1em .4em;
+    border-radius:4px;
+    font-size:.9em;
+    color:#d7dadf;
+  }
+
+  /* Nav */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,12,14,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .brand{font-weight:800; letter-spacing:.02em; text-transform:uppercase; font-size:14px; color:var(--text)}
+  .brand span{color:var(--accent)}
+  .navlinks{display:flex; gap:4px; margin-left:auto; flex-wrap:wrap}
+  .navlinks a{
+    color:var(--text-dim); text-decoration:none; font-size:13px; font-weight:700;
+    letter-spacing:.04em; text-transform:uppercase; padding:8px 12px; border-radius:6px;
+  }
+  .navlinks a:hover{background:var(--bg-elev-2); color:var(--text)}
+  .navlinks a.active{color:var(--text); background:var(--bg-elev-2)}
+
+  /* Hero */
+  header.hero{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 48px; }
+  .kicker{
+    font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 14px;
+  }
+  header.hero h1{ font-size:clamp(36px,6vw,60px); margin:0 0 14px; font-weight:800; letter-spacing:-.02em; }
+  .hero-desc{color:var(--text-dim); font-size:18px; max-width:680px; margin:0 0 6px; line-height:1.5}
+  header.hero p{color:var(--text-dim); font-size:17px; max-width:680px; margin:0 0 6px}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin:24px 0 0}
+  .pill{
+    font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+    padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim);
+  }
+
+  .takeaways{margin:40px 0 0}
+  .takeaways h2{font-size:18px; margin:0 0 4px}
+  .takeaways .lede{margin-bottom:16px}
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin:16px 0}
+  .card{
+    background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; font-size:14px; color:var(--text-dim);
+  }
+  .card strong{display:block; color:var(--text); margin-bottom:6px; font-size:15px}
+  .card.tw-sitemap{border-left:3px solid var(--patterns)}
+  .card.tw-flows{border-left:3px solid var(--benchmark)}
+  .card.tw-trace{border-left:3px solid var(--unconfirmed)}
+  .card.tw-gap{border-left:3px solid var(--accent)}
+
+  .section-index{margin:36px 0 0}
+  .section-index .card-grid{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  a.card-link{
+    display:block; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px; text-decoration:none; transition:border-color .15s, transform .15s;
+  }
+  a.card-link:hover{border-color:var(--accent); transform:translateY(-1px)}
+  .si-tag{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:8px}
+  .si-title{color:var(--text); font-weight:700; font-size:15px; display:block; margin-bottom:4px}
+  .si-desc{color:var(--text-dim); font-size:13px; display:block}
+
+  main{max-width:var(--maxw); margin:0 auto; padding:0 24px 80px}
+  section.block{padding:56px 0; border-top:1px solid var(--border); scroll-margin-top:88px}
+  section.block:first-of-type{border-top:none}
+
+  .section-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    padding:5px 12px; border-radius:999px; margin-bottom:16px;
+  }
+  .tag-sitemap{background:var(--patterns-dim); color:var(--patterns)}
+  .tag-flows{background:var(--benchmark-dim); color:var(--benchmark)}
+  .tag-trace{background:var(--unconfirmed-dim); color:var(--unconfirmed)}
+
+  h2{font-size:28px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em}
+  h3{font-size:19px; margin:32px 0 6px; font-weight:700}
+  h4{font-size:13px; margin:0 0 10px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint)}
+  .lede{color:var(--text-dim); max-width:760px; margin:0 0 28px; font-size:15px}
+
+  .callout{
+    background:var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--unconfirmed);
+    border-radius:8px; padding:16px 18px; font-size:14px; color:var(--text-dim); margin:0 0 28px;
+  }
+  .callout strong{color:var(--text)}
+
+  /* job tag pills — shared vocabulary across Sitemap + Traceability */
+  .jobtag{
+    display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:800;
+    text-transform:uppercase; letter-spacing:.03em; padding:3px 9px; border-radius:999px; white-space:nowrap;
+  }
+  .jobtag.jm1{background:var(--accent-dim); color:var(--accent)}
+  .jobtag.jm2{background:var(--benchmark-dim); color:var(--benchmark)}
+  .jobtag.jr1{background:var(--patterns-dim); color:var(--patterns)}
+  .jobtag.jr2{background:var(--job-loc-dim); color:var(--job-loc)}
+  .jobtag.jr3{background:var(--job-log-dim); color:var(--job-log)}
+  .jobtag.jr4{background:var(--job-retrieve-dim); color:var(--job-retrieve)}
+  .jobtag.jframing{background:transparent; color:var(--text-dim); border:1px solid var(--text-faint)}
+  .jobtag.orphan{background:var(--unconfirmed-dim); color:var(--unconfirmed)}
+
+  .legend{display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin:0 0 24px; font-size:12px; color:var(--text-faint)}
+  .legend .lg-label{font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-right:4px}
+
+  /* sitemap tree */
+  .iagroup{
+    border:1px solid var(--border); border-left:3px solid var(--patterns); border-radius:var(--radius);
+    background:var(--bg-elev); padding:22px; margin-bottom:18px;
+  }
+  .iagroup.archive{border-left-color:var(--benchmark)}
+  .iagroup .group-title{margin:0 0 2px; font-size:17px; font-weight:800}
+  .iagroup .group-object{
+    display:block; font-size:11.5px; color:var(--text-faint); text-transform:uppercase;
+    letter-spacing:.04em; margin-bottom:16px;
+  }
+  .screen-card{
+    background:var(--bg-elev-2); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; margin-bottom:12px;
+  }
+  .screen-card:last-child{margin-bottom:0}
+  .screen-card h4.screen-name{margin:0 0 6px; font-size:15.5px; color:var(--text); text-transform:none; letter-spacing:0}
+  .screen-card .persona{font-size:12.5px; color:var(--text-dim); margin:0 0 10px}
+  .screen-card .tags{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px}
+  .screen-card .states{font-size:12px; color:var(--text-faint); margin:0; line-height:1.5}
+  .orphan-card{
+    border:1px dashed var(--unconfirmed); background:var(--unconfirmed-dim); border-radius:var(--radius);
+    padding:18px 20px;
+  }
+  .orphan-card h4.screen-name{margin:0 0 8px; font-size:15.5px; color:var(--text); text-transform:none; letter-spacing:0}
+  .orphan-card p{margin:0; font-size:13.5px; color:var(--text-dim)}
+  .entry-note{font-size:13px; color:var(--text-faint); margin:0 0 18px; padding-left:2px}
+
+  /* mermaid diagrams */
+  .mermaid-wrap{
+    background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; margin:20px 0; overflow-x:auto;
+  }
+  .mermaid-wrap pre.mermaid{margin:0; background:transparent}
+  blockquote.jtbd{
+    margin:10px 0 0; padding:12px 16px; border-left:3px solid var(--text-faint);
+    background:var(--bg-elev); border-radius:0 8px 8px 0; font-style:italic; color:var(--text-dim); font-size:14.5px;
+  }
+  .persona-line{font-size:13px; color:var(--text-faint); margin:6px 0 0}
+
+  .flow-detail{display:grid; grid-template-columns:1.05fr 1fr; gap:28px; margin-top:22px}
+  @media (max-width:820px){.flow-detail{grid-template-columns:1fr}}
+  .flow-col ul{margin:0 0 20px; padding-left:18px; font-size:13.5px; color:var(--text-dim)}
+  .flow-col li{margin-bottom:7px}
+  .flow-col li .fl{color:var(--text-faint); font-size:11px; text-transform:uppercase; letter-spacing:.03em; margin-right:5px}
+
+  .endpoint-box{border-radius:8px; padding:14px 16px; margin-bottom:10px; font-size:13.5px; color:var(--text-dim)}
+  .endpoint-box .eb-label{
+    display:block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;
+  }
+  .endpoint-box.success{background:var(--ok-dim); border:1px solid var(--ok)}
+  .endpoint-box.success .eb-label{color:var(--ok)}
+  .endpoint-box.deadend{background:var(--accent-dim); border:1px solid var(--accent)}
+  .endpoint-box.deadend .eb-label{color:var(--accent)}
+  .endpoint-box.deadend.deferred{border-style:dashed}
+
+  /* Traceability table */
+  .table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); margin:0 0 20px}
+  table{border-collapse:collapse; width:100%; min-width:760px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top}
+  thead th{
+    background:var(--bg-elev); color:var(--text); font-size:11.5px; text-transform:uppercase;
+    letter-spacing:.03em; white-space:nowrap; position:sticky; top:0;
+  }
+  tbody tr:last-child td, tbody tr:last-child th{border-bottom:none}
+  tbody tr:hover td, tbody tr:hover th{background:var(--bg-elev)}
+  td{color:var(--text-dim); text-align:center}
+  td.jobname{text-align:left}
+  .jobname-inner{display:flex; align-items:center; gap:9px}
+  .dot{width:9px; height:9px; border-radius:50%; flex:none; display:inline-block}
+  .check{color:var(--ok); font-weight:800; font-size:15px}
+  th.orphan-col, td.orphan-col{background:var(--unconfirmed-dim)}
+  th.orphan-col{color:var(--unconfirmed)}
+  .orphan-note{font-size:10px; display:block; font-weight:800; margin-top:2px}
+
+  footer{
+    max-width:var(--maxw); margin:0 auto; padding:32px 24px 64px; color:var(--text-faint); font-size:13px;
+    border-top:1px solid var(--border);
+  }
+  footer a{color:var(--text-dim)}
+
+  @media (max-width:640px){
+    .navlinks{gap:0}
+    header.hero{padding:44px 20px 28px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · IA</a>
+    <div class="navlinks">
+      <a href="#sitemap">Sitemap</a>
+      <a href="#flow-discovery">Discovery</a>
+      <a href="#flow-log">Log Result</a>
+      <a href="#flow-retrieve">Retrieve Proof</a>
+      <a href="#traceability">Traceability</a>
+    </div>
+  </div>
+</nav>
+
+<a id="top"></a>
+<header class="hero">
+  <p class="kicker">Information architecture</p>
+  <h1>Onrace</h1>
+  <p class="hero-desc">Screens, jobs, flows, and coverage — rendered from <code>sitemap.md</code> and <code>flows.md</code> so the IA can be read as one connected system instead of two separate markdown files.</p>
+  <p>Every screen below is tagged with the <code>jtbd.md</code> job it closes; every flow is the actual Mermaid diagram from <code>flows.md</code>, not a redrawn summary; the traceability matrix is the same coverage check, with the one orphan screen highlighted rather than just noted in prose.</p>
+
+  <div class="meta-row">
+    <span class="pill">Updated 2026-09-17</span>
+    <span class="pill">6 screens + 1 orphan</span>
+    <span class="pill">8 jobs traced · 0 orphan jobs</span>
+    <span class="pill">3 flows · 6 dead ends</span>
+    <span class="pill">1 accepted MVP gap</span>
+  </div>
+
+  <div class="takeaways">
+    <h2>What this page settles</h2>
+    <p class="lede">Four corrections that came out of building this IA end-to-end — see each section below for the full reasoning.</p>
+    <div class="card-grid">
+      <div class="card tw-sitemap"><strong>The entry point is Race browse, not a screen called "Onrace"</strong>An earlier draft modeled a distinct entry screen to carry Main Job 2. It never existed as separate UI — removed from the tree and the matrix; its rationale relocated, not deleted (see Navigation in <code>sitemap.md</code>).</div>
+      <div class="card tw-trace"><strong>One orphan screen, resolved, not deleted</strong>Sign in / Sign up closes no job of its own — no job in <code>jtbd.md</code> asks for account creation. Kept as a contextual gate on Log Result and My Results, not promoted or removed.</div>
+      <div class="card tw-flows"><strong>Every success endpoint is now a verifiable condition</strong>Not a screen destination. Log Result's success previously just "landed on a screen" — tightened to "a <code>results</code> row now exists with <code>official_result_url</code> populated."</div>
+      <div class="card tw-gap"><strong>One dead end is a known, accepted MVP gap</strong>A logged result's source link can rot with no in-app fix (<code>DeadEnd5</code>). Left as-is on purpose — no job asks to <em>correct</em> a result, only to log or retrieve one. Now tracked in <code>research.md</code>.</div>
+    </div>
+  </div>
+
+  <div class="section-index">
+    <div class="card-grid">
+      <a class="card-link" href="#sitemap"><span class="si-tag" style="color:var(--patterns)">Sitemap</span><span class="si-title">Screens by entity cluster</span><span class="si-desc">6 screens + 1 orphan, each tagged with the job it closes →</span></a>
+      <a class="card-link" href="#flow-discovery"><span class="si-tag" style="color:var(--benchmark)">Flows</span><span class="si-title">All three user flows</span><span class="si-desc">Discovery, Log Result, Retrieve Proof — full Mermaid diagrams →</span></a>
+      <a class="card-link" href="#traceability"><span class="si-tag" style="color:var(--unconfirmed)">Traceability</span><span class="si-title">Job × screen coverage matrix</span><span class="si-desc">8 jobs, 6 screens, the one orphan highlighted →</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- SITEMAP -->
+  <section class="block" id="sitemap">
+    <span class="section-tag tag-sitemap">Sitemap</span>
+    <h2>Screens, grouped by entity cluster</h2>
+    <p class="lede">Grouped by the two entity clusters in <code>sitemap.md</code> — Discovery (Race listing + Search/filter criteria) and Archive (Logged result + Source-link proof) — not by generic "site sections." Every screen carries the job(s) it closes; a plain outline means the close is framing-level, not a dedicated interaction.</p>
+
+    <p class="entry-note"><strong style="color:var(--text-dim)">App entry:</strong> Race browse is the landing screen at 0 taps — see Navigation in <code>sitemap.md</code>. An earlier draft modeled a separate "Onrace — entry" screen for Main Job 2; it never existed as real UI and was removed. The reasoning wasn't wrong, just misplaced — it describes this global nav structure (Discover + My Results as co-equal items), not a screen.</p>
+
+    <div class="legend">
+      <span class="lg-label">Jobs:</span>
+      <span class="jobtag jm1">Main 1 · Discovery</span>
+      <span class="jobtag jm2">Main 2 · Archiving</span>
+      <span class="jobtag jr1">Related 1 · Format</span>
+      <span class="jobtag jr2">Related 2 · Location</span>
+      <span class="jobtag jr3">Related 3 · Log</span>
+      <span class="jobtag jr4">Related 4 · Retrieve</span>
+      <span class="jobtag jframing">Emotional / Social (framing)</span>
+    </div>
+
+    <div class="iagroup">
+      <div class="group-title">Discovery</div>
+      <span class="group-object">Object: Race listing + Search/filter criteria</span>
+
+      <div class="screen-card">
+        <h4 class="screen-name">Race browse (map + list)</h4>
+        <p class="persona">Persona: Primary (core) + Secondary — Season Planner (core, Related Job 2)</p>
+        <div class="tags">
+          <span class="jobtag jm1">Main 1 · Discovery</span>
+          <span class="jobtag jm2">Main 2 · Archiving</span>
+          <span class="jobtag jr1">Related 1 · Format</span>
+          <span class="jobtag jr2">Related 2 · Location</span>
+          <span class="jobtag jframing">Emotional</span>
+        </div>
+        <p class="states">States: loading · no races match current filters · fetch error</p>
+      </div>
+
+      <div class="screen-card">
+        <h4 class="screen-name">Race detail</h4>
+        <p class="persona">Persona: Primary + Secondary — Season Planner</p>
+        <div class="tags">
+          <span class="jobtag jm1">Main 1 · Discovery</span>
+        </div>
+        <p class="states">Job resolves here: viewing <code>official_url</code> / <code>registration_url</code> is how "compare them in one place" actually happens.</p>
+      </div>
+    </div>
+
+    <div class="iagroup archive">
+      <div class="group-title">My Results (Archive)</div>
+      <span class="group-object">Object: Logged result + Source-link proof</span>
+
+      <div class="screen-card">
+        <h4 class="screen-name">Results list ("my archive")</h4>
+        <p class="persona">Persona: Secondary — Archivist (core, Related Job 4 scores a clean 3). Primary: weak/caveated only.</p>
+        <div class="tags">
+          <span class="jobtag jm2">Main 2 · Archiving</span>
+          <span class="jobtag jr3">Related 3 · Log</span>
+          <span class="jobtag jr4">Related 4 · Retrieve</span>
+          <span class="jobtag jframing">Social</span>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <h4 class="screen-name">Log result</h4>
+        <p class="persona">Persona: Secondary — Archivist (core, scores 3). Primary: weak/general only ("2, weak/general" in <code>jtbd.md</code>'s matrix).</p>
+        <div class="tags">
+          <span class="jobtag jr3">Related 3 · Log</span>
+          <span class="jobtag jframing">Social</span>
+        </div>
+        <p class="states">States: empty form · source-link-required error (<code>official_result_url</code> — the one field <code>CLAUDE.md</code> marks required) · other-required-field error (<code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> <code>[?]</code>) · submit error</p>
+      </div>
+
+      <div class="screen-card">
+        <h4 class="screen-name">Result detail (proof view)</h4>
+        <p class="persona">Persona: Secondary — Archivist ONLY. <code>jtbd.md</code> scores this a sourced <strong style="color:var(--text)">1</strong> for Primary — an actual disconfirmation (HYROX Worlds is placement-based, not proof-of-time), not just missing evidence.</p>
+        <div class="tags">
+          <span class="jobtag jr4">Related 4 · Retrieve</span>
+          <span class="jobtag jframing">Social</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="orphan-card">
+      <h4 class="screen-name">Sign in / Sign up <span class="jobtag orphan" style="margin-left:8px">Orphan</span></h4>
+      <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Needed only because Logged result is owner-only via RLS. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps Log Result or My Results — not promoted to a global nav item, not deleted.</p>
+    </div>
+  </section>
+
+  <!-- FLOWS -->
+  <section class="block" id="flow-discovery">
+    <span class="section-tag tag-flows">Flow</span>
+    <h2>Main Job 1 — Discovery</h2>
+    <p class="persona-line">Primary persona — The HYROX-First Hybrid Athlete</p>
+    <blockquote class="jtbd">"See the full range of options — across countries, formats, and dates — instead of checking each source separately... so that I can compare them in one place."</blockquote>
+
+    <div class="legend" style="margin-top:22px">
+      <span class="lg-label">Node key:</span>
+      <span style="color:#9aa0a8">● start</span>
+      <span style="color:#eef0f2">▭ screen</span>
+      <span style="color:#9aa0a8">◌ loading</span>
+      <span style="color:#60a5fa">◌ empty</span>
+      <span style="color:#e6a23c">◌ error</span>
+      <span style="color:#a78bfa">◌ [?] flagged</span>
+      <span style="color:#4ade80">● success</span>
+      <span style="color:#ff4d2e">● dead end</span>
+    </div>
+
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart LR
+    Start(("App opens")) --> Browse["Race browse"]
+    Browse --> Loading("Loading: fetching races")
+    Loading --> HasResults{"Any races match current filters?"}
+    HasResults -->|"no"| Empty("Empty: no races match current filters")
+    Empty -->|"adjusts filters"| Browse
+    Empty -->|"gives up"| DeadEnd1(("Dead end: leaves without deciding on a race"))
+    HasResults -->|"yes"| Browse
+    Loading -->|"connection fails"| FetchError("Error: could not load races")
+    FetchError --> FetchRetry{"Retry?"}
+    FetchRetry -->|"yes"| Loading
+    FetchRetry -->|"no"| DeadEnd1
+    Browse -->|"changes region/date/sport filters"| Loading
+    Browse -->|"taps a race card or pin"| DetailLoading("Loading: fetching race details")
+    DetailLoading -->|"loads successfully"| Detail["Race detail"]
+    DetailLoading -->|"connection fails"| DetailError("Error: could not load race details")
+    DetailError --> DetailRetry{"Retry?"}
+    DetailRetry -->|"yes"| DetailLoading
+    DetailRetry -->|"no"| DeadEnd1
+    Detail -->|"back / compares another race"| Browse
+    Detail --> WantsToEnter{"Worth entering?"}
+    WantsToEnter -->|"yes"| RegLinkCheck{"Registration link opens?"}
+    RegLinkCheck -->|"yes"| Success(("Success: this race's registration_url opened — Onrace records nothing further"))
+    RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link")
+    RegLinkError -->|"back to race detail, tries again later"| Detail
+    RegLinkError -->|"gives up"| DeadEnd6(("Dead end: decided to enter, but the registration link is broken"))
+    WantsToEnter -->|"no"| Browse
+
+    classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
+    classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
+    classDef empty fill:#141518,stroke:#60a5fa,stroke-width:1.5px,color:#eef0f2;
+    classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
+    classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
+    classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
+    class Start start
+    class Browse,Detail screen
+    class Loading,DetailLoading loading
+    class Empty empty
+    class FetchError,DetailError,RegLinkError error
+    class Success success
+    class DeadEnd1,DeadEnd6 deadend
+</pre>
+    </div>
+
+    <div class="flow-detail">
+      <div class="flow-col">
+        <h4>Decisions</h4>
+        <ul>
+          <li><span class="fl">Branch</span>Any races match current filters? — results vs. empty state.</li>
+          <li><span class="fl">Retry</span>Race-list fetch failure — retry or give up.</li>
+          <li><span class="fl">Retry</span>Race-detail fetch failure — same choice, one level down.</li>
+          <li><span class="fl">Resolves</span>Worth entering? — where "compare them in one place" resolves into a decision.</li>
+          <li><span class="fl">Lightweight</span>Registration link opens? — two direct edges, no retry diamond. <code>registration_url</code> is Onrace's own curated, manually-seeded data (low rot risk); <code>official_result_url</code> is arbitrary user-submitted data (high rot risk) — that asymmetry, not job importance, is why this check is lighter than Retrieve Proof's.</li>
+        </ul>
+        <h4>States</h4>
+        <ul>
+          <li>Loading: fetching races (list) · fetching race details (single race, own step).</li>
+          <li>Empty: no races match the current filters.</li>
+          <li>Error: could not load races · could not load race details · couldn't open registration link.</li>
+        </ul>
+      </div>
+      <div class="flow-col">
+        <h4>Endpoints</h4>
+        <div class="endpoint-box success">
+          <span class="eb-label">Success</span>
+          The race's <code>registration_url</code> has opened in the browser — the entire condition. No Onrace-side record is created; unlike the other two flows, this endpoint isn't verifiable from Onrace's own data — completion happens entirely on an external site.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd1</span>
+          Leaves without deciding on a race. One merged outcome from three causes (empty result, failed list fetch, failed detail fetch) — same downstream reality, no race decided on.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd6</span>
+          Decided to enter, but the registration link is broken. Kept separate from DeadEnd1 on purpose — this person already decided; the failure is a broken link discovered <em>after</em> that, not indecision.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="flow-log">
+    <span class="section-tag tag-flows">Flow</span>
+    <h2>Related Job 3 — Log a Result with Source Proof</h2>
+    <p class="persona-line">Secondary persona — The Qualifying-Time Archivist</p>
+    <blockquote class="jtbd">"When I finish a race, I want to log the result along with where it came from, so that I have proof ready without having to redo the work later."</blockquote>
+
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    Start2(("Global nav: taps Log Result")) --> AuthCheck{"Signed in?"}
+    AuthCheck -->|"no"| SignIn["Sign in / Sign up"]
+    SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
+    SignIn -->|"closes without attempting"| DeadEnd2
+    SigningIn --> AuthResult{"Sign-in succeeded?"}
+    AuthResult -->|"no"| AuthError("Error: sign-in failed")
+    AuthError --> AuthRetry{"Retry?"}
+    AuthRetry -->|"yes"| SignIn
+    AuthRetry -->|"no"| DeadEnd2(("Dead end: leaves without logging the result"))
+    AuthResult -->|"yes"| LogForm["Log result"]
+    AuthCheck -->|"yes"| LogForm
+    LogForm --> HasLink{"official_result_url filled in?"}
+    HasLink -->|"no"| ValidationError("Error: source link is required")
+    ValidationError --> ValidationRetry{"Fix and resubmit?"}
+    ValidationRetry -->|"yes"| LogForm
+    ValidationRetry -->|"no"| DeadEnd3(("Dead end: no result saved, proof lost for later"))
+    HasLink -->|"yes"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?]"}
+    HasOtherRequired -->|"no"| OtherFieldError("Error: required field missing (race_name / date / sport_type / finish_time) [?]")
+    OtherFieldError --> OtherFieldRetry{"Fix and resubmit?"}
+    OtherFieldRetry -->|"yes"| LogForm
+    OtherFieldRetry -->|"no"| DeadEnd3
+    HasOtherRequired -->|"yes"| Submitting("Loading: saving result")
+    Submitting --> SubmitOK{"Submission succeeded?"}
+    SubmitOK -->|"no — link unreachable"| SubmitError("Error: link unreachable, submission failed")
+    SubmitError --> SubmitRetry{"Retry?"}
+    SubmitRetry -->|"yes"| LogForm
+    SubmitRetry -->|"no"| DeadEnd3
+    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated (required)"))
+
+    classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
+    classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
+    classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
+    classDef flagged fill:#1b1521,stroke:#a78bfa,stroke-width:1.5px,stroke-dasharray:4 2,color:#eef0f2;
+    classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
+    classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
+    class Start2 start
+    class SignIn,LogForm screen
+    class SigningIn,Submitting loading
+    class AuthError,ValidationError,SubmitError error
+    class HasOtherRequired,OtherFieldError,OtherFieldRetry flagged
+    class Success2 success
+    class DeadEnd2,DeadEnd3 deadend
+</pre>
+    </div>
+
+    <div class="flow-detail">
+      <div class="flow-col">
+        <h4>Decisions</h4>
+        <ul>
+          <li><span class="fl">Gate</span>Signed in? — Log Result is owner-only via RLS; gates into Sign in / Sign up, a contextual gate.</li>
+          <li><span class="fl">Required</span><code>official_result_url</code> filled in? — the one field <code>CLAUDE.md</code> explicitly marks "(required)"; enforces the source-link trust model before submission.</li>
+          <li><span class="fl">[?] Flagged</span><code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> all filled in? — a second, separate check. <code>CLAUDE.md</code>'s data model just lists these fields, it doesn't say they're required — modeled here as an assumed requirement, flagged per this document set's own convention, not settled fact.</li>
+          <li><span class="fl">Retry</span>Fix and resubmit? — offered separately after each validation failure, and after a failed submission.</li>
+        </ul>
+        <h4>States</h4>
+        <ul>
+          <li>Loading: signing in · saving result.</li>
+          <li>Error: sign-in failed · source link is required · required field missing <code>[?]</code> · link unreachable / submission failed.</li>
+        </ul>
+      </div>
+      <div class="flow-col">
+        <h4>Endpoints</h4>
+        <div class="endpoint-box success">
+          <span class="eb-label">Success — Success2</span>
+          A new row now exists in <code>results</code>, owned by this user via RLS, with <code>official_result_url</code> populated — the field <code>CLAUDE.md</code> requires — plus <code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> per this flow's <code>[?]</code>-flagged check. Tightened from "lands on Results list," a screen, not a condition.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd2</span>
+          Leaves without logging the result. Reachable from a failed sign-in (after retries) or closing Sign in / Sign up without attempting. Root cause: never got signed in.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd3</span>
+          No result saved, proof lost for later. Reachable from the source-link check, the other-fields check <code>[?]</code>, or the save itself failing — a forms/data problem, once already past sign-in.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="flow-retrieve">
+    <span class="section-tag tag-flows">Flow</span>
+    <h2>Related Job 4 — Retrieve Proof for an Elite-Race Application</h2>
+    <p class="persona-line">Secondary persona — The Qualifying-Time Archivist</p>
+    <blockquote class="jtbd">"When an elite race asks me to prove a past result, I want to pull that proof up quickly, so that I can apply without scrambling to find it."</blockquote>
+
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    Start3(("Global nav: taps My Results")) --> AuthCheck2{"Signed in?"}
+    AuthCheck2 -->|"no"| SignIn2["Sign in / Sign up"]
+    SignIn2 -->|"submits credentials"| SigningIn2("Loading: signing in")
+    SignIn2 -->|"closes without attempting"| DeadEnd4
+    SigningIn2 --> AuthResult2{"Sign-in succeeded?"}
+    AuthResult2 -->|"no"| AuthError2("Error: sign-in failed")
+    AuthError2 --> AuthRetry2{"Retry?"}
+    AuthRetry2 -->|"yes"| SignIn2
+    AuthRetry2 -->|"no"| DeadEnd4(("Dead end: leaves without proof, application deadline at risk"))
+    AuthResult2 -->|"yes"| ResultsList2["Results list (my archive)"]
+    AuthCheck2 -->|"yes"| ResultsList2
+    ResultsList2 --> Loading2("Loading: fetching logged results")
+    Loading2 --> HasLogged{"Any results logged yet?"}
+    HasLogged -->|"no"| Empty2("Empty: no results logged yet")
+    Empty2 -->|"goes to log one instead"| LogForm2["Log result"]
+    Empty2 -->|"gives up"| DeadEnd4
+    HasLogged -->|"yes"| ResultsList2
+    Loading2 -->|"connection fails"| FetchError2("Error: could not load logged results")
+    FetchError2 --> FetchRetry2{"Retry?"}
+    FetchRetry2 -->|"yes"| Loading2
+    FetchRetry2 -->|"no"| DeadEnd4
+    ResultsList2 -->|"taps a logged entry"| DetailLoading2("Loading: fetching result details")
+    DetailLoading2 -->|"loads successfully"| ResultDetail["Result detail (proof view)"]
+    DetailLoading2 -->|"connection fails"| DetailError2("Error: could not load result details")
+    DetailError2 --> DetailRetry2{"Retry?"}
+    DetailRetry2 -->|"yes"| DetailLoading2
+    DetailRetry2 -->|"no"| DeadEnd4
+    ResultDetail --> LinkWorks{"Source link still opens?"}
+    LinkWorks -->|"yes"| Success3(("Success: this results row's official_result_url opened successfully, just now"))
+    LinkWorks -->|"no"| LinkError("Error: source link unreachable")
+    LinkError --> LinkRetry{"Try again?"}
+    LinkRetry -->|"yes"| ResultDetail
+    LinkRetry -->|"no"| DeadEnd5(("Dead end: proof inaccessible, nothing in-app to correct it"))
+
+    classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
+    classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
+    classDef empty fill:#141518,stroke:#60a5fa,stroke-width:1.5px,color:#eef0f2;
+    classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
+    classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
+    classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
+    classDef deadendDeferred fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,stroke-dasharray:4 2,color:#eef0f2;
+    class Start3 start
+    class SignIn2,LogForm2,ResultsList2,ResultDetail screen
+    class SigningIn2,Loading2,DetailLoading2 loading
+    class Empty2 empty
+    class AuthError2,FetchError2,DetailError2,LinkError error
+    class Success3 success
+    class DeadEnd4 deadend
+    class DeadEnd5 deadendDeferred
+</pre>
+    </div>
+
+    <div class="flow-detail">
+      <div class="flow-col">
+        <h4>Decisions</h4>
+        <ul>
+          <li><span class="fl">Gate</span>Signed in? — same owner-only gate as Log Result.</li>
+          <li><span class="fl">Retry</span>Failed fetch of the logged-results list — added; previously the one network fetch in the document with no paired failure branch.</li>
+          <li><span class="fl">Branch</span>Any results logged yet? — archive vs. empty state.</li>
+          <li><span class="fl">Trust model</span>Source link still opens? — the moment "the link is the evidence" actually gets tested by an outside party.</li>
+          <li><span class="fl">Retry</span>Try again? — after the source link fails to open; a broken link could be transient, not necessarily dead.</li>
+        </ul>
+        <h4>States</h4>
+        <ul>
+          <li>Loading: signing in · fetching logged results · fetching result details.</li>
+          <li>Empty: no results logged yet.</li>
+          <li>Error: sign-in failed · could not load logged results · could not load result details · source link unreachable.</li>
+        </ul>
+      </div>
+      <div class="flow-col">
+        <h4>Endpoints</h4>
+        <div class="endpoint-box success">
+          <span class="eb-label">Success — Success3</span>
+          The selected <code>results</code> row's <code>official_result_url</code> opened successfully in this session. Tightened from "ready to submit to the elite race" — not something Onrace can verify. What happens after (does the race accept it) is outside Onrace's scope by design.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd4</span>
+          Leaves without proof, application deadline at risk. One merged outcome from five causes: failed sign-in, closing the auth gate without attempting, an empty archive, a failed results-list fetch, or a failed detail fetch — same downstream reality either way.
+        </div>
+        <div class="endpoint-box deadend deferred">
+          <span class="eb-label">Dead end — DeadEnd5 · accepted MVP gap</span>
+          Proof inaccessible, nothing in-app to correct it. Reached only after everything else worked and the source link is dead even after a retry. <strong style="color:var(--text)">Decision:</strong> left as-is — an edit/re-link capability isn't backed by any job in <code>jtbd.md</code>. Logged as a post-MVP backlog item in <code>research.md</code> (gap 7), not built speculatively.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACEABILITY -->
+  <section class="block" id="traceability">
+    <span class="section-tag tag-trace">Traceability</span>
+    <h2>Job × screen coverage matrix</h2>
+    <p class="lede">Rows = every job in <code>jtbd.md</code> (main, related, emotional, social). Columns = every screen in the Sitemap above. A check means the screen actually participates in <em>closing</em> that job, not merely that it's adjacent to the topic. The orphan column is highlighted, not just noted below it.</p>
+
+    <div class="legend">
+      <span class="lg-label">Jobs:</span>
+      <span><span class="dot" style="background:var(--accent)"></span> Main 1</span>
+      <span><span class="dot" style="background:var(--benchmark)"></span> Main 2</span>
+      <span><span class="dot" style="background:var(--patterns)"></span> Related 1</span>
+      <span><span class="dot" style="background:var(--job-loc)"></span> Related 2</span>
+      <span><span class="dot" style="background:var(--job-log)"></span> Related 3</span>
+      <span><span class="dot" style="background:var(--job-retrieve)"></span> Related 4</span>
+      <span><span class="dot" style="background:var(--text-faint)"></span> Emotional / Social (framing)</span>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Job (jtbd.md)</th>
+            <th>Race browse</th>
+            <th>Race detail</th>
+            <th>Results list</th>
+            <th>Log result</th>
+            <th>Result detail</th>
+            <th class="orphan-col">Sign in / Sign up<span class="orphan-note">ORPHAN</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--accent)"></span>Main Job 1 — Discovery</span></td>
+            <td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td class="orphan-col">—</td>
+          </tr>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--benchmark)"></span>Main Job 2 — Results archiving (combined)</span></td>
+            <td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td class="orphan-col">—</td>
+          </tr>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--patterns)"></span>Related Job 1 — plan season by format</span></td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td>
+          </tr>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-loc)"></span>Related Job 2 — choose races by location</span></td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td>
+          </tr>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-log)"></span>Related Job 3 — log a result with proof</span></td>
+            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td class="orphan-col">—</td>
+          </tr>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-retrieve)"></span>Related Job 4 — retrieve proof for an application</span></td>
+            <td></td><td></td><td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td>
+          </tr>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--text-faint)"></span>Emotional — recognized as a hybrid athlete</span></td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td>
+          </tr>
+          <tr>
+            <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--text-faint)"></span>Social — proof stands on its own</span></td>
+            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="orphan-col">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lede" style="margin-bottom:12px">Emotional and Social don't have a screen built specifically for them — they're closed by <em>how</em> an existing screen reads (Race browse's cross-format framing; the self-reported-source-linked labeling convention on Log result / Results list / Result detail), not by a dedicated interaction. Legitimate closes, but framing-level, unlike every other check in the matrix.</p>
+
+    <div class="callout">
+      <strong>Orphan screen — Sign in / Sign up.</strong> Zero checks, by design. Not dead weight (Logged result is owner-only via RLS) and not a job-closer either — resolved as a <strong style="color:var(--text)">contextual gate</strong> on Log Result and My Results, never a standalone destination. An earlier draft's <code>Onrace (entry)</code> column made the same mistake in reverse — crediting a nonexistent screen with closing Main Job 2 — and was removed; that job's coverage already stood on Race browse + Results list alone.
+    </div>
+    <div class="callout" style="border-left-color:var(--ok)">
+      <strong>Orphan jobs — none.</strong> Every job in <code>jtbd.md</code> traces to at least one screen once Emotional and Social's framing-level closes are counted honestly. Not a forced result: those two were only checked because the Sitemap and Entities sections had already documented exactly where each one lives.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Generated from <code>sitemap.md</code> and <code>flows.md</code>, 2026-09-17. Full rationale, revision history, and every decision behind these diagrams live in those two files. Product context in <code>CLAUDE.md</code>. Live site: <a href="https://juliamakedonska.github.io/Onrace/" target="_blank" rel="noopener">juliamakedonska.github.io/Onrace</a>.
+</footer>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      darkMode: true,
+      background: '#0b0c0e',
+      primaryColor: '#1b1d21',
+      primaryTextColor: '#eef0f2',
+      primaryBorderColor: '#2a2c31',
+      secondaryColor: '#141518',
+      tertiaryColor: '#141518',
+      lineColor: '#4a4e57',
+      textColor: '#eef0f2',
+      mainBkg: '#1b1d21',
+      nodeBorder: '#2a2c31',
+      clusterBkg: '#141518',
+      clusterBorder: '#2a2c31',
+      edgeLabelBackground: '#141518',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      fontSize: '14px'
+    },
+    flowchart: { curve: 'basis', htmlLabels: true }
+  });
+</script>
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+  var linkByTarget = {};
+  links.forEach(function(l){ linkByTarget[l.getAttribute('href').slice(1)] = l; });
+
+  var sections = Array.prototype.slice.call(document.querySelectorAll('main > section.block[id]'));
+  if(!('IntersectionObserver' in window) || !sections.length) return;
+
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      var link = linkByTarget[entry.target.id];
+      if(!link || !entry.isIntersecting) return;
+      links.forEach(function(l){ l.classList.remove('active'); });
+      link.classList.add('active');
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(function(s){ observer.observe(s); });
+})();
+</script>
+
+</body>
+</html>

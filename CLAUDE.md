@@ -74,6 +74,13 @@ MVP by **2026-11-01** (2 months from brief date, 2026-09-01).
 - `results` (personal per-user archive, owner-only via RLS): race_name/date/sport_type (optionally linked to a catalog race), finish_time, official_result_url (required).
   - `category` and `notes` — removed — no job maps to this; reconsider if the archiving job proves more central after validation.
 
+## Information architecture (high-level)
+
+- **Top-level sitemap**: Discovery (Race browse, Race detail) and My Results/Archive (Results list, Log result, Result detail), plus a contextual Sign in/Sign up gate that closes no job of its own — surfaces only when an unauthenticated person taps Log Result or My Results. Full detail: `sitemap.md`; rendered view: `ia.html`.
+- **Main flow**: Discovery — app opens → Race browse (0 taps, the default/home tab) → Race detail (1 tap) → opens `registration_url` externally. The one job in the whole JTBD matrix that needs no caveats for the primary persona. Full flow diagram, plus Log Result and Retrieve Proof: `flows.md`.
+- **Global navigation**: 3 items — Discover (Race browse), Log Result, My Results (Results list) — co-equal by trigger (planning ahead vs. after competing vs. on demand later), not by feature symmetry.
+- **Tap-depth to the main job**: 1 tap from app launch to a specific race worth entering, under the 3-tap ceiling.
+
 ## Repo / infra already set up
 
 - GitHub: https://github.com/JuliaMakedonska/Onrace (public — required for GitHub Pages on the free plan).

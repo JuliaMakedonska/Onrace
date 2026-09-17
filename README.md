@@ -13,6 +13,9 @@ This is a living index — update it as folders fill up or their purpose shifts.
 | [`research/`](./research/research.md) | Discovery notes: competitor/reference audit, findings → decisions | Drafted |
 | ↳ People | [`personas.md`](./research/personas.md) (3 personas) + [`jtbd.md`](./research/jtbd.md) (jobs to be done, JTBD × persona matrix) | Drafted from desktop research; primary interviews not started |
 | `research/screens/` | Reference screenshots gathered during research | Empty |
+| [`sitemap.md`](./sitemap.md) | Information architecture: entities, screens (tagged by job), navigation, job-traceability matrix | Drafted |
+| [`flows.md`](./flows.md) | User flows (Mermaid) for Discovery, Log Result, and Retrieve Proof, with every decision/state/endpoint reasoned out | Drafted |
+| ↳ Rendered view | [`ia.html`](./ia.html) — the sitemap tree, all three flow diagrams, and the traceability matrix as one page | Drafted |
 | [`wireframes/`](./wireframes/README.md) | Low-fidelity layout explorations for core screens | Empty |
 | [`concept/`](./concept/README.md) | Visual direction exploration — moodboards, style tiles | Empty |
 | [`tokens/`](./tokens/README.md) | Design tokens (color, type, spacing, radius, elevation) | Empty |
@@ -22,7 +25,7 @@ This is a living index — update it as folders fill up or their purpose shifts.
 | `src/` | App source code (currently the unmodified Vite scaffold) | Placeholder |
 | `.github/workflows/` | CI: auto-deploys `main` to GitHub Pages | Working |
 
-Intended flow: `research/` → `wireframes/` → `concept/` → `tokens/` → `components/` → `design-system/` → `handoff/` → implementation in `src/`.
+Intended flow: `research/` → `sitemap.md`/`flows.md` (IA) → `wireframes/` → `concept/` → `tokens/` → `components/` → `design-system/` → `handoff/` → implementation in `src/`.
 
 ## Tech stack
 
