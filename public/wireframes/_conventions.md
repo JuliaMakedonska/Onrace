@@ -53,7 +53,20 @@ Each state is its own page — same structure, different content — not one pag
 - All state pages for a given screen share the same structure and zones as the base page (§ 1–2) — a state page changes what's rendered inside those zones (e.g. a message in place of the race list, a spinner placeholder in place of content), not the page's layout or semantic skeleton.
 - Where `../flows.md` distinguishes two causes of the same state on one screen (e.g. Race detail's `DetailError` vs. `RegLinkError`, both "error"), that distinction is handled as different copy within one `-error.html` page, not as separate files — the file-naming grain is state, not cause.
 
-## 6. Deferred to a later pass
+## 6. Site navigation panel
+
+A left-side tree nav, identical on every wireframe page — matches the structural pattern already used in `public/workspace.html` (`.layout` / `.sidebar` / `.content-col`), redrawn in grayscale instead of that page's dark theme.
+
+- **Layout**: `<body>` wraps everything in `<div class="layout">` containing `<nav class="site-nav">` (fixed 240px, `position: sticky`, full viewport height, own scroll) followed by `<div class="page-content">` holding what used to be the page's entire body (the spec-note caption, the phone frame, the frame caption). The phone frame itself is untouched by this — the nav sits outside it, alongside it, never inside the device viewport.
+- **Tree structure and content, pulled only from sourced documents, nothing invented**:
+  - Top-level groups are `../sitemap.md`'s own Screens-section clusters — Discovery, My Results (Archive) — plus Sign in/Sign up as an ungrouped top-level item, exactly where `../sitemap.md`'s own ASCII tree places it (outside both clusters, an `[ORPHAN]`).
+  - Each screen is a node linking to its base `<name>.html` (§ 4/§ 5 — the base file is always the default/"success" view, so the screen node itself covers that state; there's never a separate `-success.html` to link to).
+  - State children (`Empty` / `Error` / `Loading` / `Success`) are added **only** for a screen that has an actual `_screens.md` state table, and **only** for the states that table marks ✓ — e.g. Race browse gets Empty/Error/Loading children (its Success is marked "—", not a distinct endpoint, so no child); Race detail gets Error/Loading/Success children (its Success child points to the same `race-detail.html` as the screen node — again, no separate file — and it gets no Empty child, marked "—"). A screen with no `_screens.md` table yet (Results list, Log result, Result detail, as of this pass) is left as a plain leaf link with no state children, rather than guessing at states sitemap.md only describes loosely in prose — add its children only once that screen gets its own `_screens.md` pass.
+  - Indentation is nested `<ul>`/`<li>` only (no manually-computed padding per row) — group → screen → state, three levels.
+- **Current page**: the node whose `href` matches the current file gets `aria-current="page"` and the same inverted (black background/white text) treatment already used for the global nav's active tab.
+- Sourcing/rationale for the nav's own structure lives in an HTML comment above it (per § 2's rule), not as on-page text.
+
+## 7. Deferred to a later pass
 
 Explicitly out of scope until a later step:
 
@@ -65,4 +78,4 @@ Explicitly out of scope until a later step:
 
 ---
 
-*Next: draw `race-browse.html` / `race-browse-empty.html` / `race-browse-error.html` / `race-browse-loading.html` and `race-detail.html` / `race-detail-error.html` / `race-detail-loading.html`, per `_screens.md`'s state table and these conventions.*
+*Next: `race-browse.html` is built (base page + site nav). Still to draw: `race-browse-empty.html` / `race-browse-error.html` / `race-browse-loading.html` and `race-detail.html` / `race-detail-error.html` / `race-detail-loading.html`, per `_screens.md`'s state table and these conventions — each new page gets the same § 6 nav panel, with its own node marked current.*

@@ -6,7 +6,7 @@
 <title>Race browse — Onrace (wireframe)</title>
 <style>
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
-     no custom fonts, no shadows, no icons. Deferred per _conventions.md § 6:
+     no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7:
      color, fonts, shadows, icons, finished UI. */
 
   * { box-sizing: border-box; }
@@ -17,15 +17,67 @@
     color: #000;
     background: #ccc;
     line-height: 1.4;
-    min-height: 100vh;
+  }
+
+  a { color: #000; }
+
+  /* --- site-wide layout: left nav panel + page content, same pattern as
+     public/workspace.html's .layout/.sidebar/.content-col (grayscale here,
+     no theme colors). Identical on every wireframe page. --- */
+  .layout { display: flex; align-items: flex-start; min-height: 100vh; }
+
+  .site-nav {
+    flex: 0 0 240px;
+    width: 240px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: #fff;
+    border-right: 2px solid #000;
+    padding: 20px 16px;
+  }
+  .site-nav-heading {
+    margin: 0 0 14px 0;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #555;
+    border-bottom: 1px solid #000;
+    padding-bottom: 8px;
+  }
+  .tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+  .tree > li { margin-bottom: 16px; }
+  .tree ul { padding-left: 14px; margin-top: 4px; }
+  .tree a {
+    display: block;
+    padding: 3px 6px;
+    text-decoration: none;
+    color: #000;
+  }
+  .tree a[aria-current="page"] { background: #000; color: #fff; }
+  .tree-group {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #555;
+    padding: 3px 6px 6px;
+    border-bottom: 1px solid #999;
+    margin-bottom: 6px;
+  }
+  .tree-screen { font-size: 0.85rem; font-weight: 600; }
+  .tree-state { font-size: 0.78rem; font-weight: 400; color: #444; }
+
+  .page-content {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
     padding: 32px 16px;
   }
-
-  a { color: #000; }
 
   /* --- captions live outside the device — not part of the product UI --- */
   .spec-note, .frame-caption {
@@ -240,6 +292,58 @@
 </style>
 </head>
 <body>
+
+<div class="layout">
+
+<!-- Site-wide tree nav: identical on every wireframe page. Structure pulled
+     directly from sitemap.md's Screens section (the same two entity-cluster
+     groups — Discovery; My Results/Archive — plus the orphan Sign in/Sign up
+     outside both, exactly as sitemap.md's own tree places it) and from
+     _screens.md's state table (Race browse: Empty/Error/Loading real, Success
+     not a distinct endpoint — dash; Race detail: Error/Loading/Success real,
+     Empty not real — dash). Results list / Log result / Result detail have no
+     _screens.md state table yet (out of scope until Step 8, per that file's
+     own note), so they're left as single links with no state children rather
+     than inventing one. -->
+<nav class="site-nav" aria-label="Wireframe site structure">
+  <p class="site-nav-heading">Screens</p>
+  <ul class="tree">
+    <li>
+      <span class="tree-group">Discovery</span>
+      <ul>
+        <li>
+          <a href="race-browse.html" aria-current="page" class="tree-screen">Race browse</a>
+          <ul>
+            <li><a href="race-browse-empty.html" class="tree-state">Empty</a></li>
+            <li><a href="race-browse-error.html" class="tree-state">Error</a></li>
+            <li><a href="race-browse-loading.html" class="tree-state">Loading</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="race-detail.html" class="tree-screen">Race detail</a>
+          <ul>
+            <li><a href="race-detail-error.html" class="tree-state">Error</a></li>
+            <li><a href="race-detail-loading.html" class="tree-state">Loading</a></li>
+            <li><a href="race-detail.html" class="tree-state">Success</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <span class="tree-group">My Results (Archive)</span>
+      <ul>
+        <li><a href="results-list.html" class="tree-screen">Results list</a></li>
+        <li><a href="log-result.html" class="tree-screen">Log result</a></li>
+        <li><a href="result-detail.html" class="tree-screen">Result detail</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="sign-in-sign-up.html" class="tree-screen">Sign in / Sign up</a>
+    </li>
+  </ul>
+</nav>
+
+<div class="page-content">
 
 <p class="spec-note">
   <strong>Spec note</strong> — Screen: “Race browse” (sitemap.md). Closes: Main Job 1 — Discovery
@@ -470,6 +574,10 @@
   no framework). Conventions: wireframes/_conventions.md · Screen spec: wireframes/_screens.md ·
   Source: sitemap.md, flows.md. Color, fonts, icons, and shadows still deferred.
 </p>
+
+</div><!-- /.page-content -->
+
+</div><!-- /.layout -->
 
 <script>
 (function () {
