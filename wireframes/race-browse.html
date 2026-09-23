@@ -95,19 +95,34 @@
   h1 { font-size: 1.1rem; margin: 0 0 4px 0; }
   h2 { font-size: 1rem; margin: 0 0 10px 0; }
 
-  /* --- filters trigger: opens the bottom-sheet drawer, hidden by default --- */
+  /* --- filters trigger: opens the shared bottom-sheet drawer, hidden by default.
+     List's version is the primary, full-width control (List has no spatial
+     filtering of its own). Map's version floats over the map, secondary to
+     panning/zooming, which already filters by geography. --- */
   .filters-trigger {
     display: block;
     width: 100%;
     border: 1px solid #000;
     background: #fff;
     padding: 10px 12px;
+    margin: 0 0 16px 0;
     font: inherit;
     font-size: 0.95rem;
     text-align: left;
     cursor: pointer;
   }
   .filters-trigger[aria-expanded="true"] { background: #000; color: #fff; }
+
+  .map-placeholder-wrap { position: relative; }
+  .filters-trigger--map {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: auto;
+    margin: 0;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+  }
 
   .results-count { font-size: 0.95rem; margin: 0; }
   .results-count strong { font-size: 1.05rem; }
@@ -252,14 +267,6 @@
 
       <h1>Race browse</h1>
 
-      <!-- ZONE: Search / filter criteria (sitemap.md → Search/filter criteria entity).
-           Hidden by default; opening "Filters" slides up a bottom-sheet drawer over the
-           content. Primary action inside: Apply filters, refetches the race list
-           (flows.md: filter change → Loading). -->
-      <section>
-        <button type="button" id="filters-open" class="filters-trigger" aria-haspopup="dialog" aria-controls="filters-sheet" aria-expanded="false">Filters</button>
-      </section>
-
       <!-- ZONE: Results counter (flows.md → "Any races match current filters?", the
            "yes" branch). Applies to the result set shown in either view below. -->
       <section aria-label="Results counter">
@@ -274,7 +281,19 @@
            geography-first browsing (Related Job 2) is evidenced for the secondary
            Season Planner persona, unscored ("[?]") for the primary persona. Tapping
            a card or a map pin both lead to Race detail (flows.md: "taps a race card
-           or pin"). -->
+           or pin").
+
+           Filters now live inside each view, not as one shared zone above both,
+           because Filters (region/date/sport) and the map itself are two
+           overlapping ways to narrow the same result set, not a sequential
+           "filter, then view" pipeline — panning/zooming the map already filters
+           by geography. List has no spatial filtering of its own, so its Filters
+           entry point is a full-width, primary control. Map's Filters entry point
+           is a small floating control over the map (secondary to the map
+           interaction itself) and mainly stands in for the non-spatial facets
+           (date, sport type); the Region field it shares with List's sheet still
+           overlaps with panning/zooming — reconciling the two is a real open
+           question, left unresolved at this structural pass, not designed away. -->
       <section aria-label="Map or list view">
         <div class="view-toggle" role="group" aria-label="Choose view">
           <button type="button" class="view-btn" data-view="list" aria-pressed="true">List</button>
@@ -283,6 +302,9 @@
 
         <div id="list-view" class="view-panel">
           <h2>Races</h2>
+          <!-- Filters is List's primary way to narrow results — no inherent
+               spatial filtering of its own, unlike Map. -->
+          <button type="button" class="filters-trigger" aria-haspopup="dialog" aria-controls="filters-sheet" aria-expanded="false">Filters</button>
           <!-- Primary action per card: "View race details" → enters Race detail -->
 
           <ul class="race-list">
@@ -383,8 +405,14 @@
 
         <div id="map-view" class="view-panel" hidden>
           <h2>Map</h2>
-          <div class="map-placeholder" role="img" aria-label="Map placeholder plotting the 7 matching races by latitude/longitude">
-            [ map placeholder — plots each matching race’s pin by lat/lng ]
+          <!-- Filters floats over the map, secondary to the map interaction
+               itself — panning/zooming already narrows by geography; this
+               covers date/sport type (see the zone comment above re: Region). -->
+          <div class="map-placeholder-wrap">
+            <div class="map-placeholder" role="img" aria-label="Map placeholder plotting the 7 matching races by latitude/longitude">
+              [ map placeholder — plots each matching race’s pin by lat/lng; pan/zoom narrows by location ]
+            </div>
+            <button type="button" class="filters-trigger filters-trigger--map" aria-haspopup="dialog" aria-controls="filters-sheet" aria-expanded="false">Filters</button>
           </div>
         </div>
 
@@ -445,11 +473,19 @@
 
 <script>
 (function () {
-  var openBtn = document.getElementById('filters-open');
+  // Two triggers (List's full-width control, Map's floating control) share
+  // one sheet — both reflect its open state.
+  var openBtns = document.querySelectorAll('.filters-trigger');
   var closeBtn = document.getElementById('filters-close');
   var sheet = document.getElementById('filters-sheet');
   var backdrop = document.getElementById('sheet-backdrop');
   var form = document.getElementById('filters-form');
+
+  function setTriggersExpanded(expanded) {
+    openBtns.forEach(function (btn) {
+      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    });
+  }
 
   function openSheet() {
     sheet.hidden = false;
@@ -458,20 +494,22 @@
       sheet.classList.add('open');
       backdrop.classList.add('open');
     });
-    openBtn.setAttribute('aria-expanded', 'true');
+    setTriggersExpanded(true);
   }
 
   function closeSheet() {
     sheet.classList.remove('open');
     backdrop.classList.remove('open');
-    openBtn.setAttribute('aria-expanded', 'false');
+    setTriggersExpanded(false);
     window.setTimeout(function () {
       sheet.hidden = true;
       backdrop.hidden = true;
     }, 220);
   }
 
-  openBtn.addEventListener('click', openSheet);
+  openBtns.forEach(function (btn) {
+    btn.addEventListener('click', openSheet);
+  });
   closeBtn.addEventListener('click', closeSheet);
   backdrop.addEventListener('click', closeSheet);
   form.addEventListener('submit', function (e) {
