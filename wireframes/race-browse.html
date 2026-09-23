@@ -10,16 +10,28 @@
 
   * { box-sizing: border-box; }
 
+  /* Neutral backdrop so the constrained mobile-width viewport reads clearly
+     against a desktop browser window — not a layout/positioning decision,
+     just the frame the mobile-first screen sits inside. */
   body {
     margin: 0;
     color: #000;
-    background: #fff;
+    background: #ccc;
     line-height: 1.4;
+    padding: 24px 12px;
   }
 
   a { color: #000; }
 
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+  /* Mobile-first viewport: ~390–430px wide, centered — see _conventions.md § 1. */
+  .viewport {
+    max-width: 402px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #000;
+  }
+
+  .wrap { padding: 0 16px; }
 
   /* --- spec note: not product UI — states which job/flow-step this page represents --- */
   .spec-note {
@@ -30,15 +42,18 @@
   }
   .spec-note strong { text-transform: uppercase; letter-spacing: 0.04em; }
 
-  /* --- zone tag: labels each functional zone + its primary action, per this step's brief --- */
+  /* --- zone tag: labels each functional zone + its primary action, per this step's brief.
+     Rendered as a label strip that bleeds to the section's edges, so each zone reads as
+     one grouped block with its own "header," distinct from the zone below it. --- */
   .zone-tag {
-    margin: 0 0 6px 0;
-    padding: 3px 0;
-    border-top: 1px solid #000;
+    margin: -16px -16px 12px -16px;
+    padding: 6px 16px;
+    background: #eee;
+    border-bottom: 1px solid #000;
     font-size: 0.72rem;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    color: #444;
+    color: #333;
   }
 
   header { border-bottom: 3px solid #000; }
@@ -56,18 +71,25 @@
   header nav a {
     display: block;
     text-align: center;
-    padding: 10px 8px;
+    padding: 10px 6px;
     text-decoration: none;
+    font-size: 0.82rem;
   }
   header nav a[aria-current="page"] {
     background: #000;
     color: #fff;
   }
 
+  /* Zone separation: each zone is its own bordered block, set apart from its
+     neighbors by a visible gap — grouping cue only, no positioning system. */
+  main { padding: 16px; }
   main section {
-    padding: 16px 0;
-    border-bottom: 1px solid #999;
+    border: 2px solid #000;
+    padding: 16px;
+    margin: 0 0 16px 0;
+    background: #fff;
   }
+  main section:last-child { margin-bottom: 0; }
 
   h1 { font-size: 1.1rem; margin: 0 0 4px 0; }
   h2 { font-size: 1rem; margin: 0 0 10px 0; }
@@ -151,6 +173,8 @@
 </head>
 <body>
 
+<div class="viewport">
+
 <header>
   <p class="spec-note">
     <strong>Spec note</strong> — Screen: “Race browse” (sitemap.md). Closes: Main Job 1 — Discovery
@@ -171,7 +195,7 @@
   </nav>
 </header>
 
-<main class="wrap">
+<main>
 
   <h1>Race browse</h1>
 
@@ -330,6 +354,8 @@
     <p>Wireframe — structure only, grayscale. Conventions: wireframes/_conventions.md · Screen spec: wireframes/_screens.md · Source: sitemap.md, flows.md. Color, fonts, icons, and shadows deferred to a later pass.</p>
   </div>
 </footer>
+
+</div>
 
 </body>
 </html>

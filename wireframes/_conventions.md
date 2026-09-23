@@ -12,6 +12,8 @@ Structure, hierarchy, and zones only.
 - **No fonts** — no typeface choices, no custom font sizing beyond what's needed to show a heading/body/label hierarchy generically (e.g., relative weight or size steps, not a chosen type scale).
 - **No branding** — no logo, no product name treated as a wordmark, no Onrace visual identity (`../CLAUDE.md`'s "Bold & competitive" brand tone is explicitly deferred, not applied here).
 - **No images** — no photos, illustrations, or icons standing in for future artwork. A map is represented as a labeled placeholder region (e.g., a boxed area labeled "map"), not a rendered map.
+- **Mobile-first viewport** — every screen is constrained to a single centered container ~390–430px wide (a mobile viewport), set against a neutral gray backdrop, never stretched full-width on desktop. This reflects Onrace's actual scope (`../CLAUDE.md`: web/responsive, no native app) as a phone-first default — it's a viewport constraint, not a layout/positioning decision, so it doesn't pre-empt later responsive/breakpoint work.
+- **Zone separation** — each functional zone within a screen gets a visible bordered block (with internal spacing/background distinguishing its label strip from its content), set apart from neighboring zones by a visible gap. Border *weight* is the only tool used to show nesting depth (e.g. a heavier border framing a zone, a lighter border on the items inside it) — this is a grouping cue, not a positioning/grid system, which stays deferred along with everything else in this section.
 
 This is a deliberate low-fidelity pass: the goal is to validate structure and content against the jobs in `../research/jtbd.md`, not to preview the finished UI.
 
