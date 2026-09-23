@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onrace — Wireframes</title>
+<style>
+  /* Same dark palette as ../public/research.html, ../public/personas.html,
+     ../public/ia.html, ../public/workspace.html — this page is the site's
+     shell/chrome, so it matches their visual language. The wireframe content
+     shown inside the device mockup stays grayscale (per _conventions.md) —
+     only this shell (background, device frame, nav) is dark-themed. */
+  :root {
+    --bg: #0b0c0e;
+    --bg-elev: #141518;
+    --bg-elev-2: #1b1d21;
+    --border: #2a2c31;
+    --text: #eef0f2;
+    --text-dim: #9aa0a8;
+    --text-faint: #686e77;
+    --accent: #ff4d2e;
+    --accent-dim: #ff4d2e33;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  a { color: var(--accent); }
+
+  /* --- layout: left nav column + right content column. Grid, not flex, so
+     the nav and the device mockup are two guaranteed-separate regions at
+     any window width. --- */
+  .layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+
+  /* --- left: tree nav, same structural pattern as public/workspace.html's
+     .sidebar (brand + grouped links), extended into a nested tree
+     (group → screen → state). --- */
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg-elev);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+  }
+  .sidebar-brand {
+    display: block;
+    padding: 0 20px 18px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .sidebar-brand span { color: var(--accent); }
+
+  .tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+  .tree { padding: 0 12px; }
+  .tree > li { margin-bottom: 20px; }
+  .tree ul { padding-left: 14px; margin-top: 4px; }
+  .tree-group {
+    display: block;
+    padding: 0 8px 6px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    border-bottom: 1px solid var(--border);
+  }
+  .tree a {
+    display: block;
+    padding: 6px 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+  .tree a:hover { background: var(--bg-elev-2); color: var(--text); }
+  .tree a[aria-current="page"] { background: var(--accent-dim); color: var(--accent); }
+  .tree-state { font-weight: 400; font-size: 12.5px; }
+
+  /* --- right: content column holding the device mockup --- */
+  .content-col {
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 100vh;
+  }
+  .content-heading { width: 100%; max-width: 410px; }
+  .content-heading h1 {
+    font-size: 20px;
+    margin: 0 0 4px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .content-heading p { color: var(--text-dim); font-size: 13px; margin: 0; }
+
+  /* --- device mockup: fixed ~390–430px viewport, fixed height, own scroll
+     (the iframe's native scrollbar), centered in the available space —
+     the actual wireframe (grayscale) renders inside it unchanged. --- */
+  .device-mockup {
+    width: 410px;
+    height: 864px;
+    max-height: calc(100vh - 140px);
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    flex: 0 0 auto;
+  }
+  .device-mockup iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 6px;
+    background: #fff;
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Tree nav: pulled from sitemap.md's Screens-section clusters (Discovery;
+       My Results/Archive) plus the ungrouped Sign in/Sign up orphan, exactly
+       where sitemap.md's own tree places it. State children come from
+       _screens.md's state table — only ✓ states get a node; Race browse gets
+       Empty/Error/Loading (its Success is "—", not a distinct endpoint);
+       Race detail gets Error/Loading/Success (its Empty is "—"), with
+       Success pointing at the same race-detail.html as the screen node,
+       since there's never a separate -success.html file (_conventions.md § 4).
+       Results list / Log result / Result detail have no _screens.md table
+       yet, so they're plain leaf links with no invented state children. -->
+  <aside class="sidebar">
+    <span class="sidebar-brand">ON<span>RACE</span> · Wireframes</span>
+    <ul class="tree">
+      <li>
+        <span class="tree-group">Discovery</span>
+        <ul>
+          <li>
+            <a href="race-browse.html" data-frame="race-browse.html" aria-current="page">Race browse</a>
+            <ul>
+              <li><a href="race-browse-empty.html" data-frame="race-browse-empty.html" class="tree-state">Empty</a></li>
+              <li><a href="race-browse-error.html" data-frame="race-browse-error.html" class="tree-state">Error</a></li>
+              <li><a href="race-browse-loading.html" data-frame="race-browse-loading.html" class="tree-state">Loading</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="race-detail.html" data-frame="race-detail.html">Race detail</a>
+            <ul>
+              <li><a href="race-detail-error.html" data-frame="race-detail-error.html" class="tree-state">Error</a></li>
+              <li><a href="race-detail-loading.html" data-frame="race-detail-loading.html" class="tree-state">Loading</a></li>
+              <li><a href="race-detail.html" data-frame="race-detail.html" class="tree-state">Success</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="tree-group">My Results (Archive)</span>
+        <ul>
+          <li><a href="results-list.html" data-frame="results-list.html">Results list</a></li>
+          <li><a href="log-result.html" data-frame="log-result.html">Log result</a></li>
+          <li><a href="result-detail.html" data-frame="result-detail.html">Result detail</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="sign-in-sign-up.html" data-frame="sign-in-sign-up.html">Sign in / Sign up</a>
+      </li>
+    </ul>
+  </aside>
+
+  <div class="content-col">
+    <div class="content-heading">
+      <h1 id="screen-title">Race browse</h1>
+      <p>Main Job 1 — Discovery (research/jtbd.md). Base/default state.</p>
+    </div>
+    <div class="device-mockup">
+      <iframe id="screen-frame" src="race-browse.html" title="Onrace wireframe preview"></iframe>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var frame = document.getElementById('screen-frame');
+  var title = document.getElementById('screen-title');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.tree a[data-frame]'));
+
+  links.forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      frame.src = link.getAttribute('data-frame');
+      links.forEach(function (l) { l.removeAttribute('aria-current'); });
+      link.setAttribute('aria-current', 'page');
+      title.textContent = link.textContent;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
