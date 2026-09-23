@@ -25,7 +25,7 @@ Per `../sitemap.md`, Race browse also serves Related Job 1 (plan season by forma
 | State | Real? | Why |
 |---|:---:|---|
 | Empty | ✓ | `HasResults` → "no" → `Empty("Empty: no races match current filters")`. A legitimate data state, not an error — resolved by adjusting filters or giving up (merges into `DeadEnd1`). |
-| Error | ✓ | `Loading` → "connection fails" → `FetchError("Error: could not load races")`, with a `Retry?` diamond. |
+| Error | ✓ | `Loading` → "connection fails" → `FetchError("Error: could not load races")`, with a `Retry?` diamond: "yes" retries the fetch (back to `Loading`), "no" gives up (merges into `DeadEnd1`). |
 | Loading | ✓ | `Loading("Loading: fetching races")` — fires on entry and again on every filter change. |
 | Success | — | No distinct "it worked" endpoint on this screen. Reaching `HasResults` → "yes" just re-displays `Browse` — normal browsing, not a terminal. The flow's actual `Success` node is scoped to Race detail (opening `registration_url`), not to browsing itself. |
 
@@ -45,7 +45,7 @@ This is where the job's own outcome clause — "so that I can compare them in on
 | State | Real? | Why |
 |---|:---:|---|
 | Empty | — | No empty scenario modeled — a race detail is only ever reached for a race that already exists (tapped from a populated Race browse result). `../flows.md` doesn't model this. |
-| Error | ✓ | Two distinct error states: `DetailError("Error: could not load race details")` (with a `Retry?` diamond) on load, and `RegLinkError("Error: couldn't open registration link")` (lighter-weight, no retry diamond — see `../flows.md`'s data-provenance note) after deciding to enter. |
+| Error | ✓ | Two distinct causes: `DetailError("Error: could not load race details")` on load, with a `Retry?` diamond — "yes" retries the fetch, "no" gives up (merges into `DeadEnd1`); and `RegLinkError("Error: couldn't open registration link")` after deciding to enter, lighter-weight with no retry diamond (see `../flows.md`'s data-provenance note) — exits by going back to Race detail to try again later, or gives up into the distinct `DeadEnd6`. |
 | Loading | ✓ | `DetailLoading("Loading: fetching race details")` on entry. |
 | Success | ✓ | `Success(("Success: this race's registration_url opened — Onrace records nothing further"))` — the flow's one distinct "it worked" endpoint, reached via `WantsToEnter` → "yes" → `RegLinkCheck` → "yes." |
 
@@ -54,6 +54,6 @@ This is where the job's own outcome clause — "so that I can compare them in on
 ## Summary table
 
 | Screen | Empty | Error | Loading | Success |
-|---|:---:|:---:|:---:|:---:|
-| Race browse | ✓ | ✓ | ✓ | — |
-| Race detail | — | ✓ | ✓ | ✓ |
+|---|---|---|---|---|
+| Race browse | ✓ — no races match current filters after a successful query; exit is to adjust filters (loops back to Browse) or give up (merges into `DeadEnd1`) | ✓ — race-list fetch fails; `Retry?` exits to retrying the fetch or giving up (merges into `DeadEnd1`) | ✓ — fetching races; fires on initial entry and again on every region/date/sport filter change | — |
+| Race detail | — | ✓ — either the race-detail fetch fails (`Retry?` exits to retrying or giving up into `DeadEnd1`), or, after deciding to enter, the registration link fails to open (exits to back-to-detail-and-retry-later, or giving up into the distinct `DeadEnd6`) | ✓ — fetching a specific race's details, triggered by tapping a card/pin from Race browse | ✓ — `registration_url` opens successfully after deciding the race is worth entering; exit is out to the external registration site, with nothing further recorded in Onrace |
