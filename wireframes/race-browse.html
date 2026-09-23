@@ -5,59 +5,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Race browse — Onrace (wireframe)</title>
 <style>
-  /* Structure/hierarchy/zones only — grayscale, no color, no custom fonts, no shadows, no icons.
-     Deferred per wireframes/_conventions.md § 6: color, fonts, shadows, icons, finished UI. */
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no icons. Deferred per _conventions.md § 6:
+     color, fonts, shadows, icons, finished UI. */
 
   * { box-sizing: border-box; }
 
-  /* Neutral backdrop so the constrained mobile-width viewport reads clearly
-     against a desktop browser window — not a layout/positioning decision,
-     just the frame the mobile-first screen sits inside. */
+  html, body { height: 100%; }
   body {
     margin: 0;
     color: #000;
     background: #ccc;
     line-height: 1.4;
-    padding: 24px 12px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 16px;
   }
 
   a { color: #000; }
 
-  /* Mobile-first viewport: ~390–430px wide, centered — see _conventions.md § 1. */
-  .viewport {
-    max-width: 402px;
-    margin: 0 auto;
-    background: #fff;
-    border: 1px solid #000;
-  }
-
-  .wrap { padding: 0 16px; }
-
-  /* --- spec note: not product UI — states which job/flow-step this page represents --- */
-  .spec-note {
-    background: #eee;
-    border-bottom: 2px solid #000;
-    padding: 10px 16px;
-    font-size: 0.8rem;
-  }
-  .spec-note strong { text-transform: uppercase; letter-spacing: 0.04em; }
-
-  /* --- zone tag: labels each functional zone + its primary action, per this step's brief.
-     Rendered as a label strip that bleeds to the section's edges, so each zone reads as
-     one grouped block with its own "header," distinct from the zone below it. --- */
-  .zone-tag {
-    margin: -16px -16px 12px -16px;
-    padding: 6px 16px;
-    background: #eee;
-    border-bottom: 1px solid #000;
-    font-size: 0.72rem;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
+  /* --- captions live outside the device — not part of the product UI --- */
+  .spec-note, .frame-caption {
+    max-width: 390px;
+    font-size: 0.78rem;
     color: #333;
   }
+  .spec-note {
+    background: #eee;
+    border: 1px solid #000;
+    padding: 10px 14px;
+  }
+  .spec-note strong { text-transform: uppercase; letter-spacing: 0.04em; }
+  .frame-caption { color: #444; }
 
-  header { border-bottom: 3px solid #000; }
-  header nav .wrap { padding-top: 10px; padding-bottom: 10px; }
+  /* --- fixed phone frame: 390×844, does not stretch, scrolls internally --- */
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    flex: 0 0 auto;
+    border: 2px solid #000;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    border-bottom: 3px solid #000;
+    padding: 10px 16px;
+    z-index: 2;
+  }
   header nav ul {
     list-style: none;
     display: flex;
@@ -71,63 +78,56 @@
   header nav a {
     display: block;
     text-align: center;
-    padding: 10px 6px;
+    padding: 9px 6px;
     text-decoration: none;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
-  header nav a[aria-current="page"] {
-    background: #000;
-    color: #fff;
-  }
+  header nav a[aria-current="page"] { background: #000; color: #fff; }
 
-  /* Zone separation: each zone is its own bordered block, set apart from its
-     neighbors by a visible gap — grouping cue only, no positioning system. */
+  /* Zone separation: spacing alone groups a zone — a border is added only
+     where a specific element is doing real structural work (a card, a
+     toggle button, a drawer edge), never as a wrapper around content
+     that's already self-evidently one unit. */
   main { padding: 16px; }
-  main section {
-    border: 2px solid #000;
-    padding: 16px;
-    margin: 0 0 16px 0;
-    background: #fff;
-  }
-  main section:last-child { margin-bottom: 0; }
+  main > section { margin: 0 0 20px 0; }
+  main > section:last-child { margin-bottom: 0; }
 
   h1 { font-size: 1.1rem; margin: 0 0 4px 0; }
   h2 { font-size: 1rem; margin: 0 0 10px 0; }
 
-  /* Filters: native <details>/<summary> — closed by default, no JS needed.
-     "Filters" is the tap target that reveals the form; the disclosure state
-     is real, not a styling flourish. */
-  details summary {
-    cursor: pointer;
+  /* --- filters trigger: opens the bottom-sheet drawer, hidden by default --- */
+  .filters-trigger {
+    display: block;
+    width: 100%;
     border: 1px solid #000;
-    padding: 8px 12px;
-    font-size: 0.95rem;
-  }
-  details[open] summary { margin-bottom: 12px; border-bottom: 2px solid #000; }
-
-  form div, form fieldset {
-    margin-bottom: 12px;
-    border: none;
-    padding: 0;
-  }
-  fieldset { border: 1px solid #999; padding: 8px 10px; }
-  legend { font-size: 0.85rem; padding: 0 4px; }
-  form label { display: inline-block; margin-right: 14px; font-size: 0.9rem; }
-  fieldset label { display: block; margin: 4px 0; }
-  select, input[type="date"] {
-    border: 1px solid #000;
-    padding: 4px 6px;
     background: #fff;
+    padding: 10px 12px;
     font: inherit;
-  }
-  button {
-    border: 1px solid #000;
-    background: #000;
-    color: #fff;
-    padding: 8px 16px;
-    font: inherit;
+    font-size: 0.95rem;
+    text-align: left;
     cursor: pointer;
   }
+  .filters-trigger[aria-expanded="true"] { background: #000; color: #fff; }
+
+  .results-count { font-size: 0.95rem; margin: 0; }
+  .results-count strong { font-size: 1.05rem; }
+
+  /* --- map/list toggle: real buttons, JS swaps which panel is visible --- */
+  .view-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .view-btn {
+    flex: 1;
+    border: 1px solid #000;
+    background: #fff;
+    padding: 8px;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .view-btn[aria-pressed="true"] { background: #000; color: #fff; }
 
   .map-placeholder {
     border: 1px dashed #000;
@@ -141,51 +141,10 @@
     color: #555;
   }
 
-  .results-count { font-size: 0.95rem; }
-  .results-count strong { font-size: 1.05rem; }
-
-  /* View toggle: real radio inputs (native control, not a styled fake tab)
-     switch which panel is shown — CSS-only, no JS. */
-  .view-radio {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-  }
-  .view-label {
-    display: inline-block;
-    border: 1px solid #000;
-    padding: 6px 16px;
-    margin: 0 8px 12px 0;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-  .view-radio:checked + .view-label {
-    background: #000;
-    color: #fff;
-  }
-  .view-radio:focus-visible + .view-label {
-    outline: 2px dotted #000;
-    outline-offset: 2px;
-  }
-
-  .view-panel { display: none; }
-  #view-list:checked ~ #list-view { display: block; }
-  #view-map:checked ~ #map-view { display: block; }
-
-  .sub-tag {
-    font-size: 0.78rem;
-    color: #555;
-    margin: 0 0 10px 0;
-  }
-
   .race-list { list-style: none; margin: 0; padding: 0; }
   .race-list li { margin-bottom: 14px; }
 
-  article.race-card {
-    border: 1px solid #000;
-    padding: 12px 14px;
-  }
+  article.race-card { border: 1px solid #000; padding: 12px 14px; }
   article.race-card h3 { margin: 0 0 6px 0; font-size: 1rem; }
   article.race-card dl {
     display: grid;
@@ -196,10 +155,7 @@
   }
   article.race-card dt { color: #444; }
   article.race-card dd { margin: 0; }
-  article.race-card p.description {
-    font-size: 0.88rem;
-    margin: 0 0 10px 0;
-  }
+  article.race-card p.description { font-size: 0.88rem; margin: 0 0 10px 0; }
   article.race-card a.view-detail {
     display: inline-block;
     border: 1px solid #000;
@@ -209,210 +165,339 @@
   }
   article.race-card a.view-detail:hover { background: #000; color: #fff; }
 
-  footer {
-    border-top: 3px solid #000;
-    padding: 14px 0 24px 0;
-    font-size: 0.75rem;
-    color: #444;
+  /* --- bottom-sheet drawer + backdrop: real overlay, slides up over content --- */
+  .sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); /* grayscale — black at reduced opacity, no hue */
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 5;
   }
+  .sheet-backdrop.open { opacity: 1; }
+  .sheet-backdrop[hidden] { display: none; }
+
+  .sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 75%;
+    overflow-y: auto;
+    background: #fff;
+    border-top: 2px solid #000;
+    padding: 12px 16px 20px;
+    transform: translateY(100%);
+    transition: transform 0.25s ease;
+    z-index: 6;
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet[hidden] { display: none; }
+
+  .sheet-handle {
+    width: 36px;
+    height: 4px;
+    background: #999;
+    margin: 0 auto 14px;
+  }
+
+  form div, form fieldset { margin-bottom: 12px; border: none; padding: 0; }
+  fieldset { border: 1px solid #999; padding: 8px 10px; }
+  legend { font-size: 0.85rem; padding: 0 4px; }
+  form label { display: inline-block; margin-right: 14px; font-size: 0.9rem; }
+  fieldset label { display: block; margin: 4px 0; }
+  select, input[type="date"] {
+    border: 1px solid #000;
+    padding: 4px 6px;
+    background: #fff;
+    font: inherit;
+  }
+  .sheet-actions { display: flex; gap: 10px; margin-top: 4px; }
+  .sheet-actions button {
+    flex: 1;
+    border: 1px solid #000;
+    padding: 9px 12px;
+    font: inherit;
+    cursor: pointer;
+  }
+  #filters-apply { background: #000; color: #fff; }
+  #filters-close { background: #fff; color: #000; }
 </style>
 </head>
 <body>
 
-<div class="viewport">
+<p class="spec-note">
+  <strong>Spec note</strong> — Screen: “Race browse” (sitemap.md). Closes: Main Job 1 — Discovery
+  (research/jtbd.md: “see the full range of options — across countries, formats, and dates —
+  instead of checking each source separately”). Flow position: entry point, 0 taps from app open,
+  the default/home tab (flows.md “Main Job 1 — Discovery”; sitemap.md → Navigation § 2). State shown:
+  the base/“success” page per wireframes/_screens.md — normal browsing with results found
+  (flows.md: “Any races match current filters?” → yes).
+</p>
 
-<header>
-  <p class="spec-note">
-    <strong>Spec note</strong> — Screen: “Race browse” (sitemap.md). Closes: Main Job 1 — Discovery
-    (research/jtbd.md: “see the full range of options — across countries, formats, and dates —
-    instead of checking each source separately”). Flow position: entry point, 0 taps from app open,
-    the default/home tab (flows.md “Main Job 1 — Discovery”; sitemap.md → Navigation § 2). State shown
-    on this page: the base/“success” page per wireframes/_screens.md — normal browsing with results
-    found (flows.md: “Any races match current filters?” → yes).
-  </p>
-  <nav aria-label="Global navigation">
-    <div class="wrap">
-      <ul>
-        <li><a href="race-browse.html" aria-current="page">Discover</a></li>
-        <li><a href="log-result.html">Log Result</a></li>
-        <li><a href="results-list.html">My Results</a></li>
-      </ul>
-    </div>
-  </nav>
-</header>
+<div class="phone-frame" role="application" aria-label="Onrace — Race browse (wireframe, 390×844)">
+  <div class="phone-screen">
 
-<main>
+    <header>
+      <nav aria-label="Global navigation">
+        <ul>
+          <li><a href="race-browse.html" aria-current="page">Discover</a></li>
+          <li><a href="log-result.html">Log Result</a></li>
+          <li><a href="results-list.html">My Results</a></li>
+        </ul>
+      </nav>
+    </header>
 
-  <h1>Race browse</h1>
+    <main>
 
-  <section aria-labelledby="filters-heading">
-    <p class="zone-tag">Zone — Search / filter criteria (sitemap.md → Search/filter criteria entity) · Collapsible: closed by default, tap “Filters” to expand · Primary action inside: Apply filters, refetches the race list (flows.md: filter change → Loading)</p>
-    <details>
-      <summary id="filters-heading">Filters</summary>
-      <form>
-        <div>
-          <label for="region">Region</label>
-          <select id="region" name="region">
-            <option value="">All regions</option>
-            <option>Europe</option>
-            <option>North America</option>
-            <option>Middle East</option>
-            <option>Asia-Pacific</option>
-            <option>Africa</option>
-          </select>
+      <h1>Race browse</h1>
+
+      <!-- ZONE: Search / filter criteria (sitemap.md → Search/filter criteria entity).
+           Hidden by default; opening "Filters" slides up a bottom-sheet drawer over the
+           content. Primary action inside: Apply filters, refetches the race list
+           (flows.md: filter change → Loading). -->
+      <section>
+        <button type="button" id="filters-open" class="filters-trigger" aria-haspopup="dialog" aria-controls="filters-sheet" aria-expanded="false">Filters</button>
+      </section>
+
+      <!-- ZONE: Results counter (flows.md → "Any races match current filters?", the
+           "yes" branch). Applies to the result set shown in either view below. -->
+      <section aria-label="Results counter">
+        <p class="results-count" aria-live="polite"><strong>7 races</strong> match your filters</p>
+      </section>
+
+      <!-- ZONE: Map / list view (sitemap.md: "Race browse (map + list)" — one screen,
+           two representations of the same result set, not two destinations).
+           Primary action: toggle List / Map (real JS swap, one panel visible at a
+           time). Defaults to List: the primary persona's discovery behavior is
+           format/date-anchored (research/jtbd.md → Related Job 1), while
+           geography-first browsing (Related Job 2) is evidenced for the secondary
+           Season Planner persona, unscored ("[?]") for the primary persona. Tapping
+           a card or a map pin both lead to Race detail (flows.md: "taps a race card
+           or pin"). -->
+      <section aria-label="Map or list view">
+        <div class="view-toggle" role="group" aria-label="Choose view">
+          <button type="button" class="view-btn" data-view="list" aria-pressed="true">List</button>
+          <button type="button" class="view-btn" data-view="map" aria-pressed="false">Map</button>
         </div>
-        <div>
-          <label for="date-from">Date from</label>
-          <input type="date" id="date-from" name="date-from" value="2026-09-23">
-          <label for="date-to">Date to</label>
-          <input type="date" id="date-to" name="date-to" value="2027-09-23">
+
+        <div id="list-view" class="view-panel">
+          <h2>Races</h2>
+          <!-- Primary action per card: "View race details" → enters Race detail -->
+
+          <ul class="race-list">
+
+            <li>
+              <article class="race-card">
+                <h3>HYROX London</h3>
+                <dl>
+                  <dt>Sport type</dt><dd>HYROX</dd>
+                  <dt>Date</dt><dd>6 December 2026</dd>
+                  <dt>Location</dt><dd>London, England, United Kingdom</dd>
+                </dl>
+                <p class="description">Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p>
+                <a class="view-detail" href="race-detail.html">View race details</a>
+              </article>
+            </li>
+
+            <li>
+              <article class="race-card">
+                <h3>HYROX Dallas</h3>
+                <dl>
+                  <dt>Sport type</dt><dd>HYROX</dd>
+                  <dt>Date</dt><dd>17 January 2027</dd>
+                  <dt>Location</dt><dd>Dallas, Texas, United States</dd>
+                </dl>
+                <p class="description">North American HYROX stop; the standard 8 × 1&nbsp;km run + station format.</p>
+                <a class="view-detail" href="race-detail.html">View race details</a>
+              </article>
+            </li>
+
+            <li>
+              <article class="race-card">
+                <h3>Boston Marathon</h3>
+                <dl>
+                  <dt>Sport type</dt><dd>Marathon</dd>
+                  <dt>Date</dt><dd>20 April 2027</dd>
+                  <dt>Location</dt><dd>Boston, Massachusetts, United States</dd>
+                </dl>
+                <p class="description">42.2&nbsp;km World Marathon Major through Boston’s historic Newton Hills; requires a qualifying time or charity entry.</p>
+                <a class="view-detail" href="race-detail.html">View race details</a>
+              </article>
+            </li>
+
+            <li>
+              <article class="race-card">
+                <h3>Berlin Marathon</h3>
+                <dl>
+                  <dt>Sport type</dt><dd>Marathon</dd>
+                  <dt>Date</dt><dd>27 September 2026</dd>
+                  <dt>Location</dt><dd>Berlin, Germany</dd>
+                </dl>
+                <p class="description">42.2&nbsp;km flat, fast World Marathon Major course through central Berlin.</p>
+                <a class="view-detail" href="race-detail.html">View race details</a>
+              </article>
+            </li>
+
+            <li>
+              <article class="race-card">
+                <h3>DEKA STRONG Chicago</h3>
+                <dl>
+                  <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
+                  <dt>Date</dt><dd>14 March 2027</dd>
+                  <dt>Location</dt><dd>Chicago, Illinois, United States</dd>
+                </dl>
+                <p class="description">10-zone functional-fitness circuit race; DEKA’s strength-focused format.</p>
+                <a class="view-detail" href="race-detail.html">View race details</a>
+              </article>
+            </li>
+
+            <li>
+              <article class="race-card">
+                <h3>Spartan Race Beast — Killington</h3>
+                <dl>
+                  <dt>Sport type</dt><dd>OCR</dd>
+                  <dt>Date</dt><dd>11 July 2027</dd>
+                  <dt>Location</dt><dd>Killington, Vermont, United States</dd>
+                </dl>
+                <p class="description">21+ km obstacle course race across Killington’s mountain terrain; part of the Spartan Trifecta.</p>
+                <a class="view-detail" href="race-detail.html">View race details</a>
+              </article>
+            </li>
+
+            <li>
+              <article class="race-card">
+                <h3>UTMB — Ultra-Trail du Mont-Blanc</h3>
+                <dl>
+                  <dt>Sport type</dt><dd>Ultra</dd>
+                  <dt>Date</dt><dd>24 August 2027</dd>
+                  <dt>Location</dt><dd>Chamonix, France</dd>
+                </dl>
+                <p class="description">170&nbsp;km ultra-trail circling Mont Blanc through France, Italy, and Switzerland.</p>
+                <a class="view-detail" href="race-detail.html">View race details</a>
+              </article>
+            </li>
+
+          </ul>
         </div>
-        <fieldset>
-          <legend>Sport type</legend>
-          <label><input type="checkbox" name="sport" value="hyrox"> HYROX</label>
-          <label><input type="checkbox" name="sport" value="deka"> DEKA / functional fitness</label>
-          <label><input type="checkbox" name="sport" value="marathon"> Marathon</label>
-          <label><input type="checkbox" name="sport" value="half-marathon"> Half marathon</label>
-          <label><input type="checkbox" name="sport" value="triathlon"> Triathlon</label>
-          <label><input type="checkbox" name="sport" value="ultra"> Ultra</label>
-          <label><input type="checkbox" name="sport" value="ocr"> OCR</label>
-        </fieldset>
-        <button type="submit">Apply filters</button>
-      </form>
-    </details>
-  </section>
 
-  <section aria-label="Results counter">
-    <p class="zone-tag">Zone — Results counter (flows.md → “Any races match current filters?”, the “yes” branch) · applies to the result set shown in either view below</p>
-    <p class="results-count" aria-live="polite"><strong>7 races</strong> match your filters</p>
-  </section>
+        <div id="map-view" class="view-panel" hidden>
+          <h2>Map</h2>
+          <div class="map-placeholder" role="img" aria-label="Map placeholder plotting the 7 matching races by latitude/longitude">
+            [ map placeholder — plots each matching race’s pin by lat/lng ]
+          </div>
+        </div>
 
-  <section aria-label="Map or list view">
-    <p class="zone-tag">Zone — Map / list view (sitemap.md: “Race browse (map + list)” — one screen, two representations of the same result set, not two destinations) · Primary action: toggle List / Map. Defaults to List: the primary persona’s discovery behavior is format/date-anchored (research/jtbd.md → Related Job 1), while geography-first browsing (Related Job 2) is evidenced for the secondary Season Planner persona, unscored (“[?]”) for the primary persona. Tapping a card or a map pin both lead to Race detail (flows.md: “taps a race card or pin”).</p>
+      </section>
 
-    <input type="radio" name="view" id="view-list" class="view-radio" checked>
-    <label for="view-list" class="view-label">List</label>
-    <input type="radio" name="view" id="view-map" class="view-radio">
-    <label for="view-map" class="view-label">Map</label>
+    </main>
 
-    <div id="list-view" class="view-panel">
-    <h2>Races</h2>
-    <p class="sub-tag">Primary action per card: “View race details” → enters Race detail</p>
+  </div><!-- /.phone-screen -->
 
-    <ul class="race-list">
+  <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
 
-      <li>
-        <article class="race-card">
-          <h3>HYROX London</h3>
-          <dl>
-            <dt>Sport type</dt><dd>HYROX</dd>
-            <dt>Date</dt><dd>6 December 2026</dd>
-            <dt>Location</dt><dd>London, England, United Kingdom</dd>
-          </dl>
-          <p class="description">Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p>
-          <a class="view-detail" href="race-detail.html">View race details</a>
-        </article>
-      </li>
-
-      <li>
-        <article class="race-card">
-          <h3>HYROX Dallas</h3>
-          <dl>
-            <dt>Sport type</dt><dd>HYROX</dd>
-            <dt>Date</dt><dd>17 January 2027</dd>
-            <dt>Location</dt><dd>Dallas, Texas, United States</dd>
-          </dl>
-          <p class="description">North American HYROX stop; the standard 8 × 1&nbsp;km run + station format.</p>
-          <a class="view-detail" href="race-detail.html">View race details</a>
-        </article>
-      </li>
-
-      <li>
-        <article class="race-card">
-          <h3>Boston Marathon</h3>
-          <dl>
-            <dt>Sport type</dt><dd>Marathon</dd>
-            <dt>Date</dt><dd>20 April 2027</dd>
-            <dt>Location</dt><dd>Boston, Massachusetts, United States</dd>
-          </dl>
-          <p class="description">42.2&nbsp;km World Marathon Major through Boston’s historic Newton Hills; requires a qualifying time or charity entry.</p>
-          <a class="view-detail" href="race-detail.html">View race details</a>
-        </article>
-      </li>
-
-      <li>
-        <article class="race-card">
-          <h3>Berlin Marathon</h3>
-          <dl>
-            <dt>Sport type</dt><dd>Marathon</dd>
-            <dt>Date</dt><dd>27 September 2026</dd>
-            <dt>Location</dt><dd>Berlin, Germany</dd>
-          </dl>
-          <p class="description">42.2&nbsp;km flat, fast World Marathon Major course through central Berlin.</p>
-          <a class="view-detail" href="race-detail.html">View race details</a>
-        </article>
-      </li>
-
-      <li>
-        <article class="race-card">
-          <h3>DEKA STRONG Chicago</h3>
-          <dl>
-            <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
-            <dt>Date</dt><dd>14 March 2027</dd>
-            <dt>Location</dt><dd>Chicago, Illinois, United States</dd>
-          </dl>
-          <p class="description">10-zone functional-fitness circuit race; DEKA’s strength-focused format.</p>
-          <a class="view-detail" href="race-detail.html">View race details</a>
-        </article>
-      </li>
-
-      <li>
-        <article class="race-card">
-          <h3>Spartan Race Beast — Killington</h3>
-          <dl>
-            <dt>Sport type</dt><dd>OCR</dd>
-            <dt>Date</dt><dd>11 July 2027</dd>
-            <dt>Location</dt><dd>Killington, Vermont, United States</dd>
-          </dl>
-          <p class="description">21+ km obstacle course race across Killington’s mountain terrain; part of the Spartan Trifecta.</p>
-          <a class="view-detail" href="race-detail.html">View race details</a>
-        </article>
-      </li>
-
-      <li>
-        <article class="race-card">
-          <h3>UTMB — Ultra-Trail du Mont-Blanc</h3>
-          <dl>
-            <dt>Sport type</dt><dd>Ultra</dd>
-            <dt>Date</dt><dd>24 August 2027</dd>
-            <dt>Location</dt><dd>Chamonix, France</dd>
-          </dl>
-          <p class="description">170&nbsp;km ultra-trail circling Mont Blanc through France, Italy, and Switzerland.</p>
-          <a class="view-detail" href="race-detail.html">View race details</a>
-        </article>
-      </li>
-
-    </ul>
-    </div>
-
-    <div id="map-view" class="view-panel">
-    <h2>Map</h2>
-    <div class="map-placeholder" role="img" aria-label="Map placeholder plotting the 7 matching races by latitude/longitude">
-      [ map placeholder — plots each matching race’s pin by lat/lng ]
-    </div>
-    </div>
-
-  </section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    <p>Wireframe — structure only, grayscale. Conventions: wireframes/_conventions.md · Screen spec: wireframes/_screens.md · Source: sitemap.md, flows.md. Color, fonts, icons, and shadows deferred to a later pass.</p>
+  <div id="filters-sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="filters-sheet-heading" hidden>
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <h2 id="filters-sheet-heading">Filters</h2>
+    <form id="filters-form">
+      <div>
+        <label for="region">Region</label>
+        <select id="region" name="region">
+          <option value="">All regions</option>
+          <option>Europe</option>
+          <option>North America</option>
+          <option>Middle East</option>
+          <option>Asia-Pacific</option>
+          <option>Africa</option>
+        </select>
+      </div>
+      <div>
+        <label for="date-from">Date from</label>
+        <input type="date" id="date-from" name="date-from" value="2026-09-23">
+        <label for="date-to">Date to</label>
+        <input type="date" id="date-to" name="date-to" value="2027-09-23">
+      </div>
+      <fieldset>
+        <legend>Sport type</legend>
+        <label><input type="checkbox" name="sport" value="hyrox"> HYROX</label>
+        <label><input type="checkbox" name="sport" value="deka"> DEKA / functional fitness</label>
+        <label><input type="checkbox" name="sport" value="marathon"> Marathon</label>
+        <label><input type="checkbox" name="sport" value="half-marathon"> Half marathon</label>
+        <label><input type="checkbox" name="sport" value="triathlon"> Triathlon</label>
+        <label><input type="checkbox" name="sport" value="ultra"> Ultra</label>
+        <label><input type="checkbox" name="sport" value="ocr"> OCR</label>
+      </fieldset>
+      <div class="sheet-actions">
+        <button type="button" id="filters-close">Close</button>
+        <button type="submit" id="filters-apply">Apply filters</button>
+      </div>
+    </form>
   </div>
-</footer>
 
-</div>
+</div><!-- /.phone-frame -->
+
+<p class="frame-caption">
+  Wireframe — structure only, grayscale. Fixed 390×844 phone frame with internal scroll;
+  filters drawer and map/list toggle are real, JS-driven interactions (light vanilla JS,
+  no framework). Conventions: wireframes/_conventions.md · Screen spec: wireframes/_screens.md ·
+  Source: sitemap.md, flows.md. Color, fonts, icons, and shadows still deferred.
+</p>
+
+<script>
+(function () {
+  var openBtn = document.getElementById('filters-open');
+  var closeBtn = document.getElementById('filters-close');
+  var sheet = document.getElementById('filters-sheet');
+  var backdrop = document.getElementById('sheet-backdrop');
+  var form = document.getElementById('filters-form');
+
+  function openSheet() {
+    sheet.hidden = false;
+    backdrop.hidden = false;
+    requestAnimationFrame(function () {
+      sheet.classList.add('open');
+      backdrop.classList.add('open');
+    });
+    openBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeSheet() {
+    sheet.classList.remove('open');
+    backdrop.classList.remove('open');
+    openBtn.setAttribute('aria-expanded', 'false');
+    window.setTimeout(function () {
+      sheet.hidden = true;
+      backdrop.hidden = true;
+    }, 220);
+  }
+
+  openBtn.addEventListener('click', openSheet);
+  closeBtn.addEventListener('click', closeSheet);
+  backdrop.addEventListener('click', closeSheet);
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    closeSheet();
+  });
+
+  var viewButtons = document.querySelectorAll('.view-btn');
+  var panels = {
+    list: document.getElementById('list-view'),
+    map: document.getElementById('map-view')
+  };
+
+  viewButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var view = btn.getAttribute('data-view');
+      viewButtons.forEach(function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      Object.keys(panels).forEach(function (key) {
+        panels[key].hidden = key !== view;
+      });
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
