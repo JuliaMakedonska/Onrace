@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Race browse — Onrace (wireframe)</title>
+<style>
+  /* Structure/hierarchy/zones only — grayscale, no color, no custom fonts, no shadows, no icons.
+     Deferred per wireframes/_conventions.md § 6: color, fonts, shadows, icons, finished UI. */
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    color: #000;
+    background: #fff;
+    line-height: 1.4;
+  }
+
+  a { color: #000; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+
+  /* --- spec note: not product UI — states which job/flow-step this page represents --- */
+  .spec-note {
+    background: #eee;
+    border-bottom: 2px solid #000;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+  .spec-note strong { text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* --- zone tag: labels each functional zone + its primary action, per this step's brief --- */
+  .zone-tag {
+    margin: 0 0 6px 0;
+    padding: 3px 0;
+    border-top: 1px solid #000;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  header { border-bottom: 3px solid #000; }
+  header nav .wrap { padding-top: 10px; padding-bottom: 10px; }
+  header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #000;
+  }
+  header nav li { flex: 1; border-right: 1px solid #000; }
+  header nav li:last-child { border-right: none; }
+  header nav a {
+    display: block;
+    text-align: center;
+    padding: 10px 8px;
+    text-decoration: none;
+  }
+  header nav a[aria-current="page"] {
+    background: #000;
+    color: #fff;
+  }
+
+  main section {
+    padding: 16px 0;
+    border-bottom: 1px solid #999;
+  }
+
+  h1 { font-size: 1.1rem; margin: 0 0 4px 0; }
+  h2 { font-size: 1rem; margin: 0 0 10px 0; }
+
+  form div, form fieldset {
+    margin-bottom: 12px;
+    border: none;
+    padding: 0;
+  }
+  fieldset { border: 1px solid #999; padding: 8px 10px; }
+  legend { font-size: 0.85rem; padding: 0 4px; }
+  form label { display: inline-block; margin-right: 14px; font-size: 0.9rem; }
+  fieldset label { display: block; margin: 4px 0; }
+  select, input[type="date"] {
+    border: 1px solid #000;
+    padding: 4px 6px;
+    background: #fff;
+    font: inherit;
+  }
+  button {
+    border: 1px solid #000;
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .map-placeholder {
+    border: 1px dashed #000;
+    background: #f2f2f2;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #555;
+  }
+
+  .results-count { font-size: 0.95rem; }
+  .results-count strong { font-size: 1.05rem; }
+
+  .race-list { list-style: none; margin: 0; padding: 0; }
+  .race-list li { margin-bottom: 14px; }
+
+  article.race-card {
+    border: 1px solid #000;
+    padding: 12px 14px;
+  }
+  article.race-card h3 { margin: 0 0 6px 0; font-size: 1rem; }
+  article.race-card dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 2px 10px;
+    margin: 0 0 8px 0;
+    font-size: 0.88rem;
+  }
+  article.race-card dt { color: #444; }
+  article.race-card dd { margin: 0; }
+  article.race-card p.description {
+    font-size: 0.88rem;
+    margin: 0 0 10px 0;
+  }
+  article.race-card a.view-detail {
+    display: inline-block;
+    border: 1px solid #000;
+    padding: 6px 12px;
+    text-decoration: none;
+    font-size: 0.88rem;
+  }
+  article.race-card a.view-detail:hover { background: #000; color: #fff; }
+
+  footer {
+    border-top: 3px solid #000;
+    padding: 14px 0 24px 0;
+    font-size: 0.75rem;
+    color: #444;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="spec-note">
+    <strong>Spec note</strong> — Screen: “Race browse” (sitemap.md). Closes: Main Job 1 — Discovery
+    (research/jtbd.md: “see the full range of options — across countries, formats, and dates —
+    instead of checking each source separately”). Flow position: entry point, 0 taps from app open,
+    the default/home tab (flows.md “Main Job 1 — Discovery”; sitemap.md → Navigation § 2). State shown
+    on this page: the base/“success” page per wireframes/_screens.md — normal browsing with results
+    found (flows.md: “Any races match current filters?” → yes).
+  </p>
+  <nav aria-label="Global navigation">
+    <div class="wrap">
+      <ul>
+        <li><a href="race-browse.html" aria-current="page">Discover</a></li>
+        <li><a href="log-result.html">Log Result</a></li>
+        <li><a href="results-list.html">My Results</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <h1>Race browse</h1>
+
+  <section aria-labelledby="filters-heading">
+    <p class="zone-tag">Zone — Search / filter criteria (sitemap.md → Search/filter criteria entity) · Primary action: Apply filters, refetches the race list (flows.md: filter change → Loading)</p>
+    <h2 id="filters-heading">Search / filter criteria</h2>
+    <form>
+      <div>
+        <label for="region">Region</label>
+        <select id="region" name="region">
+          <option value="">All regions</option>
+          <option>Europe</option>
+          <option>North America</option>
+          <option>Middle East</option>
+          <option>Asia-Pacific</option>
+          <option>Africa</option>
+        </select>
+      </div>
+      <div>
+        <label for="date-from">Date from</label>
+        <input type="date" id="date-from" name="date-from" value="2026-09-23">
+        <label for="date-to">Date to</label>
+        <input type="date" id="date-to" name="date-to" value="2027-09-23">
+      </div>
+      <fieldset>
+        <legend>Sport type</legend>
+        <label><input type="checkbox" name="sport" value="hyrox"> HYROX</label>
+        <label><input type="checkbox" name="sport" value="deka"> DEKA / functional fitness</label>
+        <label><input type="checkbox" name="sport" value="marathon"> Marathon</label>
+        <label><input type="checkbox" name="sport" value="half-marathon"> Half marathon</label>
+        <label><input type="checkbox" name="sport" value="triathlon"> Triathlon</label>
+        <label><input type="checkbox" name="sport" value="ultra"> Ultra</label>
+        <label><input type="checkbox" name="sport" value="ocr"> OCR</label>
+      </fieldset>
+      <button type="submit">Apply filters</button>
+    </form>
+  </section>
+
+  <section aria-labelledby="map-heading">
+    <p class="zone-tag">Zone — Map (sitemap.md: “Race browse (map + list)”) · plots each result’s lat/lng; not a separate entity (sitemap.md → Race listing)</p>
+    <h2 id="map-heading">Map</h2>
+    <div class="map-placeholder" role="img" aria-label="Map placeholder plotting the 7 matching races by latitude/longitude">
+      [ map placeholder — plots each matching race’s pin by lat/lng ]
+    </div>
+  </section>
+
+  <section aria-label="Results counter">
+    <p class="zone-tag">Zone — Results counter (flows.md → “Any races match current filters?”, the “yes” branch)</p>
+    <p class="results-count" aria-live="polite"><strong>7 races</strong> match your filters</p>
+  </section>
+
+  <section aria-labelledby="results-heading">
+    <p class="zone-tag">Zone — Race card list (sitemap.md → Race listing entity) · Primary action per card: “View race details” → enters Race detail (flows.md: “taps a race card or pin”)</p>
+    <h2 id="results-heading">Races</h2>
+
+    <ul class="race-list">
+
+      <li>
+        <article class="race-card">
+          <h3>HYROX London</h3>
+          <dl>
+            <dt>Sport type</dt><dd>HYROX</dd>
+            <dt>Date</dt><dd>6 December 2026</dd>
+            <dt>Location</dt><dd>London, England, United Kingdom</dd>
+          </dl>
+          <p class="description">Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p>
+          <a class="view-detail" href="race-detail.html">View race details</a>
+        </article>
+      </li>
+
+      <li>
+        <article class="race-card">
+          <h3>HYROX Dallas</h3>
+          <dl>
+            <dt>Sport type</dt><dd>HYROX</dd>
+            <dt>Date</dt><dd>17 January 2027</dd>
+            <dt>Location</dt><dd>Dallas, Texas, United States</dd>
+          </dl>
+          <p class="description">North American HYROX stop; the standard 8 × 1&nbsp;km run + station format.</p>
+          <a class="view-detail" href="race-detail.html">View race details</a>
+        </article>
+      </li>
+
+      <li>
+        <article class="race-card">
+          <h3>Boston Marathon</h3>
+          <dl>
+            <dt>Sport type</dt><dd>Marathon</dd>
+            <dt>Date</dt><dd>20 April 2027</dd>
+            <dt>Location</dt><dd>Boston, Massachusetts, United States</dd>
+          </dl>
+          <p class="description">42.2&nbsp;km World Marathon Major through Boston’s historic Newton Hills; requires a qualifying time or charity entry.</p>
+          <a class="view-detail" href="race-detail.html">View race details</a>
+        </article>
+      </li>
+
+      <li>
+        <article class="race-card">
+          <h3>Berlin Marathon</h3>
+          <dl>
+            <dt>Sport type</dt><dd>Marathon</dd>
+            <dt>Date</dt><dd>27 September 2026</dd>
+            <dt>Location</dt><dd>Berlin, Germany</dd>
+          </dl>
+          <p class="description">42.2&nbsp;km flat, fast World Marathon Major course through central Berlin.</p>
+          <a class="view-detail" href="race-detail.html">View race details</a>
+        </article>
+      </li>
+
+      <li>
+        <article class="race-card">
+          <h3>DEKA STRONG Chicago</h3>
+          <dl>
+            <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
+            <dt>Date</dt><dd>14 March 2027</dd>
+            <dt>Location</dt><dd>Chicago, Illinois, United States</dd>
+          </dl>
+          <p class="description">10-zone functional-fitness circuit race; DEKA’s strength-focused format.</p>
+          <a class="view-detail" href="race-detail.html">View race details</a>
+        </article>
+      </li>
+
+      <li>
+        <article class="race-card">
+          <h3>Spartan Race Beast — Killington</h3>
+          <dl>
+            <dt>Sport type</dt><dd>OCR</dd>
+            <dt>Date</dt><dd>11 July 2027</dd>
+            <dt>Location</dt><dd>Killington, Vermont, United States</dd>
+          </dl>
+          <p class="description">21+ km obstacle course race across Killington’s mountain terrain; part of the Spartan Trifecta.</p>
+          <a class="view-detail" href="race-detail.html">View race details</a>
+        </article>
+      </li>
+
+      <li>
+        <article class="race-card">
+          <h3>UTMB — Ultra-Trail du Mont-Blanc</h3>
+          <dl>
+            <dt>Sport type</dt><dd>Ultra</dd>
+            <dt>Date</dt><dd>24 August 2027</dd>
+            <dt>Location</dt><dd>Chamonix, France</dd>
+          </dl>
+          <p class="description">170&nbsp;km ultra-trail circling Mont Blanc through France, Italy, and Switzerland.</p>
+          <a class="view-detail" href="race-detail.html">View race details</a>
+        </article>
+      </li>
+
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Wireframe — structure only, grayscale. Conventions: wireframes/_conventions.md · Screen spec: wireframes/_screens.md · Source: sitemap.md, flows.md. Color, fonts, icons, and shadows deferred to a later pass.</p>
+  </div>
+</footer>
+
+</body>
+</html>
