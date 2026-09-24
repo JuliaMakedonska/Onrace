@@ -75,46 +75,55 @@
 
   /* --- main is a flex column so the visible view panel (list or map) can
      take flex:1 and genuinely fill whatever space is left below the header/
-     control-bar/chips, down to the bottom nav — this is what makes the map
-     "fill the full space" without a hardcoded height, and lets a long card
-     list overflow into .phone-screen's own scroll instead. --- */
+     controls/results row, down to the bottom nav — this is what makes the
+     map "fill the full space" without a hardcoded height, and lets a long
+     card list overflow into .phone-screen's own scroll instead. --- */
   main {
     display: flex;
     flex-direction: column;
     min-height: 100%;
   }
 
-  header { padding: 16px 16px 12px; }
-  h1 { font-size: 1.1rem; margin: 0 0 4px 0; }
-  .results-count { font-size: 0.95rem; margin: 0; color: #333; }
+  header { padding: 16px 16px 8px; }
+  h1 { font-size: 1.1rem; margin: 0; }
 
-  /* --- shared control bar: Filters + the List/Map toggle in one row, sticky
-     at the top of the scroll area. Filtering is identical for both views —
-     Map's own pan/zoom is a viewport change, not a filter (see the map-view
-     comment below) — so there is exactly one Filters entry point, not one
-     per view. --- */
-  .control-bar {
+  /* --- shared controls: the control row (Filters + List/Map toggle) and the
+     active-filter chips, together in one sticky block whose bottom border is
+     the divider. Filtering is identical for both views — Map's own pan/zoom
+     is a viewport change, not a filter (see the map-view comment below) —
+     so there is exactly one Filters entry point, not one per view. --- */
+  .controls {
     position: sticky;
     top: 0;
     z-index: 2;
+    background: #fff;
+    border-bottom: 1px solid #000;
+  }
+  .control-row {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    background: #fff;
-    border-bottom: 1px solid #000;
   }
+
+  /* Filters is the primary control (it decides WHAT is shown; the toggle only
+     decides HOW), so it takes the row's spare width and a heavier 2px border
+     + bold label. It deliberately never uses the inverted black fill — that
+     style means "current/pressed" (List/Map toggle, current nav tab) on this
+     screen, and Filters is an action, not a state. Open = light gray. */
   .filters-trigger {
-    width: auto;
-    border: 1px solid #000;
+    flex: 1;
+    border: 2px solid #000;
     background: #fff;
     padding: 8px 14px;
     margin: 0;
     font: inherit;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: left;
     cursor: pointer;
   }
-  .filters-trigger[aria-expanded="true"] { background: #000; color: #fff; }
+  .filters-trigger[aria-expanded="true"] { background: #e6e6e6; }
 
   .view-toggle {
     display: flex;
@@ -133,19 +142,80 @@
   .view-btn:last-child { border-right: none; }
   .view-btn[aria-pressed="true"] { background: #000; color: #fff; }
 
-  /* --- active filter chips: shared, identical in both views. Empty in this
-     default (no filters applied) state, so it collapses to nothing — a
-     filtered state would render one chip per active facet; not built yet,
-     no _screens.md state covers it. --- */
+  /* --- active filter chips: shared, identical in both views, between the
+     control row and the divider. One row only — overflows sideways with its
+     own horizontal scroll instead of wrapping, so the sticky block's height
+     stays fixed however many filters are on. "Clear all" sits outside the
+     scrolling list so it's always visible, never scrolled off the end. --- */
+  .chips-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px 10px;
+  }
+  .chips-bar[hidden] { display: none; }
   .chips-row {
     list-style: none;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 6px;
+    flex: 1;
+    min-width: 0;
     margin: 0;
-    padding: 10px 16px 0;
+    padding: 0;
+    overflow-x: auto;
   }
-  .chips-row:empty { display: none; }
+  .chips-row li { flex: none; }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #000;
+    background: #fff;
+    padding: 3px 8px;
+    font: inherit;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .clear-all {
+    flex: none;
+    border: none;
+    background: none;
+    padding: 3px 0;
+    font: inherit;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* --- results row: the filters' output sits with the results, below the
+     divider, in the same place in both views. List: "N upcoming races ·
+     Sort: …". Map: just "N races" — Sort is list-only (pins aren't
+     sequenced), so the row keeps its position and only loses its tail. --- */
+  .results-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .results-count { margin: 0; }
+  .sort-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #333;
+  }
+  .sort-control[hidden] { display: none; }
+  .sort-control::before { content: "·"; margin-right: 2px; color: #000; }
+  .sort-control select {
+    border: 1px solid #000;
+    padding: 3px 6px;
+    font: inherit;
+    background: #fff;
+  }
 
   /* Each view panel gets flex:1 when visible, so it fills the rest of main's
      column. min-height:0 lets it shrink/scroll correctly instead of forcing
@@ -156,48 +226,47 @@
      this outranks #map-view / #list-view's own display rules. */
   #list-view[hidden], #map-view[hidden] { display: none; }
 
-  #list-view { padding: 16px; }
+  #list-view { padding: 0 16px 16px; }
 
-  .sort-control {
+  /* --- race cards: short by design — name, sport tag + date, location.
+     No field labels (the values are self-evident), no prose description
+     (that belongs on Race detail), no separate button: the whole card is
+     one link. Sized so 4 full cards fit on a phone-height screen, with the
+     5th peeking in to signal the list scrolls. --- */
+  .race-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+  }
+  article.race-card { border: 1px solid #000; }
+  article.race-card a.card-link {
+    display: block;
+    padding: 20px 16px;
+    text-decoration: none;
+    color: inherit;
+  }
+  article.race-card a.card-link:hover,
+  article.race-card a.card-link:focus-visible { background: #f2f2f2; }
+  article.race-card h3 { margin: 0 0 12px 0; font-size: 1rem; }
+  .card-meta {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 14px 0;
-    font-size: 0.85rem;
-  }
-  .sort-control select {
-    border: 1px solid #000;
-    padding: 4px 6px;
-    font: inherit;
-    background: #fff;
-  }
-
-  .race-list { list-style: none; margin: 0; padding: 0; }
-  .race-list li { margin-bottom: 14px; }
-
-  article.race-card { border: 1px solid #000; padding: 12px 14px; }
-  article.race-card h3 { margin: 0 0 6px 0; font-size: 1rem; }
-  article.race-card dl {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 2px 10px;
     margin: 0 0 8px 0;
     font-size: 0.88rem;
   }
-  article.race-card dt { color: #444; }
-  article.race-card dd { margin: 0; }
-  article.race-card p.description { font-size: 0.88rem; margin: 0 0 10px 0; }
-  article.race-card a.view-detail {
-    display: inline-block;
+  .sport-tag {
     border: 1px solid #000;
-    padding: 6px 12px;
-    text-decoration: none;
-    font-size: 0.88rem;
+    padding: 1px 6px;
+    font-size: 0.78rem;
   }
-  article.race-card a.view-detail:hover { background: #000; color: #fff; }
+  .card-location { margin: 0; font-size: 0.88rem; color: #333; }
 
   /* --- map view: no padding (bleeds edge-to-edge), fills the remaining
-     space between the control bar and the bottom nav. --- */
+     space between the results row and the bottom nav. --- */
   #map-view {
     display: flex;
     flex-direction: column;
@@ -274,18 +343,17 @@
   #filters-close { background: #fff; color: #000; }
 
   /* --- loading skeletons: gray placeholder bars shaped like a race card's
-     own zones (title, 3 dl rows, description, action), so the layout
-     doesn't jump when real cards arrive. Static — no shimmer (finished-UI
-     polish is deferred, _conventions.md § 7). --- */
-  .skeleton-card { border: 1px solid #ccc; padding: 12px 14px; }
-  .bar { background: #ddd; height: 10px; margin: 0 0 8px 0; }
-  .bar.title { height: 14px; width: 60%; margin-bottom: 12px; }
-  .bar.row { width: 75%; }
-  .bar.row.short { width: 50%; }
-  .bar.desc { width: 100%; }
-  .bar.desc.end { width: 80%; margin-bottom: 12px; }
-  .bar.action { height: 28px; width: 130px; margin: 0; }
-  .bar.count { display: inline-block; width: 140px; height: 12px; margin: 0; }
+     own zones (name, sport tag + date, location), same padding/border as a
+     real card, so the layout doesn't jump when cards arrive. Static — no
+     shimmer (finished-UI polish is deferred, _conventions.md § 7). --- */
+  .skeleton-card { border: 1px solid #ccc; padding: 20px 16px; }
+  .bar { background: #ddd; height: 12px; }
+  .bar.title { height: 16px; width: 60%; margin-bottom: 18px; }
+  .skel-meta { display: flex; gap: 8px; margin-bottom: 14px; }
+  .bar.tag { height: 18px; width: 72px; }
+  .bar.date { height: 18px; width: 90px; }
+  .bar.location { height: 14px; width: 42%; }
+  .bar.count { display: inline-block; width: 120px; height: 12px; vertical-align: middle; }
   .visually-hidden {
     position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0 0 0 0); white-space: nowrap;
@@ -301,96 +369,99 @@
 
       <header>
         <h1>Discover</h1>
-        <!-- Count isn't known until the fetch returns — a gray bar holds its
-             place so the header doesn't reflow. -->
-        <p class="results-count" aria-live="polite"><span class="bar count" aria-hidden="true"></span><span class="visually-hidden">Loading races…</span></p>
       </header>
 
-      <!-- ZONE: shared control bar (sitemap.md: "Race browse (map + list)" — one
+      <!-- ZONE: shared controls (sitemap.md: "Race browse (map + list)" — one
            screen, two representations of one result set). Sticky at the top of
-           the scroll area so Filters and the List/Map toggle stay reachable
-           while the list scrolls beneath. Filtering is identical for both views
-           — this supersedes this file's earlier design, where Map carried its
-           own floating Filters trigger and leaned on pan/zoom as an implicit
-           location filter. That tension is resolved now, not left open: panning
-           or zooming the map only changes the viewport (see the map-view
-           comment below), so the Filters drawer (region/date/sport) is the one
-           and only way either view gets narrowed. -->
-      <div class="control-bar">
-        <button type="button" id="filters-open" class="filters-trigger" aria-haspopup="dialog" aria-controls="filters-sheet" aria-expanded="false">Filters</button>
-        <div class="view-toggle" role="group" aria-label="Choose view">
-          <button type="button" class="view-btn" data-view="list" aria-pressed="true">List</button>
-          <button type="button" class="view-btn" data-view="map" aria-pressed="false">Map</button>
+           the scroll area so Filters, the List/Map toggle, and the active
+           chips stay reachable while the list scrolls beneath; its bottom
+           border is the divider. Filtering is identical for both views —
+           panning or zooming the map only changes the viewport (see the
+           map-view comment below), so the Filters drawer (region/date/sport)
+           and the chips are the only ways either view gets narrowed.
+           Filters and the toggle are siblings in one row (Filters decides
+           WHAT you see, the toggle decides HOW), with Filters weighted as the
+           primary control. Its label carries the active-filter count
+           ("Filters · 2") once any filter is on. -->
+      <div class="controls">
+        <div class="control-row">
+          <button type="button" id="filters-open" class="filters-trigger" aria-haspopup="dialog" aria-controls="filters-sheet" aria-expanded="false">Filters</button>
+          <div class="view-toggle" role="group" aria-label="Choose view">
+            <button type="button" class="view-btn" data-view="list" aria-pressed="true">List</button>
+            <button type="button" class="view-btn" data-view="map" aria-pressed="false">Map</button>
+          </div>
+        </div>
+
+        <!-- ZONE: active filter chips — one removable chip per active facet,
+             plus "Clear all". Hidden here: no filters are applied in this
+             default state. Removing a chip is a filter change, which in the
+             real app re-runs the fetch (flows.md: filter change → Loading);
+             the wireframe only removes the chip and resets the matching
+             field in the Filters drawer, it doesn't fake new results. -->
+        <div class="chips-bar" hidden>
+          <ul class="chips-row" aria-label="Active filters"></ul>
+          <button type="button" class="clear-all" data-clear-filters>Clear all</button>
         </div>
       </div>
 
-      <!-- ZONE: active filter chips, shared and identical in both views. Empty
-           here (no filters applied in this default state) — collapses to zero
-           height via CSS rather than showing a placeholder message that isn't
-           sourced anywhere. -->
-      <ul class="chips-row" aria-label="Active filters"></ul>
+      <!-- ZONE: results row — the count isn't known until the fetch returns,
+           so a gray bar holds its place and the row doesn't reflow. Sort
+           stays (list-only, as in the default state) but is disabled until
+           there's something to order. -->
+      <div class="results-row">
+        <p class="results-count" aria-live="polite"><span class="bar count" aria-hidden="true"></span><span class="visually-hidden">Loading races…</span></p>
+        <div class="sort-control" data-list-only>
+          <label for="sort">Sort:</label>
+          <select id="sort" name="sort" disabled>
+            <option value="soonest" selected>Soonest first</option>
+            <option value="farthest">Farthest first</option>
+          </select>
+        </div>
+      </div>
 
       <section class="view-area" aria-label="Map or list view" style="display: contents;">
 
         <div id="list-view" class="view-panel">
           <!-- ZONE: loading state (_screens.md → Race browse → Loading; flows.md
                Loading("fetching races")) — fires on entry and again on every
-               filter change. Sort stays in place but disabled until there's
-               something to order. -->
-          <div class="sort-control">
-            <label for="sort">Sort</label>
-            <select id="sort" name="sort" disabled>
-              <option value="soonest" selected>Soonest first</option>
-              <option value="farthest">Farthest first</option>
-            </select>
-          </div>
-          <!-- Skeletons sit exactly where the race-card list goes; they're
-               placeholders, not races, so plain divs (not <article>) and
-               hidden from assistive tech — aria-busy + the status text in the
-               header carry the meaning instead. -->
+               filter change. Skeletons sit exactly where the race-card list
+               goes; they're placeholders, not races, so plain divs (not
+               <article>) and hidden from assistive tech — aria-busy plus the
+               status text in the results row carry the meaning instead. -->
           <ul class="race-list" aria-busy="true" aria-hidden="true">
             <li>
               <div class="skeleton-card">
                 <div class="bar title"></div>
-                <div class="bar row"></div>
-                <div class="bar row short"></div>
-                <div class="bar row"></div>
-                <div class="bar desc"></div>
-                <div class="bar desc end"></div>
-                <div class="bar action"></div>
+                <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
+                <div class="bar location"></div>
               </div>
             </li>
             <li>
               <div class="skeleton-card">
                 <div class="bar title"></div>
-                <div class="bar row"></div>
-                <div class="bar row short"></div>
-                <div class="bar row"></div>
-                <div class="bar desc"></div>
-                <div class="bar desc end"></div>
-                <div class="bar action"></div>
+                <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
+                <div class="bar location"></div>
               </div>
             </li>
             <li>
               <div class="skeleton-card">
                 <div class="bar title"></div>
-                <div class="bar row"></div>
-                <div class="bar row short"></div>
-                <div class="bar row"></div>
-                <div class="bar desc"></div>
-                <div class="bar desc end"></div>
-                <div class="bar action"></div>
+                <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
+                <div class="bar location"></div>
               </div>
             </li>
             <li>
               <div class="skeleton-card">
                 <div class="bar title"></div>
-                <div class="bar row"></div>
-                <div class="bar row short"></div>
-                <div class="bar row"></div>
-                <div class="bar desc"></div>
-                <div class="bar desc end"></div>
-                <div class="bar action"></div>
+                <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
+                <div class="bar location"></div>
+              </div>
+            </li>
+            <li>
+              <div class="skeleton-card">
+                <div class="bar title"></div>
+                <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
+                <div class="bar location"></div>
               </div>
             </li>
           </ul>
@@ -441,9 +512,9 @@
       </div>
       <div>
         <label for="date-from">Date from</label>
-        <input type="date" id="date-from" name="date-from" value="2026-09-23">
+        <input type="date" id="date-from" name="date-from" value="2026-09-23" data-unfiltered="2026-09-23">
         <label for="date-to">Date to</label>
-        <input type="date" id="date-to" name="date-to" value="2027-09-23">
+        <input type="date" id="date-to" name="date-to" value="2027-09-23" data-unfiltered="2027-09-23">
       </div>
       <fieldset>
         <legend>Sport type</legend>
@@ -464,20 +535,15 @@
 
 <script>
 (function () {
-  // Single shared Filters trigger now (the control bar's one button) —
-  // querySelectorAll still used so this keeps working unchanged if a second
-  // trigger is ever reintroduced.
-  var openBtns = document.querySelectorAll('.filters-trigger');
+  // --- Filters drawer. Opened by the control row's Filters button, and by
+  // any [data-opens-filters] button a state page adds (e.g. the empty
+  // state's "Loosen filters").
+  var filtersBtn = document.getElementById('filters-open');
+  var openBtns = document.querySelectorAll('.filters-trigger, [data-opens-filters]');
   var closeBtn = document.getElementById('filters-close');
   var sheet = document.getElementById('filters-sheet');
   var backdrop = document.getElementById('sheet-backdrop');
   var form = document.getElementById('filters-form');
-
-  function setTriggersExpanded(expanded) {
-    openBtns.forEach(function (btn) {
-      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-    });
-  }
 
   function openSheet() {
     sheet.hidden = false;
@@ -486,13 +552,13 @@
       sheet.classList.add('open');
       backdrop.classList.add('open');
     });
-    setTriggersExpanded(true);
+    filtersBtn.setAttribute('aria-expanded', 'true');
   }
 
   function closeSheet() {
     sheet.classList.remove('open');
     backdrop.classList.remove('open');
-    setTriggersExpanded(false);
+    filtersBtn.setAttribute('aria-expanded', 'false');
     window.setTimeout(function () {
       sheet.hidden = true;
       backdrop.hidden = true;
@@ -509,11 +575,61 @@
     closeSheet();
   });
 
+  // --- Active filter chips. Each chip's data-filter/data-value names the
+  // drawer field it mirrors; removing the chip resets that field, so the
+  // chips, the drawer, and the "Filters · N" count never disagree.
+  var chipsBar = document.querySelector('.chips-bar');
+  var chipsRow = document.querySelector('.chips-row');
+
+  function resetField(chip) {
+    var filter = chip.getAttribute('data-filter');
+    if (filter === 'region') {
+      form.elements.region.value = '';
+    } else if (filter === 'sport') {
+      var box = form.querySelector('input[name="sport"][value="' + chip.getAttribute('data-value') + '"]');
+      if (box) box.checked = false;
+    } else if (filter === 'dates') {
+      ['date-from', 'date-to'].forEach(function (id) {
+        var input = document.getElementById(id);
+        input.value = input.getAttribute('data-unfiltered');
+      });
+    }
+  }
+
+  function syncFilterCount() {
+    var n = chipsRow.querySelectorAll('.chip').length;
+    filtersBtn.textContent = n ? 'Filters · ' + n : 'Filters';
+    chipsBar.hidden = n === 0;
+  }
+
+  chipsRow.addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    resetField(chip);
+    chip.parentNode.remove();
+    syncFilterCount();
+  });
+
+  document.querySelectorAll('[data-clear-filters]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      chipsRow.querySelectorAll('.chip').forEach(function (chip) {
+        resetField(chip);
+        chip.parentNode.remove();
+      });
+      syncFilterCount();
+    });
+  });
+
+  syncFilterCount();
+
+  // --- List/Map toggle. Swaps the visible panel, and hides the results
+  // row's list-only parts (Sort, and "upcoming" in the count) in Map.
   var viewButtons = document.querySelectorAll('.view-btn');
   var panels = {
     list: document.getElementById('list-view'),
     map: document.getElementById('map-view')
   };
+  var listOnly = document.querySelectorAll('[data-list-only]');
 
   viewButtons.forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -523,6 +639,9 @@
       });
       Object.keys(panels).forEach(function (key) {
         panels[key].hidden = key !== view;
+      });
+      listOnly.forEach(function (el) {
+        el.hidden = view !== 'list';
       });
     });
   });
