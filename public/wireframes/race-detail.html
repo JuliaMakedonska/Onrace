@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Race detail — Onrace (wireframe)</title>
+<style>
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7.
+     Bare screen (_conventions.md § 1): index.html provides the device frame
+     and nav tree. Same shell as race-browse.html: 390-wide body, internally
+     scrolling .phone-screen, 2-tab bottom nav. */
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: #000;
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a { color: #000; }
+
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 56px; /* clears the fixed bottom-nav below */
+  }
+
+  /* Global nav (sitemap.md → Navigation § 1, 2 tabs) — identical to
+     race-browse.html. Race detail sits under Discover, so Discover stays
+     the current tab. */
+  .bottom-nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    background: #fff;
+    border-top: 2px solid #000;
+    z-index: 3;
+  }
+  .bottom-nav ul {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav li { flex: 1; }
+  .bottom-nav a {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  .bottom-nav a[aria-current="page"] { background: #000; color: #fff; }
+
+  /* --- top bar: the way back to Race browse. Sticky, bottom border is the
+     divider — same role as race-browse.html's sticky controls block. --- */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+    border-bottom: 1px solid #000;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .race { padding: 20px 16px 24px; }
+  .race[hidden] { display: none; }
+  .race h1 { font-size: 1.25rem; margin: 0 0 16px 0; }
+
+  /* Key facts keep their field labels here (unlike the shortened cards on
+     Race browse): this is where the full field values are read. */
+  .facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 14px;
+    margin: 0 0 24px 0;
+    font-size: 0.92rem;
+  }
+  .facts dt { color: #444; }
+  .facts dd { margin: 0; }
+
+  .about h2, .inline-error h2, .state-message h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+  .about p { margin: 0 0 24px 0; font-size: 0.95rem; }
+
+  /* --- actions: the decision point (flows.md → WantsToEnter). Register is
+     the primary action and the flow's Success exit; the official site is a
+     secondary reference link. Both leave Onrace — it never handles
+     sign-ups or payment (CLAUDE.md → out of scope). --- */
+  .register-btn {
+    display: block;
+    width: 100%;
+    border: 1px solid #000;
+    background: #000;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+  }
+  .link-note { font-size: 0.8rem; color: #444; margin: 8px 0 20px 0; }
+  .official-link { font-size: 0.92rem; margin: 0; }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Race detail (wireframe)">
+
+  <div class="phone-screen">
+
+    <main>
+
+      <!-- ZONE: top bar — back to Race browse. This is flows.md's
+           "back / compares another race" edge, and the "no" edge of
+           WantsToEnter: not worth entering → back to browsing. -->
+      <nav class="top-bar" aria-label="Back">
+        <a href="race-browse.html">Back to races</a>
+      </nav>
+
+      <!-- ZONE: race — one catalog listing (sitemap.md → Race listing):
+           name, full sport_type, event_date, full city/region/country,
+           description, official_url, registration_url. Job: Main Job 1 —
+           Discovery (jtbd.md: "...so that I can compare them in one place";
+           sitemap.md: viewing official_url/registration_url/description is
+           how that comparison actually happens). This base page is also
+           the Success state (_conventions.md § 5): tapping Register opens
+           registration_url — flows.md's Success, "Onrace records nothing
+           further." -->
+        <article class="race" data-race="berlin-marathon" aria-labelledby="race-berlin-marathon" hidden>
+          <h1 id="race-berlin-marathon">Berlin Marathon</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>Marathon</dd>
+            <dt>Date</dt><dd><time datetime="2026-09-27">27 September 2026</time></dd>
+            <dt>Location</dt><dd>Berlin, Germany</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-berlin-marathon">
+            <h2 id="about-berlin-marathon">About this race</h2>
+            <p>42.2&nbsp;km flat, fast World Marathon Major course through central Berlin.</p>
+          </section>
+          <section class="actions" aria-label="Enter this race">
+            <a class="register-btn" href="https://bmw-berlin-marathon.com/" target="_blank" rel="noopener">Register on the official site</a>
+            <p class="link-note">Opens bmw-berlin-marathon.com in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
+            <p class="official-link"><a href="https://bmw-berlin-marathon.com/" target="_blank" rel="noopener">Official race website</a> — bmw-berlin-marathon.com</p>
+          </section>
+        </article>
+        <article class="race" data-race="hyrox-london" aria-labelledby="race-hyrox-london">
+          <h1 id="race-hyrox-london">HYROX London</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>HYROX</dd>
+            <dt>Date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd>
+            <dt>Location</dt><dd>London, England, United Kingdom</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-hyrox-london">
+            <h2 id="about-hyrox-london">About this race</h2>
+            <p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p>
+          </section>
+          <section class="actions" aria-label="Enter this race">
+            <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on the official site</a>
+            <p class="link-note">Opens hyrox.com in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
+            <p class="official-link"><a href="https://hyrox.com/" target="_blank" rel="noopener">Official race website</a> — hyrox.com</p>
+          </section>
+        </article>
+        <article class="race" data-race="hyrox-dallas" aria-labelledby="race-hyrox-dallas" hidden>
+          <h1 id="race-hyrox-dallas">HYROX Dallas</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>HYROX</dd>
+            <dt>Date</dt><dd><time datetime="2027-01-17">17 January 2027</time></dd>
+            <dt>Location</dt><dd>Dallas, Texas, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-hyrox-dallas">
+            <h2 id="about-hyrox-dallas">About this race</h2>
+            <p>North American HYROX stop; the standard 8 × 1&nbsp;km run + station format.</p>
+          </section>
+          <section class="actions" aria-label="Enter this race">
+            <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on the official site</a>
+            <p class="link-note">Opens hyrox.com in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
+            <p class="official-link"><a href="https://hyrox.com/" target="_blank" rel="noopener">Official race website</a> — hyrox.com</p>
+          </section>
+        </article>
+        <article class="race" data-race="deka-strong-chicago" aria-labelledby="race-deka-strong-chicago" hidden>
+          <h1 id="race-deka-strong-chicago">DEKA STRONG Chicago</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
+            <dt>Date</dt><dd><time datetime="2027-03-14">14 March 2027</time></dd>
+            <dt>Location</dt><dd>Chicago, Illinois, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-deka-strong-chicago">
+            <h2 id="about-deka-strong-chicago">About this race</h2>
+            <p>10-zone functional-fitness circuit race; DEKA’s strength-focused format.</p>
+          </section>
+          <section class="actions" aria-label="Enter this race">
+            <a class="register-btn" href="https://spartan.com/" target="_blank" rel="noopener">Register on the official site</a>
+            <p class="link-note">Opens spartan.com in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
+            <p class="official-link"><a href="https://spartan.com/" target="_blank" rel="noopener">Official race website</a> — spartan.com</p>
+          </section>
+        </article>
+        <article class="race" data-race="boston-marathon" aria-labelledby="race-boston-marathon" hidden>
+          <h1 id="race-boston-marathon">Boston Marathon</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>Marathon</dd>
+            <dt>Date</dt><dd><time datetime="2027-04-20">20 April 2027</time></dd>
+            <dt>Location</dt><dd>Boston, Massachusetts, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-boston-marathon">
+            <h2 id="about-boston-marathon">About this race</h2>
+            <p>42.2&nbsp;km World Marathon Major through Boston’s historic Newton Hills; requires a qualifying time or charity entry.</p>
+          </section>
+          <section class="actions" aria-label="Enter this race">
+            <a class="register-btn" href="https://baa.org/" target="_blank" rel="noopener">Register on the official site</a>
+            <p class="link-note">Opens baa.org in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
+            <p class="official-link"><a href="https://baa.org/" target="_blank" rel="noopener">Official race website</a> — baa.org</p>
+          </section>
+        </article>
+        <article class="race" data-race="spartan-beast-killington" aria-labelledby="race-spartan-beast-killington" hidden>
+          <h1 id="race-spartan-beast-killington">Spartan Race Beast — Killington</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>OCR</dd>
+            <dt>Date</dt><dd><time datetime="2027-07-11">11 July 2027</time></dd>
+            <dt>Location</dt><dd>Killington, Vermont, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-spartan-beast-killington">
+            <h2 id="about-spartan-beast-killington">About this race</h2>
+            <p>21+ km obstacle course race across Killington’s mountain terrain; part of the Spartan Trifecta.</p>
+          </section>
+          <section class="actions" aria-label="Enter this race">
+            <a class="register-btn" href="https://spartan.com/" target="_blank" rel="noopener">Register on the official site</a>
+            <p class="link-note">Opens spartan.com in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
+            <p class="official-link"><a href="https://spartan.com/" target="_blank" rel="noopener">Official race website</a> — spartan.com</p>
+          </section>
+        </article>
+        <article class="race" data-race="utmb" aria-labelledby="race-utmb" hidden>
+          <h1 id="race-utmb">UTMB — Ultra-Trail du Mont-Blanc</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>Ultra</dd>
+            <dt>Date</dt><dd><time datetime="2027-08-24">24 August 2027</time></dd>
+            <dt>Location</dt><dd>Chamonix, France</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-utmb">
+            <h2 id="about-utmb">About this race</h2>
+            <p>170&nbsp;km ultra-trail circling Mont Blanc through France, Italy, and Switzerland.</p>
+          </section>
+          <section class="actions" aria-label="Enter this race">
+            <a class="register-btn" href="https://utmb.world/" target="_blank" rel="noopener">Register on the official site</a>
+            <p class="link-note">Opens utmb.world in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
+            <p class="official-link"><a href="https://utmb.world/" target="_blank" rel="noopener">Official race website</a> — utmb.world</p>
+          </section>
+        </article>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: global nav — same 2 tabs as race-browse.html (sitemap.md →
+       Navigation § 1). Race detail is contextual under Discover, so
+       Discover stays current. -->
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="race-browse.html" aria-current="page">Discover</a></li>
+      <li><a href="results-list.html">My Results</a></li>
+    </ul>
+  </nav>
+
+<script>
+(function () {
+  // Which sample race to show: ?race=<slug> from the card tapped on Race
+  // browse. All seven races are real markup above; this only un-hides one
+  // (default: hyrox-london, e.g. when opened from index.html with no query).
+  var slug = new URLSearchParams(window.location.search).get('race');
+  var races = document.querySelectorAll('.race[data-race]');
+  var match = Array.prototype.some.call(races, function (el) { return el.getAttribute('data-race') === slug; });
+  if (!match) slug = 'hyrox-london';
+  races.forEach(function (el) { el.hidden = el.getAttribute('data-race') !== slug; });
+})();
+</script>
+
+</body>
+</html>

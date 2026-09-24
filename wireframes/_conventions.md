@@ -80,4 +80,4 @@ Explicitly out of scope until a later step:
 
 ---
 
-*Next: `race-browse.html` (bare screen), its three state pages `race-browse-empty.html` / `race-browse-error.html` / `race-browse-loading.html`, and `index.html` (dark shell + nav tree + device mockup) are built. Still to draw: `race-detail.html` / `race-detail-error.html` / `race-detail-loading.html`, per `_screens.md`'s state table and these conventions — each new file is bare (§ 1) and just needs a `data-frame` node added to `index.html`'s existing tree (§ 6).*
+*Next: both screens in `_screens.md`'s scope are built — `race-browse.html` + `-empty` / `-error` / `-loading`, and `race-detail.html` + `-error` / `-loading` — plus `index.html` (dark shell + nav tree + device mockup). `race-detail-error.html` holds both of its causes (§ 5): DetailError by default, RegLinkError at `?cause=registration`. `race-detail.html` shows one of the seven sample races per `?race=<slug>` (the card tapped on Race browse; HYROX London by default). Still to draw: the My Results screens (Results list, Log result, Result detail) and Sign in / Sign up, once each gets a `_screens.md` pass.*

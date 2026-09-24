@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Race detail (Loading) — Onrace (wireframe)</title>
+<style>
+  /* STATE: loading — same structure and zones as race-detail.html; only
+     the content inside them changes (_conventions.md § 5). */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7.
+     Bare screen (_conventions.md § 1): index.html provides the device frame
+     and nav tree. Same shell as race-browse.html: 390-wide body, internally
+     scrolling .phone-screen, 2-tab bottom nav. */
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: #000;
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a { color: #000; }
+
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 56px; /* clears the fixed bottom-nav below */
+  }
+
+  /* Global nav (sitemap.md → Navigation § 1, 2 tabs) — identical to
+     race-browse.html. Race detail sits under Discover, so Discover stays
+     the current tab. */
+  .bottom-nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    background: #fff;
+    border-top: 2px solid #000;
+    z-index: 3;
+  }
+  .bottom-nav ul {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav li { flex: 1; }
+  .bottom-nav a {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  .bottom-nav a[aria-current="page"] { background: #000; color: #fff; }
+
+  /* --- top bar: the way back to Race browse. Sticky, bottom border is the
+     divider — same role as race-browse.html's sticky controls block. --- */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+    border-bottom: 1px solid #000;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .race { padding: 20px 16px 24px; }
+  .race[hidden] { display: none; }
+  .race h1 { font-size: 1.25rem; margin: 0 0 16px 0; }
+
+  /* Key facts keep their field labels here (unlike the shortened cards on
+     Race browse): this is where the full field values are read. */
+  .facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 14px;
+    margin: 0 0 24px 0;
+    font-size: 0.92rem;
+  }
+  .facts dt { color: #444; }
+  .facts dd { margin: 0; }
+
+  .about h2, .inline-error h2, .state-message h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+  .about p { margin: 0 0 24px 0; font-size: 0.95rem; }
+
+  /* --- actions: the decision point (flows.md → WantsToEnter). Register is
+     the primary action and the flow's Success exit; the official site is a
+     secondary reference link. Both leave Onrace — it never handles
+     sign-ups or payment (CLAUDE.md → out of scope). --- */
+  .register-btn {
+    display: block;
+    width: 100%;
+    border: 1px solid #000;
+    background: #000;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+  }
+  .link-note { font-size: 0.8rem; color: #444; margin: 8px 0 20px 0; }
+  .official-link { font-size: 0.92rem; margin: 0; }
+
+  /* --- loading skeletons: gray bars in the same zones as a loaded race
+     (name, three facts, about, Register), so nothing jumps on load. Static,
+     no shimmer (_conventions.md § 7). --- */
+  .bar { background: #ddd; height: 12px; margin: 0 0 10px 0; }
+  .bar.h1 { height: 22px; width: 70%; margin-bottom: 20px; }
+  .skel-facts { display: grid; grid-template-columns: 80px 1fr; gap: 10px 14px; margin-bottom: 28px; }
+  .skel-facts .bar { margin: 0; }
+  .bar.h2 { height: 14px; width: 35%; margin-bottom: 12px; }
+  .bar.line { width: 100%; }
+  .bar.line.end { width: 65%; margin-bottom: 28px; }
+  .bar.button { height: 46px; width: 100%; margin: 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Race detail, loading state (wireframe)">
+
+  <div class="phone-screen">
+
+    <main>
+
+      <!-- ZONE: top bar — back to Race browse. This is flows.md's
+           "back / compares another race" edge, and the "no" edge of
+           WantsToEnter: not worth entering → back to browsing. -->
+      <nav class="top-bar" aria-label="Back">
+        <a href="race-browse.html">Back to races</a>
+      </nav>
+
+      <!-- ZONE: race — Loading state (flows.md: DetailLoading, "fetching race
+           details", on tapping a card/pin in Race browse). Gray bars sit in
+           the same zones as a loaded race; hidden from assistive tech, with
+           aria-busy plus the visually-hidden status carrying the meaning.
+           Back to races stays usable — it doesn't depend on the fetch. -->
+        <article class="race" aria-busy="true">
+          <p class="visually-hidden" role="status">Loading race details…</p>
+          <div aria-hidden="true">
+            <div class="bar h1"></div>
+            <div class="skel-facts">
+              <div class="bar"></div><div class="bar" style="width:40%"></div>
+              <div class="bar"></div><div class="bar" style="width:55%"></div>
+              <div class="bar"></div><div class="bar" style="width:75%"></div>
+            </div>
+            <div class="bar h2"></div>
+            <div class="bar line"></div>
+            <div class="bar line end"></div>
+            <div class="bar button"></div>
+          </div>
+        </article>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: global nav — same 2 tabs as race-browse.html (sitemap.md →
+       Navigation § 1). Race detail is contextual under Discover, so
+       Discover stays current. -->
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="race-browse.html" aria-current="page">Discover</a></li>
+      <li><a href="results-list.html">My Results</a></li>
+    </ul>
+  </nav>
+
+
+</body>
+</html>
