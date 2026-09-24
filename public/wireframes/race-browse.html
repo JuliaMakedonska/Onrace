@@ -147,6 +147,9 @@
      column. min-height:0 lets it shrink/scroll correctly instead of forcing
      main taller than its flex basis. */
   .view-panel { flex: 1; min-height: 0; }
+  /* #map-view sets display:flex, which would otherwise beat the hidden
+     attribute and show both panels at once. */
+  .view-panel[hidden] { display: none; }
 
   #list-view { padding: 16px; }
 

@@ -80,4 +80,4 @@ Explicitly out of scope until a later step:
 
 ---
 
-*Next: `race-browse.html` (bare screen) and `index.html` (dark shell + nav tree + device mockup) are built. Still to draw: `race-browse-empty.html` / `race-browse-error.html` / `race-browse-loading.html` and `race-detail.html` / `race-detail-error.html` / `race-detail-loading.html`, per `_screens.md`'s state table and these conventions — each new file is bare (§ 1) and just needs a `data-frame` node added to `index.html`'s existing tree (§ 6).*
+*Next: `race-browse.html` (bare screen), its three state pages `race-browse-empty.html` / `race-browse-error.html` / `race-browse-loading.html`, and `index.html` (dark shell + nav tree + device mockup) are built. Still to draw: `race-detail.html` / `race-detail-error.html` / `race-detail-loading.html`, per `_screens.md`'s state table and these conventions — each new file is bare (§ 1) and just needs a `data-frame` node added to `index.html`'s existing tree (§ 6).*

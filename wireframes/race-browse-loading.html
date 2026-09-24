@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Race browse — Onrace (wireframe)</title>
+<title>Race browse (Loading) — Onrace (wireframe)</title>
 <style>
+  /* STATE: loading — same structure and zones as race-browse.html (the
+     success/default state); only the content inside those zones changes,
+     per _conventions.md § 5. */
+
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
      no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7:
      color, fonts, shadows, icons, finished UI.
@@ -267,9 +271,28 @@
   }
   #filters-apply { background: #000; color: #fff; }
   #filters-close { background: #fff; color: #000; }
+
+  /* --- loading skeletons: gray placeholder bars shaped like a race card's
+     own zones (title, 3 dl rows, description, action), so the layout
+     doesn't jump when real cards arrive. Static — no shimmer (finished-UI
+     polish is deferred, _conventions.md § 7). --- */
+  .skeleton-card { border: 1px solid #ccc; padding: 12px 14px; }
+  .bar { background: #ddd; height: 10px; margin: 0 0 8px 0; }
+  .bar.title { height: 14px; width: 60%; margin-bottom: 12px; }
+  .bar.row { width: 75%; }
+  .bar.row.short { width: 50%; }
+  .bar.desc { width: 100%; }
+  .bar.desc.end { width: 80%; margin-bottom: 12px; }
+  .bar.action { height: 28px; width: 130px; margin: 0; }
+  .bar.count { display: inline-block; width: 140px; height: 12px; margin: 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .sort-control select:disabled { color: #999; border-color: #999; }
 </style>
 </head>
-<body role="application" aria-label="Onrace — Race browse (wireframe)">
+<body role="application" aria-label="Onrace — Race browse, loading state (wireframe)">
 
   <div class="phone-screen">
 
@@ -277,11 +300,9 @@
 
       <header>
         <h1>Discover</h1>
-        <!-- Default (no filters active) state reads "N upcoming races," not
-             "N races match your filters" — nothing has actually been
-             filtered yet. That "match your filters" phrasing is reserved
-             for once a chip is active; not built as a separate page yet. -->
-        <p class="results-count" aria-live="polite"><strong>7</strong> upcoming races</p>
+        <!-- Count isn't known until the fetch returns — a gray bar holds its
+             place so the header doesn't reflow. -->
+        <p class="results-count" aria-live="polite"><span class="bar count" aria-hidden="true"></span><span class="visually-hidden">Loading races…</span></p>
       </header>
 
       <!-- ZONE: shared control bar (sitemap.md: "Race browse (map + list)" — one
@@ -311,126 +332,74 @@
       <section class="view-area" aria-label="Map or list view" style="display: contents;">
 
         <div id="list-view" class="view-panel">
-          <!-- Sort is List-only — a map's pins aren't sequenced, so ordering
-               has no map equivalent. Default "Soonest first" matches
-               Discovery's forward-looking framing (planning what to enter
-               next, research/jtbd.md → Related Job 1). Sample races below are
-               ordered by event_date ascending to match. -->
+          <!-- ZONE: loading state (_screens.md → Race browse → Loading; flows.md
+               Loading("fetching races")) — fires on entry and again on every
+               filter change. Sort stays in place but disabled until there's
+               something to order. -->
           <div class="sort-control">
             <label for="sort">Sort</label>
-            <select id="sort" name="sort">
+            <select id="sort" name="sort" disabled>
               <option value="soonest" selected>Soonest first</option>
               <option value="farthest">Farthest first</option>
             </select>
           </div>
-          <!-- Primary action per card: "View race details" → enters Race detail -->
-
-          <ul class="race-list">
-
+          <!-- Skeletons sit exactly where the race-card list goes; they're
+               placeholders, not races, so plain divs (not <article>) and
+               hidden from assistive tech — aria-busy + the status text in the
+               header carry the meaning instead. -->
+          <ul class="race-list" aria-busy="true" aria-hidden="true">
             <li>
-              <article class="race-card">
-                <h3>Berlin Marathon</h3>
-                <dl>
-                  <dt>Sport type</dt><dd>Marathon</dd>
-                  <dt>Date</dt><dd>27 September 2026</dd>
-                  <dt>Location</dt><dd>Berlin, Germany</dd>
-                </dl>
-                <p class="description">42.2&nbsp;km flat, fast World Marathon Major course through central Berlin.</p>
-                <a class="view-detail" href="race-detail.html">View race details</a>
-              </article>
+              <div class="skeleton-card">
+                <div class="bar title"></div>
+                <div class="bar row"></div>
+                <div class="bar row short"></div>
+                <div class="bar row"></div>
+                <div class="bar desc"></div>
+                <div class="bar desc end"></div>
+                <div class="bar action"></div>
+              </div>
             </li>
-
             <li>
-              <article class="race-card">
-                <h3>HYROX London</h3>
-                <dl>
-                  <dt>Sport type</dt><dd>HYROX</dd>
-                  <dt>Date</dt><dd>6 December 2026</dd>
-                  <dt>Location</dt><dd>London, England, United Kingdom</dd>
-                </dl>
-                <p class="description">Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p>
-                <a class="view-detail" href="race-detail.html">View race details</a>
-              </article>
+              <div class="skeleton-card">
+                <div class="bar title"></div>
+                <div class="bar row"></div>
+                <div class="bar row short"></div>
+                <div class="bar row"></div>
+                <div class="bar desc"></div>
+                <div class="bar desc end"></div>
+                <div class="bar action"></div>
+              </div>
             </li>
-
             <li>
-              <article class="race-card">
-                <h3>HYROX Dallas</h3>
-                <dl>
-                  <dt>Sport type</dt><dd>HYROX</dd>
-                  <dt>Date</dt><dd>17 January 2027</dd>
-                  <dt>Location</dt><dd>Dallas, Texas, United States</dd>
-                </dl>
-                <p class="description">North American HYROX stop; the standard 8 × 1&nbsp;km run + station format.</p>
-                <a class="view-detail" href="race-detail.html">View race details</a>
-              </article>
+              <div class="skeleton-card">
+                <div class="bar title"></div>
+                <div class="bar row"></div>
+                <div class="bar row short"></div>
+                <div class="bar row"></div>
+                <div class="bar desc"></div>
+                <div class="bar desc end"></div>
+                <div class="bar action"></div>
+              </div>
             </li>
-
             <li>
-              <article class="race-card">
-                <h3>DEKA STRONG Chicago</h3>
-                <dl>
-                  <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
-                  <dt>Date</dt><dd>14 March 2027</dd>
-                  <dt>Location</dt><dd>Chicago, Illinois, United States</dd>
-                </dl>
-                <p class="description">10-zone functional-fitness circuit race; DEKA’s strength-focused format.</p>
-                <a class="view-detail" href="race-detail.html">View race details</a>
-              </article>
+              <div class="skeleton-card">
+                <div class="bar title"></div>
+                <div class="bar row"></div>
+                <div class="bar row short"></div>
+                <div class="bar row"></div>
+                <div class="bar desc"></div>
+                <div class="bar desc end"></div>
+                <div class="bar action"></div>
+              </div>
             </li>
-
-            <li>
-              <article class="race-card">
-                <h3>Boston Marathon</h3>
-                <dl>
-                  <dt>Sport type</dt><dd>Marathon</dd>
-                  <dt>Date</dt><dd>20 April 2027</dd>
-                  <dt>Location</dt><dd>Boston, Massachusetts, United States</dd>
-                </dl>
-                <p class="description">42.2&nbsp;km World Marathon Major through Boston’s historic Newton Hills; requires a qualifying time or charity entry.</p>
-                <a class="view-detail" href="race-detail.html">View race details</a>
-              </article>
-            </li>
-
-            <li>
-              <article class="race-card">
-                <h3>Spartan Race Beast — Killington</h3>
-                <dl>
-                  <dt>Sport type</dt><dd>OCR</dd>
-                  <dt>Date</dt><dd>11 July 2027</dd>
-                  <dt>Location</dt><dd>Killington, Vermont, United States</dd>
-                </dl>
-                <p class="description">21+ km obstacle course race across Killington’s mountain terrain; part of the Spartan Trifecta.</p>
-                <a class="view-detail" href="race-detail.html">View race details</a>
-              </article>
-            </li>
-
-            <li>
-              <article class="race-card">
-                <h3>UTMB — Ultra-Trail du Mont-Blanc</h3>
-                <dl>
-                  <dt>Sport type</dt><dd>Ultra</dd>
-                  <dt>Date</dt><dd>24 August 2027</dd>
-                  <dt>Location</dt><dd>Chamonix, France</dd>
-                </dl>
-                <p class="description">170&nbsp;km ultra-trail circling Mont Blanc through France, Italy, and Switzerland.</p>
-                <a class="view-detail" href="race-detail.html">View race details</a>
-              </article>
-            </li>
-
           </ul>
         </div>
 
-        <!-- Map fills the remaining space down to the bottom nav (#map-view
-             is a flex column, .map-placeholder is its flex:1 child). It plots
-             pins for the same shared, filtered result set as the list — not
-             a map-specific subset — and the initial view fits all pins.
-             Panning/zooming only changes the map's own viewport; it does not
-             re-filter the result set (that's the Filters drawer's job alone,
-             per the control-bar comment above). -->
+        <!-- Map view while the same fetch is in flight: pins arrive with the
+             result set. -->
         <div id="map-view" class="view-panel" hidden>
-          <div class="map-placeholder" role="img" aria-label="Map showing pins for the 7 filtered races; initial view fits all pins">
-            [ map placeholder — pins for the 7 filtered races; initial view fits all pins. Pan/zoom changes what's visible on the map, not which races match. ]
+          <div class="map-placeholder" role="img" aria-label="Map loading; race pins appear once races have loaded" aria-busy="true">
+            [ map placeholder — loading race pins… ]
           </div>
         </div>
 
