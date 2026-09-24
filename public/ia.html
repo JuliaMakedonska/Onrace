@@ -264,10 +264,10 @@
   <p>Every screen below is tagged with the <code>jtbd.md</code> job it closes; every flow is the actual Mermaid diagram from <code>flows.md</code>, not a redrawn summary; the traceability matrix is the same coverage check, with the one orphan screen highlighted rather than just noted in prose.</p>
 
   <div class="meta-row">
-    <span class="pill">Updated 2026-09-17</span>
+    <span class="pill">Updated 2026-09-24</span>
     <span class="pill">6 screens + 1 orphan</span>
     <span class="pill">8 jobs traced · 0 orphan jobs</span>
-    <span class="pill">3 flows · 6 dead ends</span>
+    <span class="pill">2-tab nav · 3 flows · 7 dead ends</span>
     <span class="pill">1 accepted MVP gap</span>
   </div>
 
@@ -276,7 +276,7 @@
     <p class="lede">Four corrections that came out of building this IA end-to-end — see each section below for the full reasoning.</p>
     <div class="card-grid">
       <div class="card tw-sitemap"><strong>The entry point is Race browse, not a screen called "Onrace"</strong>An earlier draft modeled a distinct entry screen to carry Main Job 2. It never existed as separate UI — removed from the tree and the matrix; its rationale relocated, not deleted (see Navigation in <code>sitemap.md</code>).</div>
-      <div class="card tw-trace"><strong>One orphan screen, resolved, not deleted</strong>Sign in / Sign up closes no job of its own — no job in <code>jtbd.md</code> asks for account creation. Kept as a contextual gate on Log Result and My Results, not promoted or removed.</div>
+      <div class="card tw-trace"><strong>One orphan screen, resolved, not deleted</strong>Sign in / Sign up closes no job of its own — no job in <code>jtbd.md</code> asks for account creation. Kept as a contextual gate on My Results (which also covers the Log result action inside it), not promoted or removed.</div>
       <div class="card tw-flows"><strong>Every success endpoint is now a verifiable condition</strong>Not a screen destination. Log Result's success previously just "landed on a screen" — tightened to "a <code>results</code> row now exists with <code>official_result_url</code> populated."</div>
       <div class="card tw-gap"><strong>One dead end is a known, accepted MVP gap</strong>A logged result's source link can rot with no in-app fix (<code>DeadEnd5</code>). Left as-is on purpose — no job asks to <em>correct</em> a result, only to log or retrieve one. Now tracked in <code>research.md</code>.</div>
     </div>
@@ -300,6 +300,8 @@
     <p class="lede">Grouped by the two entity clusters in <code>sitemap.md</code> — Discovery (Race listing + Search/filter criteria) and Archive (Logged result + Source-link proof) — not by generic "site sections." Every screen carries the job(s) it closes; a plain outline means the close is framing-level, not a dedicated interaction.</p>
 
     <p class="entry-note"><strong style="color:var(--text-dim)">App entry:</strong> Race browse is the landing screen at 0 taps — see Navigation in <code>sitemap.md</code>. An earlier draft modeled a separate "Onrace — entry" screen for Main Job 2; it never existed as real UI and was removed. The reasoning wasn't wrong, just misplaced — it describes this global nav structure (Discover + My Results as co-equal items), not a screen.</p>
+
+    <p class="entry-note"><strong style="color:var(--text-dim)">Global navigation — 2 tabs (revised 2026-09-24):</strong> <strong style="color:var(--text)">Discover</strong> → Race browse and <strong style="color:var(--text)">My Results</strong> → Results list. <strong style="color:var(--text)">Log result</strong> is no longer a tab: it's the primary action button inside My Results (header, plus the empty state's call to action), because tabs are destinations and actions are buttons. Cost: logging a result goes from 1 tap to 2 from anywhere outside My Results, with no extra sign-in step. Replaces the earlier 3-tab bar (Discover / Log Result / My Results); that reasoning is kept, marked superseded, in <code>sitemap.md</code> → Navigation § 1–2.</p>
 
     <div class="legend">
       <span class="lg-label">Jobs:</span>
@@ -361,6 +363,7 @@
           <span class="jobtag jr3">Related 3 · Log</span>
           <span class="jobtag jframing">Social</span>
         </div>
+        <p class="states">Entry: the <strong style="color:var(--text)">Log result</strong> action inside My Results (header or empty state), not a nav tab — since 2026-09-24.</p>
         <p class="states">States: empty form · source-link-required error (<code>official_result_url</code> — the one field <code>CLAUDE.md</code> marks required) · other-required-field error (<code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> <code>[?]</code>) · submit error</p>
       </div>
 
@@ -376,7 +379,7 @@
 
     <div class="orphan-card">
       <h4 class="screen-name">Sign in / Sign up <span class="jobtag orphan" style="margin-left:8px">Orphan</span></h4>
-      <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Needed only because Logged result is owner-only via RLS. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps Log Result or My Results — not promoted to a global nav item, not deleted.</p>
+      <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Needed only because Logged result is owner-only via RLS. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps My Results (the Log result action lives inside it, so one gate covers both) — not promoted to a global nav item, not deleted.</p>
     </div>
   </section>
 
@@ -490,7 +493,7 @@ flowchart LR
     <div class="mermaid-wrap">
 <pre class="mermaid">
 flowchart TD
-    Start2(("Global nav: taps Log Result")) --> AuthCheck{"Signed in?"}
+    Start2(("Global nav: taps My Results")) --> AuthCheck{"Signed in?"}
     AuthCheck -->|"no"| SignIn["Sign in / Sign up"]
     SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
     SignIn -->|"closes without attempting"| DeadEnd2
@@ -499,8 +502,11 @@ flowchart TD
     AuthError --> AuthRetry{"Retry?"}
     AuthRetry -->|"yes"| SignIn
     AuthRetry -->|"no"| DeadEnd2(("Dead end: leaves without logging the result"))
-    AuthResult -->|"yes"| LogForm["Log result"]
-    AuthCheck -->|"yes"| LogForm
+    AuthResult -->|"yes"| ResultsList["Results list (my archive)"]
+    AuthCheck -->|"yes"| ResultsList
+    ResultsList --> FindsAction{"Finds and taps Log result? (header button, or empty state's call to action) [?]"}
+    FindsAction -->|"yes"| LogForm["Log result"]
+    FindsAction -->|"no"| DeadEnd7(("Dead end: reached My Results, never found Log result [?]"))
     LogForm --> HasLink{"official_result_url filled in?"}
     HasLink -->|"no"| ValidationError("Error: source link is required")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}
@@ -527,12 +533,12 @@ flowchart TD
     classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
     classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
     class Start2 start
-    class SignIn,LogForm screen
+    class SignIn,ResultsList,LogForm screen
     class SigningIn,Submitting loading
     class AuthError,ValidationError,SubmitError error
-    class HasOtherRequired,OtherFieldError,OtherFieldRetry flagged
+    class FindsAction,HasOtherRequired,OtherFieldError,OtherFieldRetry flagged
     class Success2 success
-    class DeadEnd2,DeadEnd3 deadend
+    class DeadEnd2,DeadEnd3,DeadEnd7 deadend
 </pre>
     </div>
 
@@ -540,7 +546,8 @@ flowchart TD
       <div class="flow-col">
         <h4>Decisions</h4>
         <ul>
-          <li><span class="fl">Gate</span>Signed in? — Log Result is owner-only via RLS; gates into Sign in / Sign up, a contextual gate.</li>
+          <li><span class="fl">Gate</span>Signed in? — logged results are owner-only via RLS, so the My Results tab gates into Sign in / Sign up, a contextual gate. A successful sign-in lands on Results list.</li>
+          <li><span class="fl">[?] Flagged</span>Finds and taps Log result? — the form is one in-page action away from Results list (header button or empty-state call to action), not a tab. Rests on the unvalidated hypothesis that people look for logging inside My Results. The action must stay usable while the list is loading or has failed to load.</li>
           <li><span class="fl">Required</span><code>official_result_url</code> filled in? — the one field <code>CLAUDE.md</code> explicitly marks "(required)"; enforces the source-link trust model before submission.</li>
           <li><span class="fl">[?] Flagged</span><code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> all filled in? — a second, separate check. <code>CLAUDE.md</code>'s data model just lists these fields, it doesn't say they're required — modeled here as an assumed requirement, flagged per this document set's own convention, not settled fact.</li>
           <li><span class="fl">Retry</span>Fix and resubmit? — offered separately after each validation failure, and after a failed submission.</li>
@@ -560,6 +567,10 @@ flowchart TD
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd2</span>
           Leaves without logging the result. Reachable from a failed sign-in (after retries) or closing Sign in / Sign up without attempting. Root cause: never got signed in.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd7 <code>[?]</code></span>
+          Reached My Results, never found Log result. Signed in, right screen, but never took the in-page action. Root cause: the action wasn't findable enough; fix: its placement/prominence. Added 2026-09-24 with the 2-tab nav, flagged as untested.
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd3</span>

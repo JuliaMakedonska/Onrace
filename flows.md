@@ -54,6 +54,16 @@ Audited every flow's `Success` endpoint against one question: is it a verifiable
 3. **Flow 1 (Discovery)'s `Success` was already reasonably specific** (names the exact field, `registration_url`), but its prose now says explicitly what it lacks compared to the other two: an Onrace-side data-model record. Opening `registration_url` changes nothing in Onrace's own data — completion happens entirely on an external site, outside Onrace's visibility, unlike the other two endpoints, which are both about a `results` row's confirmed state.
 
 ---
+## Revision note (Flow 2 entry point, 2026-09-24)
+
+Global navigation went from 3 tabs to 2 (`sitemap.md` → Navigation § 1, revised 2026-09-24): **Log result** is no longer a tab, it's the primary action button inside My Results. Flow 2 now reflects that; everything from the Log result form onward is unchanged.
+
+1. **Entry moved:** `Start2` is now "Global nav: taps My Results," not "taps Log Result." The sign-in gate (`AuthCheck` and everything under it) is unchanged, but it now fires on the My Results tab, and a successful sign-in lands on **Results list**, not directly on the form.
+2. **One new step, `ResultsList` → `FindsAction`:** reaching the form now takes a tap on the in-page **Log result** action (header button, or the empty state's call to action). Flagged `[?]`, because it rests on `sitemap.md`'s own unvalidated hypothesis that people will look for logging inside My Results.
+3. **One new dead end, `DeadEnd7`** ("reached My Results, never found Log result") `[?]`. Kept separate from `DeadEnd2` (never got signed in) and `DeadEnd3` (forms/data failure) under this document's own rule of merging dead ends only when the root cause and fix are the same. The root cause here is how easy the action is to find, and the fix is prominence/placement in the UI — neither auth nor submission.
+4. **Deliberately not added:** the Results list's own fetch (`Loading2` / `FetchError2`) is not copied into Flow 2. That fetch is Flow 3's job. The Log result action is part of the screen's header, not of the loaded list, so it must stay usable while the list is loading or has failed. That's a design constraint on Results list, recorded here so Flow 2 doesn't inherit Flow 3's fetch failure.
+
+---
 
 ## Main Job 1 — Discovery (Primary persona — The HYROX-First Hybrid Athlete)
 
@@ -118,7 +128,7 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    Start2(("Global nav: taps Log Result")) --> AuthCheck{"Signed in?"}
+    Start2(("Global nav: taps My Results")) --> AuthCheck{"Signed in?"}
     AuthCheck -->|"no"| SignIn["Sign in / Sign up"]
     SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
     SignIn -->|"closes without attempting"| DeadEnd2
@@ -127,8 +137,11 @@ flowchart TD
     AuthError --> AuthRetry{"Retry?"}
     AuthRetry -->|"yes"| SignIn
     AuthRetry -->|"no"| DeadEnd2(("Dead end: leaves without logging the result"))
-    AuthResult -->|"yes"| LogForm["Log result"]
-    AuthCheck -->|"yes"| LogForm
+    AuthResult -->|"yes"| ResultsList["Results list (my archive)"]
+    AuthCheck -->|"yes"| ResultsList
+    ResultsList --> FindsAction{"Finds and taps Log result? (header button, or empty state's call to action) [?]"}
+    FindsAction -->|"yes"| LogForm["Log result"]
+    FindsAction -->|"no"| DeadEnd7(("Dead end: reached My Results, never found Log result [?]"))
     LogForm --> HasLink{"official_result_url filled in?"}
     HasLink -->|"no"| ValidationError("Error: source link is required")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}
@@ -149,7 +162,8 @@ flowchart TD
 ```
 
 **Decisions:**
-- *Signed in?* — Log Result is owner-only per `../CLAUDE.md`'s RLS model; gates into Sign in / Sign up if not, per the Navigation section's contextual-gate design.
+- *Signed in?* — Logged results are owner-only per `../CLAUDE.md`'s RLS model, so the My Results tab gates into Sign in / Sign up if not signed in, per the Navigation section's contextual-gate design. Since 2026-09-24 this gate sits on the My Results tab rather than on a Log Result tab; Log result lives inside My Results, so one gate covers both archive jobs.
+- *Finds and taps Log result?* `[?]` — added 2026-09-24 with the 2-tab nav. The form is now one in-page action away from Results list (header button, or the empty state's call to action), not a tab. Flagged: that people look for logging inside My Results is `sitemap.md` → Navigation § 1's unvalidated hypothesis. The action must not depend on the list having loaded (see the 2026-09-24 revision note).
 - *Sign-in succeeded?*
 - *Retry?* (after a failed sign-in) — previously just an edge label; now an explicit diamond, same as every other error in this flow.
 - *official_result_url filled in?* — enforces the required-source-link trust model (`../CLAUDE.md` → Result trust model) before the form can be submitted at all. This is the one field `../CLAUDE.md`'s data model explicitly marks "(required)."
@@ -169,9 +183,10 @@ flowchart TD
 
 **Endpoints:**
 - **Success:** tightened from "lands in Results list" (a screen, not a condition) to the actual verifiable state: a new row now exists in `results`, owned by this user via RLS, with `official_result_url` populated — the one field `../CLAUDE.md`'s data model explicitly requires — and, per this flow's `[?]`-flagged validation, `race_name`, `date`, `sport_type`, and `finish_time` populated too (though that requirement is only assumed here, not confirmed at the schema level — see the `[?]` on `HasOtherRequired` above). That row is what now appears on Results list ("my archive") and is what the next flow below retrieves.
-- **Dead ends:** two, kept distinct on purpose.
+- **Dead ends:** three, kept distinct on purpose.
   - *Leaves without logging the result* — reachable from a failed sign-in (after exhausting retries) or from closing the Sign in / Sign up screen without attempting at all (added — previously the only modeled exit from that screen was through a failed attempt). Root cause: never got signed in.
   - *No result saved, proof lost for later* — reachable from the source-link validation failing, the other-required-fields validation failing `[?]`, or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
+  - *Reached My Results, never found Log result* `[?]` (added 2026-09-24) — signed in fine, on the right screen, but never took the in-page action. Root cause: the action wasn't findable enough. Real fix: its placement/prominence on Results list. That's a different fix from both dead ends above, so it isn't merged into either. Flagged because whether this happens at all is untested.
 
 ---
 
