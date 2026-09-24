@@ -425,11 +425,11 @@ flowchart LR
     DetailRetry -->|"no"| DeadEnd1
     Detail -->|"back / compares another race"| Browse
     Detail --> WantsToEnter{"Worth entering?"}
-    WantsToEnter -->|"yes"| RegLinkCheck{"Registration link opens?"}
-    RegLinkCheck -->|"yes"| Success(("Success: this race's registration_url opened — Onrace records nothing further"))
-    RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link")
+    WantsToEnter -->|"yes"| RegLinkCheck{"registration_url present and well-formed, and new tab not blocked?"}
+    RegLinkCheck -->|"yes"| Success(("Success: a new tab opened on this race's registration_url — whether the organiser's site then loads is outside Onrace's view; Onrace records nothing further"))
+    RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link (missing/malformed URL, or new tab blocked)")
     RegLinkError -->|"back to race detail, tries again later"| Detail
-    RegLinkError -->|"gives up"| DeadEnd6(("Dead end: decided to enter, but the registration link is broken"))
+    RegLinkError -->|"gives up"| DeadEnd6(("Dead end: decided to enter, but couldn't open the registration link"))
     WantsToEnter -->|"no"| Browse
 
     classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
@@ -457,20 +457,20 @@ flowchart LR
           <li><span class="fl">Retry</span>Race-list fetch failure — retry or give up.</li>
           <li><span class="fl">Retry</span>Race-detail fetch failure — same choice, one level down.</li>
           <li><span class="fl">Resolves</span>Worth entering? — where "compare them in one place" resolves into a decision.</li>
-          <li><span class="fl">Lightweight</span>Registration link opens? — two direct edges, no retry diamond. <code>registration_url</code> is Onrace's own curated, manually-seeded data (low rot risk); <code>official_result_url</code> is arbitrary user-submitted data (high rot risk) — that asymmetry, not job importance, is why this check is lighter than Retrieve Proof's.</li>
+          <li><span class="fl">Lightweight</span><code>registration_url</code> present and well-formed, and new tab not blocked? — reworded 2026-09-24 from "Registration link opens?": a browser can't see whether the organiser's site loads in another tab, only whether the link was usable and the tab opened. Two direct edges, no retry diamond. <code>registration_url</code> is Onrace's own curated, manually-seeded data (low rot risk); <code>official_result_url</code> is arbitrary user-submitted data (high rot risk) — that asymmetry, not job importance, is why this check is lighter than Retrieve Proof's.</li>
         </ul>
         <h4>States</h4>
         <ul>
           <li>Loading: fetching races (list) · fetching race details (single race, own step).</li>
           <li>Empty: no races match the current filters.</li>
-          <li>Error: could not load races · could not load race details · couldn't open registration link.</li>
+          <li>Error: could not load races · could not load race details · couldn't open registration link (missing/malformed URL, or new tab blocked).</li>
         </ul>
       </div>
       <div class="flow-col">
         <h4>Endpoints</h4>
         <div class="endpoint-box success">
           <span class="eb-label">Success</span>
-          The race's <code>registration_url</code> has opened in the browser — the entire condition. No Onrace-side record is created; unlike the other two flows, this endpoint isn't verifiable from Onrace's own data — completion happens entirely on an external site.
+          A new tab has opened on the race's <code>registration_url</code> — the entire condition, and all Onrace can verify; whether the organiser's site then loads is outside its view. No Onrace-side record is created; unlike the other two flows, this endpoint isn't verifiable from Onrace's own data — completion happens entirely on an external site.
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd1</span>
@@ -478,7 +478,7 @@ flowchart LR
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd6</span>
-          Decided to enter, but the registration link is broken. Kept separate from DeadEnd1 on purpose — this person already decided; the failure is a broken link discovered <em>after</em> that, not indecision.
+          Decided to enter, but couldn't open the registration link (missing/malformed URL, or new tab blocked — Onrace can't know the link is <em>broken</em>, only that it couldn't open it). Kept separate from DeadEnd1 on purpose — this person already decided; the failure is discovered <em>after</em> that, not indecision.
         </div>
       </div>
     </div>

@@ -64,6 +64,16 @@ Global navigation went from 3 tabs to 2 (`sitemap.md` → Navigation § 1, revis
 4. **Deliberately not added:** the Results list's own fetch (`Loading2` / `FetchError2`) is not copied into Flow 2. That fetch is Flow 3's job. The Log result action is part of the screen's header, not of the loaded list, so it must stay usable while the list is loading or has failed. That's a design constraint on Results list, recorded here so Flow 2 doesn't inherit Flow 3's fetch failure.
 
 ---
+## Revision note (registration-link check, 2026-09-24)
+
+Building `wireframes/race-detail-error.html` showed that Flow 1's registration-link check asked something a browser can't answer. Onrace is a static web app: when it opens `registration_url` in a new tab, it can't see whether the organiser's site then loads — that happens in another tab, on another site. So the old question, "Registration link opens?", assumed a check that can't exist.
+
+1. **Decision reworded to what the browser can actually check:** `RegLinkCheck` is now "`registration_url` present and well-formed, and new tab not blocked?". Those are the only failures Onrace can detect: the field is empty or isn't a valid URL (a data problem in the curated catalog), or the browser blocked the new tab (e.g. `window.open` returns nothing).
+2. **Success tightened to match:** Success is now "a new tab opened on this race's `registration_url`". Whether the organiser's site then loads is outside Onrace's view. That isn't a new node: Onrace can't observe it, so it doesn't belong in Onrace's flow.
+3. **Error and dead end relabeled:** `RegLinkError` names its two real causes. `DeadEnd6` changed from "the registration link is broken" to "couldn't open the registration link": Onrace can't know the link is *broken*, only that it couldn't open it.
+4. **Unchanged:** the branch structure (two direct edges, no `Retry?` diamond), the data-provenance reasoning for that lighter weight, and `DeadEnd6` staying separate from `DeadEnd1`. The new wording supports the lighter weight: a missing or malformed URL is fixed in the catalog data, not by retrying.
+
+---
 
 ## Main Job 1 — Discovery (Primary persona — The HYROX-First Hybrid Athlete)
 
@@ -91,11 +101,11 @@ flowchart LR
     DetailRetry -->|"no"| DeadEnd1
     Detail -->|"back / compares another race"| Browse
     Detail --> WantsToEnter{"Worth entering?"}
-    WantsToEnter -->|"yes"| RegLinkCheck{"Registration link opens?"}
-    RegLinkCheck -->|"yes"| Success(("Success: this race's registration_url opened — Onrace records nothing further"))
-    RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link")
+    WantsToEnter -->|"yes"| RegLinkCheck{"registration_url present and well-formed, and new tab not blocked?"}
+    RegLinkCheck -->|"yes"| Success(("Success: a new tab opened on this race's registration_url — whether the organiser's site then loads is outside Onrace's view; Onrace records nothing further"))
+    RegLinkCheck -->|"no"| RegLinkError("Error: couldn't open registration link (missing/malformed URL, or new tab blocked)")
     RegLinkError -->|"back to race detail, tries again later"| Detail
-    RegLinkError -->|"gives up"| DeadEnd6(("Dead end: decided to enter, but the registration link is broken"))
+    RegLinkError -->|"gives up"| DeadEnd6(("Dead end: decided to enter, but couldn't open the registration link"))
     WantsToEnter -->|"no"| Browse
 ```
 
@@ -104,7 +114,7 @@ flowchart LR
 - *Retry?* (after a race-list fetch fails) — genuine choice between trying the same fetch again or giving up.
 - *Retry?* (after a race-detail fetch fails) — same choice, one level down, for opening a specific race.
 - *Worth entering?* — on Race detail, this is where the job's own "so that I can compare them in one place" actually resolves into a decision.
-- *Registration link opens?* (added — Race detail previously assumed opening `registration_url` always succeeds) — checked at lighter weight than the Retrieve Proof flow's equivalent check on `official_result_url`: no retry diamond, just two direct edges (mirroring how `Empty`/`Empty2` are already handled elsewhere in this document — a legitimate outcome gets two edges, not a formal retry loop). The lighter weight is about data provenance, not job/trust-mechanism importance: `registration_url` is Onrace's own curated, manually-seeded catalog data (`../CLAUDE.md` → Race data: "manually curated/seeded, no scraping in MVP"), so Onrace controls when it's entered and it's low rot risk. `official_result_url` is an arbitrary link a user pastes in themselves, with no curation at all — genuinely higher rot risk, which is why it gets the heavier, retry-capable treatment in Flow 3.
+- *`registration_url` present and well-formed, and new tab not blocked?* (originally "Registration link opens?"; reworded 2026-09-24 to what a browser can actually verify — see the revision note above. Onrace can't see whether the organiser's site loads in the new tab, only whether the link was usable and the tab opened) — checked at lighter weight than the Retrieve Proof flow's equivalent check on `official_result_url`: no retry diamond, just two direct edges (mirroring how `Empty`/`Empty2` are already handled elsewhere in this document — a legitimate outcome gets two edges, not a formal retry loop). The lighter weight is about data provenance, not job/trust-mechanism importance: `registration_url` is Onrace's own curated, manually-seeded catalog data (`../CLAUDE.md` → Race data: "manually curated/seeded, no scraping in MVP"), so Onrace controls when it's entered and it's low rot risk. `official_result_url` is an arbitrary link a user pastes in themselves, with no curation at all — genuinely higher rot risk, which is why it gets the heavier, retry-capable treatment in Flow 3.
 
 **States:**
 - Loading: fetching races (the list).
@@ -112,13 +122,13 @@ flowchart LR
 - Empty: no races match the current filters.
 - Error: could not load races (list fetch/connection failure).
 - Error: could not load race details (detail fetch/connection failure).
-- Error: couldn't open registration link (added — lighter-weight than the source-link failure in the Retrieve Proof flow, per the data-provenance reasoning above; no retry loop — a direct back-edge to Race detail, or a distinct give-up outcome, `DeadEnd6`, kept separate from `DeadEnd1`).
+- Error: couldn't open registration link — a missing/malformed `registration_url`, or the new tab being blocked (the only failures a browser can detect; added — lighter-weight than the source-link failure in the Retrieve Proof flow, per the data-provenance reasoning above; no retry loop — a direct back-edge to Race detail, or a distinct give-up outcome, `DeadEnd6`, kept separate from `DeadEnd1`).
 
 **Endpoints:**
-- **Success:** the race's `registration_url` has opened in the browser — that's the entire condition. Per `../CLAUDE.md`, Onrace only ever links out, never handles registration, so no Onrace-side record (no row, no flag, nothing in the data model) is created or changed by this. Unlike the other two flows' success endpoints, this one isn't verifiable from Onrace's own data — the job's completion happens entirely on the registration site, outside Onrace's visibility.
+- **Success:** a new tab has opened on the race's `registration_url` — that's the entire condition, and all Onrace can verify (revised 2026-09-24: whether the organiser's site then loads happens in another tab, outside Onrace's view). Per `../CLAUDE.md`, Onrace only ever links out, never handles registration, so no Onrace-side record (no row, no flag, nothing in the data model) is created or changed by this. Unlike the other two flows' success endpoints, this one isn't verifiable from Onrace's own data — the job's completion happens entirely on the registration site, outside Onrace's visibility.
 - **Dead ends:** two, kept distinct on purpose.
   - *Leaves without deciding on a race* (`DeadEnd1`) — one merged outcome reachable from three different causes (gives up on an empty result, gives up after a failed list fetch, gives up after a failed detail fetch). All three leave the primary persona in the same place: no race decided on, job unresolved. Kept as a single node rather than three, since the *cause* is already visible from which edge leads in, and the *outcome* genuinely doesn't differ.
-  - *Decided to enter, but the registration link is broken* (`DeadEnd6`) — kept separate from `DeadEnd1` on purpose, even though both are give-up outcomes. This person already made the decision the job's own "so that I can compare them in one place" resolves into — the failure here is a broken external link discovered *after* deciding, not indecision or an earlier fetch failure. Folding it into `DeadEnd1` would misrepresent what actually happened.
+  - *Decided to enter, but couldn't open the registration link* (`DeadEnd6`; was "...the registration link is broken" until 2026-09-24 — Onrace can only know the link couldn't be opened, not that it's broken) — kept separate from `DeadEnd1` on purpose, even though both are give-up outcomes. This person already made the decision the job's own "so that I can compare them in one place" resolves into — the failure here is an unusable or blocked registration link discovered *after* deciding, not indecision or an earlier fetch failure. Folding it into `DeadEnd1` would misrepresent what actually happened.
 
 ---
 
