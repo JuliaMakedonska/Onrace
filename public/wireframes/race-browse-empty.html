@@ -42,7 +42,7 @@
     padding-bottom: 56px; /* clears the fixed bottom-nav below */
   }
 
-  /* Global nav (sitemap.md → Navigation § 1, 3 items) as a real mobile bottom
+  /* Global nav (sitemap.md → Navigation § 1, 2 tabs) as a real mobile bottom
      tab bar — fixed to the frame's bottom edge, not part of the scrolling
      content, and not styled as browser-style top tabs. */
   .bottom-nav {
@@ -379,10 +379,14 @@
 
   </div><!-- /.phone-screen -->
 
+  <!-- ZONE: global nav — 2 tabs, both destinations (sitemap.md → Navigation
+       § 1, revised 2026-09-24). "Log result" is no longer a tab: it's the
+       primary action button inside My Results (header + empty state), since
+       tabs are for places and actions are buttons. Supersedes the earlier
+       3-tab bar (Discover / Log Result / My Results). -->
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
       <li><a href="race-browse.html" aria-current="page">Discover</a></li>
-      <li><a href="log-result.html">Log Result</a></li>
       <li><a href="results-list.html">My Results</a></li>
     </ul>
   </nav>

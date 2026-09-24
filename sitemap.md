@@ -171,9 +171,28 @@ Sign in / Sign up  [ORPHAN]
 
 Built only from the screens already named in the Screens section above — no new screen is introduced here, only how the existing ones are entered and reached.
 
-### 1. Global navigation — 3 items
+### 1. Global navigation — 2 items (revised 2026-09-24)
 
-`jtbd.md`'s own framing ("Why two main jobs, not one main + related") justifies co-equal top-level status by *trigger*, not by feature symmetry: Discovery is triggered by planning ahead, Archiving by "the opposite moment — after competing." That same trigger-difference logic, applied one level down, also separates the two Archive-cluster sub-jobs from each other — Related Job 3 (log right after finishing a race) and Related Job 4 (retrieve proof later, on demand) are triggered at different moments too. That's the basis for 3 global items, not 2 or 4:
+**Current structure:** a 2-tab bottom bar — **Discover** → Race browse, **My Results** → Results list. **Log result** is no longer a tab; it's the primary action button inside My Results (in the Results list header, and as the empty state's call to action).
+
+| Item → screen | Job behind it | Persona |
+|---|---|---|
+| **Discover** → Race browse | Main Job 1 — Discovery (`jtbd.md`) | Primary (core) + Secondary — Season Planner |
+| **My Results** → Results list | Related Job 4 — "pull that proof up quickly" (`jtbd.md`); also home of Related Job 3's entry point, via the in-page **Log result** action | Secondary — Archivist (core); Primary weak/caveated only |
+
+**Why 2 tabs + an in-page action (the reasoning that replaced the 3-item version below):** the problem with the 3-item bar was a *destination/action mismatch*, not tap count. A tab bar is for switching between places; actions go in the screen's own toolbar or buttons (Apple HIG's tab bar guidance: tabs are for navigation, not for starting tasks). Discover and My Results are places — you go there to look at a set of things. "Log Result" was an action (start a form that creates one new Logged result) sitting between two places as if it were one. And that action writes to the exact collection My Results shows, so its natural home is inside that place, next to the list it adds to — not a separate location of its own.
+
+The trigger-difference argument below is still true — Related Jobs 3 and 4 *are* triggered at different moments (right after a race vs. later, on demand). But a difference in *when* a job happens doesn't make it a different *place*: both jobs act on the same object (Logged result) in the same archive. Different triggers justify two clear entry points, not two tabs — and the in-page primary action is that second entry point.
+
+**The cost, stated honestly** (see § 2 for the numbers): Related Job 3 goes from 1 tap to 2. That was the reason commit `03ed66f` kept 3 tabs: Related Job 3 is the one job sourced as urgency-triggered ("right after finishing a race," `jtbd.md`). Accepted, not dismissed: the "urgency" is hours-to-days after a race, not seconds, and the extra tap is small next to the form itself (race, date, sport type, finish time, plus finding and pasting `official_result_url`). **[?] HYPOTHESIS:** that people expect to find "log a result" inside My Results, and that logging is rare enough (a few times a season) that it doesn't need a permanent slot. Neither is backed by user research — check both in the first usability test of the My Results flow.
+
+**Main Job 2 is served better by this, not worse:** with only two tabs, Discover and My Results are now the *entire* global nav — the "one product, two co-equal halves" framing below is now literally what the bar shows.
+
+#### Superseded — original 3-item reasoning (kept for the record, no longer the structure)
+
+*Superseded 2026-09-24 by the 2-item structure above. Kept here, not deleted, because commit `03ed66f` explicitly re-affirmed it earlier the same day; the reversal should be traceable, not silent. Its reasoning about triggers is still correct — what changed is the conclusion drawn from it (see "Why 2 tabs + an in-page action" above).*
+
+`jtbd.md`'s own framing ("Why two main jobs, not one main + related") justifies co-equal top-level status by *trigger*, not by feature symmetry: Discovery is triggered by planning ahead, Archiving by "the opposite moment — after competing." That same trigger-difference logic, applied one level down, also separates the two Archive-cluster sub-jobs from each other — Related Job 3 (log right after finishing a race) and Related Job 4 (retrieve proof later, on demand) are triggered at different moments too. That's the basis for 3 global items, not 2 or 4 *(superseded — see above)*:
 
 | Item → screen | Job behind it | Persona |
 |---|---|---|
@@ -181,9 +200,9 @@ Built only from the screens already named in the Screens section above — no ne
 | **Log Result** → Log result | Related Job 3 — "log the result along with where it came from... proof ready without having to redo the work later," triggered right after finishing a race (`jtbd.md`) | Secondary — Archivist (core); Primary only weak/general (matrix: "2, weak/general") |
 | **My Results** → Results list | Related Job 4 — "pull that proof up quickly" when an elite race asks for it, triggered later, on demand (`jtbd.md`) | Secondary — Archivist (core); Primary weak/caveated only (Main Job 2 = 2) |
 
-**Why Main Job 2 lives here, not on a screen (relocated 2026-09-17):** an earlier draft of this document modeled a distinct "Onrace — entry" screen to carry Main Job 2 (jtbd.md: "I want that in one product, so that I'm not maintaining two separate habits or tools"), reasoning that "the entry point is where 'one product' is actually experienced." That screen didn't hold up — Race browse is the actual 0-tap landing screen (see Depth, below), not a separate entry point — so it was removed from the Screens tree and the Traceability matrix. But the reasoning itself was sound, just aimed at the wrong artifact: it's *this nav structure* — Discover and My Results sitting as two of three co-equal, always-visible items in one global nav, rather than two separate apps or tabs a person has to consciously switch mental models between — that's where "one product" is actually experienced. That's what the Traceability matrix's Main Job 2 checkmarks on Race browse and Results list are really pointing at.
+**Why Main Job 2 lives here, not on a screen (relocated 2026-09-17):** an earlier draft of this document modeled a distinct "Onrace — entry" screen to carry Main Job 2 (jtbd.md: "I want that in one product, so that I'm not maintaining two separate habits or tools"), reasoning that "the entry point is where 'one product' is actually experienced." That screen didn't hold up — Race browse is the actual 0-tap landing screen (see Depth, below), not a separate entry point — so it was removed from the Screens tree and the Traceability matrix. But the reasoning itself was sound, just aimed at the wrong artifact: it's *this nav structure* — Discover and My Results sitting as co-equal, always-visible items in one global nav (originally two of three; since 2026-09-24, the only two), rather than two separate apps or tabs a person has to consciously switch mental models between — that's where "one product" is actually experienced. That's what the Traceability matrix's Main Job 2 checkmarks on Race browse and Results list are really pointing at.
 
-**Deliberately excluded from global nav:** Sign in/Sign up. It's the one `[ORPHAN]` screen from Step 2 — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of 3–5 precious nav items on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It surfaces contextually instead (see below).
+**Deliberately excluded from global nav:** Sign in/Sign up. It's the one `[ORPHAN]` screen from Step 2 — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of a handful of nav items (2, as of 2026-09-24) on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It surfaces contextually instead (see below).
 
 ### 2. Depth to the primary persona's core job
 
@@ -192,21 +211,36 @@ Built only from the screens already named in the Screens section above — no ne
 - **App launch → Race browse: 0 taps.** Discover is set as the default/home tab, not just a nav item — justified because `jtbd.md`'s own conclusion names Main Job 1 as the one job in the whole matrix with "no caveats needed... satisfies both halves of the filter without qualification" (clean primary-persona importance + the strongest market gap). The one clean job gets the one screen that costs nothing to reach.
 - **Race browse → Race detail: 1 tap.** Tapping a race card/pin is where the job's own "so that I can compare them in one place" (`jtbd.md`) actually resolves into a specific decision (view official_url/registration_url and decide to enter).
 
-**Total: 1 tap** to go from opening the app to viewing a specific race worth entering — under the 3-tap ceiling, so no restructuring is needed. The tradeoff of defaulting to Discover: **Log Result** and **My Results** are never zero-tap — the Archivist persona always spends at least 1 tap to reach their core screens, and an unauthenticated user attempting either immediately meets the Sign in/Sign up gate (see below). That's an intentional bias toward the persona and job with the cleanest evidence (`jtbd.md`'s Tier 1 pick), at a small, bounded cost to the two jobs justified on weaker, Tier-2 grounds.
+**Total: 1 tap** to go from opening the app to viewing a specific race worth entering — under the 3-tap ceiling, so no restructuring is needed. The tradeoff of defaulting to Discover: the Archive screens are never zero-tap — the Archivist persona always spends at least 1 tap to reach their core screens, and an unauthenticated user meets the Sign in/Sign up gate on the way (see below). That's an intentional bias toward the persona and job with the cleanest evidence (`jtbd.md`'s Tier 1 pick), at a small, bounded cost to the two jobs justified on weaker, Tier-2 grounds. Main Job 1's path is unchanged by the 2-tab revision.
+
+**Related Job 3 (log a result) — tap depth before vs. after the 2-tab revision (2026-09-24):**
+
+| Path to the Log result form | 3 tabs (before) | 2 tabs + in-page action (now) | Change |
+|---|---|---|---|
+| From app launch, signed in | 1 — tap **Log Result** tab | 2 — tap **My Results** tab → tap **Log result** button | **+1 tap** (1 → 2) |
+| From app launch, signed out | 1 tap + sign-in gate → form | 1 tap + sign-in gate → Results list → 1 tap → form (2 taps + gate) | **+1 tap**; the gate count is the same (one gate either way) |
+| Already on My Results | 1 — tap **Log Result** tab | 1 — tap **Log result** button | no change |
+| First-time user, empty archive | 1 — tap **Log Result** tab | 2 — tap **My Results** → empty state's **Log your first result** | **+1 tap**, and lands on an empty state that explains what the archive is for, before asking for input |
+
+So the real cost is exactly **one extra tap from anywhere outside My Results** — 2 taps total, still under the 3-tap ceiling. No path gets worse by more than that, and none gains a second gate. The sign-in gate now fires one step earlier (on the My Results tab, not on the Log action), which also means a signed-out person sees *why* they're signing in (their archive) before they're asked to. Related Job 4 (retrieve proof) is unchanged: 1 tap to My Results, then 1 tap into a Result detail.
 
 ### 3. Global / contextual / deep
 
-- **Global (always visible — the 3-item nav bar):**
+- **Global (always visible — the 2-item nav bar, since 2026-09-24):**
   - Discover (Race browse)
-  - Log Result
   - My Results (Results list)
+  - *(Formerly also Log Result — now an in-page action, below. See § 1.)*
+
+- **In-page primary action (a button on a screen, not a nav item):**
+  - **Log result** — the primary button in the Results list header, and the call to action in its empty state. Opens the Log result screen.
 
 - **Contextual (appears in-flow, reached by drilling into something, not from the nav bar):**
   - **Race detail** — opened from within Race browse (tap a card/pin); no independent entry point.
+  - **Log result** — opened from within My Results via the Log result action above; no longer a global destination of its own.
   - **Result detail (proof view)** — opened from within My Results (tap a logged entry); Secondary–Archivist only, per Step 2's persona note.
-  - **Sign in / Sign up** — surfaces only when an unauthenticated person taps Log Result or My Results (both owner-only per `../CLAUDE.md`'s RLS model); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global, despite being reachable from two of the three nav items.
+  - **Sign in / Sign up** — surfaces only when an unauthenticated person taps My Results (owner-only per `../CLAUDE.md`'s RLS model — and since Log result now lives inside My Results, that one tap gates both archive jobs); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global. *(Before 2026-09-24 it was reachable from two of the three nav items, Log Result and My Results.)*
 
-- **Deep (rare, buried actions):** **None yet.** Every screen named in Step 2 is either global or one tap from a global item — there's no third tier in the current screen set. Rare actions that would naturally land here later (editing or deleting a logged result, signing out, account settings) aren't in Step 2's screen list, so they're not fabricated here just to fill this bucket — this stays empty honestly rather than invented.
+- **Deep (rare, buried actions):** **None yet.** Every screen named in Step 2 is either global or one tap from a global item (Log result included — one tap from My Results via its in-page action) — there's no third tier in the current screen set. Rare actions that would naturally land here later (editing or deleting a logged result, signing out, account settings) aren't in Step 2's screen list, so they're not fabricated here just to fill this bucket — this stays empty honestly rather than invented.
 
 ---
 

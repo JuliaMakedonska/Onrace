@@ -76,9 +76,9 @@ MVP by **2026-11-01** (2 months from brief date, 2026-09-01).
 
 ## Information architecture (high-level)
 
-- **Top-level sitemap**: Discovery (Race browse, Race detail) and My Results/Archive (Results list, Log result, Result detail), plus a contextual Sign in/Sign up gate that closes no job of its own — surfaces only when an unauthenticated person taps Log Result or My Results. Full detail: `sitemap.md`; rendered view: `ia.html`.
+- **Top-level sitemap**: Discovery (Race browse, Race detail) and My Results/Archive (Results list, Log result, Result detail), plus a contextual Sign in/Sign up gate that closes no job of its own — surfaces only when an unauthenticated person taps My Results (which also gates the Log result action inside it). Full detail: `sitemap.md`; rendered view: `ia.html`.
 - **Main flow**: Discovery — app opens → Race browse (0 taps, the default/home tab) → Race detail (1 tap) → opens `registration_url` externally. The one job in the whole JTBD matrix that needs no caveats for the primary persona. Full flow diagram, plus Log Result and Retrieve Proof: `flows.md`.
-- **Global navigation**: 3 items — Discover (Race browse), Log Result, My Results (Results list) — co-equal by trigger (planning ahead vs. after competing vs. on demand later), not by feature symmetry.
+- **Global navigation**: 2 tabs — Discover (Race browse), My Results (Results list). **Log result** is the primary action button inside My Results (header + empty state), not a tab: tabs are destinations, actions are buttons. Revised 2026-09-24 from 3 tabs (Discover / Log Result / My Results); costs Log result +1 tap (1 → 2). Full reasoning, with the superseded 3-item version kept for the record: `sitemap.md` → Navigation § 1–2.
 - **Tap-depth to the main job**: 1 tap from app launch to a specific race worth entering, under the 3-tap ceiling.
 
 ## Repo / infra already set up
