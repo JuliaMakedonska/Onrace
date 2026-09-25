@@ -4,7 +4,7 @@ Draft. Built bottom-up from `research/jtbd.md`, `research/personas.md`, and `res
 
 ## Entities
 
-Each entity below is included because a specific job in `jtbd.md` produces or requires it. Entities with no job behind them are listed separately under **Under question**, not mixed in here. `[?]` marks a part of an entity that's assumed rather than sourced.
+Entities 1–4 below are included because a specific job in `jtbd.md` produces or requires it. Entity 5 is the one exception, tagged **infrastructure**: no job requires it, but the existence of accounts does (see its reversal note). Entities with neither behind them are listed separately under **Under question**, not mixed in here. `[?]` marks a part of an entity that's assumed rather than sourced.
 
 ---
 
@@ -81,11 +81,33 @@ The external evidence attached to a logged result — called out as its own enti
 
 ---
 
+### 5. Athlete account — `[INFRASTRUCTURE]`, not job-sourced
+
+The account a person signs into, and the minimal facts that say whose it is. Private to its owner, like Logged result. Never shown to anyone else (`../CLAUDE.md` → no social features).
+
+**Fields/parts:**
+- sign-in identity (email): already provided by Supabase Auth, not a new field
+- name
+- country
+- language `[?]`: stored as a preference only. `../CLAUDE.md` plans no localization, so the field changes nothing in the UI yet. Don't design it as if it switches the app's language.
+- *(photo: deferred, not excluded.)* Showing a photo means uploading and storing images, which needs Supabase Storage, and that isn't in the decided stack. For MVP the account shows the name's **initials** instead. Revisit once Storage is decided on.
+
+**Deliberately not included:** bio, stats or results summaries, badges, customization, public visibility. There's no job for any of them, and most are the "profile page" conventions that `../CLAUDE.md` rules out (social features). `jtbd.md` Hypothesis 6 ("see my own range reflected back") stays unbuilt. This entity doesn't serve it.
+
+**Why it exists (no job behind it):** accounts exist because Logged result is owner-only (`../CLAUDE.md` → RLS). A product with accounts has to show who is signed in and offer a way to sign out. Without that, a shared or borrowed device stays signed into someone else's archive, with no way to tell or to leave.
+
+**Reversal (2026-09-25):** this entity used to sit under *Under question* as "Athlete account / identity `[?]`", concluding that "no job explicitly asks for a profile object with its own fields". Commit `03ed66f` (2026-09-24) reached the same verdict for a Profile screen (`jtbd.md` Hypothesis 6: "isn't [justified], by any job"). Both answered the question they asked correctly, but it was the wrong question for this kind of object. "Does a job need this?" is the test for product features. The test for infrastructure is the one that already justified Sign in / Sign up: **does the existence of auth require this to exist somewhere?** For account identity and sign-out, yes. The earlier verdict still holds for the *feature* version of a profile (stats, range, social surface). That stays out.
+
+**Connects to:**
+- **Logged result**: owns every result in one person's archive (row-level ownership)
+- Sign in / Sign up and Profile (screens) read and write it
+
+---
+
 ## Under question
 
 Not included above because no job in `jtbd.md` produces or requires them directly — listed here so they aren't silently dropped, not because they're necessarily wrong.
 
-- **Athlete account / identity `[?]`** — assumed necessary for "owner-only via RLS" per-user archives (`../CLAUDE.md` → Data model) and for the emotional job ("recognized as what I actually am — a hybrid athlete," `jtbd.md` → Emotional and social jobs). But no job explicitly asks for a profile object with its own fields (name, avatar, etc.) — everything sourced so far only requires *ownership*, not a profile. Needs a fields decision only if a future job requires one.
 - **Automated plausibility check / flag `[?]`** — proposed in `research.md` → BENCHMARK top-3 mechanism #3 and CONCLUSIONS gap 4 (dead-link detection, implausible-time flags, duplicate detection) as a trust-building mechanism. Not traced to any specific JTBD job — it's the researcher's proposed system behavior, not something a person's job produces or asks for. Would attach to Logged result / Source-link proof if built.
 - **Saved season plan / itinerary `[?]`** — the Multi-Region Season Planner persona's job ("browse races spatially to decide where to travel/compete next") describes *browsing* behavior only; no job or data-model field in `../CLAUDE.md` describes saving, bookmarking, or persisting a shortlist. Flagged so it isn't assumed later without a job behind it.
 - **Results map (a map of countries/locations where the user has competed) `[?]`** — a feature idea raised in this session, not sourced to any job in `jtbd.md`. Related Jobs 3–4 (logging a result with proof; retrieving proof for an application) are about producing and retrieving evidence, not about visualizing geographic spread of past results, and no other job describes wanting a spatial view of one's own history. Compelling on its own terms and worth validating later — plausibly a natural extension of the Qualifying-Time Archivist's job (a byproduct view of results already logged with location data), or a new hypothesis to add to `jtbd.md` if pursued — but currently not a confirmed requirement. Do not treat as an entity or design a screen for it until it's traced to a job the way the four entities above are.
@@ -94,7 +116,7 @@ Not included above because no job in `jtbd.md` produces or requires them directl
 
 ## Screens
 
-Grouped by the two entity clusters from the Entities section above (Discovery = Race listing + Search/filter criteria; Archive = Logged result + Source-link proof), not by generic "site sections." Every screen is tagged with the `jtbd.md` job it serves; `[ORPHAN]` marks a screen with no job behind it. Loading/empty/error states are noted inline as *states*, not listed as their own screens. An earlier draft modeled a distinct "Onrace — entry" screen to carry Main Job 2; that screen never actually existed as separate UI (Race browse is the real 0-tap landing screen, per Navigation → Depth below) and has been removed. Its rationale wasn't wrong, just misplaced — see Navigation § 1 for where it actually lives now (corrected 2026-09-17).
+Grouped by the two entity clusters from the Entities section above (Discovery = Race listing + Search/filter criteria; Archive = Logged result + Source-link proof), not by generic "site sections." Every screen is tagged with the `jtbd.md` job it serves; `[INFRASTRUCTURE]` marks a screen with no job behind it that exists because accounts do (renamed from `[ORPHAN]` on 2026-09-25: "orphan" read as "unjustified," but these screens are justified, by auth rather than by a job). Loading/empty/error states are noted inline as *states*, not listed as their own screens. An earlier draft modeled a distinct "Onrace — entry" screen to carry Main Job 2; that screen never actually existed as separate UI (Race browse is the real 0-tap landing screen, per Navigation → Depth below) and has been removed. Its rationale wasn't wrong, just misplaced — see Navigation § 1 for where it actually lives now (corrected 2026-09-17).
 
 ```
 Onrace (app — not a separate screen or job-closing destination; Race browse is the
@@ -152,24 +174,31 @@ Onrace (app — not a separate screen or job-closing destination; Race browse is
           around the Primary persona's framing (see personas.md/jtbd.md's own
           design-implication note).
 
-Sign in / Sign up  [ORPHAN]
-  No job in jtbd.md calls for account creation or login. Included here only
-  because "Logged result" is owner-only per ../CLAUDE.md's data model, and
-  the underlying "Athlete account" entity itself was already flagged `[?]`
-  under question in this file's Entities section — this screen inherits that
-  same lack of sourcing. Needed for both personas technically (to make
-  ownership work), but not sourced to any stated job.
+Sign in / Sign up  [INFRASTRUCTURE]
+  No job in jtbd.md calls for account creation or login. Exists because
+  "Logged result" is owner-only per ../CLAUDE.md's data model, which means
+  accounts exist (Entities → 5. Athlete account). Needed for both personas
+  technically (to make ownership work), but not sourced to any stated job.
+
+Profile  [INFRASTRUCTURE]  (added 2026-09-25)
+  Shows whose account this is and lets the person leave it. Not job-sourced;
+  exists because auth does (Entities → 5, incl. its reversal note).
+  Contents, deliberately narrow: initials (photo deferred) · name · country
+  · language [?] (stored preference, no localization yet) · Sign out.
+  Nothing else: no bio, stats, customization, or public view.
+  Entry: account button in the My Results navigation bar (Navigation § 1).
+  Only reachable signed in, since My Results already gates on sign-in.
 ```
 
 **Jobs with no screen of their own:** the Emotional job ("recognized as what I actually am — a hybrid athlete") and the Social job ("the proof itself to stand on its own") don't produce distinct screens — per `jtbd.md`, they describe how existing screens should read (tone/framing on Discovery; the self-reported-source-linked display convention on Result detail), not separate destinations. Not listed as screens or orphans for that reason.
 
-**Not included:** a screen for the Results map idea flagged under Entities → Under question — it stays unbuilt until it's traced to a job.
+**Not included:** a profile *feature* (stats, range reflected back, public page). `jtbd.md` Hypothesis 6 stays unbuilt, and Profile above is account infrastructure only. Also not included: a screen for the Results map idea flagged under Entities → Under question — it stays unbuilt until it's traced to a job.
 
 ---
 
 ## Navigation
 
-Built only from the screens already named in the Screens section above — no new screen is introduced here, only how the existing ones are entered and reached.
+Built only from the screens already named in the Screens section above. No new screen is introduced here, only how the existing ones are entered and reached. (Profile, added 2026-09-25, was added to the Screens section first. Its placement is decided below.)
 
 ### 1. Global navigation — 2 items (revised 2026-09-24)
 
@@ -202,7 +231,16 @@ The trigger-difference argument below is still true — Related Jobs 3 and 4 *ar
 
 **Why Main Job 2 lives here, not on a screen (relocated 2026-09-17):** an earlier draft of this document modeled a distinct "Onrace — entry" screen to carry Main Job 2 (jtbd.md: "I want that in one product, so that I'm not maintaining two separate habits or tools"), reasoning that "the entry point is where 'one product' is actually experienced." That screen didn't hold up — Race browse is the actual 0-tap landing screen (see Depth, below), not a separate entry point — so it was removed from the Screens tree and the Traceability matrix. But the reasoning itself was sound, just aimed at the wrong artifact: it's *this nav structure* — Discover and My Results sitting as co-equal, always-visible items in one global nav (originally two of three; since 2026-09-24, the only two), rather than two separate apps or tabs a person has to consciously switch mental models between — that's where "one product" is actually experienced. That's what the Traceability matrix's Main Job 2 checkmarks on Race browse and Results list are really pointing at.
 
-**Deliberately excluded from global nav:** Sign in/Sign up. It's the one `[ORPHAN]` screen from Step 2 — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of a handful of nav items (2, as of 2026-09-24) on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It surfaces contextually instead (see below).
+**Deliberately excluded from global nav:** Sign in/Sign up. It's an `[INFRASTRUCTURE]` screen (tagged `[ORPHAN]` until 2026-09-25) — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of a handful of nav items (2, as of 2026-09-24) on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It surfaces contextually instead (see below).
+
+**Profile: not a tab either (decided 2026-09-25).** Profile is reached from an **account button (initials) in the My Results navigation bar**, beside the Log result action, not from a third tab. Same discipline as the Log result decision, applied test by test:
+1. **Destination or action?** A destination: you go there to see your account. So unlike Log result, it passes the "tabs are places" test. That's necessary for a tab, not sufficient.
+2. **How often?** Tabs are for places people return to every session. Profile is visited rarely: to check whose account this is, change a preference, or sign out. Log result was already judged too infrequent for a tab, and Profile is less frequent still.
+3. **Job-sourcing.** Same test that kept Sign in / Sign up out of the bar: a permanent slot shouldn't go to a screen with no job behind it. A third tab would bring back the 3-item bar removed on 2026-09-24, with the new slot going to the one item that closes no job.
+4. **Signed-out state.** As a tab, it would need either a second sign-in gate or a designed signed-out Profile. Inside My Results it sits behind the gate that's already there, so no new gate. Discover still needs no account.
+5. **Ownership.** The account matters because it owns the archive, so its entry point sits in the archive's own header. This follows the iOS convention of an account button in the large-title bar when the tab bar is reserved for main destinations (e.g. the App Store).
+
+**Rejected alternative:** the same account button on Discover's header too (1 tap from launch). It would put an auth entry point on the one screen designed to need no account. **The cost of the chosen placement:** someone who uses only Discover and wants to change a preference has to go through My Results. **[?] HYPOTHESIS:** that people look for their account inside My Results. Not backed by user research; check it in the same first usability test as Log result's placement.
 
 ### 2. Depth to the primary persona's core job
 
@@ -224,6 +262,15 @@ The trigger-difference argument below is still true — Related Jobs 3 and 4 *ar
 
 So the real cost is exactly **one extra tap from anywhere outside My Results** — 2 taps total, still under the 3-tap ceiling. No path gets worse by more than that, and none gains a second gate. The sign-in gate now fires one step earlier (on the My Results tab, not on the Log action), which also means a signed-out person sees *why* they're signing in (their archive) before they're asked to. Related Job 4 (retrieve proof) is unchanged: 1 tap to My Results, then 1 tap into a Result detail.
 
+**Profile and Sign out: tap depth (added 2026-09-25):**
+
+| Path | Taps | Notes |
+|---|---|---|
+| App launch → Profile, signed in | 2: **My Results** tab → account button | under the 3-tap ceiling |
+| App launch → Profile, signed out | 1 tap + sign-in gate → Results list → 1 tap (2 taps + gate) | the same single gate as the archive; no new one |
+| App launch → Sign out | 3: … → Profile → **Sign out** | at the ceiling, acceptable for the rarest action in the app |
+| Already on My Results → Profile | 1 | |
+
 ### 3. Global / contextual / deep
 
 - **Global (always visible — the 2-item nav bar, since 2026-09-24):**
@@ -238,9 +285,12 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
   - **Race detail** — opened from within Race browse (tap a card/pin); no independent entry point.
   - **Log result** — opened from within My Results via the Log result action above; no longer a global destination of its own.
   - **Result detail (proof view)** — opened from within My Results (tap a logged entry); Secondary–Archivist only, per Step 2's persona note.
+  - **Profile**: opened from the account button in the My Results navigation bar; no independent entry point. Signed-in only (see § 1).
   - **Sign in / Sign up** — surfaces only when an unauthenticated person taps My Results (owner-only per `../CLAUDE.md`'s RLS model — and since Log result now lives inside My Results, that one tap gates both archive jobs); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global. *(Before 2026-09-24 it was reachable from two of the three nav items, Log Result and My Results.)*
 
-- **Deep (rare, buried actions):** **None yet.** Every screen named in Step 2 is either global or one tap from a global item (Log result included — one tap from My Results via its in-page action) — there's no third tier in the current screen set. Rare actions that would naturally land here later (editing or deleting a logged result, signing out, account settings) aren't in Step 2's screen list, so they're not fabricated here just to fill this bucket — this stays empty honestly rather than invented.
+- **Deep (rare, buried actions):**
+  - **Sign out**: a button on Profile, 3 taps from launch. The first real entry here (2026-09-25). This bucket used to say signing out wasn't in the screen list, and that absence is exactly the gap Profile closes (Entities → 5).
+  - Editing or deleting a logged result, and any further account settings, still aren't in the screen list, so they're still not invented here.
 
 ---
 
@@ -252,16 +302,16 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
 
 Rows = every job in `jtbd.md` (main, related, emotional, and social — the five unsourced items under `jtbd.md` → Hypotheses are excluded, since they're explicitly "not backed by `research.md`," a different category from what's asked here). Columns = every screen in the Screens section above. A ✓ means the screen actually participates in *closing* that job, not merely that it's adjacent to the topic.
 
-| Job (`jtbd.md`) | Race browse | Race detail | Results list | Log result | Result detail | Sign in / Sign up |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| Main Job 1 — Discovery | ✓ | ✓ | | | | |
-| Main Job 2 — Results archiving (combined) | ✓ | | ✓ | | | |
-| Related Job 1 — plan season by format | ✓ | | | | | |
-| Related Job 2 — choose races by location | ✓ | | | | | |
-| Related Job 3 — log a result with proof | | | ✓ | ✓ | | |
-| Related Job 4 — retrieve proof for an application | | | ✓ | | ✓ | |
-| Emotional — recognized as a hybrid athlete | ✓ | | | | | |
-| Social — proof stands on its own | | | ✓ | ✓ | ✓ | |
+| Job (`jtbd.md`) | Race browse | Race detail | Results list | Log result | Result detail | Sign in / Sign up | Profile |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Main Job 1 — Discovery | ✓ | ✓ | | | | | |
+| Main Job 2 — Results archiving (combined) | ✓ | | ✓ | | | | |
+| Related Job 1 — plan season by format | ✓ | | | | | | |
+| Related Job 2 — choose races by location | ✓ | | | | | | |
+| Related Job 3 — log a result with proof | | | ✓ | ✓ | | | |
+| Related Job 4 — retrieve proof for an application | | | ✓ | | ✓ | | |
+| Emotional — recognized as a hybrid athlete | ✓ | | | | | | |
+| Social — proof stands on its own | | | ✓ | ✓ | ✓ | | |
 
 **Notes on the two `✓` rows that aren't a dedicated interaction:** Emotional and Social don't have a screen built specifically for them — per the Screens section's own "Jobs with no screen of their own" note, they're closed by *how* an existing screen reads, not by a separate destination. Emotional is closed by Race browse's cross-format framing (seeing HYROX/DEKA/marathons/etc. together as one "hybrid athlete" catalog, not siloed by sport). Social is closed by the required-link-at-entry and self-reported-labeling conventions (`research.md` → BENCHMARK mechanisms #1–2) actually being implemented on Log result, Results list, and Result detail. These are legitimate closes, not padding — but they're framing-level, not task-level, unlike every other ✓ in the matrix.
 
@@ -269,9 +319,13 @@ Rows = every job in `jtbd.md` (main, related, emotional, and social — the five
 
 ### Orphan screens (column with no ✓)
 
-**Sign in / Sign up** — zero checks. Already flagged `[ORPHAN]` when it was first introduced in the Screens section: no job in `jtbd.md` calls for account creation or login on its own.
+*"Orphan" here still means what it means in a traceability matrix: a column with no ✓. The screens that have one are tagged `[INFRASTRUCTURE]` in the Screens section (renamed from `[ORPHAN]`, 2026-09-25), because an empty column isn't a defect for a screen that exists to support auth.*
+
+**Sign in / Sign up**: zero checks. Tagged `[INFRASTRUCTURE]` in the Screens section: no job in `jtbd.md` calls for account creation or login on its own.
 
 **Resolution: attach to existing, not delete or add.** This screen isn't dead weight — it's required because Logged result is owner-only per `../CLAUDE.md`'s RLS model — but it shouldn't be scored as if it closes a job of its own, and it shouldn't be promoted to a first-class, job-justified destination either. The Navigation section already made the correct call here without naming it as such: Sign in / Sign up is classified as **contextual**, a gate triggered only when an unauthenticated person attempts Log Result (Related Job 3) or My Results (Related Job 4), never a standalone stop. That's the resolution — it's attached to those two jobs' flows as an enabling step, not counted as closing them itself. No change needed beyond stating this explicitly here.
+
+**Profile**: zero checks, and the same resolution. It exists because accounts do (Entities → 5), and it's attached to the archive as that account's home and its only sign-out point. It isn't scored as closing a job. It's contextual in My Results, not a global item (Navigation § 1). Its reversal of the 2026-09-24 "no job supports Profile" verdict is documented at Entities → 5, not here, because it changes *why* the screen exists, not what it closes.
 
 ### Orphan jobs (row with no ✓)
 

@@ -247,8 +247,10 @@
 <div class="layout">
 
   <!-- Tree nav: pulled from sitemap.md's Screens-section clusters (Discovery;
-       My Results/Archive) plus the ungrouped Sign in/Sign up orphan, exactly
-       where sitemap.md's own tree places it. State children come from
+       My Results/Archive) plus the two ungrouped [INFRASTRUCTURE] screens,
+       Sign in/Sign up and Profile, exactly where sitemap.md's own tree places
+       them. Profile is a plain leaf: it has no _screens.md table and isn't
+       built yet. State children come from
        _screens.md's state table — only ✓ states get a node; Race browse gets
        Empty/Error/Loading (its Success is "—", not a distinct endpoint);
        Race detail gets Error/Loading/Success (its Empty is "—"), with
@@ -290,6 +292,9 @@
       </li>
       <li>
         <a href="sign-in-sign-up.html" data-frame="sign-in-sign-up.html">Sign in / Sign up</a>
+      </li>
+      <li>
+        <a href="profile.html" data-frame="profile.html">Profile</a>
       </li>
     </ul>
   </aside>
