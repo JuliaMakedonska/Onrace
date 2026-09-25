@@ -190,8 +190,14 @@
   }
 
   /* home indicator: 134×5pt rounded bar, centered low in its strip */
+  /* Overlaps the iframe's last pixel row (white in every screen: tab bar or
+     action bar) so a half-pixel frame position can't leave a seam where
+     scrolled content peeks through below the bar. */
   .home-indicator {
-    flex: 0 0 var(--home-h);
+    position: relative;
+    margin-top: -1px;
+    background: #fff;
+    flex: 0 0 calc(var(--home-h) + 1px);
     display: flex;
     align-items: flex-end;
     justify-content: center;

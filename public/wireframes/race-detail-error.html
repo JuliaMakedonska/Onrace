@@ -9,7 +9,8 @@
      the content inside them changes (_conventions.md § 5). */
 
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
-     no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7.
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: tab bar, back chevron — § 1). Deferred per _conventions.md § 7.
      Bare screen (_conventions.md § 1): index.html provides the device frame
      and nav tree.
 
@@ -21,13 +22,31 @@
      so it's always visible and the content never needs padding to clear
      it (the bar's height can change, e.g. when an alert is added). */
 
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (tags, chips, selects, small buttons), --r for large surfaces
+     (cards, primary buttons, segmented control, map, sheet). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
   * { box-sizing: border-box; }
 
   html, body { height: 100%; }
   body {
     margin: 0 auto;
     max-width: 390px;
-    color: #000;
+    color: var(--ink);
     background: #fff;
     line-height: 1.4;
     position: relative;
@@ -36,7 +55,7 @@
     flex-direction: column;
   }
 
-  a { color: #000; }
+  a { color: var(--ink); }
 
   .phone-screen {
     flex: 1;
@@ -48,14 +67,28 @@
   /* --- top bar: the one way back (Race browse). Sticky inside the scroll
      area; its bottom border is the divider. --- */
   .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
     position: sticky;
     top: 0;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    height: 44px;            /* iOS navigation bar */
+    padding: 0 8px;
     background: #fff;
-    border-bottom: 1px solid #000;
-    padding: 12px 16px;
-    font-size: 0.9rem;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
   }
+  /* iOS back button: chevron + label, no underline */
+  .top-bar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .back-chevron { display: block; }
 
   .race { padding: 20px 16px 28px; }
   .race[hidden] { display: none; }
@@ -70,7 +103,7 @@
     margin: 0 0 24px 0;
     font-size: 0.92rem;
   }
-  .facts dt { color: #444; }
+  .facts dt { color: var(--ink-2); }
   .facts dd { margin: 0; }
 
   .race h2, .state-message h2, .inline-error h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
@@ -84,7 +117,7 @@
   .action-bar {
     flex: none;
     background: #fff;
-    border-top: 2px solid #000;
+    border-top: 0.5px solid var(--line);
     padding: 12px 16px 14px;
     z-index: 3;
   }
@@ -92,16 +125,17 @@
   .register-btn {
     display: block;
     width: 100%;
-    border: 1px solid #000;
-    background: #000;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
     color: #fff;
     padding: 12px 16px;
     font-size: 1rem;
     font-weight: 700;
     text-align: center;
     text-decoration: none;
+    border-radius: var(--r);
   }
-  .action-caption { font-size: 0.78rem; color: #444; margin: 6px 0 0 0; text-align: center; }
+  .action-caption { font-size: 0.78rem; color: var(--ink-2); margin: 6px 0 0 0; text-align: center; }
 
   /* --- error copy. Two causes, one page (_conventions.md § 5): a full-page
      message when the race itself didn't load (no action bar: nothing to
@@ -109,26 +143,28 @@
      Register button that failed. The alert gets a border because it has to
      read as one unit inside the bar. --- */
   .state-message { padding: 40px 24px; text-align: center; }
-  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: #333; }
+  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: var(--ink-2); }
   [data-cause][hidden], .inline-error[hidden] { display: none; }
   .state-action {
     display: inline-block;
-    border: 1px solid #000;
-    background: #000;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
     color: #fff;
     padding: 9px 18px;
     font-size: 0.9rem;
     text-decoration: none;
+    border-radius: var(--r);
   }
-  .inline-error { border: 2px solid #000; padding: 10px 12px; margin: 0 0 10px 0; }
+  .inline-error { border: 1px solid var(--line-strong); padding: 10px 12px; margin: 0 0 10px 0; border-radius: var(--r); background: var(--fill-soft); }
   .inline-error p { font-size: 0.85rem; margin: 0 0 8px 0; }
   .dismiss {
-    border: 1px solid #000;
+    border: 1px solid var(--line);
     background: #fff;
     padding: 6px 14px;
     font: inherit;
     font-size: 0.85rem;
     cursor: pointer;
+    border-radius: var(--r-sm);
   }
 </style>
 </head>
@@ -141,7 +177,7 @@
            is flows.md's "back / compares another race" edge, and the "no"
            edge of WantsToEnter: not worth entering → back to browsing. -->
       <nav class="top-bar" aria-label="Back">
-        <a href="race-browse.html">Back to races</a>
+        <a href="race-browse.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back to races</span></a>
       </nav>
 
     <main>

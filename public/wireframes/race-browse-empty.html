@@ -10,7 +10,8 @@
      per _conventions.md § 5. */
 
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
-     no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7:
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: tab bar, back chevron — § 1). Deferred per _conventions.md § 7:
      color, fonts, shadows, icons, finished UI.
 
      This file is a bare screen: no nav tree, no spec-note/caption chrome —
@@ -20,39 +21,58 @@
      internally-scrolling "phone screen," just without index.html's outer
      device bezel. */
 
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (tags, chips, selects, small buttons), --r for large surfaces
+     (cards, primary buttons, segmented control, map, sheet). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
   * { box-sizing: border-box; }
 
   html, body { height: 100%; }
   body {
     margin: 0 auto;
     max-width: 390px;
-    color: #000;
+    color: var(--ink);
     background: #fff;
     line-height: 1.4;
     position: relative;
     overflow: hidden;
   }
 
-  a { color: #000; }
+  a { color: var(--ink); }
 
   .phone-screen {
     height: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 56px; /* clears the fixed bottom-nav below */
+    padding-bottom: 49px; /* clears the fixed bottom-nav below */
   }
 
   /* Global nav (sitemap.md → Navigation § 1, 2 tabs) as a real mobile bottom
      tab bar — fixed to the frame's bottom edge, not part of the scrolling
      content, and not styled as browser-style top tabs. */
   .bottom-nav {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 56px;
+    height: 49px;            /* iOS tab bar, above the home-indicator area */
     background: #fff;
-    border-top: 2px solid #000;
+    border-top: 0.5px solid var(--line);
     z-index: 3;
   }
   .bottom-nav ul {
@@ -63,15 +83,24 @@
     padding: 0;
   }
   .bottom-nav li { flex: 1; }
+  /* Icon over label, inactive tabs gray; the current tab is tinted dark
+     (iOS marks it with tint, not a filled background). */
   .bottom-nav a {
     display: flex;
+    flex-direction: column;
     height: 100%;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 1px;
+    padding-top: 5px;
     text-decoration: none;
-    font-size: 0.8rem;
+    color: var(--ink-3);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
   }
-  .bottom-nav a[aria-current="page"] { background: #000; color: #fff; }
+  .bottom-nav a[aria-current="page"] { color: var(--fill-strong); font-weight: 600; }
+  .tab-icon { display: block; }
 
   /* --- main is a flex column so the visible view panel (list or map) can
      take flex:1 and genuinely fill whatever space is left below the header/
@@ -84,8 +113,9 @@
     min-height: 100%;
   }
 
-  header { padding: 16px 16px 8px; }
-  h1 { font-size: 1.1rem; margin: 0; }
+  /* iOS large title (34pt bold), the top-level screen's own title. */
+  header { padding: 6px 16px 6px; }
+  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0; }
 
   /* --- shared controls: the control row (Filters + List/Map toggle) and the
      active-filter chips, together in one sticky block whose bottom border is
@@ -97,7 +127,7 @@
     top: 0;
     z-index: 2;
     background: #fff;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--line);
   }
   .control-row {
     display: flex;
@@ -107,13 +137,13 @@
   }
 
   /* Filters is the primary control (it decides WHAT is shown; the toggle only
-     decides HOW), so it takes the row's spare width and a heavier 2px border
-     + bold label. It deliberately never uses the inverted black fill — that
-     style means "current/pressed" (List/Map toggle, current nav tab) on this
+     decides HOW), so it takes the row's spare width and a heavier, darker border
+     + bold label. It deliberately never uses the dark-gray current fill — that
+     style means "current/pressed" (the List/Map selected segment) on this
      screen, and Filters is an action, not a state. Open = light gray. */
   .filters-trigger {
     flex: 1;
-    border: 2px solid #000;
+    border: 1.5px solid var(--line-strong);
     background: #fff;
     padding: 8px 14px;
     margin: 0;
@@ -122,25 +152,30 @@
     font-weight: 700;
     text-align: left;
     cursor: pointer;
+    border-radius: var(--r);
   }
-  .filters-trigger[aria-expanded="true"] { background: #e6e6e6; }
+  .filters-trigger[aria-expanded="true"] { background: var(--fill-soft); }
 
+  /* iOS segmented control: gray track, the selected segment filled. */
   .view-toggle {
     display: flex;
-    border: 1px solid #000;
+    gap: 2px;
+    padding: 2px;
     margin: 0;
+    border-radius: var(--r-sm);
+    background: var(--fill-track);
   }
   .view-btn {
     border: none;
-    border-right: 1px solid #000;
-    background: #fff;
-    padding: 8px 12px;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    padding: 7px 12px;
     font: inherit;
     font-size: 0.85rem;
     cursor: pointer;
   }
-  .view-btn:last-child { border-right: none; }
-  .view-btn[aria-pressed="true"] { background: #000; color: #fff; }
+  .view-btn[aria-pressed="true"] { background: var(--fill-strong); color: #fff; }
 
   /* --- active filter chips: shared, identical in both views, between the
      control row and the divider. One row only — overflows sideways with its
@@ -170,13 +205,14 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    border: 1px solid #000;
+    border: 1px solid var(--line);
     background: #fff;
     padding: 3px 8px;
     font: inherit;
     font-size: 0.8rem;
     white-space: nowrap;
     cursor: pointer;
+    border-radius: var(--r-sm);
   }
   .clear-all {
     flex: none;
@@ -185,7 +221,8 @@
     padding: 3px 0;
     font: inherit;
     font-size: 0.8rem;
-    text-decoration: underline;
+    font-weight: 600;
+    color: var(--fill-strong);
     cursor: pointer;
   }
 
@@ -206,15 +243,16 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #333;
+    color: var(--ink-2);
   }
   .sort-control[hidden] { display: none; }
-  .sort-control::before { content: "·"; margin-right: 2px; color: #000; }
+  .sort-control::before { content: "·"; margin-right: 2px; color: var(--ink); }
   .sort-control select {
-    border: 1px solid #000;
+    border: 1px solid var(--line);
     padding: 3px 6px;
     font: inherit;
     background: #fff;
+    border-radius: var(--r-sm);
   }
 
   /* Each view panel gets flex:1 when visible, so it fills the rest of main's
@@ -241,7 +279,7 @@
     margin: 0;
     padding: 0;
   }
-  article.race-card { border: 1px solid #000; }
+  article.race-card { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
   article.race-card a.card-link {
     display: block;
     padding: 20px 16px;
@@ -249,7 +287,7 @@
     color: inherit;
   }
   article.race-card a.card-link:hover,
-  article.race-card a.card-link:focus-visible { background: #f2f2f2; }
+  article.race-card a.card-link:focus-visible { background: var(--fill-soft); }
   article.race-card h3 { margin: 0 0 12px 0; font-size: 1rem; }
   .card-meta {
     display: flex;
@@ -259,11 +297,12 @@
     font-size: 0.88rem;
   }
   .sport-tag {
-    border: 1px solid #000;
+    border: 1px solid var(--line);
     padding: 1px 6px;
     font-size: 0.78rem;
+    border-radius: 6px;
   }
-  .card-location { margin: 0; font-size: 0.88rem; color: #333; }
+  .card-location { margin: 0; font-size: 0.88rem; color: var(--ink-2); }
 
   /* --- map view: no padding (bleeds edge-to-edge), fills the remaining
      space between the results row and the bottom nav. --- */
@@ -273,15 +312,16 @@
   }
   .map-placeholder {
     flex: 1;
-    border: 1px dashed #000;
-    background: #f2f2f2;
+    border: 1px dashed var(--line-strong);
+    background: var(--fill-soft);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     font-size: 0.85rem;
-    color: #555;
+    color: var(--ink-2);
     padding: 16px;
+    border-radius: var(--r);
   }
 
   /* --- bottom-sheet drawer + backdrop: real overlay, slides up over content --- */
@@ -304,8 +344,8 @@
     max-height: 75%;
     overflow-y: auto;
     background: #fff;
-    border-top: 2px solid #000;
-    padding: 12px 16px 20px;
+    border-radius: var(--r) var(--r) 0 0;
+    padding: 6px 16px 20px;
     transform: translateY(100%);
     transition: transform 0.25s ease;
     z-index: 6;
@@ -315,52 +355,56 @@
 
   .sheet-handle {
     width: 36px;
-    height: 4px;
-    background: #999;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--line);
     margin: 0 auto 14px;
   }
 
   form div, form fieldset { margin-bottom: 12px; border: none; padding: 0; }
-  fieldset { border: 1px solid #999; padding: 8px 10px; }
+  fieldset { border: 1px solid var(--line); padding: 8px 10px; border-radius: var(--r-sm); }
   legend { font-size: 0.85rem; padding: 0 4px; }
   form label { display: inline-block; margin-right: 14px; font-size: 0.9rem; }
   fieldset label { display: block; margin: 4px 0; }
   select, input[type="date"] {
-    border: 1px solid #000;
+    border: 1px solid var(--line);
     padding: 4px 6px;
     background: #fff;
     font: inherit;
+    border-radius: var(--r-sm);
   }
   .sheet-actions { display: flex; gap: 10px; margin-top: 4px; }
   .sheet-actions button {
     flex: 1;
-    border: 1px solid #000;
+    border: 1px solid var(--line);
     padding: 9px 12px;
     font: inherit;
     cursor: pointer;
+    border-radius: var(--r);
   }
-  #filters-apply { background: #000; color: #fff; }
-  #filters-close { background: #fff; color: #000; }
+  #filters-apply { background: var(--fill-strong); color: #fff; }
+  #filters-close { background: #fff; color: var(--ink); }
 
   /* --- state message (empty/error): replaces the card list inside the same
      view panels. No box around it — spacing alone groups heading, copy, and
      actions (_conventions.md § 1, "zone separation is spacing"). --- */
   .state-message { padding: 32px 8px; text-align: center; }
   .state-message h2 { font-size: 1rem; margin: 0 0 6px 0; }
-  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: #333; }
+  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: var(--ink-2); }
   .state-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
   .state-action {
     display: inline-block;
-    border: 1px solid #000;
-    background: #000;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
     color: #fff;
     padding: 9px 18px;
     font: inherit;
     font-size: 0.9rem;
     text-decoration: none;
     cursor: pointer;
+    border-radius: var(--r);
   }
-  .state-action.secondary { background: #fff; color: #000; }
+  .state-action.secondary { background: #fff; color: var(--ink); }
   .map-placeholder .state-message { padding: 0; }
 </style>
 </head>
@@ -469,10 +513,10 @@
        3-tab bar (Discover / Log Result / My Results). -->
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
-      <li><a href="race-browse.html" aria-current="page">Discover</a></li>
+      <li><a href="race-browse.html" aria-current="page"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="13" cy="13" r="10.5"/><path d="m17.2 8.8-2.6 5.8-5.8 2.6 2.6-5.8z"/></svg><span>Discover</span></a></li>
       <!-- No href yet: results-list.html isn't built, and a link to a missing
            file would be a dead end. Becomes a real link with that screen. -->
-      <li><a aria-disabled="true">My Results</a></li>
+      <li><a aria-disabled="true"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
     </ul>
   </nav>
 
