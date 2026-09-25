@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in / Sign up — Onrace (wireframe)</title>
+<style>
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons (system-chrome glyphs
+     only, and this screen needs none: Close is a text button). Deferred per
+     _conventions.md § 7. Bare screen (_conventions.md § 1): index.html
+     provides the device frame and nav tree.
+
+     Gate, not a place (_conventions.md § 1, "Gates are modals, not
+     drill-downs"): a full-screen modal. The top bar holds Close on the left
+     (text, no chevron) and the title; there is never a "‹ Back" and never
+     the global tab bar. The one action (Sign in / Create account) sits at
+     the end of the form, in the flow of the content: no sticky bottom bar,
+     so nothing collides with the on-screen keyboard. The body is a flex
+     column: the top bar sits above the scrolling .phone-screen, outside it. */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (inputs, segmented control), --r for large surfaces (primary
+     button, alert). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* placeholder regions, alert background */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { color: var(--ink); }
+  [hidden] { display: none !important; }
+
+  /* --- modal top bar: Close (leading, text button) + centered title.
+     iOS navigation bar metrics; system chrome = system font. --- */
+  .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    flex: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
+  }
+  .close {
+    position: relative;
+    z-index: 1;
+    padding: 4px 8px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .bar-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .phone-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gate { padding: 20px 16px 32px; }
+  .context { margin: 0 0 20px 0; font-size: 0.95rem; color: var(--ink-2); }
+
+  /* iOS segmented control — same CSS as Race browse's List/Map toggle
+     (.view-toggle / .view-btn), stretched to full width here. */
+  .view-toggle {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    margin: 0 0 24px 0;
+    border-radius: var(--r-sm);
+    background: var(--fill-track);
+  }
+  .view-btn {
+    flex: 1;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    padding: 7px 12px;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .view-btn[aria-pressed="true"] { background: var(--fill-strong); color: #fff; }
+  .view-btn:disabled { cursor: default; }
+
+  /* --- the form: label above each field, full-width inputs. --- */
+  fieldset { border: none; margin: 0; padding: 0; min-width: 0; }
+  .field { margin: 0 0 16px 0; }
+  .field label { display: block; font-size: 0.85rem; color: var(--ink-2); margin: 0 0 6px 0; }
+  .field input {
+    display: block;
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 0 12px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+  }
+  .field input::placeholder { color: var(--ink-3); }
+  .field input:disabled { background: var(--fill-soft); color: var(--ink-2); }
+
+  .submit-btn {
+    display: block;
+    width: 100%;
+    margin: 8px 0 0 0;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 12px 16px;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    border-radius: var(--r);
+    cursor: pointer;
+  }
+  .submit-btn:disabled { cursor: default; }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Sign in / Sign up (wireframe)">
+
+  <!-- ZONE: modal top bar — Close + title (_conventions.md § 1, Gates;
+       _screens.md → Sign in / Sign up → Chrome). Close is flows.md's
+       "closes without attempting" edge (Related Job 3 → DeadEnd2, Related
+       Job 4 → DeadEnd4: leaves without getting signed in), and on the error
+       page it is also Retry? → no. It lands on Race browse, the one screen
+       that needs no account (sitemap.md → Navigation § 1: Discover never
+       needs an account). The title follows the Sign in | Create account
+       toggle below. -->
+  <header class="top-bar">
+    <a class="close" href="race-browse.html">Close</a>
+    <h1 class="bar-title"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></h1>
+  </header>
+
+  <div class="phone-screen">
+    <main class="gate">
+
+      <!-- ZONE: why you're signing in — one line naming where the person
+           was heading (?next=), so a signed-out person sees why before
+           being asked (sitemap.md → Navigation § 2: the gate fires on the
+           My Results tab, so they see it's for their archive). The gate is
+           reached from the My Results tab (next = a Results list file) or
+           the Profile tab (next = profile.html) — sitemap.md → Navigation
+           § 1 & § 3; the generic line covers opening the file directly.
+           All six lines are real markup; the script un-hides one. -->
+      <p class="context" data-mode="signin" data-for="archive" hidden>Sign in to see your results archive.</p>
+      <p class="context" data-mode="signup" data-for="archive" hidden>Create an account to start your results archive.</p>
+      <p class="context" data-mode="signin" data-for="account" hidden>Sign in to see your account.</p>
+      <p class="context" data-mode="signup" data-for="account" hidden>Create an account to set up your profile.</p>
+      <p class="context" data-mode="signin" data-for="generic">Sign in to keep your official race results, with their source links, in one place.</p>
+      <p class="context" data-mode="signup" data-for="generic" hidden>Create an account to keep your official race results, with their source links, in one place.</p>
+
+      <!-- ZONE: Sign in | Create account — one screen, two modes
+           (_screens.md → Sign in / Sign up → Chrome: "One screen toggles
+           between Sign in and Create account"). A real iOS segmented
+           control (Race browse's .view-toggle CSS). ?mode=signup preselects
+           Create account. Both modes take the same two fields, so the
+           toggle relabels (title, context line, button, password
+           autocomplete) rather than swapping two panels. -->
+      <div class="view-toggle" role="group" aria-label="Sign in or create an account">
+        <button type="button" class="view-btn" data-set-mode="signin" aria-pressed="true">Sign in</button>
+        <button type="button" class="view-btn" data-set-mode="signup" aria-pressed="false">Create account</button>
+      </div>
+
+      <!-- ZONE: credentials form — Email, Password, then the one action at
+           the end of the form, in content flow (_conventions.md § 1,
+           Gates). Auth method [?]: no doc decides it; this assumes Supabase
+           Auth's email + password default (_screens.md → Sign in / Sign up;
+           sitemap.md → Entities 5: the account's email comes from sign-in).
+           Create account deliberately asks for nothing more: name, country
+           and language are edited on Profile (sitemap.md → Entities 5), so
+           the gate stays as short as the job it enables. Not drawn because
+           no flow has them: "Forgot password?", social sign-in. Submitting
+           is flows.md's "submits credentials" edge → SigningIn
+           (sign-in-sign-up-loading.html?run=1, carrying ?next and ?mode). -->
+      <form id="auth-form">
+        <fieldset>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+          </div>
+          <button type="submit" class="submit-btn"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></button>
+        </fieldset>
+      </form>
+
+    </main>
+  </div><!-- /.phone-screen -->
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+
+  // ?next= is where a successful sign-in lands (_screens.md → Sign in /
+  // Sign up: "Yes lands on where the person was heading"). Only owner-only
+  // screens are accepted, so the gate can't be pointed anywhere else.
+  var next = params.get('next') || '';
+  if (!/^(results-list[a-z-]*|log-result[a-z-]*|result-detail[a-z-]*|profile)\.html(\?[^#]*)?$/.test(next)) next = '';
+  var dest = /^profile\.html/.test(next) ? 'account' : (next ? 'archive' : 'generic');
+  var mode = params.get('mode') === 'signup' ? 'signup' : 'signin';
+
+  function query(m) {
+    var q = [];
+    if (next) q.push('next=' + encodeURIComponent(next));
+    if (m === 'signup') q.push('mode=signup');
+    return q.length ? '?' + q.join('&') : '';
+  }
+
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('[data-set-mode]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-set-mode') === m));
+    });
+    document.querySelectorAll('[data-mode]').forEach(function (el) {
+      var f = el.getAttribute('data-for');
+      el.hidden = el.getAttribute('data-mode') !== m || (f !== null && f !== dest);
+    });
+    document.getElementById('password').setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
+    document.title = (m === 'signup' ? 'Create account' : 'Sign in') + ' — Onrace (wireframe)';
+    // Keep the URL in step, so reloading shows the same mode.
+    try { history.replaceState(null, '', window.location.pathname + query(m)); } catch (err) {}
+  }
+
+  document.querySelectorAll('[data-set-mode]').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.getAttribute('data-set-mode')); });
+  });
+  setMode(mode);
+
+  // "Submits credentials" (flows.md) → SigningIn. Native `required`
+  // validation stops an empty field; a whitespace-only password is caught
+  // here too. Then go to the loading page, carrying ?next and ?mode.
+  var form = document.getElementById('auth-form');
+  var password = document.getElementById('password');
+  password.addEventListener('input', function () { password.setCustomValidity(''); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!password.value.trim()) {
+      password.setCustomValidity('Enter your password.');
+      password.reportValidity();
+      return;
+    }
+    var q = query(mode);
+    window.location.href = 'sign-in-sign-up-loading.html?run=1' + (q ? '&' + q.slice(1) : '');
+  });
+})();
+</script>
+
+</body>
+</html>

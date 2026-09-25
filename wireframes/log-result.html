@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log result — Onrace (wireframe)</title>
+<style>
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: the back chevron — § 1). Deferred per _conventions.md § 7.
+     Bare screen (_conventions.md § 1): index.html provides the device frame
+     and nav tree.
+
+     Drill-down form screen (_conventions.md § 1, "Drill-down screens" →
+     "Forms"): no global tab bar — "Back to My Results" in the sticky top bar
+     is the only way back — and no bottom action bar either: a sticky bottom
+     bar would collide with the on-screen keyboard, so the form's submit
+     action, Save, sits in the top bar's trailing slot (the iOS convention
+     for create/edit forms). Validation errors sit inline at the field
+     they're about; an error about the save itself sits at the top of the
+     form, directly under the bar that holds Save. */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (inputs, selects, tags), --r for large surfaces (alerts). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: placeholder, disabled */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { color: var(--ink); }
+
+  .phone-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* --- top bar: back on the left, Save on the right. Sticky inside the
+     scroll area; its bottom border is the divider. --- */
+  .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;            /* iOS navigation bar */
+    padding: 0 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
+  }
+  /* iOS back button: chevron + label, no underline */
+  .top-bar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .back-chevron { display: block; }
+  /* iOS bar button: plain text, semibold for the confirming action */
+  .save-btn {
+    border: none;
+    background: none;
+    padding: 4px 8px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--fill-strong);
+    cursor: pointer;
+  }
+  .save-progress { padding: 4px 8px; color: var(--ink-3); font-weight: 600; }
+
+  /* Large title, iOS style: system chrome = system font. It sits in the
+     content, not in the bar: "Back to My Results" plus Save leave no room
+     for a centred inline title at 390px. */
+  .form-head { padding: 12px 16px 4px; }
+  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0 0 6px 0; }
+  .form-intro { margin: 0; font-size: 0.9rem; color: var(--ink-2); }
+
+  /* --- the form: one stacked label + control per field. Spacing, not
+     boxing, separates the fields (_conventions.md § 1). --- */
+  form { padding: 16px 16px 32px; }
+  .field { margin: 0 0 18px 0; }
+  .field label { display: block; font-size: 0.9rem; font-weight: 600; margin: 0 0 6px 0; }
+  .tag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    vertical-align: 1px;
+  }
+  .field input, .field select {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    background: #fff;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    border-radius: var(--r-sm);
+  }
+  .field input::placeholder { color: var(--ink-3); }
+  .field input:disabled, .field select:disabled { background: var(--fill-soft); color: var(--ink-2); }
+  .hint { margin: 6px 0 0 0; font-size: 0.8rem; color: var(--ink-2); }
+
+  /* The proof field is the one the trust model hangs on (CLAUDE.md →
+     Result trust model), so it's set apart from the four facts above it by
+     a separator — structural, not decorative. */
+  .field.proof { border-top: 0.5px solid var(--line); padding-top: 18px; margin-top: 24px; }
+
+  /* --- errors. Field errors: inline, under the field they're about, with
+     the field's border emphasized (grayscale, so weight not hue). Save
+     error: an alert at the top of the form, under the bar that holds Save.
+     It gets a border because it has to read as one unit. --- */
+  .field input[aria-invalid="true"], .field select[aria-invalid="true"] { border: 2px solid var(--fill-strong); padding: 9px 11px; }
+  .field-error { margin: 6px 0 0 0; font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+  .form-alert { border: 1px solid var(--line-strong); padding: 10px 12px; margin: 0 0 20px 0; border-radius: var(--r); background: var(--fill-soft); }
+  .form-alert h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+  .form-alert p { font-size: 0.85rem; margin: 0; }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Log result (wireframe)">
+
+  <div class="phone-screen">
+
+      <!-- ZONE: top bar — back to Results list on the left, the only
+           navigation on this drill-down form (no global tab bar,
+           _conventions.md § 1 → Forms). "Back to My Results" is also every
+           Log result error's give-up exit (flows.md, Related Job 3:
+           Fix and resubmit? / Retry? → no → DeadEnd3, "no result saved"), so
+           no error repeats it as a button. It isn't gated: you're
+           already inside the owner-only archive (_conventions.md § 2). Save on
+           the right is the form's submit (form="log-form"): it runs flows.md's
+           checks in order — official_result_url filled in?, then race_name /
+           date / sport_type / finish_time all filled in? [?] — and only then
+           goes to "Loading: saving result" (the script at the end). -->
+      <nav class="top-bar" aria-label="Back and save">
+        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back to My Results</span></a>
+        <button type="submit" form="log-form" class="save-btn">Save</button>
+      </nav>
+
+    <main>
+
+      <!-- ZONE: title — the screen's name, iOS large title. One line of
+           intro says every field is needed, since flows.md's second check
+           treats race_name/date/sport_type/finish_time as required. That
+           requirement is [?]: CLAUDE.md's data model marks only
+           official_result_url "(required)"; the other four are an assumed
+           requirement (flows.md → HasOtherRequired). If validation drops
+           it, this line goes. Base state: the blank form (_screens.md → Log
+           result: Empty is "—", the blank form IS the base page; nothing is
+           fetched). -->
+      <header class="form-head">
+        <h1>Log result</h1>
+        <p class="form-intro">Every field is needed to save a result.</p>
+      </header>
+
+      <!-- ZONE: the form — sitemap.md → Entities → 3. Logged result:
+           race_name, date, sport_type, finish_time, official_result_url.
+           Semantic <form>, a <label> per control, real field names.
+           novalidate: the browser's own required-field bubbles are off so
+           flows.md's two checks (and their order) are what run, via the
+           script below; the required attributes still describe the fields.
+           Sport type uses exactly Race browse's option list and slugs.
+           Deliberately left out: sitemap.md's "optional link to a Race
+           listing". Picking a catalog race would need a search/picker
+           sub-flow that flows.md doesn't draw, so it isn't invented here. -->
+      <form id="log-form" action="log-result-loading.html" method="get" novalidate aria-labelledby="log-form-title">
+        <h2 id="log-form-title" class="visually-hidden">Result details</h2>
+
+        <div class="field">
+          <label for="race_name">Race name</label>
+          <input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required>
+        </div>
+
+        <div class="field">
+          <label for="date">Race date</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="field">
+          <label for="sport_type">Sport type</label>
+          <select id="sport_type" name="sport_type" required>
+            <option value="" selected>Choose a sport type</option>
+            <option value="hyrox">HYROX</option>
+            <option value="deka">DEKA / functional fitness</option>
+            <option value="marathon">Marathon</option>
+            <option value="half-marathon">Half marathon</option>
+            <option value="triathlon">Triathlon</option>
+            <option value="ultra">Ultra</option>
+            <option value="ocr">OCR</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="finish_time">Finish time</label>
+          <input type="text" id="finish_time" name="finish_time" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="finish_time-hint" required>
+          <p class="hint" id="finish_time-hint">Hours:minutes:seconds, exactly as the official results show it.</p>
+        </div>
+
+        <!-- ZONE: proof — official_result_url, the one field CLAUDE.md
+             marks required and flows.md checks first (HasLink). Its helper
+             text says why it's required and what Onrace does with it:
+             nothing — the link itself is the evidence (sitemap.md →
+             Entities → 4. Source-link proof: self-reported, never
+             "verified"; CLAUDE.md → Result trust model). -->
+        <div class="field proof">
+          <label for="official_result_url">Official result link <span class="tag">Required</span></label>
+          <input type="url" id="official_result_url" name="official_result_url" inputmode="url" placeholder="https://berlin.r.mikatiming.com/2025/" autocomplete="off" aria-describedby="official_result_url-hint" required>
+          <p class="hint" id="official_result_url-hint">Paste the link to this result on the official timing site. It’s your proof — elite races like Boston ask for exactly this. Onrace doesn’t check it: the result shows as self-reported, with this link as its source.</p>
+        </div>
+      </form>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+<script>
+/* Save (flows.md, Related Job 3) — real checks, in flows.md's order
+   (_conventions.md § 2: system decisions are real checks, not the happy
+   path). State travels in the URL: the five field values go along, so the
+   error and loading pages show the same form.
+     official_result_url empty            → Error, ?cause=link
+     any of the other four empty [?]      → Error, ?cause=fields
+     all filled in                        → Loading: saving result (?run=1)
+   A reviewer's &fail=1 on this page is passed on to the loading page. */
+(function () {
+  var FIELDS = ['race_name', 'date', 'sport_type', 'finish_time', 'official_result_url'];
+  var form = document.getElementById('log-form');
+  var here = new URLSearchParams(window.location.search);
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var q = new URLSearchParams();
+    FIELDS.forEach(function (f) { q.set(f, form.elements[f].value.trim()); });
+    var cause = !q.get('official_result_url') ? 'link'
+      : FIELDS.slice(0, 4).some(function (f) { return !q.get(f); }) ? 'fields'
+      : null;
+    if (cause) {
+      window.location.href = 'log-result-error.html?cause=' + cause + '&' + q.toString();
+    } else {
+      if (here.get('fail') === '1') q.set('fail', '1');
+      window.location.href = 'log-result-loading.html?run=1&' + q.toString();
+    }
+  });
+})();
+</script>
+
+
+<script>
+/* A logged result is a race already run: no future dates. Set from the
+   real date, not hard-coded. */
+(function () {
+  var d = document.getElementById('date'), t = new Date();
+  if (d) d.max = new Date(t.getTime() - t.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+})();
+</script>
+
+</body>
+</html>

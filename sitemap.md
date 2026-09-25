@@ -184,7 +184,8 @@ Profile  [INFRASTRUCTURE]  (added 2026-09-25)
   Shows whose account this is and lets the person leave it. Not job-sourced;
   exists because auth does (Entities → 5, incl. its reversal note).
   Contents, deliberately narrow: initials (photo deferred) · name · country
-  · language [?] (stored preference, no localization yet) · Sign out.
+  · language [?] (stored preference, no localization yet) · email (read-only,
+  from sign-in) · Sign out.
   Nothing else: no bio, stats, customization, or public view.
   Entry: the Profile tab, one of 3 global tabs (Navigation § 1, revised
   2026-09-25). Signed out, the tab opens the same Sign in / Sign up gate as

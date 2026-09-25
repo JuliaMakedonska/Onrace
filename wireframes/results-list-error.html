@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results list (Error) — Onrace (wireframe)</title>
+<style>
+  /* STATE: error — same structure and zones as results-list.html (the
+     default/populated state); only the content inside those zones changes,
+     per _conventions.md § 5. */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: tab bar — § 1). Deferred per _conventions.md § 7:
+     color, fonts, shadows, icons, finished UI.
+
+     This file is a bare screen: no nav tree, no spec-note/caption chrome —
+     that lives once in index.html, which iframes this file into its own
+     phone-frame mockup (see _conventions.md § 6). Opening this file directly
+     still works: the body itself is the 390-wide, height-constrained,
+     internally-scrolling "phone screen," just without index.html's outer
+     device bezel.
+
+     Results list ("my archive", sitemap.md → Screens) is a top-level screen:
+     3-tab bar with My Results current, iOS large title, Log result in the
+     header (_screens.md → Pass 2 → Results list → Chrome). */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (tags, small buttons), --r for large surfaces (cards, primary
+     buttons). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a { color: var(--ink); }
+
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 49px; /* clears the fixed bottom-nav below */
+  }
+
+  /* Global nav (sitemap.md → Navigation § 1, 3 tabs) as a real mobile bottom
+     tab bar — fixed to the frame's bottom edge, not part of the scrolling
+     content, and not styled as browser-style top tabs. */
+  .bottom-nav {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 49px;            /* iOS tab bar, above the home-indicator area */
+    background: #fff;
+    border-top: 0.5px solid var(--line);
+    z-index: 3;
+  }
+  .bottom-nav ul {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav li { flex: 1; }
+  /* Icon over label, inactive tabs gray; the current tab is tinted dark
+     (iOS marks it with tint, not a filled background). */
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1px;
+    padding-top: 5px;
+    text-decoration: none;
+    color: var(--ink-3);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .bottom-nav a[aria-current="page"] { color: var(--fill-strong); font-weight: 600; }
+  .tab-icon { display: block; }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  /* iOS large title (34pt bold), the top-level screen's own title, with the
+     screen's one primary action (Log result) on the same row, trailing. */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 16px 6px;
+  }
+  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0; }
+  .header-action {
+    flex: none;
+    margin-bottom: 5px;
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 7px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--r-sm);
+  }
+
+  /* --- saved confirmation: one line, shown only when Log result's success
+     lands here with ?saved=<race name>. Light fill, no border: it's a
+     status line, not a structural element. --- */
+  .saved-status {
+    margin: 8px 16px 0;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    background: var(--fill-soft);
+    border-radius: var(--r-sm);
+  }
+  .saved-status[hidden] { display: none; }
+
+  /* --- results row: the archive's size, same position and style as Race
+     browse's count row. --- */
+  .results-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .results-count { margin: 0; }
+  .results-order { color: var(--ink-2); }
+  .results-order::before { content: "·"; margin-right: 6px; color: var(--ink); }
+
+  #list-view { flex: 1; padding: 0 16px 16px; }
+
+  /* --- result cards: same card shape as Race browse's race cards. The
+     whole card is one link. finish_time is the prominent value (it's the
+     proof being retrieved), trailing the race name; sport tag + date under
+     it; the proof label last. --- */
+  .result-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+  }
+  article.result-card { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+  article.result-card a.card-link {
+    display: block;
+    padding: 18px 16px;
+    text-decoration: none;
+    color: inherit;
+  }
+  article.result-card a.card-link:hover,
+  article.result-card a.card-link:focus-visible { background: var(--fill-soft); }
+  .card-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 10px 0;
+  }
+  article.result-card h2 { margin: 0; font-size: 1rem; }
+  .finish-time {
+    flex: none;
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px 0;
+    font-size: 0.88rem;
+  }
+  .sport-tag {
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    font-size: 0.78rem;
+    border-radius: 6px;
+  }
+  .proof-label { margin: 0; font-size: 0.85rem; color: var(--ink-2); }
+
+  /* --- state message (empty/error): replaces the result list inside the
+     same section. No box around it — spacing alone groups heading, copy, and
+     actions (_conventions.md § 1, "zone separation is spacing"). --- */
+  .state-message { padding: 32px 8px; text-align: center; }
+  .state-message h2 { font-size: 1rem; margin: 0 0 6px 0; }
+  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: var(--ink-2); }
+  .state-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .state-action {
+    display: inline-block;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 9px 18px;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: var(--r);
+  }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Results list, error state (wireframe)">
+
+  <div class="phone-screen">
+
+    <main>
+
+      <!-- ZONE: header — iOS large title "My Results" plus the Log result
+           action (_screens.md → Pass 2 → Results list → Chrome;
+           sitemap.md → Navigation § 3: "the primary button in the Results
+           list header"). It's the entry to Related Job 3 (flows.md:
+           ResultsList → "Finds and taps Log result?" [?] → Log result), and
+           it's part of the header, not of the loaded list, so it's present
+           and working in every state — loading and error included (flows.md,
+           Related Job 3 decisions and the 2026-09-24 revision note). -->
+      <header>
+        <h1>My Results</h1>
+        <a class="header-action" href="log-result.html">Log result</a>
+      </header>
+
+      <!-- ZONE: results row — no count: the fetch never returned, so there's
+           no number to show (a "0" would wrongly read as the empty state). -->
+      <div class="results-row">
+        <p class="results-count" aria-live="polite">Results couldn't be loaded</p>
+      </div>
+
+      <!-- ZONE: error state (_screens.md → Results list → Error; flows.md
+           Loading2 → "connection fails" → FetchError2 "could not load logged
+           results" → Retry?). "Try again" is the "yes" edge — it re-runs the
+           same fetch (results-list-loading.html?run=1 → Loading2). The "no"
+           edge (DeadEnd4, "leaves without proof") is just leaving by a tab —
+           no button. The header's Log result still works here: logging
+           doesn't depend on the list having loaded (flows.md, Related Job 3
+           decisions). -->
+      <section id="list-view" aria-label="Logged results">
+        <div class="state-message" role="alert">
+          <h2>Couldn't load your logged results</h2>
+          <p>Check your connection and try again. Nothing in your archive has changed.</p>
+          <div class="state-actions">
+            <a class="state-action" href="results-list-loading.html?run=1">Try again</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: global nav — 3 tabs, all destinations (sitemap.md → Navigation
+       § 1, revised 2026-09-25): Discover / My Results / Profile, with
+       My Results current on this screen (_conventions.md § 1). "Log result"
+       is not a tab: it's the header action above, since tabs are for places
+       and actions are buttons. -->
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="race-browse.html"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="13" cy="13" r="10.5"/><path d="m17.2 8.8-2.6 5.8-5.8 2.6 2.6-5.8z"/></svg><span>Discover</span></a></li>
+      <!-- My Results and Profile are owner-only: data-requires-auth sends a
+           signed-out person to the Sign in / Sign up gate first (flows.md
+           "Signed in?"; the snippet at the end of this file). Re-tapping
+           My Results re-runs the archive fetch (flows.md: ResultsList →
+           Loading2). -->
+      <li><a href="results-list-loading.html?run=1" aria-current="page" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
+      <li><a href="profile.html" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="9" r="4.5"/><path d="M4.5 22.5c.9-4.3 4.2-7 8.5-7s7.6 2.7 8.5 7"/></svg><span>Profile</span></a></li>
+    </ul>
+  </nav>
+
+<script>
+(function () {
+  // Shared by results-list.html and its three state pages. Wires the
+  // Results list half of flows.md → "Related Job 4 — Retrieve Proof":
+  //   ResultsList → Loading2 → HasLogged? yes → ResultsList · no → Empty2
+  //   Loading2 → "connection fails" → FetchError2 → Retry? yes → Loading2
+  //   ResultsList → "taps a logged entry" → DetailLoading2
+  // plus Related Job 3's landing: Log result's success → ResultsList
+  // with ?saved=<race name>.
+  var params = new URLSearchParams(window.location.search);
+
+  // --- Saved confirmation: real markup, un-hidden only when Log result's
+  // success sent the saved race's name along.
+  var saved = params.get('saved');
+  var savedStatus = document.querySelector('.saved-status');
+  if (savedStatus && saved) {
+    savedStatus.querySelector('[data-saved-name]').textContent = saved;
+    savedStatus.hidden = false;
+  }
+
+  // --- Loading page: only when reached through the flow (?run=1) — opened
+  // on its own (e.g. from index.html) it stays put for inspection. After a
+  // short fetch delay it takes one of flows.md's three exits: connection
+  // fails → FetchError2; no results logged yet → Empty2; otherwise →
+  // Results list. A static wireframe can't make a real fetch fail, or vary
+  // whether anything is logged, so the error branch is taken when the
+  // browser reports offline or the URL carries &fail=1, and the empty
+  // branch on &empty=1 (_conventions.md § 2). ?saved= is carried through
+  // to the populated list.
+  if (document.body.getAttribute('data-state') === 'loading' && params.get('run') === '1') {
+    window.setTimeout(function () {
+      var failed = !navigator.onLine || params.get('fail') === '1';
+      var next = failed ? 'results-list-error.html'
+        : params.get('empty') === '1' ? 'results-list-empty.html'
+        : 'results-list.html' + (saved ? '?saved=' + encodeURIComponent(saved) : '');
+      window.location.replace(next);
+    }, 1200);
+  }
+})();
+</script>
+
+<script>
+/* Signed in? (flows.md) — the auth session is modeled as a sessionStorage
+   flag (_conventions.md § 2). Links to owner-only screens carry
+   data-requires-auth; signed out, they go to the sign-in gate instead,
+   carrying where to land after. Pages never redirect themselves. */
+(function () {
+  function signedIn() {
+    try { return sessionStorage.getItem('onrace-signed-in') === '1'; } catch (e) { return false; }
+  }
+  document.querySelectorAll('a[data-requires-auth]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (signedIn()) return;
+      e.preventDefault();
+      location.href = 'sign-in-sign-up.html?next=' + encodeURIComponent(a.getAttribute('href'));
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -61,7 +61,7 @@
     padding-bottom: 49px; /* clears the fixed bottom-nav below */
   }
 
-  /* Global nav (sitemap.md → Navigation § 1, 2 tabs) as a real mobile bottom
+  /* Global nav (sitemap.md → Navigation § 1, 3 tabs) as a real mobile bottom
      tab bar — fixed to the frame's bottom edge, not part of the scrolling
      content, and not styled as browser-style top tabs. */
   .bottom-nav {
@@ -517,11 +517,11 @@
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
       <li><a href="race-browse.html" aria-current="page"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="13" cy="13" r="10.5"/><path d="m17.2 8.8-2.6 5.8-5.8 2.6 2.6-5.8z"/></svg><span>Discover</span></a></li>
-      <!-- No href yet on My Results or Profile: results-list.html and
-           profile.html aren't built, and a link to a missing file would be a
-           dead end. Each becomes a real link with its screen. -->
-      <li><a aria-disabled="true"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
-      <li><a aria-disabled="true"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="9" r="4.5"/><path d="M4.5 22.5c.9-4.3 4.2-7 8.5-7s7.6 2.7 8.5 7"/></svg><span>Profile</span></a></li>
+      <!-- My Results and Profile are owner-only: data-requires-auth sends a
+           signed-out person to the Sign in / Sign up gate first (flows.md
+           "Signed in?"; the snippet at the end of this file). -->
+      <li><a href="results-list-loading.html?run=1" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
+      <li><a href="profile.html" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="9" r="4.5"/><path d="M4.5 22.5c.9-4.3 4.2-7 8.5-7s7.6 2.7 8.5 7"/></svg><span>Profile</span></a></li>
     </ul>
   </nav>
 
@@ -786,6 +786,25 @@
       listOnly.forEach(function (el) {
         el.hidden = view !== 'list';
       });
+    });
+  });
+})();
+</script>
+
+<script>
+/* Signed in? (flows.md) — the auth session is modeled as a sessionStorage
+   flag (_conventions.md § 2). Links to owner-only screens carry
+   data-requires-auth; signed out, they go to the sign-in gate instead,
+   carrying where to land after. Pages never redirect themselves. */
+(function () {
+  function signedIn() {
+    try { return sessionStorage.getItem('onrace-signed-in') === '1'; } catch (e) { return false; }
+  }
+  document.querySelectorAll('a[data-requires-auth]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (signedIn()) return;
+      e.preventDefault();
+      location.href = 'sign-in-sign-up.html?next=' + encodeURIComponent(a.getAttribute('href'));
     });
   });
 })();

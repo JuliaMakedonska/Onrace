@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Result detail (Loading) — Onrace (wireframe)</title>
+<style>
+  /* STATE: loading — same structure and zones as result-detail.html; only
+     the content inside them changes (_conventions.md § 5). */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: back chevron — § 1). Deferred per _conventions.md § 7.
+     Bare screen (_conventions.md § 1): index.html provides the device frame
+     and nav tree.
+
+     Result detail (proof view) — _screens.md → Pass 2 → Result detail;
+     flows.md → Related Job 4 (Retrieve Proof). Secondary persona, the
+     Qualifying-Time Archivist, ONLY (sitemap.md → Screens → Result detail):
+     framed around a finish time as proof for an elite-race application,
+     not around HYROX placement.
+
+     Drill-down screen (_conventions.md § 1, "Drill-down screens"): no global
+     tab bar — "Back to My Results" in the sticky top bar is the only way
+     back — and the primary action (Open official result) sits in a sticky
+     bottom action bar. The body is a flex column: the scrolling
+     .phone-screen takes the remaining height and the action bar sits below
+     it, outside the scroll, so it's always visible and the content never
+     needs padding to clear it (the bar's height can change, e.g. when the
+     LinkError alert is added). No edit/delete/re-link anywhere: flows.md
+     keeps DeadEnd5's fix as an accepted MVP gap (2026-09-17). */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (tags, chips, selects, small buttons), --r for large surfaces
+     (cards, primary buttons). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { color: var(--ink); }
+
+  .phone-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* --- top bar: the one way back (Results list). Sticky inside the scroll
+     area; its bottom border is the divider. --- */
+  .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    height: 44px;            /* iOS navigation bar */
+    padding: 0 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
+  }
+  /* iOS back button: chevron + label, no underline */
+  .top-bar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .back-chevron { display: block; }
+
+  .result { padding: 20px 16px 28px; }
+  .result[hidden] { display: none; }
+  .result h1 { font-size: 1.25rem; margin: 0 0 16px 0; }
+
+  /* Finish time is the fact the proof is about (Related Job 4), so it gets
+     the one size step up; the other facts keep the Race detail layout. */
+  .finish { margin: 0 0 16px 0; }
+  .finish dt { color: var(--ink-2); font-size: 0.85rem; }
+  .finish dd { margin: 0; font-size: 2rem; font-weight: 700; line-height: 1.15; }
+
+  .facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 14px;
+    margin: 0 0 24px 0;
+    font-size: 0.92rem;
+  }
+  .facts dt { color: var(--ink-2); }
+  .facts dd { margin: 0; }
+
+  .result h2, .state-message h2, .inline-error h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+
+  /* Proof: the URL as plain text (the one way to open it is the action
+     bar's checked button), the self-reported label, and one line on what
+     that label means. No checkmark, no "verified" (sitemap.md → Entities 4). */
+  .proof p { margin: 0 0 6px 0; font-size: 0.95rem; }
+  .proof .proof-url { overflow-wrap: anywhere; }
+  .proof .proof-label { font-weight: 600; font-size: 0.88rem; }
+  .proof .proof-note { color: var(--ink-2); font-size: 0.85rem; margin: 0; }
+
+  /* --- sticky action bar: the screen's one primary action, fixed to the
+     frame's bottom edge where a top-level screen's tab bar would be. Its
+     supporting caption, and any error about the action itself, live in the
+     bar with it. --- */
+  .action-bar {
+    flex: none;
+    background: #fff;
+    border-top: 0.5px solid var(--line);
+    padding: 12px 16px 14px;
+    z-index: 3;
+  }
+  .action-bar[hidden] { display: none; }
+  .open-btn {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    border-radius: var(--r);
+    overflow-wrap: anywhere;
+  }
+  .action-caption { font-size: 0.78rem; color: var(--ink-2); margin: 6px 0 0 0; text-align: center; }
+
+  /* --- loading skeletons: gray bars in the same zones as a loaded result
+     (name, finish time, two facts, proof), plus a gray placeholder in the
+     action bar where Open official result will be — so nothing jumps on
+     load. Static, no shimmer (_conventions.md § 7). --- */
+  .bar { background: var(--skeleton); height: 12px; margin: 0 0 10px 0; border-radius: 4px; }
+  .bar.h1 { height: 22px; width: 60%; margin-bottom: 20px; }
+  .bar.label { width: 25%; margin-bottom: 8px; }
+  .bar.finish-bar { height: 34px; width: 45%; margin-bottom: 20px; border-radius: var(--r-sm); }
+  .skel-facts { display: grid; grid-template-columns: 80px 1fr; gap: 10px 14px; margin-bottom: 28px; }
+  .skel-facts .bar { margin: 0; }
+  .bar.h2 { height: 14px; width: 35%; margin-bottom: 12px; }
+  .bar.line { width: 90%; }
+  .bar.line.short { width: 55%; }
+  .bar.line.end { width: 75%; }
+  .bar.button { height: 46px; width: 100%; margin: 0; border-radius: var(--r); }
+  .bar.caption { height: 10px; width: 45%; margin: 8px auto 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Result detail, loading state (wireframe)">
+
+  <div class="phone-screen">
+
+      <!-- ZONE: top bar — back to Results list ("my archive"), the only
+           navigation on this drill-down screen (no global tab bar,
+           _conventions.md § 1; sitemap.md → Navigation § 3: Result detail is
+           contextual, opened from within My Results). It's also every
+           give-up exit on this screen: DetailError2's Retry → no (DeadEnd4)
+           and LinkError's Try again → no (DeadEnd5) — flows.md → Related
+           Job 4. It isn't gated: you're already
+           inside the owner-only archive (_conventions.md § 2). -->
+      <nav class="top-bar" aria-label="Back">
+        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back to My Results</span></a>
+      </nav>
+
+    <main>
+
+      <!-- ZONE: result — Loading state (flows.md: DetailLoading2, "Loading:
+           fetching result details", on tapping a logged entry in Results
+           list, or DetailError2's "Try again"). Gray bars sit in the same
+           zones as a loaded result (name, finish time, date + sport type,
+           proof); hidden from assistive tech, with aria-busy plus the
+           visually-hidden status carrying the meaning. Back to My Results
+           stays usable — it doesn't depend on the fetch. -->
+      <article class="result" aria-busy="true">
+        <p class="visually-hidden" role="status">Loading result details…</p>
+        <div aria-hidden="true">
+          <div class="bar h1"></div>
+          <div class="bar label"></div>
+          <div class="bar finish-bar"></div>
+          <div class="skel-facts">
+            <div class="bar"></div><div class="bar" style="width:55%"></div>
+            <div class="bar"></div><div class="bar" style="width:40%"></div>
+          </div>
+          <div class="bar h2"></div>
+          <div class="bar line"></div>
+          <div class="bar line short"></div>
+          <div class="bar line end"></div>
+        </div>
+      </article>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: sticky action bar — shown from the first frame with a gray
+       placeholder where Open official result will be (not a disabled
+       button: nothing to open yet), so the layout doesn't jump when the
+       result arrives. -->
+  <div class="action-bar" aria-hidden="true">
+    <div class="bar button"></div>
+    <div class="bar caption"></div>
+  </div>
+
+<script>
+(function () {
+  // Only when reached through the flow (a logged entry on Results list, or
+  // DetailError2's "Try again" — both pass ?result=): after a short fetch
+  // delay, take one of flows.md's two DetailLoading2 exits. Opened on its
+  // own (e.g. from index.html) it stays put for inspection. "Connection
+  // fails" is taken when the browser reports offline or the URL carries the
+  // test switch &fail=1 (_conventions.md § 2).
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('result');
+  if (['deka-strong-chicago-2026', 'hyrox-london-2025', 'valencia-half-2025', 'berlin-marathon-2025'].indexOf(slug) === -1) return;
+  window.setTimeout(function () {
+    var failed = !navigator.onLine || params.get('fail') === '1';
+    window.location.replace((failed ? 'result-detail-error.html' : 'result-detail.html') + '?result=' + slug);
+  }, 1000);
+})();
+</script>
+
+
+</body>
+</html>

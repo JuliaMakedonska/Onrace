@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile — Onrace (wireframe)</title>
+<style>
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: tab bar — § 1). Deferred per _conventions.md § 7:
+     color, fonts, shadows, icons, finished UI.
+
+     Profile ([INFRASTRUCTURE], _screens.md → Pass 2 → Profile): a top-level
+     screen, so it keeps the 3-tab bar with Profile current and an iOS large
+     title. Base state only — Empty/Error/Loading/Success are all "—" in
+     _screens.md (Error/Loading unmodeled, not judged unnecessary).
+
+     This file is a bare screen: no nav tree, no spec-note/caption chrome —
+     that lives once in index.html, which iframes this file into its own
+     phone-frame mockup (see _conventions.md § 6). */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1) — same tokens as
+     race-browse.html. */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a { color: var(--ink); }
+
+  /* iOS inset-grouped list convention (Settings): the screen behind the
+     groups is the light system gray, each group a white rounded surface.
+     That contrast is what makes a group read as one unit, so the groups
+     need no border (_conventions.md § 1: spacing, not boxing). */
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 49px; /* clears the fixed bottom-nav below */
+    background: var(--fill-soft);
+  }
+
+  /* Global nav (sitemap.md → Navigation § 1, 3 tabs) — copied from
+     race-browse.html. */
+  .bottom-nav {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 49px;            /* iOS tab bar, above the home-indicator area */
+    background: #fff;
+    border-top: 0.5px solid var(--line);
+    z-index: 3;
+  }
+  .bottom-nav ul {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav li { flex: 1; }
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1px;
+    padding-top: 5px;
+    text-decoration: none;
+    color: var(--ink-3);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .bottom-nav a[aria-current="page"] { color: var(--fill-strong); font-weight: 600; }
+  .tab-icon { display: block; }
+
+  main { padding: 0 16px 24px; }
+
+  /* iOS large title (34pt bold), the top-level screen's own title. */
+  header { padding: 6px 0 6px; }
+  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0; }
+
+  /* --- identity: initials placeholder, name, email --- */
+  .identity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px 0 24px;
+  }
+  .initials {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--skeleton);
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+  }
+  .identity h2 { margin: 0 0 2px; font-size: 1.3rem; }
+  .identity p { margin: 0; font-size: 0.9rem; color: var(--ink-2); }
+
+  /* --- grouped list: rounded white group, hairline separators between
+     rows (inset from the leading edge, as iOS does), footer text below. --- */
+  .group { margin-bottom: 28px; }
+  .group-heading {
+    margin: 0 0 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+  }
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .rows li { position: relative; }
+  .rows li + li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 0;
+    border-top: 0.5px solid var(--line);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 0 16px;
+  }
+  .row label, .row .row-label { flex: none; font-size: 1rem; }
+  .row input, .row select, .row .row-value {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink-2);
+    text-align: right;
+    text-align-last: right;
+    padding: 10px 0;
+    border-radius: var(--r-sm);
+  }
+  .row .row-value { margin: 0; }
+  .group-footer {
+    margin: 6px 16px 0;
+    font-size: 0.8rem;
+    color: var(--ink-2);
+  }
+
+  /* --- sign out: its own group, a full-width text button. Destructive
+     style kept grayscale (no red, § 1): centered, semibold, dark. --- */
+  .signout {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    border: none;
+    background: #fff;
+    border-radius: var(--r);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--fill-strong);
+    cursor: pointer;
+  }
+  .signout:hover, .signout:focus-visible { background: var(--skeleton); }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Profile (wireframe)">
+
+  <div class="phone-screen">
+
+    <main>
+
+      <header>
+        <h1>Profile</h1>
+      </header>
+
+      <!-- ZONE: identity — whose account this is (sitemap.md → Entities →
+           5. Athlete account: "a product with accounts has to show who is
+           signed in"). Initials stand in for a photo: photo is DEFERRED, not
+           excluded — uploading needs Supabase Storage, which isn't in the
+           decided stack — so there's no upload control. Email is the
+           Supabase Auth sign-in identity, shown as secondary text. Nothing
+           else here by design: no bio, stats, results summary, badges, or
+           public view (Entities → 5 "Deliberately not included";
+           jtbd.md Hypothesis 6 stays unbuilt). -->
+      <section class="identity" aria-labelledby="profile-name">
+        <div class="initials" aria-hidden="true">MR</div>
+        <h2 id="profile-name">Maya Rossi</h2>
+        <p>maya.rossi@example.com</p>
+      </section>
+
+      <!-- ZONE: account fields — iOS grouped list (_screens.md → Pass 2 →
+           Profile): name, country, language [?], plus the sign-in email,
+           read-only (it's Supabase Auth's, not a Profile field). Changes save
+           as they're made, iOS Settings convention, so there is no Save
+           button [?] (_screens.md). The wireframe stores nothing and shows no
+           save feedback, rather than pretend. Language [?] is a stored
+           preference only: CLAUDE.md plans no localization, so the field
+           changes nothing in the UI, and its footer must not promise the app
+           will switch language (sitemap.md → Entities → 5). Country options
+           are a realistic subset, matching the sample races' countries plus
+           a few more (global scope, CLAUDE.md). -->
+      <section class="group" aria-labelledby="account-heading">
+        <h2 id="account-heading" class="group-heading">Account</h2>
+        <form id="account-form" onsubmit="return false;">
+          <ul class="rows">
+            <li class="row">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" value="Maya Rossi" autocomplete="name">
+            </li>
+            <li class="row">
+              <label for="country">Country</label>
+              <select id="country" name="country">
+                <option>Australia</option>
+                <option>Brazil</option>
+                <option>Canada</option>
+                <option>France</option>
+                <option>Germany</option>
+                <option selected>Italy</option>
+                <option>Japan</option>
+                <option>Netherlands</option>
+                <option>Spain</option>
+                <option>United Arab Emirates</option>
+                <option>United Kingdom</option>
+                <option>United States</option>
+              </select>
+            </li>
+            <li class="row">
+              <label for="language">Language</label>
+              <select id="language" name="language">
+                <option>Deutsch</option>
+                <option selected>English</option>
+                <option>Español</option>
+                <option>Français</option>
+                <option>Italiano</option>
+              </select>
+            </li>
+            <li class="row">
+              <span class="row-label" id="email-label">Email</span>
+              <p class="row-value" aria-labelledby="email-label">maya.rossi@example.com</p>
+            </li>
+          </ul>
+        </form>
+        <p class="group-footer">Saved to your account. Email comes from sign-in.</p>
+      </section>
+
+      <!-- ZONE: sign out — its own group at the end (_screens.md → Profile),
+           the account's only sign-out point, 2 taps from launch (sitemap.md →
+           Navigation § 2: Profile tab → Sign out). Real behavior: clears the
+           sessionStorage session flag (_conventions.md § 2) and lands on Race
+           browse, the one screen that needs no account. No confirm dialog:
+           the sign-out flow is deferred (_screens.md, 2026-09-25) and a
+           confirm would be added with it. -->
+      <section class="group" aria-label="Sign out">
+        <button type="button" class="signout" id="sign-out">Sign out</button>
+      </section>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: global nav — 3 tabs, all destinations (sitemap.md → Navigation
+       § 1, revised 2026-09-25): Discover / My Results / Profile, Profile
+       current here. My Results and Profile are owner-only and carry
+       data-requires-auth (the snippet at the end of this file). -->
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="race-browse.html"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="13" cy="13" r="10.5"/><path d="m17.2 8.8-2.6 5.8-5.8 2.6 2.6-5.8z"/></svg><span>Discover</span></a></li>
+      <li><a href="results-list-loading.html?run=1" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
+      <li><a href="profile.html" aria-current="page" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="9" r="4.5"/><path d="M4.5 22.5c.9-4.3 4.2-7 8.5-7s7.6 2.7 8.5 7"/></svg><span>Profile</span></a></li>
+    </ul>
+  </nav>
+
+<script>
+/* Sign out (sitemap.md → Navigation § 2): clear the modeled session
+   (_conventions.md § 2) and land on Race browse, which needs no account. */
+document.getElementById('sign-out').addEventListener('click', function () {
+  try { sessionStorage.removeItem('onrace-signed-in'); } catch (e) {}
+  location.href = 'race-browse.html';
+});
+</script>
+
+<script>
+/* Signed in? (flows.md) — the auth session is modeled as a sessionStorage
+   flag (_conventions.md § 2). Links to owner-only screens carry
+   data-requires-auth; signed out, they go to the sign-in gate instead,
+   carrying where to land after. Pages never redirect themselves. */
+(function () {
+  function signedIn() {
+    try { return sessionStorage.getItem('onrace-signed-in') === '1'; } catch (e) { return false; }
+  }
+  document.querySelectorAll('a[data-requires-auth]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (signedIn()) return;
+      e.preventDefault();
+      location.href = 'sign-in-sign-up.html?next=' + encodeURIComponent(a.getAttribute('href'));
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

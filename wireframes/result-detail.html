@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Result detail — Onrace (wireframe)</title>
+<style>
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: back chevron — § 1). Deferred per _conventions.md § 7.
+     Bare screen (_conventions.md § 1): index.html provides the device frame
+     and nav tree.
+
+     Result detail (proof view) — _screens.md → Pass 2 → Result detail;
+     flows.md → Related Job 4 (Retrieve Proof). Secondary persona, the
+     Qualifying-Time Archivist, ONLY (sitemap.md → Screens → Result detail):
+     framed around a finish time as proof for an elite-race application,
+     not around HYROX placement.
+
+     Drill-down screen (_conventions.md § 1, "Drill-down screens"): no global
+     tab bar — "Back to My Results" in the sticky top bar is the only way
+     back — and the primary action (Open official result) sits in a sticky
+     bottom action bar. The body is a flex column: the scrolling
+     .phone-screen takes the remaining height and the action bar sits below
+     it, outside the scroll, so it's always visible and the content never
+     needs padding to clear it (the bar's height can change, e.g. when the
+     LinkError alert is added). No edit/delete/re-link anywhere: flows.md
+     keeps DeadEnd5's fix as an accepted MVP gap (2026-09-17). */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (tags, chips, selects, small buttons), --r for large surfaces
+     (cards, primary buttons). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { color: var(--ink); }
+
+  .phone-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* --- top bar: the one way back (Results list). Sticky inside the scroll
+     area; its bottom border is the divider. --- */
+  .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    height: 44px;            /* iOS navigation bar */
+    padding: 0 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
+  }
+  /* iOS back button: chevron + label, no underline */
+  .top-bar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .back-chevron { display: block; }
+
+  .result { padding: 20px 16px 28px; }
+  .result[hidden] { display: none; }
+  .result h1 { font-size: 1.25rem; margin: 0 0 16px 0; }
+
+  /* Finish time is the fact the proof is about (Related Job 4), so it gets
+     the one size step up; the other facts keep the Race detail layout. */
+  .finish { margin: 0 0 16px 0; }
+  .finish dt { color: var(--ink-2); font-size: 0.85rem; }
+  .finish dd { margin: 0; font-size: 2rem; font-weight: 700; line-height: 1.15; }
+
+  .facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 14px;
+    margin: 0 0 24px 0;
+    font-size: 0.92rem;
+  }
+  .facts dt { color: var(--ink-2); }
+  .facts dd { margin: 0; }
+
+  .result h2, .state-message h2, .inline-error h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+
+  /* Proof: the URL as plain text (the one way to open it is the action
+     bar's checked button), the self-reported label, and one line on what
+     that label means. No checkmark, no "verified" (sitemap.md → Entities 4). */
+  .proof p { margin: 0 0 6px 0; font-size: 0.95rem; }
+  .proof .proof-url { overflow-wrap: anywhere; }
+  .proof .proof-label { font-weight: 600; font-size: 0.88rem; }
+  .proof .proof-note { color: var(--ink-2); font-size: 0.85rem; margin: 0; }
+
+  /* --- sticky action bar: the screen's one primary action, fixed to the
+     frame's bottom edge where a top-level screen's tab bar would be. Its
+     supporting caption, and any error about the action itself, live in the
+     bar with it. --- */
+  .action-bar {
+    flex: none;
+    background: #fff;
+    border-top: 0.5px solid var(--line);
+    padding: 12px 16px 14px;
+    z-index: 3;
+  }
+  .action-bar[hidden] { display: none; }
+  .open-btn {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    border-radius: var(--r);
+    overflow-wrap: anywhere;
+  }
+  .action-caption { font-size: 0.78rem; color: var(--ink-2); margin: 6px 0 0 0; text-align: center; }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Result detail (wireframe)">
+
+  <div class="phone-screen">
+
+      <!-- ZONE: top bar — back to Results list ("my archive"), the only
+           navigation on this drill-down screen (no global tab bar,
+           _conventions.md § 1; sitemap.md → Navigation § 3: Result detail is
+           contextual, opened from within My Results). It's also every
+           give-up exit on this screen: DetailError2's Retry → no (DeadEnd4)
+           and LinkError's Try again → no (DeadEnd5) — flows.md → Related
+           Job 4. It isn't gated: you're already
+           inside the owner-only archive (_conventions.md § 2). -->
+      <nav class="top-bar" aria-label="Back">
+        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back to My Results</span></a>
+      </nav>
+
+    <main>
+
+      <!-- ZONE: result — one logged result (sitemap.md → Entities 3, Logged
+           result: race_name, date, sport_type, finish_time,
+           official_result_url) plus its proof display (Entities 4,
+           Source-link proof: "Self-reported · via <domain>", never a
+           checkmark or "verified" — research.md → BENCHMARK mechanism #2).
+           Job: Related Job 4, "pull that proof up quickly" (jtbd.md).
+           Finish time leads because it's what an elite-race application asks
+           for. The four records are _screens.md's shared sample archive,
+           verbatim; each is real markup and the script un-hides the one
+           named by ?result= (default berlin-marathon-2025). The URL is shown
+           as plain text so the only way to open it is the checked button
+           below. No link to Race detail (flows.md draws no such route) and no
+           edit/delete (accepted MVP gap, flows.md → DeadEnd5). -->
+      <article class="result" data-result="deka-strong-chicago-2026" aria-labelledby="result-deka-strong-chicago-2026" hidden>
+        <h1 id="result-deka-strong-chicago-2026">DEKA STRONG Chicago</h1>
+        <dl class="finish">
+          <dt>Finish time</dt><dd>24:36</dd>
+        </dl>
+        <dl class="facts">
+          <dt>Date</dt><dd><time datetime="2026-03-14">14 March 2026</time></dd>
+          <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
+        </dl>
+        <section class="proof" aria-labelledby="proof-deka-strong-chicago-2026">
+          <h2 id="proof-deka-strong-chicago-2026">Official result</h2>
+          <p class="proof-url">https://www.athlinks.com/event/deka-strong-chicago-2026/results</p>
+          <p class="proof-label">Self-reported · via athlinks.com</p>
+          <p class="proof-note">Onrace doesn’t verify results. The official timing page is the evidence.</p>
+        </section>
+      </article>
+      <article class="result" data-result="hyrox-london-2025" aria-labelledby="result-hyrox-london-2025" hidden>
+        <h1 id="result-hyrox-london-2025">HYROX London</h1>
+        <dl class="finish">
+          <dt>Finish time</dt><dd>1:18:42</dd>
+        </dl>
+        <dl class="facts">
+          <dt>Date</dt><dd><time datetime="2025-12-06">6 December 2025</time></dd>
+          <dt>Sport type</dt><dd>HYROX</dd>
+        </dl>
+        <section class="proof" aria-labelledby="proof-hyrox-london-2025">
+          <h2 id="proof-hyrox-london-2025">Official result</h2>
+          <p class="proof-url">https://results.hyrox.com/season-8/london</p>
+          <p class="proof-label">Self-reported · via results.hyrox.com</p>
+          <p class="proof-note">Onrace doesn’t verify results. The official timing page is the evidence.</p>
+        </section>
+      </article>
+      <article class="result" data-result="valencia-half-2025" aria-labelledby="result-valencia-half-2025" hidden>
+        <h1 id="result-valencia-half-2025">Valencia Half Marathon</h1>
+        <dl class="finish">
+          <dt>Finish time</dt><dd>1:28:05</dd>
+        </dl>
+        <dl class="facts">
+          <dt>Date</dt><dd><time datetime="2025-10-26">26 October 2025</time></dd>
+          <dt>Sport type</dt><dd>Half marathon</dd>
+        </dl>
+        <section class="proof" aria-labelledby="proof-valencia-half-2025">
+          <h2 id="proof-valencia-half-2025">Official result</h2>
+          <p class="proof-url">https://www.valenciaciudaddelrunning.com/en/half/results-2025/</p>
+          <p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p>
+          <p class="proof-note">Onrace doesn’t verify results. The official timing page is the evidence.</p>
+        </section>
+      </article>
+      <article class="result" data-result="berlin-marathon-2025" aria-labelledby="result-berlin-marathon-2025">
+        <h1 id="result-berlin-marathon-2025">Berlin Marathon</h1>
+        <dl class="finish">
+          <dt>Finish time</dt><dd>3:12:48</dd>
+        </dl>
+        <dl class="facts">
+          <dt>Date</dt><dd><time datetime="2025-09-21">21 September 2025</time></dd>
+          <dt>Sport type</dt><dd>Marathon</dd>
+        </dl>
+        <section class="proof" aria-labelledby="proof-berlin-marathon-2025">
+          <h2 id="proof-berlin-marathon-2025">Official result</h2>
+          <p class="proof-url">https://berlin.r.mikatiming.com/2025/</p>
+          <p class="proof-label">Self-reported · via berlin.r.mikatiming.com</p>
+          <p class="proof-note">Onrace doesn’t verify results. The official timing page is the evidence.</p>
+        </section>
+      </article>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: sticky action bar — Open official result, the screen's one
+       primary action and flows.md's "Source link still opens?" check. Yes →
+       Success3 ("this results row's official_result_url opened
+       successfully, just now") — a new tab on the timing site; Onrace's job
+       ends there (flows.md → Endpoints). No → LinkError
+       (result-detail-error.html?cause=link&result=…). The label names the
+       domain so it's clear the proof lives outside Onrace. -->
+  <div class="action-bar" data-result="deka-strong-chicago-2026" hidden>
+    <a class="open-btn" href="https://www.athlinks.com/event/deka-strong-chicago-2026/results" target="_blank" rel="noopener">Open official result on athlinks.com</a>
+    <p class="action-caption">Opens in a new tab.</p>
+  </div>
+  <div class="action-bar" data-result="hyrox-london-2025" hidden>
+    <a class="open-btn" href="https://results.hyrox.com/season-8/london" target="_blank" rel="noopener">Open official result on results.hyrox.com</a>
+    <p class="action-caption">Opens in a new tab.</p>
+  </div>
+  <div class="action-bar" data-result="valencia-half-2025" hidden>
+    <a class="open-btn" href="https://www.valenciaciudaddelrunning.com/en/half/results-2025/" target="_blank" rel="noopener">Open official result on valenciaciudaddelrunning.com</a>
+    <p class="action-caption">Opens in a new tab.</p>
+  </div>
+  <div class="action-bar" data-result="berlin-marathon-2025">
+    <a class="open-btn" href="https://berlin.r.mikatiming.com/2025/" target="_blank" rel="noopener">Open official result on berlin.r.mikatiming.com</a>
+    <p class="action-caption">Opens in a new tab.</p>
+  </div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var SLUGS = ['deka-strong-chicago-2026', 'hyrox-london-2025', 'valencia-half-2025', 'berlin-marathon-2025'];
+  var slug = SLUGS.indexOf(params.get('result')) > -1 ? params.get('result') : 'berlin-marathon-2025';
+  document.querySelectorAll('[data-result]').forEach(function (el) {
+    el.hidden = el.getAttribute('data-result') !== slug;
+  });
+  // flows.md "Source link still opens?" as a real check: the URL must be
+  // well-formed http(s) and window.open must return a tab. Yes → Success3
+  // (the new tab is the proof, open just now). No → LinkError.
+  function openProof(btn) {
+    var url = btn.getAttribute('href');
+    var valid = false;
+    try { valid = /^https?:$/.test(new URL(url).protocol); } catch (err) {}
+    var tab = valid ? window.open(url, '_blank') : null;
+    if (tab) { tab.opener = null; return; }
+    window.location.href = 'result-detail-error.html?cause=link&result=' +
+      btn.closest('[data-result]').getAttribute('data-result');
+  }
+  document.querySelectorAll('.open-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      openProof(btn);
+    });
+  });
+})();
+</script>
+
+
+</body>
+</html>
