@@ -11,8 +11,15 @@
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
      no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7.
      Bare screen (_conventions.md § 1): index.html provides the device frame
-     and nav tree. Same shell as race-browse.html: 390-wide body, internally
-     scrolling .phone-screen, 2-tab bottom nav. */
+     and nav tree.
+
+     Drill-down screen (_conventions.md § 1, "Drill-down screens"): no global
+     tab bar — "Back to races" in the sticky top bar is the only way back —
+     and the primary action (Register) sits in a sticky bottom action bar.
+     The body is a flex column: the scrolling .phone-screen takes the
+     remaining height and the action bar sits below it, outside the scroll,
+     so it's always visible and the content never needs padding to clear
+     it (the bar's height can change, e.g. when an alert is added). */
 
   * { box-sizing: border-box; }
 
@@ -25,50 +32,21 @@
     line-height: 1.4;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   a { color: #000; }
 
   .phone-screen {
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 56px; /* clears the fixed bottom-nav below */
   }
 
-  /* Global nav (sitemap.md → Navigation § 1, 2 tabs) — identical to
-     race-browse.html. Race detail sits under Discover, so Discover stays
-     the current tab. */
-  .bottom-nav {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 56px;
-    background: #fff;
-    border-top: 2px solid #000;
-    z-index: 3;
-  }
-  .bottom-nav ul {
-    list-style: none;
-    display: flex;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  .bottom-nav li { flex: 1; }
-  .bottom-nav a {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 0.8rem;
-  }
-  .bottom-nav a[aria-current="page"] { background: #000; color: #fff; }
-
-  /* --- top bar: the way back to Race browse. Sticky, bottom border is the
-     divider — same role as race-browse.html's sticky controls block. --- */
+  /* --- top bar: the one way back (Race browse). Sticky inside the scroll
+     area; its bottom border is the divider. --- */
   .top-bar {
     position: sticky;
     top: 0;
@@ -79,7 +57,7 @@
     font-size: 0.9rem;
   }
 
-  .race { padding: 20px 16px 24px; }
+  .race { padding: 20px 16px 28px; }
   .race[hidden] { display: none; }
   .race h1 { font-size: 1.25rem; margin: 0 0 16px 0; }
 
@@ -95,13 +73,22 @@
   .facts dt { color: #444; }
   .facts dd { margin: 0; }
 
-  .about h2, .inline-error h2, .state-message h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+  .race h2, .state-message h2, .inline-error h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
   .about p { margin: 0 0 24px 0; font-size: 0.95rem; }
+  .official p { margin: 0; font-size: 0.95rem; }
 
-  /* --- actions: the decision point (flows.md → WantsToEnter). Register is
-     the primary action and the flow's Success exit; the official site is a
-     secondary reference link. Both leave Onrace — it never handles
-     sign-ups or payment (CLAUDE.md → out of scope). --- */
+  /* --- sticky action bar: the screen's one primary action, fixed to the
+     frame's bottom edge where a top-level screen's tab bar would be. Its
+     supporting caption, and any error about the action itself, live in the
+     bar with it. --- */
+  .action-bar {
+    flex: none;
+    background: #fff;
+    border-top: 2px solid #000;
+    padding: 12px 16px 14px;
+    z-index: 3;
+  }
+  .action-bar[hidden] { display: none; }
   .register-btn {
     display: block;
     width: 100%;
@@ -114,12 +101,12 @@
     text-align: center;
     text-decoration: none;
   }
-  .link-note { font-size: 0.8rem; color: #444; margin: 8px 0 20px 0; }
-  .official-link { font-size: 0.92rem; margin: 0; }
+  .action-caption { font-size: 0.78rem; color: #444; margin: 6px 0 0 0; text-align: center; }
 
   /* --- loading skeletons: gray bars in the same zones as a loaded race
-     (name, three facts, about, Register), so nothing jumps on load. Static,
-     no shimmer (_conventions.md § 7). --- */
+     (name, three facts, about, official site), plus a gray placeholder in
+     the action bar where Register will be — so nothing jumps on load.
+     Static, no shimmer (_conventions.md § 7). --- */
   .bar { background: #ddd; height: 12px; margin: 0 0 10px 0; }
   .bar.h1 { height: 22px; width: 70%; margin-bottom: 20px; }
   .skel-facts { display: grid; grid-template-columns: 80px 1fr; gap: 10px 14px; margin-bottom: 28px; }
@@ -127,7 +114,9 @@
   .bar.h2 { height: 14px; width: 35%; margin-bottom: 12px; }
   .bar.line { width: 100%; }
   .bar.line.end { width: 65%; margin-bottom: 28px; }
+  .bar.link { width: 30%; }
   .bar.button { height: 46px; width: 100%; margin: 0; }
+  .bar.caption { height: 10px; width: 60%; margin: 8px auto 0; }
   .visually-hidden {
     position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0 0 0 0); white-space: nowrap;
@@ -138,49 +127,49 @@
 
   <div class="phone-screen">
 
-    <main>
-
-      <!-- ZONE: top bar — back to Race browse. This is flows.md's
-           "back / compares another race" edge, and the "no" edge of
-           WantsToEnter: not worth entering → back to browsing. -->
+      <!-- ZONE: top bar — back to Race browse, the only navigation on this
+           drill-down screen (no global tab bar, _conventions.md § 1). This
+           is flows.md's "back / compares another race" edge, and the "no"
+           edge of WantsToEnter: not worth entering → back to browsing. -->
       <nav class="top-bar" aria-label="Back">
         <a href="race-browse.html">Back to races</a>
       </nav>
+
+    <main>
 
       <!-- ZONE: race — Loading state (flows.md: DetailLoading, "fetching race
            details", on tapping a card/pin in Race browse). Gray bars sit in
            the same zones as a loaded race; hidden from assistive tech, with
            aria-busy plus the visually-hidden status carrying the meaning.
            Back to races stays usable — it doesn't depend on the fetch. -->
-        <article class="race" aria-busy="true">
-          <p class="visually-hidden" role="status">Loading race details…</p>
-          <div aria-hidden="true">
-            <div class="bar h1"></div>
-            <div class="skel-facts">
-              <div class="bar"></div><div class="bar" style="width:40%"></div>
-              <div class="bar"></div><div class="bar" style="width:55%"></div>
-              <div class="bar"></div><div class="bar" style="width:75%"></div>
-            </div>
-            <div class="bar h2"></div>
-            <div class="bar line"></div>
-            <div class="bar line end"></div>
-            <div class="bar button"></div>
+      <article class="race" aria-busy="true">
+        <p class="visually-hidden" role="status">Loading race details…</p>
+        <div aria-hidden="true">
+          <div class="bar h1"></div>
+          <div class="skel-facts">
+            <div class="bar"></div><div class="bar" style="width:40%"></div>
+            <div class="bar"></div><div class="bar" style="width:55%"></div>
+            <div class="bar"></div><div class="bar" style="width:75%"></div>
           </div>
-        </article>
+          <div class="bar h2"></div>
+          <div class="bar line"></div>
+          <div class="bar line end"></div>
+          <div class="bar h2"></div>
+          <div class="bar link"></div>
+        </div>
+      </article>
 
     </main>
 
   </div><!-- /.phone-screen -->
 
-  <!-- ZONE: global nav — same 2 tabs as race-browse.html (sitemap.md →
-       Navigation § 1). Race detail is contextual under Discover, so
-       Discover stays current. -->
-  <nav class="bottom-nav" aria-label="Global navigation">
-    <ul>
-      <li><a href="race-browse.html" aria-current="page">Discover</a></li>
-      <li><a href="results-list.html">My Results</a></li>
-    </ul>
-  </nav>
+  <!-- ZONE: sticky action bar — shown from the first frame with a gray
+       placeholder where Register will be (not a disabled button: nothing
+       to tap yet), so the layout doesn't jump when the race arrives. -->
+  <div class="action-bar" aria-hidden="true">
+    <div class="bar button"></div>
+    <div class="bar caption"></div>
+  </div>
 
 
 </body>

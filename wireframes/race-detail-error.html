@@ -5,14 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Race detail (Error) — Onrace (wireframe)</title>
 <style>
-  /* STATE: error — same structure and zones as race-detail.html; only the
-     content inside them changes (_conventions.md § 5). */
+  /* STATE: error — same structure and zones as race-detail.html; only
+     the content inside them changes (_conventions.md § 5). */
 
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
      no custom fonts, no shadows, no icons. Deferred per _conventions.md § 7.
      Bare screen (_conventions.md § 1): index.html provides the device frame
-     and nav tree. Same shell as race-browse.html: 390-wide body, internally
-     scrolling .phone-screen, 2-tab bottom nav. */
+     and nav tree.
+
+     Drill-down screen (_conventions.md § 1, "Drill-down screens"): no global
+     tab bar — "Back to races" in the sticky top bar is the only way back —
+     and the primary action (Register) sits in a sticky bottom action bar.
+     The body is a flex column: the scrolling .phone-screen takes the
+     remaining height and the action bar sits below it, outside the scroll,
+     so it's always visible and the content never needs padding to clear
+     it (the bar's height can change, e.g. when an alert is added). */
 
   * { box-sizing: border-box; }
 
@@ -25,50 +32,21 @@
     line-height: 1.4;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   a { color: #000; }
 
   .phone-screen {
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 56px; /* clears the fixed bottom-nav below */
   }
 
-  /* Global nav (sitemap.md → Navigation § 1, 2 tabs) — identical to
-     race-browse.html. Race detail sits under Discover, so Discover stays
-     the current tab. */
-  .bottom-nav {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 56px;
-    background: #fff;
-    border-top: 2px solid #000;
-    z-index: 3;
-  }
-  .bottom-nav ul {
-    list-style: none;
-    display: flex;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  .bottom-nav li { flex: 1; }
-  .bottom-nav a {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 0.8rem;
-  }
-  .bottom-nav a[aria-current="page"] { background: #000; color: #fff; }
-
-  /* --- top bar: the way back to Race browse. Sticky, bottom border is the
-     divider — same role as race-browse.html's sticky controls block. --- */
+  /* --- top bar: the one way back (Race browse). Sticky inside the scroll
+     area; its bottom border is the divider. --- */
   .top-bar {
     position: sticky;
     top: 0;
@@ -79,7 +57,7 @@
     font-size: 0.9rem;
   }
 
-  .race { padding: 20px 16px 24px; }
+  .race { padding: 20px 16px 28px; }
   .race[hidden] { display: none; }
   .race h1 { font-size: 1.25rem; margin: 0 0 16px 0; }
 
@@ -95,13 +73,22 @@
   .facts dt { color: #444; }
   .facts dd { margin: 0; }
 
-  .about h2, .inline-error h2, .state-message h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+  .race h2, .state-message h2, .inline-error h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
   .about p { margin: 0 0 24px 0; font-size: 0.95rem; }
+  .official p { margin: 0; font-size: 0.95rem; }
 
-  /* --- actions: the decision point (flows.md → WantsToEnter). Register is
-     the primary action and the flow's Success exit; the official site is a
-     secondary reference link. Both leave Onrace — it never handles
-     sign-ups or payment (CLAUDE.md → out of scope). --- */
+  /* --- sticky action bar: the screen's one primary action, fixed to the
+     frame's bottom edge where a top-level screen's tab bar would be. Its
+     supporting caption, and any error about the action itself, live in the
+     bar with it. --- */
+  .action-bar {
+    flex: none;
+    background: #fff;
+    border-top: 2px solid #000;
+    padding: 12px 16px 14px;
+    z-index: 3;
+  }
+  .action-bar[hidden] { display: none; }
   .register-btn {
     display: block;
     width: 100%;
@@ -114,17 +101,16 @@
     text-align: center;
     text-decoration: none;
   }
-  .link-note { font-size: 0.8rem; color: #444; margin: 8px 0 20px 0; }
-  .official-link { font-size: 0.92rem; margin: 0; }
+  .action-caption { font-size: 0.78rem; color: #444; margin: 6px 0 0 0; text-align: center; }
 
   /* --- error copy. Two causes, one page (_conventions.md § 5): a full-page
-     message when the race itself didn't load, or an inline alert beside
-     Register when only the registration link failed. The inline alert gets
-     a border because it has to read as one unit inside a loaded page. --- */
+     message when the race itself didn't load (no action bar: nothing to
+     register for), or an alert inside the action bar, right above the
+     Register button that failed. The alert gets a border because it has to
+     read as one unit inside the bar. --- */
   .state-message { padding: 40px 24px; text-align: center; }
   .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: #333; }
-  .state-message[hidden], .inline-error[hidden] { display: none; }
-  .state-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  [data-cause][hidden], .inline-error[hidden] { display: none; }
   .state-action {
     display: inline-block;
     border: 1px solid #000;
@@ -134,92 +120,95 @@
     font-size: 0.9rem;
     text-decoration: none;
   }
-  .state-action.secondary { background: #fff; color: #000; }
-  .inline-error { border: 2px solid #000; padding: 12px 14px; margin: 0 0 14px 0; }
-  .inline-error p { font-size: 0.88rem; margin: 0 0 10px 0; }
+  .inline-error { border: 2px solid #000; padding: 10px 12px; margin: 0 0 10px 0; }
+  .inline-error p { font-size: 0.85rem; margin: 0 0 8px 0; }
+  .dismiss {
+    border: 1px solid #000;
+    background: #fff;
+    padding: 6px 14px;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body role="application" aria-label="Onrace — Race detail, error state (wireframe)">
 
   <div class="phone-screen">
 
-    <main>
-
-      <!-- ZONE: top bar — back to Race browse. This is flows.md's
-           "back / compares another race" edge, and the "no" edge of
-           WantsToEnter: not worth entering → back to browsing. -->
+      <!-- ZONE: top bar — back to Race browse, the only navigation on this
+           drill-down screen (no global tab bar, _conventions.md § 1). This
+           is flows.md's "back / compares another race" edge, and the "no"
+           edge of WantsToEnter: not worth entering → back to browsing. -->
       <nav class="top-bar" aria-label="Back">
         <a href="race-browse.html">Back to races</a>
       </nav>
+
+    <main>
 
       <!-- ZONE: race — Error state, two causes on one page (_screens.md →
            Race detail → Error; _conventions.md § 5: the file grain is
            state, not cause). Default: DetailError — the race itself didn't
            load. ?cause=registration: RegLinkError — the race loaded, but
-           its registration link failed to open. Both are real markup; the
-           script below only un-hides the one named in the URL. -->
+           its registration link couldn't be opened. Both are real markup;
+           the script below only un-hides the one named in the URL. -->
 
       <!-- DetailError (flows.md: DetailLoading → "connection fails" →
            DetailError → Retry?). Nothing about the race loaded, so no name
-           or facts — just the message. "Try again" is Retry → yes (back to
-           DetailLoading, i.e. race-detail-loading.html); "Back to races" is
-           Retry → no (DeadEnd1: leaves without deciding on a race). -->
+           or facts, and no action bar (nothing to register for). "Try
+           again" is Retry → yes (back to DetailLoading, i.e.
+           race-detail-loading.html); Retry → no (DeadEnd1) is the top
+           bar's "Back to races", so it isn't repeated here. -->
       <div class="state-message" data-cause="detail" role="alert">
         <h2>Couldn't load race details</h2>
         <p>Check your connection and try again.</p>
-        <div class="state-actions">
-          <a class="state-action" href="race-detail-loading.html">Try again</a>
-          <a class="state-action secondary" href="race-browse.html">Back to races</a>
-        </div>
+        <a class="state-action" href="race-detail-loading.html">Try again</a>
       </div>
 
       <div data-cause="registration" hidden>
-          <article class="race" data-race="hyrox-london" aria-labelledby="race-hyrox-london">
-            <h1 id="race-hyrox-london">HYROX London</h1>
-            <dl class="facts">
-              <dt>Sport type</dt><dd>HYROX</dd>
-              <dt>Date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd>
-              <dt>Location</dt><dd>London, England, United Kingdom</dd>
-            </dl>
-            <section class="about" aria-labelledby="about-hyrox-london">
-              <h2 id="about-hyrox-london">About this race</h2>
-              <p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p>
-            </section>
-            <section class="actions" aria-label="Enter this race">
-              <!-- RegLinkError (flows.md): shown beside Register, inside the
-                   loaded race. Lighter than DetailError — no Retry? diamond
-                   (registration_url is Onrace's own curated data). Exits per
-                   flows.md: back to race detail and try again later, or give
-                   up (DeadEnd6, just leaving). Feasibility note: a web page
-                   can't see whether an organiser's site loads in another tab,
-                   so the real app can only raise this for failures it can
-                   detect — a missing or malformed registration_url, or the
-                   new tab being blocked. The copy is written for those. -->
-              <div class="inline-error" role="alert">
-                <h2>Couldn't open the registration page</h2>
-                <p>The link to this race's registration didn't open. Registration may not be available yet — try again later from this page.</p>
-                <a class="state-action secondary" href="race-detail.html?race=hyrox-london">Back to race details</a>
-              </div>
-              <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on the official site</a>
-              <p class="link-note">Opens hyrox.com in a new tab. Registration and payment happen there — Onrace never handles sign-ups.</p>
-              <p class="official-link"><a href="https://hyrox.com/" target="_blank" rel="noopener">Official race website</a> — hyrox.com</p>
-            </section>
-          </article>
+        <article class="race" data-race="hyrox-london" aria-labelledby="race-hyrox-london">
+          <h1 id="race-hyrox-london">HYROX London</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>HYROX</dd>
+            <dt>Date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd>
+            <dt>Location</dt><dd>London, England, United Kingdom</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-hyrox-london">
+            <h2 id="about-hyrox-london">About this race</h2>
+            <p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p>
+          </section>
+          <section class="official" aria-labelledby="official-hyrox-london">
+            <h2 id="official-hyrox-london">Official race website</h2>
+            <p><a href="https://hyrox.com/" target="_blank" rel="noopener">hyrox.com</a></p>
+          </section>
+        </article>
       </div>
 
     </main>
 
   </div><!-- /.phone-screen -->
 
-  <!-- ZONE: global nav — same 2 tabs as race-browse.html (sitemap.md →
-       Navigation § 1). Race detail is contextual under Discover, so
-       Discover stays current. -->
-  <nav class="bottom-nav" aria-label="Global navigation">
-    <ul>
-      <li><a href="race-browse.html" aria-current="page">Discover</a></li>
-      <li><a href="results-list.html">My Results</a></li>
-    </ul>
-  </nav>
+  <!-- ZONE: sticky action bar — present only for RegLinkError (the race
+       loaded). Hidden for DetailError: a Register button for a race that
+       didn't load could never work (_conventions.md § 1). -->
+  <div class="action-bar" data-race="hyrox-london" data-cause="registration" hidden>
+    <!-- RegLinkError (flows.md): inside the action bar, directly above
+         the Register button that failed, so the cause sits beside the
+         action whatever the scroll position. Lighter than DetailError — no
+         Retry? diamond. Exits per flows.md: back to race detail and try
+         again later ("Dismiss" — the person is already on the race, so this
+         just closes the alert), or give up (DeadEnd6, just leaving). Only
+         failures a browser can detect: a missing or malformed
+         registration_url, or the new tab being blocked (flows.md revision
+         note, 2026-09-24). -->
+    <div class="inline-error" role="alert">
+      <h2>Couldn't open the registration page</h2>
+      <p>The registration link for this race didn't open. Registration may not be available yet — try again later from this page.</p>
+      <button type="button" class="dismiss">Dismiss</button>
+    </div>
+    <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on hyrox.com</a>
+    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+  </div>
 
 <script>
 (function () {
@@ -228,6 +217,13 @@
   var cause = new URLSearchParams(window.location.search).get('cause') === 'registration' ? 'registration' : 'detail';
   document.querySelectorAll('[data-cause]').forEach(function (el) {
     el.hidden = el.getAttribute('data-cause') !== cause;
+  });
+
+  // RegLinkError's "Dismiss": closes the alert, leaving the person on the
+  // race with Register still available to try again later.
+  var dismiss = document.querySelector('.dismiss');
+  dismiss.addEventListener('click', function () {
+    dismiss.closest('.inline-error').hidden = true;
   });
 })();
 </script>
