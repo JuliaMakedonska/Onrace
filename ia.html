@@ -251,6 +251,8 @@
       <a href="#flow-discovery">Discovery</a>
       <a href="#flow-log">Log Result</a>
       <a href="#flow-retrieve">Retrieve Proof</a>
+      <a href="#flow-signup">Sign Up</a>
+      <a href="#flow-profile">Profile</a>
       <a href="#traceability">Traceability</a>
     </div>
   </div>
@@ -265,9 +267,9 @@
 
   <div class="meta-row">
     <span class="pill">Updated 2026-09-25</span>
-    <span class="pill">5 job screens + 2 infrastructure</span>
+    <span class="pill">6 job screens + 2 infrastructure</span>
     <span class="pill">8 jobs traced · 0 orphan jobs</span>
-    <span class="pill">3-tab nav · 3 flows · 7 dead ends</span>
+    <span class="pill">3-tab nav · 5 flows (3 job + 2 infrastructure) · 10 dead ends</span>
     <span class="pill">1 accepted MVP gap</span>
   </div>
 
@@ -276,7 +278,7 @@
     <p class="lede">Four corrections that came out of building this IA end-to-end — see each section below for the full reasoning.</p>
     <div class="card-grid">
       <div class="card tw-sitemap"><strong>The entry point is Race browse, not a screen called "Onrace"</strong>An earlier draft modeled a distinct entry screen to carry Main Job 2. It never existed as separate UI — removed from the tree and the matrix; its rationale relocated, not deleted (see Navigation in <code>sitemap.md</code>).</div>
-      <div class="card tw-trace"><strong>Two infrastructure screens, justified by auth, not by a job</strong>Sign in / Sign up and Profile close no job of their own (formerly tagged "orphan"). The test for them isn't "does a job need this?" but "does the existence of accounts require it?" Sign in / Sign up is a contextual gate; Profile is a global tab (since 2026-09-25). Profile, added 2026-09-25, reverses the earlier "no job supports Profile" verdict.</div>
+      <div class="card tw-trace"><strong>Two infrastructure screens, justified by auth, not by a job</strong>Sign in / Sign up and Profile close no job of their own (formerly tagged "orphan"). The test for them isn't "does a job need this?" but "does the existence of accounts require it?" Sign in / Sign up is a contextual gate; Profile is a global tab (since 2026-09-25). Profile, added 2026-09-25, reverses the earlier "no job supports Profile" verdict. Both now have infrastructure flows of their own: sign-up with email confirmation (Flow 4) and profile + sign out (Flow 5).</div>
       <div class="card tw-flows"><strong>Every success endpoint is now a verifiable condition</strong>Not a screen destination. Log Result's success previously just "landed on a screen" — tightened to "a <code>results</code> row now exists with <code>official_result_url</code> populated."</div>
       <div class="card tw-gap"><strong>One dead end is a known, accepted MVP gap</strong>A logged result's source link can rot with no in-app fix (<code>DeadEnd5</code>). Left as-is on purpose — no job asks to <em>correct</em> a result, only to log or retrieve one. Now tracked in <code>research.md</code>.</div>
     </div>
@@ -284,9 +286,10 @@
 
   <div class="section-index">
     <div class="card-grid">
-      <a class="card-link" href="#sitemap"><span class="si-tag" style="color:var(--patterns)">Sitemap</span><span class="si-title">Screens by entity cluster</span><span class="si-desc">5 job screens + 2 infrastructure, each tagged with the job it closes →</span></a>
-      <a class="card-link" href="#flow-discovery"><span class="si-tag" style="color:var(--benchmark)">Flows</span><span class="si-title">All three user flows</span><span class="si-desc">Discovery, Log Result, Retrieve Proof — full Mermaid diagrams →</span></a>
-      <a class="card-link" href="#traceability"><span class="si-tag" style="color:var(--unconfirmed)">Traceability</span><span class="si-title">Job × screen coverage matrix</span><span class="si-desc">8 jobs, 7 screens, the two infrastructure columns highlighted →</span></a>
+      <a class="card-link" href="#sitemap"><span class="si-tag" style="color:var(--patterns)">Sitemap</span><span class="si-title">Screens by entity cluster</span><span class="si-desc">6 job screens + 2 infrastructure, each tagged with the job it closes →</span></a>
+      <a class="card-link" href="#flow-discovery"><span class="si-tag" style="color:var(--benchmark)">Flows</span><span class="si-title">All five user flows</span><span class="si-desc">Three job flows — Discovery, Log Result, Retrieve Proof — plus two infrastructure flows, Sign Up and Profile — full Mermaid diagrams →</span></a>
+      <a class="card-link" href="#flow-signup"><span class="si-tag" style="color:var(--benchmark)">Flows · Infrastructure</span><span class="si-title">Sign up &amp; Profile flows</span><span class="si-desc">Email confirmation (Flow 4) and profile + sign out (Flow 5) — no job, required by auth →</span></a>
+      <a class="card-link" href="#traceability"><span class="si-tag" style="color:var(--unconfirmed)">Traceability</span><span class="si-title">Job × screen coverage matrix</span><span class="si-desc">8 jobs, 8 screens, the two infrastructure columns highlighted →</span></a>
     </div>
   </div>
 </header>
@@ -301,7 +304,7 @@
 
     <p class="entry-note"><strong style="color:var(--text-dim)">App entry:</strong> Race browse is the landing screen at 0 taps — see Navigation in <code>sitemap.md</code>. An earlier draft modeled a separate "Onrace — entry" screen for Main Job 2; it never existed as real UI and was removed. The reasoning wasn't wrong, just misplaced — it describes this global nav structure (Discover + My Results as co-equal items), not a screen.</p>
 
-    <p class="entry-note"><strong style="color:var(--text-dim)">Global navigation — 3 tabs (revised 2026-09-25):</strong> <strong style="color:var(--text)">Discover</strong> → Race browse, <strong style="color:var(--text)">My Results</strong> → Results list, and <strong style="color:var(--text)">Profile</strong> → Profile. <strong style="color:var(--text)">Log result</strong> is no longer a tab: it's the primary action button inside My Results (header, plus the empty state's call to action), because tabs are destinations and actions are buttons. Cost: logging a result goes from 1 tap to 2 from anywhere outside My Results, with no extra sign-in step. Replaces the earlier 3-tab bar (Discover / Log Result / My Results); that reasoning is kept, marked superseded, in <code>sitemap.md</code> → Navigation § 1–2. <strong style="color:var(--text)">Profile</strong> became a tab on 2026-09-25 for 1-tap consistency and the familiar Account-tab convention. That accepts an auth entry point on every top-level screen, Discover included, though Discover itself gates nothing. It replaces a same-day account button inside My Results. Profile is 1 tap from any top-level screen (2 from Race detail, which has no tab bar), and Sign out is 2.</p>
+    <p class="entry-note"><strong style="color:var(--text-dim)">Global navigation — 3 tabs (revised 2026-09-25):</strong> <strong style="color:var(--text)">Discover</strong> → Race browse, <strong style="color:var(--text)">My Results</strong> → Results list, and <strong style="color:var(--text)">Profile</strong> → Profile. <strong style="color:var(--text)">Log result</strong> is no longer a tab: it's the primary action button inside My Results (header, plus the empty state's call to action), because tabs are destinations and actions are buttons. Cost: logging a result goes from 1 tap to 2 from anywhere outside My Results, with no extra sign-in step. Replaces the earlier 3-tab bar (Discover / Log Result / My Results); that reasoning is kept, marked superseded, in <code>sitemap.md</code> → Navigation § 1–2. <strong style="color:var(--text)">Profile</strong> became a tab on 2026-09-25 for 1-tap consistency and the familiar Account-tab convention. That accepts an auth entry point on every top-level screen, Discover included, though Discover itself gates nothing. It replaces a same-day account button inside My Results. Profile is 1 tap from any top-level screen (2 from Race detail, which has no tab bar), and Sign out is 3 (Profile → Sign out → confirm; the confirm alert is a deliberate extra tap).</p>
 
     <div class="legend">
       <span class="lg-label">Jobs:</span>
@@ -364,7 +367,19 @@
           <span class="jobtag jframing">Social</span>
         </div>
         <p class="states">Entry: the <strong style="color:var(--text)">Log result</strong> action inside My Results (header or empty state), not a nav tab — since 2026-09-24.</p>
-        <p class="states">States: empty form · source-link-required error (<code>official_result_url</code> — the one field <code>CLAUDE.md</code> marks required) · other-required-field error (<code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> <code>[?]</code>) · submit error</p>
+        <p class="states">States: empty form · source-link-required error (<code>official_result_url</code> — the one field <code>CLAUDE.md</code> marks required) · other-required-field error (<code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> <code>[?]</code>) · submit error: couldn't save (reworded 2026-09-25 from "unreachable source link", which a client-side app can't detect)</p>
+        <p class="states">Catalog link (2026-09-25): optional <strong style="color:var(--text)">Find in race catalog</strong> opens Race picker; a picked race fills and locks <code>race_name</code>/<code>date</code>/<code>sport_type</code>. Typing the race in by hand still works — the link is a shortcut, never a requirement.</p>
+      </div>
+
+      <div class="screen-card">
+        <h4 class="screen-name">Race picker</h4>
+        <p class="persona">Persona: Secondary — Archivist (same as Log result). Added 2026-09-25.</p>
+        <div class="tags">
+          <span class="jobtag jr3">Related 3 · Log</span>
+        </div>
+        <p class="states">A shortcut within logging: link the result to the catalog edition actually run, so its facts aren't retyped from memory. Object: Race listing (read-only, <strong style="color:var(--text)">past editions only</strong> — past listings stay in the catalog, one row per edition).</p>
+        <p class="states">Entry: contextual, a modal sheet opened from Log result only (3 taps + search from launch; typing the race in stays 2).</p>
+        <p class="states">States: loading · no catalog race matches · catalog failed to load. Every exit that isn't a pick returns to the form.</p>
       </div>
 
       <div class="screen-card">
@@ -380,11 +395,13 @@
     <div class="orphan-card">
       <h4 class="screen-name">Sign in / Sign up <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
       <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Exists because Logged result is owner-only via RLS, so accounts exist. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps My Results or Profile (the Log result action lives inside My Results, so that gate covers both archive jobs) — not promoted to a global nav item, not deleted.</p>
+      <p style="margin-top:8px"><strong style="color:var(--text)">Method, decided 2026-09-25:</strong> email + password through Supabase Auth, with <strong style="color:var(--text)">Confirm email</strong> on. Create account doesn't sign anyone in: it leads to a "check your inbox" step, and the emailed link signs them in (<a href="#flow-signup">Flow 4</a>). Not in MVP: magic links, social sign-in. <strong style="color:var(--text)">Flagged, not built:</strong> password reset — by the same "does auth require it?" test, email + password needs a way back in, so it's the next infrastructure gap.</p>
     </div>
 
     <div class="orphan-card">
       <h4 class="screen-name">Profile <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
       <p>Added 2026-09-25. Shows whose account this is and lets the person leave it: initials (photo deferred until Supabase Storage is decided), name, country, language <code>[?]</code> (stored preference only, no localization yet), and <strong style="color:var(--text)">Sign out</strong>. No bio, stats, or public view. Entry: the Profile tab, one of 3 global tabs. Signed out, it opens the same Sign in / Sign up gate as My Results. Reverses the 2026-09-24 "no job supports Profile" verdict: that asked whether a job needs it, the wrong test for infrastructure. The right test is whether accounts require it. See <code>sitemap.md</code> → Entities → 5.</p>
+      <p style="margin-top:8px"><strong style="color:var(--text)">States (2026-09-25, <a href="#flow-profile">Flow 5</a>):</strong> loading · couldn't load · a field's change didn't save (fields save as they change; a failed save reverts inline). Sign out asks first (confirm alert), then signs out <em>this device only</em> — a local session clear, no network call — and lands on Race browse.</p>
     </div>
   </section>
 
@@ -403,6 +420,7 @@
       <span style="color:#60a5fa">◌ empty</span>
       <span style="color:#e6a23c">◌ error</span>
       <span style="color:#a78bfa">◌ [?] flagged</span>
+      <span style="color:#2dd4bf">⟦▭⟧ [[...]] another flow, referenced not redrawn</span>
       <span style="color:#4ade80">● success</span>
       <span style="color:#ff4d2e">● dead end</span>
     </div>
@@ -502,8 +520,11 @@ flowchart TD
     AuthCheck -->|"no"| SignIn["Sign in / Sign up"]
     SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
     SignIn -->|"closes without attempting"| DeadEnd2
+    SignIn -->|"creates an account instead"| SignUp[["Flow 4: Sign up with email confirmation"]]
+    SignUp -->|"email confirmed, signed in"| ResultsList
     SigningIn --> AuthResult{"Sign-in succeeded?"}
     AuthResult -->|"no"| AuthError("Error: sign-in failed")
+    AuthResult -->|"no — email not confirmed yet"| SignUp
     AuthError --> AuthRetry{"Retry?"}
     AuthRetry -->|"yes"| SignIn
     AuthRetry -->|"no"| DeadEnd2(("Dead end: leaves without logging the result"))
@@ -512,35 +533,52 @@ flowchart TD
     ResultsList --> FindsAction{"Finds and taps Log result? (header button, or empty state's call to action) [?]"}
     FindsAction -->|"yes"| LogForm["Log result"]
     FindsAction -->|"no"| DeadEnd7(("Dead end: reached My Results, never found Log result [?]"))
-    LogForm --> HasLink{"official_result_url filled in?"}
+    LogForm -->|"taps Find in race catalog (optional)"| PickerLoading("Loading: fetching past catalog races")
+    PickerLoading -->|"connection fails"| PickerError("Error: could not load the race catalog")
+    PickerError --> PickerRetry{"Retry?"}
+    PickerRetry -->|"yes"| PickerLoading
+    PickerRetry -->|"no — types the race in instead"| LogForm
+    PickerLoading --> Picker["Race picker"]
+    Picker -->|"searches"| PickerLoading
+    Picker --> PickerMatches{"Any past races match the search?"}
+    PickerMatches -->|"no"| PickerEmpty("Empty: no catalog race matches")
+    PickerEmpty -->|"changes the search"| Picker
+    PickerEmpty -->|"types the race in instead"| LogForm
+    PickerMatches -->|"yes"| Picker
+    Picker -->|"selects a race — race name, date, sport type filled and locked"| LogForm
+    Picker -->|"cancels — form unchanged"| LogForm
+    LogForm -->|"taps Save"| HasLink{"official_result_url filled in?"}
     HasLink -->|"no"| ValidationError("Error: source link is required")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}
     ValidationRetry -->|"yes"| LogForm
     ValidationRetry -->|"no"| DeadEnd3(("Dead end: no result saved, proof lost for later"))
-    HasLink -->|"yes"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?]"}
+    HasLink -->|"yes"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?] (the first three come from the listing when a catalog race is linked)"}
     HasOtherRequired -->|"no"| OtherFieldError("Error: required field missing (race_name / date / sport_type / finish_time) [?]")
     OtherFieldError --> OtherFieldRetry{"Fix and resubmit?"}
     OtherFieldRetry -->|"yes"| LogForm
     OtherFieldRetry -->|"no"| DeadEnd3
     HasOtherRequired -->|"yes"| Submitting("Loading: saving result")
     Submitting --> SubmitOK{"Submission succeeded?"}
-    SubmitOK -->|"no — link unreachable"| SubmitError("Error: link unreachable, submission failed")
+    SubmitOK -->|"no — connection"| SubmitError("Error: couldn't save the result")
     SubmitError --> SubmitRetry{"Retry?"}
     SubmitRetry -->|"yes"| LogForm
     SubmitRetry -->|"no"| DeadEnd3
-    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated (required)"))
-
+    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated (required); catalog race linked if one was picked"))
     classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
     classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef ref fill:#141518,stroke:#2dd4bf,stroke-width:1.5px,stroke-dasharray:4 2,color:#eef0f2;
     classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
+    classDef empty fill:#141518,stroke:#60a5fa,stroke-width:1.5px,color:#eef0f2;
     classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
     classDef flagged fill:#1b1521,stroke:#a78bfa,stroke-width:1.5px,stroke-dasharray:4 2,color:#eef0f2;
     classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
     classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
     class Start2 start
-    class SignIn,ResultsList,LogForm screen
-    class SigningIn,Submitting loading
-    class AuthError,ValidationError,SubmitError error
+    class SignIn,ResultsList,LogForm,Picker screen
+    class SignUp ref
+    class SigningIn,Submitting,PickerLoading loading
+    class PickerEmpty empty
+    class AuthError,ValidationError,SubmitError,PickerError error
     class FindsAction,HasOtherRequired,OtherFieldError,OtherFieldRetry flagged
     class Success2 success
     class DeadEnd2,DeadEnd3,DeadEnd7 deadend
@@ -551,23 +589,28 @@ flowchart TD
       <div class="flow-col">
         <h4>Decisions</h4>
         <ul>
-          <li><span class="fl">Gate</span>Signed in? — logged results are owner-only via RLS, so the My Results tab gates into Sign in / Sign up, a contextual gate. A successful sign-in lands on Results list.</li>
+          <li><span class="fl">Gate</span>Signed in? — logged results are owner-only via RLS, so the My Results tab gates into Sign in / Sign up, a contextual gate. A successful sign-in lands on Results list. (The same gate is also reached from the Profile tab; that path lands on Profile and is Flow 5, not this one.)</li>
+          <li><span class="fl">Reference</span>Creates an account instead → <a href="#flow-signup">Flow 4</a>, drawn once and referenced (<code>[[...]]</code>), not redrawn here. A confirmed sign-up lands on Results list.</li>
+          <li><span class="fl">Branch</span>Sign-in succeeded? — a third edge since 2026-09-25: "email not confirmed yet" (Supabase's distinct error) routes into Flow 4's check-your-inbox step, not the generic sign-in error. Retrying can't fix it; confirming the email can.</li>
           <li><span class="fl">[?] Flagged</span>Finds and taps Log result? — the form is one in-page action away from Results list (header button or empty-state call to action), not a tab. Rests on the unvalidated hypothesis that people look for logging inside My Results. The action must stay usable while the list is loading or has failed to load.</li>
+          <li><span class="fl">Catalog</span>Any past races match the search? (Race picker, added 2026-09-25) — optional "Find in race catalog" searches only races whose <code>event_date</code> has passed. No match isn't an error: change the search or type the race in. Picking a race fills and locks <code>race_name</code>/<code>date</code>/<code>sport_type</code>; cancelling leaves the form unchanged.</li>
+          <li><span class="fl">Retry</span>Catalog failed to load — "no" isn't a dead end: the form works without a catalog link, so giving up on the picker means typing the race in.</li>
           <li><span class="fl">Required</span><code>official_result_url</code> filled in? — the one field <code>CLAUDE.md</code> explicitly marks "(required)"; enforces the source-link trust model before submission.</li>
-          <li><span class="fl">[?] Flagged</span><code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> all filled in? — a second, separate check. <code>CLAUDE.md</code>'s data model just lists these fields, it doesn't say they're required — modeled here as an assumed requirement, flagged per this document set's own convention, not settled fact.</li>
+          <li><span class="fl">[?] Flagged</span><code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> all filled in? — a second, separate check. <code>CLAUDE.md</code>'s data model just lists these fields, it doesn't say they're required — modeled here as an assumed requirement, flagged per this document set's own convention, not settled fact. The first three come from the listing when a catalog race is linked.</li>
           <li><span class="fl">Retry</span>Fix and resubmit? — offered separately after each validation failure, and after a failed submission.</li>
         </ul>
         <h4>States</h4>
         <ul>
-          <li>Loading: signing in · saving result.</li>
-          <li>Error: sign-in failed · source link is required · required field missing <code>[?]</code> · link unreachable / submission failed.</li>
+          <li>Loading: signing in · fetching past catalog races (Race picker, on open and on each search) · saving result.</li>
+          <li>Empty: no catalog race matches (Race picker).</li>
+          <li>Error: sign-in failed · could not load the race catalog · source link is required · required field missing <code>[?]</code> · couldn't save the result (was "link unreachable / submission failed" until 2026-09-25: a client-side app can't check that an arbitrary timing site is reachable, only that the save failed).</li>
         </ul>
       </div>
       <div class="flow-col">
         <h4>Endpoints</h4>
         <div class="endpoint-box success">
           <span class="eb-label">Success — Success2</span>
-          A new row now exists in <code>results</code>, owned by this user via RLS, with <code>official_result_url</code> populated — the field <code>CLAUDE.md</code> requires — plus <code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> per this flow's <code>[?]</code>-flagged check. Tightened from "lands on Results list," a screen, not a condition.
+          A new row now exists in <code>results</code>, owned by this user via RLS, with <code>official_result_url</code> populated — the field <code>CLAUDE.md</code> requires — plus <code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> per this flow's <code>[?]</code>-flagged check, and the catalog race linked if one was picked. Tightened from "lands on Results list," a screen, not a condition.
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd2</span>
@@ -579,7 +622,7 @@ flowchart TD
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd3</span>
-          No result saved, proof lost for later. Reachable from the source-link check, the other-fields check <code>[?]</code>, or the save itself failing — a forms/data problem, once already past sign-in.
+          No result saved, proof lost for later. Reachable from the source-link check, the other-fields check <code>[?]</code>, or the save itself failing — a forms/data problem, once already past sign-in. (Race picker failures don't lead here: every picker exit returns to the form.)
         </div>
       </div>
     </div>
@@ -598,8 +641,11 @@ flowchart TD
     AuthCheck2 -->|"no"| SignIn2["Sign in / Sign up"]
     SignIn2 -->|"submits credentials"| SigningIn2("Loading: signing in")
     SignIn2 -->|"closes without attempting"| DeadEnd4
+    SignIn2 -->|"creates an account instead"| SignUp2[["Flow 4: Sign up with email confirmation"]]
+    SignUp2 -->|"email confirmed, signed in"| ResultsList2
     SigningIn2 --> AuthResult2{"Sign-in succeeded?"}
     AuthResult2 -->|"no"| AuthError2("Error: sign-in failed")
+    AuthResult2 -->|"no — email not confirmed yet"| SignUp2
     AuthError2 --> AuthRetry2{"Retry?"}
     AuthRetry2 -->|"yes"| SignIn2
     AuthRetry2 -->|"no"| DeadEnd4(("Dead end: leaves without proof, application deadline at risk"))
@@ -621,15 +667,15 @@ flowchart TD
     DetailError2 --> DetailRetry2{"Retry?"}
     DetailRetry2 -->|"yes"| DetailLoading2
     DetailRetry2 -->|"no"| DeadEnd4
-    ResultDetail --> LinkWorks{"Source link still opens?"}
-    LinkWorks -->|"yes"| Success3(("Success: this results row's official_result_url opened successfully, just now"))
-    LinkWorks -->|"no"| LinkError("Error: source link unreachable")
+    ResultDetail --> LinkWorks{"Official result opens in a new tab? (official_result_url well-formed, new tab not blocked)"}
+    LinkWorks -->|"yes"| Success3(("Success: a new tab opened on this results row's official_result_url — whether the timing site then loads is outside Onrace's view"))
+    LinkWorks -->|"no"| LinkError("Error: couldn't open the source link")
     LinkError --> LinkRetry{"Try again?"}
     LinkRetry -->|"yes"| ResultDetail
     LinkRetry -->|"no"| DeadEnd5(("Dead end: proof inaccessible, nothing in-app to correct it"))
-
     classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
     classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef ref fill:#141518,stroke:#2dd4bf,stroke-width:1.5px,stroke-dasharray:4 2,color:#eef0f2;
     classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
     classDef empty fill:#141518,stroke:#60a5fa,stroke-width:1.5px,color:#eef0f2;
     classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
@@ -638,6 +684,7 @@ flowchart TD
     classDef deadendDeferred fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,stroke-dasharray:4 2,color:#eef0f2;
     class Start3 start
     class SignIn2,LogForm2,ResultsList2,ResultDetail screen
+    class SignUp2 ref
     class SigningIn2,Loading2,DetailLoading2 loading
     class Empty2 empty
     class AuthError2,FetchError2,DetailError2,LinkError error
@@ -651,24 +698,24 @@ flowchart TD
       <div class="flow-col">
         <h4>Decisions</h4>
         <ul>
-          <li><span class="fl">Gate</span>Signed in? — same owner-only gate as Log Result.</li>
+          <li><span class="fl">Gate</span>Signed in? — same owner-only gate as Log Result, with the same two 2026-09-25 additions: "creates an account instead" references <a href="#flow-signup">Flow 4</a>, and "email not confirmed yet" routes into its check-your-inbox step.</li>
           <li><span class="fl">Retry</span>Failed fetch of the logged-results list — added; previously the one network fetch in the document with no paired failure branch.</li>
           <li><span class="fl">Branch</span>Any results logged yet? — archive vs. empty state.</li>
-          <li><span class="fl">Trust model</span>Source link still opens? — the moment "the link is the evidence" actually gets tested by an outside party.</li>
-          <li><span class="fl">Retry</span>Try again? — after the source link fails to open; a broken link could be transient, not necessarily dead.</li>
+          <li><span class="fl">Trust model</span>Official result opens in a new tab? (was "Source link still opens?" until 2026-09-25) — the moment "the link is the evidence" gets used. Reworded, like Discovery's registration check, to what a browser can verify: <code>official_result_url</code> is well-formed and the new tab wasn't blocked. Whether the timing site then loads is outside Onrace's view, so the error copy must not claim the site is down.</li>
+          <li><span class="fl">Retry</span>Try again? — after the source link fails to open; the failure could be transient, not necessarily a dead link.</li>
         </ul>
         <h4>States</h4>
         <ul>
           <li>Loading: signing in · fetching logged results · fetching result details.</li>
           <li>Empty: no results logged yet.</li>
-          <li>Error: sign-in failed · could not load logged results · could not load result details · source link unreachable.</li>
+          <li>Error: sign-in failed · could not load logged results · could not load result details · couldn't open the source link (was "source link unreachable" until 2026-09-25).</li>
         </ul>
       </div>
       <div class="flow-col">
         <h4>Endpoints</h4>
         <div class="endpoint-box success">
           <span class="eb-label">Success — Success3</span>
-          The selected <code>results</code> row's <code>official_result_url</code> opened successfully in this session. Tightened from "ready to submit to the elite race" — not something Onrace can verify. What happens after (does the race accept it) is outside Onrace's scope by design.
+          A new tab opened on the selected <code>results</code> row's <code>official_result_url</code>; whether the timing site then loads is outside Onrace's view. Tightened from "ready to submit to the elite race" — not something Onrace can verify. What happens after (does the race accept it) is outside Onrace's scope by design.
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd4</span>
@@ -676,7 +723,159 @@ flowchart TD
         </div>
         <div class="endpoint-box deadend deferred">
           <span class="eb-label">Dead end — DeadEnd5 · accepted MVP gap</span>
-          Proof inaccessible, nothing in-app to correct it. Reached only after everything else worked and the source link is dead even after a retry. <strong style="color:var(--text)">Decision:</strong> left as-is — an edit/re-link capability isn't backed by any job in <code>jtbd.md</code>. Logged as a post-MVP backlog item in <code>research.md</code> (gap 7), not built speculatively.
+          Proof inaccessible, nothing in-app to correct it. Reached only after everything else worked and the source link still couldn't be opened after a retry. <strong style="color:var(--text)">Decision:</strong> left as-is — an edit/re-link capability isn't backed by any job in <code>jtbd.md</code>. Logged as a post-MVP backlog item in <code>research.md</code> (gap 7), not built speculatively.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="flow-signup">
+    <span class="section-tag tag-flows">Flow · Infrastructure</span>
+    <h2>Flow 4 — Sign up with email confirmation</h2>
+    <p class="persona-line">Infrastructure, no job — both personas</p>
+    <blockquote class="jtbd">Not a job flow. It exists because accounts do (<code>sitemap.md</code> → Entities → 5), and is drawn once here, then referenced (<code>[[...]]</code>) from Log Result and Retrieve Proof. Method decided 2026-09-25: email + password through Supabase Auth, with Confirm email on (Supabase's default) — kept on deliberately, since it proves the address belongs to the person and the archive's proof links are worth guarding.</blockquote>
+
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    Start4(("Sign in / Sign up gate: switches to Create account")) --> SignUpForm["Sign in / Sign up (Create account)"]
+    Unconfirmed(("Sign-in attempt: email not confirmed yet")) --> CheckInbox
+    SignUpForm -->|"submits email + password"| CreatingAccount("Loading: creating account")
+    SignUpForm -->|"closes"| DeadEnd8(("Dead end: leaves without an account"))
+    CreatingAccount --> SignUpOK{"Account created?"}
+    SignUpOK -->|"no — email already registered, or connection"| SignUpError("Error: couldn't create the account")
+    SignUpError --> SignUpRetry{"Retry?"}
+    SignUpRetry -->|"yes"| SignUpForm
+    SignUpRetry -->|"no"| DeadEnd8
+    SignUpOK -->|"yes — confirmation email sent"| CheckInbox("Check inbox: confirm your email to finish")
+    CheckInbox -->|"resends the email"| Resending("Loading: resending confirmation email")
+    Resending --> CheckInbox
+    CheckInbox -->|"uses a different email"| SignUpForm
+    CheckInbox -->|"opens the link in the email"| LinkValid{"Confirmation link valid?"}
+    LinkValid -->|"yes"| Success4(("Success: email confirmed, session started — lands where they were heading (Results list or Profile)"))
+    LinkValid -->|"no — expired or already used"| ConfirmError("Error: confirmation link expired or already used")
+    ConfirmError -->|"resends the email"| Resending
+    ConfirmError -->|"gives up"| DeadEnd9
+    CheckInbox -->|"never confirms"| DeadEnd9(("Dead end: account exists, unconfirmed — can't sign in yet"))
+    classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
+    classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
+    classDef empty fill:#141518,stroke:#60a5fa,stroke-width:1.5px,color:#eef0f2;
+    classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
+    classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
+    classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
+    class Start4,Unconfirmed start
+    class SignUpForm screen
+    class CreatingAccount,Resending loading
+    class CheckInbox empty
+    class SignUpError,ConfirmError error
+    class Success4 success
+    class DeadEnd8,DeadEnd9 deadend
+</pre>
+    </div>
+
+    <div class="flow-detail">
+      <div class="flow-col">
+        <h4>Decisions</h4>
+        <ul>
+          <li><span class="fl">Branch</span>Account created? — "no" covers Supabase refusing the sign-up (e.g. the email is already registered) and connection failures. The copy has to cover both, since the app can't tell them apart.</li>
+          <li><span class="fl">Branch</span>Confirmation link valid? — Supabase's confirmation links expire, and each works once. An expired or reused link returns an error to the app, which offers a fresh email rather than a dead stop.</li>
+          <li><span class="fl">Entry</span>Two ways in: switching the gate to Create account, or a sign-in attempt that returns "email not confirmed" (the <code>Unconfirmed</code> start), which goes straight to Check inbox.</li>
+        </ul>
+        <h4>States</h4>
+        <ul>
+          <li>Loading: creating account · resending confirmation email.</li>
+          <li>Check inbox: confirm your email to finish — a step waiting on something outside the app, not empty/error/loading; it gets its own state page (<code>wireframes/_conventions.md</code> § 4). Drawn in the empty-state color for want of a closer key.</li>
+          <li>Error: couldn't create the account · confirmation link expired or already used.</li>
+        </ul>
+      </div>
+      <div class="flow-col">
+        <h4>Endpoints</h4>
+        <div class="endpoint-box success">
+          <span class="eb-label">Success — Success4</span>
+          The email is confirmed and a session exists (Supabase signs the person in when the link is opened). They land on the <code>next</code> screen they were heading to — Results list or Profile. Verifiable as a session plus a confirmed <code>auth.users</code> row.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd8</span>
+          Leaves without an account. Nothing was created — closed the form, or gave up after a failed create. Fix: the form itself (clarity, errors).
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd9</span>
+          Account exists, unconfirmed — can't sign in yet. Kept apart from DeadEnd8 because the fix differs: the email (deliverability, subject line, resend). Recoverable — signing in later routes straight back to Check inbox.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="flow-profile">
+    <span class="section-tag tag-flows">Flow · Infrastructure</span>
+    <h2>Flow 5 — Profile and sign out</h2>
+    <p class="persona-line">Infrastructure, no job — both personas</p>
+    <blockquote class="jtbd">Not a job flow. Profile exists because accounts do (<code>sitemap.md</code> → Entities → 5). Added 2026-09-25, replacing the note that the sign-out flow was deferred.</blockquote>
+
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    Start5(("Global nav: taps Profile")) --> AuthCheck5{"Signed in?"}
+    AuthCheck5 -->|"no"| Gate5["Sign in / Sign up"]
+    Gate5 -->|"signs in (same loading/error states as Flows 2–3), or confirms a new account (Flow 4)"| ProfileLoading
+    Gate5 -->|"closes"| DeadEnd10(("Dead end: leaves without seeing the account"))
+    AuthCheck5 -->|"yes"| ProfileLoading("Loading: fetching profile")
+    ProfileLoading -->|"loads"| Profile["Profile"]
+    ProfileLoading -->|"connection fails"| ProfileError("Error: could not load your profile")
+    ProfileError --> ProfileRetry{"Retry?"}
+    ProfileRetry -->|"yes"| ProfileLoading
+    ProfileRetry -->|"no"| DeadEnd10
+    Profile -->|"changes name, country or language"| SavingField("Loading: saving the change")
+    SavingField --> SaveOK{"Saved?"}
+    SaveOK -->|"yes"| Profile
+    SaveOK -->|"no"| SaveError("Error: couldn't save the change — field shows its previous value")
+    SaveError -->|"tries the change again"| SavingField
+    SaveError -->|"leaves it"| Profile
+    Profile -->|"taps Sign out"| ConfirmOut{"Confirm dialog: sign out of Onrace on this device?"}
+    ConfirmOut -->|"Cancel"| Profile
+    ConfirmOut -->|"Sign out"| Success5(("Success: local session cleared — lands on Race browse, signed out"))
+    classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
+    classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
+    classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
+    classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
+    classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
+    class Start5 start
+    class Gate5,Profile screen
+    class ProfileLoading,SavingField loading
+    class ProfileError,SaveError error
+    class Success5 success
+    class DeadEnd10 deadend
+</pre>
+    </div>
+
+    <div class="flow-detail">
+      <div class="flow-col">
+        <h4>Decisions</h4>
+        <ul>
+          <li><span class="fl">Gate</span>Signed in? — the same owner-only gate as My Results. A successful sign-in, or a confirmed sign-up (<a href="#flow-signup">Flow 4</a>), lands here, on Profile.</li>
+          <li><span class="fl">Retry</span>Profile failed to load — retry or give up.</li>
+          <li><span class="fl">Branch</span>Saved? — fields save as they change (iOS Settings convention). A failed save puts the field back to its last saved value and says so inline; the person is never left looking at a value that isn't stored.</li>
+          <li><span class="fl">Confirm</span>Sign out of Onrace on this device? — sign-out is the one destructive action here (it ends access to the archive until the next sign-in), so it asks first, with Cancel as the safe default.</li>
+        </ul>
+        <h4>States</h4>
+        <ul>
+          <li>Loading: fetching profile · saving the change (inline, on the row).</li>
+          <li>Error: could not load your profile · couldn't save the change (inline, on the row).</li>
+          <li>Confirm dialog: sign out (an iOS alert over Profile, not a separate screen).</li>
+          <li><strong style="color:var(--text)">Deliberately no loading/error on sign-out itself:</strong> Onrace signs out <em>this device</em> (<code>signOut({ scope: 'local' })</code>), which clears the stored session without a network call, so there's no failure to model. Supabase's default "global" scope does call the server; if "sign out everywhere" is ever added, it brings its own states.</li>
+        </ul>
+      </div>
+      <div class="flow-col">
+        <h4>Endpoints</h4>
+        <div class="endpoint-box success">
+          <span class="eb-label">Success — Success5</span>
+          No session on this device. The person lands on Race browse, signed out — the one screen that needs no account.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd10</span>
+          Leaves without seeing the account — the sign-in gate was closed, or the profile never loaded.
         </div>
       </div>
     </div>
@@ -708,6 +907,7 @@ flowchart TD
             <th>Race detail</th>
             <th>Results list</th>
             <th>Log result</th>
+            <th>Race picker</th>
             <th>Result detail</th>
             <th class="orphan-col">Sign in / Sign up<span class="orphan-note">INFRASTRUCTURE</span></th>
             <th class="orphan-col">Profile<span class="orphan-note">INFRASTRUCTURE</span></th>
@@ -716,35 +916,35 @@ flowchart TD
         <tbody>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--accent)"></span>Main Job 1 — Discovery</span></td>
-            <td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--benchmark)"></span>Main Job 2 — Results archiving (combined)</span></td>
-            <td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--patterns)"></span>Related Job 1 — plan season by format</span></td>
-            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-loc)"></span>Related Job 2 — choose races by location</span></td>
-            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-log)"></span>Related Job 3 — log a result with proof</span></td>
-            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-retrieve)"></span>Related Job 4 — retrieve proof for an application</span></td>
-            <td></td><td></td><td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--text-faint)"></span>Emotional — recognized as a hybrid athlete</span></td>
-            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--text-faint)"></span>Social — proof stands on its own</span></td>
-            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
         </tbody>
       </table>
@@ -763,7 +963,7 @@ flowchart TD
 </main>
 
 <footer>
-  Generated from <code>sitemap.md</code> and <code>flows.md</code>, 2026-09-17. Full rationale, revision history, and every decision behind these diagrams live in those two files. Product context in <code>CLAUDE.md</code>. Live site: <a href="https://juliamakedonska.github.io/Onrace/" target="_blank" rel="noopener">juliamakedonska.github.io/Onrace</a>.
+  Generated from <code>sitemap.md</code> and <code>flows.md</code>, 2026-09-17; updated 2026-09-25. Full rationale, revision history, and every decision behind these diagrams live in those two files. Product context in <code>CLAUDE.md</code>. Live site: <a href="https://juliamakedonska.github.io/Onrace/" target="_blank" rel="noopener">juliamakedonska.github.io/Onrace</a>.
 </footer>
 
 <script type="module">

@@ -1,12 +1,13 @@
 # User flows
 
-Built from `sitemap.md` (Screens + Navigation sections) and `research/jtbd.md`. Every screen node below already exists in `sitemap.md` — no new screen was introduced while drawing these, so nothing needed adding back to the sitemap.
+Built from `sitemap.md` (Screens + Navigation sections) and `research/jtbd.md`. Every screen node below exists in `sitemap.md`. One screen was added back to the sitemap while drawing: **Race picker** (2026-09-25, Flow 2's catalog branch), per the working method's rule that a flow may only use screens the sitemap names.
 
-Shape convention, held consistent across all three diagrams:
+Shape convention, held consistent across all five diagrams:
 - `["Screen Name"]` — a screen from `sitemap.md`
 - `{"Question?"}` — a decision point
 - `("State: ...")` — a loading/empty/error state, not its own screen
 - `(("..."))` — a terminal: either a success exit or a dead end
+- `[["..."]]` — a whole other flow in this document, drawn once and referenced, not redrawn (added 2026-09-25 for the sign-up flow, which both archive flows pass through)
 
 Direction is picked per diagram for legibility, not held fixed at `TD`: Discovery below uses `flowchart LR` because "Race browse" is revisited from six different edges (entry, filter change, two dead-end retries, "back," and the no-branch of the final decision) — top-down forced those into crossing arcs; left-to-right resolves them into a clean horizontal fan with no logic change. Log Result and Retrieve Proof stay `TD` — neither revisits a single node anywhere near that often, so top-down already reads cleanly for them.
 
@@ -72,6 +73,14 @@ Building `wireframes/race-detail-error.html` showed that Flow 1's registration-l
 2. **Success tightened to match:** Success is now "a new tab opened on this race's `registration_url`". Whether the organiser's site then loads is outside Onrace's view. That isn't a new node: Onrace can't observe it, so it doesn't belong in Onrace's flow.
 3. **Error and dead end relabeled:** `RegLinkError` names its two real causes. `DeadEnd6` changed from "the registration link is broken" to "couldn't open the registration link": Onrace can't know the link is *broken*, only that it couldn't open it.
 4. **Unchanged:** the branch structure (two direct edges, no `Retry?` diamond), the data-provenance reasoning for that lighter weight, and `DeadEnd6` staying separate from `DeadEnd1`. The new wording supports the lighter weight: a missing or malformed URL is fixed in the catalog data, not by retrying.
+
+---
+## Revision note (catalog link, email confirmation, sign-out, honest link checks; 2026-09-25)
+
+1. **Flow 2 gets the catalog branch.** Log result can now optionally link a race from Onrace's catalog (`sitemap.md` → Entities → 3, "optional link to a Race listing", which was never wired up). A new screen, **Race picker**, searches the catalog's *past* races. It has its own loading, empty (no match) and error states. Picking a race fills race name, date and sport type from the listing and locks them; cancelling or giving up returns to the form with nothing changed, where the race can still be typed in by hand. So the catalog is a shortcut, never a requirement.
+2. **Sign-up is its own flow (Flow 4), with email confirmation.** Onrace uses Supabase Auth's email + password with **Confirm email** left on (its default): after "Create account" nobody is signed in yet. They get a "check your inbox" step, and only opening the emailed link signs them in. Flows 2 and 3 reference Flow 4 (`[[...]]`) from their Sign in / Sign up node instead of redrawing it. Signing in with an unconfirmed email also routes to "check your inbox" (Supabase's "Email not confirmed" error).
+3. **Profile and sign-out get a flow (Flow 5).** It covers fetching the profile (loading and error), saving a changed field (it saves as it changes, and can fail), and sign-out behind a confirm dialog. Sign-out has no loading or error branch on purpose: it signs out *this device* (Supabase `signOut({ scope: 'local' })`), which clears the local session without a network call and so can't fail.
+4. **Link checks say only what a browser can know.** Flow 3's "Source link still opens?" is now "Official result opens in a new tab?" (well-formed URL, new tab not blocked), the same rewording Flow 1 got on 2026-09-24. `LinkError` is now "couldn't open the source link". Flow 2's `SubmitError` was "link unreachable": Onrace's stack is client-side only (no custom server, `../CLAUDE.md`), so it can't fetch arbitrary timing sites to check them. It's now "couldn't save the result".
 
 ---
 
@@ -142,8 +151,11 @@ flowchart TD
     AuthCheck -->|"no"| SignIn["Sign in / Sign up"]
     SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
     SignIn -->|"closes without attempting"| DeadEnd2
+    SignIn -->|"creates an account instead"| SignUp[["Flow 4: Sign up with email confirmation"]]
+    SignUp -->|"email confirmed, signed in"| ResultsList
     SigningIn --> AuthResult{"Sign-in succeeded?"}
     AuthResult -->|"no"| AuthError("Error: sign-in failed")
+    AuthResult -->|"no — email not confirmed yet"| SignUp
     AuthError --> AuthRetry{"Retry?"}
     AuthRetry -->|"yes"| SignIn
     AuthRetry -->|"no"| DeadEnd2(("Dead end: leaves without logging the result"))
@@ -152,29 +164,43 @@ flowchart TD
     ResultsList --> FindsAction{"Finds and taps Log result? (header button, or empty state's call to action) [?]"}
     FindsAction -->|"yes"| LogForm["Log result"]
     FindsAction -->|"no"| DeadEnd7(("Dead end: reached My Results, never found Log result [?]"))
-    LogForm --> HasLink{"official_result_url filled in?"}
+    LogForm -->|"taps Find in race catalog (optional)"| PickerLoading("Loading: fetching past catalog races")
+    PickerLoading -->|"connection fails"| PickerError("Error: could not load the race catalog")
+    PickerError --> PickerRetry{"Retry?"}
+    PickerRetry -->|"yes"| PickerLoading
+    PickerRetry -->|"no — types the race in instead"| LogForm
+    PickerLoading --> Picker["Race picker"]
+    Picker -->|"searches"| PickerLoading
+    Picker --> PickerMatches{"Any past races match the search?"}
+    PickerMatches -->|"no"| PickerEmpty("Empty: no catalog race matches")
+    PickerEmpty -->|"changes the search"| Picker
+    PickerEmpty -->|"types the race in instead"| LogForm
+    PickerMatches -->|"yes"| Picker
+    Picker -->|"selects a race — race name, date, sport type filled and locked"| LogForm
+    Picker -->|"cancels — form unchanged"| LogForm
+    LogForm -->|"taps Save"| HasLink{"official_result_url filled in?"}
     HasLink -->|"no"| ValidationError("Error: source link is required")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}
     ValidationRetry -->|"yes"| LogForm
     ValidationRetry -->|"no"| DeadEnd3(("Dead end: no result saved, proof lost for later"))
-    HasLink -->|"yes"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?]"}
+    HasLink -->|"yes"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?] (the first three come from the listing when a catalog race is linked)"}
     HasOtherRequired -->|"no"| OtherFieldError("Error: required field missing (race_name / date / sport_type / finish_time) [?]")
     OtherFieldError --> OtherFieldRetry{"Fix and resubmit?"}
     OtherFieldRetry -->|"yes"| LogForm
     OtherFieldRetry -->|"no"| DeadEnd3
     HasOtherRequired -->|"yes"| Submitting("Loading: saving result")
     Submitting --> SubmitOK{"Submission succeeded?"}
-    SubmitOK -->|"no — link unreachable"| SubmitError("Error: link unreachable, submission failed")
+    SubmitOK -->|"no — connection"| SubmitError("Error: couldn't save the result")
     SubmitError --> SubmitRetry{"Retry?"}
     SubmitRetry -->|"yes"| LogForm
     SubmitRetry -->|"no"| DeadEnd3
-    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated (required)"))
+    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated (required); catalog race linked if one was picked"))
 ```
 
 **Decisions:**
 - *Signed in?* — Logged results are owner-only per `../CLAUDE.md`'s RLS model, so the My Results tab gates into Sign in / Sign up if not signed in, per the Navigation section's contextual-gate design. Since 2026-09-24 this gate sits on the My Results tab rather than on a Log Result tab; Log result lives inside My Results, so one gate covers both archive jobs. Since 2026-09-25 the same gate is also reached from the Profile tab (3-tab bar, `sitemap.md` → Navigation § 1). That path lands on Profile, not Results list, and isn't part of this flow.
+- *Sign-in succeeded?* has a third edge since 2026-09-25: "no — email not confirmed yet" routes into Flow 4's check-your-inbox step, not to the generic sign-in error. That's Supabase's distinct "Email not confirmed" response, and "try again" can't fix it: confirming the email can.
 - *Finds and taps Log result?* `[?]` — added 2026-09-24 with the 2-tab nav. The form is now one in-page action away from Results list (header button, or the empty state's call to action), not a tab. Flagged: that people look for logging inside My Results is `sitemap.md` → Navigation § 1's unvalidated hypothesis. The action must not depend on the list having loaded (see the 2026-09-24 revision note).
-- *Sign-in succeeded?*
 - *Retry?* (after a failed sign-in) — previously just an edge label; now an explicit diamond, same as every other error in this flow.
 - *official_result_url filled in?* — enforces the required-source-link trust model (`../CLAUDE.md` → Result trust model) before the form can be submitted at all. This is the one field `../CLAUDE.md`'s data model explicitly marks "(required)."
 - *race_name/date/sport_type/finish_time all filled in?* `[?]` — added as a second, separate check, deliberately flagged. Unlike `official_result_url`, `../CLAUDE.md`'s data model doesn't actually say these fields are required — it just lists them (`race_name/date/sport_type ..., finish_time, official_result_url (required)`). Modeled here as an assumed requirement (a result with no finish time or date is hard to imagine as useful) and flagged `[?]`, per this document set's own convention for assumed-not-sourced parts (see `sitemap.md`'s Entities section), not presented as settled fact. Previously this had no modeled validation at all — a blank `finish_time` would have silently surfaced as "link unreachable" via `SubmitError`, which was never accurate.
@@ -182,6 +208,8 @@ flowchart TD
 - *Fix and resubmit?* (after the other-required-fields validation fails) `[?]` — same retry-or-give-up choice, one level down; inherits the same `[?]` status as the check above it.
 - *Submission succeeded?*
 - *Retry?* (after a failed submission)
+- *Any past races match the search?* (Race picker, added 2026-09-25) — the picker searches only races whose `event_date` has passed. You log a result for a race you've run, so upcoming races are never offered. No match isn't an error. Its exits are changing the search or typing the race in by hand.
+- *Retry?* (after the catalog fails to load) — "no" isn't a dead end: the form still works without a catalog link, so giving up on the picker means typing the race in.
 
 **States:**
 - Loading: signing in (previously missing — sign-in was drawn as instant even though form submission, an equivalent network call, already had its own loading state).
@@ -189,7 +217,10 @@ flowchart TD
 - Error: source link is required (client-side validation, before submission).
 - Error: required field missing (race_name / date / sport_type / finish_time) `[?]` (client-side validation, before submission — flagged, since these aren't explicitly marked required in `../CLAUDE.md`'s data model the way `official_result_url` is).
 - Loading: saving result.
-- Error: link unreachable / submission failed.
+- Error: couldn't save the result (was "link unreachable / submission failed" until 2026-09-25: a client-side app can't check that an arbitrary timing site is reachable, so it can only know the save failed).
+- Loading: fetching past catalog races (Race picker, on opening it and on each search).
+- Empty: no catalog race matches (Race picker).
+- Error: could not load the race catalog (Race picker).
 
 **Endpoints:**
 - **Success:** tightened from "lands in Results list" (a screen, not a condition) to the actual verifiable state: a new row now exists in `results`, owned by this user via RLS, with `official_result_url` populated — the one field `../CLAUDE.md`'s data model explicitly requires — and, per this flow's `[?]`-flagged validation, `race_name`, `date`, `sport_type`, and `finish_time` populated too (though that requirement is only assumed here, not confirmed at the schema level — see the `[?]` on `HasOtherRequired` above). That row is what now appears on Results list ("my archive") and is what the next flow below retrieves.
@@ -210,8 +241,11 @@ flowchart TD
     AuthCheck2 -->|"no"| SignIn2["Sign in / Sign up"]
     SignIn2 -->|"submits credentials"| SigningIn2("Loading: signing in")
     SignIn2 -->|"closes without attempting"| DeadEnd4
+    SignIn2 -->|"creates an account instead"| SignUp2[["Flow 4: Sign up with email confirmation"]]
+    SignUp2 -->|"email confirmed, signed in"| ResultsList2
     SigningIn2 --> AuthResult2{"Sign-in succeeded?"}
     AuthResult2 -->|"no"| AuthError2("Error: sign-in failed")
+    AuthResult2 -->|"no — email not confirmed yet"| SignUp2
     AuthError2 --> AuthRetry2{"Retry?"}
     AuthRetry2 -->|"yes"| SignIn2
     AuthRetry2 -->|"no"| DeadEnd4(("Dead end: leaves without proof, application deadline at risk"))
@@ -233,9 +267,9 @@ flowchart TD
     DetailError2 --> DetailRetry2{"Retry?"}
     DetailRetry2 -->|"yes"| DetailLoading2
     DetailRetry2 -->|"no"| DeadEnd4
-    ResultDetail --> LinkWorks{"Source link still opens?"}
-    LinkWorks -->|"yes"| Success3(("Success: this results row's official_result_url opened successfully, just now"))
-    LinkWorks -->|"no"| LinkError("Error: source link unreachable")
+    ResultDetail --> LinkWorks{"Official result opens in a new tab? (official_result_url well-formed, new tab not blocked)"}
+    LinkWorks -->|"yes"| Success3(("Success: a new tab opened on this results row's official_result_url — whether the timing site then loads is outside Onrace's view"))
+    LinkWorks -->|"no"| LinkError("Error: couldn't open the source link")
     LinkError --> LinkRetry{"Try again?"}
     LinkRetry -->|"yes"| ResultDetail
     LinkRetry -->|"no"| DeadEnd5(("Dead end: proof inaccessible, nothing in-app to correct it"))
@@ -248,7 +282,7 @@ flowchart TD
 - *Retry?* (after a failed fetch of the logged-results list — added; this was the one network fetch in the whole document that previously had no paired failure branch, unlike every other fetch here).
 - *Any results logged yet?* — branches between the archive and an empty state.
 - *Retry?* (after a failed fetch of a specific result's details — previously this step wasn't modeled at all; opening a result was drawn as instant).
-- *Source link still opens?* — the moment the "the link is the evidence" trust model (`../CLAUDE.md` → Result trust model) actually gets tested by an outside party.
+- *Official result opens in a new tab?* (was "Source link still opens?" until 2026-09-25) — the moment the "the link is the evidence" trust model (`../CLAUDE.md` → Result trust model) gets used. Reworded, like Flow 1's registration check, to what a browser can verify: the URL is well-formed and the new tab wasn't blocked. Whether the timing site then loads happens in that other tab, outside Onrace's view, so the error copy must not claim the site is down.
 - *Try again?* (after the source link fails to open) — previously this dead-ended immediately with no retry attempt, even though the failure could be transient (a flaky timing-site server, not necessarily a truly dead link).
 
 **States:**
@@ -259,7 +293,7 @@ flowchart TD
 - Empty: no results logged yet.
 - Loading: fetching result details (previously missing — a specific result's detail fetch was collapsed into an instant transition).
 - Error: could not load result details.
-- Error: source link unreachable.
+- Error: couldn't open the source link (was "source link unreachable" until 2026-09-25; see the decision above).
 
 **Endpoints:**
 - **Success:** tightened from "ready to submit to the elite race" — not something Onrace can actually verify, since whether a specific application accepts the proof isn't knowable from here — to the condition the flow itself confirms: the selected `results` row's `official_result_url`, the required proof link per `../CLAUDE.md`'s Result trust model, opened successfully in this session. What happens after that — whether the race accepts it — is outside Onrace's scope by design: Onrace's job ends at confirming the link is live, since the product's trust model is "self-reported, source-linked," not "Onrace verifies" (`research.md` → CONCLUSIONS gap 4).
@@ -267,3 +301,97 @@ flowchart TD
   - *Leaves without proof, application deadline at risk* — one merged outcome reachable from five causes: a failed sign-in, closing the Sign in / Sign up screen without attempting at all (added), an empty archive (nothing was ever logged), a failed fetch of the logged-results list (added), or a failed fetch of a specific result's details. All five share the same downstream reality — no proof in hand, right when it's needed — so they're one node, not five.
   - *Proof inaccessible, nothing in-app to correct it* — kept separate from the node above on purpose. This one is reached only after everything else worked (signed in, archive has entries, the specific result loaded fine) and the source link itself turns out to be dead even after a retry. That's a materially different, more specific problem — the evidence itself has rotted — pointing at a real, currently-missing product gap (an edit/re-link flow for a logged result), which ties directly to the Navigation section's honest "Deep: none yet" note.
     - **Decision (2026-09-17): left as a known, accepted MVP gap.** Closing it (an edit/re-link capability for a logged result) would be new scope not backed by any job in `jtbd.md` — no job asks to *correct* a logged result, only to log one (Related Job 3) and retrieve one (Related Job 4). Tracked here as a post-MVP backlog item rather than built speculatively; revisit if a "fix a stale result" job is ever sourced.
+
+---
+
+## Flow 4 — Sign up with email confirmation (infrastructure; both personas)
+
+Not a job flow. It exists because accounts do (`sitemap.md` → Entities → 5). It's drawn once, here, and referenced from Flows 2 and 3 (`[[...]]`). The method is decided (2026-09-25, `sitemap.md` → Entities → 5): **email + password through Supabase Auth, with Confirm email on**, Supabase's default. It's kept on deliberately: it proves the address belongs to the person, and the archive's proof links are worth guarding.
+
+```mermaid
+flowchart TD
+    Start4(("Sign in / Sign up gate: switches to Create account")) --> SignUpForm["Sign in / Sign up (Create account)"]
+    Unconfirmed(("Sign-in attempt: email not confirmed yet")) --> CheckInbox
+    SignUpForm -->|"submits email + password"| CreatingAccount("Loading: creating account")
+    SignUpForm -->|"closes"| DeadEnd8(("Dead end: leaves without an account"))
+    CreatingAccount --> SignUpOK{"Account created?"}
+    SignUpOK -->|"no — email already registered, or connection"| SignUpError("Error: couldn't create the account")
+    SignUpError --> SignUpRetry{"Retry?"}
+    SignUpRetry -->|"yes"| SignUpForm
+    SignUpRetry -->|"no"| DeadEnd8
+    SignUpOK -->|"yes — confirmation email sent"| CheckInbox("Check inbox: confirm your email to finish")
+    CheckInbox -->|"resends the email"| Resending("Loading: resending confirmation email")
+    Resending --> CheckInbox
+    CheckInbox -->|"uses a different email"| SignUpForm
+    CheckInbox -->|"opens the link in the email"| LinkValid{"Confirmation link valid?"}
+    LinkValid -->|"yes"| Success4(("Success: email confirmed, session started — lands where they were heading (Results list or Profile)"))
+    LinkValid -->|"no — expired or already used"| ConfirmError("Error: confirmation link expired or already used")
+    ConfirmError -->|"resends the email"| Resending
+    ConfirmError -->|"gives up"| DeadEnd9
+    CheckInbox -->|"never confirms"| DeadEnd9(("Dead end: account exists, unconfirmed — can't sign in yet"))
+```
+
+**Decisions:**
+- *Account created?* — "no" covers Supabase refusing the sign-up (e.g. the email is already registered) and connection failures. The wireframe's copy has to cover both, since it can't tell them apart.
+- *Confirmation link valid?* — Supabase's confirmation links expire, and each works once. An expired or reused link returns an error to the app, which offers a fresh email rather than a dead stop.
+
+**States:**
+- Loading: creating account.
+- Error: couldn't create the account.
+- Check inbox: confirm your email to finish. This is a flow step waiting on something outside the app, not empty/error/loading. It gets its own state page (`wireframes/_conventions.md` § 4).
+- Loading: resending confirmation email.
+- Error: confirmation link expired or already used.
+
+**Endpoints:**
+- **Success:** the email is confirmed and a session exists (Supabase signs the person in when the link is opened). They land on the `next` screen they were heading to. Verifiable as a session plus a confirmed `auth.users` row.
+- **Dead ends:** two, kept apart because the fixes differ.
+  - *Leaves without an account* (`DeadEnd8`) — nothing was created. The fix is the form itself (clarity, errors).
+  - *Account exists, unconfirmed* (`DeadEnd9`) — the account exists but can't be used. The fix is the email: deliverability, subject line, resend. Signing in later routes straight back to Check inbox (the `Unconfirmed` entry), so this dead end is recoverable.
+
+---
+
+## Flow 5 — Profile and sign out (infrastructure; both personas)
+
+Not a job flow. Profile exists because accounts do (`sitemap.md` → Entities → 5). Added 2026-09-25, replacing the note that the sign-out flow was deferred.
+
+```mermaid
+flowchart TD
+    Start5(("Global nav: taps Profile")) --> AuthCheck5{"Signed in?"}
+    AuthCheck5 -->|"no"| Gate5["Sign in / Sign up"]
+    Gate5 -->|"signs in (same loading/error states as Flows 2–3), or confirms a new account (Flow 4)"| ProfileLoading
+    Gate5 -->|"closes"| DeadEnd10(("Dead end: leaves without seeing the account"))
+    AuthCheck5 -->|"yes"| ProfileLoading("Loading: fetching profile")
+    ProfileLoading -->|"loads"| Profile["Profile"]
+    ProfileLoading -->|"connection fails"| ProfileError("Error: could not load your profile")
+    ProfileError --> ProfileRetry{"Retry?"}
+    ProfileRetry -->|"yes"| ProfileLoading
+    ProfileRetry -->|"no"| DeadEnd10
+    Profile -->|"changes name, country or language"| SavingField("Loading: saving the change")
+    SavingField --> SaveOK{"Saved?"}
+    SaveOK -->|"yes"| Profile
+    SaveOK -->|"no"| SaveError("Error: couldn't save the change — field shows its previous value")
+    SaveError -->|"tries the change again"| SavingField
+    SaveError -->|"leaves it"| Profile
+    Profile -->|"taps Sign out"| ConfirmOut{"Confirm dialog: sign out of Onrace on this device?"}
+    ConfirmOut -->|"Cancel"| Profile
+    ConfirmOut -->|"Sign out"| Success5(("Success: local session cleared — lands on Race browse, signed out"))
+```
+
+**Decisions:**
+- *Signed in?* — the same owner-only gate as My Results (`sitemap.md` → Navigation § 1). A successful sign-in or a confirmed sign-up lands here, on Profile.
+- *Retry?* (after the profile fails to load).
+- *Saved?* — fields save as they change (iOS Settings convention). A failed save puts the field back to its last saved value and says so inline. The person is never left looking at a value that isn't stored.
+- *Confirm dialog* — sign-out is the one destructive action here: it ends access to the archive until the next sign-in. So it asks first, with Cancel as the safe default.
+
+**States:**
+- Loading: fetching profile.
+- Error: could not load your profile.
+- Loading: saving the change (inline, on the row).
+- Error: couldn't save the change (inline, on the row).
+- Confirm dialog: sign out (an iOS alert over Profile, not a separate screen).
+
+**Deliberately no loading/error on sign-out itself:** Onrace signs out *this device* (`signOut({ scope: 'local' })`), which clears the stored session without a network call, so there's no failure to model. Supabase's default scope ("global", every device) does call the server and can fail. If "sign out everywhere" is ever added, it brings its own loading and error states.
+
+**Endpoints:**
+- **Success:** no session on this device. The person lands on Race browse, the one screen that needs no account.
+- **Dead end:** *leaves without seeing the account* (`DeadEnd10`) — the sign-in gate was closed, or the profile never loaded.

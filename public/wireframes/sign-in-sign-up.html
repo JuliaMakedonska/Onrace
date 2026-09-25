@@ -17,7 +17,12 @@
      the global tab bar. The one action (Sign in / Create account) sits at
      the end of the form, in the flow of the content: no sticky bottom bar,
      so nothing collides with the on-screen keyboard. The body is a flex
-     column: the top bar sits above the scrolling .phone-screen, outside it. */
+     column: the top bar sits above the scrolling .phone-screen, outside it.
+
+     Auth method decided 2026-09-25: email + password through Supabase Auth,
+     with Confirm email on (_screens.md → Sign in / Sign up; sitemap.md →
+     Entities 5; flows.md → Flow 4). Create account ends on Check inbox
+     (sign-in-sign-up-check-inbox.html), not signed in. */
 
   /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
      instead of pure black on white. Still no hue. Radii: --r-sm for small
@@ -155,6 +160,9 @@
     cursor: pointer;
   }
   .submit-btn:disabled { cursor: default; }
+
+  /* One short line under the action, Create account mode only. */
+  .form-note { margin: 10px 0 0 0; font-size: 0.85rem; color: var(--ink-2); text-align: center; }
 </style>
 </head>
 <body role="application" aria-label="Onrace — Sign in / Sign up (wireframe)">
@@ -204,15 +212,22 @@
 
       <!-- ZONE: credentials form — Email, Password, then the one action at
            the end of the form, in content flow (_conventions.md § 1,
-           Gates). Auth method [?]: no doc decides it; this assumes Supabase
-           Auth's email + password default (_screens.md → Sign in / Sign up;
-           sitemap.md → Entities 5: the account's email comes from sign-in).
+           Gates). Auth method decided 2026-09-25: email + password through
+           Supabase Auth, with Confirm email on (_screens.md → Sign in /
+           Sign up → Chrome; sitemap.md → Entities 5; flows.md → Flow 4).
+           So Create account doesn't sign anyone in: it leads to Check inbox
+           (sign-in-sign-up-check-inbox.html), and the one line under the
+           button says so in Create account mode, so that step isn't a
+           surprise.
            Create account deliberately asks for nothing more: name, country
            and language are edited on Profile (sitemap.md → Entities 5), so
            the gate stays as short as the job it enables. Not drawn because
            no flow has them: "Forgot password?", social sign-in. Submitting
-           is flows.md's "submits credentials" edge → SigningIn
-           (sign-in-sign-up-loading.html?run=1, carrying ?next and ?mode). -->
+           is flows.md's "submits credentials" edge → SigningIn, or in
+           Create account mode Flow 4's "submits email + password" →
+           CreatingAccount (sign-in-sign-up-loading.html?run=1, carrying
+           ?next, ?mode and the entered email as ?email=, so Check inbox can
+           name the address). An ?email= on arrival prefills the field. -->
       <form id="auth-form">
         <fieldset>
           <div class="field">
@@ -224,6 +239,7 @@
             <input type="password" id="password" name="password" autocomplete="current-password" required>
           </div>
           <button type="submit" class="submit-btn"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></button>
+          <p class="form-note" data-mode="signup" hidden>We'll email you a link to confirm your address.</p>
         </fieldset>
       </form>
 
@@ -237,10 +253,16 @@
   // ?next= is where a successful sign-in lands (_screens.md → Sign in /
   // Sign up: "Yes lands on where the person was heading"). Only owner-only
   // screens are accepted, so the gate can't be pointed anywhere else.
+  // profile-loading.html is where the Profile tab now goes (?run=1).
   var next = params.get('next') || '';
-  if (!/^(results-list[a-z-]*|log-result[a-z-]*|result-detail[a-z-]*|profile)\.html(\?[^#]*)?$/.test(next)) next = '';
-  var dest = /^profile\.html/.test(next) ? 'account' : (next ? 'archive' : 'generic');
+  if (!/^(results-list[a-z-]*|log-result[a-z-]*|result-detail[a-z-]*|profile(-loading)?)\.html(\?[^#]*)?$/.test(next)) next = '';
+  var dest = /^profile/.test(next) ? 'account' : (next ? 'archive' : 'generic');
   var mode = params.get('mode') === 'signup' ? 'signup' : 'signin';
+
+  // ?email= prefills the field (e.g. coming back from an error page).
+  var email = params.get('email') || '';
+  if (!/^[^\s@<>"]{1,64}@[^\s@<>"]{1,190}$/.test(email)) email = '';
+  if (email) document.getElementById('email').value = email;
 
   function query(m) {
     var q = [];
@@ -283,7 +305,9 @@
       return;
     }
     var q = query(mode);
-    window.location.href = 'sign-in-sign-up-loading.html?run=1' + (q ? '&' + q.slice(1) : '');
+    var typed = document.getElementById('email').value.trim();
+    window.location.href = 'sign-in-sign-up-loading.html?run=1' + (q ? '&' + q.slice(1) : '') +
+      (typed ? '&email=' + encodeURIComponent(typed) : '');
   });
 })();
 </script>

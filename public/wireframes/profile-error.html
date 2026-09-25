@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Profile — Onrace (wireframe)</title>
+<title>Profile (Error) — Onrace (wireframe)</title>
 <style>
-  /* STATE: base — the loaded profile (flows.md Flow 5 "Profile"). */
+  /* STATE: error — same structure and zones as profile.html; only the
+     content inside those zones changes, per _conventions.md § 5. Two causes
+     on one page (§ 5): ProfileError by default, SaveError on ?cause=save. */
 
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
      no custom fonts, no shadows, no content icons
@@ -264,9 +266,30 @@
   }
   .alert-actions button + button { border-left: 0.5px solid var(--line); font-weight: 600; }
   .alert-actions button:hover, .alert-actions button:focus-visible { background: var(--fill-soft); outline: none; }
+
+  /* --- state message (load error): stands in for the whole profile under
+     the large title. No box around it — spacing alone groups heading, copy
+     and action (_conventions.md § 1). Same shape as results-list-error.html. --- */
+  .state-message { padding: 48px 8px 32px; text-align: center; }
+  .state-message h2 { font-size: 1rem; margin: 0 0 6px 0; }
+  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: var(--ink-2); }
+  .state-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .state-action {
+    display: inline-block;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 9px 18px;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: var(--r);
+  }
+  [hidden] { display: none !important; }
 </style>
 </head>
-<body role="application" aria-label="Onrace — Profile (wireframe)">
+<body data-state="error" role="application" aria-label="Onrace — Profile, error state (wireframe)">
 
   <div class="phone-screen">
 
@@ -276,6 +299,31 @@
         <h1>Profile</h1>
       </header>
 
+      <!-- ZONE: load error (default cause; _screens.md → Profile → Error;
+           flows.md Flow 5 ProfileLoading → "connection fails" → ProfileError
+           "could not load your profile" → Retry?). Stands in for the whole
+           profile: nothing loaded, so there are no fields and no Sign out —
+           an account that didn't load can't be shown, and Flow 5 draws Sign
+           out only from Profile. "Try again" is the "yes" edge
+           (profile-loading.html?run=1 → ProfileLoading). The "no" edge
+           (DeadEnd10, "leaves without seeing the account") is leaving by a
+           tab — no button. -->
+      <section id="cause-load" aria-label="Profile">
+        <div class="state-message" role="alert">
+          <h2>Couldn't load your profile</h2>
+          <p>Check your connection and try again. Your account and results haven't changed.</p>
+          <div class="state-actions">
+            <a class="state-action" href="profile-loading.html?run=1">Try again</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ZONE: save error (?cause=save; flows.md Flow 5 SavingField →
+           Saved? no → SaveError "couldn't save the change — field shows its
+           previous value"). The loaded profile, exactly as profile.html,
+           with the inline error on the one row named by &field=. Hidden
+           until the script un-hides this cause. -->
+      <div id="cause-save" hidden>
       <!-- ZONE: identity — whose account this is (sitemap.md → Entities →
            5. Athlete account: "a product with accounts has to show who is
            signed in"). Initials stand in for a photo: photo is DEFERRED, not
@@ -304,6 +352,17 @@
            browser is offline or the page URL carries &fail=1 (reviewer's
            switch, _conventions.md § 2): then the change goes to
            profile-error.html?cause=save&field=<name|country|language>.
+           On this page (?cause=save, flows.md SaveError): the profile DID
+           load, so everything is here as on profile.html, and the one row
+           named by &field= shows the inline error: the field is back at its
+           previous value (&prev=, else the sample value) and says so —
+           "Couldn't save — back to …" — so the person is never looking at a
+           value that isn't stored (Flow 5, Saved? decision). "Try again" is
+           the "tries the change again" edge: it goes back to profile.html
+           carrying the attempted value (&retry=<field>&value=), which
+           re-applies it and runs Saving… again. "Leaves it" needs no button:
+           the person just carries on — any other edit, the tab bar, Sign out
+           all still work (SaveError → Profile).
            Language [?] is a stored preference only: CLAUDE.md plans no
            localization, so the field changes nothing in the UI, and the
            footer must not promise the app will switch language (sitemap.md
@@ -320,6 +379,7 @@
                 <input type="text" id="name" name="name" value="Maya Rossi" autocomplete="name">
               </div>
               <p class="row-note" id="name-status" aria-live="polite" hidden><span data-saving hidden>Saving…</span><span data-saved hidden>Saved</span></p>
+              <p class="row-note is-error" id="name-error" role="alert" hidden>Couldn't save — back to <span data-prev>Maya Rossi</span>.<a href="profile.html" data-retry>Try again</a></p>
             </li>
             <li>
               <div class="row">
@@ -340,6 +400,7 @@
                 </select>
               </div>
               <p class="row-note" id="country-status" aria-live="polite" hidden><span data-saving hidden>Saving…</span><span data-saved hidden>Saved</span></p>
+              <p class="row-note is-error" id="country-error" role="alert" hidden>Couldn't save — back to <span data-prev>Italy</span>.<a href="profile.html" data-retry>Try again</a></p>
             </li>
             <li>
               <div class="row">
@@ -353,6 +414,7 @@
                 </select>
               </div>
               <p class="row-note" id="language-status" aria-live="polite" hidden><span data-saving hidden>Saving…</span><span data-saved hidden>Saved</span></p>
+              <p class="row-note is-error" id="language-error" role="alert" hidden>Couldn't save — back to <span data-prev>English</span>.<a href="profile.html" data-retry>Try again</a></p>
             </li>
             <li>
               <div class="row">
@@ -373,6 +435,7 @@
       <section class="group" aria-label="Sign out">
         <button type="button" class="signout" id="sign-out" aria-haspopup="dialog">Sign out</button>
       </section>
+      </div>
 
     </main>
 

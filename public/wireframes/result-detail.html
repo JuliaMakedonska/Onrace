@@ -255,9 +255,9 @@
   </div><!-- /.phone-screen -->
 
   <!-- ZONE: sticky action bar — Open official result, the screen's one
-       primary action and flows.md's "Source link still opens?" check. Yes →
+       primary action and flows.md's "Official result opens in a new tab?" check. Yes →
        Success3 ("this results row's official_result_url opened
-       successfully, just now") — a new tab on the timing site; Onrace's job
+       successfully, just now", reworded 2026-09-25 to "a new tab opened") — a new tab on the timing site; Onrace's job
        ends there (flows.md → Endpoints). No → LinkError
        (result-detail-error.html?cause=link&result=…). The label names the
        domain so it's clear the proof lives outside Onrace. -->
@@ -286,7 +286,7 @@
   document.querySelectorAll('[data-result]').forEach(function (el) {
     el.hidden = el.getAttribute('data-result') !== slug;
   });
-  // flows.md "Source link still opens?" as a real check: the URL must be
+  // flows.md "Official result opens in a new tab?" as a real check: the URL must be
   // well-formed http(s) and window.open must return a tab. Yes → Success3
   // (the new tab is the proof, open just now). No → LinkError.
   function openProof(btn) {

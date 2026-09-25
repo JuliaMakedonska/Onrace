@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in / Sign up (Check inbox) — Onrace (wireframe)</title>
+<style>
+  /* STATE: check inbox — Flow 4 CheckInbox (flows.md → Flow 4), the one
+     named exception to the state suffixes (_conventions.md § 4): a flow
+     step waiting on the inbox, not empty/error/loading. Same modal chrome
+     and :root tokens as sign-in-sign-up.html; the form is replaced by the
+     step's own content. No session is set until the emailed link is
+     opened (modeled by the ?confirmed=1 reviewer's switch). */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons (system-chrome glyphs
+     only, and this screen needs none: Close is a text button). Deferred per
+     _conventions.md § 7. Bare screen (_conventions.md § 1): index.html
+     provides the device frame and nav tree.
+
+     Gate, not a place (_conventions.md § 1, "Gates are modals, not
+     drill-downs"): a full-screen modal. The top bar holds Close on the left
+     (text, no chevron) and the title; there is never a "‹ Back" and never
+     the global tab bar. The actions sit in the flow of the content: no
+     sticky bottom bar. The body is a flex
+     column: the top bar sits above the scrolling .phone-screen, outside it.
+
+     Auth method decided 2026-09-25: email + password through Supabase Auth,
+     with Confirm email on (_screens.md → Sign in / Sign up; sitemap.md →
+     Entities 5; flows.md → Flow 4). Create account ends here, not signed
+     in. */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls, --r for large surfaces (buttons). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* placeholder regions, alert background */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { color: var(--ink); }
+  [hidden] { display: none !important; }
+
+  /* --- modal top bar: Close (leading, text button) + centered title.
+     iOS navigation bar metrics; system chrome = system font. --- */
+  .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    flex: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
+  }
+  .close {
+    position: relative;
+    z-index: 1;
+    padding: 4px 8px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .bar-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .phone-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gate { padding: 20px 16px 32px; }
+  /* --- Check inbox: a heading, the line naming the address, then the two
+     things the person can do here. Resend is a secondary (outlined) button:
+     the step's real action, opening the email, happens outside the app. --- */
+  .inbox-heading { margin: 0 0 8px 0; font-size: 1.35rem; font-weight: 700; }
+  .inbox-line { margin: 0 0 24px 0; color: var(--ink); }
+  .addr { font-weight: 600; word-break: break-all; }
+
+  .secondary-btn {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    background: #fff;
+    color: var(--ink);
+    padding: 12px 16px;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    border-radius: var(--r);
+    cursor: pointer;
+  }
+  .secondary-btn:disabled { cursor: default; color: var(--ink-2); background: var(--fill-soft); }
+  .sent-note { margin: 10px 0 0 0; font-size: 0.85rem; color: var(--ink-2); text-align: center; }
+
+  .text-link {
+    display: block;
+    margin: 20px 0 0 0;
+    padding: 8px 0;
+    text-align: center;
+    color: var(--fill-strong);
+  }
+  .expiry-note { margin: 28px 0 0 0; font-size: 0.8rem; color: var(--ink-2); text-align: center; }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Sign in / Sign up, check inbox (wireframe)">
+
+  <!-- ZONE: modal top bar — Close + title (_conventions.md § 1, Gates;
+       _screens.md → Sign in / Sign up → Chrome). Same chrome as the form:
+       Close on the left, no Back, no tab bar. Close is Flow 4's "never
+       confirms" edge → DeadEnd9 (account exists, unconfirmed — recoverable:
+       signing in later routes back here). It lands on Race browse, the one
+       screen that needs no account (sitemap.md → Navigation § 1). -->
+  <header class="top-bar">
+    <a class="close" href="race-browse.html">Close</a>
+    <h1 class="bar-title">Check your inbox</h1>
+  </header>
+
+  <div class="phone-screen">
+    <main class="gate">
+
+      <!-- ZONE: what to do — Flow 4 CheckInbox ("Check inbox: confirm your
+           email to finish", flows.md → Flow 4). A flow step waiting on the
+           inbox, not empty/error/loading (_conventions.md § 4, the one named
+           exception). Auth method decided 2026-09-25: email + password
+           through Supabase Auth, with Confirm email on (_screens.md → Sign
+           in / Sign up; sitemap.md → Entities 5). Two ways in, two lines,
+           both real markup; the script un-hides one:
+             default            after Create account ("yes — confirmation
+                                email sent"). No session exists yet.
+             ?reason=unconfirmed after signing in with an unconfirmed email
+                                (flows.md, AuthResult "no — email not
+                                confirmed yet" → Flow 4's Unconfirmed entry).
+           The address is ?email= (what was entered), else a sample. -->
+      <section aria-labelledby="inbox-heading">
+        <h2 class="inbox-heading" id="inbox-heading">Confirm your email</h2>
+        <p class="inbox-line" data-reason="new">We sent a link to <span class="addr" data-email>maya.rossi@example.com</span>. Open it on this device to finish creating your account.</p>
+        <p class="inbox-line" data-reason="unconfirmed" hidden>Your account isn't confirmed yet. Open the link we sent to <span class="addr" data-email>maya.rossi@example.com</span> to finish, or send a new one.</p>
+      </section>
+
+      <!-- ZONE: resend — Flow 4's "resends the email" edge → Resending
+           ("Loading: resending confirmation email") → back to CheckInbox.
+           Tapping locks the button and it reads "Sending…"; after a short
+           delay it unlocks and the "Sent" line shows. All real markup,
+           toggled; no separate page (flows.md draws no resend failure, so
+           there's no error branch). The visually-hidden status carries both
+           changes for assistive tech. &resend=1 runs this on arrival: that's
+           the expired-link error's "Send a new link"
+           (sign-in-sign-up-error.html?cause=confirm). -->
+      <section aria-label="Resend the confirmation email">
+        <button type="button" class="secondary-btn" id="resend"><span data-resend="idle">Resend email</span><span data-resend="sending" hidden>Sending…</span></button>
+        <p class="sent-note" id="sent-note" hidden>Sent — check your inbox again.</p>
+        <p class="visually-hidden" role="status"><span data-status="sending" hidden>Sending a new confirmation email…</span><span data-status="sent" hidden>Sent. Check your inbox again.</span></p>
+      </section>
+
+      <!-- ZONE: use a different email — Flow 4's "uses a different email"
+           edge → SignUpForm: back to the form in Create account mode, with
+           ?next kept and the email left blank. -->
+      <a class="text-link" id="different-email" href="sign-in-sign-up.html?mode=signup">Use a different email</a>
+
+      <!-- ZONE: expiry note — Flow 4's "Confirmation link valid?": Supabase
+           links expire and work once. Said up front so an expired link
+           isn't a surprise; the expired case itself is
+           sign-in-sign-up-error.html?cause=confirm. No duration is named:
+           it's a Supabase project setting, not decided yet. -->
+      <p class="expiry-note">The link works once and expires after a while. If it doesn't work, send a new one.</p>
+
+      <!-- ZONE: the emailed link, coming back — reviewer's switch, nothing
+           rendered (_conventions.md § 2 test switches). ?confirmed=1 stands
+           in for opening the email's link, which returns to the app:
+             confirmed=1            "Confirmation link valid?" → yes →
+                                    Success4: sets the session
+                                    (sessionStorage 'onrace-signed-in') and
+                                    lands on ?next, else Results list
+                                    (results-list-loading.html?run=1).
+             confirmed=1&expired=1  → no — expired or already used →
+                                    sign-in-sign-up-error.html?cause=confirm,
+                                    carrying ?next and ?email.
+           After ~1s, so the page is visible first. -->
+
+    </main>
+  </div><!-- /.phone-screen -->
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+
+  // ?next= is where the confirmed session lands. Same allowlist as the form:
+  // owner-only screens only; profile-loading.html is the Profile tab's entry.
+  var next = params.get('next') || '';
+  if (!/^(results-list[a-z-]*|log-result[a-z-]*|result-detail[a-z-]*|profile(-loading)?)\.html(\?[^#]*)?$/.test(next)) next = '';
+
+  var email = params.get('email') || '';
+  if (!/^[^\s@<>"]{1,64}@[^\s@<>"]{1,190}$/.test(email)) email = '';
+  if (email) document.querySelectorAll('[data-email]').forEach(function (el) { el.textContent = email; });
+
+  var reason = params.get('reason') === 'unconfirmed' ? 'unconfirmed' : 'new';
+  document.querySelectorAll('[data-reason]').forEach(function (el) {
+    el.hidden = el.getAttribute('data-reason') !== reason;
+  });
+
+  // "Use a different email" → the form, Create account mode, ?next kept.
+  document.getElementById('different-email').setAttribute('href',
+    'sign-in-sign-up.html?mode=signup' + (next ? '&next=' + encodeURIComponent(next) : ''));
+
+  // Resend: Sending… (Resending) → Sent (back at CheckInbox).
+  var btn = document.getElementById('resend');
+  var sent = document.getElementById('sent-note');
+  function show(attr, value) {
+    document.querySelectorAll('[' + attr + ']').forEach(function (el) {
+      el.hidden = el.getAttribute(attr) !== value;
+    });
+  }
+  function resend() {
+    btn.disabled = true;
+    sent.hidden = true;
+    show('data-resend', 'sending');
+    show('data-status', 'sending');
+    window.setTimeout(function () {
+      btn.disabled = false;
+      show('data-resend', 'idle');
+      show('data-status', 'sent');
+      sent.hidden = false;
+    }, 1000);
+  }
+  btn.addEventListener('click', resend);
+  if (params.get('resend') === '1') resend();
+
+  // Reviewer's switch: the emailed link returning to the app (see ZONE).
+  if (params.get('confirmed') !== '1') return;
+  window.setTimeout(function () {
+    if (params.get('expired') === '1') {
+      var q = ['cause=confirm'];
+      if (next) q.push('next=' + encodeURIComponent(next));
+      if (email) q.push('email=' + encodeURIComponent(email));
+      window.location.replace('sign-in-sign-up-error.html?' + q.join('&'));
+      return;
+    }
+    // The auth session lives in sessionStorage (_conventions.md § 2).
+    try { window.sessionStorage.setItem('onrace-signed-in', '1'); } catch (err) {}
+    window.location.replace(next || 'results-list-loading.html?run=1');
+  }, 1000);
+})();
+</script>
+
+</body>
+</html>

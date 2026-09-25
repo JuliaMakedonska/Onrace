@@ -29,6 +29,8 @@ A single catalog entry for a race a hybrid athlete could enter.
 - **Logged result** — a result can *optionally* link back to a race listing (`../CLAUDE.md` → `results` table: "race_name/date/sport_type, optionally linked to a catalog race")
 - its own lat/lng is what a map view (a screen, not an entity) would plot — not treated as a separate entity here
 
+**Past editions stay in the catalog (added 2026-09-25).** A listing isn't removed once its `event_date` passes. Race browse shows only upcoming races (Discovery looks forward). Race picker, inside Log result, shows only past ones (you log a race you've run). So each edition is its own listing (Berlin Marathon 2025 and 2026 are two rows), and a logged result links to the edition actually run. That's the only way the optional link below means something.
+
 ---
 
 ### 2. Search / filter criteria
@@ -54,7 +56,7 @@ A personal, owner-only archive entry recording a race a person has actually comp
 - race_name
 - date
 - sport_type
-- optional link to a Race listing
+- optional link to a Race listing: wired up 2026-09-25 through **Race picker** (Screens, below). Linking fills race_name, date and sport_type from the listing; unlinking hands them back to be typed. The race's facts then come from curated catalog data rather than memory.
 - finish_time
 - official_result_url (**required** — not optional)
 
@@ -87,6 +89,8 @@ The account a person signs into, and the minimal facts that say whose it is. Pri
 
 **Fields/parts:**
 - sign-in identity (email): already provided by Supabase Auth, not a new field
+
+**Sign-in method, decided 2026-09-25:** **email + password through Supabase Auth, with Confirm email on**, Supabase's default. It's deliberately not turned off to simplify things: confirming proves the address belongs to the person, and an archive of proof links is worth that step. So Create account doesn't sign anyone in. It sends an email, and opening its link does (`flows.md` → Flow 4). Not in MVP: magic links, social sign-in. **Flagged, not built:** password reset. By the same test that justified Profile ("does the existence of auth require it?"), email + password *does* require a way back in for someone who forgets their password. It's the next infrastructure gap, needing its own flow (reset email → set new password).
 - name
 - country
 - language `[?]`: stored as a preference only. `../CLAUDE.md` plans no localization, so the field changes nothing in the UI yet. Don't design it as if it switches the app's language.
@@ -162,8 +166,22 @@ Onrace (app — not a separate screen or job-closing destination; Race browse is
     │     data model explicitly marks required) · other-required-field
     │     validation error (race_name/date/sport_type/finish_time `[?]` —
     │     assumed required, not explicitly marked so in the data model; see
-    │     flows.md, Flow "Related Job 3") · submit error (e.g. unreachable
-    │     source link).
+    │     flows.md, Flow "Related Job 3") · submit error (couldn't save —
+    │     reworded 2026-09-25 from "unreachable source link", which a client-side
+    │     app can't detect).
+    │     Catalog link (2026-09-25): optional "Find in race catalog" opens Race
+    │     picker; a picked race fills and locks race_name/date/sport_type.
+    │
+    ├── Race picker  (added 2026-09-25)
+    │     Job: Related Job 3 — a shortcut within logging: link the result to the
+    │     catalog edition actually run, so its facts aren't retyped from memory.
+    │     Object: Race listing (the Discovery cluster's entity, read-only, past
+    │     editions only — Entities → 1).
+    │     Persona: Secondary — Archivist (same as Log result).
+    │     Entry: contextual, a modal sheet opened from Log result only.
+    │     States (not separate screens): loading · no catalog race matches ·
+    │     catalog failed to load. Every exit that isn't a pick returns to the
+    │     form, where the race can be typed in (the link is optional).
     │
     └── Result detail (proof view)
           Job: Related Job 4 — "pull that proof up quickly" (jtbd.md).
@@ -179,6 +197,9 @@ Sign in / Sign up  [INFRASTRUCTURE]
   "Logged result" is owner-only per ../CLAUDE.md's data model, which means
   accounts exist (Entities → 5. Athlete account). Needed for both personas
   technically (to make ownership work), but not sourced to any stated job.
+  Method: email + password, Supabase Auth, Confirm email on (Entities → 5).
+  Create account → "check your inbox" → the emailed link signs you in
+  (flows.md → Flow 4).
 
 Profile  [INFRASTRUCTURE]  (added 2026-09-25)
   Shows whose account this is and lets the person leave it. Not job-sourced;
@@ -187,6 +208,9 @@ Profile  [INFRASTRUCTURE]  (added 2026-09-25)
   · language [?] (stored preference, no localization yet) · email (read-only,
   from sign-in) · Sign out.
   Nothing else: no bio, stats, customization, or public view.
+  States (2026-09-25, flows.md → Flow 5): loading · couldn't load · a field's
+  change didn't save. Sign out asks first (confirm alert), then signs out
+  this device and lands on Race browse.
   Entry: the Profile tab, one of 3 global tabs (Navigation § 1, revised
   2026-09-25). Signed out, the tab opens the same Sign in / Sign up gate as
   My Results; a successful sign-in lands on Profile.
@@ -204,7 +228,7 @@ Built only from the screens already named in the Screens section above. No new s
 
 ### 1. Global navigation — 3 items (revised 2026-09-25)
 
-**Current structure:** a 3-tab bottom bar — **Discover** → Race browse, **My Results** → Results list, **Profile** → Profile. **Log result** is still not a tab; it's the primary action button inside My Results (in the Results list header, and as the empty state's call to action). Drill-down screens (Race detail, Log result, Result detail) still replace the tab bar with a back bar (`wireframes/_conventions.md` § 1).
+**Current structure:** a 3-tab bottom bar — **Discover** → Race browse, **My Results** → Results list, **Profile** → Profile. **Log result** is still not a tab; it's the primary action button inside My Results (in the Results list header, and as the empty state's call to action). Drill-down screens (Race detail, Log result, Result detail) still replace the tab bar with a back bar, and modals (Race picker, Sign in / Sign up) cover it (`wireframes/_conventions.md` § 1).
 
 | Item → screen | Job behind it | Persona |
 |---|---|---|
@@ -236,7 +260,7 @@ The trigger-difference argument below is still true — Related Jobs 3 and 4 *ar
 
 #### Superseded — original 3-item reasoning (kept for the record, no longer the structure)
 
-*Superseded 2026-09-24 by the 2-item structure above. Kept here, not deleted, because commit `03ed66f` explicitly re-affirmed it earlier the same day; the reversal should be traceable, not silent. Its reasoning about triggers is still correct — what changed is the conclusion drawn from it (see "Why 2 tabs + an in-page action" above).*
+*Superseded 2026-09-24 by the 2-item structure above. Kept here, not deleted, because commit `03ed66f` explicitly re-affirmed it earlier the same day; the reversal should be traceable, not silent. Its reasoning about triggers is still correct — what changed is the conclusion drawn from it (see "Why Log result is an in-page action, not a tab" above).*
 
 `jtbd.md`'s own framing ("Why two main jobs, not one main + related") justifies co-equal top-level status by *trigger*, not by feature symmetry: Discovery is triggered by planning ahead, Archiving by "the opposite moment — after competing." That same trigger-difference logic, applied one level down, also separates the two Archive-cluster sub-jobs from each other — Related Job 3 (log right after finishing a race) and Related Job 4 (retrieve proof later, on demand) are triggered at different moments too. That's the basis for 3 global items, not 2 or 4 *(superseded — see above)*:
 
@@ -288,7 +312,8 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
 | Any top-level screen (Race browse, Results list) → Profile, signed in | 1: **Profile** tab | the point of the tab |
 | Race detail → Profile | 2: Back → **Profile** tab | drill-down screens have no tab bar (§ 1) |
 | Any top-level screen → Profile, signed out | 1 tap + sign-in gate → lands on Profile | the same gate as My Results; no new one |
-| App launch → Sign out | 2: **Profile** tab → **Sign out** | an in-page action on a global destination, no longer buried |
+| App launch → Sign out | 3: **Profile** tab → **Sign out** → confirm **Sign out** | the confirm alert (2026-09-25) is a deliberate extra tap on the one destructive action; still at the ceiling |
+| Launch → Log result with a catalog race | 3 + search: **My Results** → **Log result** → **Find in race catalog** → pick | optional path; typing the race in stays 2 taps |
 
 *Superseded, account-button placement (same day):* launch → Profile was 2 taps (My Results → account button), and Sign out was 3.
 
@@ -302,16 +327,17 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
 
 - **In-page primary action (a button on a screen, not a nav item):**
   - **Log result** — the primary button in the Results list header, and the call to action in its empty state. Opens the Log result screen.
-  - **Sign out**: a button on Profile, 2 taps from launch.
+  - **Sign out**: a button on Profile, 3 taps from launch including its confirm alert (§ 2).
 
 - **Contextual (appears in-flow, reached by drilling into something, not from the nav bar):**
   - **Race detail** — opened from within Race browse (tap a card/pin); no independent entry point.
   - **Log result** — opened from within My Results via the Log result action above; no longer a global destination of its own.
+  - **Race picker** — opened from within Log result ("Find in race catalog"), as a modal sheet; no independent entry point. Added 2026-09-25.
   - **Result detail (proof view)** — opened from within My Results (tap a logged entry); Secondary–Archivist only, per Step 2's persona note.
   - *(Profile was briefly contextual, via an account button in My Results; since 2026-09-25 it's a global tab. See § 1.)*
   - **Sign in / Sign up** — surfaces only when an unauthenticated person taps My Results or Profile (owner-only per `../CLAUDE.md`'s RLS model — and since Log result now lives inside My Results, the My Results tap gates both archive jobs; the Profile tap is the second way into the same gate, since 2026-09-25); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global. *(Before 2026-09-24 it was reachable from two of the three nav items, Log Result and My Results.)*
 
-- **Deep (rare, buried actions):** **None again.** Sign out was briefly the first entry here (3 taps, under the superseded account-button placement). With the Profile tab it's 2 taps, an in-page action on a global destination (above), so it isn't buried. Editing or deleting a logged result, and any further account settings, still aren't in the screen list, so nothing is invented to fill this bucket.
+- **Deep (rare, buried actions):** **None again.** Sign out was briefly the first entry here (3 taps, under the superseded account-button placement). With the Profile tab it's an in-page action on a global destination (above): 3 taps including the confirm alert, a deliberate step on a destructive action, not burial. Editing or deleting a logged result, and any further account settings, still aren't in the screen list, so nothing is invented to fill this bucket.
 
 ---
 
@@ -323,16 +349,16 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
 
 Rows = every job in `jtbd.md` (main, related, emotional, and social — the five unsourced items under `jtbd.md` → Hypotheses are excluded, since they're explicitly "not backed by `research.md`," a different category from what's asked here). Columns = every screen in the Screens section above. A ✓ means the screen actually participates in *closing* that job, not merely that it's adjacent to the topic.
 
-| Job (`jtbd.md`) | Race browse | Race detail | Results list | Log result | Result detail | Sign in / Sign up | Profile |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Main Job 1 — Discovery | ✓ | ✓ | | | | | |
-| Main Job 2 — Results archiving (combined) | ✓ | | ✓ | | | | |
-| Related Job 1 — plan season by format | ✓ | | | | | | |
-| Related Job 2 — choose races by location | ✓ | | | | | | |
-| Related Job 3 — log a result with proof | | | ✓ | ✓ | | | |
-| Related Job 4 — retrieve proof for an application | | | ✓ | | ✓ | | |
-| Emotional — recognized as a hybrid athlete | ✓ | | | | | | |
-| Social — proof stands on its own | | | ✓ | ✓ | ✓ | | |
+| Job (`jtbd.md`) | Race browse | Race detail | Results list | Log result | Race picker | Result detail | Sign in / Sign up | Profile |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Main Job 1 — Discovery | ✓ | ✓ | | | | | | |
+| Main Job 2 — Results archiving (combined) | ✓ | | ✓ | | | | | |
+| Related Job 1 — plan season by format | ✓ | | | | | | | |
+| Related Job 2 — choose races by location | ✓ | | | | | | | |
+| Related Job 3 — log a result with proof | | | ✓ | ✓ | ✓ | | | |
+| Related Job 4 — retrieve proof for an application | | | ✓ | | | ✓ | | |
+| Emotional — recognized as a hybrid athlete | ✓ | | | | | | | |
+| Social — proof stands on its own | | | ✓ | ✓ | | ✓ | | |
 
 **Notes on the two `✓` rows that aren't a dedicated interaction:** Emotional and Social don't have a screen built specifically for them — per the Screens section's own "Jobs with no screen of their own" note, they're closed by *how* an existing screen reads, not by a separate destination. Emotional is closed by Race browse's cross-format framing (seeing HYROX/DEKA/marathons/etc. together as one "hybrid athlete" catalog, not siloed by sport). Social is closed by the required-link-at-entry and self-reported-labeling conventions (`research.md` → BENCHMARK mechanisms #1–2) actually being implemented on Log result, Results list, and Result detail. These are legitimate closes, not padding — but they're framing-level, not task-level, unlike every other ✓ in the matrix.
 
@@ -344,7 +370,7 @@ Rows = every job in `jtbd.md` (main, related, emotional, and social — the five
 
 **Sign in / Sign up**: zero checks. Tagged `[INFRASTRUCTURE]` in the Screens section: no job in `jtbd.md` calls for account creation or login on its own.
 
-**Resolution: attach to existing, not delete or add.** This screen isn't dead weight — it's required because Logged result is owner-only per `../CLAUDE.md`'s RLS model — but it shouldn't be scored as if it closes a job of its own, and it shouldn't be promoted to a first-class, job-justified destination either. The Navigation section already made the correct call here without naming it as such: Sign in / Sign up is classified as **contextual**, a gate triggered only when an unauthenticated person attempts Log Result (Related Job 3) or My Results (Related Job 4), never a standalone stop. That's the resolution — it's attached to those two jobs' flows as an enabling step, not counted as closing them itself. No change needed beyond stating this explicitly here.
+**Resolution: attach to existing, not delete or add.** This screen isn't dead weight — it's required because Logged result is owner-only per `../CLAUDE.md`'s RLS model — but it shouldn't be scored as if it closes a job of its own, and it shouldn't be promoted to a first-class, job-justified destination either. The Navigation section already made the correct call here without naming it as such: Sign in / Sign up is classified as **contextual**, a gate triggered only when an unauthenticated person taps My Results (which covers both Related Jobs 3 and 4, since 2026-09-24) or Profile (since 2026-09-25), never a standalone stop. That's the resolution — it's attached to those two jobs' flows as an enabling step, not counted as closing them itself. No change needed beyond stating this explicitly here.
 
 **Profile**: zero checks, and the same resolution. It exists because accounts do (Entities → 5), and it's the account's home and its only sign-out point. It isn't scored as closing a job. It's a global tab since 2026-09-25 (Navigation § 1), which changes how it's reached, not what it closes. Its reversal of the 2026-09-24 "no job supports Profile" verdict is documented at Entities → 5, not here, because it changes *why* the screen exists, not what it closes.
 

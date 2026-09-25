@@ -254,9 +254,10 @@
        base file, since there's never a separate -success.html
        (_conventions.md § 4–5). So: Race browse and Results list get
        Empty/Error/Loading; Race detail and Result detail get
-       Error/Loading/Success; Log result and Sign in/Sign up get Error/Loading
-       (their blank form is the base page); Profile is a plain leaf (its
-       Loading/Error are unmodeled until the sign-out flow exists). -->
+       Error/Loading/Success; Log result gets Error/Loading (its blank form
+       is the base page); Race picker gets Empty/Error/Loading; Sign in/Sign
+       up gets Error/Loading plus Check inbox (the one named flow-step state,
+       _conventions.md § 4); Profile gets Error/Loading (flows.md Flow 5). -->
   <aside class="sidebar">
     <span class="sidebar-brand">ON<span>RACE</span> · Wireframes</span>
     <ul class="tree">
@@ -300,6 +301,14 @@
             </ul>
           </li>
           <li>
+            <a href="race-picker.html" data-frame="race-picker.html">Race picker</a>
+            <ul>
+              <li><a href="race-picker-empty.html" data-frame="race-picker-empty.html" class="tree-state">Empty</a></li>
+              <li><a href="race-picker-error.html" data-frame="race-picker-error.html" class="tree-state">Error</a></li>
+              <li><a href="race-picker-loading.html" data-frame="race-picker-loading.html" class="tree-state">Loading</a></li>
+            </ul>
+          </li>
+          <li>
             <a href="result-detail.html" data-frame="result-detail.html">Result detail</a>
             <ul>
               <li><a href="result-detail-error.html" data-frame="result-detail-error.html" class="tree-state">Error</a></li>
@@ -314,10 +323,15 @@
         <ul>
           <li><a href="sign-in-sign-up-error.html" data-frame="sign-in-sign-up-error.html" class="tree-state">Error</a></li>
           <li><a href="sign-in-sign-up-loading.html" data-frame="sign-in-sign-up-loading.html" class="tree-state">Loading</a></li>
+          <li><a href="sign-in-sign-up-check-inbox.html" data-frame="sign-in-sign-up-check-inbox.html" class="tree-state">Check inbox</a></li>
         </ul>
       </li>
       <li>
         <a href="profile.html" data-frame="profile.html">Profile</a>
+        <ul>
+          <li><a href="profile-error.html" data-frame="profile-error.html" class="tree-state">Error</a></li>
+          <li><a href="profile-loading.html" data-frame="profile-loading.html" class="tree-state">Loading</a></li>
+        </ul>
       </li>
     </ul>
   </aside>
@@ -335,7 +349,7 @@
             <path class="screen-edge" id="screen-edge"/>
           </svg>
           <div class="device-screen" id="device-screen">
-            <div class="status-bar" aria-hidden="true">
+            <div class="status-bar" id="status-bar" aria-hidden="true">
               <span>09:41</span>
               <span class="status-icons">
                 <!-- cellular signal: 4 bars, last one outline-only -->
@@ -361,7 +375,7 @@
               </span>
             </div>
             <iframe id="screen-frame" src="race-browse.html" title="Onrace wireframe preview"></iframe>
-            <div class="home-indicator" aria-hidden="true"></div>
+            <div class="home-indicator" id="home-indicator" aria-hidden="true"></div>
           </div>
         </div>
       </div>
@@ -470,30 +484,6 @@
       ['Results row', 'A gray bar holds the count\'s place; screen readers get a hidden status line.'],
       ['Skeletons where the cards go', 'flows.md Loading2, on every My Results tap and on Try again. Reached with ?run=1 it moves on: &fail=1 or offline to the error page, &empty=1 to the empty page, otherwise to the list.'],
       ['Global nav', '3 tabs, My Results current.'] ] },
-    'log-result.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Base state: the blank form.', zones: [
-      ['Back and Save', 'Back to My Results on the left is the only navigation, and every error\'s give-up exit (DeadEnd3). Save sits on the right, because a bottom bar would collide with the keyboard (_conventions.md § 1, Forms).'],
-      ['Title', 'iOS large title "Log result", plus one line saying every field is needed. That the four non-link fields are required is flagged [?] in flows.md.'],
-      ['The four race facts', 'Race name, date, sport type (Race browse\'s seven types) and finish time (sitemap.md → Logged result). The optional link to a catalog race is left out: it would need a picker flow flows.md doesn\'t draw.'],
-      ['Official result link', 'The one field CLAUDE.md marks required. Helper text says why: it\'s the proof elite races ask for, Onrace doesn\'t check it, and the result shows as self-reported.'] ] },
-    'log-result-loading.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Loading: saving result.', zones: [
-      ['Back and Saving…', 'Save becomes a plain "Saving…" in the same slot, with nothing to tap. Back stays usable.'],
-      ['Title', 'Unchanged.'],
-      ['The form, locked', 'Filled in from the URL and disabled while the save runs (flows.md: Submitting).'],
-      ['Where it goes next', 'Success lands on Results list, which says what was saved. Offline or &fail=1 goes to the save error with your values kept.'] ] },
-    'log-result-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: source link is required.', zones: [
-      ['Back and Save', 'Back is the give-up exit (DeadEnd3), so it isn\'t repeated as a button. Save runs the same checks again.'],
-      ['Title', 'Unchanged.'],
-      ['The form, as you left it', 'Filled in from the URL, so nothing typed is lost. Fixing it and tapping Save is "Fix and resubmit".'],
-      ['Official result link — missing', 'An inline error under the field says the link is the proof (flows.md: HasLink → no). It\'s checked first, before the other fields.'] ] },
-    'log-result-error.html?cause=fields': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: required field missing [?].', zones: [
-      ['Back and Save', 'Back is the give-up exit (DeadEnd3). Save runs the same checks again.'],
-      ['Title', 'Unchanged.'],
-      ['Race facts — missing', 'Each empty field among race name, date, sport type and finish time gets its own inline error (flows.md: OtherFieldError). Whether they\'re really required is flagged [?].'],
-      ['Official result link', 'Already filled in, so no error here.'] ] },
-    'log-result-error.html?cause=submit': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: link unreachable, submission failed.', zones: [
-      ['Back and Save', 'Save is still there: tapping it is Retry. Back is giving up (DeadEnd3).'],
-      ['Save error', 'An alert at the top of the form, right under the bar that holds Save: "Couldn\'t save your result". It\'s about the save itself, not one field (_conventions.md § 1, Forms).'],
-      ['The form, as you left it', 'Filled in from the URL, with no field errors.'] ] },
     'result-detail.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Drill-down from Results list. Base/success state.', zones: [
       ['The way back', '"‹ Back to My Results" is the only navigation, with no tab bar. It\'s also every give-up exit on the screen (DeadEnd4, DeadEnd5).'],
       ['One result, with its proof', 'Race name, a prominent finish time, date and full sport type. The proof section shows the official_result_url, "Self-reported · via <domain>" (never "verified"), and a line saying the official timing page is the evidence.'],
@@ -505,32 +495,99 @@
     'result-detail-error.html?cause=link': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Error: source link unreachable (LinkError).', zones: [
       ['The way back', 'Try again → no: DeadEnd5, proof inaccessible, with no in-app re-link (an accepted MVP gap).'],
       ['The result, loaded', 'The result itself is fine and shows in full.'],
-      ['The error, beside the action', '"Couldn\'t open the official result page" sits right above the Open button. Try again re-runs the open check; Dismiss closes the alert.'] ] },
+      ['The error, beside the action', '"Couldn\'t open the link" sits right above the Open button. It says only what a browser can know: the new tab didn\'t open (maybe blocked), not that the timing site is down. Try again re-runs the check; Dismiss closes the alert.'] ] },
     'result-detail-loading.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Loading: fetching result details (DetailLoading2).', zones: [
       ['The way back', 'Stays usable during the fetch.'],
       ['Gray bars where the result goes', 'Name, finish time, facts and proof, with a status line for screen readers. Reached with ?result= it moves on: offline or &fail=1 to the error page, otherwise to the result.'],
       ['Open, not yet', 'A gray placeholder where the Open button will be, so the layout doesn\'t jump.'] ] },
-    'sign-in-sign-up.html': { job: 'Infrastructure — no job; the gate on My Results and Profile (sitemap.md → Entities 5). Base state: blank form.', zones: [
-      ['Close', 'A full-screen modal: Close on the left and the title, with no Back and no tab bar. Close is leaving without trying, and lands on Race browse, which never needs an account.'],
-      ['Why you\'re signing in', 'One line naming where the person was heading: their archive, their account, or a generic line. They see why before being asked.'],
-      ['Sign in | Create account', 'One screen, two modes, switched by a segmented control. ?mode=signup preselects Create account.'],
-      ['Form', 'Email and password (Supabase Auth\'s default, assumed [?]), then the one action at the end of the form. Create account asks for nothing more: name, country and language live on Profile.'] ] },
-    'sign-in-sign-up-loading.html': { job: 'Infrastructure — no job; the gate on My Results and Profile. Loading: signing in.', zones: [
-      ['Close', 'Still works while the request runs.'],
-      ['Why you\'re signing in', 'The same line as the form.'],
-      ['Sign in | Create account', 'Locked while the request runs.'],
-      ['Form, locked', 'The button reads "Signing in…". Success lands where the person was heading; &fail=1 or offline opens the error page.'] ] },
     'sign-in-sign-up-error.html': { job: 'Infrastructure — no job; the gate on My Results and Profile. Error: sign-in failed.', zones: [
       ['Close', 'The "don\'t retry" choice: leaves without signing in, lands on Race browse.'],
       ['Why you\'re signing in', 'The same line as the form.'],
       ['Sign in | Create account', 'Still switchable. Switching hides the alert, which was about the other mode.'],
       ['Alert', '"Couldn\'t sign you in", at the top of the form, covering both causes a wireframe can\'t tell apart: wrong credentials, or no connection.'],
       ['Form', 'Email kept, password cleared. Retrying is just submitting again, to the same destination.'] ] },
+    'log-result.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Base state: the blank form.', zones: [
+      ['Top bar', '"‹ My Results" on the left is the only navigation, and every error\'s give-up exit (DeadEnd3). The title is centred in the bar; Save sits on the right, because a bottom bar would collide with the keyboard (_conventions.md § 1, Forms).'],
+      ['Intro', 'One line saying every field is needed. That the four non-link fields are required is flagged [?] in flows.md.'],
+      ['Find in race catalog', 'Optional row that opens Race picker, carrying every value typed so far in the URL (flows.md Flow 2, catalog branch).'],
+      ['Linked race', 'Only with catalog=<slug>: a read-only card (name, date, full sport type, city/country, "From the Onrace catalog") replaces the three race facts. Unlink makes them editable again, pre-filled.'],
+      ['Race facts and finish time', 'Race name, date and sport type, typed when no race is linked. Finish time is always typed.'],
+      ['Official result link', 'The one field CLAUDE.md marks required. Helper text says why: it\'s the proof elite races ask for, Onrace doesn\'t check it, and the result shows as self-reported.'] ] },
+    'log-result-loading.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Loading: saving result.', zones: [
+      ['Top bar', 'Save becomes a plain "Saving…" in the same slot, with nothing to tap. "‹ My Results" stays usable.'],
+      ['The form, locked', 'Filled in from the URL (a linked race shows as its card) and disabled while the save runs, Find in race catalog and Unlink included (flows.md: Submitting).'],
+      ['Where it goes next', 'Success lands on Results list, which says what was saved. Offline or &fail=1 goes to the save error with your values and catalog link kept.'] ] },
+    'log-result-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: source link is required.', zones: [
+      ['Top bar', '"‹ My Results" is the give-up exit (DeadEnd3), so it isn\'t repeated as a button. Save runs the same checks again.'],
+      ['The form, as you left it', 'Filled in from the URL, a linked race included, so nothing is lost. Fixing it and tapping Save is "Fix and resubmit".'],
+      ['Official result link — missing', 'An inline error under the field says the link is the proof (flows.md: HasLink → no). It\'s checked first, before the other fields.'] ] },
+    'log-result-error.html?cause=fields': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: required field missing [?].', zones: [
+      ['Top bar', '"‹ My Results" is the give-up exit (DeadEnd3). Save runs the same checks again.'],
+      ['Race facts — missing', 'Each empty field gets its own inline error (flows.md: OtherFieldError). With a catalog race linked, only finish time can be missing. Whether these are really required is flagged [?].'],
+      ['Official result link', 'Already filled in, so no error here.'] ] },
+    'log-result-error.html?cause=submit': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: couldn\'t save the result.', zones: [
+      ['Top bar', 'Save is still there: tapping it is Retry. "‹ My Results" is giving up (DeadEnd3).'],
+      ['Save error', '"Couldn\'t save your result", framed as a connection problem, at the top of the form under the bar that holds Save. It never claims the link was checked (flows.md SubmitError, reworded 2026-09-25).'],
+      ['The form, as you left it', 'Filled in from the URL, catalog link included, with no field errors.'] ] },
+    'race-picker.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Base state.', zones: [
+      ['Top bar', 'A modal sheet: Cancel returns to Log result with every value intact (flows.md: "cancels — form unchanged"). "Find a race" is centred. No Save: tapping a row is the selection.'],
+      ['Search', 'Name or city, run with the keyboard\'s Search key through the loading page, like Race browse\'s filters. The form\'s values ride along in the URL.'],
+      ['Past races', 'Only past catalog races, newest first: you log a race you\'ve run (sitemap.md → Entities 1). Each row shows name, short sport tag, date and city/country. Tapping one returns to Log result with that race linked.'] ] },
+    'race-picker-loading.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Loading: fetching past catalog races.', zones: [
+      ['Top bar', 'Cancel works while loading too.'],
+      ['Search', 'Shows the query being fetched.'],
+      ['Skeleton rows', 'Gray placeholders where the rows go. Reached through the flow, it moves on to the list, the no-match state (a real check against the eight races), or the error when offline or &fail=1.'] ] },
+    'race-picker-empty.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Empty: no catalog race matches.', zones: [
+      ['Top bar', 'Cancel is a second way back to the form, values kept.'],
+      ['Search', 'Still holds the query. Changing it and searching again is "changes the search".'],
+      ['No match', '"No catalog race matches “…”" says why a race might be missing (only past races, hand-curated catalog). "Type it in instead" returns to the form with every value kept.'] ] },
+    'race-picker-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Error: could not load the race catalog.', zones: [
+      ['Top bar', 'Cancel returns to the form, like "Type it in instead".'],
+      ['Search', 'Keeps the query that failed.'],
+      ['Couldn\'t load the race catalog', '"Try again" re-runs the same fetch (Retry → yes). "Type it in instead" is Retry → no, which isn\'t a dead end: the form works without a catalog link.'] ] },
     'profile.html': { job: 'Infrastructure — no job; shows whose account this is (sitemap.md → Entities 5). Base state.', zones: [
-      ['Identity', 'Initials in a round gray placeholder, then the name and sign-in email. The photo is deferred until Supabase Storage is decided: no upload, no bio, stats or badges.'],
-      ['Account fields', 'An iOS grouped list: Name, Country, Language [?], and Email (read-only). Changes save as made, iOS Settings style, so no Save button [?]. Language is a stored preference only and translates nothing.'],
-      ['Sign out', 'Its own group at the end, 2 taps from launch. Clears the session and lands on Race browse, the one screen that needs no account. No confirm dialog: the sign-out flow is deferred.'],
-      ['Global nav', '3 tabs with Profile current. My Results and Profile go through the sign-in gate when signed out.'] ] }
+      ['Identity', 'Initials (photo deferred), name and sign-in email: whose account this is. Name and initials follow a saved Name change.'],
+      ['Account fields', 'Name, Country and Language [?] save as you change them (Flow 5), so there\'s no Save button. A change shows "Saving…" then "Saved" on that row; ?fail=1 or offline sends it to the save error. Email is read-only.'],
+      ['Sign out', 'Its own group at the end, the account\'s only sign-out point: 3 taps from launch, confirm included (sitemap.md → Navigation § 2). Opens the confirm alert.'],
+      ['Sign-out confirm', 'An iOS alert over Profile: "Sign out of Onrace?", your results stay saved. Cancel (focused, and Esc) keeps you here; Sign out clears the session and lands on Race browse. No loading or error: a local sign-out can\'t fail (Flow 5).'],
+      ['Global nav', '3 tabs, Profile current. My Results and Profile are gated by sign-in and run their fetch on every visit.'] ] },
+    'profile-loading.html': { job: 'Infrastructure — no job; Flow 5 ProfileLoading, fetching the profile.', zones: [
+      ['Loading state', 'Gray placeholders where the initials, name, email, the four rows and Sign out go, so nothing jumps. With ?run=1 it moves to the profile after about 1s, or to the error when offline or &fail=1.'],
+      ['Global nav', '3 tabs, Profile current. They work while loading.'] ] },
+    'profile-error.html': { job: 'Infrastructure — no job; Flow 5 ProfileError, the profile couldn\'t load.', zones: [
+      ['Load error', '"Couldn\'t load your profile" replaces the whole profile: no fields and no Sign out, because no account loaded. Try again re-runs the fetch. Leaving by a tab is Retry → no (DeadEnd10).'],
+      ['Global nav', '3 tabs, Profile current. The way out when you don\'t retry.'] ] },
+    'profile-error.html?cause=save': { job: 'Infrastructure — no job; Flow 5 SaveError, a field change didn\'t save.', zones: [
+      ['Identity', 'The loaded profile, as on profile.html.'],
+      ['Account fields', 'The named field is back at its previous value and says so inline: "Couldn\'t save — back to …". Try again re-applies the change and saves again. Carrying on is the "leaves it" edge.'],
+      ['Sign out', 'Still works: the profile loaded.'],
+      ['Sign-out confirm', 'Same iOS alert as on profile.html.'],
+      ['Global nav', '3 tabs, Profile current.'] ] },
+    'sign-in-sign-up.html': { job: 'Infrastructure — no job; the gate on My Results and Profile (sitemap.md → Entities 5). Base state: blank form.', zones: [
+      ['Close', 'A full-screen modal: Close on the left and the title, with no Back and no tab bar. Close is leaving without trying, and lands on Race browse, which never needs an account.'],
+      ['Why you\'re signing in', 'One line naming where the person was heading: their archive, their account, or a generic line. They see why before being asked.'],
+      ['Sign in | Create account', 'One screen, two modes, switched by a segmented control. ?mode=signup preselects Create account.'],
+      ['Form', 'Email and password through Supabase Auth, with Confirm email on. In Create account mode, a line under the button says a confirmation link will be emailed, so the next step isn\'t a surprise.'] ] },
+    'sign-in-sign-up-loading.html': { job: 'Infrastructure — no job; the gate on My Results and Profile. Loading: signing in, or creating an account (?mode=signup).', zones: [
+      ['Close', 'Still works while the request runs.'],
+      ['Why you\'re signing in', 'The same line as the form.'],
+      ['Sign in | Create account', 'Locked while the request runs.'],
+      ['Form, locked', '"Signing in…" or "Creating account…". A new account goes to Check inbox, not signed in. A sign-in lands where the person was heading, or with &unconfirmed=1 goes to Check inbox. Offline or &fail=1 opens the error page.'] ] },
+    'sign-in-sign-up-error.html?cause=signup': { job: 'Infrastructure — no job; Flow 4 (sitemap.md → Entities 5). Error: couldn\'t create the account.', zones: [
+      ['Close', 'The "don\'t retry" choice: leaves without an account (DeadEnd8), lands on Race browse.'],
+      ['Sign in | Create account', 'Opens in Create account. Switching to Sign in hides the alert.'],
+      ['Alert', '"Couldn\'t create your account" covers both causes: the email may already have an account (switch to Sign in), or the connection failed.'],
+      ['Form', 'Email kept, password cleared. Submitting again retries.'] ] },
+    'sign-in-sign-up-error.html?cause=confirm': { job: 'Infrastructure — no job; Flow 4 (sitemap.md → Entities 5). Error: confirmation link expired or already used.', zones: [
+      ['Close', 'Giving up (DeadEnd9): the account exists but isn\'t confirmed. Signing in later leads back to Check inbox.'],
+      ['Alert', '"This confirmation link has expired", or it was already used (each link works once). It names the address a new link will go to.'],
+      ['Send a new link', 'Opens Check inbox, which shows "Sending…" then "Sent". Email and destination are kept.'] ] },
+    'sign-in-sign-up-check-inbox.html': { job: 'Infrastructure — no job; Flow 4 email confirmation (sitemap.md → Entities 5). Check inbox.', zones: [
+      ['Close', 'Same modal chrome as the form. Closing leaves the account unconfirmed; signing in later leads straight back here.'],
+      ['Confirm your email', 'Names the address and says to open the link on this device. After a sign-in with an unconfirmed email (?reason=unconfirmed), it says the account isn\'t confirmed yet.'],
+      ['Resend email', 'Shows "Sending…" briefly, then "Sent — check your inbox again." A hidden status line announces both.'],
+      ['Use a different email', 'Back to the form in Create account mode, keeping where the person was heading.'],
+      ['Link expiry', 'The link works once and expires. ?confirmed=1 stands in for opening the emailed link: it signs in and lands where the person was heading; &expired=1 opens the expired-link error instead.'] ] }
   };
 
   function renderNotes(key) {
@@ -562,7 +619,33 @@
 
   // Notes follow what the iframe actually shows, including navigation from
   // inside the wireframe (card → detail, retry → loading, …).
+  /* The status bar and home-indicator strip belong to the shell, but on a
+     real iPhone they sit on the app's own surface. So each takes the
+     background of whatever the screen shows at its top or bottom edge
+     (e.g. Profile's grouped gray), instead of a fixed white. */
+  var statusBar = document.getElementById('status-bar');
+  var homeStrip = document.getElementById('home-indicator');
+  function edgeColor(doc, y) {
+    var el = doc.elementFromPoint(doc.documentElement.clientWidth / 2, y);
+    while (el) {
+      var bg = doc.defaultView.getComputedStyle(el).backgroundColor;
+      if (bg && bg !== 'transparent' && !/rgba\(\s*0,\s*0,\s*0,\s*0\s*\)/.test(bg)) return bg;
+      el = el.parentElement;
+    }
+    return '#fff';
+  }
+  function matchEdges() {
+    try {
+      var doc = frame.contentDocument, h = frame.contentWindow.innerHeight;
+      statusBar.style.background = edgeColor(doc, 1);
+      homeStrip.style.background = edgeColor(doc, h - 1);
+    } catch (e) {
+      statusBar.style.background = homeStrip.style.background = '#fff';
+    }
+  }
+
   frame.addEventListener('load', function () {
+    matchEdges();
     var key;
     try {
       var loc = frame.contentWindow.location;
@@ -575,15 +658,34 @@
       key = frame.getAttribute('src');
     }
     renderNotes(key);
+    var shown = linkFor(key.split('?')[0]);
+    if (shown && shown.getAttribute('aria-current') !== 'page') markCurrent(shown);
   });
 
+  // Heading and tree highlight name the screen *and* state ("Profile —
+  // Error"), and follow whatever the frame shows, including navigation from
+  // inside the wireframe.
+  function screenName(link) {
+    if (!link.classList.contains('tree-state')) return link.textContent;
+    var screen = link.closest('ul').parentElement.querySelector(':scope > a');
+    return screen.textContent + ' — ' + link.textContent;
+  }
+  function markCurrent(link) {
+    links.forEach(function (l) { l.removeAttribute('aria-current'); });
+    link.setAttribute('aria-current', 'page');
+    title.textContent = screenName(link);
+  }
+  function linkFor(file) {
+    // a base file is listed twice for screens with a Success state: prefer
+    // the screen node itself
+    var matches = links.filter(function (l) { return l.getAttribute('data-frame') === file; });
+    return matches.filter(function (l) { return !l.classList.contains('tree-state'); })[0] || matches[0];
+  }
   links.forEach(function (link) {
     link.addEventListener('click', function (e) {
       e.preventDefault();
       frame.src = link.getAttribute('data-frame');
-      links.forEach(function (l) { l.removeAttribute('aria-current'); });
-      link.setAttribute('aria-current', 'page');
-      title.textContent = link.textContent;
+      markCurrent(link);
       renderNotes(link.getAttribute('data-frame'));
     });
   });

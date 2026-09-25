@@ -303,8 +303,8 @@
        loaded). Hidden for DetailError2: an Open button for a result that
        didn't load could never work (_conventions.md § 1). -->
   <div class="action-bar" data-result="deka-strong-chicago-2026" data-cause="link" hidden>
-    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: source link
-         unreachable" → Try again?). Inside the action bar, directly above
+    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: couldn't open the
+         source link" → Try again?). Inside the action bar, directly above
          the Open button that failed. "Try again" is Try again → yes: it
          re-runs the same open check (back through ResultDetail → LinkWorks).
          "Dismiss" just closes the alert, leaving the result in place. Try
@@ -313,8 +313,8 @@
          failures a browser can detect: a malformed official_result_url or
          the new tab being blocked. -->
     <div class="inline-error" role="alert">
-      <h2>Couldn’t open the official result page</h2>
-      <p>Your result on athlinks.com didn’t open. Timing sites are sometimes down for a while — try again now or later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The link to your result on athlinks.com didn’t open in a new tab. Your browser may have blocked it. Try again.</p>
       <div class="alert-actions">
         <button type="button" class="alert-btn" data-try-again>Try again</button>
         <button type="button" class="alert-btn dismiss">Dismiss</button>
@@ -324,8 +324,8 @@
     <p class="action-caption">Opens in a new tab.</p>
   </div>
   <div class="action-bar" data-result="hyrox-london-2025" data-cause="link" hidden>
-    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: source link
-         unreachable" → Try again?). Inside the action bar, directly above
+    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: couldn't open the
+         source link" → Try again?). Inside the action bar, directly above
          the Open button that failed. "Try again" is Try again → yes: it
          re-runs the same open check (back through ResultDetail → LinkWorks).
          "Dismiss" just closes the alert, leaving the result in place. Try
@@ -334,8 +334,8 @@
          failures a browser can detect: a malformed official_result_url or
          the new tab being blocked. -->
     <div class="inline-error" role="alert">
-      <h2>Couldn’t open the official result page</h2>
-      <p>Your result on results.hyrox.com didn’t open. Timing sites are sometimes down for a while — try again now or later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The link to your result on results.hyrox.com didn’t open in a new tab. Your browser may have blocked it. Try again.</p>
       <div class="alert-actions">
         <button type="button" class="alert-btn" data-try-again>Try again</button>
         <button type="button" class="alert-btn dismiss">Dismiss</button>
@@ -345,8 +345,8 @@
     <p class="action-caption">Opens in a new tab.</p>
   </div>
   <div class="action-bar" data-result="valencia-half-2025" data-cause="link" hidden>
-    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: source link
-         unreachable" → Try again?). Inside the action bar, directly above
+    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: couldn't open the
+         source link" → Try again?). Inside the action bar, directly above
          the Open button that failed. "Try again" is Try again → yes: it
          re-runs the same open check (back through ResultDetail → LinkWorks).
          "Dismiss" just closes the alert, leaving the result in place. Try
@@ -355,8 +355,8 @@
          failures a browser can detect: a malformed official_result_url or
          the new tab being blocked. -->
     <div class="inline-error" role="alert">
-      <h2>Couldn’t open the official result page</h2>
-      <p>Your result on valenciaciudaddelrunning.com didn’t open. Timing sites are sometimes down for a while — try again now or later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The link to your result on valenciaciudaddelrunning.com didn’t open in a new tab. Your browser may have blocked it. Try again.</p>
       <div class="alert-actions">
         <button type="button" class="alert-btn" data-try-again>Try again</button>
         <button type="button" class="alert-btn dismiss">Dismiss</button>
@@ -366,8 +366,8 @@
     <p class="action-caption">Opens in a new tab.</p>
   </div>
   <div class="action-bar" data-result="berlin-marathon-2025" data-cause="link" hidden>
-    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: source link
-         unreachable" → Try again?). Inside the action bar, directly above
+    <!-- LinkError (flows.md: LinkWorks → "no" → "Error: couldn't open the
+         source link" → Try again?). Inside the action bar, directly above
          the Open button that failed. "Try again" is Try again → yes: it
          re-runs the same open check (back through ResultDetail → LinkWorks).
          "Dismiss" just closes the alert, leaving the result in place. Try
@@ -376,8 +376,8 @@
          failures a browser can detect: a malformed official_result_url or
          the new tab being blocked. -->
     <div class="inline-error" role="alert">
-      <h2>Couldn’t open the official result page</h2>
-      <p>Your result on berlin.r.mikatiming.com didn’t open. Timing sites are sometimes down for a while — try again now or later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The link to your result on berlin.r.mikatiming.com didn’t open in a new tab. Your browser may have blocked it. Try again.</p>
       <div class="alert-actions">
         <button type="button" class="alert-btn" data-try-again>Try again</button>
         <button type="button" class="alert-btn dismiss">Dismiss</button>
@@ -397,7 +397,7 @@
     var r = el.getAttribute('data-result'), c = el.getAttribute('data-cause');
     el.hidden = (r !== null && r !== slug) || (c !== null && c !== cause);
   });
-  // flows.md "Source link still opens?" as a real check: the URL must be
+  // flows.md "Official result opens in a new tab?" as a real check: the URL must be
   // well-formed http(s) and window.open must return a tab. Yes → Success3
   // (the new tab is the proof, open just now). No → LinkError.
   function openProof(btn) {

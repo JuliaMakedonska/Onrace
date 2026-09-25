@@ -15,7 +15,7 @@ This is a living index — update it as folders fill up or their purpose shifts.
 | `research/screens/` | Reference screenshots gathered during research | Empty |
 | [`sitemap.md`](./sitemap.md) | Information architecture: entities, screens (tagged by job), navigation, job-traceability matrix | Drafted |
 | [`flows.md`](./flows.md) | User flows (Mermaid) for Discovery, Log Result, and Retrieve Proof, with every decision/state/endpoint reasoned out | Drafted |
-| ↳ Rendered view | [`ia.html`](./ia.html) — the sitemap tree, all three flow diagrams, and the traceability matrix as one page | Drafted |
+| ↳ Rendered view | [`ia.html`](./ia.html) — the sitemap tree, all five flow diagrams (three job flows, two infrastructure), and the traceability matrix as one page | Drafted |
 | [`wireframes/`](./wireframes/README.md) | Low-fidelity layout explorations for core screens | Empty |
 | [`concept/`](./concept/README.md) | Visual direction exploration — moodboards, style tiles | Empty |
 | [`tokens/`](./tokens/README.md) | Design tokens (color, type, spacing, radius, elevation) | Empty |

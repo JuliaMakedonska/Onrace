@@ -8,7 +8,7 @@
   /* STATE: error — same structure and zones as log-result.html; only
      the content inside them changes (_conventions.md § 5). Three causes on
      one page, per flows.md → Related Job 3: ?cause=link (default),
-     ?cause=fields, ?cause=submit. */
+     ?cause=fields, ?cause=submit ("couldn't save the result"). */
 
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
      no custom fonts, no shadows, no content icons
@@ -17,17 +17,28 @@
      and nav tree.
 
      Drill-down form screen (_conventions.md § 1, "Drill-down screens" →
-     "Forms"): no global tab bar — "Back to My Results" in the sticky top bar
-     is the only way back — and no bottom action bar either: a sticky bottom
-     bar would collide with the on-screen keyboard, so the form's submit
-     action, Save, sits in the top bar's trailing slot (the iOS convention
-     for create/edit forms). Validation errors sit inline at the field
+     "Forms" and "Back navigation"; _screens.md → Log result → Chrome,
+     revised 2026-09-25): no global tab bar and no bottom action bar. The
+     sticky top bar is an iOS navigation bar: "‹ My Results" on the left
+     (the parent's title, since "Back to My Results" won't fit beside a
+     centred title at 390px), the title "Log result" centred in the bar
+     (the large title below the bar was dropped to save height), and Save
+     in the trailing slot, where a form's submit goes so it never collides
+     with the on-screen keyboard. Validation errors sit inline at the field
      they're about; an error about the save itself sits at the top of the
-     form, directly under the bar that holds Save. */
+     form, directly under the bar that holds Save.
+
+     Catalog link (_screens.md → Log result → Catalog link; flows.md →
+     Related Job 3, catalog branch): "Find in race catalog" opens Race
+     picker (race-picker-loading.html?run=1&<form values>). A picked race
+     comes back as catalog=<slug> and replaces the race name / date / sport
+     type fields with a read-only linked card; Unlink turns them back into
+     editable fields, pre-filled from that race. */
 
   /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
      instead of pure black on white. Still no hue. Radii: --r-sm for small
-     controls (inputs, selects, tags), --r for large surfaces (alerts). */
+     controls (inputs, selects, tags, small buttons), --r for large
+     surfaces (alerts, the catalog row, the linked-race card). */
   :root {
     --ink: #1c1c1e;          /* primary text (iOS label) */
     --ink-2: #6c6c70;        /* secondary text */
@@ -67,8 +78,10 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* --- top bar: back on the left, Save on the right. Sticky inside the
-     scroll area; its bottom border is the divider. --- */
+  /* --- top bar: back (leading), centred title, Save (trailing). Sticky
+     inside the scroll area; its bottom border is the divider. The title is
+     absolutely centred on the bar, not between the two buttons, as iOS
+     centres it. --- */
   .top-bar {
     font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
     position: sticky;
@@ -83,8 +96,10 @@
     border-bottom: 0.5px solid var(--line);
     font-size: 17px;
   }
-  /* iOS back button: chevron + label, no underline */
+  /* iOS back button: chevron + the parent's title, no underline */
   .top-bar a {
+    position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -93,8 +108,20 @@
     text-decoration: none;
   }
   .back-chevron { display: block; }
+  .bar-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    pointer-events: none;
+  }
   /* iOS bar button: plain text, semibold for the confirming action */
   .save-btn {
+    position: relative;
+    z-index: 1;
     border: none;
     background: none;
     padding: 4px 8px;
@@ -103,18 +130,12 @@
     color: var(--fill-strong);
     cursor: pointer;
   }
-  .save-progress { padding: 4px 8px; color: var(--ink-3); font-weight: 600; }
-
-  /* Large title, iOS style: system chrome = system font. It sits in the
-     content, not in the bar: "Back to My Results" plus Save leave no room
-     for a centred inline title at 390px. */
-  .form-head { padding: 12px 16px 4px; }
-  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0 0 6px 0; }
-  .form-intro { margin: 0; font-size: 0.9rem; color: var(--ink-2); }
+  .save-progress { position: relative; z-index: 1; padding: 4px 8px; color: var(--ink-3); font-weight: 600; }
 
   /* --- the form: one stacked label + control per field. Spacing, not
      boxing, separates the fields (_conventions.md § 1). --- */
-  form { padding: 16px 16px 32px; }
+  form { padding: 14px 16px 32px; }
+  .form-intro { margin: 0 0 14px 0; font-size: 0.9rem; color: var(--ink-2); }
   .field { margin: 0 0 18px 0; }
   .field label { display: block; font-size: 0.9rem; font-weight: 600; margin: 0 0 6px 0; }
   .tag {
@@ -143,8 +164,54 @@
   .field input:disabled, .field select:disabled { background: var(--fill-soft); color: var(--ink-2); }
   .hint { margin: 6px 0 0 0; font-size: 0.8rem; color: var(--ink-2); }
 
+  /* --- catalog link. "Find in race catalog" is one tappable row (a link
+     into Race picker), bordered because it's a control, not text. No
+     disclosure chevron: content icons are out (_conventions.md § 1). --- */
+  .catalog-row {
+    display: block;
+    margin: 0 0 18px 0;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  a.catalog-row[href]:hover, a.catalog-row[href]:focus-visible { background: var(--fill-soft); }
+  .catalog-row-label { display: block; font-weight: 600; color: var(--fill-strong); }
+  .catalog-row-hint { display: block; margin-top: 2px; font-size: 0.8rem; color: var(--ink-2); }
+  .catalog-row[aria-disabled="true"] { background: var(--fill-soft); }
+  .catalog-row[aria-disabled="true"] .catalog-row-label { color: var(--ink-3); }
+
+  /* The linked race: the three facts as one read-only card, set on the
+     soft fill so it reads as "not typed here". Values only, no field
+     labels (they're self-evident, like Race browse's cards). */
+  .linked-race {
+    margin: 0 0 18px 0;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--fill-soft);
+  }
+  .linked-source { margin: 0 0 6px 0; font-size: 0.78rem; font-weight: 600; color: var(--ink-2); }
+  .linked-race h3 { margin: 0 0 8px 0; font-size: 1rem; }
+  .linked-fact { margin: 0 0 2px 0; font-size: 0.88rem; }
+  .linked-fact.place { color: var(--ink-2); }
+  .unlink-btn {
+    margin-top: 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 6px 12px;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--fill-strong);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+  }
+  .unlink-btn:disabled { color: var(--ink-3); cursor: default; }
+
   /* The proof field is the one the trust model hangs on (CLAUDE.md →
-     Result trust model), so it's set apart from the four facts above it by
+     Result trust model), so it's set apart from the race facts above it by
      a separator — structural, not decorative. */
   .field.proof { border-top: 0.5px solid var(--line); padding-top: 18px; margin-top: 24px; }
 
@@ -154,7 +221,7 @@
      It gets a border because it has to read as one unit. --- */
   .field input[aria-invalid="true"], .field select[aria-invalid="true"] { border: 2px solid var(--fill-strong); padding: 9px 11px; }
   .field-error { margin: 6px 0 0 0; font-size: 0.85rem; font-weight: 600; color: var(--ink); }
-  .form-alert { border: 1px solid var(--line-strong); padding: 10px 12px; margin: 0 0 20px 0; border-radius: var(--r); background: var(--fill-soft); }
+  .form-alert { border: 1px solid var(--line-strong); padding: 10px 12px; margin: 0 0 16px 0; border-radius: var(--r); background: var(--fill-soft); }
   .form-alert h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
   .form-alert p { font-size: 0.85rem; margin: 0; }
 
@@ -168,73 +235,118 @@
 
   <div class="phone-screen">
 
-      <!-- ZONE: top bar — back to Results list on the left, the only
-           navigation on this drill-down form (no global tab bar,
-           _conventions.md § 1 → Forms). "Back to My Results" is also every
-           Log result error's give-up exit (flows.md, Related Job 3:
+      <!-- ZONE: top bar — iOS navigation bar (_conventions.md § 1 → Back
+           navigation, Forms; _screens.md → Log result → Chrome). "‹ My
+           Results" on the left goes back to Results list, the only
+           navigation on this drill-down form (no global tab bar). It's also
+           every Log result error's give-up exit (flows.md, Related Job 3:
            Fix and resubmit? / Retry? → no → DeadEnd3, "no result saved"), so
-           no error repeats it as a button. It isn't gated: you're
-           already inside the owner-only archive (_conventions.md § 2). Save on
+           no error repeats it as a button. It isn't gated: you're already
+           inside the owner-only archive (_conventions.md § 2). The title
+           "Log result" is centred in the bar. Save on
            the right is the form's submit (form="log-form"): it runs flows.md's
            checks in order — official_result_url filled in?, then race_name /
-           date / sport_type / finish_time all filled in? [?] — and only then
+           date / sport_type / finish_time all filled in? [?] (the first three
+           count as filled when a catalog race is linked) — and only then
            goes to "Loading: saving result" (the script at the end). -->
-      <nav class="top-bar" aria-label="Back and save">
-        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back to My Results</span></a>
+      <header class="top-bar">
+        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>My Results</span></a>
+        <h1 class="bar-title">Log result</h1>
         <button type="submit" form="log-form" class="save-btn">Save</button>
-      </nav>
+      </header>
 
     <main>
 
-      <!-- ZONE: title — the screen's name, iOS large title. One line of
-           intro says every field is needed, since flows.md's second check
-           treats race_name/date/sport_type/finish_time as required. That
-           requirement is [?]: CLAUDE.md's data model marks only
-           official_result_url "(required)"; the other four are an assumed
-           requirement (flows.md → HasOtherRequired). If validation drops
-           it, this line goes. -->
-      <header class="form-head">
-        <h1>Log result</h1>
-        <p class="form-intro">Every field is needed to save a result.</p>
-      </header>
-
-      <!-- ZONE: the form — sitemap.md → Entities → 3. Logged result:
-           race_name, date, sport_type, finish_time, official_result_url.
-           Semantic <form>, a <label> per control, real field names.
-           novalidate: the browser's own required-field bubbles are off so
-           flows.md's two checks (and their order) are what run, via the
-           script below; the required attributes still describe the fields.
-           Sport type uses exactly Race browse's option list and slugs.
-           Deliberately left out: sitemap.md's "optional link to a Race
-           listing". Picking a catalog race would need a search/picker
-           sub-flow that flows.md doesn't draw, so it isn't invented here. -->
       <!-- Error state (_screens.md → Log result → Error ✓ ×3 causes;
            _conventions.md § 5: the file grain is state, not cause). The form
-           comes back pre-filled from the URL, so nothing typed is lost —
-           flows.md's "Fix and resubmit?" / "Retry?" → yes is just fixing the
-           form here and tapping Save again, which re-runs the same checks.
-           → no is DeadEnd3 ("no result saved, proof lost for later"): the
-           top bar's Back, not an extra button. All three causes are real
-           markup; the script only un-hides the one named in ?cause=. -->
+           comes back pre-filled from the URL — catalog=<slug> included, so a
+           linked race stays linked — and nothing typed is lost: flows.md's
+           "Fix and resubmit?" / "Retry?" → yes is just fixing the form here
+           and tapping Save again, which re-runs the same checks. → no is
+           DeadEnd3 ("no result saved, proof lost for later"): the top bar's
+           back, not an extra button. All three causes are real markup; the
+           script only un-hides the one named in ?cause=. -->
       <form id="log-form" action="log-result-loading.html" method="get" novalidate aria-labelledby="log-form-title">
         <h2 id="log-form-title" class="visually-hidden">Result details</h2>
 
         <!-- ZONE: save error — ?cause=submit (flows.md: Submitting →
-             "Submission succeeded?" → no, link unreachable → SubmitError →
-             Retry?). About the save itself, not one field, so it sits at the
+             "Submission succeeded?" → no — connection → SubmitError,
+             "couldn't save the result" → Retry?). Reworded 2026-09-25 from
+             "link unreachable": a client-side app can't check that a timing
+             site is reachable, only that the save didn't go through, so the
+             copy is about the connection and never claims the link was
+             checked. About the save itself, not one field, so it sits at the
              top of the form, directly under the bar that holds Save
              (_conventions.md § 1 → Forms). Save stays available: tapping it
              is Retry → yes. -->
         <div class="form-alert" data-cause="submit" role="alert" hidden>
           <h2>Couldn’t save your result</h2>
-          <p>Your official result link didn’t respond, so nothing was saved. Check that the link opens on the timing site, then tap Save to try again.</p>
+          <p>Nothing was saved — Onrace couldn’t reach the server. Check your connection, then tap Save to try again. Everything you entered is still here.</p>
         </div>
 
-        <!-- ZONE: race facts — ?cause=fields (flows.md: HasOtherRequired →
-             no → OtherFieldError, "required field missing (race_name / date /
-             sport_type / finish_time)" [?] — assumed required, see the title
-             zone). An inline error under each field that's empty, worked
-             out from the pre-filled values, not a list at the top. -->
+        <!-- ZONE: intro — one line saying every field is needed, since
+             flows.md's second check treats race_name/date/sport_type/
+             finish_time as required. That requirement is [?]: CLAUDE.md's
+             data model marks only official_result_url "(required)"; the
+             other four are an assumed requirement (flows.md →
+             HasOtherRequired). Kept (it moved from under the dropped large
+             title to the top of the form) because without it the lone
+             "Required" tag on the link would suggest the rest is optional.
+             If validation drops the requirement, this line goes. -->
+        <p class="form-intro">Every field is needed to save a result.</p>
+
+        <!-- ZONE: catalog link — _screens.md → Log result → Catalog link;
+             flows.md → Related Job 3: LogForm → "taps Find in race catalog
+             (optional)" → PickerLoading → Race picker. Optional, so it's a
+             row above the race facts, not a required step; its helper text
+             says what it fills in. It's sitemap.md's "optional link to a
+             Race listing" (Entities → 3), drawn now that flows.md has the
+             picker branch.
+             The script reads the form at tap time and sends every current value
+             along (race-picker-loading.html?run=1&<values>, plus catalog=
+             if one is already linked), so nothing typed is lost on the
+             round trip (_conventions.md § 2: state travels in the URL). -->
+        <a class="catalog-row" href="race-picker-loading.html?run=1" data-open-picker>
+          <span class="catalog-row-label">Find in race catalog</span>
+          <span class="catalog-row-hint">Optional. Fills in the race name, date and sport type for you.</span>
+        </a>
+
+        <!-- ZONE: linked race — shown only when the URL carries
+             catalog=<slug> (a slug from _screens.md → Race picker → Sample
+             catalog), i.e. after Race picker's "selects a race — race name,
+             date, sport type filled and locked" edge. Replaces the three
+             race-fact fields: name, long date, full sport type (not the
+             short tag), city/country, and "From the Onrace catalog" so it's
+             clear these weren't typed. Unlink returns to this same page
+             without catalog=, with race_name/date/sport_type pre-filled from
+             the race, so the fields are editable again. The script fills the
+             card from the catalog data embedded below (the same eight races
+             as the picker), the way the form's fields are filled from the
+             URL. -->
+        <section class="linked-race" aria-labelledby="linked-race-name" data-linked hidden>
+          <p class="linked-source">From the Onrace catalog</p>
+          <h3 id="linked-race-name" data-linked-field="name"></h3>
+          <p class="linked-fact"><time data-linked-field="date"></time></p>
+          <p class="linked-fact" data-linked-field="sportType"></p>
+          <p class="linked-fact place" data-linked-field="place"></p>
+          <button type="button" class="unlink-btn" data-unlink>Unlink</button>
+        </section>
+
+        <!-- ZONE: race facts — sitemap.md → Entities → 3. Logged result:
+             race_name, date, sport_type (then finish_time and
+             official_result_url below). Semantic fields, a <label> per
+             control, real field names. Sport type uses exactly Race
+             browse's option list and slugs. Hidden (and disabled, so they
+             aren't sent) while a catalog race is linked: the linked card
+             above stands in for them.
+             ?cause=fields (flows.md: HasOtherRequired → no → OtherFieldError,
+             "required field missing (race_name / date / sport_type /
+             finish_time)" [?] — assumed required, see the intro zone): an
+             inline error under each visible field that's empty, worked out
+             from the pre-filled values, not a list at the top. When a
+             catalog race is linked these three are hidden and count as
+             filled, so only finish time can be flagged. -->
+        <div class="race-facts" data-facts>
         <div class="field">
           <label for="race_name">Race name</label>
           <input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required>
@@ -261,7 +373,11 @@
           </select>
           <p class="field-error" id="sport_type-error" data-cause="fields" data-field="sport_type" hidden>Choose a sport type.</p>
         </div>
+        </div>
 
+        <!-- ZONE: finish time — always typed, linked race or not: the
+             catalog knows the race, not your time (_screens.md → Log result
+             → Catalog link). Gets its own inline error under ?cause=fields when empty. -->
         <div class="field">
           <label for="finish_time">Finish time</label>
           <input type="text" id="finish_time" name="finish_time" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="finish_time-hint" required>
@@ -270,11 +386,12 @@
         </div>
 
         <!-- ZONE: proof — official_result_url, the one field CLAUDE.md
-             marks required and flows.md checks first (HasLink). Its helper
-             text says why it's required and what Onrace does with it:
-             nothing — the link itself is the evidence (sitemap.md →
-             Entities → 4. Source-link proof: self-reported, never
-             "verified"; CLAUDE.md → Result trust model).
+             marks required and flows.md checks first (HasLink). Always typed,
+             even with a catalog race linked: the catalog never holds your
+             result. Its helper text says why it's required and what Onrace
+             does with it: nothing — the link itself is the evidence
+             (sitemap.md → Entities → 4. Source-link proof: self-reported,
+             never "verified"; CLAUDE.md → Result trust model).
              ?cause=link, the default (flows.md: HasLink → no →
              ValidationError, "source link is required"): an inline error
              under this field, saying why it's needed. -->
@@ -291,19 +408,71 @@
   </div><!-- /.phone-screen -->
 
 <script>
-/* Which error (flows.md, Related Job 3): pre-fill the form from the URL,
-   then show the one cause named in ?cause= (link by default). For
-   ?cause=fields the empty fields are worked out from the pre-filled form,
-   so each gets its own inline error. aria-invalid + aria-describedby tie
-   each error to its control. */
+/* The Race picker's sample catalog (_screens.md → Race picker → Sample
+   catalog: past editions, newest first). Embedded once per file, identical
+   in log-result*.html and race-picker*.html. Global so the scripts below
+   can read it. */
+var CATALOG = [
+  { slug: 'utmb-2026', name: 'UTMB — Ultra-Trail du Mont-Blanc', date: '2026-08-28', short: '28 Aug 2026', long: '28 August 2026', sport: 'ultra', sportType: 'Ultra', tag: 'Ultra', city: 'Chamonix', country: 'France' },
+  { slug: 'boston-marathon-2026', name: 'Boston Marathon', date: '2026-04-20', short: '20 Apr 2026', long: '20 April 2026', sport: 'marathon', sportType: 'Marathon', tag: 'Marathon', city: 'Boston', country: 'USA' },
+  { slug: 'deka-strong-chicago-2026', name: 'DEKA STRONG Chicago', date: '2026-03-14', short: '14 Mar 2026', long: '14 March 2026', sport: 'deka', sportType: 'DEKA / functional fitness', tag: 'DEKA', city: 'Chicago', country: 'USA' },
+  { slug: 'hyrox-dallas-2026', name: 'HYROX Dallas', date: '2026-01-17', short: '17 Jan 2026', long: '17 January 2026', sport: 'hyrox', sportType: 'HYROX', tag: 'HYROX', city: 'Dallas', country: 'USA' },
+  { slug: 'hyrox-london-2025', name: 'HYROX London', date: '2025-12-06', short: '6 Dec 2025', long: '6 December 2025', sport: 'hyrox', sportType: 'HYROX', tag: 'HYROX', city: 'London', country: 'UK' },
+  { slug: 'valencia-half-2025', name: 'Valencia Half Marathon', date: '2025-10-26', short: '26 Oct 2025', long: '26 October 2025', sport: 'half-marathon', sportType: 'Half marathon', tag: 'Half marathon', city: 'Valencia', country: 'Spain' },
+  { slug: 'berlin-marathon-2025', name: 'Berlin Marathon', date: '2025-09-21', short: '21 Sep 2025', long: '21 September 2025', sport: 'marathon', sportType: 'Marathon', tag: 'Marathon', city: 'Berlin', country: 'Germany' },
+  { slug: 'spartan-beast-killington-2025', name: 'Spartan Race Beast — Killington', date: '2025-09-13', short: '13 Sep 2025', long: '13 September 2025', sport: 'ocr', sportType: 'OCR', tag: 'OCR', city: 'Killington', country: 'USA' }
+];
+</script>
+
+<script>
+/* Form state from the URL (_conventions.md § 2), the error cause, the
+   catalog link, and Save. Pre-fills the form (catalog=<slug> included),
+   shows the one cause named in ?cause=, and wires Unlink, Find in race
+   catalog and Save exactly as on log-result.html. */
 (function () {
-  var FIELDS = ['race_name', 'date', 'sport_type', 'finish_time', 'official_result_url'];
+  var FACTS = ['race_name', 'date', 'sport_type'];
+  var FIELDS = FACTS.concat(['finish_time', 'official_result_url']);
   var params = new URLSearchParams(window.location.search);
   var form = document.getElementById('log-form');
+
+  // Pre-fill the typed fields from the URL.
   FIELDS.forEach(function (f) {
     var v = params.get(f);
     if (v) form.elements[f].value = v;
   });
+
+  // catalog=<slug> → the linked card replaces the three race facts.
+  var linked = null;
+  CATALOG.forEach(function (r) { if (r.slug === params.get('catalog')) linked = r; });
+  var card = form.querySelector('[data-linked]');
+  if (linked) {
+    card.querySelector('[data-linked-field="name"]').textContent = linked.name;
+    var when = card.querySelector('[data-linked-field="date"]');
+    when.textContent = linked.long;
+    when.setAttribute('datetime', linked.date);
+    card.querySelector('[data-linked-field="sportType"]').textContent = linked.sportType;
+    card.querySelector('[data-linked-field="place"]').textContent = linked.city + ', ' + linked.country;
+    card.hidden = false;
+    form.querySelector('[data-facts]').hidden = true;
+    FACTS.forEach(function (f) { form.elements[f].disabled = true; });
+  }
+
+  // The form's values as the URL carries them: catalog=<slug> in place of
+  // the three race facts when a race is linked.
+  function current() {
+    var q = new URLSearchParams();
+    if (linked) q.set('catalog', linked.slug);
+    else FACTS.forEach(function (f) { q.set(f, form.elements[f].value.trim()); });
+    q.set('finish_time', form.elements.finish_time.value.trim());
+    q.set('official_result_url', form.elements.official_result_url.value.trim());
+    return q;
+  }
+
+  // Which error: show the one cause named in ?cause= (link by default).
+  // For ?cause=fields the empty fields are worked out from the pre-filled
+  // form (only visible ones: a linked race's facts count as filled), so
+  // each gets its own inline error. aria-invalid + aria-describedby tie
+  // each error to its control.
   var cause = ['fields', 'submit'].indexOf(params.get('cause')) > -1 ? params.get('cause') : 'link';
   function flag(f) {
     var el = form.elements[f];
@@ -315,44 +484,56 @@
   }
   if (cause === 'link') flag('official_result_url');
   if (cause === 'fields') {
-    FIELDS.slice(0, 4).forEach(function (f) { if (!form.elements[f].value.trim()) flag(f); });
+    (linked ? ['finish_time'] : FIELDS.slice(0, 4)).forEach(function (f) {
+      if (!form.elements[f].value.trim()) flag(f);
+    });
   }
   if (cause === 'submit') {
-    document.querySelector('[data-cause="submit"]').hidden = false;
+    form.querySelector('[data-cause="submit"]').hidden = false;
   }
-})();
-</script>
 
-<script>
-/* Save (flows.md, Related Job 3) — real checks, in flows.md's order
-   (_conventions.md § 2: system decisions are real checks, not the happy
-   path). State travels in the URL: the five field values go along, so the
-   error and loading pages show the same form.
-     official_result_url empty            → Error, ?cause=link
-     any of the other four empty [?]      → Error, ?cause=fields
-     all filled in                        → Loading: saving result (?run=1)
-   A reviewer's &fail=1 on this page is passed on to the loading page. */
-(function () {
-  var FIELDS = ['race_name', 'date', 'sport_type', 'finish_time', 'official_result_url'];
-  var form = document.getElementById('log-form');
-  var here = new URLSearchParams(window.location.search);
+  // Unlink → this same page without catalog=, the race's own values
+  // pre-filled into the now-editable fields (_screens.md → Catalog link).
+  card.querySelector('[data-unlink]').addEventListener('click', function () {
+    if (!linked) return;
+    var p = new URLSearchParams(window.location.search);
+    p.delete('catalog');
+    p.set('race_name', linked.name);
+    p.set('date', linked.date);
+    p.set('sport_type', linked.sport);
+    window.location.href = 'log-result-error.html?' + p.toString();
+  });
+
+  // Find in race catalog → Race picker's loading page, with every current
+  // value read at tap time (flows.md: LogForm → PickerLoading).
+  form.querySelector('[data-open-picker]').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = 'race-picker-loading.html?run=1&' + current().toString();
+  });
+
+  // Save (flows.md, Related Job 3) — real checks, in flows.md's order.
+  //   official_result_url empty                 → Error, ?cause=link
+  //   any other required field empty [?]        → Error, ?cause=fields
+  //     (only finish_time when a race is linked: the catalog fills the rest)
+  //   all filled in                             → Loading: saving result (?run=1)
+  // catalog=<slug> travels along. A reviewer's &fail=1 on this page is
+  // passed on to the loading page.
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var q = new URLSearchParams();
-    FIELDS.forEach(function (f) { q.set(f, form.elements[f].value.trim()); });
+    var q = current();
+    var required = linked ? ['finish_time'] : FIELDS.slice(0, 4);
     var cause = !q.get('official_result_url') ? 'link'
-      : FIELDS.slice(0, 4).some(function (f) { return !q.get(f); }) ? 'fields'
+      : required.some(function (f) { return !q.get(f); }) ? 'fields'
       : null;
     if (cause) {
       window.location.href = 'log-result-error.html?cause=' + cause + '&' + q.toString();
     } else {
-      if (here.get('fail') === '1') q.set('fail', '1');
+      if (params.get('fail') === '1') q.set('fail', '1');
       window.location.href = 'log-result-loading.html?run=1&' + q.toString();
     }
   });
 })();
 </script>
-
 
 <script>
 /* A logged result is a race already run: no future dates. Set from the

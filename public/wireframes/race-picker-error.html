@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Race picker (Error) — Onrace (wireframe)</title>
+<style>
+  /* STATE: error — same structure and zones as race-picker.html; only
+     the content inside them changes (_conventions.md § 5). flows.md →
+     Related Job 3: PickerLoading → "connection fails" → "Error: could not
+     load the race catalog" → Retry?. */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons (system-chrome glyphs
+     only, and this screen needs none: Cancel is a text button). Deferred per
+     _conventions.md § 7. Bare screen (_conventions.md § 1): index.html
+     provides the device frame and nav tree.
+
+     Race picker (_screens.md → Race picker; flows.md → Related Job 3,
+     catalog branch). A modal sheet over Log result, not a drill-down
+     (_conventions.md § 1, "Pickers are modal sheets"): choosing a race is a
+     sub-task of the form. The top bar holds Cancel on the left (text
+     button, styled like Sign in / Sign up's Close) and the centred title
+     "Find a race"; there's no Save (selecting a row is the action), no
+     "‹ Back" and no tab bar. The sheet sits on a gray strip at the top, the
+     edge of the form behind it, with --r top corners.
+
+     Values travel in the URL (_conventions.md § 2): Log result's current
+     form values (race_name, date, sport_type, finish_time,
+     official_result_url, and catalog= if one is already linked) arrive
+     here and are carried through search, retry, Cancel and "Type it in
+     instead". Selecting a race returns log-result.html?catalog=<slug> with
+     finish_time and official_result_url, and without the three race facts
+     the catalog now supplies. */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (search field, tags), --r for large surfaces (the sheet's top
+     edge, race rows, state buttons). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, placeholder regions */
+    --fill-track: #e9e9eb;   /* search-field fill */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  html, body { height: 100%; }
+  /* The gray behind the sheet is the form it was opened from, peeking out
+     above the sheet's top edge (iOS page sheet). */
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: var(--line);
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { color: var(--ink); }
+
+  .sheet {
+    flex: 1;
+    min-height: 0;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: var(--r) var(--r) 0 0;
+    overflow: hidden;
+  }
+
+  /* --- modal top bar: Cancel (leading, text button) + centred title.
+     iOS navigation bar metrics; system chrome = system font. --- */
+  .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    flex: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
+  }
+  .cancel {
+    position: relative;
+    z-index: 1;
+    padding: 4px 8px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .bar-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  /* --- search: iOS search field under the bar, outside the scroll so it
+     stays reachable. Submits on the keyboard's Search key. --- */
+  .search { flex: none; padding: 10px 16px; border-bottom: 0.5px solid var(--line); }
+  .search input[type="search"] {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 8px 12px;
+    background: var(--fill-track);
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    border-radius: var(--r-sm);
+  }
+  .search input[type="search"]::placeholder { color: var(--ink-3); }
+
+  .phone-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  main { padding: 12px 16px 24px; }
+
+  .list-intro { margin: 0 0 10px 0; font-size: 0.85rem; color: var(--ink-2); }
+
+  /* --- race rows: Race browse's cards, tightened — name, short sport tag
+     + date, city/country. The whole row is one link: tapping it is the
+     selection. --- */
+  .race-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+  }
+  article.race-card { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+  article.race-card a.card-link {
+    display: block;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: inherit;
+  }
+  article.race-card a.card-link:hover,
+  article.race-card a.card-link:focus-visible { background: var(--fill-soft); }
+  article.race-card h3 { margin: 0 0 8px 0; font-size: 1rem; }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 6px 0;
+    font-size: 0.88rem;
+  }
+  .sport-tag {
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    font-size: 0.78rem;
+    border-radius: 6px;
+  }
+  .card-location { margin: 0; font-size: 0.88rem; color: var(--ink-2); }
+
+  /* --- state message (empty/error): replaces the race rows, in the same
+     place. No box around it — spacing alone groups heading, copy, and
+     actions (_conventions.md § 1, "zone separation is spacing"). --- */
+  .state-message { padding: 32px 8px; text-align: center; }
+  .state-message h2 { font-size: 1rem; margin: 0 0 6px 0; }
+  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: var(--ink-2); }
+  .state-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .state-action {
+    display: inline-block;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 9px 18px;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: var(--r);
+  }
+  .state-action.secondary { background: #fff; color: var(--ink); }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Race picker, error state (wireframe)">
+
+  <div class="sheet">
+
+    <!-- ZONE: modal top bar — Cancel + title (_conventions.md § 1,
+         "Pickers are modal sheets"; _screens.md → Race picker → Chrome).
+         Cancel is flows.md's Picker → "cancels — form unchanged" → LogForm:
+         it returns to log-result.html with every carried value, catalog=
+         included if a race was already linked, so the form is exactly as it
+         was. Here it is also Retry → no, like "Type it in instead". No Save: selecting a row is the action. No tab bar. -->
+    <header class="top-bar">
+      <a class="cancel" href="log-result.html" data-back-to-form>Cancel</a>
+      <h1 class="bar-title">Find a race</h1>
+    </header>
+
+    <!-- ZONE: search — _screens.md → Race picker → What it lists: matches
+         name or city, runs on submit (the keyboard's Search key) and goes
+         through the loading page like Race browse's filter changes
+         (flows.md: Picker → "searches" → PickerLoading). A real GET form to
+         race-picker-loading.html?run=1&q=<query>&<carried values>; the
+         hidden inputs carry Log result's values (the script fills them from
+         the URL and disables the empty ones so they aren't sent). Keeps the query that failed; searching again also retries. -->
+    <form class="search" id="picker-search" role="search" action="race-picker-loading.html" method="get">
+      <input type="hidden" name="run" value="1">
+      <label for="q" class="visually-hidden">Search past races by name or city</label>
+      <input type="search" id="q" name="q" placeholder="Race name or city" enterkeyhint="search" autocomplete="off">
+      <input type="hidden" name="race_name">
+      <input type="hidden" name="date">
+      <input type="hidden" name="sport_type">
+      <input type="hidden" name="finish_time">
+      <input type="hidden" name="official_result_url">
+      <input type="hidden" name="catalog">
+    </form>
+
+    <div class="phone-screen">
+
+      <!-- ZONE: error state — replaces the race rows (_screens.md → Race
+           picker → Error; flows.md: PickerLoading → "connection fails" →
+           PickerError, "could not load the race catalog" → PickerRetry).
+           "Try again" is Retry → yes: race-picker-loading.html?run=1 with
+           the same q and carried values. "Type it in instead" is Retry →
+           no — not a dead end, because the form works without a catalog
+           link (flows.md decisions): back to log-result.html with every
+           carried value. Cancel in the bar does the same. -->
+      <main>
+        <div class="state-message" role="alert">
+          <h2>Couldn’t load the race catalog</h2>
+          <p>Check your connection and try again, or type the race in yourself. What you’ve entered on the form is kept.</p>
+          <div class="state-actions">
+            <a class="state-action" href="race-picker-loading.html?run=1" data-retry>Try again</a>
+            <a class="state-action secondary" href="log-result.html" data-back-to-form>Type it in instead</a>
+          </div>
+        </div>
+      </main>
+
+    </div><!-- /.phone-screen -->
+
+  </div><!-- /.sheet -->
+
+<script>
+/* The Race picker's sample catalog (_screens.md → Race picker → Sample
+   catalog: past editions, newest first). Embedded once per file, identical
+   in log-result*.html and race-picker*.html. Global so the script below
+   can read it. */
+var CATALOG = [
+  { slug: 'utmb-2026', name: 'UTMB — Ultra-Trail du Mont-Blanc', date: '2026-08-28', short: '28 Aug 2026', long: '28 August 2026', sport: 'ultra', sportType: 'Ultra', tag: 'Ultra', city: 'Chamonix', country: 'France' },
+  { slug: 'boston-marathon-2026', name: 'Boston Marathon', date: '2026-04-20', short: '20 Apr 2026', long: '20 April 2026', sport: 'marathon', sportType: 'Marathon', tag: 'Marathon', city: 'Boston', country: 'USA' },
+  { slug: 'deka-strong-chicago-2026', name: 'DEKA STRONG Chicago', date: '2026-03-14', short: '14 Mar 2026', long: '14 March 2026', sport: 'deka', sportType: 'DEKA / functional fitness', tag: 'DEKA', city: 'Chicago', country: 'USA' },
+  { slug: 'hyrox-dallas-2026', name: 'HYROX Dallas', date: '2026-01-17', short: '17 Jan 2026', long: '17 January 2026', sport: 'hyrox', sportType: 'HYROX', tag: 'HYROX', city: 'Dallas', country: 'USA' },
+  { slug: 'hyrox-london-2025', name: 'HYROX London', date: '2025-12-06', short: '6 Dec 2025', long: '6 December 2025', sport: 'hyrox', sportType: 'HYROX', tag: 'HYROX', city: 'London', country: 'UK' },
+  { slug: 'valencia-half-2025', name: 'Valencia Half Marathon', date: '2025-10-26', short: '26 Oct 2025', long: '26 October 2025', sport: 'half-marathon', sportType: 'Half marathon', tag: 'Half marathon', city: 'Valencia', country: 'Spain' },
+  { slug: 'berlin-marathon-2025', name: 'Berlin Marathon', date: '2025-09-21', short: '21 Sep 2025', long: '21 September 2025', sport: 'marathon', sportType: 'Marathon', tag: 'Marathon', city: 'Berlin', country: 'Germany' },
+  { slug: 'spartan-beast-killington-2025', name: 'Spartan Race Beast — Killington', date: '2025-09-13', short: '13 Sep 2025', long: '13 September 2025', sport: 'ocr', sportType: 'OCR', tag: 'OCR', city: 'Killington', country: 'USA' }
+];
+</script>
+
+<script>
+/* Race picker, error (PickerError → Retry?): carried values, Try
+   again, and "Type it in instead". */
+(function () {
+  var CARRY = ['race_name', 'date', 'sport_type', 'finish_time', 'official_result_url', 'catalog'];
+  var params = new URLSearchParams(window.location.search);
+  var q = (params.get('q') || '').trim();
+
+  // Log result's values as they arrived — only the non-empty ones, minus
+  // any keys in skip.
+  function carried(skip) {
+    var p = new URLSearchParams();
+    CARRY.forEach(function (k) {
+      if (skip && skip.indexOf(k) > -1) return;
+      var v = params.get(k);
+      if (v) p.set(k, v);
+    });
+    return p;
+  }
+  function withQuery(p) {
+    var out = new URLSearchParams();
+    if (q) out.set('q', q);
+    p.forEach(function (v, k) { out.append(k, v); });
+    return out;
+  }
+  function url(page, p) {
+    var s = p.toString();
+    return page + (s ? '?' + s : '');
+  }
+  // PickerMatches? — name or city, case-insensitive.
+  function matches(r) {
+    if (!q) return true;
+    var needle = q.toLowerCase();
+    return r.name.toLowerCase().indexOf(needle) > -1 || r.city.toLowerCase().indexOf(needle) > -1;
+  }
+
+  // Cancel, and "Type it in instead": back to the form, values intact.
+  document.querySelectorAll('[data-back-to-form]').forEach(function (a) {
+    a.href = url('log-result.html', carried());
+  });
+
+  // Search: show the current query, carry the form's values as hidden
+  // inputs (disabled when empty, so they aren't sent).
+  var search = document.getElementById('picker-search');
+  search.elements.q.value = q;
+  CARRY.forEach(function (k) {
+    var input = search.querySelector('input[type="hidden"][name="' + k + '"]');
+    var v = params.get(k);
+    if (v) input.value = v; else input.disabled = true;
+  });
+  document.querySelectorAll('[data-q]').forEach(function (el) { el.textContent = q; });
+
+  // Try again (Retry → yes): the same fetch, same q and values.
+  document.querySelectorAll('[data-retry]').forEach(function (a) {
+    var rest = withQuery(carried()).toString();
+    a.href = 'race-picker-loading.html?run=1' + (rest ? '&' + rest : '');
+  });
+})();
+</script>
+
+</body>
+</html>
