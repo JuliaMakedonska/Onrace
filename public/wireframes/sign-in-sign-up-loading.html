@@ -164,6 +164,13 @@
   }
   .submit-btn:disabled { cursor: default; }
 
+  /* Under the password field: "Forgot password?" in Sign in mode, the
+     length hint in Create account mode. One small line either way. */
+  .field-hint { margin: 6px 0 0 0; font-size: 0.8rem; color: var(--ink-2); }
+  .forgot { margin: 8px 0 0 0; font-size: 0.85rem; text-align: right; }
+  .forgot a { color: var(--fill-strong); }
+  .forgot a[aria-disabled="true"] { color: var(--ink-3); }
+
   /* One short line under the action, Create account mode only. */
   .form-note { margin: 10px 0 0 0; font-size: 0.85rem; color: var(--ink-2); text-align: center; }
 
@@ -227,7 +234,7 @@
            Create account deliberately asks for nothing more: name, country
            and language are edited on Profile (sitemap.md → Entities 5), so
            the gate stays as short as the job it enables. Not drawn because
-           no flow has them: "Forgot password?", social sign-in. Submitting
+           no flow has it: social sign-in. Submitting
            is flows.md's "submits credentials" edge → SigningIn
            (sign-in-sign-up-loading.html?run=1, carrying ?next and ?mode). -->
       <form id="auth-form" aria-busy="true">
@@ -238,7 +245,16 @@
           </div>
           <div class="field">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" autocomplete="current-password" required value="xxxxxxxxxx">
+            <input type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••" aria-label="Password, hidden while it sends">
+            <!-- ZONE: under the password field — two lines, one per mode, both
+                 real markup (setMode shows one). Locked here like the rest
+                 of the form: "Forgot password?" is shown but inactive
+                 (aria-disabled, no href) while the request runs; it's live
+                 on sign-in-sign-up.html and -error.html. The hint is the
+                 same as there: "At least 8 characters." [?] in Create
+                 account mode. -->
+            <p class="field-hint" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
+            <p class="forgot" data-mode="signin"><a id="forgot" aria-disabled="true">Forgot password?</a></p>
           </div>
           <button type="submit" class="submit-btn"><span data-mode="signin">Signing in…</span><span data-mode="signup" hidden>Creating account…</span></button>
           <p class="form-note" data-mode="signup" hidden>We'll email you a link to confirm your address.</p>
@@ -287,6 +303,9 @@
       el.hidden = el.getAttribute('data-mode') !== m || (f !== null && f !== dest);
     });
     document.getElementById('password').setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
+    // The length hint describes the field only in Create account mode.
+    if (m === 'signup') document.getElementById('password').setAttribute('aria-describedby', 'pw-hint');
+    else document.getElementById('password').removeAttribute('aria-describedby');
     document.title = (m === 'signup' ? 'Create account' : 'Sign in') + ' (Loading) — Onrace (wireframe)';
   }
 

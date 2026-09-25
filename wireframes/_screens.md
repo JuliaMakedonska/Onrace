@@ -203,6 +203,47 @@ Files: `sign-in-sign-up.html`, `-error`, `-loading`, `-check-inbox`.
 
 ---
 
+## Reset password — `[INFRASTRUCTURE]` (added 2026-09-25)
+
+**Job it closes:** none. It exists because email + password sign-in does: a forgotten password needs a way back in (`../sitemap.md` → Entities → 5).
+
+**Where it sits in the flow** (`../flows.md` → Flow 6): Sign in / Sign up → **Forgot password?** → Reset password → "submits email" → `Loading: sending reset link` → "Request accepted?" → Check inbox. It carries `email` (pre-filled from what was typed on Sign in) and `next` (where the person was heading) through every page.
+
+**Chrome:** a drill-down *inside* the Sign in modal. The top bar has "‹ Sign in" on the left (the parent's title, because the bar also holds the centred title "Reset password", `_conventions.md` § 1). There's no tab bar. One field (Email), and the primary action **Send reset link** at the end of the form, in the content flow, the gate's rule rather than the form rule: it's a sub-step of the gate (`_conventions.md` § 1, Gates).
+
+| State | Real? | Why |
+|---|:---:|---|
+| Empty | — | The blank form is the base page. |
+| Error | ✓ | Two causes on one page: by default `RequestError`, "couldn't send the reset link" (connection; `Retry?`: yes re-sends, no is `DeadEnd11`); `?cause=rate`, `RateError`, "too many requests — wait a minute" (Supabase's auth-email rate limit; the fix is waiting). |
+| Loading | ✓ | `Requesting: sending reset link`. |
+| Check inbox | ✓ | `ResetInbox`, the same kind of named flow-step state as Sign up's (`_conventions.md` § 4). Copy must not claim an email was sent: "If an account exists for <email>, we've sent a link…" (Supabase answers the same either way). Offers **Resend link** (back through loading) and **Use a different email** (back to the form, address pre-filled). The bar's "‹ Sign in" is the way back (revised 2026-09-25, `_critique.md` #2). `?opened=1` stands in for opening the emailed link (→ New password); with `&expired=1` it's an expired link instead. |
+| Success | — | Not this screen's: the flow's success is on New password. |
+
+Files: `reset-password.html`, `-error`, `-loading`, `-check-inbox`.
+
+---
+
+## New password — `[INFRASTRUCTURE]` (added 2026-09-25)
+
+**Job it closes:** none (same reason as Reset password).
+
+**Where it sits in the flow** (`../flows.md` → Flow 6): opening the emailed reset link → "Reset link valid?" → New password (a recovery session exists) → "taps Save" → client checks → `Loading: saving new password` → "Password updated?". Success: the recovery session ends on this device and the person lands on Sign in with "Password changed" and their `next` kept. Signing in with the new password then works normally.
+
+**Chrome:** the same drill-down pattern as Reset password: "‹ Sign in" on the left (going back abandons the reset) and the centred title "New password", with no tab bar. Fields: **New password** and **Confirm new password**, with the hint "At least 8 characters" `[?]` (Onrace's choice; Supabase's default is 6). The primary action **Save new password** sits at the end of the form.
+
+| State | Real? | Why |
+|---|:---:|---|
+| Empty | — | The blank form is the base page. |
+| Error | ✓ | Five causes on one page (`_conventions.md` § 5). Client-side, inline at the fields: `?cause=short` (under 8 characters) and `?cause=mismatch` (the two fields differ). Server-side: `?cause=same`, "that's your current password — choose a different one" (Supabase refuses only the current password; it keeps no history), inline at New password; `?cause=submit`, "couldn't save the new password" (connection or expired recovery session), at the top of the form with retry and "request a new link". Link opening: `?cause=expired`, "this reset link has expired or was already used". No form is shown, because there's no recovery session; the only action is **Request a new link** (→ Reset password). |
+| Loading | ✓ | `SavingPw: saving new password`. Form locked, button "Saving…". |
+| Success | — | Lands on Sign in with a confirmation. Not an endpoint of its own. |
+
+Files: `new-password.html`, `-error`, `-loading`.
+
+**Sign in / Sign up changes (same pass):** in Sign in mode, a **Forgot password?** link under the password field → `reset-password.html?email=<typed>&next=<next>`. `?reset=done` shows a one-line confirmation above the form: "Password changed. Sign in with your new password." In Create account mode, the password hint "At least 8 characters" `[?]`, the same rule as New password.
+
+---
+
 ## Profile — `[INFRASTRUCTURE]`
 
 **Job it closes:** none (`../sitemap.md` → Entities → 5, and its reversal note). It shows whose account this is and lets the person leave it.
@@ -233,4 +274,6 @@ Files: `profile.html`, `-error`, `-loading`.
 | Log result | — (blank form = base) | ✓ ×3 causes | ✓ | — (lands on Results list) | 3 |
 | Result detail | — | ✓ ×2 causes | ✓ | ✓ (base) | 3 |
 | Sign in / Sign up | — (blank form = base) | ✓ ×3 causes | ✓ | — (lands on `next`); + Check inbox | 4 |
+| Reset password | — (blank form = base) | ✓ ×2 causes | ✓ | — (flow succeeds on New password); + Check inbox | 4 |
+| New password | — (blank form = base) | ✓ ×5 causes | ✓ | — (lands on Sign in) | 3 |
 | Profile | — | ✓ ×2 causes | ✓ | — | 3 |

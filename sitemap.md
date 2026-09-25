@@ -90,7 +90,7 @@ The account a person signs into, and the minimal facts that say whose it is. Pri
 **Fields/parts:**
 - sign-in identity (email): already provided by Supabase Auth, not a new field
 
-**Sign-in method, decided 2026-09-25:** **email + password through Supabase Auth, with Confirm email on**, Supabase's default. It's deliberately not turned off to simplify things: confirming proves the address belongs to the person, and an archive of proof links is worth that step. So Create account doesn't sign anyone in. It sends an email, and opening its link does (`flows.md` → Flow 4). Not in MVP: magic links, social sign-in. **Flagged, not built:** password reset. By the same test that justified Profile ("does the existence of auth require it?"), email + password *does* require a way back in for someone who forgets their password. It's the next infrastructure gap, needing its own flow (reset email → set new password).
+**Sign-in method, decided 2026-09-25:** **email + password through Supabase Auth, with Confirm email on**, Supabase's default. It's deliberately not turned off to simplify things: confirming proves the address belongs to the person, and an archive of proof links is worth that step. So Create account doesn't sign anyone in. It sends an email, and opening its link does (`flows.md` → Flow 4). Not in MVP: magic links, social sign-in. **Password reset (closed 2026-09-25; flagged earlier the same day):** by the same test that justified Profile ("does the existence of auth require it?"), email + password requires a way back in for someone who forgets their password. `flows.md` → Flow 6 draws it, with two new infrastructure screens, **Reset password** and **New password** (Screens, below). No new fields: it only changes the password Supabase Auth already holds. One new `[?]` rule: passwords are at least **8 characters** (a Supabase project setting; its default is 6), at sign-up and on reset alike.
 - name
 - country
 - language `[?]`: stored as a preference only. `../CLAUDE.md` plans no localization, so the field changes nothing in the UI yet. Don't design it as if it switches the app's language.
@@ -199,7 +199,25 @@ Sign in / Sign up  [INFRASTRUCTURE]
   technically (to make ownership work), but not sourced to any stated job.
   Method: email + password, Supabase Auth, Confirm email on (Entities → 5).
   Create account → "check your inbox" → the emailed link signs you in
-  (flows.md → Flow 4).
+  (flows.md → Flow 4). "Forgot password?" → Reset password (Flow 6).
+
+Reset password  [INFRASTRUCTURE]  (added 2026-09-25)
+  Ask for a reset link: one email field, then "check your inbox". The copy
+  says "if an account exists…", because Supabase answers the same either way
+  (nobody can use the form to learn who has an account). Not job-sourced;
+  exists because email + password sign-in does (Entities → 5).
+  Entry: contextual, "Forgot password?" on Sign in only; a drill-down inside
+  the Sign in modal ("‹ Sign in"), no tab bar.
+  States: loading · couldn't send · too many requests · check inbox.
+
+New password  [INFRASTRUCTURE]  (added 2026-09-25)
+  Set the new password: New password + Confirm, at least 8 characters [?].
+  Entry: only by opening the emailed reset link, which starts a short-lived
+  recovery session. No in-app route leads here.
+  States: saving · too short / don't match (client) · same as current ·
+  couldn't save · link expired (no form: request a new link).
+  Success: password changed, recovery session ended on this device, back on
+  Sign in with "Password changed" to sign in with it (flows.md → Flow 6).
 
 Profile  [INFRASTRUCTURE]  (added 2026-09-25)
   Shows whose account this is and lets the person leave it. Not job-sourced;
@@ -313,6 +331,8 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
 | Race detail → Profile | 2: Back → **Profile** tab | drill-down screens have no tab bar (§ 1) |
 | Any top-level screen → Profile, signed out | 1 tap + sign-in gate → lands on Profile | the same gate as My Results; no new one |
 | App launch → Sign out | 3: **Profile** tab → **Sign out** → confirm **Sign out** | the confirm alert (2026-09-25) is a deliberate extra tap on the one destructive action; still at the ceiling |
+| Sign in → reset link requested | 2: **Forgot password?** → **Send reset link** | then outside the app: the inbox. Onrace can't count the taps there |
+| Reset link opened → signed in again | 2 + typing: **Save new password** → **Sign in** | the extra sign-in after the reset is deliberate (Flow 6 Success) |
 | Launch → Log result with a catalog race | 3 + search: **My Results** → **Log result** → **Find in race catalog** → pick | optional path; typing the race in stays 2 taps |
 
 *Superseded, account-button placement (same day):* launch → Profile was 2 taps (My Results → account button), and Sign out was 3.
@@ -335,6 +355,8 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
   - **Race picker** — opened from within Log result ("Find in race catalog"), as a modal sheet; no independent entry point. Added 2026-09-25.
   - **Result detail (proof view)** — opened from within My Results (tap a logged entry); Secondary–Archivist only, per Step 2's persona note.
   - *(Profile was briefly contextual, via an account button in My Results; since 2026-09-25 it's a global tab. See § 1.)*
+  - **Reset password** — opened from Sign in's "Forgot password?" link only; a drill-down inside the Sign in modal. Added 2026-09-25.
+  - **New password** — reached only from outside the app: the emailed reset link opens it. Its exits all lead back to Sign in (success, cancel) or to Reset password (expired link).
   - **Sign in / Sign up** — surfaces only when an unauthenticated person taps My Results or Profile (owner-only per `../CLAUDE.md`'s RLS model — and since Log result now lives inside My Results, the My Results tap gates both archive jobs; the Profile tap is the second way into the same gate, since 2026-09-25); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global. *(Before 2026-09-24 it was reachable from two of the three nav items, Log Result and My Results.)*
 
 - **Deep (rare, buried actions):** **None again.** Sign out was briefly the first entry here (3 taps, under the superseded account-button placement). With the Profile tab it's an in-page action on a global destination (above): 3 taps including the confirm alert, a deliberate step on a destructive action, not burial. Editing or deleting a logged result, and any further account settings, still aren't in the screen list, so nothing is invented to fill this bucket.
@@ -349,16 +371,16 @@ So the real cost is exactly **one extra tap from anywhere outside My Results** �
 
 Rows = every job in `jtbd.md` (main, related, emotional, and social — the five unsourced items under `jtbd.md` → Hypotheses are excluded, since they're explicitly "not backed by `research.md`," a different category from what's asked here). Columns = every screen in the Screens section above. A ✓ means the screen actually participates in *closing* that job, not merely that it's adjacent to the topic.
 
-| Job (`jtbd.md`) | Race browse | Race detail | Results list | Log result | Race picker | Result detail | Sign in / Sign up | Profile |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Main Job 1 — Discovery | ✓ | ✓ | | | | | | |
-| Main Job 2 — Results archiving (combined) | ✓ | | ✓ | | | | | |
-| Related Job 1 — plan season by format | ✓ | | | | | | | |
-| Related Job 2 — choose races by location | ✓ | | | | | | | |
-| Related Job 3 — log a result with proof | | | ✓ | ✓ | ✓ | | | |
-| Related Job 4 — retrieve proof for an application | | | ✓ | | | ✓ | | |
-| Emotional — recognized as a hybrid athlete | ✓ | | | | | | | |
-| Social — proof stands on its own | | | ✓ | ✓ | | ✓ | | |
+| Job (`jtbd.md`) | Race browse | Race detail | Results list | Log result | Race picker | Result detail | Sign in / Sign up | Reset password | New password | Profile |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Main Job 1 — Discovery | ✓ | ✓ | | | | | | | | |
+| Main Job 2 — Results archiving (combined) | ✓ | | ✓ | | | | | | | |
+| Related Job 1 — plan season by format | ✓ | | | | | | | | | |
+| Related Job 2 — choose races by location | ✓ | | | | | | | | | |
+| Related Job 3 — log a result with proof | | | ✓ | ✓ | ✓ | | | | | |
+| Related Job 4 — retrieve proof for an application | | | ✓ | | | ✓ | | | | |
+| Emotional — recognized as a hybrid athlete | ✓ | | | | | | | | | |
+| Social — proof stands on its own | | | ✓ | ✓ | | ✓ | | | | |
 
 **Notes on the two `✓` rows that aren't a dedicated interaction:** Emotional and Social don't have a screen built specifically for them — per the Screens section's own "Jobs with no screen of their own" note, they're closed by *how* an existing screen reads, not by a separate destination. Emotional is closed by Race browse's cross-format framing (seeing HYROX/DEKA/marathons/etc. together as one "hybrid athlete" catalog, not siloed by sport). Social is closed by the required-link-at-entry and self-reported-labeling conventions (`research.md` → BENCHMARK mechanisms #1–2) actually being implemented on Log result, Results list, and Result detail. These are legitimate closes, not padding — but they're framing-level, not task-level, unlike every other ✓ in the matrix.
 
@@ -371,6 +393,8 @@ Rows = every job in `jtbd.md` (main, related, emotional, and social — the five
 **Sign in / Sign up**: zero checks. Tagged `[INFRASTRUCTURE]` in the Screens section: no job in `jtbd.md` calls for account creation or login on its own.
 
 **Resolution: attach to existing, not delete or add.** This screen isn't dead weight — it's required because Logged result is owner-only per `../CLAUDE.md`'s RLS model — but it shouldn't be scored as if it closes a job of its own, and it shouldn't be promoted to a first-class, job-justified destination either. The Navigation section already made the correct call here without naming it as such: Sign in / Sign up is classified as **contextual**, a gate triggered only when an unauthenticated person taps My Results (which covers both Related Jobs 3 and 4, since 2026-09-24) or Profile (since 2026-09-25), never a standalone stop. That's the resolution — it's attached to those two jobs' flows as an enabling step, not counted as closing them itself. No change needed beyond stating this explicitly here.
+
+**Reset password** and **New password**: zero checks, the same resolution as Sign in / Sign up (added 2026-09-25). They exist because email + password sign-in does, and they're attached to Sign in as its recovery path: reached from it, returning to it. Neither is scored as closing a job.
 
 **Profile**: zero checks, and the same resolution. It exists because accounts do (Entities → 5), and it's the account's home and its only sign-out point. It isn't scored as closing a job. It's a global tab since 2026-09-25 (Navigation § 1), which changes how it's reached, not what it closes. Its reversal of the 2026-09-24 "no job supports Profile" verdict is documented at Entities → 5, not here, because it changes *why* the screen exists, not what it closes.
 

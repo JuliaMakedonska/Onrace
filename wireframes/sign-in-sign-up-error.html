@@ -180,6 +180,13 @@
   .inline-error p { font-size: 0.85rem; margin: 0; }
   .inline-error p + p { margin-top: 6px; }
 
+  /* Under the password field: "Forgot password?" in Sign in mode, the
+     length hint in Create account mode. One small line either way. */
+  .field-hint { margin: 6px 0 0 0; font-size: 0.8rem; color: var(--ink-2); }
+  .forgot { margin: 8px 0 0 0; font-size: 0.85rem; text-align: right; }
+  .forgot a { color: var(--fill-strong); }
+  .forgot a[aria-disabled="true"] { color: var(--ink-3); }
+
   /* One short line under the action, Create account mode only. */
   .form-note { margin: 10px 0 0 0; font-size: 0.85rem; color: var(--ink-2); text-align: center; }
 
@@ -286,7 +293,7 @@
         </div>
         <div class="inline-error" data-mode="signup" data-cause="signup" role="alert" hidden>
           <h2>Couldn't create your account</h2>
-          <p>This email may already have an account. If so, switch to Sign in. Otherwise, check your connection and try again.</p>
+          <p>This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you're connected, then try again.</p>
         </div>
         <fieldset>
           <div class="field">
@@ -296,6 +303,24 @@
           <div class="field">
             <label for="password">Password</label>
             <input type="password" id="password" name="password" autocomplete="current-password" required>
+            <!-- ZONE: under the password field — two lines, one per mode, both
+                 real markup (setMode shows one).
+                 Sign in mode: "Forgot password?", flows.md Flows 2 & 3's
+                 "forgot password" edge → [[Flow 6: Reset password]]
+                 (reset-password.html). Its href is built at click time from
+                 what's typed in Email now, plus ?next, so Reset password is
+                 pre-filled and the person lands back where they were
+                 heading (_screens.md → Sign in / Sign up changes). Hidden
+                 in Create account mode: no account to recover yet.
+                 Create account mode: the hint "At least 8 characters." [?]
+                 — Flow 6 → Decisions: the same minimum as New password
+                 should apply at sign-up; 8 is Onrace's choice (a Supabase
+                 project setting; Supabase's default is 6). There's no
+                 client-side length check here: Flow 4 draws none, and its
+                 "Account created?" rejects a shorter password server-side
+                 either way (→ sign-in-sign-up-error.html?cause=signup). -->
+            <p class="field-hint" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
+            <p class="forgot" data-mode="signin"><a id="forgot" href="reset-password.html">Forgot password?</a></p>
           </div>
           <button type="submit" class="submit-btn"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></button>
           <p class="form-note" data-mode="signup" hidden>We'll email you a link to confirm your address.</p>
@@ -364,6 +389,9 @@
         (c !== null && (c !== cause || m !== errorMode));
     });
     document.getElementById('password').setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
+    // The length hint describes the field only in Create account mode.
+    if (m === 'signup') document.getElementById('password').setAttribute('aria-describedby', 'pw-hint');
+    else document.getElementById('password').removeAttribute('aria-describedby');
     document.title = (m === 'signup' ? 'Create account' : 'Sign in') + ' (Error) — Onrace (wireframe)';
     // Keep the URL in step, so reloading shows the same cause and mode.
     var q = [];
@@ -373,6 +401,17 @@
     if (email) q.push('email=' + encodeURIComponent(email));
     try { history.replaceState(null, '', window.location.pathname + '?' + q.join('&')); } catch (err) {}
   }
+
+  // "Forgot password?" (Sign in mode only) → Flow 6's Reset password,
+  // carrying what's typed in Email right now and ?next. Built at click
+  // time, so the address is the current one, not the one on arrival.
+  document.getElementById('forgot').addEventListener('click', function () {
+    var q = [];
+    var typed = document.getElementById('email').value.trim();
+    if (typed) q.push('email=' + encodeURIComponent(typed));
+    if (next) q.push('next=' + encodeURIComponent(next));
+    this.setAttribute('href', 'reset-password.html' + (q.length ? '?' + q.join('&') : ''));
+  });
 
   document.querySelectorAll('[data-set-mode]').forEach(function (b) {
     b.addEventListener('click', function () { setMode(b.getAttribute('data-set-mode')); });

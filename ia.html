@@ -253,6 +253,7 @@
       <a href="#flow-retrieve">Retrieve Proof</a>
       <a href="#flow-signup">Sign Up</a>
       <a href="#flow-profile">Profile</a>
+      <a href="#flow-reset">Reset</a>
       <a href="#traceability">Traceability</a>
     </div>
   </div>
@@ -263,13 +264,13 @@
   <p class="kicker">Information architecture</p>
   <h1>Onrace</h1>
   <p class="hero-desc">Screens, jobs, flows, and coverage — rendered from <code>sitemap.md</code> and <code>flows.md</code> so the IA can be read as one connected system instead of two separate markdown files.</p>
-  <p>Every screen below is tagged with the <code>jtbd.md</code> job it closes; every flow is the actual Mermaid diagram from <code>flows.md</code>, not a redrawn summary; the traceability matrix is the same coverage check, with the two infrastructure screens (no job, but required by auth) highlighted rather than just noted in prose.</p>
+  <p>Every screen below is tagged with the <code>jtbd.md</code> job it closes; every flow is the actual Mermaid diagram from <code>flows.md</code>, not a redrawn summary; the traceability matrix is the same coverage check, with the four infrastructure screens (no job, but required by auth) highlighted rather than just noted in prose.</p>
 
   <div class="meta-row">
     <span class="pill">Updated 2026-09-25</span>
-    <span class="pill">6 job screens + 2 infrastructure</span>
+    <span class="pill">6 job screens + 4 infrastructure</span>
     <span class="pill">8 jobs traced · 0 orphan jobs</span>
-    <span class="pill">3-tab nav · 5 flows (3 job + 2 infrastructure) · 10 dead ends</span>
+    <span class="pill">3-tab nav · 6 flows (3 job + 3 infrastructure) · 12 dead ends</span>
     <span class="pill">1 accepted MVP gap</span>
   </div>
 
@@ -278,7 +279,7 @@
     <p class="lede">Four corrections that came out of building this IA end-to-end — see each section below for the full reasoning.</p>
     <div class="card-grid">
       <div class="card tw-sitemap"><strong>The entry point is Race browse, not a screen called "Onrace"</strong>An earlier draft modeled a distinct entry screen to carry Main Job 2. It never existed as separate UI — removed from the tree and the matrix; its rationale relocated, not deleted (see Navigation in <code>sitemap.md</code>).</div>
-      <div class="card tw-trace"><strong>Two infrastructure screens, justified by auth, not by a job</strong>Sign in / Sign up and Profile close no job of their own (formerly tagged "orphan"). The test for them isn't "does a job need this?" but "does the existence of accounts require it?" Sign in / Sign up is a contextual gate; Profile is a global tab (since 2026-09-25). Profile, added 2026-09-25, reverses the earlier "no job supports Profile" verdict. Both now have infrastructure flows of their own: sign-up with email confirmation (Flow 4) and profile + sign out (Flow 5).</div>
+      <div class="card tw-trace"><strong>Four infrastructure screens, justified by auth, not by a job</strong>Sign in / Sign up, Reset password, New password and Profile close no job of their own (formerly tagged "orphan"). The test for them isn't "does a job need this?" but "does the existence of accounts require it?" Sign in / Sign up is a contextual gate; Profile is a global tab (since 2026-09-25). Profile, added 2026-09-25, reverses the earlier "no job supports Profile" verdict. Infrastructure flows of their own: sign-up with email confirmation (Flow 4), profile + sign out (Flow 5), and password reset (Flow 6, 2026-09-25), which adds Reset password and New password as Sign in's recovery path.</div>
       <div class="card tw-flows"><strong>Every success endpoint is now a verifiable condition</strong>Not a screen destination. Log Result's success previously just "landed on a screen" — tightened to "a <code>results</code> row now exists with <code>official_result_url</code> populated."</div>
       <div class="card tw-gap"><strong>One dead end is a known, accepted MVP gap</strong>A logged result's source link can rot with no in-app fix (<code>DeadEnd5</code>). Left as-is on purpose — no job asks to <em>correct</em> a result, only to log or retrieve one. Now tracked in <code>research.md</code>.</div>
     </div>
@@ -286,10 +287,11 @@
 
   <div class="section-index">
     <div class="card-grid">
-      <a class="card-link" href="#sitemap"><span class="si-tag" style="color:var(--patterns)">Sitemap</span><span class="si-title">Screens by entity cluster</span><span class="si-desc">6 job screens + 2 infrastructure, each tagged with the job it closes →</span></a>
-      <a class="card-link" href="#flow-discovery"><span class="si-tag" style="color:var(--benchmark)">Flows</span><span class="si-title">All five user flows</span><span class="si-desc">Three job flows — Discovery, Log Result, Retrieve Proof — plus two infrastructure flows, Sign Up and Profile — full Mermaid diagrams →</span></a>
+      <a class="card-link" href="#sitemap"><span class="si-tag" style="color:var(--patterns)">Sitemap</span><span class="si-title">Screens by entity cluster</span><span class="si-desc">6 job screens + 4 infrastructure, each tagged with the job it closes →</span></a>
+      <a class="card-link" href="#flow-discovery"><span class="si-tag" style="color:var(--benchmark)">Flows</span><span class="si-title">All six user flows</span><span class="si-desc">Three job flows — Discovery, Log Result, Retrieve Proof — plus three infrastructure flows, Sign Up, Profile and Reset Password — full Mermaid diagrams →</span></a>
       <a class="card-link" href="#flow-signup"><span class="si-tag" style="color:var(--benchmark)">Flows · Infrastructure</span><span class="si-title">Sign up &amp; Profile flows</span><span class="si-desc">Email confirmation (Flow 4) and profile + sign out (Flow 5) — no job, required by auth →</span></a>
-      <a class="card-link" href="#traceability"><span class="si-tag" style="color:var(--unconfirmed)">Traceability</span><span class="si-title">Job × screen coverage matrix</span><span class="si-desc">8 jobs, 8 screens, the two infrastructure columns highlighted →</span></a>
+      <a class="card-link" href="#flow-reset"><span class="si-tag" style="color:var(--benchmark)">Flows · Infrastructure</span><span class="si-title">Reset password flow</span><span class="si-desc">Forgot password? → reset link → new password → back to Sign in (Flow 6) — no job, required by email + password sign-in →</span></a>
+      <a class="card-link" href="#traceability"><span class="si-tag" style="color:var(--unconfirmed)">Traceability</span><span class="si-title">Job × screen coverage matrix</span><span class="si-desc">8 jobs, 10 screens, the four infrastructure columns highlighted →</span></a>
     </div>
   </div>
 </header>
@@ -395,7 +397,19 @@
     <div class="orphan-card">
       <h4 class="screen-name">Sign in / Sign up <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
       <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Exists because Logged result is owner-only via RLS, so accounts exist. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps My Results or Profile (the Log result action lives inside My Results, so that gate covers both archive jobs) — not promoted to a global nav item, not deleted.</p>
-      <p style="margin-top:8px"><strong style="color:var(--text)">Method, decided 2026-09-25:</strong> email + password through Supabase Auth, with <strong style="color:var(--text)">Confirm email</strong> on. Create account doesn't sign anyone in: it leads to a "check your inbox" step, and the emailed link signs them in (<a href="#flow-signup">Flow 4</a>). Not in MVP: magic links, social sign-in. <strong style="color:var(--text)">Flagged, not built:</strong> password reset — by the same "does auth require it?" test, email + password needs a way back in, so it's the next infrastructure gap.</p>
+      <p style="margin-top:8px"><strong style="color:var(--text)">Method, decided 2026-09-25:</strong> email + password through Supabase Auth, with <strong style="color:var(--text)">Confirm email</strong> on. Create account doesn't sign anyone in: it leads to a "check your inbox" step, and the emailed link signs them in (<a href="#flow-signup">Flow 4</a>). Not in MVP: magic links, social sign-in. <strong style="color:var(--text)">Password reset, closed 2026-09-25:</strong> "Forgot password?" on Sign in opens Reset password (<a href="#flow-reset">Flow 6</a>) — by the same "does auth require it?" test, email + password needs a way back in. Passwords are at least 8 characters <code>[?]</code>, at sign-up and on reset alike.</p>
+    </div>
+
+    <div class="orphan-card">
+      <h4 class="screen-name">Reset password <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
+      <p>Added 2026-09-25. Ask for a reset link: one email field, then "check your inbox". The copy says "if an account exists…", because Supabase answers the same either way — nobody can use the form to learn who has an account. Not job-sourced; exists because email + password sign-in does (<code>sitemap.md</code> → Entities → 5). Entry: contextual, "Forgot password?" on Sign in only — a drill-down inside the Sign in modal ("‹ Sign in"), no tab bar.</p>
+      <p style="margin-top:8px"><strong style="color:var(--text)">States (<a href="#flow-reset">Flow 6</a>):</strong> loading · couldn't send · too many requests · check inbox.</p>
+    </div>
+
+    <div class="orphan-card">
+      <h4 class="screen-name">New password <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
+      <p>Added 2026-09-25. Set the new password: New password + Confirm, at least 8 characters <code>[?]</code>. Entry: only by opening the emailed reset link, which starts a short-lived recovery session — no in-app route leads here. Its exits all lead back to Sign in (success, cancel) or to Reset password (expired link).</p>
+      <p style="margin-top:8px"><strong style="color:var(--text)">States (<a href="#flow-reset">Flow 6</a>):</strong> saving · too short / don't match (client) · same as current · couldn't save · link expired (no form: request a new link). Success: password changed, recovery session ended on this device, back on Sign in with "Password changed" to sign in with it.</p>
     </div>
 
     <div class="orphan-card">
@@ -521,6 +535,8 @@ flowchart TD
     SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
     SignIn -->|"closes without attempting"| DeadEnd2
     SignIn -->|"creates an account instead"| SignUp[["Flow 4: Sign up with email confirmation"]]
+    SignIn -->|"forgot password"| Reset[["Flow 6: Reset password"]]
+    Reset -->|"back to Sign in (password changed, or gave up)"| SignIn
     SignUp -->|"email confirmed, signed in"| ResultsList
     SigningIn --> AuthResult{"Sign-in succeeded?"}
     AuthResult -->|"no"| AuthError("Error: sign-in failed")
@@ -575,7 +591,7 @@ flowchart TD
     classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
     class Start2 start
     class SignIn,ResultsList,LogForm,Picker screen
-    class SignUp ref
+    class SignUp,Reset ref
     class SigningIn,Submitting,PickerLoading loading
     class PickerEmpty empty
     class AuthError,ValidationError,SubmitError,PickerError error
@@ -591,6 +607,7 @@ flowchart TD
         <ul>
           <li><span class="fl">Gate</span>Signed in? — logged results are owner-only via RLS, so the My Results tab gates into Sign in / Sign up, a contextual gate. A successful sign-in lands on Results list. (The same gate is also reached from the Profile tab; that path lands on Profile and is Flow 5, not this one.)</li>
           <li><span class="fl">Reference</span>Creates an account instead → <a href="#flow-signup">Flow 4</a>, drawn once and referenced (<code>[[...]]</code>), not redrawn here. A confirmed sign-up lands on Results list.</li>
+          <li><span class="fl">Reference</span>Forgot password → <a href="#flow-reset">Flow 6</a> (added 2026-09-25), also referenced, not redrawn. A changed password returns to Sign in, where the person signs in with it; the reset itself never lands on Results list.</li>
           <li><span class="fl">Branch</span>Sign-in succeeded? — a third edge since 2026-09-25: "email not confirmed yet" (Supabase's distinct error) routes into Flow 4's check-your-inbox step, not the generic sign-in error. Retrying can't fix it; confirming the email can.</li>
           <li><span class="fl">[?] Flagged</span>Finds and taps Log result? — the form is one in-page action away from Results list (header button or empty-state call to action), not a tab. Rests on the unvalidated hypothesis that people look for logging inside My Results. The action must stay usable while the list is loading or has failed to load.</li>
           <li><span class="fl">Catalog</span>Any past races match the search? (Race picker, added 2026-09-25) — optional "Find in race catalog" searches only races whose <code>event_date</code> has passed. No match isn't an error: change the search or type the race in. Picking a race fills and locks <code>race_name</code>/<code>date</code>/<code>sport_type</code>; cancelling leaves the form unchanged.</li>
@@ -642,6 +659,8 @@ flowchart TD
     SignIn2 -->|"submits credentials"| SigningIn2("Loading: signing in")
     SignIn2 -->|"closes without attempting"| DeadEnd4
     SignIn2 -->|"creates an account instead"| SignUp2[["Flow 4: Sign up with email confirmation"]]
+    SignIn2 -->|"forgot password"| Reset2[["Flow 6: Reset password"]]
+    Reset2 -->|"back to Sign in (password changed, or gave up)"| SignIn2
     SignUp2 -->|"email confirmed, signed in"| ResultsList2
     SigningIn2 --> AuthResult2{"Sign-in succeeded?"}
     AuthResult2 -->|"no"| AuthError2("Error: sign-in failed")
@@ -684,7 +703,7 @@ flowchart TD
     classDef deadendDeferred fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,stroke-dasharray:4 2,color:#eef0f2;
     class Start3 start
     class SignIn2,LogForm2,ResultsList2,ResultDetail screen
-    class SignUp2 ref
+    class SignUp2,Reset2 ref
     class SigningIn2,Loading2,DetailLoading2 loading
     class Empty2 empty
     class AuthError2,FetchError2,DetailError2,LinkError error
@@ -699,6 +718,7 @@ flowchart TD
         <h4>Decisions</h4>
         <ul>
           <li><span class="fl">Gate</span>Signed in? — same owner-only gate as Log Result, with the same two 2026-09-25 additions: "creates an account instead" references <a href="#flow-signup">Flow 4</a>, and "email not confirmed yet" routes into its check-your-inbox step.</li>
+          <li><span class="fl">Reference</span>Forgot password → <a href="#flow-reset">Flow 6</a> (added 2026-09-25), the same edge as Log Result: a changed password comes back to Sign in, not straight to the archive.</li>
           <li><span class="fl">Retry</span>Failed fetch of the logged-results list — added; previously the one network fetch in the document with no paired failure branch.</li>
           <li><span class="fl">Branch</span>Any results logged yet? — archive vs. empty state.</li>
           <li><span class="fl">Trust model</span>Official result opens in a new tab? (was "Source link still opens?" until 2026-09-25) — the moment "the link is the evidence" gets used. Reworded, like Discovery's registration check, to what a browser can verify: <code>official_result_url</code> is well-formed and the new tab wasn't blocked. Whether the timing site then loads is outside Onrace's view, so the error copy must not claim the site is down.</li>
@@ -743,7 +763,7 @@ flowchart TD
     SignUpForm -->|"submits email + password"| CreatingAccount("Loading: creating account")
     SignUpForm -->|"closes"| DeadEnd8(("Dead end: leaves without an account"))
     CreatingAccount --> SignUpOK{"Account created?"}
-    SignUpOK -->|"no — email already registered, or connection"| SignUpError("Error: couldn't create the account")
+    SignUpOK -->|"no — email already registered, password under 8 characters, or connection"| SignUpError("Error: couldn't create the account")
     SignUpError --> SignUpRetry{"Retry?"}
     SignUpRetry -->|"yes"| SignUpForm
     SignUpRetry -->|"no"| DeadEnd8
@@ -881,11 +901,108 @@ flowchart TD
     </div>
   </section>
 
+  <section class="block" id="flow-reset">
+    <span class="section-tag tag-flows">Flow · Infrastructure</span>
+    <h2>Flow 6 — Reset password</h2>
+    <p class="persona-line">Infrastructure, no job — both personas</p>
+    <blockquote class="jtbd">Not a job flow. It exists because email + password sign-in does (<code>sitemap.md</code> → Entities → 5): a password someone can forget needs a way back in. Added 2026-09-25, closing the gap flagged the same day. Drawn once here, then referenced (<code>[[...]]</code>) from Log Result and Retrieve Proof, the same way as Flow 4. Uses Supabase Auth's recovery: <code>resetPasswordForEmail</code> sends the link, opening it starts a short-lived recovery session, <code>updateUser({ password })</code> sets the new one.</blockquote>
+
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    Start6(("Sign in / Sign up: taps Forgot password?")) --> RequestForm["Reset password"]
+    RequestForm -->|"back"| BackToSignIn["Sign in / Sign up"]
+    RequestForm -->|"submits email"| Requesting("Loading: sending reset link")
+    Requesting --> RequestOK{"Request accepted?"}
+    RequestOK -->|"no — connection"| RequestError("Error: couldn't send the reset link")
+    RequestError --> RequestRetry{"Retry?"}
+    RequestRetry -->|"yes"| Requesting
+    RequestRetry -->|"no"| DeadEnd11(("Dead end: leaves without a reset link"))
+    RequestOK -->|"no — too many requests"| RateError("Error: too many requests — wait a minute")
+    RateError -->|"waits, then tries again"| RequestForm
+    RateError -->|"gives up"| DeadEnd11
+    RequestOK -->|"yes — sent if an account exists"| ResetInbox("Check inbox: open the reset link (only sent if an account exists for this address)")
+    ResetInbox -->|"resends"| Requesting
+    ResetInbox -->|"back to Sign in"| BackToSignIn
+    ResetInbox -->|"never opens a link — no account, lost email, or gave up; Onrace can't tell which"| DeadEnd12(("Dead end: reset never completed"))
+    ResetInbox -->|"opens the link in the email"| ResetLinkValid{"Reset link valid?"}
+    ResetLinkValid -->|"no — expired or already used"| ResetLinkError("Error: reset link expired or already used")
+    ResetLinkError -->|"requests a new link"| RequestForm
+    ResetLinkError -->|"gives up"| DeadEnd12
+    ResetLinkValid -->|"yes — recovery session started"| NewPassword["New password"]
+    NewPassword -->|"cancels"| BackToSignIn
+    NewPassword -->|"taps Save"| PwChecks{"At least 8 characters, and both fields match? [?]"}
+    PwChecks -->|"no"| PwError("Error: too short, or the two passwords don't match")
+    PwError -->|"fixes and saves again"| PwChecks
+    PwError -->|"gives up"| DeadEnd12
+    PwChecks -->|"yes"| SavingPw("Loading: saving new password")
+    SavingPw --> PwSaved{"Password updated?"}
+    PwSaved -->|"no — same as the current password"| SameError("Error: that's your current password — choose a different one")
+    SameError -->|"picks another"| NewPassword
+    PwSaved -->|"no — connection, or the recovery session expired"| PwSaveError("Error: couldn't save the new password")
+    PwSaveError --> PwRetry{"Retry?"}
+    PwRetry -->|"yes"| SavingPw
+    PwRetry -->|"no — session expired, needs a new link"| RequestForm
+    PwSaved -->|"yes"| Success6(("Success: password changed and the recovery session ended on this device — back on Sign in with a confirmation, to sign in with the new password"))
+    classDef start fill:#1b1d21,stroke:#686e77,stroke-width:1.5px,color:#eef0f2;
+    classDef screen fill:#1b1d21,stroke:#2a2c31,stroke-width:1.5px,color:#eef0f2;
+    classDef loading fill:#141518,stroke:#686e77,stroke-width:1.5px,stroke-dasharray:3 3,color:#9aa0a8;
+    classDef empty fill:#141518,stroke:#60a5fa,stroke-width:1.5px,color:#eef0f2;
+    classDef error fill:#241a12,stroke:#e6a23c,stroke-width:1.5px,color:#eef0f2;
+    classDef flagged fill:#1b1521,stroke:#a78bfa,stroke-width:1.5px,stroke-dasharray:4 2,color:#eef0f2;
+    classDef success fill:#0f2318,stroke:#4ade80,stroke-width:2px,color:#eef0f2;
+    classDef deadend fill:#2a1414,stroke:#ff4d2e,stroke-width:2px,color:#eef0f2;
+    class Start6 start
+    class RequestForm,BackToSignIn,NewPassword screen
+    class Requesting,SavingPw loading
+    class ResetInbox empty
+    class RequestError,RateError,ResetLinkError,PwError,SameError,PwSaveError error
+    class PwChecks flagged
+    class Success6 success
+    class DeadEnd11,DeadEnd12 deadend
+</pre>
+    </div>
+
+    <div class="flow-detail">
+      <div class="flow-col">
+        <h4>Decisions</h4>
+        <ul>
+          <li><span class="fl">Branch</span>Request accepted? — the only thing Onrace learns from the request. "Yes" means Supabase took it, <strong style="color:var(--text)">not</strong> that an email went out: Supabase answers the same for addresses with no account, so the form can't be used to find out who has one. "Too many requests" is Supabase's rate limit on auth emails, a distinct answer whose fix is waiting, not retrying at once.</li>
+          <li><span class="fl">Branch</span>Reset link valid? — checked when the app opens with the link. Like Flow 4's confirmation links, reset links expire and work once.</li>
+          <li><span class="fl">[?] Flagged</span>At least 8 characters, and both fields match? — client-side, before anything is sent. 8 is Onrace's choice (a Supabase project setting; its default is 6), flagged because nothing in the docs sets it yet. The same minimum should apply at sign-up.</li>
+          <li><span class="fl">Branch</span>Password updated? — two server-side "no"s with different fixes: a password identical to the current one (choose another), or a connection failure / expired recovery session (retry, or request a new link).</li>
+          <li><span class="fl">Observability</span>What Onrace can and can't see, stated the same way as the registration-link check. It <em>can</em> know whether Supabase accepted the request. It <em>can't</em> know whether an email arrived, whether an account exists, or whether the link is ever opened — that happens in someone's inbox, so Check inbox says "if an account exists…". It <em>can</em> know again once the link is opened: whether it's still valid, and whether the new password saved.</li>
+        </ul>
+        <h4>States</h4>
+        <ul>
+          <li>Loading: sending reset link · saving new password.</li>
+          <li>Check inbox: open the reset link, only sent if an account exists — a step waiting on the inbox, the same kind as Flow 4's, with its own state page (<code>wireframes/_conventions.md</code> § 4). Drawn in the empty-state color, like Flow 4.</li>
+          <li>Error: couldn't send the reset link (connection) · too many requests — wait a minute (rate limit) · reset link expired or already used · too short, or the two passwords don't match (client-side, inline) · that's your current password — choose a different one (server-side) · couldn't save the new password.</li>
+        </ul>
+      </div>
+      <div class="flow-col">
+        <h4>Endpoints</h4>
+        <div class="endpoint-box success">
+          <span class="eb-label">Success — Success6</span>
+          The password is changed, then Onrace ends the recovery session on this device (local sign-out) and returns to Sign in with a "password changed" line. Supabase would leave the person signed in; Onrace deliberately doesn't — signing in once with the new password proves they know it, and <code>next</code> carries them where they were heading. Verifiable as: the password was updated, and no session exists on this device.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd11</span>
+          Leaves without a reset link — the request itself failed or was rate-limited, and the person gave up. Onrace saw it happen.
+        </div>
+        <div class="endpoint-box deadend">
+          <span class="eb-label">Dead end — DeadEnd12</span>
+          Reset never completed — a request was accepted, but no new password was set: no account for that address, a lost email, an expired link, or giving up on the form. Onrace can't tell most of these apart by design (the anti-enumeration answer and the inbox are outside its view), which is why it's one node, not four.
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- TRACEABILITY -->
   <section class="block" id="traceability">
     <span class="section-tag tag-trace">Traceability</span>
     <h2>Job × screen coverage matrix</h2>
-    <p class="lede">Rows = every job in <code>jtbd.md</code> (main, related, emotional, social). Columns = every screen in the Sitemap above. A check means the screen actually participates in <em>closing</em> that job, not merely that it's adjacent to the topic. The orphan column is highlighted, not just noted below it.</p>
+    <p class="lede">Rows = every job in <code>jtbd.md</code> (main, related, emotional, social). Columns = every screen in the Sitemap above. A check means the screen actually participates in <em>closing</em> that job, not merely that it's adjacent to the topic. The infrastructure columns are highlighted, not just noted below them.</p>
 
     <div class="legend">
       <span class="lg-label">Jobs:</span>
@@ -910,41 +1027,43 @@ flowchart TD
             <th>Race picker</th>
             <th>Result detail</th>
             <th class="orphan-col">Sign in / Sign up<span class="orphan-note">INFRASTRUCTURE</span></th>
+            <th class="orphan-col">Reset password<span class="orphan-note">INFRASTRUCTURE</span></th>
+            <th class="orphan-col">New password<span class="orphan-note">INFRASTRUCTURE</span></th>
             <th class="orphan-col">Profile<span class="orphan-note">INFRASTRUCTURE</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--accent)"></span>Main Job 1 — Discovery</span></td>
-            <td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--benchmark)"></span>Main Job 2 — Results archiving (combined)</span></td>
-            <td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--patterns)"></span>Related Job 1 — plan season by format</span></td>
-            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-loc)"></span>Related Job 2 — choose races by location</span></td>
-            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-log)"></span>Related Job 3 — log a result with proof</span></td>
-            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--job-retrieve)"></span>Related Job 4 — retrieve proof for an application</span></td>
-            <td></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td></td><td></td><td><span class="check">✓</span></td><td></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--text-faint)"></span>Emotional — recognized as a hybrid athlete</span></td>
-            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td><span class="check">✓</span></td><td></td><td></td><td></td><td></td><td></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
           <tr>
             <td class="jobname"><span class="jobname-inner"><span class="dot" style="background:var(--text-faint)"></span>Social — proof stands on its own</span></td>
-            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td>
+            <td></td><td></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td></td><td><span class="check">✓</span></td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td><td class="orphan-col">—</td>
           </tr>
         </tbody>
       </table>
@@ -953,7 +1072,7 @@ flowchart TD
     <p class="lede" style="margin-bottom:12px">Emotional and Social don't have a screen built specifically for them — they're closed by <em>how</em> an existing screen reads (Race browse's cross-format framing; the self-reported-source-linked labeling convention on Log result / Results list / Result detail), not by a dedicated interaction. Legitimate closes, but framing-level, unlike every other check in the matrix.</p>
 
     <div class="callout">
-      <strong>Columns with no check — Sign in / Sign up and Profile (infrastructure).</strong> Zero checks, by design. Not dead weight (Logged result is owner-only via RLS, so accounts exist) and not job-closers either. Sign in / Sign up is a <strong style="color:var(--text)">contextual gate</strong> on My Results and Profile, never a standalone destination. Profile is the account's home and its only sign-out point, reached from its own tab. An earlier draft's <code>Onrace (entry)</code> column made the same mistake in reverse — crediting a nonexistent screen with closing Main Job 2 — and was removed; that job's coverage already stood on Race browse + Results list alone.
+      <strong>Columns with no check — Sign in / Sign up, Reset password, New password and Profile (infrastructure).</strong> Zero checks, by design. Not dead weight (Logged result is owner-only via RLS, so accounts exist) and not job-closers either. Sign in / Sign up is a <strong style="color:var(--text)">contextual gate</strong> on My Results and Profile, never a standalone destination. Reset password and New password (added 2026-09-25) are attached to Sign in as its recovery path — reached from it, returning to it — because email + password sign-in exists. Profile is the account's home and its only sign-out point, reached from its own tab. An earlier draft's <code>Onrace (entry)</code> column made the same mistake in reverse — crediting a nonexistent screen with closing Main Job 2 — and was removed; that job's coverage already stood on Race browse + Results list alone.
     </div>
     <div class="callout" style="border-left-color:var(--ok)">
       <strong>Orphan jobs — none.</strong> Every job in <code>jtbd.md</code> traces to at least one screen once Emotional and Social's framing-level closes are counted honestly. Not a forced result: those two were only checked because the Sitemap and Entities sections had already documented exactly where each one lives.

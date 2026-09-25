@@ -247,8 +247,8 @@
 <div class="layout">
 
   <!-- Tree nav: pulled from sitemap.md's Screens-section clusters (Discovery;
-       My Results/Archive) plus the two ungrouped [INFRASTRUCTURE] screens,
-       Sign in/Sign up and Profile, exactly where sitemap.md's own tree places
+       My Results/Archive) plus the ungrouped [INFRASTRUCTURE] screens,
+       Sign in/Sign up, Reset password, New password and Profile, exactly where sitemap.md's own tree places
        them. State children come from _screens.md's state tables (Pass 1 and
        Pass 2): only ✓ states get a node, and a Success child points at the
        base file, since there's never a separate -success.html
@@ -256,8 +256,9 @@
        Empty/Error/Loading; Race detail and Result detail get
        Error/Loading/Success; Log result gets Error/Loading (its blank form
        is the base page); Race picker gets Empty/Error/Loading; Sign in/Sign
-       up gets Error/Loading plus Check inbox (the one named flow-step state,
-       _conventions.md § 4); Profile gets Error/Loading (flows.md Flow 5). -->
+       up and Reset password get Error/Loading plus Check inbox (the named
+       flow-step state, _conventions.md § 4); New password and Profile get
+       Error/Loading (flows.md Flows 6 and 5). -->
   <aside class="sidebar">
     <span class="sidebar-brand">ON<span>RACE</span> · Wireframes</span>
     <ul class="tree">
@@ -324,6 +325,21 @@
           <li><a href="sign-in-sign-up-error.html" data-frame="sign-in-sign-up-error.html" class="tree-state">Error</a></li>
           <li><a href="sign-in-sign-up-loading.html" data-frame="sign-in-sign-up-loading.html" class="tree-state">Loading</a></li>
           <li><a href="sign-in-sign-up-check-inbox.html" data-frame="sign-in-sign-up-check-inbox.html" class="tree-state">Check inbox</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="reset-password.html" data-frame="reset-password.html">Reset password</a>
+        <ul>
+          <li><a href="reset-password-error.html" data-frame="reset-password-error.html" class="tree-state">Error</a></li>
+          <li><a href="reset-password-loading.html" data-frame="reset-password-loading.html" class="tree-state">Loading</a></li>
+          <li><a href="reset-password-check-inbox.html" data-frame="reset-password-check-inbox.html" class="tree-state">Check inbox</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="new-password.html" data-frame="new-password.html">New password</a>
+        <ul>
+          <li><a href="new-password-error.html" data-frame="new-password-error.html" class="tree-state">Error</a></li>
+          <li><a href="new-password-loading.html" data-frame="new-password-loading.html" class="tree-state">Loading</a></li>
         </ul>
       </li>
       <li>
@@ -567,7 +583,8 @@
       ['Close', 'A full-screen modal: Close on the left and the title, with no Back and no tab bar. Close is leaving without trying, and lands on Race browse, which never needs an account.'],
       ['Why you\'re signing in', 'One line naming where the person was heading: their archive, their account, or a generic line. They see why before being asked.'],
       ['Sign in | Create account', 'One screen, two modes, switched by a segmented control. ?mode=signup preselects Create account.'],
-      ['Form', 'Email and password through Supabase Auth, with Confirm email on. In Create account mode, a line under the button says a confirmation link will be emailed, so the next step isn\'t a surprise.'] ] },
+      ['Password changed', 'Only with ?reset=done, where Flow 6 lands: "Password changed. Sign in with your new password." Mode is forced to Sign in.'],
+      ['Form', 'Email and password through Supabase Auth, with Confirm email on. Sign in mode shows "Forgot password?" under Password (→ Reset password, Flow 6). Create account mode shows "At least 8 characters." [?] and a line saying a confirmation link will be emailed.'] ] },
     'sign-in-sign-up-loading.html': { job: 'Infrastructure — no job; the gate on My Results and Profile. Loading: signing in, or creating an account (?mode=signup).', zones: [
       ['Close', 'Still works while the request runs.'],
       ['Why you\'re signing in', 'The same line as the form.'],
@@ -587,7 +604,53 @@
       ['Confirm your email', 'Names the address and says to open the link on this device. After a sign-in with an unconfirmed email (?reason=unconfirmed), it says the account isn\'t confirmed yet.'],
       ['Resend email', 'Shows "Sending…" briefly, then "Sent — check your inbox again." A hidden status line announces both.'],
       ['Use a different email', 'Back to the form in Create account mode, keeping where the person was heading.'],
-      ['Link expiry', 'The link works once and expires. ?confirmed=1 stands in for opening the emailed link: it signs in and lands where the person was heading; &expired=1 opens the expired-link error instead.'] ] }
+      ['Link expiry', 'The link works once and expires. ?confirmed=1 stands in for opening the emailed link: it signs in and lands where the person was heading; &expired=1 opens the expired-link error instead.'] ] },
+    'reset-password.html': { job: 'Infrastructure — no job; Flow 6 password reset (sitemap.md → Entities 5). Base state.', zones: [
+      ['Top bar', '"‹ Sign in" goes back to Sign in, keeping the typed email and where the person was heading. The title "Reset password" is centred; no tab bar.'],
+      ['Context', 'Enter the email you signed up with and we\'ll send a link to set a new password. It promises a link, not that an account exists.'],
+      ['Request form', 'Email, pre-filled from Sign in. "Send reset link" sits at the end of the form (the gate\'s rule) and goes to Loading: sending reset link.'] ] },
+    'reset-password-loading.html': { job: 'Infrastructure — no job; Flow 6 password reset. Loading: sending reset link.', zones: [
+      ['Top bar', '"‹ Sign in" still works while the request runs.'],
+      ['Context', 'Same line as the base page.'],
+      ['Form, submitted', 'Locked, button "Sending…", with a hidden status line. Reached through the flow it answers "Request accepted?": &fail=1 or offline → couldn\'t send, &rate=1 → too many requests, otherwise Check inbox.'] ] },
+    'reset-password-error.html': { job: 'Infrastructure — no job; Flow 6 password reset. Error: couldn\'t send the reset link (connection).', zones: [
+      ['Top bar', '"‹ Sign in" is the give-up exit (Retry? → no, DeadEnd11), so the page doesn\'t repeat it as a button.'],
+      ['Context', 'Same line as the base page.'],
+      ['Alert + form', '"Couldn\'t send the reset link — check your connection and try again." The email is kept; submitting again is Retry → yes.'] ] },
+    'reset-password-error.html?cause=rate': { job: 'Infrastructure — no job; Flow 6 password reset. Error: too many requests (Supabase auth-email rate limit).', zones: [
+      ['Top bar', '"‹ Sign in" is "gives up".'],
+      ['Context', 'Same line as the base page.'],
+      ['Alert + form', '"Too many requests — wait a minute, then try again." A static note, no countdown: Onrace doesn\'t know when the limit resets. The form stays usable.'] ] },
+    'reset-password-check-inbox.html': { job: 'Infrastructure — no job; Flow 6 password reset. Check inbox: a flow step waiting on the inbox (_conventions.md § 4).', zones: [
+      ['Top bar', '"‹ Sign in" and "Check your inbox". Leaving without opening a link is "reset never completed" (DeadEnd12), which Onrace can\'t see.'],
+      ['What to do', '"Reset your password": if an account exists for this address, a link was sent. It never says an email was sent, because Supabase answers the same either way.'],
+      ['Resend link', 'Goes back through Loading: sending reset link, so the connection and rate-limit errors can still happen on a resend.'],
+      ['Use a different email', 'Back to Reset password with the address pre-filled: a mistyped email is the likeliest reason no link arrives, and Resend can\'t fix it. The bar\'s "‹ Sign in" is the way back.'],
+      ['Expiry note', 'The link works once and expires. ?opened=1 stands in for opening it (→ New password); with &expired=1, New password\'s expired-link error.'] ] },
+    'new-password.html': { job: 'Infrastructure — no job; Flow 6 password reset (sitemap.md → Entities 5). Base state.', zones: [
+      ['Top bar', '"‹ Sign in" returns to Sign in with next kept; going back abandons the reset. The centred title is "New password", no tab bar.'],
+      ['What this is', '"Choose a new password for your Onrace account." The recovery session from the emailed link already exists.'],
+      ['New password form', 'New password (at least 8 characters [?]; Supabase defaults to 6) and Confirm, with Save new password at the end of the form. Save checks length, then match, in the browser; passwords never go in the URL.'] ] },
+    'new-password-loading.html': { job: 'Infrastructure — no job; Flow 6 password reset. Loading: saving new password.', zones: [
+      ['Top bar', '"‹ Sign in" stays usable while saving.'],
+      ['What this is', 'The same one-line intro.'],
+      ['Locked form', 'Masked placeholder dots (no password reached this page), button "Saving…". Reached through the flow: offline or &fail=1 → couldn\'t save; &same=1 → same password; otherwise Sign in with "Password changed", the recovery session ended.'] ] },
+    'new-password-error.html': { job: 'Infrastructure — no job; Flow 6 password reset. Error: couldn\'t save the new password.', zones: [
+      ['Top bar', '"‹ Sign in" is also the give-up exit.'],
+      ['Save error', '"Couldn\'t save your new password" at the top of the form: a dropped connection or an expired recovery session. Save retries; "Request a new link" goes to Reset password.'],
+      ['New password form', 'The fields come back empty, because passwords are never carried. Save runs the same checks again.'] ] },
+    'new-password-error.html?cause=short': { job: 'Infrastructure — no job; Flow 6 password reset. Error: too short.', zones: [
+      ['Top bar', '"‹ Sign in" is the give-up exit.'],
+      ['New password form', 'Inline under New password: "Use at least 8 characters." Both fields empty again; Save rechecks.'] ] },
+    'new-password-error.html?cause=mismatch': { job: 'Infrastructure — no job; Flow 6 password reset. Error: passwords don\'t match.', zones: [
+      ['Top bar', '"‹ Sign in" is the give-up exit.'],
+      ['New password form', 'Inline under Confirm: "The two passwords don\'t match." Both fields empty again; Save rechecks.'] ] },
+    'new-password-error.html?cause=same': { job: 'Infrastructure — no job; Flow 6 password reset. Error: same as the current password.', zones: [
+      ['Top bar', '"‹ Sign in" is the give-up exit.'],
+      ['New password form', 'Inline under New password: "That\'s your current password. Choose a different one." Supabase refuses the current password.'] ] },
+    'new-password-error.html?cause=expired': { job: 'Infrastructure — no job; Flow 6 password reset. Error: reset link expired or already used.', zones: [
+      ['Top bar', '"‹ Sign in" still returns to Sign in.'],
+      ['Expired link', '"This reset link has expired": links work once, for a short time. No form, because there\'s no recovery session. The one action, "Request a new link", goes to Reset password.'] ] }
   };
 
   function renderNotes(key) {

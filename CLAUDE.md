@@ -65,7 +65,7 @@ MVP by **2026-11-01** (2 months from brief date, 2026-09-01).
 
 - **Frontend**: React + Vite, deployed as a static site via the existing GitHub Actions → GitHub Pages pipeline.
 - **Backend**: Supabase (Postgres DB + Auth), accessed client-side via the anon key with Row Level Security — no custom server needed.
-- **Auth method (decided 2026-09-25)**: email + password via Supabase Auth, with **Confirm email left on** (Supabase's default): Create account sends a confirmation email, and opening its link signs the person in. Sign-out is local to the device (`signOut({ scope: 'local' })`). No magic links or social sign-in in MVP. Password reset is required by this method but not yet designed (flagged in `sitemap.md` → Entities → 5).
+- **Auth method (decided 2026-09-25)**: email + password via Supabase Auth, with **Confirm email left on** (Supabase's default): Create account sends a confirmation email, and opening its link signs the person in. Sign-out is local to the device (`signOut({ scope: 'local' })`). No magic links or social sign-in in MVP. Password reset: "Forgot password?" on Sign in → Reset password (email, then "check your inbox") → the emailed link opens New password → back on Sign in with the new password (`flows.md` → Flow 6). Minimum password length 8 `[?]` (a Supabase project setting; default 6).
 - **Map**: Leaflet + OpenStreetMap tiles (free, no API key required).
 - **Race data**: manually curated/seeded, no scraping in MVP.
 
@@ -78,7 +78,7 @@ MVP by **2026-11-01** (2 months from brief date, 2026-09-01).
 
 ## Information architecture (high-level)
 
-- **Top-level sitemap**: Discovery (Race browse, Race detail) and My Results/Archive (Results list, Log result, Race picker — an optional modal from Log result to link a past catalog race, Result detail), plus two `[INFRASTRUCTURE]` screens that close no job of their own but exist because accounts do: a contextual Sign in/Sign up gate — surfaces only when an unauthenticated person taps My Results (which also gates the Log result action inside it) — and Profile (initials, name, country, language, Sign out), a global tab (added 2026-09-25; reverses the earlier "no job supports Profile" verdict — see `sitemap.md` → Entities → 5). Signed out, the Profile tab opens the same Sign in/Sign up gate as My Results. Full detail: `sitemap.md`; rendered view: `ia.html`.
+- **Top-level sitemap**: Discovery (Race browse, Race detail) and My Results/Archive (Results list, Log result, Race picker — an optional modal from Log result to link a past catalog race, Result detail), plus `[INFRASTRUCTURE]` screens that close no job of their own but exist because accounts do (Reset password and New password, Flow 6, sit under the Sign in gate; the two main ones are described here): a contextual Sign in/Sign up gate — surfaces only when an unauthenticated person taps My Results (which also gates the Log result action inside it) — and Profile (initials, name, country, language, Sign out), a global tab (added 2026-09-25; reverses the earlier "no job supports Profile" verdict — see `sitemap.md` → Entities → 5). Signed out, the Profile tab opens the same Sign in/Sign up gate as My Results. Full detail: `sitemap.md`; rendered view: `ia.html`.
 - **Main flow**: Discovery — app opens → Race browse (0 taps, the default/home tab) → Race detail (1 tap) → opens `registration_url` externally. The one job in the whole JTBD matrix that needs no caveats for the primary persona. Full flow diagram, plus Log Result and Retrieve Proof: `flows.md`.
 - **Global navigation**: 3 tabs — Discover (Race browse), My Results (Results list), Profile (Profile). Revised 2026-09-25: Profile became a tab for 1-tap consistency and the familiar Account-tab convention, accepting an auth entry point on every top-level screen, Discover included (Discover itself still gates nothing). This replaces a same-day account button inside My Results, kept as superseded. Profile is 1 tap from any top-level screen (2 from Race detail, which has no tab bar); Sign out is 2. **Log result** stays the primary action button inside My Results (header + empty state), not a tab: tabs are destinations, actions are buttons (revised 2026-09-24 from the Discover / Log Result / My Results bar; costs Log result +1 tap, 1 → 2). Full reasoning, with both superseded versions kept for the record: `sitemap.md` → Navigation § 1–2.
 - **Tap-depth to the main job**: 1 tap from app launch to a specific race worth entering, under the 3-tap ceiling.
@@ -95,6 +95,17 @@ MVP by **2026-11-01** (2 months from brief date, 2026-09-01).
 - No differentiation/competitor analysis done yet.
 - Platform is web-only/responsive for now, no native mobile app planned.
 
+## Wireframes
+
+Low-fidelity, grayscale, iOS-structured HTML wireframes for **every screen in `sitemap.md`**, in `wireframes/` (mirrored to `public/wireframes/` for GitHub Pages; keep both in sync). Browse them at https://juliamakedonska.github.io/Onrace/wireframes/: an iPhone frame, the screen tree on the left, and zone notes for the current screen on the right.
+
+- **Screens (10):** Race browse, Race detail (Discovery); Results list, Log result, Race picker, Result detail (archive); Sign in / Sign up, Reset password, New password, Profile (`[INFRASTRUCTURE]`). 35 pages in total: each screen's base page plus one page per real state (`-empty` / `-error` / `-loading`, and two named inbox waits, `-check-inbox`).
+- **The rules:** `wireframes/_conventions.md` covers fidelity, soft-gray tokens and radii, iOS system chrome, 3-tab bar vs drill-down vs modal, forms, gates, pickers and alerts, linking along `flows.md` only, state in the URL, the sessionStorage auth session, and test switches.
+- **The scope:** `wireframes/_screens.md` has, for every screen, its states (with ✓ or — and the reason) and the shared sample data.
+- **Live flows:** every primary action is a real link along `flows.md`'s six flows. System decisions are real checks, and failure branches use reviewer switches (`&fail=1`, `&empty=1`, `?confirmed=1`, …).
+- **Review:** `wireframes/_critique.md` holds the 2026-09-25 review: 8 defects found and fixed (dead ends first), with everything else checked clean.
+- **Deferred:** color, brand typography, content icons and finished-UI polish (`_conventions.md` § 7).
+
 ## Status
 
-Pre-implementation. Repo holds the Vite scaffold, the deploy pipeline, and the design-process folder structure (`research/`, `wireframes/`, `concept/`, `tokens/`, `components/`, `design-system/`, `handoff/` — see `README.md` for what each holds). No product code or design work has been produced yet.
+Pre-implementation. The IA (`sitemap.md`, `flows.md`, `ia.html`) and the full low-fidelity wireframe set (above) are done. No product code yet: `src/` is still the Vite scaffold. Next in the design-process folders: `concept/` (visual direction), then `tokens/`, `components/`, `design-system/`, `handoff/`.

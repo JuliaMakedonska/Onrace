@@ -1,8 +1,8 @@
 # User flows
 
-Built from `sitemap.md` (Screens + Navigation sections) and `research/jtbd.md`. Every screen node below exists in `sitemap.md`. One screen was added back to the sitemap while drawing: **Race picker** (2026-09-25, Flow 2's catalog branch), per the working method's rule that a flow may only use screens the sitemap names.
+Built from `sitemap.md` (Screens + Navigation sections) and `research/jtbd.md`. Every screen node below exists in `sitemap.md`. Screens added back to the sitemap while drawing: **Race picker** (2026-09-25, Flow 2's catalog branch), and **Reset password** and **New password** (2026-09-25, Flow 6). That follows the working method's rule that a flow may only use screens the sitemap names.
 
-Shape convention, held consistent across all five diagrams:
+Shape convention, held consistent across all six diagrams:
 - `["Screen Name"]` — a screen from `sitemap.md`
 - `{"Question?"}` — a decision point
 - `("State: ...")` — a loading/empty/error state, not its own screen
@@ -83,6 +83,16 @@ Building `wireframes/race-detail-error.html` showed that Flow 1's registration-l
 4. **Link checks say only what a browser can know.** Flow 3's "Source link still opens?" is now "Official result opens in a new tab?" (well-formed URL, new tab not blocked), the same rewording Flow 1 got on 2026-09-24. `LinkError` is now "couldn't open the source link". Flow 2's `SubmitError` was "link unreachable": Onrace's stack is client-side only (no custom server, `../CLAUDE.md`), so it can't fetch arbitrary timing sites to check them. It's now "couldn't save the result".
 
 ---
+## Revision note (password reset, 2026-09-25)
+
+Email + password sign-in needs a way back in for someone who forgot the password. `sitemap.md` → Entities → 5 had flagged it as the next infrastructure gap, and **Flow 6** closes it. Two new screens, **Reset password** (ask for a link) and **New password** (set one), are both reached from Sign in, never from the tab bar. Flows 2 and 3 gain one edge each from their Sign in / Sign up node ("forgot password" → `[[Flow 6]]`), and Flow 4 is unchanged.
+
+What Onrace can and can't observe, stated the same way as the registration-link check (2026-09-24):
+- **It can know** whether Supabase accepted the reset request. Supabase answers "sent" whether or not an account exists for that address, so nobody can use the form to learn who has an account.
+- **It can't know** whether an email arrived, whether an account exists, or whether the person ever opens the link. Those happen in someone's inbox. So Check inbox says "if an account exists…", and a request that never turns into a new password is a dead end Onrace can't see (`DeadEnd12`).
+- **It can know again** once the link is opened, because the app opens with it: whether the link is still valid, and whether the new password saved.
+
+---
 
 ## Main Job 1 — Discovery (Primary persona — The HYROX-First Hybrid Athlete)
 
@@ -152,6 +162,8 @@ flowchart TD
     SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
     SignIn -->|"closes without attempting"| DeadEnd2
     SignIn -->|"creates an account instead"| SignUp[["Flow 4: Sign up with email confirmation"]]
+    SignIn -->|"forgot password"| Reset[["Flow 6: Reset password"]]
+    Reset -->|"back to Sign in (password changed, or gave up)"| SignIn
     SignUp -->|"email confirmed, signed in"| ResultsList
     SigningIn --> AuthResult{"Sign-in succeeded?"}
     AuthResult -->|"no"| AuthError("Error: sign-in failed")
@@ -242,6 +254,8 @@ flowchart TD
     SignIn2 -->|"submits credentials"| SigningIn2("Loading: signing in")
     SignIn2 -->|"closes without attempting"| DeadEnd4
     SignIn2 -->|"creates an account instead"| SignUp2[["Flow 4: Sign up with email confirmation"]]
+    SignIn2 -->|"forgot password"| Reset2[["Flow 6: Reset password"]]
+    Reset2 -->|"back to Sign in (password changed, or gave up)"| SignIn2
     SignUp2 -->|"email confirmed, signed in"| ResultsList2
     SigningIn2 --> AuthResult2{"Sign-in succeeded?"}
     AuthResult2 -->|"no"| AuthError2("Error: sign-in failed")
@@ -315,7 +329,7 @@ flowchart TD
     SignUpForm -->|"submits email + password"| CreatingAccount("Loading: creating account")
     SignUpForm -->|"closes"| DeadEnd8(("Dead end: leaves without an account"))
     CreatingAccount --> SignUpOK{"Account created?"}
-    SignUpOK -->|"no — email already registered, or connection"| SignUpError("Error: couldn't create the account")
+    SignUpOK -->|"no — email already registered, password under 8 characters, or connection"| SignUpError("Error: couldn't create the account")
     SignUpError --> SignUpRetry{"Retry?"}
     SignUpRetry -->|"yes"| SignUpForm
     SignUpRetry -->|"no"| DeadEnd8
@@ -332,7 +346,7 @@ flowchart TD
 ```
 
 **Decisions:**
-- *Account created?* — "no" covers Supabase refusing the sign-up (e.g. the email is already registered) and connection failures. The wireframe's copy has to cover both, since it can't tell them apart.
+- *Account created?* — "no" covers Supabase refusing the sign-up (the email is already registered, or the password is under the project's minimum of 8 `[?]`, the same rule as Flow 6) and connection failures. The wireframe's copy has to cover both, since it can't tell them apart.
 - *Confirmation link valid?* — Supabase's confirmation links expire, and each works once. An expired or reused link returns an error to the app, which offers a fresh email rather than a dead stop.
 
 **States:**
@@ -395,3 +409,70 @@ flowchart TD
 **Endpoints:**
 - **Success:** no session on this device. The person lands on Race browse, the one screen that needs no account.
 - **Dead end:** *leaves without seeing the account* (`DeadEnd10`) — the sign-in gate was closed, or the profile never loaded.
+
+---
+
+## Flow 6 — Reset password (infrastructure; both personas)
+
+Not a job flow. It exists because email + password sign-in does (`sitemap.md` → Entities → 5): a password someone can forget needs a way back in. It's drawn once and referenced from Flows 2 and 3 (`[[...]]`), the same way as Flow 4. It uses Supabase Auth's recovery: `resetPasswordForEmail(email, { redirectTo })` sends the link; opening it starts a short-lived recovery session in the app; `updateUser({ password })` sets the new password.
+
+```mermaid
+flowchart TD
+    Start6(("Sign in / Sign up: taps Forgot password?")) --> RequestForm["Reset password"]
+    RequestForm -->|"back"| BackToSignIn["Sign in / Sign up"]
+    RequestForm -->|"submits email"| Requesting("Loading: sending reset link")
+    Requesting --> RequestOK{"Request accepted?"}
+    RequestOK -->|"no — connection"| RequestError("Error: couldn't send the reset link")
+    RequestError --> RequestRetry{"Retry?"}
+    RequestRetry -->|"yes"| Requesting
+    RequestRetry -->|"no"| DeadEnd11(("Dead end: leaves without a reset link"))
+    RequestOK -->|"no — too many requests"| RateError("Error: too many requests — wait a minute")
+    RateError -->|"waits, then tries again"| RequestForm
+    RateError -->|"gives up"| DeadEnd11
+    RequestOK -->|"yes — sent if an account exists"| ResetInbox("Check inbox: open the reset link (only sent if an account exists for this address)")
+    ResetInbox -->|"resends"| Requesting
+    ResetInbox -->|"back to Sign in"| BackToSignIn
+    ResetInbox -->|"never opens a link — no account, lost email, or gave up; Onrace can't tell which"| DeadEnd12(("Dead end: reset never completed"))
+    ResetInbox -->|"opens the link in the email"| ResetLinkValid{"Reset link valid?"}
+    ResetLinkValid -->|"no — expired or already used"| ResetLinkError("Error: reset link expired or already used")
+    ResetLinkError -->|"requests a new link"| RequestForm
+    ResetLinkError -->|"gives up"| DeadEnd12
+    ResetLinkValid -->|"yes — recovery session started"| NewPassword["New password"]
+    NewPassword -->|"cancels"| BackToSignIn
+    NewPassword -->|"taps Save"| PwChecks{"At least 8 characters, and both fields match? [?]"}
+    PwChecks -->|"no"| PwError("Error: too short, or the two passwords don't match")
+    PwError -->|"fixes and saves again"| PwChecks
+    PwError -->|"gives up"| DeadEnd12
+    PwChecks -->|"yes"| SavingPw("Loading: saving new password")
+    SavingPw --> PwSaved{"Password updated?"}
+    PwSaved -->|"no — same as the current password"| SameError("Error: that's your current password — choose a different one")
+    SameError -->|"picks another"| NewPassword
+    PwSaved -->|"no — connection, or the recovery session expired"| PwSaveError("Error: couldn't save the new password")
+    PwSaveError --> PwRetry{"Retry?"}
+    PwRetry -->|"yes"| SavingPw
+    PwRetry -->|"no — session expired, needs a new link"| RequestForm
+    PwSaved -->|"yes"| Success6(("Success: password changed and the recovery session ended on this device — back on Sign in with a confirmation, to sign in with the new password"))
+```
+
+**Decisions:**
+- *Request accepted?* — the only thing Onrace learns from the request. "Yes" means Supabase took it, **not** that an email went out: Supabase gives the same answer for addresses with no account (so the form can't be used to find out who has one). "Too many requests" is Supabase's rate limit on auth emails, and it's a real, distinct answer: the fix is waiting, not retrying at once.
+- *Reset link valid?* — checked when the app opens with the link. Like Flow 4's confirmation links, reset links expire and work once.
+- *At least 8 characters, and both fields match?* `[?]` — client-side, before anything is sent. 8 is Onrace's choice (a Supabase project setting; Supabase's default minimum is 6), flagged `[?]` because nothing in the docs sets it yet. The same minimum applies at sign-up, where Flow 4's "Account created?" rejects a shorter password server-side (drawn on its "no" edge since 2026-09-25, `wireframes/_critique.md` #3).
+- *Password updated?* — two server-side "no"s with different fixes. Supabase refuses a new password identical to the current one: the fix is choosing another. A connection failure or an expired recovery session: retry, or, if the session is gone, request a new link.
+
+**States:**
+- Loading: sending reset link.
+- Error: couldn't send the reset link (connection).
+- Error: too many requests — wait a minute (rate limit).
+- Check inbox: open the reset link, only sent if an account exists. It's a flow step waiting on the inbox, the same kind as Flow 4's, and gets its own named state page (`wireframes/_conventions.md` § 4).
+- Error: reset link expired or already used.
+- Error: too short, or the two passwords don't match (client-side, inline at the fields).
+- Error: that's your current password — choose a different one (server-side; Supabase refuses only the current password, it keeps no history).
+- Error: couldn't save the new password.
+- Loading: saving new password.
+
+**Endpoints:**
+- **Success:** the password is changed, and Onrace then ends the recovery session on this device (local sign-out) and returns to Sign in with a "password changed" line. Supabase would leave the person signed in after `updateUser`. Onrace deliberately doesn't: signing in once with the new password proves they know it before they need it on another device, and it lands them back where they were heading (`next` is carried through the whole flow). Verifiable as: the password was updated, and no session exists on this device.
+- **Dead ends:** two, kept apart because what Onrace can see differs.
+  - *Leaves without a reset link* (`DeadEnd11`) — the request itself failed or was rate-limited, and the person gave up. Onrace saw it happen.
+  - *Reset never completed* (`DeadEnd12`) — a request was accepted, but no new password was set. That covers no account for that address, a lost email, an expired link, or giving up on the form. **Onrace can't distinguish most of these** by design: the anti-enumeration answer and the inbox are outside its view. That's why it's one node, not four.

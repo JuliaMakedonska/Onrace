@@ -320,6 +320,38 @@
     border-radius: var(--r);
   }
 
+  /* --- map pins (added 2026-09-25, _critique.md #1): one real link per
+     filtered race, placed roughly by lat/lng inside the placeholder. They're
+     labeled markers on a placeholder, not a rendered map (_conventions.md
+     § 1, "No images"): a gray dot plus the city name, grayscale. Tapping a
+     pin is flows.md's "taps a race card or pin" → DetailLoading. --- */
+  .map-placeholder.has-pins { position: relative; align-items: flex-end; }
+  .map-pin {
+    position: absolute;
+    transform: translate(-6px, -6px);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px 2px 2px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.75rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .map-pin::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--fill-strong);
+  }
+  .map-pin:focus-visible, .map-pin:hover { background: var(--fill-soft); }
+  .map-pin[hidden] { display: none; }
+  .map-caption { margin: 0; font-size: 0.75rem; color: var(--ink-2); }
+
   /* --- bottom-sheet drawer + backdrop: real overlay, slides up over content --- */
   .sheet-backdrop {
     position: absolute;
@@ -540,10 +572,22 @@
              a map-specific subset — and the initial view fits all pins.
              Panning/zooming only changes the map's own viewport; it does not
              re-filter the result set (that's the Filters drawer's job alone,
-             per the controls comment above). -->
+             per the controls comment above).
+             Each pin is a real link to that race's Race detail, via its
+             loading state — flows.md: "taps a race card or pin" →
+             DetailLoading. Without them the Map view had no way forward
+             (_critique.md #1). Pins hide with the same filter check as the
+             cards, so both views always show one result set. -->
         <div id="map-view" class="view-panel" hidden>
-          <div class="map-placeholder" role="img" aria-label="Map showing pins for the 7 filtered races; initial view fits all pins">
-            [ map placeholder — pins for the 7 filtered races; initial view fits all pins. Pan/zoom changes what's visible on the map, not which races match. ]
+          <div class="map-placeholder has-pins" role="group" aria-label="Map of the filtered races">
+            <a class="map-pin" href="race-detail-loading.html?race=berlin-marathon" style="left:78%;top:21%" aria-label="Berlin Marathon, Berlin, 27 Sep 2026">Berlin</a>
+            <a class="map-pin" href="race-detail-loading.html?race=hyrox-london" style="left:62%;top:28%" aria-label="HYROX London, London, 6 Dec 2026">London</a>
+            <a class="map-pin" href="race-detail-loading.html?race=utmb" style="left:66%;top:42%" aria-label="UTMB — Ultra-Trail du Mont-Blanc, Chamonix, 24 Aug 2027">Chamonix</a>
+            <a class="map-pin" href="race-detail-loading.html?race=hyrox-dallas" style="left:9%;top:76%" aria-label="HYROX Dallas, Dallas, 17 Jan 2027">Dallas</a>
+            <a class="map-pin" href="race-detail-loading.html?race=deka-strong-chicago" style="left:8%;top:50%" aria-label="DEKA STRONG Chicago, Chicago, 14 Mar 2027">Chicago</a>
+            <a class="map-pin" href="race-detail-loading.html?race=spartan-beast-killington" style="left:26%;top:36%" aria-label="Spartan Race Beast — Killington, Killington, 11 Jul 2027">Killington</a>
+            <a class="map-pin" href="race-detail-loading.html?race=boston-marathon" style="left:30%;top:52%" aria-label="Boston Marathon, Boston, 20 Apr 2027">Boston</a>
+            <p class="map-caption" aria-hidden="true">[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]</p>
           </div>
         </div>
 
@@ -784,6 +828,10 @@
     cards.forEach(function (card) {
       var slug = new URLSearchParams(card.querySelector('a').search).get('race');
       card.parentNode.hidden = keep.indexOf(slug) === -1;
+    });
+    // Map pins: the same result set as the cards (_critique.md #1).
+    document.querySelectorAll('.map-pin').forEach(function (pin) {
+      pin.hidden = keep.indexOf(new URLSearchParams(pin.search).get('race')) === -1;
     });
     document.querySelector('.results-count').innerHTML =
       '<strong>' + keep.length + '</strong> ' + (keep.length === 1 ? 'race matches' : 'races match') + ' your filters';
