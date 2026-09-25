@@ -98,17 +98,20 @@
   .tree a[aria-current="page"] { background: var(--accent-dim); color: var(--accent); }
   .tree-state { font-weight: 400; font-size: 12.5px; }
 
-  /* --- right: content column holding the device mockup --- */
+  /* --- right: content column — the device mockup, with the current
+     screen's zone notes beside it --- */
   .content-col {
-    padding: 32px 24px;
+    padding: 32px 32px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
     justify-content: center;
-    gap: 18px;
+    gap: 40px;
     min-height: 100vh;
   }
-  .content-heading { width: 100%; max-width: 417px; }
+  .device-col { display: flex; flex-direction: column; gap: 18px; }
+  /* heading wraps to the device's width instead of widening the column */
+  .content-heading { width: 0; min-width: 100%; }
   .content-heading h1 {
     font-size: 20px;
     margin: 0 0 4px;
@@ -117,48 +120,57 @@
   }
   .content-heading p { color: var(--text-dim); font-size: 13px; margin: 0; }
 
-  /* --- device mockup: an iPhone-style shell (iPhone 15/16 logical
-     viewport, 393×852 pt) around the wireframe. Status bar and home
-     indicator are part of this shell, not of the wireframe pages — the
-     wireframes stay untouched and render grayscale inside the iframe,
-     between the two. Device chrome is neutral grayscale only (no accent). --- */
-  .device-mockup {
-    --bezel: 12px;
-    --screen-radius: 55px;           /* iPhone 15/16 display corner radius */
-    width: calc(393px + 2 * var(--bezel));
-    height: calc(852px + 2 * var(--bezel));
-    max-height: calc(100vh - 140px);
+  /* --- device mockup: iPhone 12/13/14 logical viewport (390×844 pt) —
+     exactly the wireframes' own 390px width, so nothing is letterboxed.
+     Inside the screen, top to bottom: 47pt status bar, the wireframe
+     iframe, and the home-indicator strip. The three heights add up to the
+     screen height, so the wireframe's bottom edge (tab bar / action bar)
+     always sits fully between them. The strip is 40pt rather than iOS's 34
+     so the screen's corner curve (47pt, continuous) never reaches the
+     wireframe's bottom corners.
+     Corners are continuous ("squircle", like iOS), not circular: the
+     outline is an SVG path built by the script below, used as the body's
+     fill and as the screen's clip-path. The whole device is scaled as one
+     piece to fit the window — its internal proportions never change.
+     Device chrome is neutral grayscale only (no accent). --- */
+  .device-slot { position: relative; width: 412px; height: 866px; }
+  .device {
+    --bezel: 11px;
+    --status-h: 47px;
+    --home-h: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(390px + 2 * var(--bezel));
+    height: calc(844px + 2 * var(--bezel));
     padding: var(--bezel);
-    border-radius: calc(var(--screen-radius) + var(--bezel));
-    background: #050506;
-    /* thin metal rim + soft drop shadow so it reads as a physical device */
-    box-shadow:
-      0 0 0 1px #3a3d43,
-      0 0 0 3px #1a1b1e,
-      0 0 0 4px #4a4e55,
-      0 24px 60px rgba(0, 0, 0, 0.55),
-      0 6px 18px rgba(0, 0, 0, 0.4);
-    flex: 0 0 auto;
+    transform-origin: top left;
   }
+  .device-body {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.35)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+  }
+  .device-body .body-fill { fill: #101113; stroke: #3b3e44; stroke-width: 1; }
+  .device-body .screen-edge { fill: none; stroke: #000; stroke-width: 1; }
   .device-screen {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
-    border-radius: var(--screen-radius);
-    overflow: hidden;
     background: #fff;
     color: #000;
   }
 
-  /* status bar: 54pt tall on Dynamic Island iPhones; time left, grayscale
-     outline signal/Wi-Fi/battery right */
+  /* status bar: time left, grayscale signal/Wi-Fi/battery right */
   .status-bar {
-    flex: 0 0 54px;
+    flex: 0 0 var(--status-h);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 30px 0 44px;
+    padding: 4px 28px 0 40px;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     font-size: 16px;
     font-weight: 600;
@@ -177,10 +189,9 @@
     background: #fff;
   }
 
-  /* home indicator: 34pt gesture area below the app content, with the
-     134×5pt rounded bar centered in it */
+  /* home indicator: 134×5pt rounded bar, centered low in its strip */
   .home-indicator {
-    flex: 0 0 34px;
+    flex: 0 0 var(--home-h);
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -193,6 +204,36 @@
     border-radius: 100px;
     background: #000;
   }
+
+  /* --- zone notes: what each zone of the current screen shows and why,
+     condensed from the <!-- ZONE: ... --> comments in its file. Outside the
+     frame, never inside the wireframe. --- */
+  .zone-notes {
+    width: 300px;
+    padding-top: 110px;   /* roughly level with the top of the screen content */
+  }
+  .zone-notes-label {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+  }
+  .zone { margin: 0 0 22px; }
+  .zone h2 {
+    margin: 0 0 4px;
+    font-size: 11.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text);
+  }
+  .zone p { margin: 0; font-size: 13px; line-height: 1.55; color: var(--text-dim); }
+  .zone-empty { font-size: 13px; color: var(--text-faint); }
+
 </style>
 </head>
 <body>
@@ -248,41 +289,58 @@
   </aside>
 
   <div class="content-col">
-    <div class="content-heading">
-      <h1 id="screen-title">Race browse</h1>
-      <p>Main Job 1 — Discovery (research/jtbd.md). Base/default state.</p>
-    </div>
-    <div class="device-mockup">
-      <div class="device-screen">
-        <div class="status-bar" aria-hidden="true">
-          <span>09:41</span>
-          <span class="status-icons">
-            <!-- cellular signal: 4 bars, last one outline-only -->
-            <svg width="18" height="12" viewBox="0 0 18 12" fill="#000">
-              <rect x="0" y="8" width="3" height="4" rx="1"/>
-              <rect x="5" y="5.5" width="3" height="6.5" rx="1"/>
-              <rect x="10" y="3" width="3" height="9" rx="1"/>
-              <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="#000" stroke-width="1"/>
-            </svg>
-            <!-- Wi-Fi -->
-            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round">
-              <path d="M1 4.2a10 10 0 0 1 14 0"/>
-              <path d="M3.4 6.8a6.5 6.5 0 0 1 9.2 0"/>
-              <path d="M5.8 9.3a3 3 0 0 1 4.4 0"/>
-              <circle cx="8" cy="11" r="0.6" fill="#000"/>
-            </svg>
-            <!-- battery: outline body + cap, grayscale fill -->
-            <svg width="27" height="13" viewBox="0 0 27 13">
-              <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#000" stroke-opacity="0.45"/>
-              <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="#000"/>
-              <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="#000" fill-opacity="0.45"/>
-            </svg>
-          </span>
+    <div class="device-col">
+      <div class="content-heading">
+        <h1 id="screen-title">Race browse</h1>
+        <p id="screen-job">Main Job 1 — Discovery (research/jtbd.md). Base/default state.</p>
+      </div>
+      <div class="device-slot" id="device-slot">
+        <div class="device" id="device">
+          <svg class="device-body" id="device-body" aria-hidden="true">
+            <path class="body-fill" id="body-path"/>
+            <path class="screen-edge" id="screen-edge"/>
+          </svg>
+          <div class="device-screen" id="device-screen">
+            <div class="status-bar" aria-hidden="true">
+              <span>09:41</span>
+              <span class="status-icons">
+                <!-- cellular signal: 4 bars, last one outline-only -->
+                <svg width="18" height="12" viewBox="0 0 18 12" fill="#000">
+                  <rect x="0" y="8" width="3" height="4" rx="1"/>
+                  <rect x="5" y="5.5" width="3" height="6.5" rx="1"/>
+                  <rect x="10" y="3" width="3" height="9" rx="1"/>
+                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="#000" stroke-width="1"/>
+                </svg>
+                <!-- Wi-Fi -->
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round">
+                  <path d="M1 4.2a10 10 0 0 1 14 0"/>
+                  <path d="M3.4 6.8a6.5 6.5 0 0 1 9.2 0"/>
+                  <path d="M5.8 9.3a3 3 0 0 1 4.4 0"/>
+                  <circle cx="8" cy="11" r="0.6" fill="#000"/>
+                </svg>
+                <!-- battery: outline body + cap, grayscale fill -->
+                <svg width="27" height="13" viewBox="0 0 27 13">
+                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#000" stroke-opacity="0.45"/>
+                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="#000"/>
+                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="#000" fill-opacity="0.45"/>
+                </svg>
+              </span>
+            </div>
+            <iframe id="screen-frame" src="race-browse.html" title="Onrace wireframe preview"></iframe>
+            <div class="home-indicator" aria-hidden="true"></div>
+          </div>
         </div>
-        <iframe id="screen-frame" src="race-browse.html" title="Onrace wireframe preview"></iframe>
-        <div class="home-indicator" aria-hidden="true"></div>
       </div>
     </div>
+
+    <!-- Zone notes: per-screen, condensed from each file's own
+         <!- - ZONE: ... - -> comments (and the sitemap.md / flows.md /
+         _screens.md references they cite). Keyed by the file the iframe is
+         actually showing, so they follow in-frame navigation too. -->
+    <aside class="zone-notes" aria-label="Zone notes">
+      <p class="zone-notes-label">Zones on this screen</p>
+      <div id="zone-list"></div>
+    </aside>
   </div>
 
 </div>
@@ -291,7 +349,113 @@
 (function () {
   var frame = document.getElementById('screen-frame');
   var title = document.getElementById('screen-title');
+  var job = document.getElementById('screen-job');
+  var zoneList = document.getElementById('zone-list');
   var links = Array.prototype.slice.call(document.querySelectorAll('.tree a[data-frame]'));
+
+  /* ---------- zone notes, per file (see the comment above .zone-notes) ---------- */
+  var BROWSE_JOB = 'Main Job 1 — Discovery (research/jtbd.md).';
+  var DETAIL_JOB = 'Main Job 1 — Discovery (research/jtbd.md). Drill-down from Race browse.';
+  var browseControls = ['What we show and how we narrow it',
+    'Filters (region, date, sport) and the List/Map toggle share one sticky row: Filters decides what you see, the toggle decides how. Both views are narrowed only by Filters. Panning the map moves the viewport; it never re-filters.'];
+  var browseChips = ['Active filters',
+    'One removable chip per active facet, plus Clear all. Removing a chip is a filter change, so the list reloads (flows.md: filter change → Loading).'];
+  var browseNav = ['Global nav',
+    'Two tabs, both destinations: Discover and My Results (sitemap.md → Navigation § 1). Log result is a button inside My Results, not a tab. Tabs are places, actions are buttons.'];
+  var detailBack = ['The way back',
+    'A sticky "Back to races" bar is the only navigation on this drill-down screen: no tab bar (_conventions.md § 1). It\'s flows.md\'s "compares another race" edge, and the "not worth entering" exit.'];
+
+  var NOTES = {
+    'race-browse.html': { job: BROWSE_JOB + ' Base/default state.', zones: [
+      browseControls,
+      [browseChips[0], browseChips[1] + ' Hidden here: nothing is filtered yet.'],
+      ['The result count', 'The filters\' output sits with the results, in the same place in both views. Unfiltered, it reads "upcoming races". Sort (Soonest first) is list-only: map pins have no order.'],
+      ['The races, as list or map', 'Each card is one tap into Race detail (flows.md: taps a race card → DetailLoading → Race detail). The map plots the same filtered set as pins. It isn\'t a map-only subset.'],
+      browseNav
+    ]},
+    'race-browse-empty.html': { job: BROWSE_JOB + ' Empty state.', zones: [
+      browseControls,
+      browseChips,
+      ['The result count', 'Filters are on, so the count reads "match your filters". Sort is dropped because there\'s nothing to order.'],
+      ['A state instead of cards', 'No races match (flows.md: HasResults → no → Empty). This is a data state, not an error, so there\'s no retry. Every exit adjusts filters: a chip\'s ×, Clear all filters, or Loosen filters (reopens the drawer with the current selections).'],
+      [browseNav[0], browseNav[1] + ' Giving up is just leaving by a tab, so no button is needed.']
+    ]},
+    'race-browse-error.html': { job: BROWSE_JOB + ' Error state.', zones: [
+      browseControls,
+      browseChips,
+      ['The result count', 'No count at all: the fetch never returned, and a "0" would read as the empty state. Sort is dropped.'],
+      ['A state instead of cards', 'The connection failed (flows.md: Loading → connection fails → FetchError). "Try again" re-runs the same fetch with the current filters. Giving up is just leaving by a tab.'],
+      browseNav
+    ]},
+    'race-browse-loading.html': { job: BROWSE_JOB + ' Loading state.', zones: [
+      browseControls,
+      browseChips,
+      ['The result count', 'A gray bar holds the count\'s place until the fetch returns, so the row doesn\'t reflow. Sort stays visible but disabled.'],
+      ['Skeletons where the cards go', 'Fires on entry and on every filter change (flows.md: Loading, "fetching races"). Placeholders, not races, so they\'re hidden from assistive tech. The status text carries the meaning.'],
+      browseNav
+    ]},
+    'race-detail.html': { job: DETAIL_JOB + ' Base/success state.', zones: [
+      detailBack,
+      ['One race, in full', 'Name, sport type, date, full location, description and the official site (sitemap.md → Race listing). This is where comparing races actually happens. The official site is reference material, so it gets its own section.'],
+      ['Register', 'The screen\'s one primary action and flows.md\'s Success exit: opens registration_url in a new tab. The label names the domain, so it\'s clear you\'re leaving Onrace. Onrace never handles sign-ups or payment.']
+    ]},
+    'race-detail-loading.html': { job: DETAIL_JOB + ' Loading state.', zones: [
+      [detailBack[0], detailBack[1] + ' Stays usable while loading: it doesn\'t depend on the fetch.'],
+      ['Gray bars where the race goes', 'Same zones as a loaded race (flows.md: DetailLoading, after tapping a card or pin). Hidden from assistive tech. A visually hidden status carries the meaning.'],
+      ['Register, not yet', 'The action bar shows from the first frame with a gray placeholder, not a disabled button, so the layout doesn\'t jump when the race arrives.']
+    ]},
+    'race-detail-error.html': { job: DETAIL_JOB + ' Error state — race didn\'t load (DetailError).', zones: [
+      detailBack,
+      ['A state instead of the race', 'Nothing about the race loaded (flows.md: DetailLoading → connection fails → DetailError). "Try again" reloads the same race. Giving up is the back bar, so it isn\'t repeated as a button.'],
+      ['No action bar', 'Hidden: a Register button for a race that didn\'t load could never work (_conventions.md § 1).']
+    ]},
+    'race-detail-error.html?cause=registration': { job: DETAIL_JOB + ' Error state — registration link failed (RegLinkError).', zones: [
+      detailBack,
+      ['The race, loaded', 'The race itself is fine. Only its registration link couldn\'t be opened. Both error causes live on one page (_conventions.md § 5: the file grain is state, not cause).'],
+      ['The error, beside the action', 'The alert sits in the action bar, directly above the Register button that failed, so it stays visible at any scroll position. Lighter than DetailError, with no retry step: Dismiss, try later, or leave.']
+    ]}
+  };
+
+  function renderNotes(key) {
+    var n = NOTES[key] || NOTES[key.split('?')[0]];
+    zoneList.textContent = '';
+    if (!n) {
+      var empty = document.createElement('p');
+      empty.className = 'zone-empty';
+      empty.textContent = 'Not wireframed yet — no zones documented.';
+      zoneList.appendChild(empty);
+      job.textContent = 'Not wireframed yet.';
+      if (device) fit();
+      return;
+    }
+    job.textContent = n.job;
+    n.zones.forEach(function (z, i) {
+      var sec = document.createElement('section');
+      sec.className = 'zone';
+      var h = document.createElement('h2');
+      h.textContent = 'Zone ' + (i + 1) + ' — ' + z[0];
+      var p = document.createElement('p');
+      p.textContent = z[1];
+      sec.appendChild(h);
+      sec.appendChild(p);
+      zoneList.appendChild(sec);
+    });
+    if (device) fit();
+  }
+
+  // Notes follow what the iframe actually shows, including navigation from
+  // inside the wireframe (card → detail, retry → loading, …).
+  frame.addEventListener('load', function () {
+    var key;
+    try {
+      var loc = frame.contentWindow.location;
+      key = loc.pathname.split('/').pop();
+      if (key === 'race-detail-error.html' && /[?&]cause=registration/.test(loc.search)) key += '?cause=registration';
+    } catch (e) {
+      key = frame.getAttribute('src');
+    }
+    renderNotes(key);
+  });
 
   links.forEach(function (link) {
     link.addEventListener('click', function (e) {
@@ -300,8 +464,74 @@
       links.forEach(function (l) { l.removeAttribute('aria-current'); });
       link.setAttribute('aria-current', 'page');
       title.textContent = link.textContent;
+      renderNotes(link.getAttribute('data-frame'));
     });
   });
+
+  /* ---------- continuous ("squircle") corners ----------
+     Same construction as Figma's corner smoothing (60% ≈ iOS): each corner
+     is bezier → circular arc → bezier, so curvature ramps up smoothly
+     instead of jumping from straight edge to arc. */
+  function corner(r, s) {
+    var rad = Math.PI / 180;
+    var p = (1 + s) * r;
+    var arcDeg = 90 * (1 - s);
+    var arc = Math.sin(arcDeg / 2 * rad) * r * Math.SQRT2;
+    var p34 = r * Math.tan((90 - arcDeg) / 4 * rad);
+    var c = p34 * Math.cos(45 * s * rad);
+    var d = c * Math.tan(45 * s * rad);
+    var b = (p - arc - c - d) / 3;
+    return { r: r, p: p, a: 2 * b, b: b, c: c, d: d, arc: arc };
+  }
+  function squircle(x, y, w, h, r, s) {
+    var k = corner(Math.min(r, w / 2, h / 2), s);
+    var a = k.a, b = k.b, c = k.c, d = k.d, A = k.arc, R = k.r, P = k.p, abc = a + b + c;
+    return [
+      'M', x + w - P, y,
+      'c', a, 0, a + b, 0, abc, d, 'a', R, R, 0, 0, 1, A, A, 'c', d, c, d, b + c, d, abc,
+      'L', x + w, y + h - P,
+      'c', 0, a, 0, a + b, -d, abc, 'a', R, R, 0, 0, 1, -A, A, 'c', -c, d, -(b + c), d, -abc, d,
+      'L', x + P, y + h,
+      'c', -a, 0, -(a + b), 0, -abc, -d, 'a', R, R, 0, 0, 1, -A, -A, 'c', -d, -c, -d, -(b + c), -d, -abc,
+      'L', x, y + P,
+      'c', 0, -a, 0, -(a + b), d, -abc, 'a', R, R, 0, 0, 1, A, -A, 'c', c, -d, b + c, -d, abc, -d,
+      'Z'
+    ].map(function (v) { return typeof v === 'number' ? +v.toFixed(3) : v; }).join(' ');
+  }
+
+  var device = document.getElementById('device');
+  var slot = document.getElementById('device-slot');
+  var screen = document.getElementById('device-screen');
+  var SCREEN_R = 47, SMOOTH = 0.6;   // iPhone 12–14 display corner radius, pt
+
+  (function drawOutline() {
+    var bezel = parseFloat(getComputedStyle(device).paddingLeft);
+    var W = device.offsetWidth, H = device.offsetHeight;
+    var sw = W - 2 * bezel, sh = H - 2 * bezel;
+    document.getElementById('device-body').setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    document.getElementById('device-body').setAttribute('width', W);
+    document.getElementById('device-body').setAttribute('height', H);
+    document.getElementById('body-path').setAttribute('d', squircle(0.5, 0.5, W - 1, H - 1, SCREEN_R + bezel, SMOOTH));
+    document.getElementById('screen-edge').setAttribute('d', squircle(bezel - 0.5, bezel - 0.5, sw + 1, sh + 1, SCREEN_R + 0.5, SMOOTH));
+    screen.style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
+  })();
+
+  // Scale the whole device (never its internals) to fit the window height.
+  // Two passes: the heading wraps to the slot's width, so a narrower slot
+  // can push the slot down, which changes the height available to it.
+  function fit() {
+    var W = device.offsetWidth, H = device.offsetHeight;
+    for (var i = 0; i < 2; i++) {
+      var top = slot.getBoundingClientRect().top + window.scrollY;
+      var avail = window.innerHeight - top - 32;
+      var scale = Math.min(1, Math.max(0.55, avail / H));
+      device.style.transform = 'scale(' + scale + ')';
+      slot.style.width = (W * scale) + 'px';
+      slot.style.height = (H * scale) + 'px';
+    }
+  }
+  renderNotes('race-browse.html');   // also runs fit()
+  window.addEventListener('resize', fit);
 })();
 </script>
 
