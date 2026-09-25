@@ -267,7 +267,7 @@
     <span class="pill">Updated 2026-09-25</span>
     <span class="pill">5 job screens + 2 infrastructure</span>
     <span class="pill">8 jobs traced · 0 orphan jobs</span>
-    <span class="pill">2-tab nav · 3 flows · 7 dead ends</span>
+    <span class="pill">3-tab nav · 3 flows · 7 dead ends</span>
     <span class="pill">1 accepted MVP gap</span>
   </div>
 
@@ -276,7 +276,7 @@
     <p class="lede">Four corrections that came out of building this IA end-to-end — see each section below for the full reasoning.</p>
     <div class="card-grid">
       <div class="card tw-sitemap"><strong>The entry point is Race browse, not a screen called "Onrace"</strong>An earlier draft modeled a distinct entry screen to carry Main Job 2. It never existed as separate UI — removed from the tree and the matrix; its rationale relocated, not deleted (see Navigation in <code>sitemap.md</code>).</div>
-      <div class="card tw-trace"><strong>Two infrastructure screens, justified by auth, not by a job</strong>Sign in / Sign up and Profile close no job of their own (formerly tagged "orphan"). The test for them isn't "does a job need this?" but "does the existence of accounts require it?" Both are contextual in My Results, neither is a tab. Profile, added 2026-09-25, reverses the earlier "no job supports Profile" verdict.</div>
+      <div class="card tw-trace"><strong>Two infrastructure screens, justified by auth, not by a job</strong>Sign in / Sign up and Profile close no job of their own (formerly tagged "orphan"). The test for them isn't "does a job need this?" but "does the existence of accounts require it?" Sign in / Sign up is a contextual gate; Profile is a global tab (since 2026-09-25). Profile, added 2026-09-25, reverses the earlier "no job supports Profile" verdict.</div>
       <div class="card tw-flows"><strong>Every success endpoint is now a verifiable condition</strong>Not a screen destination. Log Result's success previously just "landed on a screen" — tightened to "a <code>results</code> row now exists with <code>official_result_url</code> populated."</div>
       <div class="card tw-gap"><strong>One dead end is a known, accepted MVP gap</strong>A logged result's source link can rot with no in-app fix (<code>DeadEnd5</code>). Left as-is on purpose — no job asks to <em>correct</em> a result, only to log or retrieve one. Now tracked in <code>research.md</code>.</div>
     </div>
@@ -301,7 +301,7 @@
 
     <p class="entry-note"><strong style="color:var(--text-dim)">App entry:</strong> Race browse is the landing screen at 0 taps — see Navigation in <code>sitemap.md</code>. An earlier draft modeled a separate "Onrace — entry" screen for Main Job 2; it never existed as real UI and was removed. The reasoning wasn't wrong, just misplaced — it describes this global nav structure (Discover + My Results as co-equal items), not a screen.</p>
 
-    <p class="entry-note"><strong style="color:var(--text-dim)">Global navigation — 2 tabs (revised 2026-09-24):</strong> <strong style="color:var(--text)">Discover</strong> → Race browse and <strong style="color:var(--text)">My Results</strong> → Results list. <strong style="color:var(--text)">Log result</strong> is no longer a tab: it's the primary action button inside My Results (header, plus the empty state's call to action), because tabs are destinations and actions are buttons. Cost: logging a result goes from 1 tap to 2 from anywhere outside My Results, with no extra sign-in step. Replaces the earlier 3-tab bar (Discover / Log Result / My Results); that reasoning is kept, marked superseded, in <code>sitemap.md</code> → Navigation § 1–2. <strong style="color:var(--text)">Profile</strong> isn't a tab either (added 2026-09-25). It's an account button in the My Results navigation bar: 2 taps from launch, with Sign out 3.</p>
+    <p class="entry-note"><strong style="color:var(--text-dim)">Global navigation — 3 tabs (revised 2026-09-25):</strong> <strong style="color:var(--text)">Discover</strong> → Race browse, <strong style="color:var(--text)">My Results</strong> → Results list, and <strong style="color:var(--text)">Profile</strong> → Profile. <strong style="color:var(--text)">Log result</strong> is no longer a tab: it's the primary action button inside My Results (header, plus the empty state's call to action), because tabs are destinations and actions are buttons. Cost: logging a result goes from 1 tap to 2 from anywhere outside My Results, with no extra sign-in step. Replaces the earlier 3-tab bar (Discover / Log Result / My Results); that reasoning is kept, marked superseded, in <code>sitemap.md</code> → Navigation § 1–2. <strong style="color:var(--text)">Profile</strong> became a tab on 2026-09-25 for 1-tap consistency and the familiar Account-tab convention. That accepts an auth entry point on every top-level screen, Discover included, though Discover itself gates nothing. It replaces a same-day account button inside My Results. Profile is 1 tap from any top-level screen (2 from Race detail, which has no tab bar), and Sign out is 2.</p>
 
     <div class="legend">
       <span class="lg-label">Jobs:</span>
@@ -379,12 +379,12 @@
 
     <div class="orphan-card">
       <h4 class="screen-name">Sign in / Sign up <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
-      <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Exists because Logged result is owner-only via RLS, so accounts exist. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps My Results (the Log result action lives inside it, so one gate covers both) — not promoted to a global nav item, not deleted.</p>
+      <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Exists because Logged result is owner-only via RLS, so accounts exist. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps My Results or Profile (the Log result action lives inside My Results, so that gate covers both archive jobs) — not promoted to a global nav item, not deleted.</p>
     </div>
 
     <div class="orphan-card">
       <h4 class="screen-name">Profile <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
-      <p>Added 2026-09-25. Shows whose account this is and lets the person leave it: initials (photo deferred until Supabase Storage is decided), name, country, language <code>[?]</code> (stored preference only, no localization yet), and <strong style="color:var(--text)">Sign out</strong>. No bio, stats, or public view. Entry: an account button in the My Results navigation bar, signed-in only, not a tab. Reverses the 2026-09-24 "no job supports Profile" verdict: that asked whether a job needs it, the wrong test for infrastructure. The right test is whether accounts require it. See <code>sitemap.md</code> → Entities → 5.</p>
+      <p>Added 2026-09-25. Shows whose account this is and lets the person leave it: initials (photo deferred until Supabase Storage is decided), name, country, language <code>[?]</code> (stored preference only, no localization yet), and <strong style="color:var(--text)">Sign out</strong>. No bio, stats, or public view. Entry: the Profile tab, one of 3 global tabs. Signed out, it opens the same Sign in / Sign up gate as My Results. Reverses the 2026-09-24 "no job supports Profile" verdict: that asked whether a job needs it, the wrong test for infrastructure. The right test is whether accounts require it. See <code>sitemap.md</code> → Entities → 5.</p>
     </div>
   </section>
 
@@ -753,7 +753,7 @@ flowchart TD
     <p class="lede" style="margin-bottom:12px">Emotional and Social don't have a screen built specifically for them — they're closed by <em>how</em> an existing screen reads (Race browse's cross-format framing; the self-reported-source-linked labeling convention on Log result / Results list / Result detail), not by a dedicated interaction. Legitimate closes, but framing-level, unlike every other check in the matrix.</p>
 
     <div class="callout">
-      <strong>Columns with no check — Sign in / Sign up and Profile (infrastructure).</strong> Zero checks, by design. Not dead weight (Logged result is owner-only via RLS, so accounts exist) and not job-closers either. Sign in / Sign up is a <strong style="color:var(--text)">contextual gate</strong> on My Results, never a standalone destination. Profile is the account's home and its only sign-out point, reached from My Results. An earlier draft's <code>Onrace (entry)</code> column made the same mistake in reverse — crediting a nonexistent screen with closing Main Job 2 — and was removed; that job's coverage already stood on Race browse + Results list alone.
+      <strong>Columns with no check — Sign in / Sign up and Profile (infrastructure).</strong> Zero checks, by design. Not dead weight (Logged result is owner-only via RLS, so accounts exist) and not job-closers either. Sign in / Sign up is a <strong style="color:var(--text)">contextual gate</strong> on My Results and Profile, never a standalone destination. Profile is the account's home and its only sign-out point, reached from its own tab. An earlier draft's <code>Onrace (entry)</code> column made the same mistake in reverse — crediting a nonexistent screen with closing Main Job 2 — and was removed; that job's coverage already stood on Race browse + Results list alone.
     </div>
     <div class="callout" style="border-left-color:var(--ok)">
       <strong>Orphan jobs — none.</strong> Every job in <code>jtbd.md</code> traces to at least one screen once Emotional and Social's framing-level closes are counted honestly. Not a forced result: those two were only checked because the Sitemap and Entities sections had already documented exactly where each one lives.

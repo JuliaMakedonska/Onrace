@@ -186,8 +186,9 @@ Profile  [INFRASTRUCTURE]  (added 2026-09-25)
   Contents, deliberately narrow: initials (photo deferred) · name · country
   · language [?] (stored preference, no localization yet) · Sign out.
   Nothing else: no bio, stats, customization, or public view.
-  Entry: account button in the My Results navigation bar (Navigation § 1).
-  Only reachable signed in, since My Results already gates on sign-in.
+  Entry: the Profile tab, one of 3 global tabs (Navigation § 1, revised
+  2026-09-25). Signed out, the tab opens the same Sign in / Sign up gate as
+  My Results; a successful sign-in lands on Profile.
 ```
 
 **Jobs with no screen of their own:** the Emotional job ("recognized as what I actually am — a hybrid athlete") and the Social job ("the proof itself to stand on its own") don't produce distinct screens — per `jtbd.md`, they describe how existing screens should read (tone/framing on Discovery; the self-reported-source-linked display convention on Result detail), not separate destinations. Not listed as screens or orphans for that reason.
@@ -200,22 +201,37 @@ Profile  [INFRASTRUCTURE]  (added 2026-09-25)
 
 Built only from the screens already named in the Screens section above. No new screen is introduced here, only how the existing ones are entered and reached. (Profile, added 2026-09-25, was added to the Screens section first. Its placement is decided below.)
 
-### 1. Global navigation — 2 items (revised 2026-09-24)
+### 1. Global navigation — 3 items (revised 2026-09-25)
 
-**Current structure:** a 2-tab bottom bar — **Discover** → Race browse, **My Results** → Results list. **Log result** is no longer a tab; it's the primary action button inside My Results (in the Results list header, and as the empty state's call to action).
+**Current structure:** a 3-tab bottom bar — **Discover** → Race browse, **My Results** → Results list, **Profile** → Profile. **Log result** is still not a tab; it's the primary action button inside My Results (in the Results list header, and as the empty state's call to action). Drill-down screens (Race detail, Log result, Result detail) still replace the tab bar with a back bar (`wireframes/_conventions.md` § 1).
 
 | Item → screen | Job behind it | Persona |
 |---|---|---|
 | **Discover** → Race browse | Main Job 1 — Discovery (`jtbd.md`) | Primary (core) + Secondary — Season Planner |
 | **My Results** → Results list | Related Job 4 — "pull that proof up quickly" (`jtbd.md`); also home of Related Job 3's entry point, via the in-page **Log result** action | Secondary — Archivist (core); Primary weak/caveated only |
+| **Profile** → Profile | None. `[INFRASTRUCTURE]`: exists because accounts do (Entities → 5) | Both personas, once they have an account |
 
-**Why 2 tabs + an in-page action (the reasoning that replaced the 3-item version below):** the problem with the 3-item bar was a *destination/action mismatch*, not tap count. A tab bar is for switching between places; actions go in the screen's own toolbar or buttons (Apple HIG's tab bar guidance: tabs are for navigation, not for starting tasks). Discover and My Results are places — you go there to look at a set of things. "Log Result" was an action (start a form that creates one new Logged result) sitting between two places as if it were one. And that action writes to the exact collection My Results shows, so its natural home is inside that place, next to the list it adds to — not a separate location of its own.
+**Why a Profile tab (2026-09-25, replacing the account-button placement decided earlier the same day, kept below as superseded):** a separate, always-visible Profile destination is worth its costs for two reasons:
+- **1-tap consistency.** The account is one tap from every top-level screen, and nobody has to learn that it lives inside My Results. That also retires the earlier placement's `[?]` hypothesis ("people look for their account inside My Results") instead of leaving it to a usability test.
+- **Familiar convention.** An Account/Profile tab in the bottom bar is where people look for their account in most consumer iOS apps. The earlier placement followed a less common pattern (an account button in a screen's header).
+
+**The costs, accepted knowingly:**
+- **An auth entry point on every top-level screen, Discover included.** This is exactly what the superseded reasoning refused. What still holds: Discover itself needs no account and nothing on it is gated. The Profile tab is an opt-in way in, never a wall in front of browsing. Signed out, tapping Profile opens the same Sign in / Sign up gate as My Results (one gate, now reachable from two tabs), and a successful sign-in lands on Profile.
+- **A permanent slot for a screen that closes no job.** This overrides the principle that kept Sign in / Sign up out of the bar ("a permanent slot shouldn't go to a screen with no job behind it"). That principle now applies only to Sign in / Sign up, which stays out because it's a gate, not a destination (see below).
+- **Back to 3 tabs.** This doesn't reopen what the 2026-09-24 revision fixed. The 3-tab bar was wrong because one tab was an *action* (Log Result). Profile is a *destination*, so the destination/action reasoning below still holds and Log result stays an in-page button.
+- **A slot for a rarely visited screen.** Accepted for discoverability. Sign out and account facts are always one tap away, never buried.
+
+**Race detail keeps no tab bar.** It's a drill-down screen, so the tab bar is replaced by the back bar and the sticky Register bar (`wireframes/_conventions.md` § 1, commit `24d80f6`). "1 tap from anywhere" therefore means from any top-level screen. From Race detail, Profile is 2 taps (Back → Profile). See § 2.
+
+**Why Log result is an in-page action, not a tab (2026-09-24; still holds with the 3-tab bar):** the problem with the 3-item bar was a *destination/action mismatch*, not tap count. A tab bar is for switching between places; actions go in the screen's own toolbar or buttons (Apple HIG's tab bar guidance: tabs are for navigation, not for starting tasks). Discover and My Results are places — you go there to look at a set of things. "Log Result" was an action (start a form that creates one new Logged result) sitting between two places as if it were one. And that action writes to the exact collection My Results shows, so its natural home is inside that place, next to the list it adds to — not a separate location of its own.
 
 The trigger-difference argument below is still true — Related Jobs 3 and 4 *are* triggered at different moments (right after a race vs. later, on demand). But a difference in *when* a job happens doesn't make it a different *place*: both jobs act on the same object (Logged result) in the same archive. Different triggers justify two clear entry points, not two tabs — and the in-page primary action is that second entry point.
 
 **The cost, stated honestly** (see § 2 for the numbers): Related Job 3 goes from 1 tap to 2. That was the reason commit `03ed66f` kept 3 tabs: Related Job 3 is the one job sourced as urgency-triggered ("right after finishing a race," `jtbd.md`). Accepted, not dismissed: the "urgency" is hours-to-days after a race, not seconds, and the extra tap is small next to the form itself (race, date, sport type, finish time, plus finding and pasting `official_result_url`). **[?] HYPOTHESIS:** that people expect to find "log a result" inside My Results, and that logging is rare enough (a few times a season) that it doesn't need a permanent slot. Neither is backed by user research — check both in the first usability test of the My Results flow.
 
-**Main Job 2 is served better by this, not worse:** with only two tabs, Discover and My Results are now the *entire* global nav — the "one product, two co-equal halves" framing below is now literally what the bar shows.
+**Main Job 2:** Discover and My Results are the only two *job-carrying* tabs, co-equal, side by side. Profile is the third tab, but it's account infrastructure, not a third half of the product. The "one product, two co-equal halves" framing below still reads directly off the bar. *(From 2026-09-24 until the Profile tab on 2026-09-25, those two were the entire bar.)*
+
+**Deliberately excluded from global nav:** Sign in/Sign up. It's an `[INFRASTRUCTURE]` screen (tagged `[ORPHAN]` until 2026-09-25) — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of a handful of nav items (3 as of 2026-09-25, one of them already Profile) on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It's also a gate, not a destination: nobody goes to "Sign in" to look at something there. It surfaces contextually instead, when a signed-out person taps My Results or Profile (see below).
 
 #### Superseded — original 3-item reasoning (kept for the record, no longer the structure)
 
@@ -229,18 +245,20 @@ The trigger-difference argument below is still true — Related Jobs 3 and 4 *ar
 | **Log Result** → Log result | Related Job 3 — "log the result along with where it came from... proof ready without having to redo the work later," triggered right after finishing a race (`jtbd.md`) | Secondary — Archivist (core); Primary only weak/general (matrix: "2, weak/general") |
 | **My Results** → Results list | Related Job 4 — "pull that proof up quickly" when an elite race asks for it, triggered later, on demand (`jtbd.md`) | Secondary — Archivist (core); Primary weak/caveated only (Main Job 2 = 2) |
 
-**Why Main Job 2 lives here, not on a screen (relocated 2026-09-17):** an earlier draft of this document modeled a distinct "Onrace — entry" screen to carry Main Job 2 (jtbd.md: "I want that in one product, so that I'm not maintaining two separate habits or tools"), reasoning that "the entry point is where 'one product' is actually experienced." That screen didn't hold up — Race browse is the actual 0-tap landing screen (see Depth, below), not a separate entry point — so it was removed from the Screens tree and the Traceability matrix. But the reasoning itself was sound, just aimed at the wrong artifact: it's *this nav structure* — Discover and My Results sitting as co-equal, always-visible items in one global nav (originally two of three; since 2026-09-24, the only two), rather than two separate apps or tabs a person has to consciously switch mental models between — that's where "one product" is actually experienced. That's what the Traceability matrix's Main Job 2 checkmarks on Race browse and Results list are really pointing at.
+**Why Main Job 2 lives here, not on a screen (relocated 2026-09-17):** an earlier draft of this document modeled a distinct "Onrace — entry" screen to carry Main Job 2 (jtbd.md: "I want that in one product, so that I'm not maintaining two separate habits or tools"), reasoning that "the entry point is where 'one product' is actually experienced." That screen didn't hold up — Race browse is the actual 0-tap landing screen (see Depth, below), not a separate entry point — so it was removed from the Screens tree and the Traceability matrix. But the reasoning itself was sound, just aimed at the wrong artifact: it's *this nav structure* — Discover and My Results sitting as co-equal, always-visible items in one global nav (originally two of three; the only two from 2026-09-24; two of three again since 2026-09-25, beside the infrastructure Profile tab), rather than two separate apps or tabs a person has to consciously switch mental models between — that's where "one product" is actually experienced. That's what the Traceability matrix's Main Job 2 checkmarks on Race browse and Results list are really pointing at.
 
-**Deliberately excluded from global nav:** Sign in/Sign up. It's an `[INFRASTRUCTURE]` screen (tagged `[ORPHAN]` until 2026-09-25) — no job in `jtbd.md` calls for it — and Discovery (the strongest, cleanest-sourced job in the whole matrix) doesn't require an account at all. Giving it a permanent global slot would spend one of a handful of nav items (2, as of 2026-09-24) on a screen with no job behind it, and would put an auth wall in front of users whose only goal is Discovery. It surfaces contextually instead (see below).
+#### Superseded — Profile as an account button in My Results (kept for the record, no longer the structure)
 
-**Profile: not a tab either (decided 2026-09-25).** Profile is reached from an **account button (initials) in the My Results navigation bar**, beside the Log result action, not from a third tab. Same discipline as the Log result decision, applied test by test:
+*Decided and superseded on the same day, 2026-09-25, by the Profile tab above. Kept, not deleted, the same way the 3-item reasoning above was kept after `03ed66f`: the reversal should be traceable. Its tests weren't wrong on their own terms. What changed is the weight given to 1-tap consistency and convention versus keeping auth entry points off Discover.*
+
+**Profile: not a tab either (decided 2026-09-25, superseded).** Profile is reached from an **account button (initials) in the My Results navigation bar**, beside the Log result action, not from a third tab. Same discipline as the Log result decision, applied test by test:
 1. **Destination or action?** A destination: you go there to see your account. So unlike Log result, it passes the "tabs are places" test. That's necessary for a tab, not sufficient.
 2. **How often?** Tabs are for places people return to every session. Profile is visited rarely: to check whose account this is, change a preference, or sign out. Log result was already judged too infrequent for a tab, and Profile is less frequent still.
 3. **Job-sourcing.** Same test that kept Sign in / Sign up out of the bar: a permanent slot shouldn't go to a screen with no job behind it. A third tab would bring back the 3-item bar removed on 2026-09-24, with the new slot going to the one item that closes no job.
 4. **Signed-out state.** As a tab, it would need either a second sign-in gate or a designed signed-out Profile. Inside My Results it sits behind the gate that's already there, so no new gate. Discover still needs no account.
 5. **Ownership.** The account matters because it owns the archive, so its entry point sits in the archive's own header. This follows the iOS convention of an account button in the large-title bar when the tab bar is reserved for main destinations (e.g. the App Store).
 
-**Rejected alternative:** the same account button on Discover's header too (1 tap from launch). It would put an auth entry point on the one screen designed to need no account. **The cost of the chosen placement:** someone who uses only Discover and wants to change a preference has to go through My Results. **[?] HYPOTHESIS:** that people look for their account inside My Results. Not backed by user research; check it in the same first usability test as Log result's placement.
+**Rejected alternative (at the time):** the same account button on Discover's header too (1 tap from launch). It would put an auth entry point on the one screen designed to need no account. **The cost of the chosen placement:** someone who uses only Discover and wants to change a preference has to go through My Results. **[?] HYPOTHESIS:** that people look for their account inside My Results. Not backed by user research; check it in the same first usability test as Log result's placement.
 
 ### 2. Depth to the primary persona's core job
 
@@ -262,35 +280,37 @@ The trigger-difference argument below is still true — Related Jobs 3 and 4 *ar
 
 So the real cost is exactly **one extra tap from anywhere outside My Results** — 2 taps total, still under the 3-tap ceiling. No path gets worse by more than that, and none gains a second gate. The sign-in gate now fires one step earlier (on the My Results tab, not on the Log action), which also means a signed-out person sees *why* they're signing in (their archive) before they're asked to. Related Job 4 (retrieve proof) is unchanged: 1 tap to My Results, then 1 tap into a Result detail.
 
-**Profile and Sign out: tap depth (added 2026-09-25):**
+**Profile and Sign out: tap depth (revised 2026-09-25 for the Profile tab):**
 
 | Path | Taps | Notes |
 |---|---|---|
-| App launch → Profile, signed in | 2: **My Results** tab → account button | under the 3-tap ceiling |
-| App launch → Profile, signed out | 1 tap + sign-in gate → Results list → 1 tap (2 taps + gate) | the same single gate as the archive; no new one |
-| App launch → Sign out | 3: … → Profile → **Sign out** | at the ceiling, acceptable for the rarest action in the app |
-| Already on My Results → Profile | 1 | |
+| Any top-level screen (Race browse, Results list) → Profile, signed in | 1: **Profile** tab | the point of the tab |
+| Race detail → Profile | 2: Back → **Profile** tab | drill-down screens have no tab bar (§ 1) |
+| Any top-level screen → Profile, signed out | 1 tap + sign-in gate → lands on Profile | the same gate as My Results; no new one |
+| App launch → Sign out | 2: **Profile** tab → **Sign out** | an in-page action on a global destination, no longer buried |
+
+*Superseded, account-button placement (same day):* launch → Profile was 2 taps (My Results → account button), and Sign out was 3.
 
 ### 3. Global / contextual / deep
 
-- **Global (always visible — the 2-item nav bar, since 2026-09-24):**
+- **Global (always visible — the 3-item nav bar, since 2026-09-25):**
   - Discover (Race browse)
   - My Results (Results list)
+  - Profile (Profile): infrastructure, not job-sourced (§ 1)
   - *(Formerly also Log Result — now an in-page action, below. See § 1.)*
 
 - **In-page primary action (a button on a screen, not a nav item):**
   - **Log result** — the primary button in the Results list header, and the call to action in its empty state. Opens the Log result screen.
+  - **Sign out**: a button on Profile, 2 taps from launch.
 
 - **Contextual (appears in-flow, reached by drilling into something, not from the nav bar):**
   - **Race detail** — opened from within Race browse (tap a card/pin); no independent entry point.
   - **Log result** — opened from within My Results via the Log result action above; no longer a global destination of its own.
   - **Result detail (proof view)** — opened from within My Results (tap a logged entry); Secondary–Archivist only, per Step 2's persona note.
-  - **Profile**: opened from the account button in the My Results navigation bar; no independent entry point. Signed-in only (see § 1).
-  - **Sign in / Sign up** — surfaces only when an unauthenticated person taps My Results (owner-only per `../CLAUDE.md`'s RLS model — and since Log result now lives inside My Results, that one tap gates both archive jobs); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global. *(Before 2026-09-24 it was reachable from two of the three nav items, Log Result and My Results.)*
+  - *(Profile was briefly contextual, via an account button in My Results; since 2026-09-25 it's a global tab. See § 1.)*
+  - **Sign in / Sign up** — surfaces only when an unauthenticated person taps My Results or Profile (owner-only per `../CLAUDE.md`'s RLS model — and since Log result now lives inside My Results, the My Results tap gates both archive jobs; the Profile tap is the second way into the same gate, since 2026-09-25); never interrupts Discover, since that job needs no account. This is a gate triggered by an action, not a destination someone navigates to on its own — hence contextual, not global. *(Before 2026-09-24 it was reachable from two of the three nav items, Log Result and My Results.)*
 
-- **Deep (rare, buried actions):**
-  - **Sign out**: a button on Profile, 3 taps from launch. The first real entry here (2026-09-25). This bucket used to say signing out wasn't in the screen list, and that absence is exactly the gap Profile closes (Entities → 5).
-  - Editing or deleting a logged result, and any further account settings, still aren't in the screen list, so they're still not invented here.
+- **Deep (rare, buried actions):** **None again.** Sign out was briefly the first entry here (3 taps, under the superseded account-button placement). With the Profile tab it's 2 taps, an in-page action on a global destination (above), so it isn't buried. Editing or deleting a logged result, and any further account settings, still aren't in the screen list, so nothing is invented to fill this bucket.
 
 ---
 
@@ -325,7 +345,7 @@ Rows = every job in `jtbd.md` (main, related, emotional, and social — the five
 
 **Resolution: attach to existing, not delete or add.** This screen isn't dead weight — it's required because Logged result is owner-only per `../CLAUDE.md`'s RLS model — but it shouldn't be scored as if it closes a job of its own, and it shouldn't be promoted to a first-class, job-justified destination either. The Navigation section already made the correct call here without naming it as such: Sign in / Sign up is classified as **contextual**, a gate triggered only when an unauthenticated person attempts Log Result (Related Job 3) or My Results (Related Job 4), never a standalone stop. That's the resolution — it's attached to those two jobs' flows as an enabling step, not counted as closing them itself. No change needed beyond stating this explicitly here.
 
-**Profile**: zero checks, and the same resolution. It exists because accounts do (Entities → 5), and it's attached to the archive as that account's home and its only sign-out point. It isn't scored as closing a job. It's contextual in My Results, not a global item (Navigation § 1). Its reversal of the 2026-09-24 "no job supports Profile" verdict is documented at Entities → 5, not here, because it changes *why* the screen exists, not what it closes.
+**Profile**: zero checks, and the same resolution. It exists because accounts do (Entities → 5), and it's the account's home and its only sign-out point. It isn't scored as closing a job. It's a global tab since 2026-09-25 (Navigation § 1), which changes how it's reached, not what it closes. Its reversal of the 2026-09-24 "no job supports Profile" verdict is documented at Entities → 5, not here, because it changes *why* the screen exists, not what it closes.
 
 ### Orphan jobs (row with no ✓)
 

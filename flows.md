@@ -172,7 +172,7 @@ flowchart TD
 ```
 
 **Decisions:**
-- *Signed in?* — Logged results are owner-only per `../CLAUDE.md`'s RLS model, so the My Results tab gates into Sign in / Sign up if not signed in, per the Navigation section's contextual-gate design. Since 2026-09-24 this gate sits on the My Results tab rather than on a Log Result tab; Log result lives inside My Results, so one gate covers both archive jobs.
+- *Signed in?* — Logged results are owner-only per `../CLAUDE.md`'s RLS model, so the My Results tab gates into Sign in / Sign up if not signed in, per the Navigation section's contextual-gate design. Since 2026-09-24 this gate sits on the My Results tab rather than on a Log Result tab; Log result lives inside My Results, so one gate covers both archive jobs. Since 2026-09-25 the same gate is also reached from the Profile tab (3-tab bar, `sitemap.md` → Navigation § 1). That path lands on Profile, not Results list, and isn't part of this flow.
 - *Finds and taps Log result?* `[?]` — added 2026-09-24 with the 2-tab nav. The form is now one in-page action away from Results list (header button, or the empty state's call to action), not a tab. Flagged: that people look for logging inside My Results is `sitemap.md` → Navigation § 1's unvalidated hypothesis. The action must not depend on the list having loaded (see the 2026-09-24 revision note).
 - *Sign-in succeeded?*
 - *Retry?* (after a failed sign-in) — previously just an edge label; now an explicit diamond, same as every other error in this flow.

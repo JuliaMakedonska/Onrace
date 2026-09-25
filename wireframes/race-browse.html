@@ -553,17 +553,22 @@
 
   </div><!-- /.phone-screen -->
 
-  <!-- ZONE: global nav — 2 tabs, both destinations (sitemap.md → Navigation
-       § 1, revised 2026-09-24). "Log result" is no longer a tab: it's the
-       primary action button inside My Results (header + empty state), since
-       tabs are for places and actions are buttons. Supersedes the earlier
-       3-tab bar (Discover / Log Result / My Results). -->
+  <!-- ZONE: global nav — 3 tabs, all destinations (sitemap.md → Navigation
+       § 1, revised 2026-09-25): Discover / My Results / Profile. Profile is
+       account infrastructure, always one tap away; signed out, it opens the
+       same Sign in / Sign up gate as My Results. "Log result" is still not a
+       tab: it's the primary action button inside My Results (header + empty
+       state), since tabs are for places and actions are buttons. Supersedes
+       the 2-tab bar (2026-09-24) and the earlier Discover / Log Result /
+       My Results bar. -->
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
       <li><a href="race-browse.html" aria-current="page"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="13" cy="13" r="10.5"/><path d="m17.2 8.8-2.6 5.8-5.8 2.6 2.6-5.8z"/></svg><span>Discover</span></a></li>
-      <!-- No href yet: results-list.html isn't built, and a link to a missing
-           file would be a dead end. Becomes a real link with that screen. -->
+      <!-- No href yet on My Results or Profile: results-list.html and
+           profile.html aren't built, and a link to a missing file would be a
+           dead end. Each becomes a real link with its screen. -->
       <li><a aria-disabled="true"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
+      <li><a aria-disabled="true"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="9" r="4.5"/><path d="M4.5 22.5c.9-4.3 4.2-7 8.5-7s7.6 2.7 8.5 7"/></svg><span>Profile</span></a></li>
     </ul>
   </nav>
 
