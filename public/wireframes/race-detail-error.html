@@ -156,16 +156,32 @@
       <!-- DetailError (flows.md: DetailLoading → "connection fails" →
            DetailError → Retry?). Nothing about the race loaded, so no name
            or facts, and no action bar (nothing to register for). "Try
-           again" is Retry → yes (back to DetailLoading, i.e.
-           race-detail-loading.html); Retry → no (DeadEnd1) is the top
+           again" is Retry → yes (back to DetailLoading for the same race,
+           race-detail-loading.html?race=…); Retry → no (DeadEnd1) is the top
            bar's "Back to races", so it isn't repeated here. -->
       <div class="state-message" data-cause="detail" role="alert">
         <h2>Couldn't load race details</h2>
         <p>Check your connection and try again.</p>
-        <a class="state-action" href="race-detail-loading.html">Try again</a>
+        <a class="state-action" href="race-detail-loading.html?race=hyrox-london" data-retry>Try again</a>
       </div>
 
       <div data-cause="registration" hidden>
+        <article class="race" data-race="berlin-marathon" aria-labelledby="race-berlin-marathon" hidden>
+          <h1 id="race-berlin-marathon">Berlin Marathon</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>Marathon</dd>
+            <dt>Date</dt><dd><time datetime="2026-09-27">27 September 2026</time></dd>
+            <dt>Location</dt><dd>Berlin, Germany</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-berlin-marathon">
+            <h2 id="about-berlin-marathon">About this race</h2>
+            <p>42.2&nbsp;km flat, fast World Marathon Major course through central Berlin.</p>
+          </section>
+          <section class="official" aria-labelledby="official-berlin-marathon">
+            <h2 id="official-berlin-marathon">Official race website</h2>
+            <p><a href="https://bmw-berlin-marathon.com/" target="_blank" rel="noopener">bmw-berlin-marathon.com</a></p>
+          </section>
+        </article>
         <article class="race" data-race="hyrox-london" aria-labelledby="race-hyrox-london">
           <h1 id="race-hyrox-london">HYROX London</h1>
           <dl class="facts">
@@ -182,6 +198,86 @@
             <p><a href="https://hyrox.com/" target="_blank" rel="noopener">hyrox.com</a></p>
           </section>
         </article>
+        <article class="race" data-race="hyrox-dallas" aria-labelledby="race-hyrox-dallas" hidden>
+          <h1 id="race-hyrox-dallas">HYROX Dallas</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>HYROX</dd>
+            <dt>Date</dt><dd><time datetime="2027-01-17">17 January 2027</time></dd>
+            <dt>Location</dt><dd>Dallas, Texas, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-hyrox-dallas">
+            <h2 id="about-hyrox-dallas">About this race</h2>
+            <p>North American HYROX stop; the standard 8 × 1&nbsp;km run + station format.</p>
+          </section>
+          <section class="official" aria-labelledby="official-hyrox-dallas">
+            <h2 id="official-hyrox-dallas">Official race website</h2>
+            <p><a href="https://hyrox.com/" target="_blank" rel="noopener">hyrox.com</a></p>
+          </section>
+        </article>
+        <article class="race" data-race="deka-strong-chicago" aria-labelledby="race-deka-strong-chicago" hidden>
+          <h1 id="race-deka-strong-chicago">DEKA STRONG Chicago</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
+            <dt>Date</dt><dd><time datetime="2027-03-14">14 March 2027</time></dd>
+            <dt>Location</dt><dd>Chicago, Illinois, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-deka-strong-chicago">
+            <h2 id="about-deka-strong-chicago">About this race</h2>
+            <p>10-zone functional-fitness circuit race; DEKA’s strength-focused format.</p>
+          </section>
+          <section class="official" aria-labelledby="official-deka-strong-chicago">
+            <h2 id="official-deka-strong-chicago">Official race website</h2>
+            <p><a href="https://spartan.com/" target="_blank" rel="noopener">spartan.com</a></p>
+          </section>
+        </article>
+        <article class="race" data-race="boston-marathon" aria-labelledby="race-boston-marathon" hidden>
+          <h1 id="race-boston-marathon">Boston Marathon</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>Marathon</dd>
+            <dt>Date</dt><dd><time datetime="2027-04-20">20 April 2027</time></dd>
+            <dt>Location</dt><dd>Boston, Massachusetts, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-boston-marathon">
+            <h2 id="about-boston-marathon">About this race</h2>
+            <p>42.2&nbsp;km World Marathon Major through Boston’s historic Newton Hills; requires a qualifying time or charity entry.</p>
+          </section>
+          <section class="official" aria-labelledby="official-boston-marathon">
+            <h2 id="official-boston-marathon">Official race website</h2>
+            <p><a href="https://baa.org/" target="_blank" rel="noopener">baa.org</a></p>
+          </section>
+        </article>
+        <article class="race" data-race="spartan-beast-killington" aria-labelledby="race-spartan-beast-killington" hidden>
+          <h1 id="race-spartan-beast-killington">Spartan Race Beast — Killington</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>OCR</dd>
+            <dt>Date</dt><dd><time datetime="2027-07-11">11 July 2027</time></dd>
+            <dt>Location</dt><dd>Killington, Vermont, United States</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-spartan-beast-killington">
+            <h2 id="about-spartan-beast-killington">About this race</h2>
+            <p>21+ km obstacle course race across Killington’s mountain terrain; part of the Spartan Trifecta.</p>
+          </section>
+          <section class="official" aria-labelledby="official-spartan-beast-killington">
+            <h2 id="official-spartan-beast-killington">Official race website</h2>
+            <p><a href="https://spartan.com/" target="_blank" rel="noopener">spartan.com</a></p>
+          </section>
+        </article>
+        <article class="race" data-race="utmb" aria-labelledby="race-utmb" hidden>
+          <h1 id="race-utmb">UTMB — Ultra-Trail du Mont-Blanc</h1>
+          <dl class="facts">
+            <dt>Sport type</dt><dd>Ultra</dd>
+            <dt>Date</dt><dd><time datetime="2027-08-24">24 August 2027</time></dd>
+            <dt>Location</dt><dd>Chamonix, France</dd>
+          </dl>
+          <section class="about" aria-labelledby="about-utmb">
+            <h2 id="about-utmb">About this race</h2>
+            <p>170&nbsp;km ultra-trail circling Mont Blanc through France, Italy, and Switzerland.</p>
+          </section>
+          <section class="official" aria-labelledby="official-utmb">
+            <h2 id="official-utmb">Official race website</h2>
+            <p><a href="https://utmb.world/" target="_blank" rel="noopener">utmb.world</a></p>
+          </section>
+        </article>
       </div>
 
     </main>
@@ -191,6 +287,24 @@
   <!-- ZONE: sticky action bar — present only for RegLinkError (the race
        loaded). Hidden for DetailError: a Register button for a race that
        didn't load could never work (_conventions.md § 1). -->
+  <div class="action-bar" data-race="berlin-marathon" data-cause="registration" hidden>
+    <!-- RegLinkError (flows.md): inside the action bar, directly above
+         the Register button that failed, so the cause sits beside the
+         action whatever the scroll position. Lighter than DetailError — no
+         Retry? diamond. Exits per flows.md: back to race detail and try
+         again later ("Dismiss" — the person is already on the race, so this
+         just closes the alert), or give up (DeadEnd6, just leaving). Only
+         failures a browser can detect: a missing or malformed
+         registration_url, or the new tab being blocked (flows.md revision
+         note, 2026-09-24). -->
+    <div class="inline-error" role="alert">
+      <h2>Couldn't open the registration page</h2>
+      <p>The registration link for this race didn't open. Registration may not be available yet — try again later from this page.</p>
+      <button type="button" class="dismiss">Dismiss</button>
+    </div>
+    <a class="register-btn" href="https://bmw-berlin-marathon.com/" target="_blank" rel="noopener">Register on bmw-berlin-marathon.com</a>
+    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+  </div>
   <div class="action-bar" data-race="hyrox-london" data-cause="registration" hidden>
     <!-- RegLinkError (flows.md): inside the action bar, directly above
          the Register button that failed, so the cause sits beside the
@@ -209,21 +323,130 @@
     <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on hyrox.com</a>
     <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
   </div>
+  <div class="action-bar" data-race="hyrox-dallas" data-cause="registration" hidden>
+    <!-- RegLinkError (flows.md): inside the action bar, directly above
+         the Register button that failed, so the cause sits beside the
+         action whatever the scroll position. Lighter than DetailError — no
+         Retry? diamond. Exits per flows.md: back to race detail and try
+         again later ("Dismiss" — the person is already on the race, so this
+         just closes the alert), or give up (DeadEnd6, just leaving). Only
+         failures a browser can detect: a missing or malformed
+         registration_url, or the new tab being blocked (flows.md revision
+         note, 2026-09-24). -->
+    <div class="inline-error" role="alert">
+      <h2>Couldn't open the registration page</h2>
+      <p>The registration link for this race didn't open. Registration may not be available yet — try again later from this page.</p>
+      <button type="button" class="dismiss">Dismiss</button>
+    </div>
+    <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on hyrox.com</a>
+    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+  </div>
+  <div class="action-bar" data-race="deka-strong-chicago" data-cause="registration" hidden>
+    <!-- RegLinkError (flows.md): inside the action bar, directly above
+         the Register button that failed, so the cause sits beside the
+         action whatever the scroll position. Lighter than DetailError — no
+         Retry? diamond. Exits per flows.md: back to race detail and try
+         again later ("Dismiss" — the person is already on the race, so this
+         just closes the alert), or give up (DeadEnd6, just leaving). Only
+         failures a browser can detect: a missing or malformed
+         registration_url, or the new tab being blocked (flows.md revision
+         note, 2026-09-24). -->
+    <div class="inline-error" role="alert">
+      <h2>Couldn't open the registration page</h2>
+      <p>The registration link for this race didn't open. Registration may not be available yet — try again later from this page.</p>
+      <button type="button" class="dismiss">Dismiss</button>
+    </div>
+    <a class="register-btn" href="https://spartan.com/" target="_blank" rel="noopener">Register on spartan.com</a>
+    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+  </div>
+  <div class="action-bar" data-race="boston-marathon" data-cause="registration" hidden>
+    <!-- RegLinkError (flows.md): inside the action bar, directly above
+         the Register button that failed, so the cause sits beside the
+         action whatever the scroll position. Lighter than DetailError — no
+         Retry? diamond. Exits per flows.md: back to race detail and try
+         again later ("Dismiss" — the person is already on the race, so this
+         just closes the alert), or give up (DeadEnd6, just leaving). Only
+         failures a browser can detect: a missing or malformed
+         registration_url, or the new tab being blocked (flows.md revision
+         note, 2026-09-24). -->
+    <div class="inline-error" role="alert">
+      <h2>Couldn't open the registration page</h2>
+      <p>The registration link for this race didn't open. Registration may not be available yet — try again later from this page.</p>
+      <button type="button" class="dismiss">Dismiss</button>
+    </div>
+    <a class="register-btn" href="https://baa.org/" target="_blank" rel="noopener">Register on baa.org</a>
+    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+  </div>
+  <div class="action-bar" data-race="spartan-beast-killington" data-cause="registration" hidden>
+    <!-- RegLinkError (flows.md): inside the action bar, directly above
+         the Register button that failed, so the cause sits beside the
+         action whatever the scroll position. Lighter than DetailError — no
+         Retry? diamond. Exits per flows.md: back to race detail and try
+         again later ("Dismiss" — the person is already on the race, so this
+         just closes the alert), or give up (DeadEnd6, just leaving). Only
+         failures a browser can detect: a missing or malformed
+         registration_url, or the new tab being blocked (flows.md revision
+         note, 2026-09-24). -->
+    <div class="inline-error" role="alert">
+      <h2>Couldn't open the registration page</h2>
+      <p>The registration link for this race didn't open. Registration may not be available yet — try again later from this page.</p>
+      <button type="button" class="dismiss">Dismiss</button>
+    </div>
+    <a class="register-btn" href="https://spartan.com/" target="_blank" rel="noopener">Register on spartan.com</a>
+    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+  </div>
+  <div class="action-bar" data-race="utmb" data-cause="registration" hidden>
+    <!-- RegLinkError (flows.md): inside the action bar, directly above
+         the Register button that failed, so the cause sits beside the
+         action whatever the scroll position. Lighter than DetailError — no
+         Retry? diamond. Exits per flows.md: back to race detail and try
+         again later ("Dismiss" — the person is already on the race, so this
+         just closes the alert), or give up (DeadEnd6, just leaving). Only
+         failures a browser can detect: a missing or malformed
+         registration_url, or the new tab being blocked (flows.md revision
+         note, 2026-09-24). -->
+    <div class="inline-error" role="alert">
+      <h2>Couldn't open the registration page</h2>
+      <p>The registration link for this race didn't open. Registration may not be available yet — try again later from this page.</p>
+      <button type="button" class="dismiss">Dismiss</button>
+    </div>
+    <a class="register-btn" href="https://utmb.world/" target="_blank" rel="noopener">Register on utmb.world</a>
+    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+  </div>
 
 <script>
 (function () {
-  // Which cause to show: ?cause=registration → RegLinkError; anything
-  // else → DetailError (the default).
-  var cause = new URLSearchParams(window.location.search).get('cause') === 'registration' ? 'registration' : 'detail';
-  document.querySelectorAll('[data-cause]').forEach(function (el) {
-    el.hidden = el.getAttribute('data-cause') !== cause;
+  var params = new URLSearchParams(window.location.search);
+  var SLUGS = ['berlin-marathon', 'hyrox-london', 'hyrox-dallas', 'deka-strong-chicago', 'boston-marathon', 'spartan-beast-killington', 'utmb'];
+  var slug = SLUGS.indexOf(params.get('race')) > -1 ? params.get('race') : 'hyrox-london';
+  var cause = params.get('cause') === 'registration' ? 'registration' : 'detail';
+  document.querySelectorAll('[data-race], [data-cause]').forEach(function (el) {
+    var r = el.getAttribute('data-race'), c = el.getAttribute('data-cause');
+    el.hidden = (r !== null && r !== slug) || (c !== null && c !== cause);
+  });
+  document.querySelectorAll('.register-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var url = btn.getAttribute('href');
+      var valid = false;
+      try { valid = /^https?:$/.test(new URL(url).protocol); } catch (err) {}
+      var tab = valid ? window.open(url, '_blank') : null;
+      if (tab) { tab.opener = null; return; }
+      window.location.href = 'race-detail-error.html?cause=registration&race=' +
+        btn.closest('[data-race]').getAttribute('data-race');
+    });
+  });
+  // DetailError's "Try again": re-fetch the same race.
+  document.querySelectorAll('[data-retry]').forEach(function (a) {
+    a.href = 'race-detail-loading.html?race=' + slug;
   });
 
-  // RegLinkError's "Dismiss": closes the alert, leaving the person on the
-  // race with Register still available to try again later.
-  var dismiss = document.querySelector('.dismiss');
-  dismiss.addEventListener('click', function () {
-    dismiss.closest('.inline-error').hidden = true;
+  // RegLinkError's "Dismiss" (flows.md: back to race detail, tries again
+  // later): closes the alert, leaving the race and Register in place.
+  document.querySelectorAll('.dismiss').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.closest('.inline-error').hidden = true;
+    });
   });
 })();
 </script>

@@ -277,15 +277,26 @@
 
 <script>
 (function () {
-  // Which sample race to show: ?race=<slug> from the card tapped on Race
-  // browse. All seven races (and their action bars) are real markup above;
-  // this only un-hides one (default: hyrox-london, e.g. when opened from index.html
-  // with no query).
-  var slug = new URLSearchParams(window.location.search).get('race');
-  var items = document.querySelectorAll('[data-race]');
-  var match = Array.prototype.some.call(items, function (el) { return el.getAttribute('data-race') === slug; });
-  if (!match) slug = 'hyrox-london';
-  items.forEach(function (el) { el.hidden = el.getAttribute('data-race') !== slug; });
+  var params = new URLSearchParams(window.location.search);
+  var SLUGS = ['berlin-marathon', 'hyrox-london', 'hyrox-dallas', 'deka-strong-chicago', 'boston-marathon', 'spartan-beast-killington', 'utmb'];
+  var slug = SLUGS.indexOf(params.get('race')) > -1 ? params.get('race') : 'hyrox-london';
+  var cause = params.get('cause') === 'registration' ? 'registration' : 'detail';
+  document.querySelectorAll('[data-race], [data-cause]').forEach(function (el) {
+    var r = el.getAttribute('data-race'), c = el.getAttribute('data-cause');
+    el.hidden = (r !== null && r !== slug) || (c !== null && c !== cause);
+  });
+  document.querySelectorAll('.register-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var url = btn.getAttribute('href');
+      var valid = false;
+      try { valid = /^https?:$/.test(new URL(url).protocol); } catch (err) {}
+      var tab = valid ? window.open(url, '_blank') : null;
+      if (tab) { tab.opener = null; return; }
+      window.location.href = 'race-detail-error.html?cause=registration&race=' +
+        btn.closest('[data-race]').getAttribute('data-race');
+    });
+  });
 })();
 </script>
 

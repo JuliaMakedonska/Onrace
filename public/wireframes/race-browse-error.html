@@ -419,14 +419,15 @@
         <div id="list-view" class="view-panel">
           <!-- ZONE: error state (_screens.md → Race browse → Error; flows.md
                Loading → "connection fails" → FetchError → Retry?). "Try again"
-               is the "yes" edge — it re-runs the same fetch, so in the
-               wireframe it links to race-browse-loading.html (Retry → Loading).
+               is the "yes" edge — it re-runs the same fetch, keeping the
+               current filters: race-browse-loading.html?run=1&… (Retry →
+               Loading → HasResults?).
                The "no" edge (DeadEnd1) is just leaving via the bottom nav. -->
           <div class="state-message" role="alert">
             <h2>Couldn't load races</h2>
             <p>Check your connection and try again. Your filters will stay as they are.</p>
             <div class="state-actions">
-              <a class="state-action" href="race-browse-loading.html">Try again</a>
+              <a class="state-action" href="race-browse-loading.html?run=1" data-retry>Try again</a>
             </div>
           </div>
         </div>
@@ -440,7 +441,7 @@
               <h2>Couldn't load races</h2>
               <p>Check your connection and try again. Your filters will stay as they are.</p>
               <div class="state-actions">
-                <a class="state-action" href="race-browse-loading.html">Try again</a>
+                <a class="state-action" href="race-browse-loading.html?run=1" data-retry>Try again</a>
               </div>
             </div>
           </div>
@@ -460,7 +461,9 @@
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
       <li><a href="race-browse.html" aria-current="page">Discover</a></li>
-      <li><a href="results-list.html">My Results</a></li>
+      <!-- No href yet: results-list.html isn't built, and a link to a missing
+           file would be a dead end. Becomes a real link with that screen. -->
+      <li><a aria-disabled="true">My Results</a></li>
     </ul>
   </nav>
 
@@ -506,16 +509,142 @@
 
 <script>
 (function () {
-  // --- Filters drawer. Opened by the control row's Filters button, and by
-  // any [data-opens-filters] button a state page adds (e.g. the empty
-  // state's "Loosen filters").
+  // Shared by race-browse.html and its three state pages. Wires Main Job 1's
+  // Race browse half of flows.md → "Main Job 1 — Discovery":
+  //   Browse → "changes region/date/sport filters" → Loading
+  //   Loading → HasResults? yes → Browse · no → Empty · connection fails → FetchError
+  //   Empty → "adjusts filters" → Browse (via Loading) · FetchError → Retry? yes → Loading
+  //   Browse → "taps a race card" → DetailLoading (race-detail-loading.html)
+  // Filter state travels in the URL (region, from, to, sport) so every page
+  // in the loop shows the same filters. The "fetch" is the seven sample races
+  // below — the same ones as the cards and race-detail.html.
+  var RACES = [
+    { slug: 'berlin-marathon', sport: 'marathon', date: '2026-09-27', region: 'Europe' },
+    { slug: 'hyrox-london', sport: 'hyrox', date: '2026-12-06', region: 'Europe' },
+    { slug: 'hyrox-dallas', sport: 'hyrox', date: '2027-01-17', region: 'North America' },
+    { slug: 'deka-strong-chicago', sport: 'deka', date: '2027-03-14', region: 'North America' },
+    { slug: 'boston-marathon', sport: 'marathon', date: '2027-04-20', region: 'North America' },
+    { slug: 'spartan-beast-killington', sport: 'ocr', date: '2027-07-11', region: 'North America' },
+    { slug: 'utmb', sport: 'ultra', date: '2027-08-24', region: 'Europe' }
+  ];
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  var params = new URLSearchParams(window.location.search);
   var filtersBtn = document.getElementById('filters-open');
   var openBtns = document.querySelectorAll('.filters-trigger, [data-opens-filters]');
   var closeBtn = document.getElementById('filters-close');
   var sheet = document.getElementById('filters-sheet');
   var backdrop = document.getElementById('sheet-backdrop');
   var form = document.getElementById('filters-form');
+  var fromInput = document.getElementById('date-from');
+  var toInput = document.getElementById('date-to');
+  var chipsBar = document.querySelector('.chips-bar');
+  var chipsRow = document.querySelector('.chips-row');
 
+  // --- Filter state: the drawer's form is the single source of truth.
+  function readForm() {
+    return {
+      region: form.elements.region.value,
+      from: fromInput.value,
+      to: toInput.value,
+      sports: Array.prototype.map.call(form.querySelectorAll('input[name="sport"]:checked'), function (b) { return b.value; })
+    };
+  }
+  function unfiltered() {
+    return { region: '', from: fromInput.getAttribute('data-unfiltered'), to: toInput.getAttribute('data-unfiltered'), sports: [] };
+  }
+  function datesFiltered(f) {
+    return f.from !== fromInput.getAttribute('data-unfiltered') || f.to !== toInput.getAttribute('data-unfiltered');
+  }
+  function toParams(f) {
+    var p = new URLSearchParams();
+    if (f.region) p.set('region', f.region);
+    if (datesFiltered(f)) { p.set('from', f.from); p.set('to', f.to); }
+    f.sports.forEach(function (s) { p.append('sport', s); });
+    return p;
+  }
+  function hasFilterParams(p) {
+    return p.has('region') || p.has('from') || p.has('to') || p.has('sport');
+  }
+  function writeForm(p) {
+    var u = unfiltered();
+    form.elements.region.value = p.get('region') || '';
+    fromInput.value = p.get('from') || u.from;
+    toInput.value = p.get('to') || u.to;
+    var sports = p.getAll('sport');
+    form.querySelectorAll('input[name="sport"]').forEach(function (b) { b.checked = sports.indexOf(b.value) > -1; });
+  }
+  function matches(f) {
+    return RACES.filter(function (r) {
+      return (!f.region || r.region === f.region) &&
+        r.date >= f.from && r.date <= f.to &&
+        (!f.sports.length || f.sports.indexOf(r.sport) > -1);
+    });
+  }
+  function withRun(f) {
+    var p = toParams(f);
+    p.set('run', '1');
+    return 'race-browse-loading.html?' + p.toString();
+  }
+
+  // --- Chips mirror the form: one removable chip per active facet.
+  function fmt(iso, withYear) {
+    var d = iso.split('-');
+    return (+d[2]) + ' ' + MONTHS[+d[1] - 1] + (withYear ? ' ' + d[0] : '');
+  }
+  function addChip(label, facet, value) {
+    var li = document.createElement('li');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip';
+    btn.setAttribute('data-filter', facet);
+    if (value) btn.setAttribute('data-value', value);
+    btn.setAttribute('aria-label', 'Remove filter: ' + label);
+    btn.appendChild(document.createTextNode(label + ' '));
+    var x = document.createElement('span');
+    x.setAttribute('aria-hidden', 'true');
+    x.textContent = '×';
+    btn.appendChild(x);
+    li.appendChild(btn);
+    chipsRow.appendChild(li);
+  }
+  function renderChips(f) {
+    chipsRow.innerHTML = '';
+    if (f.region) addChip(f.region, 'region');
+    f.sports.forEach(function (s) {
+      var box = form.querySelector('input[name="sport"][value="' + s + '"]');
+      addChip(box.parentNode.textContent.trim(), 'sport', s);
+    });
+    if (datesFiltered(f)) {
+      var sameYear = f.from.slice(0, 4) === f.to.slice(0, 4);
+      addChip(fmt(f.from, !sameYear) + ' – ' + fmt(f.to, true), 'dates');
+    }
+    var n = chipsRow.children.length;
+    filtersBtn.textContent = n ? 'Filters · ' + n : 'Filters';
+    chipsBar.hidden = n === 0;
+  }
+
+  if (hasFilterParams(params)) writeForm(params);
+  renderChips(readForm());
+
+  // --- Every filter change is flows.md's "changes region/date/sport
+  // filters" → Loading: Apply, a chip's ×, and Clear all all go to the
+  // loading page, which then decides the outcome.
+  chipsRow.addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    var f = readForm();
+    var facet = chip.getAttribute('data-filter');
+    if (facet === 'region') f.region = '';
+    if (facet === 'sport') f.sports = f.sports.filter(function (s) { return s !== chip.getAttribute('data-value'); });
+    if (facet === 'dates') { var u = unfiltered(); f.from = u.from; f.to = u.to; }
+    window.location.href = withRun(f);
+  });
+  document.querySelectorAll('[data-clear-filters]').forEach(function (btn) {
+    btn.addEventListener('click', function () { window.location.href = withRun(unfiltered()); });
+  });
+
+  // --- Filters drawer.
   function openSheet() {
     sheet.hidden = false;
     backdrop.hidden = false;
@@ -525,7 +654,6 @@
     });
     filtersBtn.setAttribute('aria-expanded', 'true');
   }
-
   function closeSheet() {
     sheet.classList.remove('open');
     backdrop.classList.remove('open');
@@ -535,63 +663,50 @@
       backdrop.hidden = true;
     }, 220);
   }
-
-  openBtns.forEach(function (btn) {
-    btn.addEventListener('click', openSheet);
-  });
+  openBtns.forEach(function (btn) { btn.addEventListener('click', openSheet); });
   closeBtn.addEventListener('click', closeSheet);
   backdrop.addEventListener('click', closeSheet);
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    closeSheet();
+    window.location.href = withRun(readForm());
   });
 
-  // --- Active filter chips. Each chip's data-filter/data-value names the
-  // drawer field it mirrors; removing the chip resets that field, so the
-  // chips, the drawer, and the "Filters · N" count never disagree.
-  var chipsBar = document.querySelector('.chips-bar');
-  var chipsRow = document.querySelector('.chips-row');
-
-  function resetField(chip) {
-    var filter = chip.getAttribute('data-filter');
-    if (filter === 'region') {
-      form.elements.region.value = '';
-    } else if (filter === 'sport') {
-      var box = form.querySelector('input[name="sport"][value="' + chip.getAttribute('data-value') + '"]');
-      if (box) box.checked = false;
-    } else if (filter === 'dates') {
-      ['date-from', 'date-to'].forEach(function (id) {
-        var input = document.getElementById(id);
-        input.value = input.getAttribute('data-unfiltered');
-      });
-    }
-  }
-
-  function syncFilterCount() {
-    var n = chipsRow.querySelectorAll('.chip').length;
-    filtersBtn.textContent = n ? 'Filters · ' + n : 'Filters';
-    chipsBar.hidden = n === 0;
-  }
-
-  chipsRow.addEventListener('click', function (e) {
-    var chip = e.target.closest('.chip');
-    if (!chip) return;
-    resetField(chip);
-    chip.parentNode.remove();
-    syncFilterCount();
-  });
-
-  document.querySelectorAll('[data-clear-filters]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      chipsRow.querySelectorAll('.chip').forEach(function (chip) {
-        resetField(chip);
-        chip.parentNode.remove();
-      });
-      syncFilterCount();
+  // --- Success page with filters applied: show only the matching sample
+  // races (real markup, un-hidden or hidden) and the filtered count.
+  var cards = document.querySelectorAll('.race-list .race-card');
+  if (cards.length && hasFilterParams(params)) {
+    var keep = matches(readForm()).map(function (r) { return r.slug; });
+    cards.forEach(function (card) {
+      var slug = new URLSearchParams(card.querySelector('a').search).get('race');
+      card.parentNode.hidden = keep.indexOf(slug) === -1;
     });
-  });
+    document.querySelector('.results-count').innerHTML =
+      '<strong>' + keep.length + '</strong> ' + (keep.length === 1 ? 'race matches' : 'races match') + ' your filters';
+  }
 
-  syncFilterCount();
+  // --- Error page: "Try again" re-runs the same fetch, keeping filters
+  // (FetchError → Retry? yes → Loading).
+  document.querySelectorAll('[data-retry]').forEach(function (a) { a.href = withRun(readForm()); });
+
+  // --- Loading page: only when reached through the flow (?run=1) — opened
+  // on its own (e.g. from index.html) it stays put for inspection. After a
+  // short fetch delay it takes one of flows.md's three exits: connection
+  // fails → FetchError; no matches → Empty; otherwise → Race browse with
+  // the results. A static wireframe can't make a real fetch fail (offline,
+  // the next page wouldn't load either), so "connection fails" is taken
+  // when the browser reports offline or the URL carries the test switch
+  // &fail=1 (_conventions.md § 2).
+  if (document.body.getAttribute('data-state') === 'loading' && params.get('run') === '1') {
+    window.setTimeout(function () {
+      var f = readForm();
+      var q = toParams(f).toString();
+      var failed = !navigator.onLine || params.get('fail') === '1';
+      var next = failed ? 'race-browse-error.html'
+        : matches(f).length === 0 ? 'race-browse-empty.html'
+        : 'race-browse.html';
+      window.location.replace(next + (q ? '?' + q : ''));
+    }, 1200);
+  }
 
   // --- List/Map toggle. Swaps the visible panel, and hides the results
   // row's list-only parts (Sort, and "upcoming" in the count) in Map.
@@ -601,7 +716,6 @@
     map: document.getElementById('map-view')
   };
   var listOnly = document.querySelectorAll('[data-list-only]');
-
   viewButtons.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var view = btn.getAttribute('data-view');

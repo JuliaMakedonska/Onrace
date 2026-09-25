@@ -171,6 +171,23 @@
     <div class="bar caption"></div>
   </div>
 
+<script>
+(function () {
+  // Only when reached through the flow (a race card on Race browse, or
+  // DetailError's "Try again" — both pass ?race=): after a short fetch delay,
+  // take one of flows.md's two DetailLoading exits. Opened on its own (e.g.
+  // from index.html) it stays put for inspection. "Connection fails" is
+  // taken when the browser reports offline or the URL carries the test
+  // switch &fail=1 (_conventions.md § 2).
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('race');
+  if (['berlin-marathon', 'hyrox-london', 'hyrox-dallas', 'deka-strong-chicago', 'boston-marathon', 'spartan-beast-killington', 'utmb'].indexOf(slug) === -1) return;
+  window.setTimeout(function () {
+    var failed = !navigator.onLine || params.get('fail') === '1';
+    window.location.replace((failed ? 'race-detail-error.html' : 'race-detail.html') + '?race=' + slug);
+  }, 1000);
+})();
+</script>
 
 </body>
 </html>
