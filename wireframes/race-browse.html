@@ -453,7 +453,7 @@
              field in the Filters drawer, it doesn't fake new results. -->
         <div class="chips-bar" hidden>
           <ul class="chips-row" aria-label="Active filters"></ul>
-          <button type="button" class="clear-all" data-clear-filters>Clear all</button>
+          <button type="button" class="clear-all" data-clear-filters>Clear all filters</button>
         </div>
       </div>
 
@@ -473,7 +473,7 @@
           <label for="sort">Sort:</label>
           <select id="sort" name="sort">
             <option value="soonest" selected>Soonest first</option>
-            <option value="farthest">Farthest first</option>
+            <option value="farthest">Latest first</option>
           </select>
         </div>
       </div>
@@ -634,9 +634,9 @@
         </select>
       </div>
       <div>
-        <label for="date-from">Date from</label>
+        <label for="date-from">Race date from</label>
         <input type="date" id="date-from" name="date-from" value="2026-09-23" data-unfiltered="2026-09-23">
-        <label for="date-to">Date to</label>
+        <label for="date-to">Race date to</label>
         <input type="date" id="date-to" name="date-to" value="2027-09-23" data-unfiltered="2027-09-23">
       </div>
       <fieldset>
@@ -650,7 +650,7 @@
         <label><input type="checkbox" name="sport" value="ocr"> OCR</label>
       </fieldset>
       <div class="sheet-actions">
-        <button type="button" id="filters-close">Close</button>
+        <button type="button" id="filters-close">Cancel</button>
         <button type="submit" id="filters-apply">Apply filters</button>
       </div>
     </form>

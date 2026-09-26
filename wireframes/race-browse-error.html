@@ -447,7 +447,7 @@
              field in the Filters drawer, it doesn't fake new results. -->
         <div class="chips-bar" hidden>
           <ul class="chips-row" aria-label="Active filters"></ul>
-          <button type="button" class="clear-all" data-clear-filters>Clear all</button>
+          <button type="button" class="clear-all" data-clear-filters>Clear all filters</button>
         </div>
       </div>
 
@@ -455,7 +455,7 @@
            no number to show (a "0" would wrongly read as the empty state).
            Sort is dropped: nothing loaded to order. -->
       <div class="results-row">
-        <p class="results-count" aria-live="polite">Races couldn't be loaded</p>
+        <p class="results-count" aria-live="polite">Races didn’t load</p>
       </div>
 
       <section class="view-area" aria-label="Map or list view" style="display: contents;">
@@ -468,8 +468,8 @@
                Loading → HasResults?).
                The "no" edge (DeadEnd1) is just leaving via the bottom nav. -->
           <div class="state-message" role="alert">
-            <h2>Couldn't load races</h2>
-            <p>Check your connection and try again. Your filters will stay as they are.</p>
+            <h2>Couldn’t load races</h2>
+            <p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p>
             <div class="state-actions">
               <a class="state-action" href="race-browse-loading.html?run=1" data-retry>Try again</a>
             </div>
@@ -482,8 +482,8 @@
           <div class="map-placeholder">
             <div class="state-message">
               <p>[ map placeholder — no pins: races failed to load ]</p>
-              <h2>Couldn't load races</h2>
-              <p>Check your connection and try again. Your filters will stay as they are.</p>
+              <h2>Couldn’t load races</h2>
+              <p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p>
               <div class="state-actions">
                 <a class="state-action" href="race-browse-loading.html?run=1" data-retry>Try again</a>
               </div>
@@ -534,9 +534,9 @@
         </select>
       </div>
       <div>
-        <label for="date-from">Date from</label>
+        <label for="date-from">Race date from</label>
         <input type="date" id="date-from" name="date-from" value="2026-09-23" data-unfiltered="2026-09-23">
-        <label for="date-to">Date to</label>
+        <label for="date-to">Race date to</label>
         <input type="date" id="date-to" name="date-to" value="2027-09-23" data-unfiltered="2027-09-23">
       </div>
       <fieldset>
@@ -550,7 +550,7 @@
         <label><input type="checkbox" name="sport" value="ocr"> OCR</label>
       </fieldset>
       <div class="sheet-actions">
-        <button type="button" id="filters-close">Close</button>
+        <button type="button" id="filters-close">Cancel</button>
         <button type="submit" id="filters-apply">Apply filters</button>
       </div>
     </form>
