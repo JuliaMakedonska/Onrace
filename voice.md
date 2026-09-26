@@ -121,3 +121,74 @@ This is a pointer only. Nothing is rewritten here, and the flags live in `microc
 - **Principle 3 (tone):** microcopy flag **V1**, the minimizer "just" ("it just isn't confirmed yet").
 - **Principle 2:** flag **T2**, where the proof link has seven names. Naming the source consistently is part of letting it vouch.
 - **Principle 1:** no conflicts found. No current line says "verified" (only "Onrace doesn't verify results"). "Official" only ever names the source's own page ("Official result", "Official race website"), and the error copy already says only what the browser can detect.
+
+## Dictionary
+
+One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1–A5, C1–C4) is resolved below. When a line is written or rewritten, the word comes from this table, and the struck-out words don't reappear. The reasons use the research's own language. Where a choice rests on iOS convention rather than research, it says so.
+
+### Things (nouns)
+
+| Concept | Use | Not | Why | Resolves |
+|---|---|---|---|---|
+| The collection of someone's results | **results archive** | ~~archive~~ (alone), ~~logged results~~, ~~your official race results~~ (as a name) | The product is "a personal archive of official race results" (`CLAUDE.md` → What it is), and the job is "Results archiving" (`jtbd.md` → Main Job 2). "Results archive" says both what's kept and why. "Logged results" names the act, not the place. Counts read "4 results", not "4 logged results". | T1 |
+| …the tab and screen that show it | **My Results** | — | The nav label, fixed in `sitemap.md` → Navigation § 1. It names the place in the tab bar. Running copy says "results archive" ("Sign in to see your results archive"). The two don't compete: one is a label, the other a description. | T1 |
+| One logged race | **result** | ~~entry~~, ~~submission~~, ~~record~~, ~~time~~ (for the whole thing), ~~activity~~ | `CLAUDE.md` → `results` table, and Boston's own wording: "an official race result" (`research.md` → Proof-of-result findings). "Proof of a past time" becomes "proof of a past result". | T3 |
+| The number on it | **finish time** | ~~time~~ (alone), ~~PR~~ | The field (`finish_time`, `CLAUDE.md`). **qualifying time** is allowed only when naming what an elite race asks for. It's the Archivist's own phrase ("proof of a qualifying time", `personas.md`). | T3 |
+| The link a person pastes as proof | **official result link** | ~~source link~~, ~~result link~~, ~~timing page~~, ~~your proof~~ (as a name) | `CLAUDE.md` → trust model: "a link to the official timing site as proof"; the field is `official_result_url`. "Official result" is what Boston accepts, so this is the word an elite race will recognise. "Proof" stays as the *reason* ("it's the proof elite races ask for"), not as the object's name. | T2 |
+| The page that link opens | **official result** | ~~timing page~~, ~~result page~~ | The same Boston phrase: the thing opened is the official result itself ("Open official result on berlin.r.mikatiming.com"). | T2 |
+| The website behind it | its **domain** (results.hyrox.com); generically, **official timing site** | ~~timing site~~ (without "official"), ~~the source~~ | Principle 2: name where the truth lives. "Official timing site" is `CLAUDE.md`'s own phrase, used only when there's no domain to name (e.g. the Log result helper). | T2 |
+| The set of races Onrace curates | **race catalog** | ~~Onrace catalog~~, ~~catalog race~~, ~~the catalog~~ (alone), ~~listing~~ | `CLAUDE.md` → Data model: "`races` (public catalog)". "Race" in front says what's in it, and saying "Onrace" in Onrace's own UI adds nothing. One item is still "a race" ("Find a race", "No race in the race catalog matches…"). "Listing" is IA-doc language (`sitemap.md` → Race listing), not interface language. | T4 |
+| A race | **race** | ~~event~~, ~~competition~~, ~~listing~~ | Already consistent (`microcopy.md` → Searched for and not found). It's the audience's word ("find hybrid races to enter", `jtbd.md` → Main Job 1). Competitors' "event" (ocrbase) and "activity" (Strava) are what principle 4 rules out. | — |
+| What someone signs in to | **account** | ~~profile~~ (in running copy) | `CLAUDE.md` / `sitemap.md` → Entities 5, "Athlete account": the thing that exists because of auth. "Create an account to set up your profile" becomes "Create an account to start your results archive", or "…to see your account". | T5 |
+| …the tab and screen that show it | **Profile** | — | The nav label (`sitemap.md` → Navigation § 1), same pattern as My Results: a label, not a synonym. | T5 |
+| What someone types to sign in | **email** | ~~address~~, ~~email address~~ | `CLAUDE.md` → Auth method: "email + password". One word everywhere: "We'll send a link to confirm your email", not "…your address". | T6 |
+| What the email contains | **confirmation link** (sign-up) / **reset link** (password) | ~~email~~ as the thing you resend, ~~the link we sent~~ when the type matters | `flows.md` Flows 4 and 6 name the objects this way. The link is the thing the person acts on, and the email is only how it travels. So "Resend email" becomes "Send a new link" (see A1). | T6 |
+| When a race happens | **race date** | ~~date~~ (alone, as a field label) | The race's `event_date`, and the person's own phrase on Log result ("Add the date you raced"). On Race detail and Result detail, the label becomes "Race date" as well. The Filters range keeps its structure as "Race date: From / To". | C1 |
+
+### Actions (buttons and links)
+
+| Action | Use | Not | Why | Resolves |
+|---|---|---|---|---|
+| Get a fresh emailed link (confirmation or reset) | **Send a new link** | ~~Resend email~~, ~~Resend link~~, ~~Request a new link~~, ~~send a new one~~ | One action, one label, on all four surfaces (sign-up Check inbox, reset Check inbox, expired confirmation, expired reset). "New" is the accurate word: each link "works once" (`flows.md` Flows 4 and 6), so a person needs a new link, not the old email again. | A1 |
+| Create an Onrace account | **Create account** | ~~Sign up~~, ~~Register~~ | Already the button and toggle label. "Sign up" stays a doc name only (`sitemap.md` → "Sign in / Sign up") and never appears in the UI. | A2 |
+| Enter a race, on the organiser's site | **Register** ("Register on hyrox.com"), and **registration** | ~~sign-up~~, ~~sign up~~ | `CLAUDE.md` → `registration_url`, and "Race registration/payment handling" is out of scope. Registering is the organiser's word for entering a race. "Sign-up and payment happen there" becomes "Registration and payment happen there". Then "sign up" never means two things. | A2 |
+| Sign in / out | **Sign in**, **Sign out** | ~~Log in~~, ~~Log out~~, ~~Login~~ | Already consistent. "Log" is reserved for results ("Log result"), so it never means signing in. | — |
+| Record a new result | **Log result** / "Log your first result" | ~~Add result~~, ~~Submit~~ | `jtbd.md` → Related Job 3: "log the result along with where it came from". | — |
+| Leave a task or modal without changing anything | **Cancel** | ~~Close~~ | iOS convention (not research): Cancel means "nothing I started here is kept". It covers the Sign in modal, Race picker, Filters sheet and sign-out alert. "Close" goes. | A3 |
+| Hide a message you've read | **Dismiss** | ~~Close~~, ~~OK~~ | The inline alerts (registration link, official result link) aren't tasks, so Cancel would be wrong. One word for "I've seen this". | A3 |
+| Go back one screen | **‹ \<parent screen's title\>** — "‹ Discover", "‹ My Results", "‹ Sign in" | ~~Back to races~~, ~~Back to My Results~~ | iOS convention: the back button names where it goes, using the same word as that screen's title or tab, so the label always matches where you land. Replaces the two-rule compromise in `wireframes/_conventions.md` § 1 (the rule changes in the rewrite pass). | A4 |
+| Remove every active filter | **Clear all filters** | ~~Clear all~~ | The longer label is unambiguous wherever it appears (chips bar, empty state). "Clear all" next to chips could read as clearing the search or the list. | A5 |
+| Retry a failed load | **Try again** | ~~Retry~~, ~~Reload~~ | Already consistent across every error. | — |
+
+### Consistency rules
+
+| Rule | Decision | Why | Resolves |
+|---|---|---|---|
+| Expiry wording | One sentence, everywhere a link can expire: **"Each link works once and expires after a while."** An expired-link heading is "This link has expired", naming the link type if needed ("This reset link has expired"). What the screen reader hears matches what's shown: "Sent. Check your inbox again." in both. | Three wordings of one fact read as three different rules. `flows.md` Flows 4 and 6 state the rule once ("expire and work once"). | C2 |
+| Apostrophes | **Curly ’** in all product copy. | Typographic, not research: it's the platform's own text style, and it takes one decision to end 13 vs 32 inconsistent lines. | C3 |
+| Required vs optional | **Mark what's optional, not what's required.** Every Log result field is needed, so none gets a "Required" tag. The one optional control, "Find in race catalog", keeps its "Optional" note, and the official result link's helper says *why* it's needed. | Drops the self-contradiction (a "Required" tag on one field under "Every field is needed"). The link keeps its weight through its explanation, which is what `research.md` → BENCHMARK mechanism #1 cares about: the link is mandatory, and people understand why. | C4 |
+
+### Allowed and not allowed at a glance
+
+- **Allowed:** race · race catalog · race date · sport type · result · finish time · qualifying time (elite-race context only) · results archive · official result link · official result · official timing site / \<domain\> · log (a result) · register / registration (races only) · account · email · confirmation link · reset link · Create account · Sign in · Sign out · Send a new link · Cancel · Dismiss · Try again · Clear all filters · My Results / Profile / Discover (as labels).
+- **Not allowed:** event · competition · listing · entry · submission · record · activity · workout · effort · archive (alone) · logged results · source link · result link · timing page · timing site (without "official") · proof (as the link's name) · address · email address · the catalog / Onrace catalog / catalog race · profile (in running copy) · sign up / signup / sign-up (anywhere in the UI) · log in / login · Close · Back to … · Resend … · Request a new link · Clear all (alone) · Required (as a tag) · verified · PR / personal best.
+
+## Forbidden
+
+What Onrace never writes, whoever is writing and however the line is squeezed for space. Each "before" is either a real line from the current copy (`microcopy.md`) or the competitor pattern it echoes (`research.md` → Competitor language). The "after" follows the Dictionary.
+
+| Never write | Why | Before | After |
+|---|---|---|---|
+| **"all in one place" / "in one place" / "in one spot"** | Every competitor's stock promise (Athlinks "All of Your Results in One Place", Strava "Everything you need, all in one place"). Principle 3: it can't set Onrace apart, and it says nothing specific. | "Sign in to keep your official race results, with their source links, in one place." (current Sign in line) | "Sign in to see your results archive: each result with its official result link." |
+| **crush · conquer · legendary · epic · beast mode** | The category's hype register (RoxConnect "crush your next event", Strava "Become legendary", Athlinks "conquer new goals"). Principle 3. | "Crush your next race." | "7 upcoming races" |
+| **Motivational second person**: "your next X starts here", "push yourself", "you've got this" | Competitor pattern #5 (ocrbase "Your next race starts here", Strava "Push yourself further"). Training and coaching are out of scope (`CLAUDE.md`). | "Your next race starts here." | "Discover" (the screen title), then the races |
+| **Hype numbers**: counts used as social proof ("+499,900 athletes", "every 19 seconds") | Competitor pattern #4. RoxConnect's own counts contradict each other (80, 30+, 195+ countries), and a number used to impress invites exactly that doubt. Counts are allowed only as plain facts about the list on screen. | "Join 100,000+ hybrid athletes!" | "7 upcoming races" |
+| **Community and crowd words**: community, friends, rivals, followers, share, cheers, leaderboard | Principle 5. Social features are out of scope (`CLAUDE.md`), and peer visibility "won't work" here (`research.md` → BENCHMARK). | "Share your result with the community!" | "Saved: Berlin Marathon" |
+| **verified / ✓** about a result | Principle 1 (`CLAUDE.md`: "Onrace does not verify it"). The competitor scan's clearest warning is RoxConnect's "VERIFIED RACE PROFILES" for what is only a link. | "✓ Verified result" | "Self-reported · via results.hyrox.com" |
+| **"just"** as a minimizer (flag V1) | It shrinks the person's problem instead of explaining it, and a stuck account isn't a small thing to the person it happened to. | "Your account is still there, it just isn't confirmed yet." (current) | "Your account is still there. It isn't confirmed yet." |
+| **Exclamation marks** | Principle 3: the facts carry the weight. A "!" on an error reads as alarm, and on a success it reads as salesmanship. Neither helps someone assembling proof for an elite race. | "Password changed!" | "Password changed. Sign in with your new password." (current) |
+| **Emoji in system messages** (errors, confirmations, status, empty states) | Principle 3. Emoji add tone the facts don't need, and screen readers read them aloud ("fire, party popper"). | "No races found 😕" | "No races match your current filters" (current) |
+| **"successfully"** | Redundant: the message that something happened *is* the success. "Saved" already says it worked. It also pads a line that should be scannable. | "Your result was saved successfully." | "Saved: Berlin Marathon" (current) |
+| **Oops / Whoops / Uh-oh / "Something went wrong"** | The AI-and-app cliché error. It says nothing about what happened or what to do next, which is the opposite of principle 1. | "Oops! Something went wrong." | "Couldn’t load races. Check your connection and try again." (current, with a curly apostrophe) |
+
+**Not forbidden, for the record:** "official" (it names the source's own page, not Onrace's judgement), "proof" (as the reason a link is needed), and plain counts of what's on screen ("4 results"). These are allowed because they state facts. The words above are forbidden because they make claims.
