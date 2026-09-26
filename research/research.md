@@ -61,6 +61,92 @@ Comparison matrix and market-pattern findings for all **15 competitors** identif
 2. **"Race discovery" is solved via at least four different product shapes.** Pure calendar browsing (ocrbase, confirmed screenshot), partner-matching wrapped around events (RoxConnect, confirmed screenshot), filters + a personalized rail bolted onto a social app (Strava, confirmed `screens/strava-events.md`), and a claimed-results database with no discovery layer at all (Athlinks, confirmed screenshot). None matches Onrace's planned map-first, cross-format approach exactly.
 3. **Revenue structure differs by category.** Direct consumer subscription (RoxConnect confirmed; Strava/AllTrails publicly positioned as freemium but specifics data not confirmed) vs. B2B-subsidizes-free-consumer-product (Athlinks, ChronoTrack footer link) vs. no visible monetization (ocrbase, confirmed — no pricing UI anywhere on the site). CLAUDE.md's "no monetization plan" puts Onrace in the same bucket as the least-resourced competitor here.
 
+## Competitor language (2026-09-26)
+
+How the four closest competitors *write*, not what they do. Every quote is verbatim from the live page on 2026-09-26. Pages were read as raw HTML (curl), or as rendered text (Playwright) where the page needs JavaScript. None of it is taken from a summary. It was collected to find where their language converges, since that's where Onrace's voice can differentiate (see `../voice.md`).
+
+### RoxConnect — web [roxconnect.com](https://roxconnect.com) · iOS [App Store](https://apps.apple.com/us/app/roxconnect-hyrox-partners/id6747093086) (Google Play description identical)
+
+| Quote | Element |
+|---|---|
+| "Find your Perfect HYROX Partner" | Web hero headline |
+| "Built for the HYROX community. Connect with athletes near you, train smarter, and crush your next event — together." | Web hero subline |
+| "Start Now — It’s Free" | Web primary CTA |
+| "+499,900 Active competitors globally" / "80 Countries across the world" | Web stats strip |
+| "Connect with Hyrox athletes in 30+ countries across all upcoming race locations." | Web feature |
+| "Athletes from 195+ countries." | iOS "GLOBAL COMMUNITY" (contradicts the web's 80 and 30+) |
+| "Athletes who train with a partner are 3x more likely to set a personal best." | iOS, statistic with no source |
+| "View verified race history and official HYROX results" | iOS matching bullet |
+| "VERIFIED RACE PROFILES" / "Link your official HYROX results directly from results.hyrox.com" | iOS section header and bullet |
+| "Unlock unlimited messaging, advanced filters, and full access to every athlete profile. Upgrade and get matched faster." | iOS Premium |
+
+What it calls things: "event" on the web; "race" and "race history" in the app; "athlete profiles"; "partner".
+
+### ocrbase — [home](https://ocrbase.com) · [list](https://ocrbase.com/events?type=ocr&type=fitness) · [detail](https://ocrbase.com/events/2026-london-south-east-spartan-weekend-september-26-2026)
+
+| Quote | Element |
+|---|---|
+| "Your next race starts here" | Home hero |
+| "Search 248 Obstacle Course/Fitness Racing events in 29 countries." | Home subline |
+| "Find my nearest events" / "Search events" | Home CTAs |
+| "List your event (free)" | Home footer CTA, for organisers |
+| "Select an organizer to filter by event formats" | List, filter helper |
+| "List" / "Map" · "Add to Calendar" · "Subscribe" · "Sorted by" | List, view toggle and actions |
+| "Register" · "All events by" · "At this event" · "Nearby events" | Detail, CTA and section labels |
+| "If you are looking for a race that will truly test your mettle and crush your soul, the Beast is the event for you." | Detail description (appears to be the organiser's own copy) |
+
+What it calls things: "event" is the container, "race" is the tagline word. It has nothing about results, and makes no accuracy or official-status claims at all.
+
+### Athlinks — [home](https://www.athlinks.com) (JavaScript-only, read with Playwright) · help center athlinks.zendesk.com (Cloudflare-blocked to curl and WebFetch, read with Playwright)
+
+| Quote | Element / source |
+|---|---|
+| "All of Your Results in One Place" | Home hero headline |
+| "The pain you endured to cross the finish line is temporary. But your race results are forever. Claim, share and celebrate them here." | Home hero subline |
+| "CLAIM RESULTS" / "Your Times Are Timeless" | Home section |
+| "With the largest collection of results at your fingertips, let Athlinks do the tracking for you. If you've crossed a finish line in the last 10 years, you'll find yours here." | Home body |
+| "Connect With Friends and Rivals" / "compare yourself to rivals … challenge each other to conquer new goals." | Home social section |
+| "Athlinks is an amazing tool for tracking your entire racing history and sharing your successes with your Athlinks friends." | [Help article 115000660764](https://athlinks.zendesk.com/hc/en-us/articles/115000660764), intro |
+| "Unclaimed Results" · "Yes, this is me" · "Claim Result" | Same article, UI labels |
+| "our data analysts will verify that the result truly belongs to you and then post to your profile within 24-48 hours. This process is in place to ensure honesty in results claiming." | Same article |
+| "We're still working out a few kinks in our auto-claiming process" | [Help article 360018974993](https://athlinks.zendesk.com/hc/en-us/articles/360018974993) |
+| "If your result or personal information within an Athlinks event is incorrect AND the official website's results are also not correct, please contact the Event's organizer" | [Help article 217991978](https://athlinks.zendesk.com/hc/en-us/articles/217991978) |
+| "If you've tried Claiming a Result and it doesn't show up in your Profile or you receive an error, please Contact Us" | [Help article 218522237](https://athlinks.zendesk.com/hc/en-us/articles/218522237), error guidance |
+
+What it calls things: "result" (claimed/unclaimed), "event", "profile", "racing history". No working App Store listing was found (id1153823287 returns a 404; Athlinks appears to have moved into the Life Time app).
+
+### Strava — [home](https://www.strava.com) · [subscription](https://www.strava.com/subscription) · features (redirects to a JS subscription page, read with Playwright) · [iOS](https://apps.apple.com/us/app/strava-run-bike-walk/id426826309)
+
+| Quote | Element / source |
+|---|---|
+| "Community-Powered Motivation" / "Track your progress and cheer each other on. Join over 100 million active people on Strava for free." | Home hero |
+| "We're the social network for those who strive." · "Join for the tracking, stay for the community." · "A no BS network." | Home section headlines |
+| "The best of Strava. Built for your goals." / "Everything you need, all in one place" | Subscription page |
+| "Climb the leaderboards" / "Become legendary … claim Local Legend status." / "Every 19 seconds, a Subscriber hits their goal." | Features page |
+| "Strava makes fitness tracking social. We house your entire active journey in one spot" | iOS description |
+| "Push yourself further and reach a personal record" | iOS, challenge card |
+| "We know 33% isn't 100%, but it will mean many millions of illegitimate efforts will be removed from leaderboards." | [Support: verified segments](https://support.strava.com/en-us/articles/15401612-segment-updates-verified-segments-decluttering-and-leaderboard) |
+| "Users are ultimately responsible for their own data" | [Support: activity flag](https://support.strava.com/en-us/articles/15402000-the-activity-flag-remove-an-activity-s-segment-results-from-the-leaderboard) |
+
+What it calls things: "activity", "effort", "segment", "leaderboard", "personal record", "Training Log", "challenge". There's no race-result object. "Verified" and "official" apply only to segment geometry, never to a person's time.
+
+### Where they all sound the same
+
+1. **"All in one place."** Athlinks: "All of Your Results in One Place". Strava: "Everything you need, all in one place", "house your entire active journey in one spot". It's the default promise in this category.
+2. **Crush / conquer / legendary.** RoxConnect: "crush your next event". Athlinks: "conquer new goals". Strava: "Become legendary", "Climb the leaderboards". ocrbase shows it only in organiser copy ("crush your soul").
+3. **Community and rivals as the reason to be there.** RoxConnect: "Built for the HYROX community… together". Athlinks: "Connect With Friends and Rivals", "sharing your successes". Strava: "Community-Powered Motivation", "social network for those who strive". ocrbase is the only one without it.
+4. **Big numbers as proof.** RoxConnect: "+499,900 Active competitors", with country counts that disagree with each other (80, 30+, 195+). Athlinks: "the largest collection of results". Strava: "over 100 million active people", "Every 19 seconds". ocrbase: "248 … events in 29 countries".
+5. **Motivational second person.** "Your next race starts here" (ocrbase), "Your Times Are Timeless" (Athlinks), "Push yourself further" (Strava), "find your perfect match" (RoxConnect).
+6. **Personal bests and rivals.** RoxConnect: "set a personal best". Strava: "reach a personal record". Athlinks: "compare yourself to rivals".
+
+### Where they differ
+
+1. **How confident the verification claims are.** RoxConnect is the most confident and the least supported: "verified race history", "VERIFIED RACE PROFILES". The mechanism it describes is only "Link your official HYROX results directly from results.hyrox.com". Athlinks backs "ensure honesty" with a stated process (analysts, 24–48 h) but admits "a few kinks". Strava hedges openly ("33% isn't 100%", "Users are ultimately responsible for their own data"). ocrbase makes no claims.
+2. **Who the source of truth is.** Only Athlinks points back to "the official website's results" and "the Event's original data", which is the closest to Onrace's required source link. For Strava it's the user's own GPS activity. For RoxConnect it's a link to results.hyrox.com, presented as verification.
+3. **Tone.** Athlinks is sentimental ("…your race results are forever"). Strava is casual and irreverent ("A no BS network"). RoxConnect reads like a dating app ("find your perfect match"). ocrbase is plain utility, the only one of the four with no hype of its own.
+
+**Implication for Onrace:** "all in one place", community, crush-and-legend energy and big numbers are what everyone says, so none of them can set Onrace apart. What no competitor does consistently is state plainly what it knows and where the proof lives. RoxConnect calls a link "verified", Strava hedges only in its help center, and Athlinks buries its best line ("the official website's results") in a support article. That's the space Onrace's voice takes (`../voice.md`).
+
 ## BENCHMARK
 
 **Question:** which lightweight mechanisms should Onrace's MVP borrow to make self-reported result *ownership* credible, given there's no manual verification team? Benchmarked against 5 products that handle self-reported/unverified ownership claims well in their own niche, scored 1–5 on 8 criteria.
