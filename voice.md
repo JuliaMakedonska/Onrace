@@ -192,3 +192,128 @@ What Onrace never writes, whoever is writing and however the line is squeezed fo
 | **Oops / Whoops / Uh-oh / "Something went wrong"** | The AI-and-app cliché error. It says nothing about what happened or what to do next, which is the opposite of principle 1. | "Oops! Something went wrong." | "Couldn’t load races. Check your connection and try again." (current, with a curly apostrophe) |
 
 **Not forbidden, for the record:** "official" (it names the source's own page, not Onrace's judgement), "proof" (as the reason a link is needed), and plain counts of what's on screen ("4 results"). These are allowed because they state facts. The words above are forbidden because they make claims.
+
+## Microcopy
+
+Rules by element type. Each rule has one Onrace example (written to the Dictionary above) and a "not" example. A **Check** line shows the rule was tested against the Principles, Dictionary and Forbidden list. Where two of them pulled in different directions, the resolution is written into the rule.
+
+The states these rules cover are the ones `wireframes/_screens.md` scopes for every screen: base, empty, error, loading, success, plus the two check-inbox waits.
+
+### Button
+
+**Rule:** an action verb plus what it acts on, naming the result of the tap, and it must make sense read alone, out of context (a screen reader's list of buttons, a skimmed screen). Where the platform keeps the visible label short (a nav-bar "Save", a retry inside an error block), the **accessible name** carries the full phrase.
+
+| Onrace example | Not |
+|---|---|
+| **Register on hyrox.com** · **Log result** · **Send a new link** · **Save new password** · **Find in race catalog** · **Clear all filters** | ~~OK~~ · ~~Next~~ · ~~Submit~~ · ~~Continue~~ · ~~Yes~~ · ~~Click here~~ · ~~Register now~~ |
+
+- **Short visible label, full accessible name:** "Try again" inside "Couldn’t load races" is announced as "Try loading races again". The nav-bar "Save" beside "Log result" is announced as "Save result". "Dismiss" is announced as "Dismiss this message".
+- **Check:**
+  - Principle 2: a button that leaves Onrace names its destination ("Register on hyrox.com", "Open official result on berlin.r.mikatiming.com").
+  - Dictionary: verbs are the chosen ones (Log, Register, Send a new link, Cancel, Dismiss, Try again).
+  - The read-alone test is why the Dictionary keeps "Try again" only with an accessible name, and picks "Clear all filters" over "Clear all".
+
+### Screen heading
+
+**Rule:** say what this place *is*, in Dictionary terms: the screen's name, or the one race or result it shows. It's never a greeting, a mood or a promise.
+
+| Onrace example | Not |
+|---|---|
+| **Discover** · **My Results** · **Log result** · **Find a race** · **Reset password** · on a detail screen, the item itself: **HYROX London**, **Berlin Marathon** | ~~Welcome back!~~ · ~~Your dashboard~~ · ~~Let’s log a race~~ · ~~Your next race starts here~~ |
+
+- **Check:**
+  - The heading is also the back label on the next screen down (`_conventions.md` § 1, Dictionary A4), so it has to be the place's stable name ("‹ My Results" only works if the screen is called My Results).
+  - Principle 3 and Forbidden rule out greetings and motivational lines (ocrbase's "Your next race starts here").
+
+### Form field
+
+**Rule:** the **label** says what to enter, the **hint** says how (format, or where to find it), and the **validation error** says exactly what to fix, in one sentence, next to the field. A **placeholder** is an example marked "e.g.", never a real-looking value and never a stand-in for the label.
+
+| Part | Onrace example | Not |
+|---|---|---|
+| Label | **Official result link** · **Finish time** · **Race date** | ~~Source link~~ · ~~Time~~ · ~~Date~~ |
+| Hint | "Paste the link from the official timing site. Elite races ask for exactly this." · "Hours:minutes:seconds, exactly as the official results show it." | ~~Enter a valid URL~~ · ~~Required~~ |
+| Error | "Add your finish time, e.g. 3:12:48." · "Use at least 8 characters." | ~~Invalid input~~ · ~~This field is required~~ · ~~You forgot the finish time~~ |
+| Placeholder | "e.g. 3:12:48" · "e.g. Berlin Marathon" | ~~https://berlin.r.mikatiming.com/2025/~~ (reads as filled in, flag P2) |
+
+- **Required vs optional:** mark only what's optional ("Optional", on Find in race catalog). Required fields carry no tag, and the hint explains why a field matters (Dictionary, C4).
+- **Check:**
+  - The labels come from the Dictionary (official result link, race date, finish time).
+  - The hint and error say *why* the link is needed, which is principle 2's "let the source vouch".
+  - Errors follow the Error rule below: no blame, the fix stated as an instruction.
+
+### Empty state
+
+**Rule:** say why it's empty (which is often nothing wrong), then offer the action that fills it. Name the real reason: filters, a search, nothing logged yet. Don't imply a fault.
+
+| Onrace example | Not |
+|---|---|
+| "**No races match your current filters.** Remove a filter above, or try a wider date range." · [**Clear all filters**] [**Loosen filters**] | ~~Nothing here yet 😕~~ · ~~No data~~ · ~~Oops, no results!~~ |
+| "**No results in your results archive yet.** Each result you log keeps its official result link, ready when an elite race asks for proof." · [**Log your first result**] | ~~Start your journey!~~ · ~~Your archive is empty~~ (no next step) |
+
+- **Check:**
+  - Principle 1: the reason given is the one Onrace knows (the filters, the empty archive).
+  - The Archivist's job gives the empty archive its reason to fill ("proof of a qualifying time", `personas.md`).
+  - Forbidden: no emoji, no "Oops", no hype.
+  - Dictionary: "results archive", "official result link".
+
+### Error
+
+**Rule:** three parts, in order: **what happened**, **why** (as far as Onrace can know), and **what to do next**. Never blame the person reading it, even when the cause is on their side (a missing field, a mistyped email). State the fix as an instruction, not as their mistake. When Onrace can't know the cause, it gives the likely ones as possibilities ("may"), never as fact.
+
+| Onrace example | Not |
+|---|---|
+| "**Couldn’t open the link.** It didn’t open in a new tab; your browser may have blocked it. Try again, or come back to this race later." | ~~The timing site is down.~~ (a claim Onrace can’t check) |
+| "**Couldn’t sign you in.** The email or password didn’t match, or the connection dropped. Check both and try again." | ~~You entered the wrong password.~~ · ~~Invalid credentials.~~ |
+| "**Too many requests.** Onrace limits how often a reset link can be sent. Wait a minute, then send a new link." | ~~Oops! Something went wrong.~~ · ~~Error 429~~ |
+| Field-level: "Add the official result link. It’s the proof this result is yours." | ~~You didn’t add a link!~~ |
+
+- **Check:**
+  - Principle 1 decides what goes in the "why" part. `flows.md`'s link checks were reworded for the same reason, and the "may" framing is the honest form when there are several possible causes.
+  - Forbidden: no Oops, no exclamation marks, no "successfully".
+  - Dictionary: "Couldn’t" with a curly apostrophe (C3), "Send a new link" (A1), "email" (T6).
+
+### Loading
+
+**Rule:** say nothing, or name what's loading. Use a skeleton or placeholder in place of the content, and a short status line for screen readers ("Loading races…"). In a button, the verb moves into the present tense: Save becomes Saving…. There's no filler, no cheer, and no invented progress.
+
+| Onrace example | Not |
+|---|---|
+| (skeleton cards) + screen-reader status "Loading races…" · button **Saving…** · **Sending…** · **Signing in…** | ~~Hang tight!~~ · ~~Good things take time…~~ · ~~Almost there! 87%~~ · ~~Please wait~~ |
+
+- **Check:**
+  - Principle 1: no fake percentages, because Onrace doesn't know them.
+  - Principle 3: silence or a noun, no cheer.
+  - The present-tense button keeps the Button rule's verb, so the label still says what's happening.
+
+### Success
+
+**Rule:** state the fact, and the next step if there is one. No celebration: the result of the tap is the confirmation.
+
+| Onrace example | Not |
+|---|---|
+| "**Saved: Berlin Marathon**" (on My Results, the result now in the list) · "**Password changed.** Sign in with your new password." · "**We sent a link to maya.rossi@example.com.** Open it on this device to finish creating your account." | ~~Result saved successfully!~~ · ~~Congratulations! 🎉~~ · ~~You’re all set!~~ · ~~Great job, champion~~ |
+
+- **Check:**
+  - Forbidden: "successfully", exclamation marks, emoji.
+  - Principle 5: no "share it" follow-up.
+  - Principle 1: Check inbox says "We sent a link" only on sign-up, where Onrace knows it did. On reset it says "If an account exists for …", because Supabase doesn't reveal whether one does (`flows.md` Flow 6).
+
+### Dangerous action
+
+**Rule:** before the tap, say what will happen, and whether it can be undone. If it can't, say so plainly. If it can, say how to get back. Either way the confirm button repeats the action's verb, not "Yes" or "OK", and Cancel is the safe default.
+
+| Onrace example | Not |
+|---|---|
+| Alert: "**Sign out of Onrace?** Your results stay saved. Sign back in anytime to see them." · [**Cancel**] [**Sign out**] | ~~Are you sure?~~ · [~~Yes~~] [~~No~~] · ~~This can’t be undone~~ (it can: signing back in restores everything) |
+| Template for an irreversible action (none in MVP; editing or deleting a result is an accepted gap, `research.md` → CONCLUSIONS gap 7): "**Delete your Berlin Marathon result?** This can’t be undone. The official result on berlin.r.mikatiming.com isn’t affected." · [**Cancel**] [**Delete result**] | ~~Delete?~~ · [~~OK~~] |
+
+- **Check:**
+  - Principle 1 decides the undo sentence. "Can't be undone" appears only when it's true, which is why Sign out gets the reassuring version.
+  - Principle 2 names what's outside Onrace and untouched (the official result).
+  - Dictionary: Cancel (A3), "results", "official result".
+  - Button rule: the verb repeats the action ("Sign out", "Delete result").
+
+---
+
+`voice.md` is complete: Principles → Dictionary → Forbidden → Microcopy. From here on, every line of Onrace copy is written by it, and checked against `microcopy.md`. When they disagree: the **Forbidden** list is absolute, the **Dictionary** decides the word, the **Microcopy** rules decide the shape of the line, and the **Principles** settle anything the other three don't cover.
