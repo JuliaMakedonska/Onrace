@@ -443,16 +443,14 @@
       browseSearch,
       browseControls,
       browseChips,
-      ['The result count', 'Filters are on, so the count reads "match your filters". Sort is dropped because there\'s nothing to order.'],
-      ['A state instead of cards', 'No races match (flows.md: HasResults → no → Empty). This is a data state, not an error, so there\'s no retry. Every exit adjusts filters: a chip\'s ×, Clear all filters, or Loosen filters (reopens the drawer with the current selections).'],
+      ['A state instead of cards', 'No count row above it: it only repeated this heading. No races match (flows.md: HasResults → no → Empty). This is a data state, not an error, so there\'s no retry. Every exit adjusts filters: a chip\'s ×, Clear all filters, or Loosen filters (reopens the drawer with the current selections).'],
       [browseNav[0], browseNav[1] + ' Giving up is just leaving by a tab, so no button is needed.']
     ]},
     'race-browse-error.html': { job: BROWSE_JOB + ' Error state.', zones: [
       browseSearch,
       browseControls,
       browseChips,
-      ['The result count', 'No count at all: the fetch never returned, and a "0" would read as the empty state. Sort is dropped.'],
-      ['A state instead of cards', 'The connection failed (flows.md: Loading → connection fails → FetchError). "Try again" re-runs the same fetch with the current filters. Giving up is just leaving by a tab.'],
+      ['A state instead of cards', 'No status line above it: it only repeated this heading. The connection failed (flows.md: Loading → connection fails → FetchError). "Try again" re-runs the same fetch with the current filters. Giving up is just leaving by a tab.'],
       browseNav
     ]},
     'race-browse-loading.html': { job: BROWSE_JOB + ' Loading state.', zones: [
@@ -492,13 +490,11 @@
       ['Global nav', '3 tabs: Discover / My Results (current) / Profile (sitemap.md → Navigation § 1). My Results and Profile go through the sign-in gate when signed out.'] ] },
     'results-list-empty.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Empty: no results logged yet.', zones: [
       ['Header', 'Same large title and Log result action as the base state, still working here.'],
-      ['Results row', 'A real "0 logged results": the fetch succeeded and returned nothing.'],
-      ['Empty state', 'flows.md Empty2. Explains what the archive is for (official results with source links, as proof for elite-race applications). "Log your first result" opens Log result. A data state, so no retry; giving up is just leaving by a tab.'],
+      ['Empty state', 'flows.md Empty2. "No results logged yet" and one line: "Keep your official race results here." "Log your first result" opens Log result. Why the official result link matters is explained on Log result, where it applies. There\'s no count row above: it only repeated the heading. A data state, so no retry; giving up is just leaving by a tab.'],
       ['Global nav', '3 tabs, My Results current.'] ] },
     'results-list-error.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Error: could not load logged results.', zones: [
       ['Header', 'Same large title and Log result action. Logging doesn\'t depend on the list having loaded (flows.md, Related Job 3).'],
-      ['Results row', 'No count, because the fetch never returned; a "0" would read as the empty state.'],
-      ['Error state', 'flows.md FetchError2 → Retry?. "Try again" re-runs the fetch through the loading page. Giving up (DeadEnd4) is just leaving by a tab.'],
+      ['Error state', 'flows.md FetchError2 → Retry?. No status line above it (it only repeated the heading). "Try again" re-runs the fetch through the loading page. Giving up (DeadEnd4) is just leaving by a tab.'],
       ['Global nav', '3 tabs, My Results current.'] ] },
     'results-list-loading.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Loading: fetching logged results.', zones: [
       ['Header', 'Same large title and Log result action, usable while the list loads.'],

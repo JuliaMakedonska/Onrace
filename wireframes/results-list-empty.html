@@ -236,6 +236,7 @@
     position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0 0 0 0); white-space: nowrap;
   }
+  .results-row[hidden] { display: none; }
 </style>
 </head>
 <body role="application" aria-label="Onrace — Results list, empty state (wireframe)">
@@ -257,10 +258,11 @@
         <a class="header-action" href="log-result.html">Log result</a>
       </header>
 
-      <!-- ZONE: results row — the fetch succeeded and returned nothing, so
-           the count is a real 0 (unlike the error state, which shows none). -->
-      <div class="results-row">
-        <p class="results-count" aria-live="polite"><strong>0</strong> logged results</p>
+      <!-- ZONE: results row — the count row, as on the base page. Hidden in this state (2026-09-30, `_critique.md` #9): the empty
+           state's heading already says it ("No races match…"), so a count
+           line above it only repeated the message. -->
+      <div class="results-row" hidden>
+        <p class="results-count" aria-live="polite"></p>
       </div>
 
       <!-- ZONE: empty state (_screens.md → Results list → Empty; flows.md
@@ -275,7 +277,7 @@
       <section id="list-view" aria-label="Logged results">
         <div class="state-message" role="status">
           <h2>No results logged yet</h2>
-          <p>Keep your official race results here, each with a link to the timing site that published it. When an elite race asks for proof of a past time, it's ready to pull up.</p>
+          <p>Keep your official race results here.</p>
           <div class="state-actions">
             <a class="state-action" href="log-result.html">Log your first result</a>
           </div>

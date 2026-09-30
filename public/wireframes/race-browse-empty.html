@@ -431,6 +431,7 @@
     position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0 0 0 0); white-space: nowrap;
   }
+  .results-row[hidden] { display: none; }
 </style>
 </head>
 <body role="application" aria-label="Onrace — Race browse, empty state (wireframe)">
@@ -489,11 +490,11 @@
         </div>
       </div>
 
-      <!-- ZONE: results row — filters are active here, so the count uses the
-           "match your filters" phrasing (same in both views). Sort is
-           dropped: nothing to order. -->
-      <div class="results-row">
-        <p class="results-count" aria-live="polite"><strong>0</strong> races match your filters</p>
+      <!-- ZONE: results row — the count row, as on the base page. Hidden in this state (2026-09-30, `_critique.md` #9): the empty
+           state's heading already says it ("No races match…"), so a count
+           line above it only repeated the message. -->
+      <div class="results-row" hidden>
+        <p class="results-count" aria-live="polite"></p>
       </div>
 
       <section class="view-area" aria-label="Map or list view" style="display: contents;">
@@ -809,7 +810,6 @@
   // one (real markup variants, un-hidden here; the query goes in as text).
   if (document.querySelector('[data-if-search]')) {
     var ef = readForm();
-    document.querySelector('.results-count').innerHTML = countText(0, ef);
     document.querySelectorAll('[data-if-search]').forEach(function (el) { el.hidden = !ef.q; });
     document.querySelectorAll('[data-if-filters]').forEach(function (el) { el.hidden = !!ef.q; });
     document.querySelectorAll('[data-q]').forEach(function (el) { el.textContent = ef.q; });

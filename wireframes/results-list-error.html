@@ -236,6 +236,7 @@
     position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0 0 0 0); white-space: nowrap;
   }
+  .results-row[hidden] { display: none; }
 </style>
 </head>
 <body role="application" aria-label="Onrace — Results list, error state (wireframe)">
@@ -257,10 +258,11 @@
         <a class="header-action" href="log-result.html">Log result</a>
       </header>
 
-      <!-- ZONE: results row — no count: the fetch never returned, so there's
-           no number to show (a "0" would wrongly read as the empty state). -->
-      <div class="results-row">
-        <p class="results-count" aria-live="polite">Results couldn't be loaded</p>
+      <!-- ZONE: results row — the count row, as on the base page. Hidden in this state (2026-09-30, `_critique.md` #9): the error
+           message below already says what happened, so a status line above
+           it only repeated it. -->
+      <div class="results-row" hidden>
+        <p class="results-count" aria-live="polite"></p>
       </div>
 
       <!-- ZONE: error state (_screens.md → Results list → Error; flows.md
