@@ -16,8 +16,8 @@ This is a living index — update it as folders fill up or their purpose shifts.
 | [`sitemap.md`](./sitemap.md) | Information architecture: entities, screens (tagged by job), navigation, job-traceability matrix | Drafted |
 | [`flows.md`](./flows.md) | User flows (Mermaid): three job flows (Discovery, Log Result, Retrieve Proof) and three infrastructure flows (Sign up with email confirmation, Profile and sign out, Password reset), with every decision/state/endpoint reasoned out | Drafted |
 | ↳ Rendered view | [`ia.html`](./ia.html) — the sitemap tree, all six flow diagrams (three job flows, three infrastructure), and the traceability matrix as one page | Drafted |
-| [`voice.md`](./voice.md) | Voice principles: 5 rules Onrace speaks by, each with an example, a counter-example and its source in the research | Drafted |
-| [`microcopy.md`](./microcopy.md) | Every interface line from the wireframes in one table (screen, zone, line, type), with inconsistencies flagged, becoming the source of truth for product copy | Transcribed, flags open |
+| [`voice.md`](./voice.md) | Voice: principles, Dictionary, Forbidden list, Microcopy rules | Done, applied to every screen |
+| [`microcopy.md`](./microcopy.md) | Every interface line from the wireframes in one table (screen, zone, line, type), with inconsistencies flagged, becoming the source of truth for product copy | Done: Before / After for every line, matches the pages |
 | [`wireframes/`](./wireframes/README.md) | Low-fidelity, grayscale, iOS-structured wireframes for every sitemap screen and state, linked along the flows | Done: 10 screens, 35 pages ([live](https://juliamakedonska.github.io/Onrace/wireframes/)) |
 | [`concept/`](./concept/README.md) | Visual direction exploration — moodboards, style tiles | Empty |
 | [`tokens/`](./tokens/README.md) | Design tokens (color, type, spacing, radius, elevation) | Empty |
@@ -41,6 +41,15 @@ Intended flow: `research/` → `sitemap.md`/`flows.md` (IA) → `wireframes/` �
 | [`_critique.md`](./wireframes/_critique.md) | The 2026-09-25 review: defects found and fixed, and what was checked clean |
 
 The pages are wired along `flows.md`'s six flows (sign-in gate, catalog link, email confirmation, sign-out, password reset), so every path can be clicked through. Color, brand type and content icons are deferred to `concept/`.
+
+## Voice
+
+| File | What it is |
+|---|---|
+| [`voice.md`](./voice.md) | How Onrace speaks: 5 principles (each tied to the research and the competitor copy scan), the Dictionary (one concept, one word), the Forbidden list, and Microcopy rules per element type |
+| [`microcopy.md`](./microcopy.md) | Every interface line on every wireframe (534 rows: Before / After / Why), with our copy separated from catalog data and user-written text. The source of truth that every product line is checked against |
+
+Applied to all 10 screens (35 pages) on 2026-09-30. The latest audit found three small defects and fixed them. The pages and `microcopy.md` now match line for line. One known gap is open: accessible names for short buttons, left for a markup pass.
 
 ## Tech stack
 

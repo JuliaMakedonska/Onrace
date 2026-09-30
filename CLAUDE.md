@@ -106,6 +106,25 @@ Low-fidelity, grayscale, iOS-structured HTML wireframes for **every screen in `s
 - **Review:** `wireframes/_critique.md` holds the 2026-09-25 review: 8 defects found and fixed (dead ends first), with everything else checked clean.
 - **Deferred:** color, brand typography, content icons and finished-UI polish (`_conventions.md` § 7).
 
+## Voice
+
+How Onrace speaks, decided 2026-09-26 to 2026-09-30 and applied to every wireframe screen.
+
+- **`voice.md`** is the rulebook, in precedence order: **Forbidden** (absolute) > **Dictionary** (one concept, one word) > **Microcopy** (the shape of each element type: button, heading, field, empty, error, loading, success, dangerous action) > **Principles** (the why).
+- **The five principles**, each grounded in `research/` and the competitor copy scan (`research/research.md` → Competitor language):
+  1. Claim only what Onrace can know. A result is "Self-reported · via \<domain\>", never "verified".
+  2. Point to the source and let it vouch.
+  3. Plain words; the look carries the energy.
+  4. Every format by its own name.
+  5. No crowd in the copy.
+- **Key terms:**
+  - things: results archive (label: My Results), result, finish time, official result link / official result, race catalog, account (label: Profile), email, confirmation link / reset link, race date.
+  - actions: Log result, Register (races only), Create account, Sign in / Sign out, Send a new link (only where the tap sends), Reset password again, Cancel (leave a task), Dismiss (hide a message), Try again, Clear all filters.
+  - back buttons name the destination screen.
+- **Never:** "all in one place", crush / legendary, motivational lines, hype numbers, community or crowd words, "verified", a minimizing "just", exclamation marks, emoji in system messages, "successfully", Oops-style errors.
+- **`microcopy.md`** is the source of truth for every product line: 534 rows with the screen, zone, Before / After, Why, type, states, source, and flags. It separates our copy from catalog data, reference data, user-written text (`race_name`, `finish_time`, `official_result_url`, name, email, search text; never rewritten) and wireframe annotations. It was last checked against all 35 pages on 2026-09-30, with zero mismatches.
+- **Known gap:** short buttons ("Try again", the nav-bar "Save", "Dismiss") still need full accessible names. That's a dedicated markup pass (`voice.md` → Button; `wireframes/_critique.md` #10).
+
 ## Status
 
 Pre-implementation. The IA (`sitemap.md`, `flows.md`, `ia.html`) and the full low-fidelity wireframe set (above) are done. No product code yet: `src/` is still the Vite scaffold. Next in the design-process folders: `concept/` (visual direction), then `tokens/`, `components/`, `design-system/`, `handoff/`.
