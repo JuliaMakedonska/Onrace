@@ -177,7 +177,7 @@
            is flows.md's "back / compares another race" edge, and the "no"
            edge of WantsToEnter: not worth entering → back to browsing. -->
       <nav class="top-bar" aria-label="Back">
-        <a href="race-browse.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back to races</span></a>
+        <a href="race-browse.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Discover</span></a>
       </nav>
 
     <main>
@@ -196,8 +196,8 @@
            race-detail-loading.html?race=…); Retry → no (DeadEnd1) is the top
            bar's "Back to races", so it isn't repeated here. -->
       <div class="state-message" data-cause="detail" role="alert">
-        <h2>Couldn't load race details</h2>
-        <p>Check your connection and try again.</p>
+        <h2>Couldn’t load race details</h2>
+        <p>The connection may have dropped. Check it, then try again.</p>
         <a class="state-action" href="race-detail-loading.html?race=hyrox-london" data-retry>Try again</a>
       </div>
 
@@ -206,7 +206,7 @@
           <h1 id="race-berlin-marathon">Berlin Marathon</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>Marathon</dd>
-            <dt>Date</dt><dd><time datetime="2026-09-27">27 September 2026</time></dd>
+            <dt>Race date</dt><dd><time datetime="2026-09-27">27 September 2026</time></dd>
             <dt>Location</dt><dd>Berlin, Germany</dd>
           </dl>
           <section class="about" aria-labelledby="about-berlin-marathon">
@@ -222,7 +222,7 @@
           <h1 id="race-hyrox-london">HYROX London</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>HYROX</dd>
-            <dt>Date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd>
+            <dt>Race date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd>
             <dt>Location</dt><dd>London, England, United Kingdom</dd>
           </dl>
           <section class="about" aria-labelledby="about-hyrox-london">
@@ -238,7 +238,7 @@
           <h1 id="race-hyrox-dallas">HYROX Dallas</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>HYROX</dd>
-            <dt>Date</dt><dd><time datetime="2027-01-17">17 January 2027</time></dd>
+            <dt>Race date</dt><dd><time datetime="2027-01-17">17 January 2027</time></dd>
             <dt>Location</dt><dd>Dallas, Texas, United States</dd>
           </dl>
           <section class="about" aria-labelledby="about-hyrox-dallas">
@@ -254,7 +254,7 @@
           <h1 id="race-deka-strong-chicago">DEKA STRONG Chicago</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
-            <dt>Date</dt><dd><time datetime="2027-03-14">14 March 2027</time></dd>
+            <dt>Race date</dt><dd><time datetime="2027-03-14">14 March 2027</time></dd>
             <dt>Location</dt><dd>Chicago, Illinois, United States</dd>
           </dl>
           <section class="about" aria-labelledby="about-deka-strong-chicago">
@@ -270,7 +270,7 @@
           <h1 id="race-boston-marathon">Boston Marathon</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>Marathon</dd>
-            <dt>Date</dt><dd><time datetime="2027-04-20">20 April 2027</time></dd>
+            <dt>Race date</dt><dd><time datetime="2027-04-20">20 April 2027</time></dd>
             <dt>Location</dt><dd>Boston, Massachusetts, United States</dd>
           </dl>
           <section class="about" aria-labelledby="about-boston-marathon">
@@ -286,7 +286,7 @@
           <h1 id="race-spartan-beast-killington">Spartan Race Beast — Killington</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>OCR</dd>
-            <dt>Date</dt><dd><time datetime="2027-07-11">11 July 2027</time></dd>
+            <dt>Race date</dt><dd><time datetime="2027-07-11">11 July 2027</time></dd>
             <dt>Location</dt><dd>Killington, Vermont, United States</dd>
           </dl>
           <section class="about" aria-labelledby="about-spartan-beast-killington">
@@ -302,7 +302,7 @@
           <h1 id="race-utmb">UTMB — Ultra-Trail du Mont-Blanc</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>Ultra</dd>
-            <dt>Date</dt><dd><time datetime="2027-08-24">24 August 2027</time></dd>
+            <dt>Race date</dt><dd><time datetime="2027-08-24">24 August 2027</time></dd>
             <dt>Location</dt><dd>Chamonix, France</dd>
           </dl>
           <section class="about" aria-labelledby="about-utmb">
@@ -334,12 +334,12 @@
          registration_url, or the new tab being blocked (flows.md revision
          note, 2026-09-24). -->
     <div class="inline-error" role="alert">
-      <h2>Couldn't open the link</h2>
-      <p>The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
       <button type="button" class="dismiss">Dismiss</button>
     </div>
     <a class="register-btn" href="https://bmw-berlin-marathon.com/" target="_blank" rel="noopener">Register on bmw-berlin-marathon.com</a>
-    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+    <p class="action-caption">Opens in a new tab — registration and payment happen there.</p>
   </div>
   <div class="action-bar" data-race="hyrox-london" data-cause="registration" hidden>
     <!-- RegLinkError (flows.md): inside the action bar, directly above
@@ -352,12 +352,12 @@
          registration_url, or the new tab being blocked (flows.md revision
          note, 2026-09-24). -->
     <div class="inline-error" role="alert">
-      <h2>Couldn't open the link</h2>
-      <p>The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
       <button type="button" class="dismiss">Dismiss</button>
     </div>
     <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on hyrox.com</a>
-    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+    <p class="action-caption">Opens in a new tab — registration and payment happen there.</p>
   </div>
   <div class="action-bar" data-race="hyrox-dallas" data-cause="registration" hidden>
     <!-- RegLinkError (flows.md): inside the action bar, directly above
@@ -370,12 +370,12 @@
          registration_url, or the new tab being blocked (flows.md revision
          note, 2026-09-24). -->
     <div class="inline-error" role="alert">
-      <h2>Couldn't open the link</h2>
-      <p>The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
       <button type="button" class="dismiss">Dismiss</button>
     </div>
     <a class="register-btn" href="https://hyrox.com/" target="_blank" rel="noopener">Register on hyrox.com</a>
-    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+    <p class="action-caption">Opens in a new tab — registration and payment happen there.</p>
   </div>
   <div class="action-bar" data-race="deka-strong-chicago" data-cause="registration" hidden>
     <!-- RegLinkError (flows.md): inside the action bar, directly above
@@ -388,12 +388,12 @@
          registration_url, or the new tab being blocked (flows.md revision
          note, 2026-09-24). -->
     <div class="inline-error" role="alert">
-      <h2>Couldn't open the link</h2>
-      <p>The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
       <button type="button" class="dismiss">Dismiss</button>
     </div>
     <a class="register-btn" href="https://spartan.com/" target="_blank" rel="noopener">Register on spartan.com</a>
-    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+    <p class="action-caption">Opens in a new tab — registration and payment happen there.</p>
   </div>
   <div class="action-bar" data-race="boston-marathon" data-cause="registration" hidden>
     <!-- RegLinkError (flows.md): inside the action bar, directly above
@@ -406,12 +406,12 @@
          registration_url, or the new tab being blocked (flows.md revision
          note, 2026-09-24). -->
     <div class="inline-error" role="alert">
-      <h2>Couldn't open the link</h2>
-      <p>The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
       <button type="button" class="dismiss">Dismiss</button>
     </div>
     <a class="register-btn" href="https://baa.org/" target="_blank" rel="noopener">Register on baa.org</a>
-    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+    <p class="action-caption">Opens in a new tab — registration and payment happen there.</p>
   </div>
   <div class="action-bar" data-race="spartan-beast-killington" data-cause="registration" hidden>
     <!-- RegLinkError (flows.md): inside the action bar, directly above
@@ -424,12 +424,12 @@
          registration_url, or the new tab being blocked (flows.md revision
          note, 2026-09-24). -->
     <div class="inline-error" role="alert">
-      <h2>Couldn't open the link</h2>
-      <p>The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
       <button type="button" class="dismiss">Dismiss</button>
     </div>
     <a class="register-btn" href="https://spartan.com/" target="_blank" rel="noopener">Register on spartan.com</a>
-    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+    <p class="action-caption">Opens in a new tab — registration and payment happen there.</p>
   </div>
   <div class="action-bar" data-race="utmb" data-cause="registration" hidden>
     <!-- RegLinkError (flows.md): inside the action bar, directly above
@@ -442,12 +442,12 @@
          registration_url, or the new tab being blocked (flows.md revision
          note, 2026-09-24). -->
     <div class="inline-error" role="alert">
-      <h2>Couldn't open the link</h2>
-      <p>The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2>Couldn’t open the link</h2>
+      <p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
       <button type="button" class="dismiss">Dismiss</button>
     </div>
     <a class="register-btn" href="https://utmb.world/" target="_blank" rel="noopener">Register on utmb.world</a>
-    <p class="action-caption">Opens in a new tab — sign-up and payment happen there.</p>
+    <p class="action-caption">Opens in a new tab — registration and payment happen there.</p>
   </div>
 
 <script>

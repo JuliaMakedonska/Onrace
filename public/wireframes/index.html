@@ -428,7 +428,7 @@
   var browseNav = ['Global nav',
     'Three tabs, all destinations: Discover, My Results and Profile (sitemap.md → Navigation § 1). Profile is account infrastructure, one tap from any top-level screen. Signed out, it opens the same sign-in gate as My Results. Log result is a button inside My Results, not a tab. Tabs are places, actions are buttons.'];
   var detailBack = ['The way back',
-    'A sticky "Back to races" bar is the only navigation on this drill-down screen: no tab bar (_conventions.md § 1). It\'s flows.md\'s "compares another race" edge, and the "not worth entering" exit.'];
+    'The sticky "‹ Discover" back bar is the only navigation on this drill-down screen: no tab bar (_conventions.md § 1). It\'s flows.md\'s "compares another race" edge, and the "not worth entering" exit.'];
 
   var NOTES = {
     'race-browse.html': { job: BROWSE_JOB + ' Base/default state.', zones: [
@@ -485,7 +485,7 @@
     'results-list.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Base state.', zones: [
       ['Header', 'iOS large title "My Results" with the Log result action, the entry to Related Job 3. The action belongs to the header, not the list, so it works in every state (flows.md).'],
       ['Saved confirmation', 'Shown only when Log result\'s success lands here with ?saved=<race name>: "Saved: <race name>". Otherwise hidden.'],
-      ['Results row', 'The archive\'s size ("4 logged results · Newest first"), in the same place as Race browse\'s count. Newest first because proof is usually needed for a recent qualifying window.'],
+      ['Results row', 'The archive\'s size ("4 results · Newest first"), in the same place as Race browse\'s count. Newest first because proof is usually needed for a recent qualifying window.'],
       ['Logged results', 'One card per result; the whole card opens Result detail through its loading state (flows.md: "taps a logged entry"). It shows race name, finish time, a short sport tag, date, and "Self-reported · via <domain>", never "verified" (sitemap.md → Entities 4).'],
       ['Global nav', '3 tabs: Discover / My Results (current) / Profile (sitemap.md → Navigation § 1). My Results and Profile go through the sign-in gate when signed out.'] ] },
     'results-list-empty.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Empty: no results logged yet.', zones: [
@@ -502,7 +502,7 @@
       ['Skeletons where the cards go', 'flows.md Loading2, on every My Results tap and on Try again. Reached with ?run=1 it moves on: &fail=1 or offline to the error page, &empty=1 to the empty page, otherwise to the list.'],
       ['Global nav', '3 tabs, My Results current.'] ] },
     'result-detail.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Drill-down from Results list. Base/success state.', zones: [
-      ['The way back', '"‹ Back to My Results" is the only navigation, with no tab bar. It\'s also every give-up exit on the screen (DeadEnd4, DeadEnd5).'],
+      ['The way back', '"‹ My Results" is the only navigation, with no tab bar. It\'s also every give-up exit on the screen (DeadEnd4, DeadEnd5).'],
       ['One result, with its proof', 'Race name, a prominent finish time, date and full sport type. The proof section shows the official_result_url, "Self-reported · via <domain>" (never "verified"), and a line saying the official timing page is the evidence.'],
       ['Open the official result', '"Open official result on <domain>" runs flows.md\'s "Source link still opens?" as a real check: a new tab opening is Success3, otherwise LinkError.'] ] },
     'result-detail-error.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Error: could not load result details (DetailError2).', zones: [
@@ -518,7 +518,7 @@
       ['Gray bars where the result goes', 'Name, finish time, facts and proof, with a status line for screen readers. Reached with ?result= it moves on: offline or &fail=1 to the error page, otherwise to the result.'],
       ['Open, not yet', 'A gray placeholder where the Open button will be, so the layout doesn\'t jump.'] ] },
     'sign-in-sign-up-error.html': { job: 'Infrastructure — no job; the gate on My Results and Profile. Error: sign-in failed.', zones: [
-      ['Close', 'The "don\'t retry" choice: leaves without signing in, lands on Race browse.'],
+      ['Cancel', 'The "don\'t retry" choice: leaves without signing in, lands on Race browse.'],
       ['Why you\'re signing in', 'The same line as the form.'],
       ['Sign in | Create account', 'Still switchable. Switching hides the alert, which was about the other mode.'],
       ['Alert', '"Couldn\'t sign you in", at the top of the form, covering both causes a wireframe can\'t tell apart: wrong credentials, or no connection.'],
@@ -527,12 +527,12 @@
       ['Top bar', '"‹ My Results" on the left is the only navigation, and every error\'s give-up exit (DeadEnd3). The title is centred in the bar; Save sits on the right, because a bottom bar would collide with the keyboard (_conventions.md § 1, Forms).'],
       ['Intro', 'One line saying every field is needed. That the four non-link fields are required is flagged [?] in flows.md.'],
       ['Find in race catalog', 'Optional row that opens Race picker, carrying every value typed so far in the URL (flows.md Flow 2, catalog branch).'],
-      ['Linked race', 'Only with catalog=<slug>: a read-only card (name, date, full sport type, city/country, "From the Onrace catalog") replaces the three race facts. Unlink makes them editable again, pre-filled.'],
+      ['Linked race', 'Only with catalog=<slug>: a read-only card (name, date, full sport type, city/country, "From the race catalog") replaces the three race facts. "Unlink race" makes them editable again, pre-filled.'],
       ['Race facts and finish time', 'Race name, date and sport type, typed when no race is linked. Finish time is always typed.'],
       ['Official result link', 'The one field CLAUDE.md marks required. Helper text says why: it\'s the proof elite races ask for, Onrace doesn\'t check it, and the result shows as self-reported.'] ] },
     'log-result-loading.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Loading: saving result.', zones: [
       ['Top bar', 'Save becomes a plain "Saving…" in the same slot, with nothing to tap. "‹ My Results" stays usable.'],
-      ['The form, locked', 'Filled in from the URL (a linked race shows as its card) and disabled while the save runs, Find in race catalog and Unlink included (flows.md: Submitting).'],
+      ['The form, locked', 'Filled in from the URL (a linked race shows as its card) and disabled while the save runs, Find in race catalog and "Unlink race" included (flows.md: Submitting).'],
       ['Where it goes next', 'Success lands on Results list, which says what was saved. Offline or &fail=1 goes to the save error with your values and catalog link kept.'] ] },
     'log-result-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: source link is required.', zones: [
       ['Top bar', '"‹ My Results" is the give-up exit (DeadEnd3), so it isn\'t repeated as a button. Save runs the same checks again.'],
@@ -557,7 +557,7 @@
     'race-picker-empty.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Empty: no catalog race matches.', zones: [
       ['Top bar', 'Cancel is a second way back to the form, values kept.'],
       ['Search', 'Still holds the query. Changing it and searching again is "changes the search".'],
-      ['No match', '"No catalog race matches “…”" says why a race might be missing (only past races, hand-curated catalog). "Type it in instead" returns to the form with every value kept.'] ] },
+      ['No match', '"No past race in the race catalog matches “…”" says why a race might be missing (only past races, hand-curated catalog). "Type it in instead" returns to the form with every value kept.'] ] },
     'race-picker-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Error: could not load the race catalog.', zones: [
       ['Top bar', 'Cancel returns to the form, like "Type it in instead".'],
       ['Search', 'Keeps the query that failed.'],
@@ -572,7 +572,7 @@
       ['Loading state', 'Gray placeholders where the initials, name, email, the four rows and Sign out go, so nothing jumps. With ?run=1 it moves to the profile after about 1s, or to the error when offline or &fail=1.'],
       ['Global nav', '3 tabs, Profile current. They work while loading.'] ] },
     'profile-error.html': { job: 'Infrastructure — no job; Flow 5 ProfileError, the profile couldn\'t load.', zones: [
-      ['Load error', '"Couldn\'t load your profile" replaces the whole profile: no fields and no Sign out, because no account loaded. Try again re-runs the fetch. Leaving by a tab is Retry → no (DeadEnd10).'],
+      ['Load error', '"Couldn’t load your account" replaces the whole profile: no fields and no Sign out, because no account loaded. Try again re-runs the fetch. Leaving by a tab is Retry → no (DeadEnd10).'],
       ['Global nav', '3 tabs, Profile current. The way out when you don\'t retry.'] ] },
     'profile-error.html?cause=save': { job: 'Infrastructure — no job; Flow 5 SaveError, a field change didn\'t save.', zones: [
       ['Identity', 'The loaded profile, as on profile.html.'],
@@ -581,29 +581,29 @@
       ['Sign-out confirm', 'Same iOS alert as on profile.html.'],
       ['Global nav', '3 tabs, Profile current.'] ] },
     'sign-in-sign-up.html': { job: 'Infrastructure — no job; the gate on My Results and Profile (sitemap.md → Entities 5). Base state: blank form.', zones: [
-      ['Close', 'A full-screen modal: Close on the left and the title, with no Back and no tab bar. Close is leaving without trying, and lands on Race browse, which never needs an account.'],
+      ['Cancel', 'A full-screen modal: Cancel on the left and the title, with no Back and no tab bar. Cancel is leaving without trying, and lands on Race browse, which never needs an account.'],
       ['Why you\'re signing in', 'One line naming where the person was heading: their archive, their account, or a generic line. They see why before being asked.'],
       ['Sign in | Create account', 'One screen, two modes, switched by a segmented control. ?mode=signup preselects Create account.'],
       ['Password changed', 'Only with ?reset=done, where Flow 6 lands: "Password changed. Sign in with your new password." Mode is forced to Sign in.'],
       ['Form', 'Email and password through Supabase Auth, with Confirm email on. Sign in mode shows "Forgot password?" under Password (→ Reset password, Flow 6). Create account mode shows "At least 8 characters." [?] and a line saying a confirmation link will be emailed.'] ] },
     'sign-in-sign-up-loading.html': { job: 'Infrastructure — no job; the gate on My Results and Profile. Loading: signing in, or creating an account (?mode=signup).', zones: [
-      ['Close', 'Still works while the request runs.'],
+      ['Cancel', 'Still works while the request runs.'],
       ['Why you\'re signing in', 'The same line as the form.'],
       ['Sign in | Create account', 'Locked while the request runs.'],
       ['Form, locked', '"Signing in…" or "Creating account…". A new account goes to Check inbox, not signed in. A sign-in lands where the person was heading, or with &unconfirmed=1 goes to Check inbox. Offline or &fail=1 opens the error page.'] ] },
     'sign-in-sign-up-error.html?cause=signup': { job: 'Infrastructure — no job; Flow 4 (sitemap.md → Entities 5). Error: couldn\'t create the account.', zones: [
-      ['Close', 'The "don\'t retry" choice: leaves without an account (DeadEnd8), lands on Race browse.'],
+      ['Cancel', 'The "don\'t retry" choice: leaves without an account (DeadEnd8), lands on Race browse.'],
       ['Sign in | Create account', 'Opens in Create account. Switching to Sign in hides the alert.'],
       ['Alert', '"Couldn\'t create your account" covers both causes: the email may already have an account (switch to Sign in), or the connection failed.'],
       ['Form', 'Email kept, password cleared. Submitting again retries.'] ] },
     'sign-in-sign-up-error.html?cause=confirm': { job: 'Infrastructure — no job; Flow 4 (sitemap.md → Entities 5). Error: confirmation link expired or already used.', zones: [
-      ['Close', 'Giving up (DeadEnd9): the account exists but isn\'t confirmed. Signing in later leads back to Check inbox.'],
+      ['Cancel', 'Giving up (DeadEnd9): the account exists but isn\'t confirmed. Signing in later leads back to Check inbox.'],
       ['Alert', '"This confirmation link has expired", or it was already used (each link works once). It names the address a new link will go to.'],
       ['Send a new link', 'Opens Check inbox, which shows "Sending…" then "Sent". Email and destination are kept.'] ] },
     'sign-in-sign-up-check-inbox.html': { job: 'Infrastructure — no job; Flow 4 email confirmation (sitemap.md → Entities 5). Check inbox.', zones: [
-      ['Close', 'Same modal chrome as the form. Closing leaves the account unconfirmed; signing in later leads straight back here.'],
+      ['Cancel', 'Same modal chrome as the form. Closing leaves the account unconfirmed; signing in later leads straight back here.'],
       ['Confirm your email', 'Names the address and says to open the link on this device. After a sign-in with an unconfirmed email (?reason=unconfirmed), it says the account isn\'t confirmed yet.'],
-      ['Resend email', 'Shows "Sending…" briefly, then "Sent — check your inbox again." A hidden status line announces both.'],
+      ['Send a new link', 'Shows "Sending…" briefly, then "Sent. Check your inbox again." A hidden status line announces both.'],
       ['Use a different email', 'Back to the form in Create account mode, keeping where the person was heading.'],
       ['Link expiry', 'The link works once and expires. ?confirmed=1 stands in for opening the emailed link: it signs in and lands where the person was heading; &expired=1 opens the expired-link error instead.'] ] },
     'reset-password.html': { job: 'Infrastructure — no job; Flow 6 password reset (sitemap.md → Entities 5). Base state.', zones: [
@@ -625,7 +625,7 @@
     'reset-password-check-inbox.html': { job: 'Infrastructure — no job; Flow 6 password reset. Check inbox: a flow step waiting on the inbox (_conventions.md § 4).', zones: [
       ['Top bar', '"‹ Sign in" and "Check your inbox". Leaving without opening a link is "reset never completed" (DeadEnd12), which Onrace can\'t see.'],
       ['What to do', '"Reset your password": if an account exists for this address, a link was sent. It never says an email was sent, because Supabase answers the same either way.'],
-      ['Resend link', 'Goes back through Loading: sending reset link, so the connection and rate-limit errors can still happen on a resend.'],
+      ['Send a new link', 'Goes back through Loading: sending reset link, so the connection and rate-limit errors can still happen on a resend.'],
       ['Use a different email', 'Back to Reset password with the address pre-filled: a mistyped email is the likeliest reason no link arrives, and Resend can\'t fix it. The bar\'s "‹ Sign in" is the way back.'],
       ['Expiry note', 'The link works once and expires. ?opened=1 stands in for opening it (→ New password); with &expired=1, New password\'s expired-link error.'] ] },
     'new-password.html': { job: 'Infrastructure — no job; Flow 6 password reset (sitemap.md → Entities 5). Base state.', zones: [
@@ -638,7 +638,7 @@
       ['Locked form', 'Masked placeholder dots (no password reached this page), button "Saving…". Reached through the flow: offline or &fail=1 → couldn\'t save; &same=1 → same password; otherwise Sign in with "Password changed", the recovery session ended.'] ] },
     'new-password-error.html': { job: 'Infrastructure — no job; Flow 6 password reset. Error: couldn\'t save the new password.', zones: [
       ['Top bar', '"‹ Sign in" is also the give-up exit.'],
-      ['Save error', '"Couldn\'t save your new password" at the top of the form: a dropped connection or an expired recovery session. Save retries; "Request a new link" goes to Reset password.'],
+      ['Save error', '"Couldn\'t save your new password" at the top of the form: a dropped connection or an expired recovery session. Save retries; "Send a new link" goes to Reset password.'],
       ['New password form', 'The fields come back empty, because passwords are never carried. Save runs the same checks again.'] ] },
     'new-password-error.html?cause=short': { job: 'Infrastructure — no job; Flow 6 password reset. Error: too short.', zones: [
       ['Top bar', '"‹ Sign in" is the give-up exit.'],
@@ -651,7 +651,7 @@
       ['New password form', 'Inline under New password: "That\'s your current password. Choose a different one." Supabase refuses the current password.'] ] },
     'new-password-error.html?cause=expired': { job: 'Infrastructure — no job; Flow 6 password reset. Error: reset link expired or already used.', zones: [
       ['Top bar', '"‹ Sign in" still returns to Sign in.'],
-      ['Expired link', '"This reset link has expired": links work once, for a short time. No form, because there\'s no recovery session. The one action, "Request a new link", goes to Reset password.'] ] }
+      ['Expired link', '"This reset link has expired": links work once, for a short time. No form, because there\'s no recovery session. The one action, "Send a new link", goes to Reset password.'] ] }
   };
 
   function renderNotes(key) {

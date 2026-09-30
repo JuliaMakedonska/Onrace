@@ -146,14 +146,14 @@
 </head>
 <body role="application" aria-label="Onrace — Sign in / Sign up, check inbox (wireframe)">
 
-  <!-- ZONE: modal top bar — Close + title (_conventions.md § 1, Gates;
+  <!-- ZONE: modal top bar — Cancel + title (_conventions.md § 1, Gates;
        _screens.md → Sign in / Sign up → Chrome). Same chrome as the form:
-       Close on the left, no Back, no tab bar. Close is Flow 4's "never
+       Cancel on the left, no Back, no tab bar. Cancel is Flow 4's "never
        confirms" edge → DeadEnd9 (account exists, unconfirmed — recoverable:
        signing in later routes back here). It lands on Race browse, the one
        screen that needs no account (sitemap.md → Navigation § 1). -->
   <header class="top-bar">
-    <a class="close" href="race-browse.html">Close</a>
+    <a class="close" href="race-browse.html">Cancel</a>
     <h1 class="bar-title">Check your inbox</h1>
   </header>
 
@@ -175,8 +175,8 @@
            The address is ?email= (what was entered), else a sample. -->
       <section aria-labelledby="inbox-heading">
         <h2 class="inbox-heading" id="inbox-heading">Confirm your email</h2>
-        <p class="inbox-line" data-reason="new">We sent a link to <span class="addr" data-email>maya.rossi@example.com</span>. Open it on this device to finish creating your account.</p>
-        <p class="inbox-line" data-reason="unconfirmed" hidden>Your account isn't confirmed yet. Open the link we sent to <span class="addr" data-email>maya.rossi@example.com</span> to finish, or send a new one.</p>
+        <p class="inbox-line" data-reason="new">We sent a confirmation link to <span class="addr" data-email>maya.rossi@example.com</span>. Open it on this device to finish creating your account.</p>
+        <p class="inbox-line" data-reason="unconfirmed" hidden>Your account isn’t confirmed yet. Open the confirmation link we sent to <span class="addr" data-email>maya.rossi@example.com</span> to finish.</p>
       </section>
 
       <!-- ZONE: resend — Flow 4's "resends the email" edge → Resending
@@ -188,10 +188,10 @@
            changes for assistive tech. &resend=1 runs this on arrival: that's
            the expired-link error's "Send a new link"
            (sign-in-sign-up-error.html?cause=confirm). -->
-      <section aria-label="Resend the confirmation email">
-        <button type="button" class="secondary-btn" id="resend"><span data-resend="idle">Resend email</span><span data-resend="sending" hidden>Sending…</span></button>
-        <p class="sent-note" id="sent-note" hidden>Sent — check your inbox again.</p>
-        <p class="visually-hidden" role="status"><span data-status="sending" hidden>Sending a new confirmation email…</span><span data-status="sent" hidden>Sent. Check your inbox again.</span></p>
+      <section aria-label="Send a new confirmation link">
+        <button type="button" class="secondary-btn" id="resend"><span data-resend="idle">Send a new link</span><span data-resend="sending" hidden>Sending…</span></button>
+        <p class="sent-note" id="sent-note" hidden>Sent. Check your inbox again.</p>
+        <p class="visually-hidden" role="status"><span data-status="sending" hidden>Sending a new confirmation link…</span><span data-status="sent" hidden>Sent. Check your inbox again.</span></p>
       </section>
 
       <!-- ZONE: use a different email — Flow 4's "uses a different email"
@@ -204,7 +204,7 @@
            isn't a surprise; the expired case itself is
            sign-in-sign-up-error.html?cause=confirm. No duration is named:
            it's a Supabase project setting, not decided yet. -->
-      <p class="expiry-note">The link works once and expires after a while. If it doesn't work, send a new one.</p>
+      <p class="expiry-note">Each link works once and expires after a while. If it doesn’t work, send a new link.</p>
 
       <!-- ZONE: the emailed link, coming back — reviewer's switch, nothing
            rendered (_conventions.md § 2 test switches). ?confirmed=1 stands

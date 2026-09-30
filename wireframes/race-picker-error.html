@@ -227,7 +227,7 @@
          the URL and disables the empty ones so they aren't sent). Keeps the query that failed; searching again also retries. -->
     <form class="search" id="picker-search" role="search" action="race-picker-loading.html" method="get">
       <input type="hidden" name="run" value="1">
-      <label for="q" class="visually-hidden">Search past races by name or city</label>
+      <label for="q" class="visually-hidden">Search races by name or city</label>
       <input type="search" id="q" name="q" placeholder="Race name or city" enterkeyhint="search" autocomplete="off">
       <input type="hidden" name="race_name">
       <input type="hidden" name="date">
@@ -250,7 +250,7 @@
       <main>
         <div class="state-message" role="alert">
           <h2>Couldn’t load the race catalog</h2>
-          <p>Check your connection and try again, or type the race in yourself. What you’ve entered on the form is kept.</p>
+          <p>The connection may have dropped. Check it, then try again, or type the race in yourself. What you’ve entered on the form stays as it is.</p>
           <div class="state-actions">
             <a class="state-action" href="race-picker-loading.html?run=1" data-retry>Try again</a>
             <a class="state-action secondary" href="log-result.html" data-back-to-form>Type it in instead</a>

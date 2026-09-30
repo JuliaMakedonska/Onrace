@@ -197,8 +197,8 @@
 </head>
 <body role="application" aria-label="Onrace — Sign in / Sign up, error state (wireframe)">
 
-  <!-- ZONE: modal top bar — Close + title (_conventions.md § 1, Gates;
-       _screens.md → Sign in / Sign up → Chrome). Close is flows.md's
+  <!-- ZONE: modal top bar — Cancel + title (_conventions.md § 1, Gates;
+       _screens.md → Sign in / Sign up → Chrome). Cancel is flows.md's
        "closes without attempting" edge (Related Job 3 → DeadEnd2, Related
        Job 4 → DeadEnd4: leaves without getting signed in), and on this
        error page it is also every Retry? → no: sign-in failed (DeadEnd2 /
@@ -210,7 +210,7 @@
        toggle; for ?cause=confirm it reads "Check your inbox", the step
        this error belongs to. -->
   <header class="top-bar">
-    <a class="close" href="race-browse.html">Close</a>
+    <a class="close" href="race-browse.html">Cancel</a>
     <h1 class="bar-title"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span><span data-cause="confirm" hidden>Check your inbox</span></h1>
   </header>
 
@@ -229,9 +229,9 @@
       <p class="context" data-mode="signin" data-for="archive" hidden>Sign in to see your results archive.</p>
       <p class="context" data-mode="signup" data-for="archive" hidden>Create an account to start your results archive.</p>
       <p class="context" data-mode="signin" data-for="account" hidden>Sign in to see your account.</p>
-      <p class="context" data-mode="signup" data-for="account" hidden>Create an account to set up your profile.</p>
-      <p class="context" data-mode="signin" data-for="generic">Sign in to keep your official race results, with their source links, in one place.</p>
-      <p class="context" data-mode="signup" data-for="generic" hidden>Create an account to keep your official race results, with their source links, in one place.</p>
+      <p class="context" data-mode="signup" data-for="account" hidden>Create an account to start your results archive.</p>
+      <p class="context" data-mode="signin" data-for="generic">Sign in to see your results archive: each result with its official result link.</p>
+      <p class="context" data-mode="signup" data-for="generic" hidden>Create an account to start your results archive: each result with its official result link.</p>
 
       <!-- ZONE: expired or used confirmation link — ConfirmError (flows.md →
            Flow 4, "Confirmation link valid?" → no), shown only for
@@ -240,13 +240,13 @@
            one action is Flow 4's "resends the email" edge → Resending:
            Check inbox with &resend=1, which runs its own "Sending…" and then
            shows "Sent" (sign-in-sign-up-check-inbox.html), carrying ?email
-           and ?next. "Gives up" (→ DeadEnd9) is Close in the top bar. The
+           and ?next. "Gives up" (→ DeadEnd9) is Cancel in the top bar. The
            address is the one from ?email=, else a sample. -->
       <section data-cause="confirm" hidden>
         <div class="inline-error" role="alert">
           <h2>This confirmation link has expired</h2>
-          <p>Or it was already used: each link works once. Your account is still there, it just isn't confirmed yet.</p>
-          <p>We'll send a new link to <span class="addr" data-email>maya.rossi@example.com</span>.</p>
+          <p>It may also have been used already. Each link works once and expires after a while. Your account is still there. It isn’t confirmed yet.</p>
+          <p>We’ll send a new link to <span class="addr" data-email>maya.rossi@example.com</span>.</p>
         </div>
         <a class="submit-btn" id="send-new-link" href="sign-in-sign-up-check-inbox.html?resend=1">Send a new link</a>
       </section>
@@ -275,7 +275,7 @@
       <form id="auth-form" data-form-zone>
         <!-- ZONE: inline alert — one per form cause, at the top of the form,
              directly above the fields it's about (same placement rule as a
-             failed save, _conventions.md § 1, Forms). Retry? → no is Close
+             failed save, _conventions.md § 1, Forms). Retry? → no is Cancel
              in the top bar, so it isn't repeated here. An alert belongs to
              the mode it was raised in; switching mode hides it.
              Default: AuthError, sign-in failed (flows.md, Flows 2 & 3). The
@@ -288,12 +288,12 @@
              since the wireframe can't tell them apart, and points an
              existing account at Sign in. -->
         <div class="inline-error" data-mode="signin" data-cause="signin" role="alert">
-          <h2>Couldn't sign you in</h2>
-          <p>Check your email and password and try again. If they're right, check your connection.</p>
+          <h2>Couldn’t sign you in</h2>
+          <p>The email or password didn’t match, or the connection dropped. Check both and try again.</p>
         </div>
         <div class="inline-error" data-mode="signup" data-cause="signup" role="alert" hidden>
-          <h2>Couldn't create your account</h2>
-          <p>This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you're connected, then try again.</p>
+          <h2>Couldn’t create your account</h2>
+          <p>This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you’re connected, then try again.</p>
         </div>
         <fieldset>
           <div class="field">
@@ -323,7 +323,7 @@
             <p class="forgot" data-mode="signin"><a id="forgot" href="reset-password.html">Forgot password?</a></p>
           </div>
           <button type="submit" class="submit-btn"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></button>
-          <p class="form-note" data-mode="signup" hidden>We'll email you a link to confirm your address.</p>
+          <p class="form-note" data-mode="signup" hidden>We’ll send a link to confirm your email.</p>
         </fieldset>
       </form>
 

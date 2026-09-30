@@ -310,8 +310,8 @@
            tab — no button. -->
       <section id="cause-load" aria-label="Profile">
         <div class="state-message" role="alert">
-          <h2>Couldn't load your profile</h2>
-          <p>Check your connection and try again. Your account and results haven't changed.</p>
+          <h2>Couldn’t load your account</h2>
+          <p>The connection may have dropped. Check it, then try again. Your account and results haven’t changed.</p>
           <div class="state-actions">
             <a class="state-action" href="profile-loading.html?run=1">Try again</a>
           </div>
@@ -356,7 +356,7 @@
            load, so everything is here as on profile.html, and the one row
            named by &field= shows the inline error: the field is back at its
            previous value (&prev=, else the sample value) and says so —
-           "Couldn't save — back to …" — so the person is never looking at a
+           "Couldn’t save — back to … The connection may have dropped." — so the person is never looking at a
            value that isn't stored (Flow 5, Saved? decision). "Try again" is
            the "tries the change again" edge: it goes back to profile.html
            carrying the attempted value (&retry=<field>&value=), which
@@ -379,7 +379,7 @@
                 <input type="text" id="name" name="name" value="Maya Rossi" autocomplete="name">
               </div>
               <p class="row-note" id="name-status" aria-live="polite" hidden><span data-saving hidden>Saving…</span><span data-saved hidden>Saved</span></p>
-              <p class="row-note is-error" id="name-error" role="alert" hidden>Couldn't save — back to <span data-prev>Maya Rossi</span>.<a href="profile.html" data-retry>Try again</a></p>
+              <p class="row-note is-error" id="name-error" role="alert" hidden>Couldn’t save — back to <span data-prev>Maya Rossi</span>. The connection may have dropped.<a href="profile.html" data-retry>Try again</a></p>
             </li>
             <li>
               <div class="row">
@@ -400,7 +400,7 @@
                 </select>
               </div>
               <p class="row-note" id="country-status" aria-live="polite" hidden><span data-saving hidden>Saving…</span><span data-saved hidden>Saved</span></p>
-              <p class="row-note is-error" id="country-error" role="alert" hidden>Couldn't save — back to <span data-prev>Italy</span>.<a href="profile.html" data-retry>Try again</a></p>
+              <p class="row-note is-error" id="country-error" role="alert" hidden>Couldn’t save — back to <span data-prev>Italy</span>. The connection may have dropped.<a href="profile.html" data-retry>Try again</a></p>
             </li>
             <li>
               <div class="row">
@@ -414,7 +414,7 @@
                 </select>
               </div>
               <p class="row-note" id="language-status" aria-live="polite" hidden><span data-saving hidden>Saving…</span><span data-saved hidden>Saved</span></p>
-              <p class="row-note is-error" id="language-error" role="alert" hidden>Couldn't save — back to <span data-prev>English</span>.<a href="profile.html" data-retry>Try again</a></p>
+              <p class="row-note is-error" id="language-error" role="alert" hidden>Couldn’t save — back to <span data-prev>English</span>. The connection may have dropped.<a href="profile.html" data-retry>Try again</a></p>
             </li>
             <li>
               <div class="row">
@@ -424,7 +424,7 @@
             </li>
           </ul>
         </form>
-        <p class="group-footer">Changes save as you make them. Email comes from sign-in.</p>
+        <p class="group-footer">Changes save as you make them. Your email is the one you sign in with, so it can’t be changed here.</p>
       </section>
 
       <!-- ZONE: sign out — its own group at the end (_screens.md → Profile),

@@ -218,7 +218,7 @@
          the URL and disables the empty ones so they aren't sent). Shows the query being fetched, and stays usable. -->
     <form class="search" id="picker-search" role="search" action="race-picker-loading.html" method="get">
       <input type="hidden" name="run" value="1">
-      <label for="q" class="visually-hidden">Search past races by name or city</label>
+      <label for="q" class="visually-hidden">Search races by name or city</label>
       <input type="search" id="q" name="q" placeholder="Race name or city" enterkeyhint="search" autocomplete="off">
       <input type="hidden" name="race_name">
       <input type="hidden" name="date">
@@ -241,8 +241,8 @@
            eight catalog races) → PickerEmpty; otherwise → Picker, with q
            and the carried values kept. Opened directly it stays put. -->
       <main aria-busy="true">
-        <p class="list-intro">Past races in the Onrace catalog</p>
-        <p class="visually-hidden" role="status">Loading past races from the Onrace catalog…</p>
+        <p class="list-intro">Past races in the race catalog</p>
+        <p class="visually-hidden" role="status">Loading past races…</p>
         <ul class="race-list" aria-hidden="true">
           <li>
             <div class="skeleton-card">

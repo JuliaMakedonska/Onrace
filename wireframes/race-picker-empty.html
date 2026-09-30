@@ -226,7 +226,7 @@
          the URL and disables the empty ones so they aren't sent). Stays pre-filled with the query: editing it and searching again is flows.md's PickerEmpty → "changes the search" → Picker (through the loading page). -->
     <form class="search" id="picker-search" role="search" action="race-picker-loading.html" method="get">
       <input type="hidden" name="run" value="1">
-      <label for="q" class="visually-hidden">Search past races by name or city</label>
+      <label for="q" class="visually-hidden">Search races by name or city</label>
       <input type="search" id="q" name="q" placeholder="Race name or city" enterkeyhint="search" autocomplete="off">
       <input type="hidden" name="race_name">
       <input type="hidden" name="date">
@@ -249,8 +249,8 @@
            listed, and the catalog is hand-curated (CLAUDE.md → Race data). -->
       <main>
         <div class="state-message" role="status">
-          <h2>No catalog race matches “<span data-q></span>”</h2>
-          <p>The catalog only lists races that have already happened, and it may not have this one yet. Try another name or city, or type the race in yourself.</p>
+          <h2>No past race in the race catalog matches “<span data-q></span>”</h2>
+          <p>Only past races in the race catalog appear here, and this one may not be in it yet. Check the spelling, try the city instead of the race name, or type the race in yourself.</p>
           <div class="state-actions">
             <a class="state-action" href="log-result.html" data-back-to-form>Type it in instead</a>
           </div>

@@ -201,7 +201,7 @@
          the URL and disables the empty ones so they aren't sent). Pre-filled with ?q= when a search has run. -->
     <form class="search" id="picker-search" role="search" action="race-picker-loading.html" method="get">
       <input type="hidden" name="run" value="1">
-      <label for="q" class="visually-hidden">Search past races by name or city</label>
+      <label for="q" class="visually-hidden">Search races by name or city</label>
       <input type="search" id="q" name="q" placeholder="Race name or city" enterkeyhint="search" autocomplete="off">
       <input type="hidden" name="race_name">
       <input type="hidden" name="date">
@@ -228,9 +228,9 @@
            the intro line names the search. Base state (_conventions.md § 5):
            PickerMatches → yes → Picker. -->
       <main>
-        <p class="list-intro" data-intro="all">Past races in the Onrace catalog</p>
-        <p class="list-intro" data-intro="search" hidden>Past races in the Onrace catalog matching “<span data-q></span>”</p>
-        <ul class="race-list" aria-label="Past catalog races">
+        <p class="list-intro" data-intro="all">Past races in the race catalog</p>
+        <p class="list-intro" data-intro="search" hidden>Past races in the race catalog matching “<span data-q></span>”</p>
+        <ul class="race-list" aria-label="Past races in the race catalog">
           <li data-slug="utmb-2026">
             <article class="race-card">
               <a class="card-link" href="log-result.html?catalog=utmb-2026">
