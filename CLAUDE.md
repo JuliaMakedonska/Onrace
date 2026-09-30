@@ -10,7 +10,7 @@ A **hybrid-athlete race calendar**, not a single race format. Catalog whatever r
 
 ## Core features (MVP)
 
-1. **Interactive map of races** — filterable by region, date, and sport type.
+1. **Interactive map of races** — filterable by region, date, and sport type, plus a search by race name or city (added 2026-09-30, for finding a race you already know; `research/jtbd.md` → Hypothesis 7 `[?]`).
 2. **Personal archive of official race results** — each entry links back to the official source (timing site) as proof.
 
 ## Target users

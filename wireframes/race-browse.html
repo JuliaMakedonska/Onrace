@@ -125,6 +125,27 @@
     background: #fff;
     border-bottom: 1px solid var(--line);
   }
+  /* --- search (added 2026-09-30): an iOS search field under the large
+     title. It scrolls away with the title and sits outside the sticky
+     .controls block, so that block's height is unchanged (61px, or 97px
+     with chips). It's system chrome, like the title, so it uses the system
+     font. It matches race name or city (the same scope as Race picker) and
+     narrows together with the filters. An active search shows as the
+     first chip in the chips row. --- */
+  .race-search { margin: 10px 0 2px; }
+  .race-search input {
+    width: 100%;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: var(--fill-track);
+    padding: 0 12px;
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .race-search input::placeholder { color: var(--ink-3); }
+
   .control-row {
     display: flex;
     align-items: center;
@@ -412,6 +433,10 @@
   }
   #filters-apply { background: var(--fill-strong); color: #fff; }
   #filters-close { background: #fff; color: var(--ink); }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
 </style>
 </head>
 <body role="application" aria-label="Onrace — Race browse (wireframe)">
@@ -422,6 +447,15 @@
 
       <header>
         <h1>Discover</h1>
+        <!-- ZONE: search — find a race you already know by name or city
+             (jtbd.md → Hypothesis 7 [?], added 2026-09-30). Outside the
+             sticky controls, under the large title, so it scrolls away with
+             the title (_conventions.md § 1, Search). Submitting is a filter
+             change: flows.md "searches by race name or city" → Loading. -->
+        <form class="race-search" id="race-search" role="search">
+          <label class="visually-hidden" for="race-q">Search races by name or city</label>
+          <input type="search" id="race-q" name="q" placeholder="Race name or city" autocomplete="off" enterkeyhint="search">
+        </form>
       </header>
 
       <!-- ZONE: shared controls (sitemap.md: "Race browse (map + list)" — one
@@ -668,13 +702,13 @@
   // in the loop shows the same filters. The "fetch" is the seven sample races
   // below — the same ones as the cards and race-detail.html.
   var RACES = [
-    { slug: 'berlin-marathon', sport: 'marathon', date: '2026-09-27', region: 'Europe' },
-    { slug: 'hyrox-london', sport: 'hyrox', date: '2026-12-06', region: 'Europe' },
-    { slug: 'hyrox-dallas', sport: 'hyrox', date: '2027-01-17', region: 'North America' },
-    { slug: 'deka-strong-chicago', sport: 'deka', date: '2027-03-14', region: 'North America' },
-    { slug: 'boston-marathon', sport: 'marathon', date: '2027-04-20', region: 'North America' },
-    { slug: 'spartan-beast-killington', sport: 'ocr', date: '2027-07-11', region: 'North America' },
-    { slug: 'utmb', sport: 'ultra', date: '2027-08-24', region: 'Europe' }
+    { slug: 'berlin-marathon', name: 'Berlin Marathon', city: 'Berlin', sport: 'marathon', date: '2026-09-27', region: 'Europe' },
+    { slug: 'hyrox-london', name: 'HYROX London', city: 'London', sport: 'hyrox', date: '2026-12-06', region: 'Europe' },
+    { slug: 'hyrox-dallas', name: 'HYROX Dallas', city: 'Dallas', sport: 'hyrox', date: '2027-01-17', region: 'North America' },
+    { slug: 'deka-strong-chicago', name: 'DEKA STRONG Chicago', city: 'Chicago', sport: 'deka', date: '2027-03-14', region: 'North America' },
+    { slug: 'boston-marathon', name: 'Boston Marathon', city: 'Boston', sport: 'marathon', date: '2027-04-20', region: 'North America' },
+    { slug: 'spartan-beast-killington', name: 'Spartan Race Beast — Killington', city: 'Killington', sport: 'ocr', date: '2027-07-11', region: 'North America' },
+    { slug: 'utmb', name: 'UTMB — Ultra-Trail du Mont-Blanc', city: 'Chamonix', sport: 'ultra', date: '2027-08-24', region: 'Europe' }
   ];
   var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -689,10 +723,13 @@
   var toInput = document.getElementById('date-to');
   var chipsBar = document.querySelector('.chips-bar');
   var chipsRow = document.querySelector('.chips-row');
+  var searchForm = document.getElementById('race-search');
+  var searchInput = document.getElementById('race-q');
 
   // --- Filter state: the drawer's form is the single source of truth.
   function readForm() {
     return {
+      q: (searchInput.value || '').trim(),
       region: form.elements.region.value,
       from: fromInput.value,
       to: toInput.value,
@@ -700,23 +737,25 @@
     };
   }
   function unfiltered() {
-    return { region: '', from: fromInput.getAttribute('data-unfiltered'), to: toInput.getAttribute('data-unfiltered'), sports: [] };
+    return { q: '', region: '', from: fromInput.getAttribute('data-unfiltered'), to: toInput.getAttribute('data-unfiltered'), sports: [] };
   }
   function datesFiltered(f) {
     return f.from !== fromInput.getAttribute('data-unfiltered') || f.to !== toInput.getAttribute('data-unfiltered');
   }
   function toParams(f) {
     var p = new URLSearchParams();
+    if (f.q) p.set('q', f.q);
     if (f.region) p.set('region', f.region);
     if (datesFiltered(f)) { p.set('from', f.from); p.set('to', f.to); }
     f.sports.forEach(function (s) { p.append('sport', s); });
     return p;
   }
   function hasFilterParams(p) {
-    return p.has('region') || p.has('from') || p.has('to') || p.has('sport');
+    return p.has('q') || p.has('region') || p.has('from') || p.has('to') || p.has('sport');
   }
   function writeForm(p) {
     var u = unfiltered();
+    searchInput.value = p.get('q') || '';
     form.elements.region.value = p.get('region') || '';
     fromInput.value = p.get('from') || u.from;
     toInput.value = p.get('to') || u.to;
@@ -725,7 +764,8 @@
   }
   function matches(f) {
     return RACES.filter(function (r) {
-      return (!f.region || r.region === f.region) &&
+      return (!f.q || (r.name + ' ' + r.city).toLowerCase().indexOf(f.q.toLowerCase()) > -1) &&
+        (!f.region || r.region === f.region) &&
         r.date >= f.from && r.date <= f.to &&
         (!f.sports.length || f.sports.indexOf(r.sport) > -1);
     });
@@ -741,14 +781,14 @@
     var d = iso.split('-');
     return (+d[2]) + ' ' + MONTHS[+d[1] - 1] + (withYear ? ' ' + d[0] : '');
   }
-  function addChip(label, facet, value) {
+  function addChip(label, facet, value, aria) {
     var li = document.createElement('li');
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'chip';
     btn.setAttribute('data-filter', facet);
     if (value) btn.setAttribute('data-value', value);
-    btn.setAttribute('aria-label', 'Remove filter: ' + label);
+    btn.setAttribute('aria-label', aria || 'Remove filter: ' + label);
     btn.appendChild(document.createTextNode(label + ' '));
     var x = document.createElement('span');
     x.setAttribute('aria-hidden', 'true');
@@ -759,6 +799,7 @@
   }
   function renderChips(f) {
     chipsRow.innerHTML = '';
+    if (f.q) addChip('“' + f.q + '”', 'q', null, 'Clear search: “' + f.q + '”');
     if (f.region) addChip(f.region, 'region');
     f.sports.forEach(function (s) {
       var box = form.querySelector('input[name="sport"][value="' + s + '"]');
@@ -769,7 +810,8 @@
       addChip(fmt(f.from, !sameYear) + ' – ' + fmt(f.to, true), 'dates');
     }
     var n = chipsRow.children.length;
-    filtersBtn.textContent = n ? 'Filters · ' + n : 'Filters';
+    var nf = n - (f.q ? 1 : 0); // the search chip isn't a filter in the count
+    filtersBtn.textContent = nf ? 'Filters · ' + nf : 'Filters';
     chipsBar.hidden = n === 0;
   }
 
@@ -784,6 +826,7 @@
     if (!chip) return;
     var f = readForm();
     var facet = chip.getAttribute('data-filter');
+    if (facet === 'q') f.q = '';
     if (facet === 'region') f.region = '';
     if (facet === 'sport') f.sports = f.sports.filter(function (s) { return s !== chip.getAttribute('data-value'); });
     if (facet === 'dates') { var u = unfiltered(); f.from = u.from; f.to = u.to; }
@@ -819,6 +862,19 @@
     e.preventDefault();
     window.location.href = withRun(readForm());
   });
+  // Search: submitting (the keyboard's Search key) is a filter change →
+  // Loading, keeping the current filters (flows.md Flow 1).
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    window.location.href = withRun(readForm());
+  });
+
+  // Result count, in the same words whether it's a search, filters or both.
+  function countText(n, f) {
+    var filtered = f.region || f.sports.length || datesFiltered(f);
+    var what = f.q ? '“' + f.q + '”' + (filtered ? ' and your filters' : '') : 'your filters';
+    return '<strong>' + n + '</strong> ' + (n === 1 ? 'race matches ' : 'races match ') + what;
+  }
 
   // --- Success page with filters applied: show only the matching sample
   // races (real markup, un-hidden or hidden) and the filtered count.
@@ -833,8 +889,7 @@
     document.querySelectorAll('.map-pin').forEach(function (pin) {
       pin.hidden = keep.indexOf(new URLSearchParams(pin.search).get('race')) === -1;
     });
-    document.querySelector('.results-count').innerHTML =
-      '<strong>' + keep.length + '</strong> ' + (keep.length === 1 ? 'race matches' : 'races match') + ' your filters';
+    document.querySelector('.results-count').innerHTML = countText(keep.length, readForm());
   }
 
   // --- Error page: "Try again" re-runs the same fetch, keeping filters

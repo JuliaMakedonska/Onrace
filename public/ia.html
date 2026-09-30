@@ -444,9 +444,9 @@
 flowchart LR
     Start(("App opens")) --> Browse["Race browse"]
     Browse --> Loading("Loading: fetching races")
-    Loading --> HasResults{"Any races match current filters?"}
-    HasResults -->|"no"| Empty("Empty: no races match current filters")
-    Empty -->|"adjusts filters"| Browse
+    Loading --> HasResults{"Any races match current filters and search?"}
+    HasResults -->|"no"| Empty("Empty: no races match current filters or search")
+    Empty -->|"adjusts filters or search"| Browse
     Empty -->|"gives up"| DeadEnd1(("Dead end: leaves without deciding on a race"))
     HasResults -->|"yes"| Browse
     Loading -->|"connection fails"| FetchError("Error: could not load races")
@@ -454,6 +454,7 @@ flowchart LR
     FetchRetry -->|"yes"| Loading
     FetchRetry -->|"no"| DeadEnd1
     Browse -->|"changes region/date/sport filters"| Loading
+    Browse -->|"searches by race name or city"| Loading
     Browse -->|"taps a race card or pin"| DetailLoading("Loading: fetching race details")
     DetailLoading -->|"loads successfully"| Detail["Race detail"]
     DetailLoading -->|"connection fails"| DetailError("Error: could not load race details")

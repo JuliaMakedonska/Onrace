@@ -22,13 +22,15 @@ Two screens qualify — the only two rows in `../sitemap.md`'s Traceability matr
 
 Per `../sitemap.md`, Race browse also serves Related Job 1 (plan season by format) and Related Job 2 (choose races by location) — noted for context, but Main Job 1 is what puts it on this main path.
 
+**Search (added 2026-09-30):** an iOS search field under the large title matches race name or city (`../research/jtbd.md` → Hypothesis 7 `[?]`). It narrows together with the filters, shows as the first chip in the chips row, and doesn't count toward "Filters · N". It sits outside the sticky controls, so their height is unchanged (`_conventions.md` § 1, Search).
+
 **Where it sits in the flow** (`../flows.md` → "Main Job 1 — Discovery"): the entry node. `App opens → Race browse` at 0 taps — per `../sitemap.md` → Navigation § 2, it's the default/home tab, "the one clean job gets the one screen that costs nothing to reach." It's also the most-revisited node in the diagram: filter changes loop back into it (`Browse → Loading → ... → Browse`), and it's the landing point after backing out of Race detail ("back / compares another race"). From here, tapping a race card or pin is the 1-tap transition into Race detail.
 
 **States:**
 
 | State | Real? | Why |
 |---|:---:|---|
-| Empty | ✓ | `HasResults` → "no" → `Empty("Empty: no races match current filters")`. A legitimate data state, not an error — resolved by adjusting filters or giving up (merges into `DeadEnd1`). |
+| Empty | ✓ | `HasResults` → "no" → `Empty("Empty: no races match current filters or search")`. With a search active, the message names it ("No races match “kona”") and says what the catalog holds, not just what the filters excluded. A legitimate data state, not an error — resolved by adjusting filters or giving up (merges into `DeadEnd1`). |
 | Error | ✓ | `Loading` → "connection fails" → `FetchError("Error: could not load races")`, with a `Retry?` diamond: "yes" retries the fetch (back to `Loading`), "no" gives up (merges into `DeadEnd1`). |
 | Loading | ✓ | `Loading("Loading: fetching races")` — fires on entry and again on every filter change. |
 | Success | — | No distinct "it worked" endpoint on this screen. Reaching `HasResults` → "yes" just re-displays `Browse` — normal browsing, not a terminal. The flow's actual `Success` node is scoped to Race detail (opening `registration_url`), not to browsing itself. |

@@ -120,6 +120,10 @@ Discovery and archiving aren't ranked against each other, even though `research.
 
    **Update (2026-09-25):** a Profile *screen* now exists, as account infrastructure: initials, name, country, language `[?]`, and Sign out (`../sitemap.md` → Entities → 5. Athlete account, and Screens). That doesn't resolve this hypothesis. It deliberately shows no results, range or stats, so this job is still unbuilt and still unsourced. What changed is the question asked of the screen. "Does a job need a Profile?" (no, as above) was the wrong test for infrastructure. The right one is "does the existence of auth require it?" (yes: someone signed in needs to see whose account it is and be able to sign out). The verdict above still stands for the feature version of a profile.
 
+7. > **When** I already know which race I'm after (a friend's race, one I read about, one I'm registered for), **I want to** find it by typing its name or city, **so that** I can open it without working out its format, region and month for the filters first.
+
+   **Why it's a hypothesis:** added 2026-09-30, from a design argument, not from `research.md`. With the catalog at "tens to low hundreds of races" (`research.md` → PATTERNS) and about four race cards per phone screen, a known race can be many scrolls away. Filters don't help much if the person misremembers the month or the region, because they land on "no races match". The supporting evidence is indirect: every discovery product reviewed pairs filters with text search (Strava "Search + faceted filters", IRONMAN "text search", ocrbase "Search events", `research.md` → COMPETITORS), and Onrace's own Race picker already searches the same race catalog. No athlete has said they do this. Built as Race browse's search field (`../wireframes/race-browse.html`); worth checking in the first usability test whether people type or filter.
+
 ---
 
 ## JTBD × Persona matrix

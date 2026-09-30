@@ -422,6 +422,7 @@
   var DETAIL_JOB = 'Main Job 1 — Discovery (research/jtbd.md). Drill-down from Race browse.';
   var browseControls = ['What we show and how we narrow it',
     'Filters (region, date, sport) and the List/Map toggle share one sticky row: Filters decides what you see, the toggle decides how. Both views are narrowed only by Filters. Panning the map moves the viewport; it never re-filters.'];
+  var browseSearch = ['Search', 'An iOS search field under the large title, by race name or city (jtbd.md → Hypothesis 7 [?]), for a race you already know. It scrolls away with the title, outside the sticky controls, so their height is unchanged. Searching is a filter change (→ Loading), and an active search becomes the first chip.'];
   var browseChips = ['Active filters',
     'One removable chip per active facet, plus Clear all. Removing a chip is a filter change, so the list reloads (flows.md: filter change → Loading).'];
   var browseNav = ['Global nav',
@@ -431,6 +432,7 @@
 
   var NOTES = {
     'race-browse.html': { job: BROWSE_JOB + ' Base/default state.', zones: [
+      browseSearch,
       browseControls,
       [browseChips[0], browseChips[1] + ' Hidden here: nothing is filtered yet.'],
       ['The result count', 'The filters\' output sits with the results, in the same place in both views. Unfiltered, it reads "upcoming races". Sort (Soonest first) is list-only: map pins have no order.'],
@@ -438,6 +440,7 @@
       browseNav
     ]},
     'race-browse-empty.html': { job: BROWSE_JOB + ' Empty state.', zones: [
+      browseSearch,
       browseControls,
       browseChips,
       ['The result count', 'Filters are on, so the count reads "match your filters". Sort is dropped because there\'s nothing to order.'],
@@ -445,6 +448,7 @@
       [browseNav[0], browseNav[1] + ' Giving up is just leaving by a tab, so no button is needed.']
     ]},
     'race-browse-error.html': { job: BROWSE_JOB + ' Error state.', zones: [
+      browseSearch,
       browseControls,
       browseChips,
       ['The result count', 'No count at all: the fetch never returned, and a "0" would read as the empty state. Sort is dropped.'],
@@ -452,6 +456,7 @@
       browseNav
     ]},
     'race-browse-loading.html': { job: BROWSE_JOB + ' Loading state.', zones: [
+      browseSearch,
       browseControls,
       browseChips,
       ['The result count', 'A gray bar holds the count\'s place until the fetch returns, so the row doesn\'t reflow. Sort stays visible but disabled.'],

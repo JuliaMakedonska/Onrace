@@ -102,9 +102,9 @@ What Onrace can and can't observe, stated the same way as the registration-link 
 flowchart LR
     Start(("App opens")) --> Browse["Race browse"]
     Browse --> Loading("Loading: fetching races")
-    Loading --> HasResults{"Any races match current filters?"}
-    HasResults -->|"no"| Empty("Empty: no races match current filters")
-    Empty -->|"adjusts filters"| Browse
+    Loading --> HasResults{"Any races match current filters and search?"}
+    HasResults -->|"no"| Empty("Empty: no races match current filters or search")
+    Empty -->|"adjusts filters or search"| Browse
     Empty -->|"gives up"| DeadEnd1(("Dead end: leaves without deciding on a race"))
     HasResults -->|"yes"| Browse
     Loading -->|"connection fails"| FetchError("Error: could not load races")
@@ -112,6 +112,7 @@ flowchart LR
     FetchRetry -->|"yes"| Loading
     FetchRetry -->|"no"| DeadEnd1
     Browse -->|"changes region/date/sport filters"| Loading
+    Browse -->|"searches by race name or city"| Loading
     Browse -->|"taps a race card or pin"| DetailLoading("Loading: fetching race details")
     DetailLoading -->|"loads successfully"| Detail["Race detail"]
     DetailLoading -->|"connection fails"| DetailError("Error: could not load race details")
@@ -129,7 +130,7 @@ flowchart LR
 ```
 
 **Decisions:**
-- *Any races match current filters?* — branches between showing results and the empty state.
+- *Any races match current filters and search?* — branches between showing results and the empty state. Since 2026-09-30 the search (race name or city, `jtbd.md` → Hypothesis 7 `[?]`) narrows together with the filters. A search is a filter change like any other: it runs the same loading step and ends in the same two branches.
 - *Retry?* (after a race-list fetch fails) — genuine choice between trying the same fetch again or giving up.
 - *Retry?* (after a race-detail fetch fails) — same choice, one level down, for opening a specific race.
 - *Worth entering?* — on Race detail, this is where the job's own "so that I can compare them in one place" actually resolves into a decision.
@@ -138,7 +139,7 @@ flowchart LR
 **States:**
 - Loading: fetching races (the list).
 - Loading: fetching race details (a single race — its own step, no longer skipped or folded into the list's loading state).
-- Empty: no races match the current filters.
+- Empty: no races match the current filters or search (when a search is active, the message names it).
 - Error: could not load races (list fetch/connection failure).
 - Error: could not load race details (detail fetch/connection failure).
 - Error: couldn't open registration link — a missing/malformed `registration_url`, or the new tab being blocked (the only failures a browser can detect; added — lighter-weight than the source-link failure in the Retrieve Proof flow, per the data-provenance reasoning above; no retry loop — a direct back-edge to Race detail, or a distinct give-up outcome, `DeadEnd6`, kept separate from `DeadEnd1`).

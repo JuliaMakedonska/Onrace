@@ -41,6 +41,7 @@ The set of facets a person narrows the race catalog by.
 - region
 - date (range)
 - sport_type
+- text search: race name or city (added 2026-09-30, `jtbd.md` → Hypothesis 7 `[?]`). It narrows together with the facets above, and it's the same scope as Race picker's search over the same race catalog.
 
 **Job:** Main Job 1 — Discovery, directly ("across countries, formats, and dates"). Also Related Job 1 (format-driven planning) and Related Job 2 (location-driven planning) — `jtbd.md` ties these two related jobs to filtering by sport_type and by region/location respectively.
 
@@ -136,8 +137,10 @@ Onrace (app — not a separate screen or job-closing destination; Race browse is
 │   │     (jtbd.md); + Related Job 1 (plan season by format); + Related Job 2
 │   │     (choose races by location).
 │   │     Persona: Primary (core) + Secondary — Season Planner (core, Related Job 2).
+│   │     Search (2026-09-30): a field under the large title, by race name or
+│   │     city, combined with the filters (jtbd.md → Hypothesis 7 [?]).
 │   │     States (not separate screens): loading · no races match current
-│   │     filters · fetch error.
+│   │     filters or search · fetch error.
 │   │
 │   └── Race detail
 │         Job: Main Job 1 (jtbd.md: "...so that I can compare them in one
