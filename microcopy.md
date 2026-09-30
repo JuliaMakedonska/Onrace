@@ -33,7 +33,7 @@ From `CLAUDE.md` → Data model. The only free-text a person types are these. On
 | `official_result_url` | Log result → Official result link | Result detail (URL text), the domain in "Self-reported · via <domain>", "Open official result on <domain>" |
 | `name` (profile) | Profile → Name | Profile identity, initials, "Couldn't save — back to <name>." |
 | email | Sign in / Sign up → Email (and Reset password) | Profile, Check inbox lines ("We sent a link to <email>") |
-| search text | Race picker → search | "No catalog race matches “<search text>”" |
+| search text | Race picker → search, Race browse → search | "No past races match “<search text>”" (Race picker), "No races match “<search text>”" (Race browse) |
 
 `date` and `sport_type` are picked from controls, and country and language from lists, so they're reference data rather than free text. There's no `notes` or `category` field (both were cut, `CLAUDE.md` → Data model), so a logged result has no other free text.
 
@@ -343,7 +343,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 266 |Race picker|modal top bar|Find a race| unchanged | Checked against voice.md; already follows it |heading|empty; error; loading; base|UI copy||
 | 267 |Race picker|search|Search past races by name or city| **Search races by name or city** | Dictionary (search): the same label as Race browse, same search over the same catalog |field label|empty; error; loading; base|UI copy||
 | 268 |Race picker|search|Race name or city| unchanged | Checked against voice.md; already follows it |field placeholder|empty; error; loading; base|UI copy||
-| 269 |Race picker|empty state|No catalog race matches “<search text>”| unchanged | Checked against voice.md; already follows it |heading|empty|UI copy|T4|
+| 269 |Race picker|empty state|No catalog race matches “<search text>”| **No past races match “<search text>”** | T4 ("catalog race" isn't used); same sentence shape as Race browse's "No races match “…”" (mismatch #3); "past" because the picker lists only past races |heading|empty|UI copy|T4|
 | 270 |Race picker|empty state|The catalog only lists races that have already happened, and it may not have this one yet. Try another name or city, or type the race in yourself.| **Only past races in the race catalog appear here, and this one may not be in it yet. Check the spelling, try the city instead of the race name, or type the race in yourself.** | T4: "race catalog"; T4, plus "past" (principle 1: the picker lists only past races) |state message|empty|UI copy||
 | 271 |Race picker|empty state|Type it in instead| unchanged | Checked against voice.md; already follows it |button|empty|UI copy||
 | 272 |Race picker|(page)|Onrace — Race picker, error state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|error|wireframe annotation|P1|
@@ -356,7 +356,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 279 |Race picker|loading|Loading past races from the Onrace catalog…| **Loading past races…** | T4: "race catalog"; Loading rule: name what's loading, briefly |status (a11y / live)|loading|UI copy|T4|
 | 280 |Race picker|(page)|Onrace — Race picker (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|base|wireframe annotation|P1|
 | 281 |Race picker|past races|Past races in the Onrace catalog| **Past races in the race catalog** | T4: "race catalog" |helper text|base|UI copy|T4|
-| 282 |Race picker|past races|Past races in the Onrace catalog matching “<search text>”| unchanged | Checked against voice.md; already follows it |helper text|base|UI copy|T4|
+| 282 |Race picker|past races|Past races in the Onrace catalog matching “<search text>”| **Past races in the race catalog matching “<search text>”** | T4: "race catalog" |helper text|base|UI copy|T4|
 | 283 |Race picker|past races|Past catalog races| **Past races in the race catalog** | T4: "race catalog" |a11y label|base|UI copy|T4|
 | 284 |Race picker|past races|UTMB — Ultra-Trail du Mont-Blanc| unchanged | Not ours to rewrite: catalog data |heading|base|catalog data||
 | 285 |Race picker|past races|Ultra| unchanged | Not ours to rewrite: catalog data |body text (in tappable row)|base|catalog data||
@@ -470,11 +470,11 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 393 | Sign in / Sign up | Sign in \| Create account | Sign in |  |  | button | error; loading; base | UI copy |  |
 | 394 | Sign in / Sign up | Sign in \| Create account | Create account |  |  | button | error; loading; base | UI copy | T5 A2 |
 | 395 |Sign in / Sign up|inline alert|Couldn't sign you in| **Couldn’t sign you in** | C3 curly apostrophe |heading|error (cause=signin,mode=signin)|UI copy||
-| 396 |Sign in / Sign up|inline alert|Check your email and password and try again. If they're right, check your connection.| **The email or password didn’t match, or the connection dropped. Check both and try again.** | Error rule: what happened / why (possibilities) / what to do (voice.md's own example); C3 |state message|error (cause=signin,mode=signin)|UI copy||
+| 396 |Sign in / Sign up|inline alert|Check your email and password and try again. If they're right, check your connection.| **The email or password didn’t match, or the connection dropped. Check your email and password, then try again.** | Error rule; "Check both" was ambiguous next to three causes (mismatch #5) |state message|error (cause=signin,mode=signin)|UI copy||
 | 397 |Sign in / Sign up|inline alert|Couldn't create your account| **Couldn’t create your account** | C3 curly apostrophe |heading|error (cause=signup,mode=signup)|UI copy|T5|
 | 398 |Sign in / Sign up|inline alert|This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you're connected, then try again.| **This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you’re connected, then try again.** | C3 curly apostrophe |state message|error (cause=signup,mode=signup)|UI copy|T5|
 | 399 |Sign in / Sign up|credentials form|Email| unchanged | Checked against voice.md; already follows it |field label|error|UI copy||
-| 400 |Sign in / Sign up|credentials form|you@example.com| unchanged | Checked against voice.md; already follows it |field placeholder|error|UI copy||
+| 400 |Sign in / Sign up|credentials form|you@example.com| **e.g. you@example.com** | Form field rule: a placeholder example is marked "e.g." (mismatch #4) |field placeholder|error|UI copy||
 | 401 |Sign in / Sign up|inline alert|maya.rossi@example.com| unchanged | Not ours to rewrite: user-written |field value (prefilled)|error|user-written||
 | 402 |Sign in / Sign up|credentials form|Password| unchanged | Checked against voice.md; already follows it |field label|error|UI copy||
 | 403 |Sign in / Sign up|under the password field|At least 8 characters.| unchanged | Checked against voice.md; already follows it |helper text|error (mode=signup); loading (mode=signup); base (mode=signup)|UI copy||
@@ -484,7 +484,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 407 |Sign in / Sign up|under the password field|We'll email you a link to confirm your address.| **We’ll send a link to confirm your email.** | T6: "email", not "address"; C3 |helper text|error (mode=signup); loading (mode=signup); base (mode=signup)|UI copy|T6|
 | 408 |Sign in / Sign up|(page)|Onrace — Sign in / Sign up, loading state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|loading|wireframe annotation|P1|
 | 409 |Sign in / Sign up|credentials form|Email| unchanged | Checked against voice.md; already follows it |field label|loading; base|UI copy||
-| 410 |Sign in / Sign up|credentials form|you@example.com| unchanged | Checked against voice.md; already follows it |field placeholder|loading; base|UI copy||
+| 410 |Sign in / Sign up|credentials form|you@example.com| **e.g. you@example.com** | Form field rule: a placeholder example is marked "e.g." (mismatch #4) |field placeholder|loading; base|UI copy||
 | 411 |Sign in / Sign up|credentials form|maya.rossi@example.com| unchanged | Not ours to rewrite: user-written |field value (prefilled)|loading|user-written||
 | 412 |Sign in / Sign up|credentials form|Password| unchanged | Checked against voice.md; already follows it |field label|loading; base|UI copy||
 | 413 |Sign in / Sign up|credentials form|••••••••| unchanged | Checked against voice.md; already follows it |field placeholder|loading|UI copy||
@@ -510,31 +510,31 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 433 |Reset password|inline alert|Couldn't send the reset link| **Couldn’t send the reset link** | C3 curly apostrophe |heading|error (cause=request)|UI copy||
 | 434 |Reset password|inline alert|Check your connection and try again.| **The connection may have dropped. Check it, then try again.** | Error rule: adds the missing "why", as a possibility (principle 1), in the Race browse sample's words |state message|error (cause=request)|UI copy||
 | 435 |Reset password|inline alert|Too many requests| unchanged | Checked against voice.md; already follows it |heading|error (cause=rate)|UI copy||
-| 436 |Reset password|inline alert|Wait a minute, then try again.| **Onrace limits how often a reset link can be sent. Wait a minute, then send a new link.** | Error rule: what happened / why / what to do (voice.md's own example); T6: "reset link" |state message|error (cause=rate)|UI copy||
+| 436 |Reset password|inline alert|Wait a minute, then try again.| **Onrace limits how often a reset link can be sent. Wait a minute, then send the reset link again.** | Error rule; matches the "Send reset link" button right below it (mismatch #1) |state message|error (cause=rate)|UI copy||
 | 437 |Reset password|request form|Email| unchanged | Checked against voice.md; already follows it |field label|error|UI copy||
-| 438 |Reset password|request form|you@example.com| unchanged | Checked against voice.md; already follows it |field placeholder|error|UI copy||
+| 438 |Reset password|request form|you@example.com| **e.g. you@example.com** | Form field rule: a placeholder example is marked "e.g." (mismatch #4) |field placeholder|error|UI copy||
 | 439 |Reset password|inline alert|maya.rossi@example.com| unchanged | Not ours to rewrite: user-written |field value (prefilled)|error|user-written||
 | 440 |Reset password|request form|Send reset link| unchanged | Checked against voice.md; already follows it |button|error|UI copy||
 | 441 |Reset password|(page)|Onrace — Reset password, loading state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|loading|wireframe annotation|P1|
 | 442 |Reset password|request form, submitted|Email| unchanged | Checked against voice.md; already follows it |field label|loading|UI copy||
-| 443 |Reset password|request form, submitted|you@example.com| unchanged | Checked against voice.md; already follows it |field placeholder|loading|UI copy||
+| 443 |Reset password|request form, submitted|you@example.com| **e.g. you@example.com** | Form field rule: a placeholder example is marked "e.g." (mismatch #4) |field placeholder|loading|UI copy||
 | 444 |Reset password|request form, submitted|maya.rossi@example.com| unchanged | Not ours to rewrite: user-written |field value (prefilled)|loading|user-written||
 | 445 |Reset password|request form, submitted|Sending…| unchanged | Checked against voice.md; already follows it |button|loading|UI copy||
 | 446 |Reset password|status|Sending the reset link…| unchanged | Checked against voice.md; already follows it |status (a11y / live)|loading|UI copy||
 | 447 |Reset password|(page)|Onrace — Reset password (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|base|wireframe annotation|P1|
 | 448 |Reset password|request form|Email| unchanged | Checked against voice.md; already follows it |field label|base|UI copy||
-| 449 |Reset password|request form|you@example.com| unchanged | Checked against voice.md; already follows it |field placeholder|base|UI copy||
+| 449 |Reset password|request form|you@example.com| **e.g. you@example.com** | Form field rule: a placeholder example is marked "e.g." (mismatch #4) |field placeholder|base|UI copy||
 | 450 |Reset password|request form|Send reset link| unchanged | Checked against voice.md; already follows it |button|base|UI copy||
 | 451 |New password|(page)|Onrace — New password, error state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|error|wireframe annotation|P1|
 | 452 |New password|top bar|Sign in| unchanged | Checked against voice.md; already follows it |button (nav)|error; loading; base|UI copy|A4|
 | 453 |New password|top bar|New password| unchanged | Checked against voice.md; already follows it |heading|error; loading; base|UI copy||
 | 454 |New password|expired link|This reset link has expired| unchanged | Checked against voice.md; already follows it |heading|error (cause=expired)|UI copy||
-| 455 |New password|expired link|Reset links work once and only for a short time, so this one has expired or was already used. Request a new link and we'll email you a fresh one.| **Each link works once and expires after a while. This one has expired or was already used. Send a new link and we’ll email it to you.** | A1: always "Send a new link"; C2: one expiry sentence everywhere; C3 |body text|error (cause=expired)|UI copy|A1 C2|
-| 456 |New password|expired link|Request a new link| **Send a new link** | A1: always "Send a new link" |button|error (cause=expired)|UI copy|A1|
+| 455 |New password|expired link|Reset links work once and only for a short time, so this one has expired or was already used. Request a new link and we'll email you a fresh one.| **Each link works once and expires after a while. This one has expired or was already used. Reset your password again to get a new one.** | C2, C3; A1 revised: this page doesn't send a link itself, so it points to the reset instead |body text|error (cause=expired)|UI copy|A1 C2|
+| 456 |New password|expired link|Request a new link| **Reset password again** | A1 (revised 2026-09-30): the tap opens Reset password, where "Send reset link" does the sending |button|error (cause=expired)|UI copy|A1|
 | 457 |New password|what this is|Choose a new password for your Onrace account.| unchanged | Checked against voice.md; already follows it |helper text|error; loading; base|UI copy|T5|
 | 458 |New password|save error|Couldn't save your new password| **Couldn’t save your new password** | C3 curly apostrophe |heading|error (cause=submit)|UI copy||
-| 459 |New password|save error|Your password wasn't changed. Check your connection, enter it again and tap Save new password. If this reset link has timed out, you'll need a new one.| **Your password wasn’t changed. The connection may have dropped, or this reset link may have expired. Check your connection, enter your new password again and tap Save new password. If it still won’t save, send a new link.** | Error rule: adds the missing "why", as a possibility (principle 1), in the Race browse sample's words; C3 |state message|error (cause=submit)|UI copy||
-| 460 |New password|save error|Request a new link| **Send a new link** | A1: always "Send a new link" |button|error (cause=submit)|UI copy|A1|
+| 459 |New password|save error|Your password wasn't changed. Check your connection, enter it again and tap Save new password. If this reset link has timed out, you'll need a new one.| **Your password wasn’t changed. The connection may have dropped, or this reset link may have expired. Check your connection, enter your new password again and tap Save new password. If it still won’t save, reset your password again.** | Error rule (why as a possibility, then what to do); A1 revised |state message|error (cause=submit)|UI copy||
+| 460 |New password|save error|Request a new link| **Reset password again** | A1 (revised 2026-09-30): the tap opens Reset password, where "Send reset link" does the sending |button|error (cause=submit)|UI copy|A1|
 | 461 |New password|new password form|New password| unchanged | Checked against voice.md; already follows it |field label|error|UI copy||
 | 462 |New password|new password form|Use at least 8 characters.| unchanged | Checked against voice.md; already follows it |state message|error (cause=short)|UI copy||
 | 463 |New password|new password form|That's your current password. Choose a different one.| **That’s your current password. Choose a different one.** | C3 curly apostrophe |state message|error (cause=same)|UI copy||

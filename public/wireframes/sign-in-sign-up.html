@@ -7,12 +7,12 @@
 <style>
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
      no custom fonts, no shadows, no content icons (system-chrome glyphs
-     only, and this screen needs none: Close is a text button). Deferred per
+     only, and this screen needs none: Cancel is a text button). Deferred per
      _conventions.md § 7. Bare screen (_conventions.md § 1): index.html
      provides the device frame and nav tree.
 
      Gate, not a place (_conventions.md § 1, "Gates are modals, not
-     drill-downs"): a full-screen modal. The top bar holds Close on the left
+     drill-downs"): a full-screen modal. The top bar holds Cancel on the left
      (text, no chevron) and the title; there is never a "‹ Back" and never
      the global tab bar. The one action (Sign in / Create account) sits at
      the end of the form, in the flow of the content: no sticky bottom bar,
@@ -60,7 +60,7 @@
   a { color: var(--ink); }
   [hidden] { display: none !important; }
 
-  /* --- modal top bar: Close (leading, text button) + centered title.
+  /* --- modal top bar: Cancel (leading, text button) + centered title.
      iOS navigation bar metrics; system chrome = system font. --- */
   .top-bar {
     font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -252,7 +252,7 @@
         <fieldset>
           <div class="field">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required>
+            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required>
           </div>
           <div class="field">
             <label for="password">Password</label>

@@ -14,12 +14,12 @@
 
   /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
      no custom fonts, no shadows, no content icons (system-chrome glyphs
-     only, and this screen needs none: Close is a text button). Deferred per
+     only, and this screen needs none: Cancel is a text button). Deferred per
      _conventions.md § 7. Bare screen (_conventions.md § 1): index.html
      provides the device frame and nav tree.
 
      Gate, not a place (_conventions.md § 1, "Gates are modals, not
-     drill-downs"): a full-screen modal. The top bar holds Close on the left
+     drill-downs"): a full-screen modal. The top bar holds Cancel on the left
      (text, no chevron) and the title; there is never a "‹ Back" and never
      the global tab bar. The actions sit in the flow of the content: no
      sticky bottom bar. The body is a flex
@@ -65,7 +65,7 @@
   a { color: var(--ink); }
   [hidden] { display: none !important; }
 
-  /* --- modal top bar: Close (leading, text button) + centered title.
+  /* --- modal top bar: Cancel (leading, text button) + centered title.
      iOS navigation bar metrics; system chrome = system font. --- */
   .top-bar {
     font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -106,7 +106,7 @@
 
   .gate { padding: 20px 16px 32px; }
   /* --- Check inbox: a heading, the line naming the address, then the two
-     things the person can do here. Resend is a secondary (outlined) button:
+     things the person can do here. "Send a new link" is a secondary (outlined) button:
      the step's real action, opening the email, happens outside the app. --- */
   .inbox-heading { margin: 0 0 8px 0; font-size: 1.35rem; font-weight: 700; }
   .inbox-line { margin: 0 0 24px 0; color: var(--ink); }
@@ -244,7 +244,7 @@
   document.getElementById('different-email').setAttribute('href',
     'sign-in-sign-up.html?mode=signup' + (next ? '&next=' + encodeURIComponent(next) : ''));
 
-  // Resend: Sending… (Resending) → Sent (back at CheckInbox).
+  // Send a new link: Sending… (Resending) → Sent (back at CheckInbox).
   var btn = document.getElementById('resend');
   var sent = document.getElementById('sent-note');
   function show(attr, value) {

@@ -557,7 +557,7 @@
     'race-picker-empty.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Empty: no catalog race matches.', zones: [
       ['Top bar', 'Cancel is a second way back to the form, values kept.'],
       ['Search', 'Still holds the query. Changing it and searching again is "changes the search".'],
-      ['No match', '"No past race in the race catalog matches “…”" says why a race might be missing (only past races, hand-curated catalog). "Type it in instead" returns to the form with every value kept.'] ] },
+      ['No match', '"No past races match “…”" says why a race might be missing (only past races, hand-curated catalog). "Type it in instead" returns to the form with every value kept.'] ] },
     'race-picker-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Error: could not load the race catalog.', zones: [
       ['Top bar', 'Cancel returns to the form, like "Type it in instead".'],
       ['Search', 'Keeps the query that failed.'],
@@ -638,7 +638,7 @@
       ['Locked form', 'Masked placeholder dots (no password reached this page), button "Saving…". Reached through the flow: offline or &fail=1 → couldn\'t save; &same=1 → same password; otherwise Sign in with "Password changed", the recovery session ended.'] ] },
     'new-password-error.html': { job: 'Infrastructure — no job; Flow 6 password reset. Error: couldn\'t save the new password.', zones: [
       ['Top bar', '"‹ Sign in" is also the give-up exit.'],
-      ['Save error', '"Couldn\'t save your new password" at the top of the form: a dropped connection or an expired recovery session. Save retries; "Send a new link" goes to Reset password.'],
+      ['Save error', '"Couldn\'t save your new password" at the top of the form: a dropped connection or an expired recovery session. Save retries; "Reset password again" goes to Reset password.'],
       ['New password form', 'The fields come back empty, because passwords are never carried. Save runs the same checks again.'] ] },
     'new-password-error.html?cause=short': { job: 'Infrastructure — no job; Flow 6 password reset. Error: too short.', zones: [
       ['Top bar', '"‹ Sign in" is the give-up exit.'],
@@ -651,7 +651,7 @@
       ['New password form', 'Inline under New password: "That\'s your current password. Choose a different one." Supabase refuses the current password.'] ] },
     'new-password-error.html?cause=expired': { job: 'Infrastructure — no job; Flow 6 password reset. Error: reset link expired or already used.', zones: [
       ['Top bar', '"‹ Sign in" still returns to Sign in.'],
-      ['Expired link', '"This reset link has expired": links work once, for a short time. No form, because there\'s no recovery session. The one action, "Send a new link", goes to Reset password.'] ] }
+      ['Expired link', '"This reset link has expired": links work once, for a short time. No form, because there\'s no recovery session. The one action, "Reset password again", goes to Reset password.'] ] }
   };
 
   function renderNotes(key) {

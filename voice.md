@@ -149,7 +149,8 @@ One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1�
 
 | Action | Use | Not | Why | Resolves |
 |---|---|---|---|---|
-| Get a fresh emailed link (confirmation or reset) | **Send a new link** | ~~Resend email~~, ~~Resend link~~, ~~Request a new link~~, ~~send a new one~~ | One action, one label, on all four surfaces (sign-up Check inbox, reset Check inbox, expired confirmation, expired reset). "New" is the accurate word: each link "works once" (`flows.md` Flows 4 and 6), so a person needs a new link, not the old email again. | A1 |
+| Get a fresh emailed link (confirmation or reset) | **Send a new link**, only where the tap actually sends one (sign-up Check inbox, reset Check inbox, expired confirmation) | ~~Resend email~~, ~~Resend link~~, ~~Request a new link~~, ~~send a new one~~ | One action, one label. "New" is the accurate word: each link "works once" (`flows.md` Flows 4 and 6), so a person needs a new link, not the old email again. Revised 2026-09-30: a button that only *leads to* a form (New password → Reset password) doesn't send anything, so it can't say "Send" (Button rule: name the result of the tap). See the next row. | A1 |
+| Start a password reset over (from New password, when the link expired or the save failed) | **Reset password again** | ~~Send a new link~~ (it opens the Reset password form; the send happens there, on "Send reset link") | The label names where the tap goes and what happens next. The Reset password form's own button, **Send reset link**, then does the sending. | A1 |
 | Create an Onrace account | **Create account** | ~~Sign up~~, ~~Register~~ | Already the button and toggle label. "Sign up" stays a doc name only (`sitemap.md` → "Sign in / Sign up") and never appears in the UI. | A2 |
 | Enter a race, on the organiser's site | **Register** ("Register on hyrox.com"), and **registration** | ~~sign-up~~, ~~sign up~~ | `CLAUDE.md` → `registration_url`, and "Race registration/payment handling" is out of scope. Registering is the organiser's word for entering a race. "Sign-up and payment happen there" becomes "Registration and payment happen there". Then "sign up" never means two things. | A2 |
 | Sign in / out | **Sign in**, **Sign out** | ~~Log in~~, ~~Log out~~, ~~Login~~ | Already consistent. "Log" is reserved for results ("Log result"), so it never means signing in. | — |
@@ -209,6 +210,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 | **Register on hyrox.com** · **Log result** · **Send a new link** · **Save new password** · **Find in race catalog** · **Clear all filters** | ~~OK~~ · ~~Next~~ · ~~Submit~~ · ~~Continue~~ · ~~Yes~~ · ~~Click here~~ · ~~Register now~~ |
 
 - **Short visible label, full accessible name:** "Try again" inside "Couldn’t load races" is announced as "Try loading races again". The nav-bar "Save" beside "Log result" is announced as "Save result". "Dismiss" is announced as "Dismiss this message".
+- **Known gap (2026-09-30):** none of the wireframe pages carries these accessible names yet: "Try again" (six screens), the nav-bar "Save" on Log result, and "Dismiss". Adding them means adding `aria-label` attributes, which the text-only copy passes didn't allow. They're left for one dedicated markup pass across all screens (`wireframes/_critique.md` #10).
 - **Check:**
   - Principle 2: a button that leaves Onrace names its destination ("Register on hyrox.com", "Open official result on berlin.r.mikatiming.com").
   - Dictionary: verbs are the chosen ones (Log, Register, Send a new link, Cancel, Dismiss, Try again).
@@ -228,14 +230,14 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 
 ### Form field
 
-**Rule:** the **label** says what to enter, the **hint** says how (format, or where to find it), and the **validation error** says exactly what to fix, in one sentence, next to the field. A **placeholder** is an example marked "e.g.", never a real-looking value and never a stand-in for the label.
+**Rule:** the **label** says what to enter, the **hint** says how (format, or where to find it), and the **validation error** says exactly what to fix, in one sentence, next to the field. A **placeholder** is an example marked "e.g.", never a real-looking value and never a stand-in for the label. **One exception (2026-09-30): a search field's placeholder is a plain prompt** that names what can be searched ("Race name or city"), not an example, because any one example would suggest the search only takes that kind of value. The same words are used on every search over the same data (Race browse and Race picker).
 
 | Part | Onrace example | Not |
 |---|---|---|
 | Label | **Official result link** · **Finish time** · **Race date** | ~~Source link~~ · ~~Time~~ · ~~Date~~ |
 | Hint | "Paste the link from the official timing site. Elite races ask for exactly this." · "Hours:minutes:seconds, exactly as the official results show it." | ~~Enter a valid URL~~ · ~~Required~~ |
 | Error | "Add your finish time, e.g. 3:12:48." · "Use at least 8 characters." | ~~Invalid input~~ · ~~This field is required~~ · ~~You forgot the finish time~~ |
-| Placeholder | "e.g. 3:12:48" · "e.g. Berlin Marathon" | ~~https://berlin.r.mikatiming.com/2025/~~ (reads as filled in, flag P2) |
+| Placeholder | "e.g. 3:12:48" · "e.g. Berlin Marathon" · "e.g. you@example.com" | ~~https://berlin.r.mikatiming.com/2025/~~ (reads as filled in, flag P2) · ~~you@example.com~~ (an example without "e.g.") |
 
 - **Required vs optional:** mark only what's optional ("Optional", on Find in race catalog). Required fields carry no tag, and the hint explains why a field matters (Dictionary, C4).
 - **Check:**
@@ -250,7 +252,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 | Onrace example | Not |
 |---|---|
 | "**No races match your current filters.** Remove a filter above, or try a wider date range." · [**Clear all filters**] [**Loosen filters**] | ~~Nothing here yet 😕~~ · ~~No data~~ · ~~Oops, no results!~~ |
-| "**No results in your results archive yet.** Each result you log keeps its official result link, ready when an elite race asks for proof." · [**Log your first result**] | ~~Start your journey!~~ · ~~Your archive is empty~~ (no next step) |
+| "**No results logged yet.** Keep your official race results here." · [**Log your first result**] (why the official result link matters is explained on Log result, where it applies) | ~~Start your journey!~~ · ~~Your archive is empty~~ (no next step) |
 
 - **Check:**
   - Principle 1: the reason given is the one Onrace knows (the filters, the empty archive).
@@ -265,7 +267,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 | Onrace example | Not |
 |---|---|
 | "**Couldn’t open the link.** It didn’t open in a new tab; your browser may have blocked it. Try again, or come back to this race later." | ~~The timing site is down.~~ (a claim Onrace can’t check) |
-| "**Couldn’t sign you in.** The email or password didn’t match, or the connection dropped. Check both and try again." | ~~You entered the wrong password.~~ · ~~Invalid credentials.~~ |
+| "**Couldn’t sign you in.** The email or password didn’t match, or the connection dropped. Check your email and password, then try again." | ~~You entered the wrong password.~~ · ~~Invalid credentials.~~ |
 | "**Too many requests.** Onrace limits how often a reset link can be sent. Wait a minute, then send a new link." | ~~Oops! Something went wrong.~~ · ~~Error 429~~ |
 | Field-level: "Add the official result link. It’s the proof this result is yours." | ~~You didn’t add a link!~~ |
 

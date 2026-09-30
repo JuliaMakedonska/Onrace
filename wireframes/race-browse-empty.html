@@ -201,7 +201,7 @@
   /* --- active filter chips: shared, identical in both views, between the
      control row and the divider. One row only — overflows sideways with its
      own horizontal scroll instead of wrapping, so the sticky block's height
-     stays fixed however many filters are on. "Clear all" sits outside the
+     stays fixed however many filters are on. "Clear all filters" sits outside the
      scrolling list so it's always visible, never scrolled off the end. --- */
   .chips-bar {
     display: flex;
@@ -475,7 +475,7 @@
         </div>
 
         <!-- ZONE: active filter chips — one removable chip per active facet,
-             plus "Clear all". Hidden here: no filters are applied in this
+             plus "Clear all filters". Hidden here: no filters are applied in this
              default state. Removing a chip is a filter change, which in the
              real app re-runs the fetch (flows.md: filter change → Loading);
              the wireframe only removes the chip and resets the matching
@@ -503,9 +503,9 @@
           <!-- ZONE: empty state (_screens.md → Race browse → Empty; flows.md
                HasResults → "no" → Empty). A legitimate data state, not an
                error — so no retry. Exits are all "adjusts filters" (loops
-               back to Browse): the one-tap fixes are a chip's × or Clear all
-               (in the chips bar, and repeated here as "Clear all filters");
-               "Loosen filters" reopens the drawer with the current selections
+               back to Browse): the one-tap fixes are a chip's × or "Clear all filters"
+               (in the chips bar, and repeated here);
+               "Change filters" reopens the drawer with the current selections
                still set, for a finer adjustment. "Gives up" (DeadEnd1) is just
                leaving via the bottom nav — no button needed. -->
           <div class="state-message" role="status">

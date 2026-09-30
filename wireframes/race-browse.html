@@ -197,7 +197,7 @@
   /* --- active filter chips: shared, identical in both views, between the
      control row and the divider. One row only — overflows sideways with its
      own horizontal scroll instead of wrapping, so the sticky block's height
-     stays fixed however many filters are on. "Clear all" sits outside the
+     stays fixed however many filters are on. "Clear all filters" sits outside the
      scrolling list so it's always visible, never scrolled off the end. --- */
   .chips-bar {
     display: flex;
@@ -480,7 +480,7 @@
         </div>
 
         <!-- ZONE: active filter chips — one removable chip per active facet,
-             plus "Clear all". Hidden here: no filters are applied in this
+             plus "Clear all filters". Hidden here: no filters are applied in this
              default state. Removing a chip is a filter change, which in the
              real app re-runs the fetch (flows.md: filter change → Loading);
              the wireframe only removes the chip and resets the matching
