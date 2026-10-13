@@ -234,7 +234,7 @@ Lesson 6 steps 5–6 forbid changing screen text and structure, so these wait.
 
 - **HARD-tier app UI.** The HARD tier is covered only by marketing sites, App Store screenshots and web pages (§ 4b), all from 2026-09-02. The real in-app UI of RoxFit and RoxConnect hasn't been seen beyond website mockups.
 - **Visual-only techniques untested.** The reduced date column (`display: contents`, `::first-line`) is **[?]** until it's tried in the wireframe CSS.
-- **Light vs. dark.** The brief says dark. Three of the four Mobbin references are light-first, and the one dark one (Letterboxd) is a film app. Among the five hybrid-racing products (§ 4b), three are dark. Not decided.
+- **Light vs. dark: decided, dark.** It's the designer's decision (see `concept.md` → Designer's taste), not inherited from the brief or the artifact pages. For the record: three of the four Mobbin references are light-first, and three of the five hybrid-racing products (§ 4b) are dark.
 - **Exact values.** Every hex is [~] from compressed previews, and every typeface is [?]. Nothing here is a token.
 - **Accent color.** None of the references' brand accents are taken (Strava orange, LinkedIn blue/green, Letterboxd green/orange, and in § 4b RoxFit yellow and fitnessracingcalendar lime). Only the specific artifact-page values are banned, so Onrace's accent, orange included, is an open taste decision.
 - **Untested persona links.** Whether the date-first card actually helps the personas is **[?]**. No user research exists (`personas.md`, opening note).

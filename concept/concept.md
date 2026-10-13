@@ -59,7 +59,7 @@ The format is the most visible label on a card: a small uppercase chip with a hi
 - **Technique:** the format as a small uppercase chip with a high-contrast fill, from fitnessracingcalendar and RoxFit (`references.md` § 4b; visual only, on the existing `.sport-tag`).
 - **Strength:** data for the jobs. **[?]** That the chip reads as "made for hybrid athletes" to real users is untested (`references.md` § 4b).
 - **Taste:** matches Like 2.
-- **Data and taste pull apart here, so you decide:** see Tension A below.
+- **Uppercase:** decided, CSS `text-transform` only, so the name in the markup stays as `voice.md` principle 4 requires (Tension A below).
 
 ### 4. Proof stated, not stamped
 
@@ -75,28 +75,36 @@ The source sits as its own quieter line under the claim ("Self-reported · via r
 
 ### 5. Intense, not aggressive
 
-Dark, high-contrast, bold type, with one accent on a few high-signal elements. The intensity comes from weight and contrast, not from alarm colors or a wall of saturation.
+Dark and high-contrast, with bold type. The intensity comes from weight, contrast and the format chip, not from alarm colors.
+- **The dark** has depth, but it isn't pure `#000` and it isn't "black plus one hot accent" (Tension C).
+- **How much color** varies across the step-3 directions, from restrained to rich (Tension D). It isn't fixed by this attribute.
 
 - **Data:**
   - `../CLAUDE.md` → Design / brand tone: "high-energy, athletic, performance-driven visual identity (dark, intense, bold typography)".
   - `../voice.md` → principle 3: "Plain words; the look carries the energy". Its counter-example is "Crush your next race."
 - **Technique:**
-  - the hybrid-racing set's color pattern, "color is one accent on small, high-signal elements, not a palette" (`references.md` § 4b, Tally)
-  - Strava's hierarchy without decoration (§ 4, Base)
-- **Strength:** data.
-- **Taste:** matches "Don't want: aggressive 'energy' red" and the dark theme.
-- **Data and taste pull apart here, so you decide:** see Tension B below.
+  - Strava's hierarchy without decoration (`references.md` § 4, Base)
+  - the format chip (§ 4b)
+  - the hybrid-racing set's range of color amount, from RoxFit's and RoxConnect's small accents to fitnessracingcalendar's and RoxMatchUp's heavier use (§ 4b)
+- **Strength:** data for "dark, intense, bold". **[?]** That type, contrast or the chip can carry the energy without red is a hypothesis; step 3 tests it (Tension B).
+- **Taste:**
+  - matches "Don't want: aggressive 'energy' red" and the dark theme
+  - takes RoxConnect's depth of dark, not its formula (Tension C)
 
 ---
 
-## Where data and taste pull apart (for the designer to decide)
+## Where data and taste pull apart (decided 2026-10-13)
 
 **A. Uppercase format chip vs. `voice.md` principle 4.** The taste wants the format chip in uppercase ("DEKA FIT"). Principle 4 asks for every format "by its own name … exactly". CSS uppercase leaves the markup text unchanged, but it renders "Half marathon" as "HALF MARATHON" and "Marathon" as "MARATHON". Is uppercase still "its own name"? The options:
 - uppercase every chip
 - uppercase only names that are already all caps (HYROX, DEKA, OCR), which would need a per-format rule
 - keep sentence case and get the chip's energy from fill and weight alone
 
+**Decision: keep the uppercase chip, via CSS `text-transform` only.** The format name in the markup stays exactly as `voice.md` principle 4 requires ("Half marathon"). Only the rendering is uppercase. This satisfies principle 4 because the name itself doesn't change.
+
 **B. "High-energy … in the spirit of HYROX/CrossFit branding" vs. "no aggressive energy red".** The brief asks for high energy and names HYROX/CrossFit as the spirit. The taste rules out aggressive red as the way to get there. These don't contradict each other, since the brief names no color. But it leaves the energy to type weight, contrast and the format chip, and step 3 has to show that this is enough. No research says whether athletes read energy from color or from type.
+
+**Decision: accepted as a hypothesis [?].** Step 3 is the test. Each of the three directions shows a different main source of energy (type, contrast, or the format chip), so the designer can judge in the browser whether that's enough without red.
 
 **C. RoxConnect: liked, but also an anti-reference.** The taste likes all five hybrid-racing products, RoxConnect included. `references.md` § 4b lists two of RoxConnect's traits as anti-references:
 - its big-number stat strip: copy, already banned by `voice.md`, so no visual conflict
@@ -104,13 +112,26 @@ Dark, high-contrast, bold type, with one accent on a few high-signal elements. T
 
 Is RoxConnect's pure-black base part of what's liked, or only its type and contrast?
 
+**Decision: the depth of RoxConnect's dark is liked, not its formula.** Onrace is dark, but not pure `#000`, and not "black plus one hot accent". The anti-reference in `references.md` § 4b stays as written.
+
 **D. How much color.** Most of the liked hybrid products keep color small (RoxFit, RoxConnect). fitnessracingcalendar puts lime on every chip and button, and RoxMatchUp spreads yellow across titles, tags and bubbles. Attribute 5 follows the "small, high-signal" majority. If the "strong visuals" you like include the louder ones, that's a range for step 3 to explore, not a rule yet.
+
+**Decision: a range for step 3.**
+- At least one direction is **restrained**: color only on the data and the format chip.
+- At least one direction is **rich**: closer to fitnessracingcalendar and RoxMatchUp.
+- Amount of color is one of the two required axes of difference (see the step 3 note).
 
 ---
 
 ## Note for step 3
 
-The theme is fixed as dark, so the three directions must differ on at least two of:
-- amount of color
-- type character
-- element shape
+The theme is fixed as dark, so the three directions must differ on at least two axes:
+- **Amount of color (required, Tension D).** At least one direction is restrained (color only on the data and the format chip), and at least one is rich (closer to fitnessracingcalendar and RoxMatchUp).
+- **And at least one of:** type character, or element shape.
+
+They must also differ in their **main source of energy**: one each from type, contrast and the format chip. That tests the hypothesis that energy works without red (Tension B, **[?]**).
+
+All three directions share:
+- **Dark with depth:** not pure `#000`, not "black plus one hot accent" (Tension C). No aggressive "energy" red.
+- **The uppercase format chip**, via CSS `text-transform` only (Tension A).
+- **The guardrail:** no artifact-page values (`#0b0c0e`, the `#ff4d2e` family), nothing from `src/style.css`, no wireframe grays.
