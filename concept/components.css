@@ -337,6 +337,105 @@
 .skeleton { border-radius: var(--radius-1); background: var(--bg-2); }
 .shadow-demo { padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); box-shadow: var(--shadow-sheet); color: var(--text-2); font-size: var(--size-proof); }
 
+/* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
+.controls { display: grid; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
+.control-row { display: flex; align-items: center; gap: var(--space-3); }
+.control-row .filters-trigger { flex: 1; }
+.filters-trigger::before {
+  content: "";
+  width: var(--icon-m);
+  height: var(--icon-m);
+  flex: none;
+  background: currentColor;
+  -webkit-mask: var(--icon-filters) center / contain no-repeat;
+  mask: var(--icon-filters) center / contain no-repeat;
+}
+
+/* active filter chips + "Clear all filters" (tertiary) */
+.chips-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.chips-row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.chips-bar[hidden] { display: none; }
+
+/* ---------- result count + sort ---------- */
+.results-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; font-size: var(--size-meta); color: var(--text-2); }
+.results-count { margin: 0; }
+.results-count strong { color: var(--text-1); font-weight: var(--weight-strong); }
+.sort-control { position: relative; display: flex; align-items: center; gap: var(--space-1); }
+.sort-control label { color: var(--text-2); }
+.sort-control select {
+  min-height: var(--target);
+  padding: 0 calc(var(--icon-s) + var(--space-1)) 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.sort-control::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  margin-top: calc(var(--icon-s) / -2);
+  background: var(--text-1);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
+.sort-control select:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.sort-control:has(select:disabled)::after { background: var(--text-disabled); }
+
+/* ---------- loading: skeleton race card (wireframe markup; photo band drawn by CSS) ---------- */
+.race-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.bar { border-radius: var(--radius-1); background: var(--bg-2); }
+.results-count .bar.count { display: inline-block; width: var(--skel-count-w); height: var(--skel-line); vertical-align: middle; }
+.skeleton-card {
+  display: grid;
+  grid-template-columns: var(--date-col) minmax(0, 1fr);
+  grid-template-areas: "photo photo" "date name" "date meta" "date loc";
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+}
+.skeleton-card::before { content: ""; grid-area: photo; aspect-ratio: var(--photo-ratio); border-radius: var(--radius-1); background: var(--bg-2); margin-bottom: var(--space-1); }
+.skeleton-card .skel-meta { display: contents; }
+.skeleton-card .bar.title { grid-area: name; width: var(--skel-title-w); height: var(--skel-title); }
+.skeleton-card .bar.tag { grid-area: meta; width: var(--skel-tag-w); height: var(--chip-height); }
+.skeleton-card .bar.date { grid-area: date; align-self: stretch; }   /* the empty date tile */
+.skeleton-card .bar.location { grid-area: loc; width: var(--skel-loc-w); height: var(--skel-line); margin-bottom: var(--space-1); }
+
+/* ---------- empty and error states: message + actions in the button hierarchy ---------- */
+.state-message { display: grid; gap: var(--space-2); justify-items: start; padding: var(--space-6) 0; }
+.state-message h2 {
+  margin: 0;
+  font-family: var(--font-text);   /* text face: not a screen title, not a key number (rule 4) */
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.state-message p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
+.state-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+.state-message[role="alert"] h2::before, .state-message.is-error h2::before {   /* error: one icon, in the error color; the stand uses .is-error so a static specimen isn't announced */
+  content: "";
+  display: inline-block;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin-right: var(--space-2);
+  vertical-align: text-bottom;
+  background: var(--error);
+  -webkit-mask: var(--icon-error) center / contain no-repeat;
+  mask: var(--icon-error) center / contain no-repeat;
+}
+
 /* =================================================================
    Stand layout (concept.html only). Tokens only, like everything above.
    ================================================================= */

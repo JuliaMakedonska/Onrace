@@ -61,16 +61,28 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Search field outline against its own fill (non-text, 3:1)', 'field-line', 'bg-1', 'ui'),
     ('Search field outline against the page (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
     ('Disabled button label', 'text-disabled', 'bg-2', 'exempt'),
+    ('Result count number', 'text-1', 'bg-0', 'text'),
+    ('Result count text, Sort: label', 'text-2', 'bg-0', 'text'),
+    ('Sort value (Soonest first)', 'text-1', 'bg-0', 'text'),
+    ('Sort chevron (non-text, 3:1)', 'text-1', 'bg-0', 'ui'),
+    ('Filters label and icon on the secondary button', 'text-1', 'bg-2', 'text'),
+    ('Empty and error state heading', 'text-1', 'bg-0', 'text'),
+    ('Empty and error state body', 'text-2', 'bg-0', 'text'),
+    ('Error icon in the state heading (non-text, 3:1)', 'error', 'bg-0', 'ui'),
+    ('Disabled sort while loading', 'text-disabled', 'bg-0', 'exempt'),
+    ('Skeleton bar on a card', 'bg-2', 'bg-1', 'info'),
+    ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
 ]
 rows, failures = [], []
 for label, fg, bg, kind in PAIRS:
     f, b = tok(fg), tok(bg)
     r = cr(f, b)
-    need = {'text': 4.5, 'large': 3.0, 'ui': 3.0, 'exempt': 0}[kind]
+    need = {'text': 4.5, 'large': 3.0, 'ui': 3.0, 'exempt': 0, 'info': 0}[kind]
     ok = r >= need
-    if kind != 'exempt' and not ok:
+    if kind not in ('exempt', 'info') and not ok:
         failures.append((label, r))
     verdict = ('<span class="exempt">exempt (disabled, WCAG 1.4.3)</span>' if kind == 'exempt'
+               else '<span class="exempt">no requirement (decorative placeholder, aria-hidden)</span>' if kind == 'info'
                else f'<span class="pass">pass</span> · needs {need:g}:1' if ok else f'<b>fail</b> · needs {need:g}:1')
     rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {f}</td>'
                 f'<td class="sample">{sw(bg)}<code>--{bg}</code> {b}</td><td class="num">{r:.2f}:1</td><td>{verdict}</td></tr>')
@@ -225,10 +237,11 @@ ICON_PLAN = [
     ('Search field', 'magnifer', 'Inside the field, Text 2.', 'in use'),
     ('Button · primary', 'add-circle', 'Log result.', 'in use'),
     ('Button · external', 'arrow-right-up', 'Register on &lt;domain&gt;, Open official result: the arrow says it leaves Onrace (voice principle 2).', 'in use'),
-    ('Button · secondary', 'tuning-2', 'Filters.', 'in use'),
+    ('Button · secondary', 'tuning-2', 'Filters, before the label (CSS mask, no markup change).', 'in use'),
+    ('Sort', 'alt-arrow-down', 'After the sort value (CSS mask on the sort control).', 'in use'),
     ('Filter chip · remove', 'close-circle', 'Planned replacement for the × glyph in filter chips; the wireframe uses a text ×.', 'planned'),
-    ('State · empty', 'inbox', 'Results list empty state, above "Log your first result".', 'planned'),
-    ('State · error', 'danger-circle', 'Error messages ("Couldn’t load races").', 'in use'),
+    ('State · empty', 'inbox', 'Results list empty state, above "Log your first result". Race browse empty uses no icon: the filters above are the context.', 'planned'),
+    ('State · error', 'danger-circle', 'Before the error heading ("Couldn’t load races"), in the error color (CSS mask).', 'in use'),
     ('State · success', 'check-circle', 'Saved confirmation.', 'in use'),
     ('State · warning', 'danger-triangle', 'Warning messages, when one exists.', 'planned'),
     ('State · loading', None, 'No icon and no spinner: skeleton cards plus "Loading races…" for screen readers (voice.md → Loading).', 'none'),
@@ -357,6 +370,84 @@ page = f'''<!doctype html>
     </div>
   </section>
 
+  <section class="stand-section" id="race-browse-parts" aria-labelledby="rb-h">
+    <h2 id="rb-h">Race browse parts, live</h2>
+    <p>Everything Race browse needs besides the card, in the wireframes' own markup and copy, styled only from <code>components.css</code>. The screen can link the same file without markup changes.</p>
+    <div class="stand-grid">
+      <div class="stand-panel">
+        <h3>Controls · Filters, List/Map, active filter chips, result count and sort</h3>
+        <div class="controls">
+          <div class="control-row">
+            <button type="button" class="filters-trigger" aria-haspopup="dialog" aria-expanded="false">Filters · 2</button>
+            <div class="view-toggle" role="group" aria-label="Choose view">
+              <button type="button" class="view-btn" aria-pressed="true">List</button>
+              <button type="button" class="view-btn" aria-pressed="false">Map</button>
+            </div>
+          </div>
+          <div class="chips-bar">
+            <ul class="chips-row" aria-label="Active filters">
+              <li><button type="button" class="chip" aria-label="Remove filter: HYROX">HYROX <span aria-hidden="true">×</span></button></li>
+              <li><button type="button" class="chip" aria-label="Remove filter: Marathon">Marathon <span aria-hidden="true">×</span></button></li>
+            </ul>
+            <button type="button" class="clear-all">Clear all filters</button>
+          </div>
+        </div>
+        <div class="results-row">
+          <p class="results-count"><strong>4</strong> races match your filters</p>
+          <div class="sort-control">
+            <label for="sort-live">Sort:</label>
+            <select id="sort-live" name="sort">
+              <option value="soonest" selected>Soonest first</option>
+              <option value="farthest">Latest first</option>
+            </select>
+          </div>
+        </div>
+        {why("Hierarchy rule 3: Filters is secondary (tonal), Clear all filters is tertiary (text link)", "Hierarchy rule 2: the active chip is a calm outline, not the brightest thing", "Hierarchy rule 1: the selected segment uses Line, not the accent", "Hierarchy rule 4: count and sort are meta", "Critique fix: 44px targets")}
+      </div>
+      <div class="stand-panel">
+        <h3>Loading · skeleton cards, count bar, sort disabled</h3>
+        <div class="results-row">
+          <p class="results-count"><span class="bar count" aria-hidden="true"></span><span class="visually-hidden">Loading races…</span></p>
+          <div class="sort-control">
+            <label for="sort-loading">Sort:</label>
+            <select id="sort-loading" name="sort" disabled>
+              <option value="soonest" selected>Soonest first</option>
+              <option value="farthest">Latest first</option>
+            </select>
+          </div>
+        </div>
+        <ul class="race-list" aria-busy="true" aria-hidden="true">
+          <li><div class="skeleton-card"><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
+          <li><div class="skeleton-card"><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
+        </ul>
+        {why("voice.md → Loading: a skeleton plus “Loading races…” for screen readers; no spinner, no invented progress", "Race card anatomy (designer): the skeleton has the card's shape: photo band, date tile, title, chip, location", "No shimmer: nothing moves that isn't real")}
+      </div>
+      <div class="stand-panel">
+        <h3>Empty · no races match</h3>
+        <div class="state-message">
+          <h2>No races match your current filters</h2>
+          <p>Remove a filter above, or try a wider date range, another region, or more sport types.</p>
+          <div class="state-actions">
+            <button type="button" class="state-action">Change filters</button>
+            <button type="button" class="state-action secondary">Clear all filters</button>
+          </div>
+        </div>
+        {why("Hierarchy rule 3: one primary (Change filters), one secondary (Clear all filters)", "Hierarchy rule 4: the heading is the text face, item level, not a display title", "voice.md → Empty: say what happened and the way forward, no motivational line")}
+      </div>
+      <div class="stand-panel">
+        <h3>Error · the catalog didn’t load</h3>
+        <div class="state-message is-error">
+          <h2>Couldn’t load races</h2>
+          <p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p>
+          <div class="state-actions">
+            <a class="state-action" href="#race-browse-parts">Try again</a>
+          </div>
+        </div>
+        {why("States: icon and text first, color second; the error color is only on the icon", "Hierarchy rule 3: Try again is the screen's one primary", "voice.md → Error: no Oops, names the problem and the recovery", "On the screen this block has role=alert; the stand leaves the role off so a specimen is not announced on load")}
+      </div>
+    </div>
+  </section>
+
   <section class="stand-section" aria-labelledby="contrast-h">
     <h2 id="contrast-h">Contrast · every text pair and the key non-text pairs</h2>
     <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>tokens.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>
@@ -364,6 +455,15 @@ page = f'''<!doctype html>
   </section>
 
 </main>
+<script>
+  // List/Map is live: pressing one releases the other.
+  document.querySelectorAll('.view-toggle').forEach(function (group) {{
+    group.addEventListener('click', function (e) {{
+      var btn = e.target.closest('.view-btn'); if (!btn) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) {{ b.setAttribute('aria-pressed', String(b === btn)); }});
+    }});
+  }});
+</script>
 </body>
 </html>
 '''
