@@ -248,6 +248,38 @@
     </div>
   </section>
 
+  <section class="stand-section" id="first-screen" aria-labelledby="fs-h">
+    <h2 id="fs-h">First screen · how many race cards on a phone</h2>
+    <p>Measured on 2026-10-13 with <code>scripts/concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. A card is 247px tall.</p>
+    <div class="spec-wrap" tabindex="0" role="region" aria-label="First screen measurement"><table class="spec"><thead><tr><th>State</th><th>List starts at</th><th>Tab bar at</th><th>Fully visible</th><th>Next card visible</th></tr></thead><tbody><tr><td>Default (no filters, 7 races)</td><td class="num">298px</td><td class="num">747px</td><td class="num">1 card</td><td class="num">77%</td></tr><tr><td>2 filters on (chips row shown, 4 races)</td><td class="num">354px</td><td class="num">747px</td><td class="num">1 card</td><td class="num">54%</td></tr></tbody></table></div>
+    <p class="stand-why"><b>For the designer to judge (attribute b, a calendar, not a poster):</b> with a photo in every card, the first screen shows one full race and part of the next. Nothing is changed here.</p>
+  </section>
+
+  <section class="stand-section" id="color-rules" aria-labelledby="rules-h">
+    <h2 id="rules-h">Color rules, checked by the build</h2>
+    <p>From <code>concept.md</code> → Color rules. <code>scripts/concept/build_stand.py</code> checks them on every build: rules 1, 2 and 3a stop the build when broken; 3b is reported here and does not block.</p>
+    <div class="stand-grid">
+      <div class="stand-panel">
+        <h3>1 · Accent placement · pass</h3>
+        <p class="stand-why">Amber only where you can act or where you are. The build found the accent on 9 selectors, all allowed: the primary button and its hover, <code>.header-action</code>, the primary <code>.state-action</code>, the current tab, and the specimen swatches. It is never on a result, a finish time, a count or a status.</p>
+      </div>
+      <div class="stand-panel">
+        <h3>2 · No success color on results · pass</h3>
+        <p class="stand-why">Results are self-reported; Onrace can't verify them. <code>--success</code> appears only on the saved confirmation (and its swatch); no result row has a check icon or the word "verified". The proof line stays Text 2 (attribute d). Even this page's "pass" labels are Text 1, not green.</p>
+      </div>
+    </div>
+    <div class="stand-panel">
+      <h3>3a · Depth of dark, not #000: L* 4.5–20, C* ≤ 6, each level ≥ 1.5 L* above the last</h3>
+      <div class="spec-wrap" tabindex="0" role="region" aria-label="Dark depth check"><table class="spec"><thead><tr><th>Level</th><th>L*</th><th>C*</th><th>Step</th><th>Result</th></tr></thead><tbody><tr><td><code>--bg-bar</code> #0F1114</td><td class="num">4.99</td><td class="num">1.99</td><td class="num">base</td><td><span class="pass">pass</span></td></tr><tr><td><code>--bg-0</code> #131518</td><td class="num">6.69</td><td class="num">2.34</td><td class="num">+1.70</td><td><span class="pass">pass</span></td></tr><tr><td><code>--bg-1</code> #1D2024</td><td class="num">12.10</td><td class="num">3.19</td><td class="num">+5.41</td><td><span class="pass">pass</span></td></tr><tr><td><code>--bg-2</code> #272B30</td><td class="num">17.33</td><td class="num">3.87</td><td class="num">+5.23</td><td><span class="pass">pass</span></td></tr></tbody></table></div>
+      <p class="stand-why">For reference, #000 is L* 0 and the guardrail <code>#0B0C0E</code> is L* 3.30; both fall outside the range.</p>
+    </div>
+    <div class="stand-panel">
+      <h3>3b · Amber, not HYROX yellow: hue distance ≥ 25° and ΔE2000 ≥ 24 · fails, kept by the designer</h3>
+      <div class="spec-wrap" tabindex="0" role="region" aria-label="HYROX distance check"><table class="spec"><thead><tr><th>HYROX yellow [~], measured in research/screens/</th><th>Hue distance</th><th>ΔE2000</th><th>Result</th></tr></thead><tbody><tr><td>RoxFit <code>#FFEC00</code><br>roxfit-how-it-works.png, 5,786 px</td><td class="num">19.2°</td><td class="num">18.7</td><td><b>fail</b></td></tr><tr><td>RoxMatchUp <code>#F5E401</code><br>roxmatchup-home.png, 2,770 px</td><td class="num">19.6°</td><td class="num">17.9</td><td><b>fail</b></td></tr></tbody></table></div>
+      <p class="stand-why">The threshold is "at least as far as named orange": CSS <code>orange</code> <code>#FFA500</code> is 24.6° and ΔE 24.0 from <code>#FFEC00</code>. There is no screenshot of HYROX's own site in <code>research/screens/</code>, so the reference is the HYROX-ecosystem apps. The amber <code>#F5B649</code> is not changed; the decision is open (<code>concept.md</code> → Directions).</p>
+    </div>
+  </section>
+
   <section class="stand-section" aria-labelledby="contrast-h">
     <h2 id="contrast-h">Contrast · every text pair and the key non-text pairs</h2>
     <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>tokens.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>

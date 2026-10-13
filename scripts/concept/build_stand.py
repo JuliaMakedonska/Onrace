@@ -90,6 +90,90 @@ assert not failures, failures
 CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text</th><th>Background</th><th>Ratio</th><th>WCAG AA</th></tr></thead><tbody>'
             + ''.join(rows) + '</tbody></table></div>')
 
+# ---------------------------------------------------------------- color rules (concept.md → Color rules)
+import math
+from colorlib import lab, de2000, hue as lab_hue
+CSS = open(os.path.join(ROOT, 'concept/components.css')).read()
+CSS_RULES = [(sel.strip(), body) for sel, body in re.findall(r'([^{}]+)\{([^{}]*)\}', re.sub(r'/\*.*?\*/', '', CSS, flags=re.S))]
+
+def selectors_using(*tokens):
+    out = []
+    for sel, body in CSS_RULES:
+        if any(f'var(--{t})' in body for t in tokens):
+            out += [x.strip() for x in sel.split(',')]
+    return out
+
+# Rule 1: amber only where you can act or where you are
+ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.header-action(:hover)?$', r'^\.state-action:not\(\.secondary\)(:hover)?$',
+             r'^\.bottom-nav a\[aria-current="page"\]$', r'^\.swatch--accent(-hover)?$', r'^\.swatch--on-accent$']
+accent_sel = selectors_using('accent', 'accent-hover')
+accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK)]
+assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
+
+# Rule 2: no success color on results
+SUCCESS_OK = [r'^\.status--success( \.icon| strong)?$', r'^\.swatch--success(-bg)?$']
+success_sel = selectors_using('success', 'success-bg')
+success_bad = [x for x in success_sel if not any(re.match(p, x) for p in SUCCESS_OK)]
+assert not success_bad, ('Color rule 2: success color outside the saved status', success_bad)
+
+# Rule 3a: depth of dark, not #000
+BG_LEVELS = ['bg-bar', 'bg-0', 'bg-1', 'bg-2']
+L_MIN, L_MAX, C_MAX, STEP_MIN = 4.5, 20.0, 6.0, 1.5
+bg_rows, prev = [], None
+for t in BG_LEVELS:
+    L, a, b = lab(tok(t)); C = math.hypot(a, b)
+    ok = L_MIN <= L <= L_MAX and C <= C_MAX and (prev is None or L - prev >= STEP_MIN)
+    assert ok, ('Color rule 3a: background level out of range', t, round(L, 2), round(C, 2))
+    bg_rows.append((t, L, C, None if prev is None else L - prev)); prev = L
+
+# Rule 3b: amber, not HYROX yellow (reported, not blocking: the designer keeps the amber knowingly)
+HYROX_REFS = [('RoxFit', '#FFEC00', 'roxfit-how-it-works.png, 5,786 px'), ('RoxMatchUp', '#F5E401', 'roxmatchup-home.png, 2,770 px')]
+HUE_MIN, DE_MIN = 25.0, 24.0
+def hue_dist(x, y):
+    d = abs(lab_hue(x) - lab_hue(y)); return min(d, 360 - d)
+hyrox_rows = [(n, c, src, hue_dist(tok('accent'), c), de2000(tok('accent'), c)) for n, c, src in HYROX_REFS]
+HYROX_PASS = all(h >= HUE_MIN and d >= DE_MIN for _, _, _, h, d in hyrox_rows)
+
+# results never carry a success mark (checked on the generated markup at the end)
+print('Color rule 1 (accent placement): pass ·', len(accent_sel), 'selectors')
+print('Color rule 2 (no success on results): pass ·', len(success_sel), 'selectors')
+print('Color rule 3a (depth of dark): pass ·', ', '.join(f'{t} L*{L:.2f} C*{C:.2f}' for t, L, C, _ in bg_rows))
+print('Color rule 3b (amber vs HYROX yellow):', 'pass' if HYROX_PASS else 'FAIL (reported, not blocking)', '·',
+      '; '.join(f'{n} {c}: {h:.1f}° ΔE {d:.1f}' for n, c, _, h, d in hyrox_rows))
+
+def rules_section():
+    bg = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td class="num">{L:.2f}</td><td class="num">{C:.2f}</td><td class="num">{"base" if st is None else f"+{st:.2f}"}</td><td><span class="pass">pass</span></td></tr>' for t, L, C, st in bg_rows)
+    hy = ''.join(f'<tr><td>{n} <code>{c}</code><br>{src}</td><td class="num">{h:.1f}°</td><td class="num">{d:.1f}</td><td>{"<span class=pass>pass</span>" if h >= HUE_MIN and d >= DE_MIN else "<b>fail</b>"}</td></tr>' for n, c, src, h, d in hyrox_rows)
+    return f'''
+  <section class="stand-section" id="color-rules" aria-labelledby="rules-h">
+    <h2 id="rules-h">Color rules, checked by the build</h2>
+    <p>From <code>concept.md</code> → Color rules. <code>scripts/concept/build_stand.py</code> checks them on every build: rules 1, 2 and 3a stop the build when broken; 3b is reported here and does not block.</p>
+    <div class="stand-grid">
+      <div class="stand-panel">
+        <h3>1 · Accent placement · pass</h3>
+        <p class="stand-why">Amber only where you can act or where you are. The build found the accent on {len(accent_sel)} selectors, all allowed: the primary button and its hover, <code>.header-action</code>, the primary <code>.state-action</code>, the current tab, and the specimen swatches. It is never on a result, a finish time, a count or a status.</p>
+      </div>
+      <div class="stand-panel">
+        <h3>2 · No success color on results · pass</h3>
+        <p class="stand-why">Results are self-reported; Onrace can't verify them. <code>--success</code> appears only on the saved confirmation (and its swatch); no result row has a check icon or the word "verified". The proof line stays Text 2 (attribute d). Even this page's "pass" labels are Text 1, not green.</p>
+      </div>
+    </div>
+    <div class="stand-panel">
+      <h3>3a · Depth of dark, not #000: L* {L_MIN:g}–{L_MAX:g}, C* ≤ {C_MAX:g}, each level ≥ {STEP_MIN:g} L* above the last</h3>
+      {wrap('Dark depth check', f'<table class="spec"><thead><tr><th>Level</th><th>L*</th><th>C*</th><th>Step</th><th>Result</th></tr></thead><tbody>{bg}</tbody></table>')}
+      <p class="stand-why">For reference, #000 is L* 0 and the guardrail <code>#0B0C0E</code> is L* 3.30; both fall outside the range.</p>
+    </div>
+    <div class="stand-panel">
+      <h3>3b · Amber, not HYROX yellow: hue distance ≥ {HUE_MIN:g}° and ΔE2000 ≥ {DE_MIN:g} · {"pass" if HYROX_PASS else "fails, kept by the designer"}</h3>
+      {wrap('HYROX distance check', f'<table class="spec"><thead><tr><th>HYROX yellow [~], measured in research/screens/</th><th>Hue distance</th><th>ΔE2000</th><th>Result</th></tr></thead><tbody>{hy}</tbody></table>')}
+      <p class="stand-why">The threshold is "at least as far as named orange": CSS <code>orange</code> <code>#FFA500</code> is 24.6° and ΔE 24.0 from <code>#FFEC00</code>. There is no screenshot of HYROX's own site in <code>research/screens/</code>, so the reference is the HYROX-ecosystem apps. The amber <code>{tok("accent")}</code> is not changed; the decision is open (<code>concept.md</code> → Directions).</p>
+    </div>
+  </section>
+'''
+
+# measured in the browser with first-screen.html at 390×844 on 2026-10-13 (re-measure after layout changes)
+FS = {'card_h': 247, 'tab': 747, 'base': {'top': 298, 'full': 1, 'next': 77}, 'filtered': {'top': 354, 'full': 1, 'next': 54}}
+
 # ---------------------------------------------------------------- shared markup (wireframe text and structure)
 def race_card(name, tag, iso, date, loc, src, pos, alt):
     return f'''<article class="race-card">
@@ -448,6 +532,15 @@ page = f'''<!doctype html>
     </div>
   </section>
 
+  <section class="stand-section" id="first-screen" aria-labelledby="fs-h">
+    <h2 id="fs-h">First screen · how many race cards on a phone</h2>
+    <p>Measured on 2026-10-13 with <code>scripts/concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. A card is {FS["card_h"]}px tall.</p>
+    {wrap('First screen measurement', f'<table class="spec"><thead><tr><th>State</th><th>List starts at</th><th>Tab bar at</th><th>Fully visible</th><th>Next card visible</th></tr></thead><tbody>'
+      + f'<tr><td>Default (no filters, 7 races)</td><td class="num">{FS["base"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["base"]["full"]} card</td><td class="num">{FS["base"]["next"]}%</td></tr>'
+      + f'<tr><td>2 filters on (chips row shown, 4 races)</td><td class="num">{FS["filtered"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["filtered"]["full"]} card</td><td class="num">{FS["filtered"]["next"]}%</td></tr></tbody></table>')}
+    <p class="stand-why"><b>For the designer to judge (attribute b, a calendar, not a poster):</b> with a photo in every card, the first screen shows one full race and part of the next. Nothing is changed here.</p>
+  </section>
+{rules_section()}
   <section class="stand-section" aria-labelledby="contrast-h">
     <h2 id="contrast-h">Contrast · every text pair and the key non-text pairs</h2>
     <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>tokens.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>
@@ -467,5 +560,9 @@ page = f'''<!doctype html>
 </body>
 </html>
 '''
+# Color rule 2 on the generated markup: no result row carries a check icon or "verified"
+for block in re.findall(r'<article class="result-card">.*?</article>', page, flags=re.S):
+    assert 'check-circle' not in block and 'verified' not in block.lower(), 'Color rule 2: a result carries a success mark'
+    assert 'Self-reported · via ' in block, 'Attribute d: the proof line states the source'
 open(os.path.join(ROOT, 'concept/concept.html'), 'w').write(page)
 print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b, k in PAIRS if k == 'text'))

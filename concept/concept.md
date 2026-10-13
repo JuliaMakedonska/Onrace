@@ -44,6 +44,18 @@ Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yell
 
 ---
 
+## Color rules (designer, 2026-10-13)
+
+Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on every build. Rules 1, 2 and 3a stop the build when broken. Rule 3b is reported on the stand and doesn't block, because the designer keeps the current amber knowingly.
+
+1. **Accent placement.** Amber only where you can act or where you are: the primary action, the current tab, an active state. Never on a result, a finish time, a count or a status. *Build check:* every `components.css` rule that uses `--accent` or `--accent-hover` must target an allowed selector (primary button, `.header-action`, primary `.state-action`, the current tab). Specimen swatches on the stand are the only other place.
+2. **No success color on results.** Results are self-reported, and Onrace can't verify them, so there's no green and no "verified" mark anywhere on a result. The proof line stays neutral (attribute 4, d: proof stated, not stamped). *Build check:* `--success` and `--success-bg` are used only by the saved-confirmation status (and its swatch). No result row contains a check icon or the word "verified".
+3. **Two taste rules, made measurable** (CIELAB, D65):
+   - **a. Depth of dark, not #000.** Every background level (`--bg-bar`, `--bg-0`, `--bg-1`, `--bg-2`) has a lightness L* between 4.5 and 20 and a chroma C* of at most 6 (near-neutral, not tinted). Each level is at least 1.5 L* lighter than the one below it, so the levels read as depth. For reference, #000 is L* 0 and the guardrail `#0B0C0E` is L* 3.3; both fall outside the range. *Current:* L* 4.99 / 6.69 / 12.10 / 17.33, C* 2.0–3.9. **Passes.**
+   - **b. Amber, not HYROX yellow.** HYROX yellow [~] is measured from `research/screens/`. There's no screenshot of HYROX's own site there, so the reference is the HYROX-ecosystem apps: RoxFit `#FFEC00` (5,786 pixels in `roxfit-how-it-works.png`) and RoxMatchUp `#F5E401` (2,770 pixels in `roxmatchup-home.png`). The accent must be at least as far from the nearer of the two as named orange is: hue distance ≥ 25° and ΔE2000 ≥ 24. CSS `orange` `#FFA500` sits at 24.6° and ΔE 24.0 from `#FFEC00`. *Current amber `#F5B649`:* 19.2° and ΔE 18.7 from RoxFit's yellow (19.6° and ΔE 17.9 from RoxMatchUp's). **Fails.** It's kept unchanged by the designer; the decision is open.
+
+---
+
 ## Race card anatomy (decided by the designer, 2026-10-13)
 
 **Borrowed from round 1 "Format colors": layout only, no colors.** In Direction A "Podium"'s own colors, type, radius, surfaces and icons:
@@ -200,7 +212,7 @@ Round 2, in `directions.html`. All three were built under the Hierarchy rules ab
 **Chosen: Direction A, "Podium".** Why: it keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.
 - Graphite ground `#131518`, sodium amber accent `#F5B649` (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.
 - Its values now live in `tokens.css`, its components in `components.css`, and its stand in `concept.html`.
-- **Still open:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). It is ΔE 17.1 from HYROX yellow `~#FFE600` [~], and it reads most HYROX-like as a filled button. The designer kept it knowingly.
+- **Still open:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in `research/screens/` (RoxFit `#FFEC00`), it is 19.2° of hue and ΔE 18.7 away, which fails Color rule 3b (needs ≥ 25° and ΔE ≥ 24). It reads most HYROX-like as a filled button. The designer kept it knowingly.
 
 **Not picked:**
 - **Direction B, "Telemetry"** (periwinkle `#A9B8FF` on blue-black, Saira + Sofia Sans, 4px). Its Results list read like a timing board. But its critique found Race browse "could belong to any dark fintech or fitness app": blue on dark drifts toward a generic tech look, and its energy depended on dimming everything that isn't data.

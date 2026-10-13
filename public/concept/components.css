@@ -473,7 +473,7 @@
 .spec-wrap:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
 .spec code { white-space: nowrap; }
 .swatch { display: inline-block; width: var(--space-4); height: var(--space-4); border-radius: var(--radius-1); vertical-align: middle; margin-right: var(--space-2); box-shadow: inset 0 0 0 var(--border) var(--line); }
-.pass { color: var(--success); font-weight: var(--weight-strong); }
+.pass { color: var(--text-1); font-weight: var(--weight-strong); }  /* not green: no success color as a verdict mark (Color rule 2) */
 .exempt { color: var(--text-2); }
 
 .phone-frame { width: 100%; max-width: var(--phone-width); border-radius: var(--radius-3); overflow: hidden; background: var(--bg-0); box-shadow: inset 0 0 0 var(--border) var(--line); }
