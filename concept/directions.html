@@ -487,6 +487,38 @@ body {
 .d2 { --i-chev: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23FBF4EC%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22M19%209L12%2015L5%209%22/%3E%3C/svg%3E"); }
 .d3 { --i-chev: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23F5F8FA%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22M19%209L12%2015L5%209%22/%3E%3C/svg%3E"); }
 
+
+/* ---------- comparison block: Direction 1, three accents ---------- */
+.compare { max-width: 1440px; margin: 0 auto; padding: 0 24px 48px; }
+.compare-head { display: grid; gap: 10px; margin-bottom: 20px; max-width: 80ch; }
+.compare-head h2 { margin: 0; font-size: 22px; line-height: 1.2; }
+.compare-head p { margin: 0; color: var(--page-ink-2); }
+.compare-head strong, .compare-head b { color: var(--page-ink); }
+.variants { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1120px) { .variants { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.variant { background: var(--ground); color: var(--ink); font-family: var(--body); padding: 24px 16px 28px; display: grid; gap: 16px; align-content: start; min-width: 0; }
+.variant ::selection { background: var(--sel-bg); color: var(--sel-ink); }
+.variant-head { display: grid; gap: 10px; }
+.variant-head h3 { margin: 0; font: 900 34px/.95 var(--display); text-transform: uppercase; color: var(--ink); }
+.variant-head h3 span { display: block; margin-top: 6px; font: 500 14px/1.3 var(--body); text-transform: none; color: var(--ink-2); }
+.swatch-pair { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+.swatch-pair .sw { width: 28px; height: 28px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+.swatch-pair .sw.ref { margin-left: 10px; width: 18px; height: 18px; }
+.swatch-pair code { font: 500 13px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--ink); }
+.swatch-pair code.dim { color: var(--ink-2); font-size: 12px; }
+.numbers { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.numbers div { background: var(--surface); padding: 10px 12px; display: grid; gap: 2px; }
+.numbers dt { font-size: 12px; color: var(--ink-2); }
+.numbers dd { margin: 0; font: 900 28px/1 var(--display); color: var(--data); font-variant-numeric: tabular-nums; }
+.refs-label { margin: 0; font-size: 12px; color: var(--ink-2); }
+.refs { margin: -8px 0 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: 13px; color: var(--ink); }
+.refs code { font: 500 12px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--ink-2); }
+.notes { margin: 0; display: grid; gap: 10px; }
+.notes div { display: grid; gap: 2px; }
+.notes dt { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.notes dd { margin: 0; font-size: 14px; line-height: 1.45; }
+@media (max-width: 480px) { .compare { padding-left: 16px; padding-right: 16px; } }
+
 @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
 </style>
 </head>
@@ -507,6 +539,519 @@ body {
   <span><b>d</b> Proof stated, not stamped</span>
   <span><b>e</b> Intense, not aggressive</span>
 </p>
+
+
+<section class="compare" aria-labelledby="cmp-h">
+  <div class="compare-head">
+    <h2 id="cmp-h">Direction 1, three accents</h2>
+    <p>Direction 1's layout, type and shapes in all three. Only the accent changes, everywhere Direction 1 uses it: the finish time, the format chip fill, the focus ring and text selection. The photos stay black and white (see the component blocks below; the screens have no photo slots). Nothing is chosen yet.</p>
+    <p><strong>What "more contrasting" measures:</strong> by WCAG luminance contrast, magnesium already beats sodium on this ground (12.49:1 vs 9.65:1). What sodium has is chroma: 63 against magnesium's 13. So the third accent keeps magnesium's brightness (11.38:1) and roughly triples its chroma (39), in a hue 124° from HYROX's.</p>
+    <p><strong>Why ice, derived from the attributes:</strong> <b>a</b> (the result is the loudest thing on the row) asks for the highest contrast on the page after the chalk ink. <b>c</b> (each format by name) rules out any hue a format already owns: HYROX's yellow, Strava's orange, fitnessracingcalendar's lime. <b>e</b> (intense, not aggressive) rules out red and favours a cool hue. On a warm rubber ground the cool side of the wheel also adds hue contrast on top of brightness. That leaves a bright cyan, pushed as far as sRGB allows at this brightness.</p>
+  </div>
+  <div class="variants">
+    <article class="variant d1" id="cmp-v1" style="--data: #BFE0EE; --focus: #BFE0EE; --sel-bg: #BFE0EE;" aria-labelledby="cmp-v1-h">
+      <header class="variant-head">
+        <h3 id="cmp-v1-h">Magnesium <span>Direction 1 as is</span></h3>
+        <div class="swatch-pair">
+          <span class="sw" style="background:#BFE0EE"></span><code>#BFE0EE</code>
+          <span class="sw ref" style="background:#FFE600"></span><code class="dim">HYROX #FFE600 [~]</code>
+        </div>
+      </header>
+      <div class="phones">
+      <div class="phone" aria-label="Race browse preview">
+        <div class="screen">
+          <main>
+            <header>
+              <h1>Discover</h1>
+              <form class="race-search" role="search" onsubmit="return false">
+                <label class="visually-hidden" for="race-q-v1">Search races by name or city</label>
+                <input type="search" id="race-q-v1" name="q" placeholder="Race name or city" autocomplete="off" enterkeyhint="search">
+              </form>
+            </header>
+            <div class="controls">
+              <div class="control-row">
+                <button type="button" class="filters-trigger" aria-haspopup="dialog" aria-expanded="false">Filters · 2</button>
+                <div class="view-toggle" role="group" aria-label="Choose view">
+                  <button type="button" class="view-btn" aria-pressed="true">List</button>
+                  <button type="button" class="view-btn" aria-pressed="false">Map</button>
+                </div>
+              </div>
+              <div class="chips-bar">
+                <ul class="chips-row" aria-label="Active filters">
+                  <li><button type="button" class="chip" aria-label="Remove filter: HYROX">HYROX <span aria-hidden="true">×</span></button></li>
+                  <li><button type="button" class="chip" aria-label="Remove filter: Marathon">Marathon <span aria-hidden="true">×</span></button></li>
+                </ul>
+                <button type="button" class="clear-all">Clear all filters</button>
+              </div>
+            </div>
+            <div class="results-row">
+              <p class="results-count"><strong>4</strong> races match your filters</p>
+              <div class="sort-control">
+                <label for="sort-v1">Sort:</label>
+                <select id="sort-v1" name="sort">
+                  <option value="soonest" selected>Soonest first</option>
+                  <option value="farthest">Latest first</option>
+                </select>
+              </div>
+            </div>
+            <ul class="race-list">
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v1">
+                  <h3>Berlin Marathon</h3>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-09-27">27 Sep 2026</time></p>
+                  <p class="card-location">Berlin, Germany</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v1">
+                  <h3>HYROX London</h3>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06">6 Dec 2026</time></p>
+                  <p class="card-location">London, UK</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v1">
+                  <h3>HYROX Dallas</h3>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2027-01-17">17 Jan 2027</time></p>
+                  <p class="card-location">Dallas, USA</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v1">
+                  <h3>Boston Marathon</h3>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2027-04-20">20 Apr 2027</time></p>
+                  <p class="card-location">Boston, USA</p>
+                </a>
+              </article>
+            </li>
+            </ul>
+          </main>
+          <nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#cmp-v1" aria-current="page"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M13.024 14.5601C10.7142 15.484 9.5593 15.946 8.89964 15.4977C8.74324 15.3914 8.60834 15.2565 8.50206 15.1001C8.0538 14.4405 8.51575 13.2856 9.43967 10.9758C9.63673 10.4831 9.73527 10.2368 9.90474 10.0435C9.94792 9.99429 9.99429 9.94792 10.0435 9.90474C10.2368 9.73527 10.4831 9.63673 10.9758 9.43966C13.2856 8.51575 14.4405 8.0538 15.1001 8.50206C15.2565 8.60834 15.3914 8.74324 15.4977 8.89964C15.946 9.5593 15.484 10.7142 14.5601 13.024C14.363 13.5166 14.2645 13.763 14.095 13.9562C14.0518 14.0055 14.0055 14.0518 13.9562 14.095C13.763 14.2645 13.5166 14.363 13.024 14.5601Z"/></g></svg><span>Discover</span></a></li><li><a href="#cmp-v1"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M21 13C21 17.9706 16.9706 22 12 22C7.02944 22 3 17.9706 3 13C3 8.02944 7.02944 4 12 4C16.9706 4 21 8.02944 21 13Z"/><path stroke-linejoin="round" d="M12 13V9"/><path d="M10 2H14"/></g></svg><span>My Results</span></a></li><li><a href="#cmp-v1"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="6" r="4"/><path d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"/></g></svg><span>Profile</span></a></li></ul></nav>
+        </div>
+      </div>
+      <div class="phone" aria-label="Results list preview">
+        <div class="screen">
+          <main>
+            <header>
+              <h1>My Results</h1>
+              <a class="header-action" href="#cmp-v1">Log result</a>
+            </header>
+            <div class="results-row">
+              <p class="results-count"><strong>4</strong> results <span class="results-order">Newest first</span></p>
+            </div>
+            <ul class="result-list">
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v1">
+                  <div class="card-top">
+                    <h2>DEKA STRONG Chicago</h2>
+                    <span class="finish-time">24:36</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p>
+                  <p class="proof-label">Self-reported · via athlinks.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v1">
+                  <div class="card-top">
+                    <h2>HYROX London</h2>
+                    <span class="finish-time">1:18:42</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2025-12-06">6 Dec 2025</time></p>
+                  <p class="proof-label">Self-reported · via results.hyrox.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v1">
+                  <div class="card-top">
+                    <h2>Valencia Half Marathon</h2>
+                    <span class="finish-time">1:28:05</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p>
+                  <p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v1">
+                  <div class="card-top">
+                    <h2>Berlin Marathon</h2>
+                    <span class="finish-time">3:12:48</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2025-09-21">21 Sep 2025</time></p>
+                  <p class="proof-label">Self-reported · via berlin.r.mikatiming.com</p>
+                </a>
+              </article>
+            </li>
+            </ul>
+          </main>
+          <nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#cmp-v1"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M13.024 14.5601C10.7142 15.484 9.5593 15.946 8.89964 15.4977C8.74324 15.3914 8.60834 15.2565 8.50206 15.1001C8.0538 14.4405 8.51575 13.2856 9.43967 10.9758C9.63673 10.4831 9.73527 10.2368 9.90474 10.0435C9.94792 9.99429 9.99429 9.94792 10.0435 9.90474C10.2368 9.73527 10.4831 9.63673 10.9758 9.43966C13.2856 8.51575 14.4405 8.0538 15.1001 8.50206C15.2565 8.60834 15.3914 8.74324 15.4977 8.89964C15.946 9.5593 15.484 10.7142 14.5601 13.024C14.363 13.5166 14.2645 13.763 14.095 13.9562C14.0518 14.0055 14.0055 14.0518 13.9562 14.095C13.763 14.2645 13.5166 14.363 13.024 14.5601Z"/></g></svg><span>Discover</span></a></li><li><a href="#cmp-v1" aria-current="page"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M21 13C21 17.9706 16.9706 22 12 22C7.02944 22 3 17.9706 3 13C3 8.02944 7.02944 4 12 4C16.9706 4 21 8.02944 21 13Z"/><path stroke-linejoin="round" d="M12 13V9"/><path d="M10 2H14"/></g></svg><span>My Results</span></a></li><li><a href="#cmp-v1"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="6" r="4"/><path d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"/></g></svg><span>Profile</span></a></li></ul></nav>
+        </div>
+      </div>
+      </div>
+      <dl class="numbers">
+        <div><dt>On ground #1C1A17</dt><dd>12.49:1</dd></div>
+        <div><dt>On card #26231F</dt><dd>11.26:1</dd></div>
+        <div><dt>Chip text on accent</dt><dd>12.49:1</dd></div>
+        <div><dt>Chroma (saturation)</dt><dd>13</dd></div>
+      </dl>
+      <p class="refs-label">Color distance (CIEDE2000; under ~10 reads as the same color, over ~30 as clearly different):</p>
+      <ul class="refs"><li>HYROX yellow [~] <code>#FFE600</code>: ΔE 40.6</li><li>Strava orange [~] <code>#FC5200</code>: ΔE 49.3</li><li>fitnessracingcalendar lime [~] <code>#C8F03C</code>: ΔE 39.2</li></ul>
+      <dl class="notes">
+        <div><dt>Could HYROX alone predict it?</dt><dd>Passes. Pale, low-chroma blue on warm charcoal; nothing about it points to HYROX.</dd></div>
+        <div><dt>The HYROX chip next to the accent</dt><dd>The HYROX chip is a pale blue block with dark type, identical to DEKA, Marathon and Half marathon. It reads as one format among several, with no echo of HYROX's yellow.</dd></div>
+        <div><dt>Attribute c · each format by name</dt><dd>Holds: one neutral fill for all formats, owned by none.</dd></div>
+        <div><dt>Decision C · not dark plus one hot accent</dt><dd>Holds: a dark ground plus a pale accent, not a hot one.</dd></div>
+      </dl>
+    </article>
+    <article class="variant d1" id="cmp-v2" style="--data: #F5B649; --focus: #F5B649; --sel-bg: #F5B649;" aria-labelledby="cmp-v2-h">
+      <header class="variant-head">
+        <h3 id="cmp-v2-h">Sodium <span>Direction 3's accent on Direction 1</span></h3>
+        <div class="swatch-pair">
+          <span class="sw" style="background:#F5B649"></span><code>#F5B649</code>
+          <span class="sw ref" style="background:#FFE600"></span><code class="dim">HYROX #FFE600 [~]</code>
+        </div>
+      </header>
+      <div class="phones">
+      <div class="phone" aria-label="Race browse preview">
+        <div class="screen">
+          <main>
+            <header>
+              <h1>Discover</h1>
+              <form class="race-search" role="search" onsubmit="return false">
+                <label class="visually-hidden" for="race-q-v2">Search races by name or city</label>
+                <input type="search" id="race-q-v2" name="q" placeholder="Race name or city" autocomplete="off" enterkeyhint="search">
+              </form>
+            </header>
+            <div class="controls">
+              <div class="control-row">
+                <button type="button" class="filters-trigger" aria-haspopup="dialog" aria-expanded="false">Filters · 2</button>
+                <div class="view-toggle" role="group" aria-label="Choose view">
+                  <button type="button" class="view-btn" aria-pressed="true">List</button>
+                  <button type="button" class="view-btn" aria-pressed="false">Map</button>
+                </div>
+              </div>
+              <div class="chips-bar">
+                <ul class="chips-row" aria-label="Active filters">
+                  <li><button type="button" class="chip" aria-label="Remove filter: HYROX">HYROX <span aria-hidden="true">×</span></button></li>
+                  <li><button type="button" class="chip" aria-label="Remove filter: Marathon">Marathon <span aria-hidden="true">×</span></button></li>
+                </ul>
+                <button type="button" class="clear-all">Clear all filters</button>
+              </div>
+            </div>
+            <div class="results-row">
+              <p class="results-count"><strong>4</strong> races match your filters</p>
+              <div class="sort-control">
+                <label for="sort-v2">Sort:</label>
+                <select id="sort-v2" name="sort">
+                  <option value="soonest" selected>Soonest first</option>
+                  <option value="farthest">Latest first</option>
+                </select>
+              </div>
+            </div>
+            <ul class="race-list">
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v2">
+                  <h3>Berlin Marathon</h3>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-09-27">27 Sep 2026</time></p>
+                  <p class="card-location">Berlin, Germany</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v2">
+                  <h3>HYROX London</h3>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06">6 Dec 2026</time></p>
+                  <p class="card-location">London, UK</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v2">
+                  <h3>HYROX Dallas</h3>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2027-01-17">17 Jan 2027</time></p>
+                  <p class="card-location">Dallas, USA</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v2">
+                  <h3>Boston Marathon</h3>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2027-04-20">20 Apr 2027</time></p>
+                  <p class="card-location">Boston, USA</p>
+                </a>
+              </article>
+            </li>
+            </ul>
+          </main>
+          <nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#cmp-v2" aria-current="page"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M13.024 14.5601C10.7142 15.484 9.5593 15.946 8.89964 15.4977C8.74324 15.3914 8.60834 15.2565 8.50206 15.1001C8.0538 14.4405 8.51575 13.2856 9.43967 10.9758C9.63673 10.4831 9.73527 10.2368 9.90474 10.0435C9.94792 9.99429 9.99429 9.94792 10.0435 9.90474C10.2368 9.73527 10.4831 9.63673 10.9758 9.43966C13.2856 8.51575 14.4405 8.0538 15.1001 8.50206C15.2565 8.60834 15.3914 8.74324 15.4977 8.89964C15.946 9.5593 15.484 10.7142 14.5601 13.024C14.363 13.5166 14.2645 13.763 14.095 13.9562C14.0518 14.0055 14.0055 14.0518 13.9562 14.095C13.763 14.2645 13.5166 14.363 13.024 14.5601Z"/></g></svg><span>Discover</span></a></li><li><a href="#cmp-v2"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M21 13C21 17.9706 16.9706 22 12 22C7.02944 22 3 17.9706 3 13C3 8.02944 7.02944 4 12 4C16.9706 4 21 8.02944 21 13Z"/><path stroke-linejoin="round" d="M12 13V9"/><path d="M10 2H14"/></g></svg><span>My Results</span></a></li><li><a href="#cmp-v2"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="6" r="4"/><path d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"/></g></svg><span>Profile</span></a></li></ul></nav>
+        </div>
+      </div>
+      <div class="phone" aria-label="Results list preview">
+        <div class="screen">
+          <main>
+            <header>
+              <h1>My Results</h1>
+              <a class="header-action" href="#cmp-v2">Log result</a>
+            </header>
+            <div class="results-row">
+              <p class="results-count"><strong>4</strong> results <span class="results-order">Newest first</span></p>
+            </div>
+            <ul class="result-list">
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v2">
+                  <div class="card-top">
+                    <h2>DEKA STRONG Chicago</h2>
+                    <span class="finish-time">24:36</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p>
+                  <p class="proof-label">Self-reported · via athlinks.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v2">
+                  <div class="card-top">
+                    <h2>HYROX London</h2>
+                    <span class="finish-time">1:18:42</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2025-12-06">6 Dec 2025</time></p>
+                  <p class="proof-label">Self-reported · via results.hyrox.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v2">
+                  <div class="card-top">
+                    <h2>Valencia Half Marathon</h2>
+                    <span class="finish-time">1:28:05</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p>
+                  <p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v2">
+                  <div class="card-top">
+                    <h2>Berlin Marathon</h2>
+                    <span class="finish-time">3:12:48</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2025-09-21">21 Sep 2025</time></p>
+                  <p class="proof-label">Self-reported · via berlin.r.mikatiming.com</p>
+                </a>
+              </article>
+            </li>
+            </ul>
+          </main>
+          <nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#cmp-v2"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M13.024 14.5601C10.7142 15.484 9.5593 15.946 8.89964 15.4977C8.74324 15.3914 8.60834 15.2565 8.50206 15.1001C8.0538 14.4405 8.51575 13.2856 9.43967 10.9758C9.63673 10.4831 9.73527 10.2368 9.90474 10.0435C9.94792 9.99429 9.99429 9.94792 10.0435 9.90474C10.2368 9.73527 10.4831 9.63673 10.9758 9.43966C13.2856 8.51575 14.4405 8.0538 15.1001 8.50206C15.2565 8.60834 15.3914 8.74324 15.4977 8.89964C15.946 9.5593 15.484 10.7142 14.5601 13.024C14.363 13.5166 14.2645 13.763 14.095 13.9562C14.0518 14.0055 14.0055 14.0518 13.9562 14.095C13.763 14.2645 13.5166 14.363 13.024 14.5601Z"/></g></svg><span>Discover</span></a></li><li><a href="#cmp-v2" aria-current="page"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M21 13C21 17.9706 16.9706 22 12 22C7.02944 22 3 17.9706 3 13C3 8.02944 7.02944 4 12 4C16.9706 4 21 8.02944 21 13Z"/><path stroke-linejoin="round" d="M12 13V9"/><path d="M10 2H14"/></g></svg><span>My Results</span></a></li><li><a href="#cmp-v2"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="6" r="4"/><path d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"/></g></svg><span>Profile</span></a></li></ul></nav>
+        </div>
+      </div>
+      </div>
+      <dl class="numbers">
+        <div><dt>On ground #1C1A17</dt><dd>9.65:1</dd></div>
+        <div><dt>On card #26231F</dt><dd>8.69:1</dd></div>
+        <div><dt>Chip text on accent</dt><dd>9.65:1</dd></div>
+        <div><dt>Chroma (saturation)</dt><dd>63</dd></div>
+      </dl>
+      <p class="refs-label">Color distance (CIEDE2000; under ~10 reads as the same color, over ~30 as clearly different):</p>
+      <ul class="refs"><li>HYROX yellow [~] <code>#FFE600</code>: ΔE 17.1</li><li>Strava orange [~] <code>#FC5200</code>: ΔE 28.9</li><li>fitnessracingcalendar lime [~] <code>#C8F03C</code>: ΔE 27.5</li></ul>
+      <dl class="notes">
+        <div><dt>Could HYROX alone predict it?</dt><dd>Fails here. In Direction 3 the amber sat on petrol blue. On Direction 1's warm near-black it becomes a warm yellow-orange on dark, the same family as HYROX's yellow on black.</dd></div>
+        <div><dt>The HYROX chip next to the accent</dt><dd>The HYROX chip becomes an amber block with dark HYROX type: close to HYROX's own mark. Worse, DEKA, Marathon and Half marathon wear the same fill, so every format looks like a HYROX variant.</dd></div>
+        <div><dt>Attribute c · each format by name</dt><dd>Conflicts: one sport's brand color becomes every format's chip.</dd></div>
+        <div><dt>Decision C · not dark plus one hot accent</dt><dd>Conflicts: a near-black ground plus one warm, saturated accent is the anti-reference.</dd></div>
+      </dl>
+    </article>
+    <article class="variant d1" id="cmp-v3" style="--data: #4FE3FF; --focus: #4FE3FF; --sel-bg: #4FE3FF;" aria-labelledby="cmp-v3-h">
+      <header class="variant-head">
+        <h3 id="cmp-v3-h">Ice <span>A new high-contrast accent</span></h3>
+        <div class="swatch-pair">
+          <span class="sw" style="background:#4FE3FF"></span><code>#4FE3FF</code>
+          <span class="sw ref" style="background:#FFE600"></span><code class="dim">HYROX #FFE600 [~]</code>
+        </div>
+      </header>
+      <div class="phones">
+      <div class="phone" aria-label="Race browse preview">
+        <div class="screen">
+          <main>
+            <header>
+              <h1>Discover</h1>
+              <form class="race-search" role="search" onsubmit="return false">
+                <label class="visually-hidden" for="race-q-v3">Search races by name or city</label>
+                <input type="search" id="race-q-v3" name="q" placeholder="Race name or city" autocomplete="off" enterkeyhint="search">
+              </form>
+            </header>
+            <div class="controls">
+              <div class="control-row">
+                <button type="button" class="filters-trigger" aria-haspopup="dialog" aria-expanded="false">Filters · 2</button>
+                <div class="view-toggle" role="group" aria-label="Choose view">
+                  <button type="button" class="view-btn" aria-pressed="true">List</button>
+                  <button type="button" class="view-btn" aria-pressed="false">Map</button>
+                </div>
+              </div>
+              <div class="chips-bar">
+                <ul class="chips-row" aria-label="Active filters">
+                  <li><button type="button" class="chip" aria-label="Remove filter: HYROX">HYROX <span aria-hidden="true">×</span></button></li>
+                  <li><button type="button" class="chip" aria-label="Remove filter: Marathon">Marathon <span aria-hidden="true">×</span></button></li>
+                </ul>
+                <button type="button" class="clear-all">Clear all filters</button>
+              </div>
+            </div>
+            <div class="results-row">
+              <p class="results-count"><strong>4</strong> races match your filters</p>
+              <div class="sort-control">
+                <label for="sort-v3">Sort:</label>
+                <select id="sort-v3" name="sort">
+                  <option value="soonest" selected>Soonest first</option>
+                  <option value="farthest">Latest first</option>
+                </select>
+              </div>
+            </div>
+            <ul class="race-list">
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v3">
+                  <h3>Berlin Marathon</h3>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-09-27">27 Sep 2026</time></p>
+                  <p class="card-location">Berlin, Germany</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v3">
+                  <h3>HYROX London</h3>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06">6 Dec 2026</time></p>
+                  <p class="card-location">London, UK</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v3">
+                  <h3>HYROX Dallas</h3>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2027-01-17">17 Jan 2027</time></p>
+                  <p class="card-location">Dallas, USA</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="race-card">
+                <a class="card-link" href="#cmp-v3">
+                  <h3>Boston Marathon</h3>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2027-04-20">20 Apr 2027</time></p>
+                  <p class="card-location">Boston, USA</p>
+                </a>
+              </article>
+            </li>
+            </ul>
+          </main>
+          <nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#cmp-v3" aria-current="page"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M13.024 14.5601C10.7142 15.484 9.5593 15.946 8.89964 15.4977C8.74324 15.3914 8.60834 15.2565 8.50206 15.1001C8.0538 14.4405 8.51575 13.2856 9.43967 10.9758C9.63673 10.4831 9.73527 10.2368 9.90474 10.0435C9.94792 9.99429 9.99429 9.94792 10.0435 9.90474C10.2368 9.73527 10.4831 9.63673 10.9758 9.43966C13.2856 8.51575 14.4405 8.0538 15.1001 8.50206C15.2565 8.60834 15.3914 8.74324 15.4977 8.89964C15.946 9.5593 15.484 10.7142 14.5601 13.024C14.363 13.5166 14.2645 13.763 14.095 13.9562C14.0518 14.0055 14.0055 14.0518 13.9562 14.095C13.763 14.2645 13.5166 14.363 13.024 14.5601Z"/></g></svg><span>Discover</span></a></li><li><a href="#cmp-v3"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M21 13C21 17.9706 16.9706 22 12 22C7.02944 22 3 17.9706 3 13C3 8.02944 7.02944 4 12 4C16.9706 4 21 8.02944 21 13Z"/><path stroke-linejoin="round" d="M12 13V9"/><path d="M10 2H14"/></g></svg><span>My Results</span></a></li><li><a href="#cmp-v3"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="6" r="4"/><path d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"/></g></svg><span>Profile</span></a></li></ul></nav>
+        </div>
+      </div>
+      <div class="phone" aria-label="Results list preview">
+        <div class="screen">
+          <main>
+            <header>
+              <h1>My Results</h1>
+              <a class="header-action" href="#cmp-v3">Log result</a>
+            </header>
+            <div class="results-row">
+              <p class="results-count"><strong>4</strong> results <span class="results-order">Newest first</span></p>
+            </div>
+            <ul class="result-list">
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v3">
+                  <div class="card-top">
+                    <h2>DEKA STRONG Chicago</h2>
+                    <span class="finish-time">24:36</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p>
+                  <p class="proof-label">Self-reported · via athlinks.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v3">
+                  <div class="card-top">
+                    <h2>HYROX London</h2>
+                    <span class="finish-time">1:18:42</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2025-12-06">6 Dec 2025</time></p>
+                  <p class="proof-label">Self-reported · via results.hyrox.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v3">
+                  <div class="card-top">
+                    <h2>Valencia Half Marathon</h2>
+                    <span class="finish-time">1:28:05</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p>
+                  <p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p>
+                </a>
+              </article>
+            </li>
+            <li>
+              <article class="result-card">
+                <a class="card-link" href="#cmp-v3">
+                  <div class="card-top">
+                    <h2>Berlin Marathon</h2>
+                    <span class="finish-time">3:12:48</span>
+                  </div>
+                  <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2025-09-21">21 Sep 2025</time></p>
+                  <p class="proof-label">Self-reported · via berlin.r.mikatiming.com</p>
+                </a>
+              </article>
+            </li>
+            </ul>
+          </main>
+          <nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#cmp-v3"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M13.024 14.5601C10.7142 15.484 9.5593 15.946 8.89964 15.4977C8.74324 15.3914 8.60834 15.2565 8.50206 15.1001C8.0538 14.4405 8.51575 13.2856 9.43967 10.9758C9.63673 10.4831 9.73527 10.2368 9.90474 10.0435C9.94792 9.99429 9.99429 9.94792 10.0435 9.90474C10.2368 9.73527 10.4831 9.63673 10.9758 9.43966C13.2856 8.51575 14.4405 8.0538 15.1001 8.50206C15.2565 8.60834 15.3914 8.74324 15.4977 8.89964C15.946 9.5593 15.484 10.7142 14.5601 13.024C14.363 13.5166 14.2645 13.763 14.095 13.9562C14.0518 14.0055 14.0055 14.0518 13.9562 14.095C13.763 14.2645 13.5166 14.363 13.024 14.5601Z"/></g></svg><span>Discover</span></a></li><li><a href="#cmp-v3" aria-current="page"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M21 13C21 17.9706 16.9706 22 12 22C7.02944 22 3 17.9706 3 13C3 8.02944 7.02944 4 12 4C16.9706 4 21 8.02944 21 13Z"/><path stroke-linejoin="round" d="M12 13V9"/><path d="M10 2H14"/></g></svg><span>My Results</span></a></li><li><a href="#cmp-v3"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><circle cx="12" cy="6" r="4"/><path d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"/></g></svg><span>Profile</span></a></li></ul></nav>
+        </div>
+      </div>
+      </div>
+      <dl class="numbers">
+        <div><dt>On ground #1C1A17</dt><dd>11.38:1</dd></div>
+        <div><dt>On card #26231F</dt><dd>10.25:1</dd></div>
+        <div><dt>Chip text on accent</dt><dd>11.38:1</dd></div>
+        <div><dt>Chroma (saturation)</dt><dd>39</dd></div>
+      </dl>
+      <p class="refs-label">Color distance (CIEDE2000; under ~10 reads as the same color, over ~30 as clearly different):</p>
+      <ul class="refs"><li>HYROX yellow [~] <code>#FFE600</code>: ΔE 48.5</li><li>Strava orange [~] <code>#FC5200</code>: ΔE 57.2</li><li>fitnessracingcalendar lime [~] <code>#C8F03C</code>: ΔE 45.8</li></ul>
+      <dl class="notes">
+        <div><dt>Could HYROX alone predict it?</dt><dd>Passes. HYROX alone predicts yellow on black; this hue sits 124° away from it on the color wheel, and Strava orange and fitnessracingcalendar's lime are far from it too. Risk: a saturated cyan on dark sits near the "neon on black" cliché. It holds only with no glow and with the accent kept to data.</dd></div>
+        <div><dt>The HYROX chip next to the accent</dt><dd>The HYROX chip is an ice-blue block shared with every other format. It stands as one format among several and owes nothing to the HYROX brand.</dd></div>
+        <div><dt>Attribute c · each format by name</dt><dd>Holds: a hue no format in the catalog owns.</dd></div>
+        <div><dt>Decision C · not dark plus one hot accent</dt><dd>Partly: it isn't hot (no red, orange or yellow), but it is more saturated than magnesium, so the page is closer to "dark plus one bright accent". The ground's warmth is what keeps it from reading as black plus neon.</dd></div>
+      </dl>
+    </article>
+  </div>
+</section>
 
 <main class="directions">
 
