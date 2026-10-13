@@ -33,7 +33,7 @@ Searched in priority order: the HARD tier first, then the BENCHMARK's highest sc
 | Strava | SOFT, and BENCHMARK 23/40 | **Yes (iOS)** | Used. |
 | LinkedIn (certifications) | BENCHMARK 23/40 | **Yes (iOS)** | Used. |
 | Chess.com (FIDE field) | BENCHMARK 21/40 | **No** | Two iOS queries returned Duolingo, Alan, Quizlet, Lyft and others. Skipped. |
-| Letterboxd | BENCHMARK 17/40, ASPIRATIONAL | **Yes (iOS)** | Used. |
+| Letterboxd | BENCHMARK 17/40, ASPIRATIONAL | **Yes (iOS)** | Looked at, not picked as a style (§ 4). |
 | AllTrails | ASPIRATIONAL | **Yes (iOS)** | Looked at, not picked as a style (§ 4). |
 | IRONMAN | ASPIRATIONAL | **No** | iOS search returned Future Pro, Garmin Connect, Strava. Skipped. |
 | Athlinks | SOFT (web) | **No** | Web search returned only unrelated apps. Skipped. |
@@ -140,7 +140,7 @@ Searched in priority order: the HARD tier first, then the BENCHMARK's highest sc
 
 ## 4. Picked styles
 
-Three styles: one base and two donors, plus one hybrid-racing source from the Lesson 1 screenshots (§ 4b). AllTrails is documented above but not picked. Its strongest techniques are photo-led cards (Onrace has no race imagery, and content images are deferred in `../wireframes/_conventions.md` § 7) and the floating Map pill (map view is out of scope). Its one leftover technique, the dot-separated meta line, is already covered by Strava's card.
+Two styles: one base and one donor, plus one hybrid-racing source from the Lesson 1 screenshots (§ 4b). Letterboxd is documented below as not picked. AllTrails is documented above but not picked. Its strongest techniques are photo-led cards (Onrace has no race imagery, and content images are deferred in `../wireframes/_conventions.md` § 7) and the floating Map pill (map view is out of scope). Its one leftover technique, the dot-separated meta line, is already covered by Strava's card.
 
 ### Base: Strava
 
@@ -156,26 +156,24 @@ Three styles: one base and two donors, plus one hybrid-racing source from the Le
 | **The finish time is the row's largest, boldest figure.** Strava sets its stat values about 1.5× the size of their labels [~], bold. | **Visual only.** Checked `wireframes/results-list.html`: `<span class="finish-time">` already sits in `.card-top` next to the race name, so its size and weight are CSS. Strava's gray label above the value ("Moving Time") has no equivalent element in the row, so that part is structural (§ 4c). | [125cbc4d](https://mobbin.com/screens/125cbc4d-55cc-4abc-82d0-4ff489ed616e) | Results list rows (finish time) | Qualifying-Time Archivist: "pull that proof up quickly" (`jtbd.md` → Related job 4). The finish time is the fact being proved, so it gets the largest type in the row. Primary persona's emotional job, "be recognized as what I actually am — a hybrid athlete" (`jtbd.md` → Emotional): performance figures set as the hero content. |
 | **The empty state's button weight follows its cause.** A filled pill when the empty state's action creates something ("Create an event"). An outlined pill when it recovers from filtering ("Adjust Filters"). Both with a bold title and one plain line. | **Visual only.** The markup already makes the distinction: `results-list-empty.html` has `<a class="state-action">` ("Log your first result"), and `race-browse-empty.html` has `<button class="state-action secondary">` ("Clear all filters"). Only the styling changes. | [b6641647](https://mobbin.com/screens/b6641647-d40e-49b3-a73a-56f2a11e5c98), [0ebb31b2](https://mobbin.com/screens/0ebb31b2-336e-4b06-b298-bbdf271d5598) | Results list `-empty` (filled **Log your first result**); Race browse `-empty` (outlined **Clear all filters**) | Archivist: "log the result … so that I have proof ready" (`jtbd.md` → Related job 3); the empty archive's one way forward is logging. Race browse `-empty`: `jtbd.md` → Hypothesis 7 **[?]** (a filter that lands on "no races match"). |
 
-### Donor 1: LinkedIn (licenses and certifications)
+### Donor: LinkedIn (licenses and certifications), source-line logic only
 
 - **Light/dark:** light.
 - **Why picked:** it's the other 23/40 BENCHMARK scorer, and the one whose proof is an external link, the same shape as Onrace's trust model (`../CLAUDE.md` → Result trust model).
+- **What's taken: the logic of the source line only, not its styling.** The designer finds LinkedIn's look corporate and dated (`concept.md` → Designer's taste). So its gray, its type and its link glyph aren't carried over; only the arrangement is: the proof as its own quieter line under the claim, not a badge.
 
 | Technique (pointable) | Scope | Mobbin | Onrace screen | Persona worry / job it addresses |
 |---|---|---|---|---|
-| **The source sits on its own line under the claim, as a gray domain with an external-link glyph, not as a badge.** The claim (title) is bold. The proof is a quieter meta line beneath it ("blogs.microsoft.com"). Nothing is pinned to the title or avatar. | **Visual only.** `results-list.html` already has `<p class="proof-label">` on its own line under the meta line. The external-link glyph is visual only if drawn with CSS `::before`; adding an SVG element would be structural. | [2e873a3b](https://mobbin.com/screens/2e873a3b-3ac8-4bca-b726-92de277571ed), [a26e38b8](https://mobbin.com/screens/a26e38b8-aee7-41eb-a0b0-4f023d37ec08) | Results list rows and Result detail: "Self-reported · via \<domain\>" | Primary persona's trust trigger: a product that "visibly labels 'self-reported + source-linked' would be *more transparent than what they're used to*" (`../research/personas.md` → Primary → Trust triggers). Archivist's trust trigger: Boston "accepts a link or certificate as sufficient proof" (`personas.md` → Secondary → Trust triggers). Social job: "I want the proof itself to stand on its own" (`jtbd.md` → Social). |
+| **The source sits on its own line under the claim, not as a badge** (logic only). LinkedIn shows it as a gray domain with an external-link glyph; that styling isn't taken. The claim (title) is bold. The proof is a quieter meta line beneath it ("blogs.microsoft.com"). Nothing is pinned to the title or avatar. | **Visual only.** `results-list.html` already has `<p class="proof-label">` on its own line under the meta line. The external-link glyph is visual only if drawn with CSS `::before`; adding an SVG element would be structural. | [2e873a3b](https://mobbin.com/screens/2e873a3b-3ac8-4bca-b726-92de277571ed), [a26e38b8](https://mobbin.com/screens/a26e38b8-aee7-41eb-a0b0-4f023d37ec08) | Results list rows and Result detail: "Self-reported · via \<domain\>" | Primary persona's trust trigger: a product that "visibly labels 'self-reported + source-linked' would be *more transparent than what they're used to*" (`../research/personas.md` → Primary → Trust triggers). Archivist's trust trigger: Boston "accepts a link or certificate as sufficient proof" (`personas.md` → Secondary → Trust triggers). Social job: "I want the proof itself to stand on its own" (`jtbd.md` → Social). |
 | **What not to take:** the shield badge and "Verified by Persona". | n/a | [f8fa87dc](https://mobbin.com/screens/f8fa87dc-3036-493f-8cee-9475e12ed26a) | n/a | `../voice.md` principle 1; `research.md` BENCHMARK mechanism 2. |
 
-### Donor 2: Letterboxd (diary)
+### Documented, not picked: Letterboxd (diary)
 
-- **Light/dark:** dark. It's the only dark reference found among the named products.
-- **Why picked:** its diary is a personal, date-ordered log of things you did, the closest analogue to Results list. It also shows how a dark UI can keep color on the data rather than the chrome.
-
-| Technique (pointable) | Scope | Mobbin | Onrace screen | Persona worry / job it addresses |
-|---|---|---|---|---|
-| **Color only on the data, never on the chrome.** The background, rows and type are neutral slate. Saturated color appears only on the ratings and the like-heart. Our equivalent: color lands on the finish time or sport tag, not on headers or bars. | **Visual only.** A color rule over existing elements. | [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49), [37003650](https://mobbin.com/screens/37003650-95a8-4b42-9c41-47a1e2ada51d) | Both screens, as a color rule | No persona source. **[?]** It's a technique for "dark, intense" (`../CLAUDE.md` brand tone) and `../voice.md` principle 3 ("the look carries the energy"), not an answer to a persona worry. |
-
-Letterboxd's month-grouped diary was picked as a technique too, but it's structural, so it's in § 4c.
+- **Light/dark:** dark.
+- **Why not picked:** "Designer finds the diary unclear: dense dark list where it's not obvious what matters." (`concept.md` → Designer's taste.)
+- **Its techniques, kept for the record only (not used in Lesson 6 or deferred to Lesson 7):**
+  - **Color only on the data, never on the chrome.** The background, rows and type are neutral slate; saturated color appears only on the ratings and the like-heart. Would have been visual only. [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49), [37003650](https://mobbin.com/screens/37003650-95a8-4b42-9c41-47a1e2ada51d). No persona source **[?]**.
+  - **Month-grouped log with a day box.** A full-width uppercase month band ("OCTOBER 2025") heads each group. Each row starts with a small bordered square holding the day number, then the title (bold) and the year (lighter), then one data line. Flat rows, hairline separators, ~4px radius [~]. Would have been structural: it adds month headers and needs the day as its own element. [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49). Served the Archivist's "pull that proof up quickly" (`jtbd.md` → Related job 4); recall by date is **[?]**.
 
 ### 4b. Hybrid-racing products (Lesson 1 screenshots, not Mobbin)
 
@@ -215,7 +213,6 @@ Lesson 6 steps 5–6 forbid changing screen text and structure, so these wait.
 
 | Technique | From | Why it's structural | Onrace screen |
 |---|---|---|---|
-| **Month-grouped log with a day box.** A full-width uppercase month band ("OCTOBER 2025") heads each group. Each row starts with a small bordered square holding the day number, then the title (bold) and the year (lighter), then one data line. Flat rows, hairline separators, ~4px radius [~] on the small elements. | Letterboxd diary, [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49) | Adds month header elements and regroups the list by month. The day box needs the day as its own element, but `results-list.html` has the whole date in one `<time>`. | Results list. Persona: Archivist, "pull that proof up quickly … without scrambling to find it" (`jtbd.md` → Related job 4). That people recall races by date is **[?]**. |
 | **The full date tile:** the month on its own colored band, plus a weekday line. | Strava, [cb844353](https://mobbin.com/screens/cb844353-6828-40e9-9aff-bf37ffe1b302) | It splits the single `<time>` into month and day elements, and adds weekday text that isn't in the markup. | Race browse cards |
 | **A gray label above the finish time** ("Finish time"). | Strava, [125cbc4d](https://mobbin.com/screens/125cbc4d-55cc-4abc-82d0-4ff489ed616e) | Adds a label element (and text) the Results list row doesn't have. | Results list rows |
 | **A dark card head** holding the format chip and title, over a light body with the date and location. | fitnessracingcalendar, `../research/screens/fitnessracingcalendar-home.png` | It regroups the card: in `race-browse.html` the sport tag sits in `.card-meta` beside the date, not with the title. | Race browse cards |
@@ -240,5 +237,5 @@ Lesson 6 steps 5–6 forbid changing screen text and structure, so these wait.
 - **Light vs. dark.** The brief says dark. Three of the four Mobbin references are light-first, and the one dark one (Letterboxd) is a film app. Among the five hybrid-racing products (§ 4b), three are dark. Not decided.
 - **Exact values.** Every hex is [~] from compressed previews, and every typeface is [?]. Nothing here is a token.
 - **Accent color.** None of the references' brand accents are taken (Strava orange, LinkedIn blue/green, Letterboxd green/orange, and in § 4b RoxFit yellow and fitnessracingcalendar lime). Only the specific artifact-page values are banned, so Onrace's accent, orange included, is an open taste decision.
-- **Untested persona links.** Whether the date-first card or the month-grouped log actually help the personas is **[?]**. No user research exists (`personas.md`, opening note).
+- **Untested persona links.** Whether the date-first card actually helps the personas is **[?]**. No user research exists (`personas.md`, opening note).
 - **Products not searched:** Goodreads, Parkrun, World Athletics, My Race Results, DUV, Race Roster.
