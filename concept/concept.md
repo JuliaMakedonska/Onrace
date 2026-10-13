@@ -44,6 +44,23 @@ Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yell
 
 ---
 
+## Race card details (designer, decided 2026-10-13)
+
+Round 2 left two details open as A/B options in `directions.html`. The designer decided both:
+
+1. **The date sits on a tile:** a background on the date column, the day large, the month and year below it. Chosen over a plain date column.
+2. **The format chip has a format dot:** a small colored dot before the format name, inside a neutral chip. Chosen over a text-only chip. The chip itself stays neutral metadata (Hierarchy rule 2).
+
+**Card anatomy, applied to round 2 Direction A ("Podium"):** round 1 Direction 2's card: the photo inside the card (inset, with its own radius), then two columns. On the left, the date tile. On the right, a text column of the race title, then the format chip with its dot, then the location with the map-point icon. Direction A's colors, type, radius, surfaces and icon style are unchanged; only the anatomy changed. The same card is used on every card of the Race browse preview.
+
+**Dot colors:** derived from Direction A's palette and muted: each format hue is mixed 50% into Ink 2 (`#A3A9B0`), so the dots' chroma stays at 3–29 against the accent's 63, and none competes with the accent (Hierarchy rule 1). Each dot passes 3:1 against its chip, checked by script.
+
+**Markup hooks (not in the wireframes):**
+- `data-sport="…"` on each format tag and filter chip, so CSS can color the dot.
+- one `<img>` per race card for the photo. The wireframes have no photo slot.
+
+---
+
 ## Attributes
 
 Visual opposites, "X, not Y". Each one names:

@@ -256,6 +256,17 @@ Lesson 6, step 3, 2026-10-13. These photos demonstrate each direction's card in 
 | 2 · Format colors | A racer in a headband runs up a steep wooden obstacle wall on an outdoor course, motion-blurred. OCR. | Nikita Pishchugin | https://unsplash.com/photos/man-climbing-a-wooden-obstacle-during-a-race-yNUBSKvl5d8 | https://images.unsplash.com/photo-1776938023428-60ddf175a2d1 |
 | 3 · Floodlight | A trail runner with a hydration vest on a mountain path, with glaciated peaks behind. Trail / ultra. Paired with the UTMB card, but the location isn't confirmed by the source. | Brian Metzler | https://unsplash.com/photos/man-in-white-shirt-and-blue-shorts-running-on-brown-ground-between-green-grass-during-daytime-nmWQ2SKvj5M | https://images.unsplash.com/photo-1498581444814-7e44d2fbe0e2 |
 
+### Added 2026-10-13 for Direction A's Race browse preview (every card has a photo)
+
+| Card | Subject | Photographer | Unsplash page | Image URL |
+|---|---|---|---|---|
+| Berlin Marathon | Runners filling a tree-lined city avenue during a road race, seen from above. The city isn't identified, so the photo is illustrative, not Berlin. | Mārtiņš Zemlickis | https://unsplash.com/photos/people-running-on-road-during-daytime-NPFu4GfFZ7E | https://images.unsplash.com/photo-1452626038306-9aae5e071dd3 |
+| HYROX London | Same sled-push start line as Direction 1 above. | Leona Lee | https://unsplash.com/photos/athletes-compete-by-pushing-weighted-sleds-indoors-xGzdmd5lB6I | https://images.unsplash.com/photo-1743993414654-0be2b73a9620 |
+| HYROX Dallas | An athlete pushing a sled down a HYROX lane, with a HYROX-branded barrier. Listed below as not used in step 3; used here because it's a HYROX race's own card. | Mathieu Improvisato | https://unsplash.com/photos/athletes-compete-in-a-hyrox-race-event-v4P_DDrpRsk | https://images.unsplash.com/photo-1757147517623-ee9a76c9ead2 |
+| Boston Marathon | Road-race runners wearing race bibs, legs and shoes mid-stride. The city isn't identified, so the photo is illustrative. | Miguel A Amutio | https://unsplash.com/photos/people-running-on-gray-asphalt-road-during-daytime-QDv-uBc-poY | https://images.unsplash.com/photo-1613936360976-8f35cf0e5461 |
+
+Also downloaded and viewed, not used: a close-up of runners' legs on a road race (Miguel A Amutio, https://unsplash.com/photos/people-running-on-gray-asphalt-road-during-daytime-Y0woUmyxGrw), and a motion-blurred runner's legs (Pierre-Antoine Franck, https://unsplash.com/photos/runners-in-motion-during-a-race-W2pBsQaT6FQ). Both were too abstract to place a race.
+
 ### Downloaded, not used
 
 | Subject | Photographer | Unsplash page | Why not used |
