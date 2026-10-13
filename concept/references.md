@@ -11,7 +11,11 @@ Lesson 6, step 1, 2026-10-13. Collected on Mobbin (`search_screens`, iOS first) 
 - Every typeface is a guess from letterforms, marked **[?]**.
 - A persona or job claim not traced to `research/personas.md` or `research/jtbd.md` is marked **[?]**.
 
-**Guardrail (applies to everything below):** the artifact-page palette (the `#0b0c0e` / `#ff4d2e` family), `src/style.css` and the wireframe grays are not inputs for the product's look. Where a reference's own color falls into that family, it's flagged and not taken.
+**Guardrail (applies to everything below):** the artifact-page palette (the `#0b0c0e` / `#ff4d2e` family), `src/style.css` and the wireframe grays are not inputs for the product's look. The ban is on those specific values, not on any hue: whether Onrace uses orange, or any other color, is an open taste decision. Separately, a reference's signature brand color (Strava's orange, LinkedIn's blue) isn't taken, because it belongs to another brand.
+
+**Scope label (Lesson 6, steps 5–6 forbid changing screen text and structure):** every technique in § 4 is marked
+- **visual only**: applies within the existing markup, by CSS alone; or
+- **structural**: adds, splits or regroups elements. Structural techniques are listed in § 4c, Deferred to Lesson 7.
 
 ---
 
@@ -37,7 +41,7 @@ Searched in priority order: the HARD tier first, then the BENCHMARK's highest sc
 
 **Seen in results but not used:** Runna, pliability and Garmin Connect came up in name searches. research.md doesn't name them as competitors or benchmarks: Runna appears only as Strava's race-data source, Garmin only inside a RoxFit review. So they aren't substituted in. This includes Garmin Connect's "Verified Source" race list ([screen](https://mobbin.com/screens/25ab95f9-a80d-4bee-a01c-0e5d1dd67898)), which is close to our topic.
 
-**The consequence:** no HARD-tier product is on Mobbin. Every reference below comes from a benchmark or aspirational product, and none is hybrid-racing branded. The brief's "in the spirit of HYROX/CrossFit" (`../CLAUDE.md` → Design / brand tone) has no visual reference here yet (§ 6).
+**The consequence:** no HARD-tier product is on Mobbin. Every Mobbin reference below comes from a benchmark or aspirational product, and none is hybrid-racing branded. The HARD tier is covered instead from the Lesson 1 screenshots in `../research/screens/` (§ 4b).
 
 ---
 
@@ -53,7 +57,7 @@ Searched in priority order: the HARD tier first, then the BENCHMARK's highest sc
 
 **Observed:**
 - **Background:** white with pale-gray section bands ~#F2F2F2 [~]. Text is near-black ~#1A1A1A [~].
-- **One saturated accent:** orange ~#FC5200 [~], on the active tab, PR badges, the date-tile band and primary pills. **It's in the forbidden `#ff4d2e` family, so Strava's color is not taken.**
+- **One saturated accent:** orange ~#FC5200 [~], on the active tab, PR badges, the date-tile band and primary pills. **Not taken: it's Strava's signature brand color.** The reason is that it belongs to another brand, not that orange is banned; whether Onrace uses any orange is an open taste decision.
 - **Shapes:** cards have a ~12px radius [~] and a faint shadow. Buttons are fully rounded pills.
 - **Type:** titles in a heavy grotesque sans, possibly a custom face [?]. Stats are set as a small gray label over a large bold number.
 - **Density:** medium. Three stats to a row.
@@ -82,7 +86,7 @@ Searched in priority order: the HARD tier first, then the BENCHMARK's highest sc
 
 **Observed:**
 - **Background:** blue-tinted slate ~#14181C [~], with lighter slate row bands ~#20262D [~]. Text is pale blue-gray ~#DDE3EA [~], and meta is mid slate ~#8899AA [~].
-- **Color on data only:** green ~#00E054 [~] for star ratings and orange ~#FF8000 [~] for the "liked" heart. The tab bar is slate with a blue active icon ~#40BCF4 [~]. The heart's orange is amber, not the forbidden `#ff4d2e`, but it's still not taken.
+- **Color on data only:** green ~#00E054 [~] for star ratings and orange ~#FF8000 [~] for the "liked" heart. The tab bar is slate with a blue active icon ~#40BCF4 [~]. These are Letterboxd's own brand colors, so they aren't taken.
 - **Shapes:** small radii ~4px [~] on posters and day boxes. Rows are flat, with hairline separators.
 - **Type:** a grotesque sans, possibly Graphik [?]. Titles bold, the year in a lighter gray beside them.
 - **Density:** high. About ten rows per screen on the diary.
@@ -136,41 +140,85 @@ Searched in priority order: the HARD tier first, then the BENCHMARK's highest sc
 
 ## 4. Picked styles
 
-Three styles: one base and two donors. AllTrails is documented above but not picked. Its strongest techniques are photo-led cards (Onrace has no race imagery, and content images are deferred in `../wireframes/_conventions.md` § 7) and the floating Map pill (map view is out of scope). Its one leftover technique, the dot-separated meta line, is already covered by Strava's card.
+Three styles: one base and two donors, plus one hybrid-racing source from the Lesson 1 screenshots (§ 4b). AllTrails is documented above but not picked. Its strongest techniques are photo-led cards (Onrace has no race imagery, and content images are deferred in `../wireframes/_conventions.md` § 7) and the floating Map pill (map view is out of scope). Its one leftover technique, the dot-separated meta line, is already covered by Strava's card.
 
 ### Base: Strava
 
 - **Why it's the base:**
   - It's tied for the top BENCHMARK score (23/40) and is the only sports product of the four.
   - It has screens for both of our concept screens: an event list and a performance record.
-- **What "base" means here:** the structure and type hierarchy, **not the color**. Its orange is in the forbidden family and is dropped.
+- **What "base" means here:** the structure and type hierarchy, **not the color**. Its orange is Strava's signature brand color, so it isn't carried over. Onrace may still use an orange of its own; that's an open taste decision.
 - **Light/dark:** light by default, with a dark mode that keeps the same structure ([e691c172](https://mobbin.com/screens/e691c172-0756-44c2-a5a2-35ae7eed1269)). That suggests the structure survives either theme decision.
 
-| Technique (pointable) | Mobbin | Onrace screen | Persona worry / job it addresses |
-|---|---|---|---|
-| **The date tile leads the race card.** A fixed-width tile on the left (short month on a band, a large day number, the weekday), with the name and meta to its right. Card radius ~12px [~]. Keep the shape; the band color will be our own. | [cb844353](https://mobbin.com/screens/cb844353-6828-40e9-9aff-bf37ffe1b302) | Race browse cards | Primary persona: "see what's coming up … so that I can plan my season instead of finding out about races too late" (`../research/jtbd.md` → Related job 1). Reading the date first serves season planning. That it scans faster than a date inside the meta line is **[?]**. |
-| **Stat typesetting: a small gray label above a large bold value.** "Moving Time / 4:07", in a 2–3 column grid, with the value about 1.5× the label's size [~]. | [125cbc4d](https://mobbin.com/screens/125cbc4d-55cc-4abc-82d0-4ff489ed616e) | Results list rows (finish time), Result detail | Qualifying-Time Archivist: "pull that proof up quickly" (`jtbd.md` → Related job 4). The finish time is the fact being proved, so it gets the largest type in the row. Primary persona's emotional job, "be recognized as what I actually am — a hybrid athlete" (`jtbd.md` → Emotional): performance figures set as the hero content. |
-| **The empty state's button weight follows its cause.** A filled pill when the empty state's action creates something ("Create an event"). An outlined pill when it recovers from filtering ("Adjust Filters"). Both with a bold title and one plain line. | [b6641647](https://mobbin.com/screens/b6641647-d40e-49b3-a73a-56f2a11e5c98), [0ebb31b2](https://mobbin.com/screens/0ebb31b2-336e-4b06-b298-bbdf271d5598) | Results list `-empty` (filled **Log result**); Race browse `-empty` (outlined **Clear all filters**) | Archivist: "log the result … so that I have proof ready" (`jtbd.md` → Related job 3); the empty archive's one way forward is logging. Race browse `-empty`: `jtbd.md` → Hypothesis 7 **[?]** (a filter that lands on "no races match"). |
+| Technique (pointable) | Scope | Mobbin | Onrace screen | Persona worry / job it addresses |
+|---|---|---|---|---|
+| **The date leads the race card, in its own left column.** Strava sets a fixed-width tile on the left, with the name and meta to its right. Card radius ~12px [~]. | **Visual only (reduced form).** Checked `wireframes/race-browse.html`: each card already holds the date, as one `<time>` ("27 Sep 2026") inside `<p class="card-meta">` after the sport tag. CSS alone can pull that `<time>` into a left column (`display: contents` on `.card-meta`, a grid on `.card-link`) and let it wrap in a narrow box, with the first line ("27") set larger via `::first-line` **[?]** (untested). Strava's full tile isn't possible this way: there's no weekday in the markup, and the month isn't its own element, so it can't get its own band. Those parts are in § 4c. | [cb844353](https://mobbin.com/screens/cb844353-6828-40e9-9aff-bf37ffe1b302) | Race browse cards | Primary persona: "see what's coming up … so that I can plan my season instead of finding out about races too late" (`../research/jtbd.md` → Related job 1). Reading the date first serves season planning. That it scans faster than a date inside the meta line is **[?]**. |
+| **The finish time is the row's largest, boldest figure.** Strava sets its stat values about 1.5× the size of their labels [~], bold. | **Visual only.** Checked `wireframes/results-list.html`: `<span class="finish-time">` already sits in `.card-top` next to the race name, so its size and weight are CSS. Strava's gray label above the value ("Moving Time") has no equivalent element in the row, so that part is structural (§ 4c). | [125cbc4d](https://mobbin.com/screens/125cbc4d-55cc-4abc-82d0-4ff489ed616e) | Results list rows (finish time) | Qualifying-Time Archivist: "pull that proof up quickly" (`jtbd.md` → Related job 4). The finish time is the fact being proved, so it gets the largest type in the row. Primary persona's emotional job, "be recognized as what I actually am — a hybrid athlete" (`jtbd.md` → Emotional): performance figures set as the hero content. |
+| **The empty state's button weight follows its cause.** A filled pill when the empty state's action creates something ("Create an event"). An outlined pill when it recovers from filtering ("Adjust Filters"). Both with a bold title and one plain line. | **Visual only.** The markup already makes the distinction: `results-list-empty.html` has `<a class="state-action">` ("Log your first result"), and `race-browse-empty.html` has `<button class="state-action secondary">` ("Clear all filters"). Only the styling changes. | [b6641647](https://mobbin.com/screens/b6641647-d40e-49b3-a73a-56f2a11e5c98), [0ebb31b2](https://mobbin.com/screens/0ebb31b2-336e-4b06-b298-bbdf271d5598) | Results list `-empty` (filled **Log your first result**); Race browse `-empty` (outlined **Clear all filters**) | Archivist: "log the result … so that I have proof ready" (`jtbd.md` → Related job 3); the empty archive's one way forward is logging. Race browse `-empty`: `jtbd.md` → Hypothesis 7 **[?]** (a filter that lands on "no races match"). |
 
 ### Donor 1: LinkedIn (licenses and certifications)
 
 - **Light/dark:** light.
 - **Why picked:** it's the other 23/40 BENCHMARK scorer, and the one whose proof is an external link, the same shape as Onrace's trust model (`../CLAUDE.md` → Result trust model).
 
-| Technique (pointable) | Mobbin | Onrace screen | Persona worry / job it addresses |
-|---|---|---|---|
-| **The source sits on its own line under the claim, as a gray domain with an external-link glyph, not as a badge.** The claim (title) is bold. The proof is a quieter meta line beneath it ("blogs.microsoft.com"). Nothing is pinned to the title or avatar. | [2e873a3b](https://mobbin.com/screens/2e873a3b-3ac8-4bca-b726-92de277571ed), [a26e38b8](https://mobbin.com/screens/a26e38b8-aee7-41eb-a0b0-4f023d37ec08) | Results list rows and Result detail: "Self-reported · via \<domain\>" | Primary persona's trust trigger: a product that "visibly labels 'self-reported + source-linked' would be *more transparent than what they're used to*" (`../research/personas.md` → Primary → Trust triggers). Archivist's trust trigger: Boston "accepts a link or certificate as sufficient proof" (`personas.md` → Secondary → Trust triggers). Social job: "I want the proof itself to stand on its own" (`jtbd.md` → Social). |
-| **What not to take:** the shield badge and "Verified by Persona". | [f8fa87dc](https://mobbin.com/screens/f8fa87dc-3036-493f-8cee-9475e12ed26a) | n/a | `../voice.md` principle 1; `research.md` BENCHMARK mechanism 2. |
+| Technique (pointable) | Scope | Mobbin | Onrace screen | Persona worry / job it addresses |
+|---|---|---|---|---|
+| **The source sits on its own line under the claim, as a gray domain with an external-link glyph, not as a badge.** The claim (title) is bold. The proof is a quieter meta line beneath it ("blogs.microsoft.com"). Nothing is pinned to the title or avatar. | **Visual only.** `results-list.html` already has `<p class="proof-label">` on its own line under the meta line. The external-link glyph is visual only if drawn with CSS `::before`; adding an SVG element would be structural. | [2e873a3b](https://mobbin.com/screens/2e873a3b-3ac8-4bca-b726-92de277571ed), [a26e38b8](https://mobbin.com/screens/a26e38b8-aee7-41eb-a0b0-4f023d37ec08) | Results list rows and Result detail: "Self-reported · via \<domain\>" | Primary persona's trust trigger: a product that "visibly labels 'self-reported + source-linked' would be *more transparent than what they're used to*" (`../research/personas.md` → Primary → Trust triggers). Archivist's trust trigger: Boston "accepts a link or certificate as sufficient proof" (`personas.md` → Secondary → Trust triggers). Social job: "I want the proof itself to stand on its own" (`jtbd.md` → Social). |
+| **What not to take:** the shield badge and "Verified by Persona". | n/a | [f8fa87dc](https://mobbin.com/screens/f8fa87dc-3036-493f-8cee-9475e12ed26a) | n/a | `../voice.md` principle 1; `research.md` BENCHMARK mechanism 2. |
 
 ### Donor 2: Letterboxd (diary)
 
 - **Light/dark:** dark. It's the only dark reference found among the named products.
 - **Why picked:** its diary is a personal, date-ordered log of things you did, the closest analogue to Results list. It also shows how a dark UI can keep color on the data rather than the chrome.
 
-| Technique (pointable) | Mobbin | Onrace screen | Persona worry / job it addresses |
+| Technique (pointable) | Scope | Mobbin | Onrace screen | Persona worry / job it addresses |
+|---|---|---|---|---|
+| **Color only on the data, never on the chrome.** The background, rows and type are neutral slate. Saturated color appears only on the ratings and the like-heart. Our equivalent: color lands on the finish time or sport tag, not on headers or bars. | **Visual only.** A color rule over existing elements. | [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49), [37003650](https://mobbin.com/screens/37003650-95a8-4b42-9c41-47a1e2ada51d) | Both screens, as a color rule | No persona source. **[?]** It's a technique for "dark, intense" (`../CLAUDE.md` brand tone) and `../voice.md` principle 3 ("the look carries the energy"), not an answer to a persona worry. |
+
+Letterboxd's month-grouped diary was picked as a technique too, but it's structural, so it's in § 4c.
+
+### 4b. Hybrid-racing products (Lesson 1 screenshots, not Mobbin)
+
+None of the HARD tier is on Mobbin (§ 1), but `../research/screens/` holds screenshots of all five from the 2026-09-02 pass.
+
+**What these screenshots are:** mostly marketing websites and App Store listings, not the apps themselves.
+- RoxFit and RoxConnect show their apps only as phone mockups on their websites.
+- RoxMatchUp's App Store screenshots are the only real in-app UI in the set.
+- ocrbase and fitnessracingcalendar are web products, so their pages are the product.
+
+| Product | Screenshot | Light/dark | Color amount | Type character |
+|---|---|---|---|---|
+| RoxFit | `../research/screens/roxfit-how-it-works.png`, `../research/screens/roxfit-home.png` | **Dark.** Near-black ~#0F0F0D [~] with an olive-yellow glow. The app mockups are dark gray ~#1C1C1C [~] cards. | **One loud accent, small areas.** Yellow ~#FFE600 [~] only on the selected pill and the small uppercase eyebrow labels ("PACEME", "ON YOUR WRIST"). The "Ultra" waitlist page swaps this for violet ~#9B8CF2 [~]. | Heavy geometric sans for headlines, tight [?]. The wordmark is condensed, letterspaced capitals [?]. The eyebrows are small, wide-tracked uppercase. |
+| RoxConnect | `../research/screens/roxconnect-home.png` | **Dark.** Pure black ~#000000 [~], with dark-gray ~#0E0E0E [~] cards. | **Almost none.** White and gray type, white pill buttons. Orange appears only inside the app mockups, on small controls. | Neutral grotesque, Inter-like [?]. Big bold headlines, light gray body. |
+| RoxMatchUp | `../research/screens/roxmatchup-appstore.png` | **Dark.** Slate ~#2D303C [~]. | **Medium.** Yellow ~#F5DF3A [~] on titles, outlined buttons and tags, and the chat bubbles. | Bold rounded sans for screen titles [?]. Dense, small body text. |
+| fitnessracingcalendar.com | `../research/screens/fitnessracingcalendar-home.png` | **Light page, dark card heads.** Warm off-white ~#F5F4EF [~]. Each card has a near-black head ~#171712 [~] over a white body. | **One accent, used a lot.** Lime ~#C8F03C [~] on every card's format chip and "Book now" button, plus olive-green links ~#5A7A00 [~]. "Sold out" is a pink chip ~#FDE2E2 [~] with red text. | Heavy, slightly condensed display grotesque for card titles [?]. The format chip is small, bold, wide-tracked uppercase ("DEKA FIT", "WILD HYBRID"). The body is a plain grotesque [?]. |
+| ocrbase.com | `../research/screens/ocrbase-events-list.png`, `../research/screens/ocrbase-home.png` | **Light.** White, with a gray header ~#ECEFF0 [~]. | **Low.** Teal ~#1ABC9C [~] links (underlined race titles), gray tag chips. | Generic web sans, Inter-like [?]. Reads as a default framework theme, not a brand. |
+
+**Tally:** three dark (RoxFit, RoxConnect, RoxMatchUp) and two light (fitnessracingcalendar, ocrbase), though fitnessracingcalendar puts a dark head on every card. Across all five, color is one accent on small, high-signal elements, not a palette.
+
+**Technique taken: the format as a small uppercase chip with a high-contrast fill.** Seen in fitnessracingcalendar's card chips ("DEKA FIT") and RoxFit's eyebrows.
+
+- **Scope: visual only.** Every Race browse card and Results list row already has `<span class="sport-tag">` (HYROX, DEKA, Marathon …). Uppercase, letterspacing and fill are CSS (`text-transform`); the text in the markup doesn't change.
+- **Open question [?]:** whether CSS uppercase sits well with `../voice.md` principle 4, "Every format by its own name". The name is unchanged, but "Half marathon" would render as "HALF MARATHON".
+- **Persona worry:** the Primary persona's "see what's coming up in the formats I actually care about" (`../research/jtbd.md` → Related job 1), so the format reads at a glance. Also the Emotional job, "recognized as what I actually am — a hybrid athlete" (`jtbd.md` → Emotional), since the format chip is the most hybrid-racing-native element in this set. That it reads as "for hybrid athletes" to real users is **[?]**.
+
+**Anti-reference: what we don't take.**
+- **Big-number stat strips.** RoxConnect's "+499,900 active competitors globally / +80 countries". These are hype numbers and crowd words, both on `../voice.md`'s Forbidden list.
+- **Pure black plus one hot accent.** RoxConnect's look, and the fastest route back to the banned artifact-page values (`#0b0c0e` / `#ff4d2e`) by habit. If Onrace goes dark, its values have to be chosen fresh, not drifted into.
+- **Price and booking state on the card.** fitnessracingcalendar's "From £80", "Book now" and pink "Sold out". Onrace has no price data and links out to register only (`../CLAUDE.md` → Out of scope).
+- **The tag-soup format list.** ocrbase's gray chips ("DEKA MILE - Affiliate", "DEKA STRONG - Affiliate") repeat in every row, so no chip stands out.
+- **Marketing-tone card copy** ("Salt Lake City, are you ready?"). That's catalog data, not ours, but it shows how quickly a race card turns into hype.
+
+### 4c. Deferred to Lesson 7 (structural)
+
+Lesson 6 steps 5–6 forbid changing screen text and structure, so these wait.
+
+| Technique | From | Why it's structural | Onrace screen |
 |---|---|---|---|
-| **Month-grouped log with a day box.** A full-width uppercase month band ("OCTOBER 2025") heads each group. Each row starts with a small bordered square holding the day number, then the title (bold) and the year (lighter), then one data line. Flat rows, hairline separators, ~4px radius [~] on the small elements. | [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49) | Results list (denser and calmer than Race browse's cards: the contrast this lesson is after) | Archivist: "pull that proof up quickly … without scrambling to find it" (`jtbd.md` → Related job 4). Grouping by month matches remembering a race by when it was. That people recall races by date is **[?]**. |
-| **Color only on the data, never on the chrome.** The background, rows and type are neutral slate. Saturated color appears only on the ratings and the like-heart. Our equivalent: color lands on the finish time or sport tag, not on headers or bars. | [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49), [37003650](https://mobbin.com/screens/37003650-95a8-4b42-9c41-47a1e2ada51d) | Both screens, as a color rule | No persona source. **[?]** It's a technique for "dark, intense" (`../CLAUDE.md` brand tone) and `../voice.md` principle 3 ("the look carries the energy"), not an answer to a persona worry. |
+| **Month-grouped log with a day box.** A full-width uppercase month band ("OCTOBER 2025") heads each group. Each row starts with a small bordered square holding the day number, then the title (bold) and the year (lighter), then one data line. Flat rows, hairline separators, ~4px radius [~] on the small elements. | Letterboxd diary, [483648e0](https://mobbin.com/screens/483648e0-d2c3-47ed-9c05-384c4d078d49) | Adds month header elements and regroups the list by month. The day box needs the day as its own element, but `results-list.html` has the whole date in one `<time>`. | Results list. Persona: Archivist, "pull that proof up quickly … without scrambling to find it" (`jtbd.md` → Related job 4). That people recall races by date is **[?]**. |
+| **The full date tile:** the month on its own colored band, plus a weekday line. | Strava, [cb844353](https://mobbin.com/screens/cb844353-6828-40e9-9aff-bf37ffe1b302) | It splits the single `<time>` into month and day elements, and adds weekday text that isn't in the markup. | Race browse cards |
+| **A gray label above the finish time** ("Finish time"). | Strava, [125cbc4d](https://mobbin.com/screens/125cbc4d-55cc-4abc-82d0-4ff489ed616e) | Adds a label element (and text) the Results list row doesn't have. | Results list rows |
+| **A dark card head** holding the format chip and title, over a light body with the date and location. | fitnessracingcalendar, `../research/screens/fitnessracingcalendar-home.png` | It regroups the card: in `race-browse.html` the sport tag sits in `.card-meta` beside the date, not with the title. | Race browse cards |
 
 ---
 
@@ -182,12 +230,15 @@ Three styles: one base and two donors. AllTrails is documented above but not pic
   - `research/jtbd.md`: Related jobs 1–4, Emotional and Social jobs, Hypotheses 1–7
 - **Searches:** the products in § 1, with platform iOS (web only for the web-only HARD products and Athlinks). For each product used, I read the returned previews before describing them, and kept only screens whose `app_name` matched the product.
 - **Links:** every Mobbin link here is the `mobbin_url` the tool returned.
+- **Hybrid-racing screenshots (§ 4b):** viewed `roxfit-home.png`, `roxfit-how-it-works.png`, `roxconnect-home.png`, `roxmatchup-appstore.png`, `fitnessracingcalendar-home.png` (whole page plus a cropped section of cards) and `ocrbase-events-list.png` in `research/screens/`, alongside each product's `.md` note there.
+- **Scope labels (§ 4):** checked against the current markup of `wireframes/race-browse.html` (race card), `wireframes/results-list.html` (result row), `wireframes/results-list-empty.html` and `wireframes/race-browse-empty.html` (state actions).
 
 ## 6. Still unknown
 
-- **No HARD-tier visuals.** RoxFit, RoxConnect, RoxMatchUp, ocrbase and fitnessracingcalendar aren't on Mobbin. The closest-audience products have no visual reference. Their App Store or website screenshots would need another source; `research/screens/` may already hold some from the 2026-09-02 pass (not checked in this step).
-- **Light vs. dark.** The brief says dark. Three of the four references are light-first, and the one dark reference (Letterboxd) is a film app. Not decided.
+- **HARD-tier app UI.** The HARD tier is covered only by marketing sites, App Store screenshots and web pages (§ 4b), all from 2026-09-02. The real in-app UI of RoxFit and RoxConnect hasn't been seen beyond website mockups.
+- **Visual-only techniques untested.** The reduced date column (`display: contents`, `::first-line`) is **[?]** until it's tried in the wireframe CSS.
+- **Light vs. dark.** The brief says dark. Three of the four Mobbin references are light-first, and the one dark one (Letterboxd) is a film app. Among the five hybrid-racing products (§ 4b), three are dark. Not decided.
 - **Exact values.** Every hex is [~] from compressed previews, and every typeface is [?]. Nothing here is a token.
-- **Accent color.** The base's accent is ruled out by the guardrail, and the donors' accents (LinkedIn blue/green, Letterboxd green/orange) aren't taken. Onrace's accent is fully open.
+- **Accent color.** None of the references' brand accents are taken (Strava orange, LinkedIn blue/green, Letterboxd green/orange, and in § 4b RoxFit yellow and fitnessracingcalendar lime). Only the specific artifact-page values are banned, so Onrace's accent, orange included, is an open taste decision.
 - **Untested persona links.** Whether the date-first card or the month-grouped log actually help the personas is **[?]**. No user research exists (`personas.md`, opening note).
 - **Products not searched:** Goodreads, Parkrun, World Athletics, My Race Results, DUV, Race Roster.
