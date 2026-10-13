@@ -44,16 +44,14 @@ Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yell
 
 ---
 
-## Race card details (designer, 2026-10-13)
+## Race card anatomy (decided by the designer, 2026-10-13)
 
-**Race card anatomy borrowed from round 1 "Format colors" (layout only, no colors).** Round 1 Direction 2's card layout, in Direction A "Podium"'s own colors, type, radius, surfaces and icons:
+**Borrowed from round 1 "Format colors": layout only, no colors.** In Direction A "Podium"'s own colors, type, radius, surfaces and icons:
 - the photo sits inside the card (inset, with its own radius)
 - below it, on the left: the date on a tile (a raised background, the day large, the month and year below)
-- on the right, a text column: the race title, the format chip, the location with the map-point icon
+- on the right, a text column: the race title, the neutral format chip, the location with the map-point icon
 
-**Format chips:** Podium's neutral chip, the same for every format (Hierarchy rule 2). No format dot and no per-format color. The dot option was dropped on 2026-10-13.
-
-**Date column:** on a tile. This replaces the brief "plain date, revisit later" default set the same day when the direction was chosen.
+**No per-format colors.** The format chip is Podium's neutral chip, the same for every format (Hierarchy rule 2). The format-dot option was dropped.
 
 **Markup hook the card needs (not in the wireframes):** one `<img>` per race card for the photo. The wireframes have no photo slot.
 

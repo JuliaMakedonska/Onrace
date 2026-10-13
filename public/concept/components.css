@@ -16,7 +16,7 @@
 .onrace ::selection { background: var(--text-1); color: var(--bg-0); }
 .onrace :focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
 .onrace .visually-hidden {
-  position: absolute; width: var(--border); height: var(--border); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  position: absolute; width: var(--hidden-size); height: var(--hidden-size); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
 }
 .onrace h1, .screen-title {
   margin: 0;
@@ -76,9 +76,9 @@
 .btn--tertiary:hover, .clear-all:hover { color: var(--text-2); }
 
 /* states */
-.btn:disabled, .btn[aria-disabled="true"] { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
+.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
 .btn--tertiary:disabled { background: none; }
-.btn[aria-busy="true"] { cursor: progress; pointer-events: none; opacity: var(--busy-opacity); }
+.btn[aria-busy="true"] { cursor: progress; pointer-events: none; }  /* busy: same fill, verb in the present tense ("Saving…"), aria-disabled blocks keys */
 
 /* ---------- format chip: metadata, neutral ---------- */
 .sport-tag {
@@ -91,7 +91,7 @@
   color: var(--chip-text);
   font-family: var(--font-text);
   font-size: var(--size-label);
-  font-weight: var(--weight-chip);
+  font-weight: var(--weight-strong);
   letter-spacing: var(--tracking-label);
   line-height: var(--leading-tight);
   text-transform: uppercase;  /* decision A: CSS only, markup keeps "Half marathon" */
@@ -113,13 +113,13 @@
   color: var(--text-1);
   font-family: var(--font-text);
   font-size: var(--size-label);
-  font-weight: var(--weight-chip);
+  font-weight: var(--weight-strong);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   cursor: pointer;
 }
 .chip span { color: var(--text-2); }
-.chip::after, .clear-all::after { content: ""; position: absolute; inset: calc(var(--space-2) * -0.75) 0; } /* 44px tap area */
+.chip::after, .clear-all::after { content: ""; position: absolute; inset: var(--tap-pad) 0; } /* 44px tap area */
 
 /* ---------- search field ---------- */
 .race-search { position: relative; }
@@ -157,10 +157,14 @@
 
 /* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
 .race-card {
+  position: relative;
   padding: var(--space-2);
   border-radius: var(--radius-2);
   background: var(--bg-1);
 }
+.race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
+.race-card .card-link:focus-visible { outline: none; }
+.race-card .card-link:focus-visible::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
 .race-card .photo {
   display: block;
   width: 100%;
@@ -194,7 +198,6 @@
 .race-card .sport-tag { grid-area: meta; justify-self: start; margin-bottom: var(--space-1); }
 .race-card time {
   grid-area: date;
-  align-self: center;
   display: block;
   width: var(--date-col);
   text-align: center;
@@ -332,11 +335,12 @@
 
 /* ---------- skeleton (loading): no spinner, no invented progress ---------- */
 .skeleton { border-radius: var(--radius-1); background: var(--bg-2); }
+.shadow-demo { padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); box-shadow: var(--shadow-sheet); color: var(--text-2); font-size: var(--size-proof); }
 
 /* =================================================================
    Stand layout (concept.html only). Tokens only, like everything above.
    ================================================================= */
-.stand { max-width: calc(var(--space-9) * 18); margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-9); display: grid; gap: var(--space-9); }
+.stand { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-9); display: grid; gap: var(--space-9); }
 .stand-head { display: grid; gap: var(--space-3); }
 .stand p { max-width: var(--measure); }
 .stand-head p { margin: 0; color: var(--text-2); }
@@ -350,7 +354,7 @@
   letter-spacing: var(--tracking-display);
 }
 .stand-section > p, .stand-stack > p:not(.stand-label):not(.stand-why) { margin: 0; color: var(--text-2); }
-.stand-grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--space-9) * 5)), 1fr)); align-items: start; }
+.stand-grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), 1fr)); align-items: start; }
 .stand-panel { display: grid; gap: var(--space-4); align-content: start; padding: var(--space-5); border-radius: var(--radius-3); background: var(--bg-bar); }
 .stand-panel > h3 { margin: 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-2); }
 .stand-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
@@ -373,7 +377,7 @@
 .pass { color: var(--success); font-weight: var(--weight-strong); }
 .exempt { color: var(--text-2); }
 
-.phone-frame { width: 100%; max-width: calc(var(--space-9) * 6 + var(--space-1) * 2); border-radius: var(--radius-3); overflow: hidden; background: var(--bg-0); box-shadow: inset 0 0 0 var(--border) var(--line); }
+.phone-frame { width: 100%; max-width: var(--phone-width); border-radius: var(--radius-3); overflow: hidden; background: var(--bg-0); box-shadow: inset 0 0 0 var(--border) var(--line); }
 .phone-frame .stand-stack { padding: var(--space-4); }
 .icon-cell { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-1); }
 .icon-cell .icon { width: var(--icon-l); height: var(--icon-l); flex: none; }
@@ -400,3 +404,4 @@
 .swatch--on-accent { background: var(--on-accent); } .swatch--error { background: var(--error); } .swatch--error-bg { background: var(--error-bg); }
 .swatch--success { background: var(--success); } .swatch--success-bg { background: var(--success-bg); } .swatch--warning { background: var(--warning); }
 .swatch--warning-bg { background: var(--warning-bg); } .swatch--focus { background: var(--focus); }
+.swatch--warning-line { background: var(--warning-line); }
