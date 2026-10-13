@@ -239,3 +239,29 @@ Lesson 6 steps 5–6 forbid changing screen text and structure, so these wait.
 - **Accent color.** None of the references' brand accents are taken (Strava orange, LinkedIn blue/green, Letterboxd green/orange, and in § 4b RoxFit yellow and fitnessracingcalendar lime). Only the specific artifact-page values are banned, so Onrace's accent, orange included, is an open taste decision.
 - **Untested persona links.** Whether the date-first card actually helps the personas is **[?]**. No user research exists (`personas.md`, opening note).
 - **Products not searched:** Goodreads, Parkrun, World Athletics, My Race Results, DUV, Race Roster.
+
+---
+
+## 7. Photos
+
+Lesson 6, step 3, 2026-10-13. These photos demonstrate each direction's card in `directions.html`. They aren't product content. Every photo below was downloaded and looked at before it was used, and each one is free under the Unsplash License (no Unsplash+). The page loads them from `images.unsplash.com` at `?w=900&q=75&fm=jpg`, and all three loaded in the browser check.
+
+**Scope reminder (step 5):** neither `wireframes/race-browse.html` nor `wireframes/results-list.html` has an image placeholder. Race cards and result rows are text only (`_conventions.md` § 1, "No images"), and the one placeholder region is Race browse's `.map-placeholder`, which is the map view and out of scope. So in step 5 these photos have no slot to fill, and adding one would be structural (§ 4c).
+
+### Used in `directions.html`
+
+| Direction | Subject | Photographer | Unsplash page | Image URL |
+|---|---|---|---|---|
+| 1 · Chalk on rubber | A row of athletes leaning on loaded sleds at the start line of an indoor fitness race, with the crowd behind the barriers. Functional-fitness racing. Shown in grayscale. | Leona Lee | https://unsplash.com/photos/athletes-compete-by-pushing-weighted-sleds-indoors-xGzdmd5lB6I | https://images.unsplash.com/photo-1743993414654-0be2b73a9620 |
+| 2 · Format colors | A racer in a headband runs up a steep wooden obstacle wall on an outdoor course, motion-blurred. OCR. | Nikita Pishchugin | https://unsplash.com/photos/man-climbing-a-wooden-obstacle-during-a-race-yNUBSKvl5d8 | https://images.unsplash.com/photo-1776938023428-60ddf175a2d1 |
+| 3 · Floodlight | A trail runner with a hydration vest on a mountain path, with glaciated peaks behind. Trail / ultra. Paired with the UTMB card, but the location isn't confirmed by the source. | Brian Metzler | https://unsplash.com/photos/man-in-white-shirt-and-blue-shorts-running-on-brown-ground-between-green-grass-during-daytime-nmWQ2SKvj5M | https://images.unsplash.com/photo-1498581444814-7e44d2fbe0e2 |
+
+### Downloaded, not used
+
+| Subject | Photographer | Unsplash page | Why not used |
+|---|---|---|---|
+| A HYROX sled-push lane, with a HYROX-branded barrier and roxzone behind | Mathieu Improvisato | https://unsplash.com/photos/athletes-compete-in-a-hyrox-race-event-v4P_DDrpRsk | On topic, but the HYROX branding fills the frame and would make one format set the look (attribute 3). |
+| Runners from behind on an indoor HYROX run lane, with Red Bull and HYROX branding | Mathieu Improvisato | https://unsplash.com/photos/athletes-running-in-an-indoor-race-event-Nqfj4YYMXVc | Same reason: brand-heavy, and it reads as a crowd (`voice.md` principle 5). |
+| A racer on a rope climb over water, shot through a blurred foreground | Nikita Pishchugin | https://unsplash.com/photos/person-rappelling-down-a-rope-over-water-W50GgZvvPa8 | OCR, but the subject is small and the frame is dominated by blur. |
+| Athletes preparing for a fitness competition | Mathieu Improvisato | https://unsplash.com/photos/athletes-preparing-for-a-fitness-competition-seOGJ4ZOOew | Downloaded as a backup but not opened, so its subject is only Unsplash's alt text. |
+| A man on a trail | Eddy Billard | https://unsplash.com/photos/man-on-trail-iXU_zV0S62o | Downloaded as a backup but not opened, so its subject is only Unsplash's alt text. |
