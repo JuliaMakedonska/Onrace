@@ -31,6 +31,19 @@ The designer's own judgment, recorded in their words. It isn't derived from rese
 
 ---
 
+## Hierarchy rules (designer)
+
+Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yellow" variant, which broke basic hierarchy. They apply to every direction from round 2 on.
+
+1. **Accent is scarce.** At most one or two accent uses per screen, reserved for the single most important thing (the primary action, or the active state). Not on every chip, not on every finish time.
+2. **Format chips are metadata.** Neutral: a subtle fill or a quiet outline, never the accent. The active filter chip differs from inactive ones by a clear but calm state, not by being the brightest thing on screen.
+3. **Button hierarchy.** Exactly one primary per screen (filled). Secondary actions are tonal or outlined; tertiary actions are text links. On Race browse, Filters is secondary, not primary. On Results list, Log result is the primary.
+4. **Type hierarchy.** The display face only for the screen title and the key numbers (finish time, date day). Race names, chips, buttons, tab labels and meta use the text face, in sentence case. Chips stay uppercase via CSS (decision A). At least three clearly distinct levels: screen title, item title, meta.
+5. **The finish time stays the loudest thing on the row** (attribute 1) through size and weight, not through accent color on every row.
+6. **The proof line has one link icon,** not two.
+
+---
+
 ## Attributes
 
 Visual opposites, "X, not Y". Each one names:
