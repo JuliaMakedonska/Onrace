@@ -1,0 +1,402 @@
+/* Onrace components: Direction A "Podium".
+   Uses tokens.css variables only, so no raw colors, sizes or radii appear here.
+   Selectors cover both the stand's classes and the wireframes' own class names
+   (.header-action, .filters-trigger, .clear-all, .sport-tag, .chip, .race-card,
+   .result-card, .proof-label, .race-search, .bottom-nav), so the two screens can
+   link this file without markup changes. */
+
+/* ---------- base ---------- */
+.onrace {
+  background: var(--bg-0);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+}
+.onrace ::selection { background: var(--text-1); color: var(--bg-0); }
+.onrace :focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.onrace .visually-hidden {
+  position: absolute; width: var(--border); height: var(--border); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.onrace h1, .screen-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--size-title);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);
+}
+
+/* ---------- buttons: one primary per screen ---------- */
+.btn, .header-action, .filters-trigger, .state-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-2);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.btn:active, .header-action:active, .filters-trigger:active, .state-action:active { transform: translateY(var(--border)); }
+.btn .icon { width: var(--icon-m); height: var(--icon-m); flex: none; }
+
+/* primary: filled accent (Log result, Register on <domain>) */
+.btn--primary, .header-action, .state-action:not(.secondary) { background: var(--accent); color: var(--on-accent); }
+.btn--primary:hover, .header-action:hover, .state-action:not(.secondary):hover { background: var(--accent-hover); }
+
+/* secondary: tonal (Filters, Clear all filters on an empty state) */
+.btn--secondary, .filters-trigger, .state-action.secondary { background: var(--bg-2); color: var(--text-1); }
+.btn--secondary:hover, .filters-trigger:hover, .state-action.secondary:hover { background: var(--line); }
+
+/* tertiary: text link (Clear all filters in the chips row, Cancel) */
+.btn--tertiary, .clear-all {
+  position: relative;
+  min-height: var(--target);
+  padding: 0 var(--space-1);
+  background: none;
+  border: 0;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-regular);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.btn--tertiary:hover, .clear-all:hover { color: var(--text-2); }
+
+/* states */
+.btn:disabled, .btn[aria-disabled="true"] { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
+.btn--tertiary:disabled { background: none; }
+.btn[aria-busy="true"] { cursor: progress; pointer-events: none; opacity: var(--busy-opacity); }
+
+/* ---------- format chip: metadata, neutral ---------- */
+.sport-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--chip-height);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--bg-2);
+  color: var(--chip-text);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-chip);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;  /* decision A: CSS only, markup keeps "Half marathon" */
+  white-space: nowrap;
+}
+
+/* active filter chip: calm outline, removable */
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--filter-chip-height);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border) var(--text-2);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-chip);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.chip span { color: var(--text-2); }
+.chip::after, .clear-all::after { content: ""; position: absolute; inset: calc(var(--space-2) * -0.75) 0; } /* 44px tap area */
+
+/* ---------- search field ---------- */
+.race-search { position: relative; }
+.race-search::before {
+  content: "";
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin-top: calc(var(--icon-m) / -2);
+  background: var(--text-2);
+  -webkit-mask: var(--icon-search) center / contain no-repeat;
+  mask: var(--icon-search) center / contain no-repeat;
+  pointer-events: none;
+}
+.race-search input {
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-3) 0 calc(var(--space-3) * 2 + var(--icon-m));
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.race-search input::placeholder { color: var(--text-2); opacity: 1; }
+.race-search input:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
+.race-search input:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+.race-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+/* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
+.race-card {
+  padding: var(--space-2);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+}
+.race-card .photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--photo-ratio);
+  object-fit: cover;
+  border-radius: var(--radius-1);
+  filter: var(--photo-filter);
+}
+.race-card .card-link {
+  display: grid;
+  grid-template-columns: var(--date-col) minmax(0, 1fr);
+  grid-template-areas: "date name" "date meta" "date loc";
+  column-gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3) var(--space-1) var(--space-1);
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-1);
+}
+.race-card h3 {
+  grid-area: name;
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.race-card .card-meta { display: contents; }
+.race-card .sport-tag { grid-area: meta; justify-self: start; margin-bottom: var(--space-1); }
+.race-card time {
+  grid-area: date;
+  align-self: center;
+  display: block;
+  width: var(--date-col);
+  text-align: center;
+  font-family: var(--font-text);
+  font-size: var(--size-proof);
+  line-height: var(--leading-item);
+  color: var(--text-2);
+  align-self: stretch;                         /* the date sits on a tile */
+  padding: var(--space-3) var(--space-1);
+  border-radius: var(--radius-1);
+  background: var(--bg-2);
+}
+.race-card time::first-line {
+  font-family: var(--font-display);
+  font-size: var(--size-day);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);
+}
+.race-card .card-location {
+  grid-area: loc;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--size-meta);
+  color: var(--text-2);
+}
+.race-card .card-location::before, .proof-label::before {
+  content: "";
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  background: currentColor;
+  -webkit-mask: var(--icon-pin) center / contain no-repeat;
+  mask: var(--icon-pin) center / contain no-repeat;
+}
+
+/* ---------- result row: the finish time is the loudest thing on the row ---------- */
+.result-card .card-link {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  color: inherit;
+  text-decoration: none;
+}
+.card-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.card-top h2 {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.finish-time {
+  font-family: var(--font-display);
+  font-size: var(--size-time);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);  /* not the accent: rule 5 */
+  white-space: nowrap;
+}
+.result-card .card-meta { margin: 0; display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
+
+/* ---------- proof line: one link icon, stated not stamped ---------- */
+.proof-label {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--size-proof);
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+.proof-label::before { -webkit-mask-image: var(--icon-link); mask-image: var(--icon-link); }
+
+/* ---------- segmented List / Map ---------- */
+.view-toggle { display: inline-flex; padding: var(--space-1); border-radius: var(--radius-2); background: var(--bg-2); }
+.view-btn {
+  min-height: calc(var(--target) - var(--space-2));
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.view-btn[aria-pressed="true"] { background: var(--line); color: var(--text-1); }
+
+/* ---------- tab bar: current tab is the screen's one accent on Race browse ---------- */
+.bottom-nav { background: var(--bg-bar); border-top: var(--border) solid var(--line); padding: var(--space-2) var(--space-2) var(--space-6); }
+.bottom-nav ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.bottom-nav a {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  min-height: var(--target);
+  padding: var(--space-1) 0;
+  color: var(--text-2);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
+}
+.bottom-nav a[aria-current="page"] { color: var(--accent); }
+.bottom-nav .tab-icon { width: var(--icon-l); height: var(--icon-l); }
+
+/* ---------- status messages: icon + text, color second ---------- */
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  font-size: var(--size-meta);
+  color: var(--text-1);
+}
+.status .icon { width: var(--icon-m); height: var(--icon-m); flex: none; margin-top: calc(var(--space-1) / 2); }
+.status--error { background: var(--error-bg); }
+.status--error .icon, .status--error strong { color: var(--error); }
+.status--success { background: var(--success-bg); }
+.status--success .icon, .status--success strong { color: var(--success); }
+.status--warning { background: var(--warning-bg); box-shadow: inset 0 0 0 var(--border) var(--warning-line); }
+.status--warning .icon, .status--warning strong { color: var(--warning); }
+.status p { margin: 0; }
+
+/* ---------- skeleton (loading): no spinner, no invented progress ---------- */
+.skeleton { border-radius: var(--radius-1); background: var(--bg-2); }
+
+/* =================================================================
+   Stand layout (concept.html only). Tokens only, like everything above.
+   ================================================================= */
+.stand { max-width: calc(var(--space-9) * 18); margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-9); display: grid; gap: var(--space-9); }
+.stand-head { display: grid; gap: var(--space-3); }
+.stand p { max-width: var(--measure); }
+.stand-head p { margin: 0; color: var(--text-2); }
+.stand-section { display: grid; gap: var(--space-6); }
+.stand-section > h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--size-time);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+}
+.stand-section > p, .stand-stack > p:not(.stand-label):not(.stand-why) { margin: 0; color: var(--text-2); }
+.stand-grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--space-9) * 5)), 1fr)); align-items: start; }
+.stand-panel { display: grid; gap: var(--space-4); align-content: start; padding: var(--space-5); border-radius: var(--radius-3); background: var(--bg-bar); }
+.stand-panel > h3 { margin: 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-2); }
+.stand-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.stand-stack { display: grid; gap: var(--space-3); }
+.stand-label { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
+.stand-why { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
+.stand-why b { color: var(--text-1); font-weight: var(--weight-strong); }
+
+.spec { width: 100%; border-collapse: collapse; font-size: var(--size-proof); }
+.spec th { text-align: left; font-weight: var(--weight-strong); color: var(--text-2); padding: 0 var(--space-3) var(--space-2) 0; border-bottom: var(--border) solid var(--line); vertical-align: bottom; }
+.spec td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: var(--border) solid var(--line); vertical-align: top; color: var(--text-2); }
+.spec td:first-child { color: var(--text-1); font-weight: var(--weight-strong); }
+.spec .num { font-variant-numeric: tabular-nums; color: var(--text-1); white-space: nowrap; }
+.spec .sample { white-space: nowrap; }
+.spec code, .stand code { font-family: var(--font-mono); font-size: var(--size-proof); color: var(--text-1); }
+.spec-wrap { overflow-x: auto; border-radius: var(--radius-1); }
+.spec-wrap:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.spec code { white-space: nowrap; }
+.swatch { display: inline-block; width: var(--space-4); height: var(--space-4); border-radius: var(--radius-1); vertical-align: middle; margin-right: var(--space-2); box-shadow: inset 0 0 0 var(--border) var(--line); }
+.pass { color: var(--success); font-weight: var(--weight-strong); }
+.exempt { color: var(--text-2); }
+
+.phone-frame { width: 100%; max-width: calc(var(--space-9) * 6 + var(--space-1) * 2); border-radius: var(--radius-3); overflow: hidden; background: var(--bg-0); box-shadow: inset 0 0 0 var(--border) var(--line); }
+.phone-frame .stand-stack { padding: var(--space-4); }
+.icon-cell { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-1); }
+.icon-cell .icon { width: var(--icon-l); height: var(--icon-l); flex: none; }
+.stand-link { color: var(--text-1); text-underline-offset: var(--space-1); }
+.photo--low { object-position: var(--photo-focus-low); }
+.photo--mid { object-position: var(--photo-focus-mid); }
+.type-sample { color: var(--text-1); }
+.type-sample--display { font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+.type-sample--title { font-size: var(--size-title); }
+.type-sample--time { font-size: var(--size-time); }
+.type-sample--day { font-size: var(--size-day); }
+.type-sample--item { font-size: var(--size-item); font-weight: var(--weight-strong); }
+.type-sample--body { font-size: var(--size-body); }
+.type-sample--meta { font-size: var(--size-meta); color: var(--text-2); }
+.type-sample--proof { font-size: var(--size-proof); color: var(--text-2); }
+.space-bar { display: inline-block; height: var(--space-3); border-radius: var(--radius-1); background: var(--text-2); }
+.space-bar--1 { width: var(--space-1); } .space-bar--2 { width: var(--space-2); } .space-bar--3 { width: var(--space-3); }
+.space-bar--4 { width: var(--space-4); } .space-bar--5 { width: var(--space-5); } .space-bar--6 { width: var(--space-6); }
+.space-bar--7 { width: var(--space-7); } .space-bar--8 { width: var(--space-8); } .space-bar--9 { width: var(--space-9); }
+.swatch--bg-bar { background: var(--bg-bar); } .swatch--bg-0 { background: var(--bg-0); } .swatch--bg-1 { background: var(--bg-1); }
+.swatch--bg-2 { background: var(--bg-2); } .swatch--line { background: var(--line); } .swatch--field-line { background: var(--field-line); }
+.swatch--text-1 { background: var(--text-1); } .swatch--text-2 { background: var(--text-2); } .swatch--text-disabled { background: var(--text-disabled); }
+.swatch--chip-text { background: var(--chip-text); } .swatch--accent { background: var(--accent); } .swatch--accent-hover { background: var(--accent-hover); }
+.swatch--on-accent { background: var(--on-accent); } .swatch--error { background: var(--error); } .swatch--error-bg { background: var(--error-bg); }
+.swatch--success { background: var(--success); } .swatch--success-bg { background: var(--success-bg); } .swatch--warning { background: var(--warning); }
+.swatch--warning-bg { background: var(--warning-bg); } .swatch--focus { background: var(--focus); }
