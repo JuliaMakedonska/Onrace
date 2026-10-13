@@ -12,12 +12,20 @@ The designer's own judgment, recorded in their words. It isn't derived from rese
 
 1. **Strava.** The date leads the race card in its own left column; the finish time is the row's largest, boldest figure. Clear hierarchy without decoration.
 2. **The hybrid-racing products from Lesson 1** (RoxFit, RoxConnect, RoxMatchUp, fitnessracingcalendar, ocrbase), both the dark and the light ones. Strong visuals; especially the race format as a small uppercase chip with a high-contrast fill ("DEKA FIT" on fitnessracingcalendar).
+3. **Nike Run Club: typography.** Bold but refined. (Added 2026-10-13, after round 1.)
+4. **Whoop: typography.** Technical and clean. (Added 2026-10-13, after round 1.)
+5. **Black-and-white race photos.** From round 1, Direction 1.
+6. **A high-contrast accent.** From round 1, Direction 3's yellow (`#F5B649`). **Open question:** it may read as HYROX yellow. See attribute 3 (c, "Each format by name, not one sport's look").
 
 **Don't want:**
 
 - **LinkedIn's look.** The logic of a gray source line under a claim is good, but the styling feels corporate and dated.
 - **Letterboxd's diary.** A dense dark list where it's unclear what matters.
 - **Aggressive "energy" red.**
+- **One heavy condensed display face used for everything.** Crude, not stylish. (Added 2026-10-13, after round 1.)
+- **No radius at all.** It looks like a wireframe, not a product. (Added 2026-10-13, after round 1.)
+
+**Shape: slightly rounded, small radius.** This is a designer decision (2026-10-13).
 
 **Theme: dark.** This is a designer decision. It isn't inherited from the brief (which also says dark) or from the artifact pages (which are dark too). The guardrail on artifact-page values still applies (`#0b0c0e`, the `#ff4d2e` family, `src/style.css`, the wireframe grays). Onrace's dark has to be derived from the attributes below, not copied from the docs.
 
@@ -135,3 +143,24 @@ All three directions share:
 - **Dark with depth:** not pure `#000`, not "black plus one hot accent" (Tension C). No aggressive "energy" red.
 - **The uppercase format chip**, via CSS `text-transform` only (Tension A).
 - **The guardrail:** no artifact-page values (`#0b0c0e`, the `#ff4d2e` family), nothing from `src/style.css`, no wireframe grays.
+
+---
+
+## Step 3, round 1 (rejected 2026-10-13)
+
+Kept for the record in `directions-round-1.html` (live: https://juliamakedonska.github.io/Onrace/concept/directions-round-1.html). All three were dark and followed the step 3 note above.
+
+| Direction | Color | Energy from | Type | Shape |
+|---|---|---|---|---|
+| 1 · Chalk on rubber | Restrained: warm charcoal `#1C1A17`, chalk `#F3EFE7`, pale magnesium blue `#BFE0EE` on times and chips only | Type | Big Shoulders Display (heavy condensed) + Barlow | Sharp, 0–2px |
+| 2 · Format colors | Rich: aubergine `#221827`, a pastel color per format | The format chip | Bricolage Grotesque + Onest | Soft, pills and 20px cards |
+| 3 · Floodlight | Middle: petrol night `#0C1820`, sodium amber `#F5B649` on times and the one action, glacier `#CFE6F2` chips | Contrast | Archivo (wide) + Martian Mono | Medium, 4–8px |
+
+**Why it was rejected (the designer's feedback):**
+- **Direction 1's layout is the wireframes.** All three phone previews share the wireframe structure, so the layout carried no direction of its own.
+- **Direction 1's type is crude:** one heavy condensed face used everywhere.
+- **No radius looks like a wireframe**, not a product.
+
+**What carries over to round 2:**
+- Direction 1's black-and-white photo treatment.
+- The high contrast of Direction 3's accent. A late comparison in round 1 put Direction 3's amber on Direction 1. It showed that the amber's pull is saturation, not luminance: `#F5B649` is 9.65:1 on `#1C1A17`, below magnesium's 12.49:1, but its chroma is 63 against magnesium's 13. Its distance from HYROX's yellow (`~#FFE600` [~]) is ΔE 17.1, the open question in Designer's taste → Like 6.
