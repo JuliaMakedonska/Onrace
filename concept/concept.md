@@ -44,20 +44,18 @@ Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yell
 
 ---
 
-## Race card details (designer, decided 2026-10-13)
+## Race card details (designer, 2026-10-13)
 
-Round 2 left two details open as A/B options in `directions.html`. The designer decided both:
+**Race card anatomy borrowed from round 1 "Format colors" (layout only, no colors).** Round 1 Direction 2's card layout, in Direction A "Podium"'s own colors, type, radius, surfaces and icons:
+- the photo sits inside the card (inset, with its own radius)
+- below it, on the left: the date on a tile (a raised background, the day large, the month and year below)
+- on the right, a text column: the race title, the format chip, the location with the map-point icon
 
-1. **The date sits on a tile:** a background on the date column, the day large, the month and year below it. Chosen over a plain date column.
-2. **The format chip has a format dot:** a small colored dot before the format name, inside a neutral chip. Chosen over a text-only chip. The chip itself stays neutral metadata (Hierarchy rule 2).
+**Format chips:** Podium's neutral chip, the same for every format (Hierarchy rule 2). No format dot and no per-format color. The dot option was dropped on 2026-10-13.
 
-**Card anatomy, applied to round 2 Direction A ("Podium"):** round 1 Direction 2's card: the photo inside the card (inset, with its own radius), then two columns. On the left, the date tile. On the right, a text column of the race title, then the format chip with its dot, then the location with the map-point icon. Direction A's colors, type, radius, surfaces and icon style are unchanged; only the anatomy changed. The same card is used on every card of the Race browse preview.
+**Date column:** on a tile. This replaces the brief "plain date, revisit later" default set the same day when the direction was chosen.
 
-**Dot colors:** derived from Direction A's palette and muted: each format hue is mixed 50% into Ink 2 (`#A3A9B0`), so the dots' chroma stays at 3–29 against the accent's 63, and none competes with the accent (Hierarchy rule 1). Each dot passes 3:1 against its chip, checked by script.
-
-**Markup hooks (not in the wireframes):**
-- `data-sport="…"` on each format tag and filter chip, so CSS can color the dot.
-- one `<img>` per race card for the photo. The wireframes have no photo slot.
+**Markup hook the card needs (not in the wireframes):** one `<img>` per race card for the photo. The wireframes have no photo slot.
 
 ---
 
@@ -194,3 +192,19 @@ Kept for the record in `directions-round-1.html` (live: https://juliamakedonska.
 **What carries over to round 2:**
 - Direction 1's black-and-white photo treatment.
 - The high contrast of Direction 3's accent. A late comparison in round 1 put Direction 3's amber on Direction 1. It showed that the amber's pull is saturation, not luminance: `#F5B649` is 9.65:1 on `#1C1A17`, below magnesium's 12.49:1, but its chroma is 63 against magnesium's 13. Its distance from HYROX's yellow (`~#FFE600` [~]) is ΔE 17.1, the open question in Designer's taste → Like 6.
+
+---
+
+## Directions (step 3, chosen 2026-10-13)
+
+Round 2, in `directions.html`. All three were built under the Hierarchy rules above, and critiqued with `/impeccable critique`.
+
+**Chosen: Direction A, "Podium".** Why: it keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.
+- Graphite ground `#131518`, sodium amber accent `#F5B649` (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.
+- Its values now live in `tokens.css`, its components in `components.css`, and its stand in `concept.html`.
+- **Still open:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). It is ΔE 17.1 from HYROX yellow `~#FFE600` [~], and it reads most HYROX-like as a filled button. The designer kept it knowingly.
+
+**Not picked:**
+- **Direction B, "Telemetry"** (periwinkle `#A9B8FF` on blue-black, Saira + Sofia Sans, 4px). Its Results list read like a timing board. But its critique found Race browse "could belong to any dark fintech or fitness app": blue on dark drifts toward a generic tech look, and its energy depended on dimming everything that isn't data.
+- **Direction C, "Bib number"** (orchid `#FF9BE6` on pine green, Mona Sans wide + Host Grotesk, 10px). It was the rich-color direction, with energy from the format chip. Under Hierarchy rule 2 the chips became neutral metadata, so its color and energy had nowhere left to go. Mona Sans is also flagged by the detector as an overused face, and pink risked reading as lifestyle, not race.
+
