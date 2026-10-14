@@ -186,10 +186,28 @@ ANAT = CS['Race card anatomy (decided by the designer, 2026-10-13)']
 first_screen = para(ANAT, '**Photo band: 3:1 (decided 2026-10-14).**')
 RB_STATES = [('race-browse.html', 'Base'), ('race-browse.html?sport=hyrox&amp;sport=marathon', 'Filtered'), ('race-browse-empty.html', 'Empty'), ('race-browse-loading.html', 'Loading'), ('race-browse-error.html', 'Error')]
 RL_STATES = [('results-list.html', 'Base'), ('results-list.html?saved=1', 'Saved'), ('results-list-empty.html', 'Empty'), ('results-list-loading.html', 'Loading'), ('results-list-error.html', 'Error')]
+# The phone frame is the wireframes viewer's own (wireframes/index.html): its device CSS, status-bar markup and
+# corner construction are read from that file on every build, so the frames match the viewer's dimensions
+# (390×844 screen: 47px status bar, 757px page, 40px home strip) that the first-screen figures were measured in.
+VIEWER = open(ROOT + '/wireframes/index.html').read()
+DEVICE_CSS = VIEWER[VIEWER.index('  .device-slot {'):VIEWER.index('  /* --- zone notes')].rstrip()
+STATUS_BAR = re.search(r'<div class="status-bar" id="status-bar" aria-hidden="true">(.*?)</div>\s*<iframe', VIEWER, re.S).group(1).strip()
+SQUIRCLE_JS = VIEWER[VIEWER.index('  function corner(r, s) {'):VIEWER.index(".join(' ');\n  }", VIEWER.index('  function squircle(')) + len(".join(' ');\n  }")]
+CORNER = re.search(r'var SCREEN_R = (\d+), SMOOTH = ([\d.]+);', VIEWER)
+SCREEN_R, SMOOTH = CORNER.group(1), CORNER.group(2)
+assert 'status-icons' in STATUS_BAR and 'function squircle' in SQUIRCLE_JS and '--status-h: 47px' in DEVICE_CSS
+
 def phone(src, title, states, caption):
     links = ' · '.join(f'<a href="wireframes/{u}">{n}</a>' for u, n in states)
     return f'''<figure class="phone-fig">
-    <div class="phone"><iframe src="wireframes/{src}" title="{title}, live" loading="lazy"></iframe></div>
+    <div class="device-slot"><div class="device">
+      <svg class="device-body" aria-hidden="true"><path class="body-fill"/><path class="screen-edge"/></svg>
+      <div class="device-screen">
+        <div class="status-bar" aria-hidden="true">{STATUS_BAR}</div>
+        <iframe src="wireframes/{src}" title="{title}, live" loading="lazy"></iframe>
+        <div class="home-indicator" aria-hidden="true"></div>
+      </div>
+    </div></div>
     <figcaption><strong>{title}</strong><br>{caption}<br><span class="states">States: {links}</span></figcaption>
   </figure>'''
 screens_body = f'''
@@ -240,6 +258,47 @@ overview_body = f'''
   <div class="panel"><h3>What we decided</h3><ul>{lis(DECIDED)}</ul></div>
 </div>
 '''
+
+DEVICE_JS = """(function () {
+""" + SQUIRCLE_JS + """
+  var SCREEN_R = """ + SCREEN_R + """, SMOOTH = """ + SMOOTH + """;
+  // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge.
+  function edgeColor(doc, y) {
+    var el = doc.elementFromPoint(doc.documentElement.clientWidth / 2, y);
+    while (el) {
+      var bg = doc.defaultView.getComputedStyle(el).backgroundColor;
+      if (bg && bg !== 'transparent' && !/rgba\\(\\s*0,\\s*0,\\s*0,\\s*0\\s*\\)/.test(bg)) return bg;
+      el = el.parentElement;
+    }
+    return '#fff';
+  }
+  var devices = Array.prototype.slice.call(document.querySelectorAll('.phone-fig .device'));
+  devices.forEach(function (device) {
+    var bezel = parseFloat(getComputedStyle(device).paddingLeft);
+    var W = device.offsetWidth, H = device.offsetHeight, sw = W - 2 * bezel, sh = H - 2 * bezel;
+    var body = device.querySelector('.device-body');
+    body.setAttribute('viewBox', '0 0 ' + W + ' ' + H); body.setAttribute('width', W); body.setAttribute('height', H);
+    body.querySelector('.body-fill').setAttribute('d', squircle(0.5, 0.5, W - 1, H - 1, SCREEN_R + bezel, SMOOTH));
+    body.querySelector('.screen-edge').setAttribute('d', squircle(bezel - 0.5, bezel - 0.5, sw + 1, sh + 1, SCREEN_R + 0.5, SMOOTH));
+    device.querySelector('.device-screen').style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
+    var frame = device.querySelector('iframe'), bar = device.querySelector('.status-bar'), home = device.querySelector('.home-indicator');
+    frame.addEventListener('load', function () {
+      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); }
+      catch (e) { bar.style.background = home.style.background = '#fff'; }
+    });
+  });
+  // Scale each device as one piece (never its internals) to fit its column, as the viewer does for the window.
+  function fit() {
+    devices.forEach(function (device) {
+      var slot = device.parentElement, W = device.offsetWidth, H = device.offsetHeight;
+      var scale = Math.min(1, slot.parentElement.clientWidth / W);
+      device.style.transform = 'scale(' + scale + ')';
+      slot.style.width = (W * scale) + 'px'; slot.style.height = (H * scale) + 'px';
+    });
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();"""
 
 NAV = [('overview', 'Overview'), ('references', 'References'), ('taste', 'Taste'), ('directions', 'Directions'), ('stand', 'Stand'), ('screens', 'Screens'), ('check', 'Check'), ('open', 'Open')]
 CSSSRC = open(ROOT + '/public/ia.html').read()
@@ -313,13 +372,13 @@ PAGE = f'''<!DOCTYPE html>
   .stat-l{{display:block; font-size:13px; color:var(--text-dim); margin-top:6px}}
   .phones{{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:28px; margin:18px 0}}
   .phone-fig{{margin:0}}
-  .phone{{width:100%; max-width:390px; height:757px; margin:0 auto; border:10px solid var(--bg-elev-2); border-radius:36px; overflow:hidden; background:#000}}
-  .phone iframe{{display:block; width:100%; height:100%; border:0}}
-  figcaption{{max-width:390px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}}
+  /* device frame: copied from wireframes/index.html at build time */
+{DEVICE_CSS}
+  .phone-fig .device-slot{{margin:0 auto}}
+  figcaption{{max-width:412px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}}
   figcaption strong{{color:var(--text)}}
   .states{{color:var(--text-faint)}}
   footer{{max-width:var(--maxw); margin:0 auto; padding:24px; color:var(--text-faint); font-size:12.5px; border-top:1px solid var(--border)}}
-  @media (max-width:640px){{ .phone{{height:640px; border-width:6px; border-radius:24px}} }}
   @media (prefers-reduced-motion: reduce){{ html{{scroll-behavior:auto}} a.card-link{{transition:none}} a.card-link:hover{{transform:none}} }}
 </style>
 </head>
@@ -363,6 +422,9 @@ PAGE = f'''<!DOCTYPE html>
 {section('open', 'Open', 'tag-f', "What's open", open_body)}
 </main>
 <footer>Generated by <code>scripts/build_concept_overview.py</code> from <a href="{GH}concept/concept.md">concept/concept.md</a> and <a href="{GH}concept/references.md">concept/references.md</a>. Counts are read from <code>tokens.css</code>, <code>map.css</code> and <code>build_stand.py</code>.</footer>
+<script>
+{DEVICE_JS}
+</script>
 <script>
 (function(){{
   var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));

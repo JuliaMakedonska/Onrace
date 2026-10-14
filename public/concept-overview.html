@@ -139,13 +139,89 @@
   .stat-l{display:block; font-size:13px; color:var(--text-dim); margin-top:6px}
   .phones{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:28px; margin:18px 0}
   .phone-fig{margin:0}
-  .phone{width:100%; max-width:390px; height:757px; margin:0 auto; border:10px solid var(--bg-elev-2); border-radius:36px; overflow:hidden; background:#000}
-  .phone iframe{display:block; width:100%; height:100%; border:0}
-  figcaption{max-width:390px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}
+  /* device frame: copied from wireframes/index.html at build time */
+  .device-slot { position: relative; width: 412px; height: 866px; }
+  .device {
+    --bezel: 11px;
+    --status-h: 47px;
+    --home-h: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(390px + 2 * var(--bezel));
+    height: calc(844px + 2 * var(--bezel));
+    padding: var(--bezel);
+    transform-origin: top left;
+  }
+  .device-body {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.35)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+  }
+  .device-body .body-fill { fill: #101113; stroke: #3b3e44; stroke-width: 1; }
+  .device-body .screen-edge { fill: none; stroke: #000; stroke-width: 1; }
+  .device-screen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    color: #000;
+  }
+
+  /* status bar: time left, grayscale signal/Wi-Fi/battery right */
+  .status-bar {
+    flex: 0 0 var(--status-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 28px 0 40px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    user-select: none;
+  }
+  .status-icons { display: flex; align-items: center; gap: 6px; }
+  .status-icons svg { display: block; }
+
+  .device-screen iframe {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    border: 0;
+    background: #fff;
+  }
+
+  /* home indicator: 134×5pt rounded bar, centered low in its strip */
+  /* Overlaps the iframe's last pixel row (white in every screen: tab bar or
+     action bar) so a half-pixel frame position can't leave a seam where
+     scrolled content peeks through below the bar. */
+  .home-indicator {
+    position: relative;
+    margin-top: -1px;
+    background: #fff;
+    flex: 0 0 calc(var(--home-h) + 1px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+  }
+  .home-indicator::before {
+    content: "";
+    width: 134px;
+    height: 5px;
+    border-radius: 100px;
+    background: #000;
+  }
+  .phone-fig .device-slot{margin:0 auto}
+  figcaption{max-width:412px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}
   figcaption strong{color:var(--text)}
   .states{color:var(--text-faint)}
   footer{max-width:var(--maxw); margin:0 auto; padding:24px; color:var(--text-faint); font-size:12.5px; border-top:1px solid var(--border)}
-  @media (max-width:640px){ .phone{height:640px; border-width:6px; border-radius:24px} }
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} a.card-link{transition:none} a.card-link:hover{transform:none} }
 </style>
 </head>
@@ -260,11 +336,69 @@
 <section class="block" id="screens"><span class="section-tag tag-t">Steps 5–6</span><h2>The two screens</h2><div class="prose">
 <div class="phones">
   <figure class="phone-fig">
-    <div class="phone"><iframe src="wireframes/race-browse.html" title="Race browse, live" loading="lazy"></iframe></div>
+    <div class="device-slot"><div class="device">
+      <svg class="device-body" aria-hidden="true"><path class="body-fill"/><path class="screen-edge"/></svg>
+      <div class="device-screen">
+        <div class="status-bar" aria-hidden="true"><span>09:41</span>
+              <span class="status-icons">
+                <!-- cellular signal: 4 bars, last one outline-only -->
+                <svg width="18" height="12" viewBox="0 0 18 12" fill="#000">
+                  <rect x="0" y="8" width="3" height="4" rx="1"/>
+                  <rect x="5" y="5.5" width="3" height="6.5" rx="1"/>
+                  <rect x="10" y="3" width="3" height="9" rx="1"/>
+                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="#000" stroke-width="1"/>
+                </svg>
+                <!-- Wi-Fi -->
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round">
+                  <path d="M1 4.2a10 10 0 0 1 14 0"/>
+                  <path d="M3.4 6.8a6.5 6.5 0 0 1 9.2 0"/>
+                  <path d="M5.8 9.3a3 3 0 0 1 4.4 0"/>
+                  <circle cx="8" cy="11" r="0.6" fill="#000"/>
+                </svg>
+                <!-- battery: outline body + cap, grayscale fill -->
+                <svg width="27" height="13" viewBox="0 0 27 13">
+                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#000" stroke-opacity="0.45"/>
+                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="#000"/>
+                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="#000" fill-opacity="0.45"/>
+                </svg>
+              </span></div>
+        <iframe src="wireframes/race-browse.html" title="Race browse, live" loading="lazy"></iframe>
+        <div class="home-indicator" aria-hidden="true"></div>
+      </div>
+    </div></div>
     <figcaption><strong>Race browse</strong><br>Race cards with black-and-white photos, the date on a tile, neutral chips. Filters and the List / Map switch above; the Map is a static Natural Earth background.<br><span class="states">States: <a href="wireframes/race-browse.html">Base</a> · <a href="wireframes/race-browse.html?sport=hyrox&amp;sport=marathon">Filtered</a> · <a href="wireframes/race-browse-empty.html">Empty</a> · <a href="wireframes/race-browse-loading.html">Loading</a> · <a href="wireframes/race-browse-error.html">Error</a></span></figcaption>
   </figure>
   <figure class="phone-fig">
-    <div class="phone"><iframe src="wireframes/results-list.html" title="Results list, live" loading="lazy"></iframe></div>
+    <div class="device-slot"><div class="device">
+      <svg class="device-body" aria-hidden="true"><path class="body-fill"/><path class="screen-edge"/></svg>
+      <div class="device-screen">
+        <div class="status-bar" aria-hidden="true"><span>09:41</span>
+              <span class="status-icons">
+                <!-- cellular signal: 4 bars, last one outline-only -->
+                <svg width="18" height="12" viewBox="0 0 18 12" fill="#000">
+                  <rect x="0" y="8" width="3" height="4" rx="1"/>
+                  <rect x="5" y="5.5" width="3" height="6.5" rx="1"/>
+                  <rect x="10" y="3" width="3" height="9" rx="1"/>
+                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="#000" stroke-width="1"/>
+                </svg>
+                <!-- Wi-Fi -->
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round">
+                  <path d="M1 4.2a10 10 0 0 1 14 0"/>
+                  <path d="M3.4 6.8a6.5 6.5 0 0 1 9.2 0"/>
+                  <path d="M5.8 9.3a3 3 0 0 1 4.4 0"/>
+                  <circle cx="8" cy="11" r="0.6" fill="#000"/>
+                </svg>
+                <!-- battery: outline body + cap, grayscale fill -->
+                <svg width="27" height="13" viewBox="0 0 27 13">
+                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#000" stroke-opacity="0.45"/>
+                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="#000"/>
+                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="#000" fill-opacity="0.45"/>
+                </svg>
+              </span></div>
+        <iframe src="wireframes/results-list.html" title="Results list, live" loading="lazy"></iframe>
+        <div class="home-indicator" aria-hidden="true"></div>
+      </div>
+    </div></div>
     <figcaption><strong>Results list</strong><br>The finish time is the loudest thing on each row; the proof line states the source. Log result is the one primary.<br><span class="states">States: <a href="wireframes/results-list.html">Base</a> · <a href="wireframes/results-list.html?saved=1">Saved</a> · <a href="wireframes/results-list-empty.html">Empty</a> · <a href="wireframes/results-list-loading.html">Loading</a> · <a href="wireframes/results-list-error.html">Error</a></span></figcaption>
   </figure>
 </div>
@@ -293,6 +427,73 @@
 
 </main>
 <footer>Generated by <code>scripts/build_concept_overview.py</code> from <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md">concept/concept.md</a> and <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/references.md">concept/references.md</a>. Counts are read from <code>tokens.css</code>, <code>map.css</code> and <code>build_stand.py</code>.</footer>
+<script>
+(function () {
+  function corner(r, s) {
+    var rad = Math.PI / 180;
+    var p = (1 + s) * r;
+    var arcDeg = 90 * (1 - s);
+    var arc = Math.sin(arcDeg / 2 * rad) * r * Math.SQRT2;
+    var p34 = r * Math.tan((90 - arcDeg) / 4 * rad);
+    var c = p34 * Math.cos(45 * s * rad);
+    var d = c * Math.tan(45 * s * rad);
+    var b = (p - arc - c - d) / 3;
+    return { r: r, p: p, a: 2 * b, b: b, c: c, d: d, arc: arc };
+  }
+  function squircle(x, y, w, h, r, s) {
+    var k = corner(Math.min(r, w / 2, h / 2), s);
+    var a = k.a, b = k.b, c = k.c, d = k.d, A = k.arc, R = k.r, P = k.p, abc = a + b + c;
+    return [
+      'M', x + w - P, y,
+      'c', a, 0, a + b, 0, abc, d, 'a', R, R, 0, 0, 1, A, A, 'c', d, c, d, b + c, d, abc,
+      'L', x + w, y + h - P,
+      'c', 0, a, 0, a + b, -d, abc, 'a', R, R, 0, 0, 1, -A, A, 'c', -c, d, -(b + c), d, -abc, d,
+      'L', x + P, y + h,
+      'c', -a, 0, -(a + b), 0, -abc, -d, 'a', R, R, 0, 0, 1, -A, -A, 'c', -d, -c, -d, -(b + c), -d, -abc,
+      'L', x, y + P,
+      'c', 0, -a, 0, -(a + b), d, -abc, 'a', R, R, 0, 0, 1, A, -A, 'c', c, -d, b + c, -d, abc, -d,
+      'Z'
+    ].map(function (v) { return typeof v === 'number' ? +v.toFixed(3) : v; }).join(' ');
+  }
+  var SCREEN_R = 47, SMOOTH = 0.6;
+  // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge.
+  function edgeColor(doc, y) {
+    var el = doc.elementFromPoint(doc.documentElement.clientWidth / 2, y);
+    while (el) {
+      var bg = doc.defaultView.getComputedStyle(el).backgroundColor;
+      if (bg && bg !== 'transparent' && !/rgba\(\s*0,\s*0,\s*0,\s*0\s*\)/.test(bg)) return bg;
+      el = el.parentElement;
+    }
+    return '#fff';
+  }
+  var devices = Array.prototype.slice.call(document.querySelectorAll('.phone-fig .device'));
+  devices.forEach(function (device) {
+    var bezel = parseFloat(getComputedStyle(device).paddingLeft);
+    var W = device.offsetWidth, H = device.offsetHeight, sw = W - 2 * bezel, sh = H - 2 * bezel;
+    var body = device.querySelector('.device-body');
+    body.setAttribute('viewBox', '0 0 ' + W + ' ' + H); body.setAttribute('width', W); body.setAttribute('height', H);
+    body.querySelector('.body-fill').setAttribute('d', squircle(0.5, 0.5, W - 1, H - 1, SCREEN_R + bezel, SMOOTH));
+    body.querySelector('.screen-edge').setAttribute('d', squircle(bezel - 0.5, bezel - 0.5, sw + 1, sh + 1, SCREEN_R + 0.5, SMOOTH));
+    device.querySelector('.device-screen').style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
+    var frame = device.querySelector('iframe'), bar = device.querySelector('.status-bar'), home = device.querySelector('.home-indicator');
+    frame.addEventListener('load', function () {
+      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); }
+      catch (e) { bar.style.background = home.style.background = '#fff'; }
+    });
+  });
+  // Scale each device as one piece (never its internals) to fit its column, as the viewer does for the window.
+  function fit() {
+    devices.forEach(function (device) {
+      var slot = device.parentElement, W = device.offsetWidth, H = device.offsetHeight;
+      var scale = Math.min(1, slot.parentElement.clientWidth / W);
+      device.style.transform = 'scale(' + scale + ')';
+      slot.style.width = (W * scale) + 'px'; slot.style.height = (H * scale) + 'px';
+    });
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+</script>
 <script>
 (function(){
   var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
