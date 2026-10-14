@@ -49,7 +49,7 @@ Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yell
 Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on every build. Rules 1, 2 and 3a stop the build when broken. Rule 3b is reported on the stand and doesn't block, because the designer keeps the current amber knowingly.
 
 1. **Accent placement.** Amber only where you can act or where you are: the primary action, the current tab, an active state. Never on a result, a finish time, a count or a status. *Build check:* every `components.css` rule that uses `--accent` or `--accent-hover` must target an allowed selector (primary button, `.header-action`, primary `.state-action`, the current tab). Specimen swatches on the stand are the only other place.
-2. **No success color on results.** Results are self-reported, and Onrace can't verify them, so there's no green and no "verified" mark anywhere on a result. The proof line stays neutral (attribute 4, d: proof stated, not stamped). *Build check:* `--success` and `--success-bg` are used only by the saved-confirmation status (and its swatch). No result row contains a check icon or the word "verified".
+2. **No success color on results.** Results are self-reported, and Onrace can't verify them, so there's no green and no "verified" mark anywhere on a result. The proof line stays neutral (attribute 4, d: proof stated, not stamped). *Build check:* `--success` and `--success-bg` appear on no product screen: the build allows them only on the stand's status specimen and its swatch. The saved confirmation on Results list is neutral (decided 2026-10-14: a green check next to a race name reads as a "verified" stamp). No result row contains a check icon or the word "verified".
 3. **Two taste rules, made measurable** (CIELAB, D65):
    - **a. Depth of dark, not #000.** Every background level (`--bg-bar`, `--bg-0`, `--bg-1`, `--bg-2`) has a lightness L* between 4.5 and 20 and a chroma C* of at most 6 (near-neutral, not tinted). Each level is at least 1.5 L* lighter than the one below it, so the levels read as depth. For reference, #000 is L* 0 and the guardrail `#0B0C0E` is L* 3.3; both fall outside the range. *Current:* L* 4.99 / 6.69 / 12.10 / 17.33, C* 2.0–3.9. **Passes.**
    - **b. Amber, not HYROX yellow.** HYROX yellow [~] is measured from `research/screens/`. There's no screenshot of HYROX's own site there, so the reference is the HYROX-ecosystem apps: RoxFit `#FFEC00` (5,786 pixels in `roxfit-how-it-works.png`) and RoxMatchUp `#F5E401` (2,770 pixels in `roxmatchup-home.png`). The accent must be at least as far from the nearer of the two as named orange is: hue distance ≥ 25° and ΔE2000 ≥ 24. CSS `orange` `#FFA500` sits at 24.6° and ΔE 24.0 from `#FFEC00`. *Current amber `#F5B649`:* 19.2° and ΔE 18.7 from RoxFit's yellow (19.6° and ΔE 17.9 from RoxMatchUp's). It fails the threshold.
@@ -84,6 +84,13 @@ Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on ever
 
 ---
 
+## Results list details (designer, 2026-10-14)
+
+- **Saved confirmation: neutral.** "Saved: …" sits on a neutral surface (`--bg-1`) with a neutral "save" glyph in Text 2. No success color and no green check: next to a race name, a green check reads as a "verified" stamp (attribute 4, d). The text carries the meaning. Color rule 2's build check no longer allows success color anywhere on Results list.
+- **Finish times: proportional figures.** They stay proportional, so digit widths vary slightly down the column. Schibsted Grotesk's tabular figures space the colons wide ("24 : 36"), which breaks the time as one number. Decided in round 2, kept by the designer.
+
+---
+
 ## Map (designer decision, 2026-10-14)
 
 **Map: static Natural Earth background (designer decision); the interactive Map upgrade stays deferred.**
@@ -103,6 +110,8 @@ Recorded 2026-10-14, before step 6. Each item needs a change to markup or script
 | Heading levels skip h1 → h3 on Race browse: the race names are `<h3>` directly under the `<h1>` "Discover" | `wireframes/race-browse.html` | Fixing it means changing heading levels (`<h2>` for race names, or a visually hidden `<h2>`), which is structure |
 | The Filters sheet doesn't move focus into itself when it opens, and doesn't close on Escape | `wireframes/race-browse*.html` (the sheet's script: `openSheet()` / `closeSheet()`) | It's wireframe JavaScript, not styling |
 | Short buttons need full accessible names: "Try again" → "Try loading races again", the nav-bar "Save" → "Save result", "Dismiss" → "Dismiss this message" | "Try again" on Race browse, Race detail, Race picker, Results list, Result detail and Profile (their `-error` pages); "Save" on `log-result.html`; "Dismiss" on Race detail and Result detail. Rule: `voice.md` → Microcopy → Button; tracked in `wireframes/_critique.md` #10 | It's a markup pass (`aria-label` or visually hidden text), already planned as its own pass |
+| Results list `-empty`: the header's "Log result" and the empty state's "Log your first result" do the same job. CSS keeps only one filled (the header action steps down to secondary), but two buttons remain | `wireframes/results-list-empty.html` | Removing or merging a button changes structure |
+| The saved confirmation ("Saved: …") has `role="status"`, which screen readers may not announce when the element is already present at page load | `wireframes/results-list.html` (`.saved-status`, shown by script from `?saved=`) | Fixing it means changing when the script fills or reveals the live region, which is script and markup |
 | The map pins' old approximate `left`/`top` values are still inline in the markup; `components.css` overrides them with the real coordinates. Remove the inline values | `wireframes/race-browse.html` (each `.map-pin`) | Removing an attribute is a markup change |
 | The race card's date splits into day and month only because CSS wraps the text (`time::first-line` in a 68px column). Long month names, other languages, text zoom or a font swap can break it; a separate day element is sturdier | `wireframes/race-browse.html` (each `<time>` in a card); `concept/components.css` (`.race-card time`) | A separate day element is a markup change |
 

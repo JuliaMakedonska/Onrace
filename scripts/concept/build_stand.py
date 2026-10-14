@@ -89,8 +89,8 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Race browse · Map leader line on water (non-text, 3:1)', 'text-2', 'bg-bar', 'ui'),
     ('Race browse · Map state panel text (empty, error) on its panel', 'text-1', 'bg-1', 'text'),
     ('Race browse · coastlines and borders on land', 'bg-3', 'bg-1', 'info'),
-    ('Results list · saved confirmation text ("Saved: HYROX London")', 'text-1', 'success-bg', 'text'),
-    ('Results list · saved confirmation icon (non-text, 3:1)', 'success', 'success-bg', 'ui'),
+    ('Results list · saved confirmation text ("Saved: HYROX London"), neutral surface', 'text-1', 'bg-1', 'text'),
+    ('Results list · saved confirmation icon, neutral (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
     ('Results list · "Newest first" after the count', 'text-2', 'bg-0', 'text'),
     ('Results list · Log result stepped down to secondary (empty, error)', 'text-1', 'bg-2', 'text'),
     ('Results list · count separator hairline', 'line', 'bg-0', 'info'),
@@ -144,10 +144,10 @@ accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK
 assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
 
 # Rule 2: no success color on results
-SUCCESS_OK = [r'^\.status--success( \.icon| strong)?$', r'^\.saved-status(::before)?$', r'^\.swatch--success(-bg)?$']
+SUCCESS_OK = [r'^\.status--success( \.icon| strong)?$', r'^\.swatch--success(-bg)?$']   # stand specimen only; no product screen uses success color
 success_sel = selectors_using('success', 'success-bg')
 success_bad = [x for x in success_sel if not any(re.match(p, x) for p in SUCCESS_OK)]
-assert not success_bad, ('Color rule 2: success color outside the saved status', success_bad)
+assert not success_bad, ('Color rule 2: success color outside the stand specimen', success_bad)
 
 # Rule 3a: depth of dark, not #000
 BG_LEVELS = ['bg-bar', 'bg-0', 'bg-1', 'bg-2', 'bg-3']
@@ -215,7 +215,7 @@ def rules_section():
       </div>
       <div class="stand-panel">
         <h3>2 · No success color on results · pass</h3>
-        <p class="stand-why">Results are self-reported; Onrace can't verify them. <code>--success</code> appears only on the saved confirmation (and its swatch); no result row has a check icon or the word "verified". The proof line stays Text 2 (attribute d). Even this page's "pass" labels are Text 1, not green.</p>
+        <p class="stand-why">Results are self-reported; Onrace can't verify them. No product screen uses <code>--success</code>: the saved confirmation on Results list is neutral (a surface and a "save" glyph), because a green check next to a race name reads as a "verified" stamp. The build allows success color only on this stand's specimen. The proof line stays Text 2 (attribute d), and even this page's "pass" labels are Text 1, not green.</p>
       </div>
     </div>
     <div class="stand-panel">
@@ -325,8 +325,8 @@ COLOR_ROWS = [
     ('on-accent', 'On accent', 'Text and icons on the accent.', 'Anywhere else.', f'Contrast: {cr(tok("on-accent"), tok("accent")):.2f}:1 on the accent'),
     ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races".', 'Not for emphasis, not for deleting, never as a fill for a whole card.', 'Taste: no aggressive red (not the #FF4D2E family)'),
     ('error-bg', 'Error tint', 'Behind an error message.', 'Not behind a card or a field.', 'States: color second, after icon and text'),
-    ('success', 'Success', 'The saved confirmation: "Saved: HYROX London".', 'Not for "verified" or any claim about a result.', 'Voice principle 1: claim only what Onrace can know'),
-    ('success-bg', 'Success tint', 'Behind the saved confirmation.', 'Not behind results or proof lines.', 'Voice principle 1: no verified look'),
+    ('success', 'Success', 'The status specimen on this stand only. No product screen uses it: the saved confirmation is neutral (Color rule 2).', 'Not on a result, not on Results list at all, not for "verified" or any claim about a result.', 'Voice principle 1: claim only what Onrace can know'),
+    ('success-bg', 'Success tint', 'The status specimen on this stand only.', 'Not behind results, proof lines or the saved confirmation.', 'Voice principle 1: no verified look'),
     ('warning', 'Warning (no hue)', 'Icon plus text on a raised surface with an outline. No warning state exists in the wireframes yet.', 'No amber or yellow: every warm candidate is within ΔE 7.7–13 of the accent and would read as an action.', 'Hierarchy rule 1: keep the accent the only warm hue'),
     ('warning-bg', 'Warning surface', 'Behind a warning: the raised level.', 'Not a tint of any hue.', 'Hierarchy rule 1'),
     ('warning-line', 'Warning outline', 'Around a warning, so it differs from a secondary button.', 'Not around cards.', 'States need a shape cue when they have no hue'),
@@ -420,7 +420,7 @@ icon_trs = ''.join(f'<tr><td>{p}</td><td>{("<span class=icon-cell>" + svg(n) + f
 
 STATUS = f'''<div class="stand-stack">
             <div class="status status--error">{svg("danger-circle")}<p><strong>Couldn’t load races</strong><br>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p></div>
-            <div class="status status--success">{svg("check-circle")}<p><strong>Saved:</strong> HYROX London</p></div>
+            <div class="status status--success">{svg("check-circle")}<p><strong>Success style</strong> (specimen only; the saved confirmation on Results list is neutral)</p></div>
             <div class="status status--warning">{svg("danger-triangle")}<p><strong>Warning style</strong> (no warning copy exists in the wireframes yet)</p></div>
           </div>'''
 
