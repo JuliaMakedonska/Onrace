@@ -30,3 +30,18 @@ def de2000(c1,c2):
     dt=30*math.exp(-((hb-275)/25)**2);RC=2*math.sqrt(Cbp**7/(Cbp**7+25**7))
     SL=1+0.015*(Lb-50)**2/math.sqrt(20+(Lb-50)**2);SC=1+0.045*Cbp;SH=1+0.015*Cbp*T;RT=-math.sin(math.radians(2*dt))*RC
     return math.sqrt((dL/SL)**2+(dC/SC)**2+(dH/SH)**2+RT*(dC/SC)*(dH/SH))
+
+def lch_to_hex(L, C, h):
+    """CIELAB LCh (D65) to sRGB hex; returns None if out of gamut."""
+    a, b = C * math.cos(math.radians(h)), C * math.sin(math.radians(h))
+    fy = (L + 16) / 116; fx = fy + a / 500; fz = fy - b / 200
+    inv = lambda t: t ** 3 if t ** 3 > 0.008856 else (t - 16 / 116) / 7.787
+    X, Y, Z = inv(fx) * 0.95047, inv(fy), inv(fz) * 1.08883
+    r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z
+    g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z
+    bl = 0.0557 * X - 0.2040 * Y + 1.0570 * Z
+    enc = lambda c: 12.92 * c if c <= 0.0031308 else 1.055 * c ** (1 / 2.4) - 0.055
+    out = [enc(c) for c in (r, g, bl)]
+    if any(c < -0.002 or c > 1.002 for c in out):
+        return None
+    return '#' + ''.join(f'{round(min(max(c, 0), 1) * 255):02X}' for c in out)

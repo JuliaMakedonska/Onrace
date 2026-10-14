@@ -1,0 +1,7 @@
+/* Measurement harness only (not a product page): iOS frame around the Race browse top.
+   Values here are the device frame, not design tokens. */
+.fs-main { padding: 59px var(--space-4) 0; }            /* iPhone 14/15: 47px status bar + 12px */
+.fs-main header { display: grid; gap: var(--space-3); margin-bottom: var(--space-3); }
+.fs-tabbar { position: fixed; left: 0; right: 0; bottom: 0; padding-bottom: 34px; } /* 34px home indicator */
+.fs-buttons { display: grid; gap: var(--space-3); padding: var(--space-4); background: var(--bg-bar); min-height: 100vh; align-content: start; }
+.fs-buttons[hidden], .fs-main[hidden], .fs-tabbar[hidden] { display: none; }

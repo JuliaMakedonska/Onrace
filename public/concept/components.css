@@ -478,6 +478,11 @@
 
 .phone-frame { width: 100%; max-width: var(--phone-width); border-radius: var(--radius-3); overflow: hidden; background: var(--bg-0); box-shadow: inset 0 0 0 var(--border) var(--line); }
 .phone-frame .stand-stack { padding: var(--space-4); }
+.compare-row { display: flex; gap: var(--space-6); overflow-x: auto; align-items: start; padding-bottom: var(--space-3); }
+.compare-col { display: grid; gap: var(--space-3); flex: none; }
+.compare-col > h3 { margin: 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-1); }
+.compare-col iframe { display: block; border: 0; border-radius: var(--radius-3); background: var(--bg-0); box-shadow: inset 0 0 0 var(--border) var(--line); }
+.compare-col .spec { max-width: var(--phone-width); }
 .icon-cell { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-1); }
 .icon-cell .icon { width: var(--icon-l); height: var(--icon-l); flex: none; }
 .stand-link { color: var(--text-1); text-underline-offset: var(--space-1); }

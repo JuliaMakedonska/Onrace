@@ -90,6 +90,13 @@ assert not failures, failures
 CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text</th><th>Background</th><th>Ratio</th><th>WCAG AA</th></tr></thead><tbody>'
             + ''.join(rows) + '</tbody></table></div>')
 
+# cache-busting: stylesheet links carry a short hash of tokens.css + components.css
+import hashlib
+CSS_V = hashlib.sha1((open(os.path.join(ROOT, 'concept/tokens.css')).read() + open(os.path.join(ROOT, 'concept/components.css')).read()).encode()).hexdigest()[:8]
+_fs = os.path.join(ROOT, 'concept/first-screen.html')
+_fs_html = re.sub(r'href="(tokens|components)\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(_fs).read())
+open(_fs, 'w').write(_fs_html)
+
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
 import math
 from colorlib import lab, de2000, hue as lab_hue
@@ -141,6 +148,55 @@ print('Color rule 3a (depth of dark): pass ·', ', '.join(f'{t} L*{L:.2f} C*{C:.
 print('Color rule 3b (amber vs HYROX yellow):', 'pass' if HYROX_PASS else 'FAIL (reported, not blocking)', '·',
       '; '.join(f'{n} {c}: {h:.1f}° ΔE {d:.1f}' for n, c, _, h, d in hyrox_rows))
 
+def decisions_section():
+    from urllib.parse import quote
+    cols = []
+    for n, c in ACCENT_VERSIONS:
+        rows = ''.join(f'<tr><td>{rn}</td><td class="num">{v}</td></tr>' for rn, v in [
+            ('Hex', f'<code>{c}</code>'),
+            ('Hue distance to RoxFit <code>#FFEC00</code>', f'{hue_dist(c, "#FFEC00"):.1f}°'),
+            ('ΔE2000 to RoxFit', f'{de2000(c, "#FFEC00"):.1f}'),
+            ('Rule 3b (both references)', 'pass' if all(hue_dist(c, y) >= HUE_MIN and de2000(c, y) >= DE_MIN for _, y, _ in HYROX_REFS) else 'fail'),
+            ('On-accent text on the accent', f'{cr(tok("on-accent"), c):.2f}:1'),
+            ('Accent (current tab) on the tab bar', f'{cr(c, tok("bg-bar")):.2f}:1'),
+            ('Accent on the page', f'{cr(c, tok("bg-0")):.2f}:1'),
+            ('ΔE2000 to Strava orange <code>#FC5200</code> [~]', f'{de2000(c, "#FC5200"):.1f}')])
+        q = quote(c)
+        cols.append(f'''<div class="compare-col">
+          <h3>{n} · {c}</h3>
+          <iframe src="first-screen.html?state=hyrox&amp;accent={q}" width="390" height="844" title="Race browse first screen, accent {c}" loading="lazy"></iframe>
+          <iframe src="first-screen.html?mode=buttons&amp;accent={q}" width="390" height="140" title="Primary buttons in accent {c}" loading="lazy"></iframe>
+          {wrap(f'Accent {c} numbers', f'<table class="spec"><tbody>{rows}</tbody></table>')}
+        </div>''')
+    bcols = []
+    for key, title in [('current', 'Current card'), ('short', 'Shorter photo band')]:
+        b = BAND[key]
+        rows = ''.join(f'<tr><td>{rn}</td><td class="num">{v}</td></tr>' for rn, v in [
+            ('Photo band', f'{b["band"]}px ({b["ratio"].replace("/", ":")})'), ('Card height', f'{b["card"]}px'),
+            ('No filters (7 races)', f'{b["def"][0]} full + {b["def"][1]}% of the next'),
+            ('2 filters on (4 races)', f'{b["filt"][0]} full + {b["filt"][1]}% of the next')])
+        bcols.append(f'''<div class="compare-col">
+          <h3>{title}</h3>
+          <iframe src="first-screen.html?ratio={b["ratio"]}" width="390" height="844" title="Race browse first screen, photo band {b["band"]}px" loading="lazy"></iframe>
+          {wrap(f'{title} numbers', f'<table class="spec"><tbody>{rows}</tbody></table>')}
+        </div>''')
+    return f'''
+  <section class="stand-section" id="decisions" aria-labelledby="dec-h">
+    <h2 id="dec-h">Two decisions, side by side</h2>
+    <p>Each phone is the first-screen harness at 390×844, live, with one thing overridden from its URL. <code>tokens.css</code> is unchanged until a version is picked.</p>
+    <div class="stand-panel">
+      <h3>1 · Accent: identical screens, only the accent differs</h3>
+      <p class="stand-why">Race browse filtered to HYROX, so a HYROX card is on screen next to the accent (the current tab). Race browse has no primary button in the wireframe, so the strip under each phone shows the two real primaries from other screens: Log result (Results list) and Register on &lt;domain&gt; (Race detail). The warmer versions keep lightness; the hue turns toward orange, and chroma drops only where sRGB runs out.</p>
+      <div class="compare-row">{''.join(cols)}</div>
+    </div>
+    <div class="stand-panel">
+      <h3>2 · Card height: same photos and anatomy, only the photo band changes</h3>
+      <p class="stand-why">The shortest change that fits two full cards with no filters is a {BAND["boundary"]["band"]}px band ({BAND["boundary"]["ratio"].replace("/", ":")}, card {BAND["boundary"]["card"]}px), but it fits with 0px to spare. The version shown uses 3:1 ({BAND["short"]["band"]}px), which keeps 6px of margin.</p>
+      <div class="compare-row">{''.join(bcols)}</div>
+    </div>
+  </section>
+'''
+
 def rules_section():
     bg = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td class="num">{L:.2f}</td><td class="num">{C:.2f}</td><td class="num">{"base" if st is None else f"+{st:.2f}"}</td><td><span class="pass">pass</span></td></tr>' for t, L, C, st in bg_rows)
     hy = ''.join(f'<tr><td>{n} <code>{c}</code><br>{src}</td><td class="num">{h:.1f}°</td><td class="num">{d:.1f}</td><td>{"<span class=pass>pass</span>" if h >= HUE_MIN and d >= DE_MIN else "<b>fail</b>"}</td></tr>' for n, c, src, h, d in hyrox_rows)
@@ -170,6 +226,28 @@ def rules_section():
     </div>
   </section>
 '''
+
+# ---------------------------------------------------------------- decision 1: accent versions (computed)
+from colorlib import lch_to_hex, chroma as lab_chroma
+def _rotate_until_pass():
+    A = tok('accent'); L, a, b = lab(A); C0 = math.hypot(a, b); h0 = lab_hue(A)
+    def col(h):
+        C = C0
+        while lch_to_hex(L, C, h) is None: C -= 0.1     # keep lightness; lower chroma only as the gamut requires
+        return lch_to_hex(L, C, h)
+    ok = lambda c: all(hue_dist(c, y) >= HUE_MIN and de2000(c, y) >= DE_MIN for _, y, _ in HYROX_REFS)
+    h = h0
+    while not ok(col(h)): h -= 0.1                   # warmer = toward orange
+    return col((h0 + h) / 2), col(h)
+ACCENT_HALF, ACCENT_PASS = _rotate_until_pass()
+ACCENT_VERSIONS = [('Current amber', tok('accent')), ('Halfway', ACCENT_HALF), ('Warmer, just passes 3b', ACCENT_PASS)]
+print('Accent versions:', ', '.join(f'{n} {c}' for n, c in ACCENT_VERSIONS))
+
+# ---------------------------------------------------------------- decision 2: photo band (measured in the browser)
+# first-screen.html at 390×844 on 2026-10-14. Boundary found by search: ratio 2.8638 → band 114px, card 219px, 2 full cards with 0px to spare.
+BAND = {'current': {'ratio': '16/7', 'band': 143, 'card': 247, 'def': (1, 77), 'filt': (1, 54)},
+        'short':   {'ratio': '3/1',  'band': 109, 'card': 213, 'def': (2, 0),  'filt': (1, 79)},
+        'boundary': {'ratio': '2.86/1', 'band': 114, 'card': 219}}
 
 # measured in the browser with first-screen.html at 390×844 on 2026-10-13 (re-measure after layout changes)
 FS = {'card_h': 247, 'tab': 747, 'base': {'top': 298, 'full': 1, 'next': 77}, 'filtered': {'top': 354, 'full': 1, 'next': 54}}
@@ -344,8 +422,8 @@ page = f'''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Onrace concept stand</title>
-<link rel="stylesheet" href="tokens.css">
-<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="tokens.css?v={CSS_V}">
+<link rel="stylesheet" href="components.css?v={CSS_V}">
 </head>
 <body class="onrace">
 <main class="stand">
@@ -534,13 +612,14 @@ page = f'''<!doctype html>
 
   <section class="stand-section" id="first-screen" aria-labelledby="fs-h">
     <h2 id="fs-h">First screen · how many race cards on a phone</h2>
-    <p>Measured on 2026-10-13 with <code>scripts/concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. A card is {FS["card_h"]}px tall.</p>
+    <p>Measured on 2026-10-13 with <code>concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. A card is {FS["card_h"]}px tall.</p>
     {wrap('First screen measurement', f'<table class="spec"><thead><tr><th>State</th><th>List starts at</th><th>Tab bar at</th><th>Fully visible</th><th>Next card visible</th></tr></thead><tbody>'
       + f'<tr><td>Default (no filters, 7 races)</td><td class="num">{FS["base"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["base"]["full"]} card</td><td class="num">{FS["base"]["next"]}%</td></tr>'
       + f'<tr><td>2 filters on (chips row shown, 4 races)</td><td class="num">{FS["filtered"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["filtered"]["full"]} card</td><td class="num">{FS["filtered"]["next"]}%</td></tr></tbody></table>')}
     <p class="stand-why"><b>For the designer to judge (attribute b, a calendar, not a poster):</b> with a photo in every card, the first screen shows one full race and part of the next. Nothing is changed here.</p>
   </section>
 {rules_section()}
+{decisions_section()}
   <section class="stand-section" aria-labelledby="contrast-h">
     <h2 id="contrast-h">Contrast · every text pair and the key non-text pairs</h2>
     <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>tokens.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>

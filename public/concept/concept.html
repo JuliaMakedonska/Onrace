@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Onrace concept stand</title>
-<link rel="stylesheet" href="tokens.css">
-<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="tokens.css?v=6e7c993c">
+<link rel="stylesheet" href="components.css?v=6e7c993c">
 </head>
 <body class="onrace">
 <main class="stand">
@@ -250,7 +250,7 @@
 
   <section class="stand-section" id="first-screen" aria-labelledby="fs-h">
     <h2 id="fs-h">First screen · how many race cards on a phone</h2>
-    <p>Measured on 2026-10-13 with <code>scripts/concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. A card is 247px tall.</p>
+    <p>Measured on 2026-10-13 with <code>concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. A card is 247px tall.</p>
     <div class="spec-wrap" tabindex="0" role="region" aria-label="First screen measurement"><table class="spec"><thead><tr><th>State</th><th>List starts at</th><th>Tab bar at</th><th>Fully visible</th><th>Next card visible</th></tr></thead><tbody><tr><td>Default (no filters, 7 races)</td><td class="num">298px</td><td class="num">747px</td><td class="num">1 card</td><td class="num">77%</td></tr><tr><td>2 filters on (chips row shown, 4 races)</td><td class="num">354px</td><td class="num">747px</td><td class="num">1 card</td><td class="num">54%</td></tr></tbody></table></div>
     <p class="stand-why"><b>For the designer to judge (attribute b, a calendar, not a poster):</b> with a photo in every card, the first screen shows one full race and part of the next. Nothing is changed here.</p>
   </section>
@@ -277,6 +277,45 @@
       <h3>3b · Amber, not HYROX yellow: hue distance ≥ 25° and ΔE2000 ≥ 24 · fails, kept by the designer</h3>
       <div class="spec-wrap" tabindex="0" role="region" aria-label="HYROX distance check"><table class="spec"><thead><tr><th>HYROX yellow [~], measured in research/screens/</th><th>Hue distance</th><th>ΔE2000</th><th>Result</th></tr></thead><tbody><tr><td>RoxFit <code>#FFEC00</code><br>roxfit-how-it-works.png, 5,786 px</td><td class="num">19.2°</td><td class="num">18.7</td><td><b>fail</b></td></tr><tr><td>RoxMatchUp <code>#F5E401</code><br>roxmatchup-home.png, 2,770 px</td><td class="num">19.6°</td><td class="num">17.9</td><td><b>fail</b></td></tr></tbody></table></div>
       <p class="stand-why">The threshold is "at least as far as named orange": CSS <code>orange</code> <code>#FFA500</code> is 24.6° and ΔE 24.0 from <code>#FFEC00</code>. There is no screenshot of HYROX's own site in <code>research/screens/</code>, so the reference is the HYROX-ecosystem apps. The amber <code>#F5B649</code> is not changed; the decision is open (<code>concept.md</code> → Directions).</p>
+    </div>
+  </section>
+
+
+  <section class="stand-section" id="decisions" aria-labelledby="dec-h">
+    <h2 id="dec-h">Two decisions, side by side</h2>
+    <p>Each phone is the first-screen harness at 390×844, live, with one thing overridden from its URL. <code>tokens.css</code> is unchanged until a version is picked.</p>
+    <div class="stand-panel">
+      <h3>1 · Accent: identical screens, only the accent differs</h3>
+      <p class="stand-why">Race browse filtered to HYROX, so a HYROX card is on screen next to the accent (the current tab). Race browse has no primary button in the wireframe, so the strip under each phone shows the two real primaries from other screens: Log result (Results list) and Register on &lt;domain&gt; (Race detail). The warmer versions keep lightness; the hue turns toward orange, and chroma drops only where sRGB runs out.</p>
+      <div class="compare-row"><div class="compare-col">
+          <h3>Current amber · #F5B649</h3>
+          <iframe src="first-screen.html?state=hyrox&amp;accent=%23F5B649" width="390" height="844" title="Race browse first screen, accent #F5B649" loading="lazy"></iframe>
+          <iframe src="first-screen.html?mode=buttons&amp;accent=%23F5B649" width="390" height="140" title="Primary buttons in accent #F5B649" loading="lazy"></iframe>
+          <div class="spec-wrap" tabindex="0" role="region" aria-label="Accent #F5B649 numbers"><table class="spec"><tbody><tr><td>Hex</td><td class="num"><code>#F5B649</code></td></tr><tr><td>Hue distance to RoxFit <code>#FFEC00</code></td><td class="num">19.2°</td></tr><tr><td>ΔE2000 to RoxFit</td><td class="num">18.7</td></tr><tr><td>Rule 3b (both references)</td><td class="num">fail</td></tr><tr><td>On-accent text on the accent</td><td class="num">10.16:1</td></tr><tr><td>Accent (current tab) on the tab bar</td><td class="num">10.51:1</td></tr><tr><td>Accent on the page</td><td class="num">10.16:1</td></tr><tr><td>ΔE2000 to Strava orange <code>#FC5200</code> [~]</td><td class="num">28.9</td></tr></tbody></table></div>
+        </div><div class="compare-col">
+          <h3>Halfway · #FCB24D</h3>
+          <iframe src="first-screen.html?state=hyrox&amp;accent=%23FCB24D" width="390" height="844" title="Race browse first screen, accent #FCB24D" loading="lazy"></iframe>
+          <iframe src="first-screen.html?mode=buttons&amp;accent=%23FCB24D" width="390" height="140" title="Primary buttons in accent #FCB24D" loading="lazy"></iframe>
+          <div class="spec-wrap" tabindex="0" role="region" aria-label="Accent #FCB24D numbers"><table class="spec"><tbody><tr><td>Hex</td><td class="num"><code>#FCB24D</code></td></tr><tr><td>Hue distance to RoxFit <code>#FFEC00</code></td><td class="num">24.2°</td></tr><tr><td>ΔE2000 to RoxFit</td><td class="num">22.0</td></tr><tr><td>Rule 3b (both references)</td><td class="num">fail</td></tr><tr><td>On-accent text on the accent</td><td class="num">10.12:1</td></tr><tr><td>Accent (current tab) on the tab bar</td><td class="num">10.46:1</td></tr><tr><td>Accent on the page</td><td class="num">10.12:1</td></tr><tr><td>ΔE2000 to Strava orange <code>#FC5200</code> [~]</td><td class="num">25.7</td></tr></tbody></table></div>
+        </div><div class="compare-col">
+          <h3>Warmer, just passes 3b · #FFB05C</h3>
+          <iframe src="first-screen.html?state=hyrox&amp;accent=%23FFB05C" width="390" height="844" title="Race browse first screen, accent #FFB05C" loading="lazy"></iframe>
+          <iframe src="first-screen.html?mode=buttons&amp;accent=%23FFB05C" width="390" height="140" title="Primary buttons in accent #FFB05C" loading="lazy"></iframe>
+          <div class="spec-wrap" tabindex="0" role="region" aria-label="Accent #FFB05C numbers"><table class="spec"><tbody><tr><td>Hex</td><td class="num"><code>#FFB05C</code></td></tr><tr><td>Hue distance to RoxFit <code>#FFEC00</code></td><td class="num">29.1°</td></tr><tr><td>ΔE2000 to RoxFit</td><td class="num">25.2</td></tr><tr><td>Rule 3b (both references)</td><td class="num">pass</td></tr><tr><td>On-accent text on the accent</td><td class="num">10.12:1</td></tr><tr><td>Accent (current tab) on the tab bar</td><td class="num">10.46:1</td></tr><tr><td>Accent on the page</td><td class="num">10.12:1</td></tr><tr><td>ΔE2000 to Strava orange <code>#FC5200</code> [~]</td><td class="num">23.1</td></tr></tbody></table></div>
+        </div></div>
+    </div>
+    <div class="stand-panel">
+      <h3>2 · Card height: same photos and anatomy, only the photo band changes</h3>
+      <p class="stand-why">The shortest change that fits two full cards with no filters is a 114px band (2.86:1, card 219px), but it fits with 0px to spare. The version shown uses 3:1 (109px), which keeps 6px of margin.</p>
+      <div class="compare-row"><div class="compare-col">
+          <h3>Current card</h3>
+          <iframe src="first-screen.html?ratio=16/7" width="390" height="844" title="Race browse first screen, photo band 143px" loading="lazy"></iframe>
+          <div class="spec-wrap" tabindex="0" role="region" aria-label="Current card numbers"><table class="spec"><tbody><tr><td>Photo band</td><td class="num">143px (16:7)</td></tr><tr><td>Card height</td><td class="num">247px</td></tr><tr><td>No filters (7 races)</td><td class="num">1 full + 77% of the next</td></tr><tr><td>2 filters on (4 races)</td><td class="num">1 full + 54% of the next</td></tr></tbody></table></div>
+        </div><div class="compare-col">
+          <h3>Shorter photo band</h3>
+          <iframe src="first-screen.html?ratio=3/1" width="390" height="844" title="Race browse first screen, photo band 109px" loading="lazy"></iframe>
+          <div class="spec-wrap" tabindex="0" role="region" aria-label="Shorter photo band numbers"><table class="spec"><tbody><tr><td>Photo band</td><td class="num">109px (3:1)</td></tr><tr><td>Card height</td><td class="num">213px</td></tr><tr><td>No filters (7 races)</td><td class="num">2 full + 0% of the next</td></tr><tr><td>2 filters on (4 races)</td><td class="num">1 full + 79% of the next</td></tr></tbody></table></div>
+        </div></div>
     </div>
   </section>
 
