@@ -86,7 +86,7 @@
 
   /* ---------- race card ---------- */
   --date-col: 60px;
-  --photo-ratio: 16 / 7;
+  --photo-ratio: 3 / 1;     /* decided 2026-10-14: 109px band at 390 wide, two full cards on the first screen (attribute b) */
   --photo-filter: grayscale(1) contrast(1.12) brightness(0.85); /* every photo: black and white */
   --photo-focus-low: 50% 72%;  /* crop focus for photos whose subject sits low */
   --photo-focus-mid: 50% 60%;

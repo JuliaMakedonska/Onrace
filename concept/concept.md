@@ -52,7 +52,13 @@ Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on ever
 2. **No success color on results.** Results are self-reported, and Onrace can't verify them, so there's no green and no "verified" mark anywhere on a result. The proof line stays neutral (attribute 4, d: proof stated, not stamped). *Build check:* `--success` and `--success-bg` are used only by the saved-confirmation status (and its swatch). No result row contains a check icon or the word "verified".
 3. **Two taste rules, made measurable** (CIELAB, D65):
    - **a. Depth of dark, not #000.** Every background level (`--bg-bar`, `--bg-0`, `--bg-1`, `--bg-2`) has a lightness L* between 4.5 and 20 and a chroma C* of at most 6 (near-neutral, not tinted). Each level is at least 1.5 L* lighter than the one below it, so the levels read as depth. For reference, #000 is L* 0 and the guardrail `#0B0C0E` is L* 3.3; both fall outside the range. *Current:* L* 4.99 / 6.69 / 12.10 / 17.33, C* 2.0–3.9. **Passes.**
-   - **b. Amber, not HYROX yellow.** HYROX yellow [~] is measured from `research/screens/`. There's no screenshot of HYROX's own site there, so the reference is the HYROX-ecosystem apps: RoxFit `#FFEC00` (5,786 pixels in `roxfit-how-it-works.png`) and RoxMatchUp `#F5E401` (2,770 pixels in `roxmatchup-home.png`). The accent must be at least as far from the nearer of the two as named orange is: hue distance ≥ 25° and ΔE2000 ≥ 24. CSS `orange` `#FFA500` sits at 24.6° and ΔE 24.0 from `#FFEC00`. *Current amber `#F5B649`:* 19.2° and ΔE 18.7 from RoxFit's yellow (19.6° and ΔE 17.9 from RoxMatchUp's). **Fails.** It's kept unchanged by the designer; the decision is open.
+   - **b. Amber, not HYROX yellow.** HYROX yellow [~] is measured from `research/screens/`. There's no screenshot of HYROX's own site there, so the reference is the HYROX-ecosystem apps: RoxFit `#FFEC00` (5,786 pixels in `roxfit-how-it-works.png`) and RoxMatchUp `#F5E401` (2,770 pixels in `roxmatchup-home.png`). The accent must be at least as far from the nearer of the two as named orange is: hue distance ≥ 25° and ΔE2000 ≥ 24. CSS `orange` `#FFA500` sits at 24.6° and ΔE 24.0 from `#FFEC00`. *Current amber `#F5B649`:* 19.2° and ΔE 18.7 from RoxFit's yellow (19.6° and ΔE 17.9 from RoxMatchUp's). It fails the threshold.
+     - **Overridden by the designer, with reason (2026-10-14).** The amber `#F5B649` stays, as a conscious choice. Three things keep it from reading as HYROX's look:
+       - the accent is scarce: 1–2 uses per screen (rule 1)
+       - the ground is graphite, not black (rule 3a)
+       - the format chips are neutral (Hierarchy rule 2)
+     - The designer compared it side by side with a halfway version `#FCB24D` and a warmer `#FFB05C` that just passes. The warmer one moves toward Strava orange.
+     - The build still measures rule 3b and shows it on the stand as "accepted by designer". The override covers this exact hex only: any other accent is checked against the threshold again.
 
 ---
 
@@ -64,6 +70,12 @@ Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on ever
 - on the right, a text column: the race title, the neutral format chip, the location with the map-point icon
 
 **No per-format colors.** The format chip is Podium's neutral chip, the same for every format (Hierarchy rule 2). The format-dot option was dropped.
+
+**Photo band: 3:1 (decided 2026-10-14).** `--photo-ratio: 3 / 1` in `tokens.css`, which gives a 109px band at 390px wide and a 213px card.
+- *First screen at 390×844* (measured with `concept/first-screen.html`): **2 full race cards** with no filters (7 races); **1 full + 79% of the next** with two filters on (4 races).
+- *Compared with 16:7:* a 143px band and a 247px card, giving 1 full + 77% with no filters and 1 full + 54% with two filters on.
+- *Attribute b (a calendar, not a poster):* two full races on the first screen make the list read as a run of dates, not one poster per screen. The photo stays, as a band, not a hero.
+- *Margin:* 3:1 fits two cards with 6px to spare. The tightest fit, a 114px band (2.86:1), had 0px.
 
 **Markup hook the card needs (not in the wireframes):** one `<img>` per race card for the photo. The wireframes have no photo slot.
 
@@ -212,7 +224,7 @@ Round 2, in `directions.html`. All three were built under the Hierarchy rules ab
 **Chosen: Direction A, "Podium".** Why: it keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.
 - Graphite ground `#131518`, sodium amber accent `#F5B649` (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.
 - Its values now live in `tokens.css`, its components in `components.css`, and its stand in `concept.html`.
-- **Still open:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in `research/screens/` (RoxFit `#FFEC00`), it is 19.2° of hue and ΔE 18.7 away, which fails Color rule 3b (needs ≥ 25° and ΔE ≥ 24). It reads most HYROX-like as a filled button. The designer kept it knowingly.
+- **Still open:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in `research/screens/` (RoxFit `#FFEC00`), it is 19.2° of hue and ΔE 18.7 away, below Color rule 3b's threshold (≥ 25° and ΔE ≥ 24). **Decided 2026-10-14:** kept, as a designer override of rule 3b. The reason is recorded under Color rules → 3b.
 
 **Not picked:**
 - **Direction B, "Telemetry"** (periwinkle `#A9B8FF` on blue-black, Saira + Sofia Sans, 4px). Its Results list read like a timing board. But its critique found Race browse "could belong to any dark fintech or fitness app": blue on dark drifts toward a generic tech look, and its energy depended on dimming everything that isn't data.

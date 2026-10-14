@@ -140,70 +140,43 @@ def hue_dist(x, y):
     d = abs(lab_hue(x) - lab_hue(y)); return min(d, 360 - d)
 hyrox_rows = [(n, c, src, hue_dist(tok('accent'), c), de2000(tok('accent'), c)) for n, c, src in HYROX_REFS]
 HYROX_PASS = all(h >= HUE_MIN and d >= DE_MIN for _, _, _, h, d in hyrox_rows)
+# Designer override (concept.md → Color rules → 3b), valid only for this exact accent
+RULE_3B_OVERRIDE = {'accent': '#F5B649', 'date': '2026-10-14',
+                    'reason': 'the accent is scarce (1–2 uses per screen), the ground is graphite, not black, and the chips are neutral'}
+HYROX_ACCEPTED = (not HYROX_PASS) and tok('accent').upper() == RULE_3B_OVERRIDE['accent']
+HYROX_STATUS = 'pass' if HYROX_PASS else 'accepted by designer' if HYROX_ACCEPTED else 'FAIL'
 
 # results never carry a success mark (checked on the generated markup at the end)
 print('Color rule 1 (accent placement): pass ·', len(accent_sel), 'selectors')
 print('Color rule 2 (no success on results): pass ·', len(success_sel), 'selectors')
 print('Color rule 3a (depth of dark): pass ·', ', '.join(f'{t} L*{L:.2f} C*{C:.2f}' for t, L, C, _ in bg_rows))
-print('Color rule 3b (amber vs HYROX yellow):', 'pass' if HYROX_PASS else 'FAIL (reported, not blocking)', '·',
+print('Color rule 3b (amber vs HYROX yellow):', HYROX_STATUS if HYROX_STATUS != 'FAIL' else 'FAIL (no designer override for this accent; reported, not blocking)', '·',
       '; '.join(f'{n} {c}: {h:.1f}° ΔE {d:.1f}' for n, c, _, h, d in hyrox_rows))
 
 def decisions_section():
-    from urllib.parse import quote
-    cols = []
-    for n, c in ACCENT_VERSIONS:
-        rows = ''.join(f'<tr><td>{rn}</td><td class="num">{v}</td></tr>' for rn, v in [
-            ('Hex', f'<code>{c}</code>'),
-            ('Hue distance to RoxFit <code>#FFEC00</code>', f'{hue_dist(c, "#FFEC00"):.1f}°'),
-            ('ΔE2000 to RoxFit', f'{de2000(c, "#FFEC00"):.1f}'),
-            ('Rule 3b (both references)', 'pass' if all(hue_dist(c, y) >= HUE_MIN and de2000(c, y) >= DE_MIN for _, y, _ in HYROX_REFS) else 'fail'),
-            ('On-accent text on the accent', f'{cr(tok("on-accent"), c):.2f}:1'),
-            ('Accent (current tab) on the tab bar', f'{cr(c, tok("bg-bar")):.2f}:1'),
-            ('Accent on the page', f'{cr(c, tok("bg-0")):.2f}:1'),
-            ('ΔE2000 to Strava orange <code>#FC5200</code> [~]', f'{de2000(c, "#FC5200"):.1f}')])
-        q = quote(c)
-        cols.append(f'''<div class="compare-col">
-          <h3>{n} · {c}</h3>
-          <iframe src="first-screen.html?state=hyrox&amp;accent={q}" width="390" height="844" title="Race browse first screen, accent {c}" loading="lazy"></iframe>
-          <iframe src="first-screen.html?mode=buttons&amp;accent={q}" width="390" height="140" title="Primary buttons in accent {c}" loading="lazy"></iframe>
-          {wrap(f'Accent {c} numbers', f'<table class="spec"><tbody>{rows}</tbody></table>')}
-        </div>''')
-    bcols = []
-    for key, title in [('current', 'Current card'), ('short', 'Shorter photo band')]:
-        b = BAND[key]
-        rows = ''.join(f'<tr><td>{rn}</td><td class="num">{v}</td></tr>' for rn, v in [
-            ('Photo band', f'{b["band"]}px ({b["ratio"].replace("/", ":")})'), ('Card height', f'{b["card"]}px'),
-            ('No filters (7 races)', f'{b["def"][0]} full + {b["def"][1]}% of the next'),
-            ('2 filters on (4 races)', f'{b["filt"][0]} full + {b["filt"][1]}% of the next')])
-        bcols.append(f'''<div class="compare-col">
-          <h3>{title}</h3>
-          <iframe src="first-screen.html?ratio={b["ratio"]}" width="390" height="844" title="Race browse first screen, photo band {b["band"]}px" loading="lazy"></iframe>
-          {wrap(f'{title} numbers', f'<table class="spec"><tbody>{rows}</tbody></table>')}
-        </div>''')
     return f'''
   <section class="stand-section" id="decisions" aria-labelledby="dec-h">
-    <h2 id="dec-h">Two decisions, side by side</h2>
-    <p>Each phone is the first-screen harness at 390×844, live, with one thing overridden from its URL. <code>tokens.css</code> is unchanged until a version is picked.</p>
-    <div class="stand-panel">
-      <h3>1 · Accent: identical screens, only the accent differs</h3>
-      <p class="stand-why">Race browse filtered to HYROX, so a HYROX card is on screen next to the accent (the current tab). Race browse has no primary button in the wireframe, so the strip under each phone shows the two real primaries from other screens: Log result (Results list) and Register on &lt;domain&gt; (Race detail). The warmer versions keep lightness; the hue turns toward orange, and chroma drops only where sRGB runs out.</p>
-      <div class="compare-row">{''.join(cols)}</div>
-    </div>
-    <div class="stand-panel">
-      <h3>2 · Card height: same photos and anatomy, only the photo band changes</h3>
-      <p class="stand-why">The shortest change that fits two full cards with no filters is a {BAND["boundary"]["band"]}px band ({BAND["boundary"]["ratio"].replace("/", ":")}, card {BAND["boundary"]["card"]}px), but it fits with 0px to spare. The version shown uses 3:1 ({BAND["short"]["band"]}px), which keeps 6px of margin.</p>
-      <div class="compare-row">{''.join(bcols)}</div>
+    <h2 id="dec-h">Decided</h2>
+    <div class="stand-grid">
+      <div class="stand-panel">
+        <h3>Accent · <code>{tok("accent")}</code>, kept</h3>
+        <p class="stand-why">Compared side by side against a halfway version (<code>{ACCENT_HALF}</code>) and a warmer one that just passes rule 3b (<code>{ACCENT_PASS}</code>). The designer kept the current amber, overriding rule 3b (see Color rules). Text on the accent: {cr(tok("on-accent"), tok("accent")):.2f}:1.</p>
+      </div>
+      <div class="stand-panel">
+        <h3>Photo band · 3:1, {BAND["short"]["band"]}px</h3>
+        <p class="stand-why">Compared with 16:7 ({BAND["current"]["band"]}px band, {BAND["current"]["card"]}px card: 1 full card + {BAND["current"]["def"][1]}% of the next). At 3:1 the card is {FS["card_h"]}px: {FS["base"]["full"]} full cards with no filters, {FS["filtered"]["full"]} full + {FS["filtered"]["next"]}% with two filters on. Attribute b: a calendar, not a poster. Same photos and anatomy.</p>
+      </div>
     </div>
   </section>
 '''
 
 def rules_section():
     bg = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td class="num">{L:.2f}</td><td class="num">{C:.2f}</td><td class="num">{"base" if st is None else f"+{st:.2f}"}</td><td><span class="pass">pass</span></td></tr>' for t, L, C, st in bg_rows)
-    hy = ''.join(f'<tr><td>{n} <code>{c}</code><br>{src}</td><td class="num">{h:.1f}°</td><td class="num">{d:.1f}</td><td>{"<span class=pass>pass</span>" if h >= HUE_MIN and d >= DE_MIN else "<b>fail</b>"}</td></tr>' for n, c, src, h, d in hyrox_rows)
+    hy = ''.join(f'<tr><td>{n} <code>{c}</code><br>{src}</td><td class="num">{h:.1f}°</td><td class="num">{d:.1f}</td><td>{"<span class=pass>pass</span>" if h >= HUE_MIN and d >= DE_MIN else "below threshold · accepted by designer" if HYROX_ACCEPTED else "<b>fail</b>"}</td></tr>' for n, c, src, h, d in hyrox_rows)
     return f'''
   <section class="stand-section" id="color-rules" aria-labelledby="rules-h">
     <h2 id="rules-h">Color rules, checked by the build</h2>
-    <p>From <code>concept.md</code> → Color rules. <code>scripts/concept/build_stand.py</code> checks them on every build: rules 1, 2 and 3a stop the build when broken; 3b is reported here and does not block.</p>
+    <p>From <code>concept.md</code> → Color rules. <code>scripts/concept/build_stand.py</code> checks them on every build: rules 1, 2 and 3a stop the build when broken; 3b is reported here and does not block (the current amber is accepted by the designer).</p>
     <div class="stand-grid">
       <div class="stand-panel">
         <h3>1 · Accent placement · pass</h3>
@@ -220,9 +193,9 @@ def rules_section():
       <p class="stand-why">For reference, #000 is L* 0 and the guardrail <code>#0B0C0E</code> is L* 3.30; both fall outside the range.</p>
     </div>
     <div class="stand-panel">
-      <h3>3b · Amber, not HYROX yellow: hue distance ≥ {HUE_MIN:g}° and ΔE2000 ≥ {DE_MIN:g} · {"pass" if HYROX_PASS else "fails, kept by the designer"}</h3>
+      <h3>3b · Amber, not HYROX yellow: hue distance ≥ {HUE_MIN:g}° and ΔE2000 ≥ {DE_MIN:g} · {HYROX_STATUS}</h3>
       {wrap('HYROX distance check', f'<table class="spec"><thead><tr><th>HYROX yellow [~], measured in research/screens/</th><th>Hue distance</th><th>ΔE2000</th><th>Result</th></tr></thead><tbody>{hy}</tbody></table>')}
-      <p class="stand-why">The threshold is "at least as far as named orange": CSS <code>orange</code> <code>#FFA500</code> is 24.6° and ΔE 24.0 from <code>#FFEC00</code>. There is no screenshot of HYROX's own site in <code>research/screens/</code>, so the reference is the HYROX-ecosystem apps. The amber <code>{tok("accent")}</code> is not changed; the decision is open (<code>concept.md</code> → Directions).</p>
+      <p class="stand-why">The threshold is "at least as far as named orange": CSS <code>orange</code> <code>#FFA500</code> is 24.6° and ΔE 24.0 from <code>#FFEC00</code>. There is no screenshot of HYROX's own site in <code>research/screens/</code>, so the reference is the HYROX-ecosystem apps. <b>Overridden by the designer on {RULE_3B_OVERRIDE["date"]}:</b> the amber <code>{RULE_3B_OVERRIDE["accent"]}</code> stays because {RULE_3B_OVERRIDE["reason"]}. The override covers this exact hex; any other accent is checked against the threshold again.</p>
     </div>
   </section>
 '''
@@ -249,8 +222,8 @@ BAND = {'current': {'ratio': '16/7', 'band': 143, 'card': 247, 'def': (1, 77), '
         'short':   {'ratio': '3/1',  'band': 109, 'card': 213, 'def': (2, 0),  'filt': (1, 79)},
         'boundary': {'ratio': '2.86/1', 'band': 114, 'card': 219}}
 
-# measured in the browser with first-screen.html at 390×844 on 2026-10-13 (re-measure after layout changes)
-FS = {'card_h': 247, 'tab': 747, 'base': {'top': 298, 'full': 1, 'next': 77}, 'filtered': {'top': 354, 'full': 1, 'next': 54}}
+# measured in the browser with first-screen.html at 390×844 on 2026-10-14, --photo-ratio 3 / 1 from tokens.css (re-measure after layout changes)
+FS = {'card_h': 213, 'band': 109, 'tab': 747, 'base': {'top': 298, 'full': 2, 'next': 0}, 'filtered': {'top': 354, 'full': 1, 'next': 79}}
 
 # ---------------------------------------------------------------- shared markup (wireframe text and structure)
 def race_card(name, tag, iso, date, loc, src, pos, alt):
@@ -355,7 +328,7 @@ SPACE = ''.join(f'<tr><td><code>--space-{i}</code> {tok(f"space-{i}")}</td><td><
 METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside the 17px title', 'Hierarchy rule 2'),
            ('filter-chip-height', 'Active filter chip height (44px tap area via ::after)', 'Removable, so a bigger target than the metadata chip', 'Critique fix: touch targets'),
            ('date-col', 'Date column width', 'Fits "Sep 2026" on one line under the day', 'Attribute b: the date leads'),
-           ('photo-ratio', 'Photo band ratio in the card', 'A band, not a poster', 'Attribute b: a calendar, not a poster'),
+           ('photo-ratio', 'Photo band ratio in the card', '3:1, 109px at 390 wide (decided 2026-10-14)', 'Attribute b: two full cards on the first screen'),
            ('icon-s', 'Icons in meta (location, proof line)', 'Matches 13–14px meta text', 'Hierarchy rule 4: meta is level 3'),
            ('icon-m', 'Icons in buttons, search, states', 'Matches 15px button text', 'Hierarchy rule 3'),
            ('icon-l', 'Tab bar icons', 'iOS tab bar size', 'Wireframe conventions: iOS chrome'),
@@ -369,8 +342,8 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('leading-item', 'Item titles, the date column', 'Line height 1.2', 'Hierarchy rule 4: level 2 stays compact'),
            ('weight-regular', 'Body and meta', 'Regular 400', 'Hierarchy rule 4: meta steps back by weight too'),
            ('tap-pad', 'Invisible tap area around filter chips', 'Extends the 32px chip to 44px', 'Critique fix: touch targets'),
-           ('photo-focus-low', 'Crop focus for photos whose subject sits low', 'Keeps the athletes in the 16:7 band', 'Attribute b: the band shows the race, not the sky'),
-           ('photo-focus-mid', 'Crop focus for photos with a centered subject', 'Keeps the athletes in the 16:7 band', 'Attribute b'),
+           ('photo-focus-low', 'Crop focus for photos whose subject sits low', 'Keeps the athletes in the 3:1 band', 'Attribute b: the band shows the race, not the sky'),
+           ('photo-focus-mid', 'Crop focus for photos with a centered subject', 'Keeps the athletes in the 3:1 band', 'Attribute b'),
            ('ease-out', 'Easing for hover and press', 'Fast start, soft stop', 'Attribute e: intense, not jittery'),
            ('stand-max', 'Stand page width (stand only)', 'Never used in the product', 'Stand layout'),
            ('phone-width', 'Phone frame on the stand (stand only)', '390px screen + border', 'Stand layout'),
@@ -488,7 +461,7 @@ page = f'''<!doctype html>
     <h2 id="photo-h">Photos</h2>
     <div class="stand-grid">
       <div class="stand-stack">
-        <p>Every photo is black and white: <code>--photo-filter</code> ({tok("photo-filter")}), set inside the card at 16:7 with a 4px radius. Color stays reserved for the accent and the states.</p>
+        <p>Every photo is black and white: <code>--photo-filter</code> ({tok("photo-filter")}), set inside the card at 3:1 with a 4px radius. Color stays reserved for the accent and the states.</p>
         <p>Source: Unsplash, free license, on topic: hybrid and functional-fitness racing, road races, trail and OCR. No stairs, no generic gym selfies, no posed portraits. Each photo is downloaded and looked at before use, and logged in <code>references.md</code> → Photos.</p>
         {why("Taste: black-and-white race photos (round 1 Direction 1)", "Hierarchy rule 1: photos never compete with the accent", "Attribute c: no single sport's look")}
       </div>
@@ -612,11 +585,11 @@ page = f'''<!doctype html>
 
   <section class="stand-section" id="first-screen" aria-labelledby="fs-h">
     <h2 id="fs-h">First screen · how many race cards on a phone</h2>
-    <p>Measured on 2026-10-13 with <code>concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. A card is {FS["card_h"]}px tall.</p>
+    <p>Measured on 2026-10-14 with <code>concept/first-screen.html</code> at 390×844 (iPhone 14/15 viewport, 47px status bar, 34px home indicator): the wireframe's Race browse top with the decided photo card, styled only by <code>tokens.css</code> and <code>components.css</code>. With the decided 3:1 photo band ({FS["band"]}px), a card is {FS["card_h"]}px tall.</p>
     {wrap('First screen measurement', f'<table class="spec"><thead><tr><th>State</th><th>List starts at</th><th>Tab bar at</th><th>Fully visible</th><th>Next card visible</th></tr></thead><tbody>'
-      + f'<tr><td>Default (no filters, 7 races)</td><td class="num">{FS["base"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["base"]["full"]} card</td><td class="num">{FS["base"]["next"]}%</td></tr>'
+      + f'<tr><td>Default (no filters, 7 races)</td><td class="num">{FS["base"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["base"]["full"]} cards</td><td class="num">{FS["base"]["next"]}%</td></tr>'
       + f'<tr><td>2 filters on (chips row shown, 4 races)</td><td class="num">{FS["filtered"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["filtered"]["full"]} card</td><td class="num">{FS["filtered"]["next"]}%</td></tr></tbody></table>')}
-    <p class="stand-why"><b>For the designer to judge (attribute b, a calendar, not a poster):</b> with a photo in every card, the first screen shows one full race and part of the next. Nothing is changed here.</p>
+    <p class="stand-why"><b>Why (attribute b, a calendar, not a poster):</b> two full races on the first screen with no filters, so the list reads as a run of dates rather than one poster per screen. With two filters on, the chips row costs one card's worth of the second race (1 full + 79%).</p>
   </section>
 {rules_section()}
 {decisions_section()}
