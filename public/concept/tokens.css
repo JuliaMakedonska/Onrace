@@ -91,6 +91,7 @@
   --photo-filter: grayscale(1) contrast(1.12) brightness(0.85); /* every photo: black and white */
   --photo-focus-low: 50% 72%;  /* crop focus for photos whose subject sits low */
   --photo-focus-mid: 50% 60%;
+  --photo-focus-lower: 50% 74%;   /* lower band: keeps a banner above the subject out of frame (DEKA photo) */
   --photo-focus-center: 50% 44%;  /* subject in the middle of a tall photo */
   --photo-focus-high: 50% 0%;     /* subject at the top edge (race bibs) */
   --icon-s: 15px;

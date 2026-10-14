@@ -2,6 +2,8 @@
 
 Applies to every screen wireframed for Onrace, starting with the two screens scoped in `_screens.md` (Race browse, Race detail) and carried forward as later steps expand to the rest of `sitemap.md`. Nothing here draws a screen — this is the ruleset the drawing steps follow.
 
+> **Visual language, since Lesson 6 step 5 (2026-10-14).** Race browse (`race-browse.html` and its `-empty`, `-error` and `-loading` pages), and after step 6 Results list, use the **Podium** visual language. They link `../concept/tokens.css` and `../concept/components.css` and hold no style values of their own. Their race cards carry black-and-white photos (`../concept/concept.md` → Race card anatomy). On those screens, Podium replaces § 1's grayscale, fonts, no-branding and no-images rules; their text and structure still follow this file. **Every other screen stays grayscale under the rules below until Lesson 7.**
+
 ---
 
 ## 1. Fidelity

@@ -463,6 +463,7 @@ body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position
 #list-view { padding: 0 var(--space-4) var(--space-4); }
 .photo--low { object-position: var(--photo-focus-low); }
 .photo--mid { object-position: var(--photo-focus-mid); }
+.photo--lower { object-position: var(--photo-focus-lower); }
 .photo--center { object-position: var(--photo-focus-center); }
 .photo--high { object-position: var(--photo-focus-high); }
 .race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
