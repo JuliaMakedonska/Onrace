@@ -71,7 +71,10 @@ Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on ever
 
 **No per-format colors.** The format chip is Podium's neutral chip, the same for every format (Hierarchy rule 2). The format-dot option was dropped.
 
-**Photo band: 3:1 (decided 2026-10-14).** `--photo-ratio: 3 / 1` in `tokens.css`, which gives a 109px band at 390px wide and a 213px card.
+**Photo band: 3:1 (decided 2026-10-14).** `--photo-ratio: 3 / 1` in `tokens.css`, which gave a 109px band at 390px wide and a 213px card on the stand.
+- *Step 5, on the real screen* (`wireframes/race-browse.html`): the card is 215px (114px band). The page now sizes boxes including their padding, so the photo is 342px wide, and the date column is 68px to fit "May 2027".
+  - **Inside the wireframes viewer, which is the phone** (a 757px page between the status bar and home strip): **2 full cards with no filters, with 8.6px to spare**, and **1 full + 78%** with two filters on.
+  - Opened directly at 390×844: 2 full + 39%, or 2 full + 13% with two filters on.
 - *First screen at 390×844* (measured with `concept/first-screen.html`): **2 full race cards** with no filters (7 races); **1 full + 79% of the next** with two filters on (4 races).
 - *Compared with 16:7:* a 143px band and a 247px card, giving 1 full + 77% with no filters and 1 full + 54% with two filters on.
 - *Attribute b (a calendar, not a poster):* two full races on the first screen make the list read as a run of dates, not one poster per screen. The photo stays, as a band, not a hero.

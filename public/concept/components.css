@@ -6,6 +6,8 @@
    link this file without markup changes. */
 
 /* ---------- base ---------- */
+.onrace, .onrace *, .onrace *::before, .onrace *::after { box-sizing: border-box; }
+.onrace { margin: 0; }
 .onrace {
   background: var(--bg-0);
   color: var(--text-1);
@@ -55,7 +57,7 @@
 
 /* secondary: tonal (Filters, Clear all filters on an empty state) */
 .btn--secondary, .filters-trigger, .state-action.secondary { background: var(--bg-2); color: var(--text-1); }
-.btn--secondary:hover, .filters-trigger:hover, .state-action.secondary:hover { background: var(--line); }
+.btn--secondary:hover, .filters-trigger:hover, .state-action.secondary:hover { background: var(--bg-3); }
 
 /* tertiary: text link (Clear all filters in the chips row, Cancel) */
 .btn--tertiary, .clear-all {
@@ -180,7 +182,7 @@
   grid-template-areas: "date name" "date meta" "date loc";
   column-gap: var(--space-3);
   align-items: start;
-  padding: var(--space-3) var(--space-1) var(--space-1);
+  padding: var(--space-3) 0 0;
   color: inherit;
   text-decoration: none;
   border-radius: var(--radius-1);
@@ -294,7 +296,9 @@
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
-.view-btn[aria-pressed="true"] { background: var(--line); color: var(--text-1); }
+.view-btn[aria-pressed="true"] { background: var(--bg-3); color: var(--text-1); box-shadow: inset 0 0 0 var(--border) var(--field-line); }  /* pressed: calm outline, like the active chip */
+.view-btn { position: relative; }
+.view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
 
 /* ---------- tab bar: current tab is the screen's one accent on Race browse ---------- */
 .bottom-nav { background: var(--bg-bar); border-top: var(--border) solid var(--line); padding: var(--space-2) var(--space-2) var(--space-6); }
@@ -352,8 +356,11 @@
 }
 
 /* active filter chips + "Clear all filters" (tertiary) */
-.chips-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
-.chips-row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.chips-bar { display: flex; align-items: center; gap: var(--space-2); }
+.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-2); flex: 1; min-width: 0; overflow-x: auto; }
+.chips-row li { flex: none; }
+.chips-row { -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }  /* the row scrolls: its end fades */
+.chips-bar .clear-all { flex: none; }
 .chips-bar[hidden] { display: none; }
 
 /* ---------- result count + sort ---------- */
@@ -405,7 +412,7 @@
   border-radius: var(--radius-2);
   background: var(--bg-1);
 }
-.skeleton-card::before { content: ""; grid-area: photo; aspect-ratio: var(--photo-ratio); border-radius: var(--radius-1); background: var(--bg-2); margin-bottom: var(--space-1); }
+.skeleton-card .bar.photo { grid-area: photo; aspect-ratio: var(--photo-ratio); margin-bottom: var(--space-1); }
 .skeleton-card .skel-meta { display: contents; }
 .skeleton-card .bar.title { grid-area: name; width: var(--skel-title-w); height: var(--skel-title); }
 .skeleton-card .bar.tag { grid-area: meta; width: var(--skel-tag-w); height: var(--chip-height); }
@@ -424,7 +431,7 @@
 }
 .state-message p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
 .state-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
-.state-message[role="alert"] h2::before, .state-message.is-error h2::before {   /* error: one icon, in the error color; the stand uses .is-error so a static specimen isn't announced */
+.state-message[role="alert"] h2::before, .state-message.is-error h2::before, .state-message:has([data-retry]) h2::before {   /* error: one icon, in the error color; the stand uses .is-error so a static specimen isn't announced */
   content: "";
   display: inline-block;
   width: var(--icon-m);
@@ -435,6 +442,170 @@
   -webkit-mask: var(--icon-error) center / contain no-repeat;
   mask: var(--icon-error) center / contain no-repeat;
 }
+
+/* =================================================================
+   Race browse screen (wireframes/race-browse*.html): the wireframes' own
+   markup, laid out here. Tokens only, like everything above.
+   ================================================================= */
+:where(.onrace) a { color: var(--text-1); }   /* zero specificity: components always win */
+html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
+body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
+.phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-h); }
+.phone-screen main { display: flex; flex-direction: column; min-height: 100%; }
+.phone-screen header { display: grid; gap: var(--space-3); padding: var(--space-2) var(--space-4) var(--space-1); }  /* the viewer draws the status bar above the page */
+.phone-screen .controls { position: sticky; top: 0; z-index: 2; background: var(--bg-0); padding: var(--space-3) var(--space-4); }
+.phone-screen .results-row { padding-inline: var(--space-4); }
+.results-row[hidden], .sort-control[hidden] { display: none; }
+.filters-trigger[aria-expanded="true"] { background: var(--bg-3); }
+.view-area { display: contents; }
+.view-panel { flex: 1; min-height: 0; }
+#list-view[hidden], #map-view[hidden] { display: none; }
+#list-view { padding: 0 var(--space-4) var(--space-4); }
+.photo--low { object-position: var(--photo-focus-low); }
+.photo--mid { object-position: var(--photo-focus-mid); }
+.photo--center { object-position: var(--photo-focus-center); }
+.photo--high { object-position: var(--photo-focus-high); }
+.race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
+
+/* tab bar on a screen: fixed to the frame's bottom; Solar icons from tokens (the markup's own glyphs are hidden) */
+body > .bottom-nav:not(.fs-tabbar) { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; height: var(--tabbar-h); padding: var(--space-1) var(--space-2); display: grid; align-items: center; }
+body > .bottom-nav:not(.fs-tabbar) .tab-icon { display: none; }
+body > .bottom-nav:not(.fs-tabbar) a::before {
+  content: "";
+  width: var(--icon-l);
+  height: var(--icon-l);
+  background: currentColor;
+  -webkit-mask: var(--tab-icon) center / contain no-repeat;
+  mask: var(--tab-icon) center / contain no-repeat;
+}
+.bottom-nav a[href^="race-browse"] { --tab-icon: var(--icon-compass); }
+.bottom-nav a[href^="results-list"] { --tab-icon: var(--icon-stopwatch); }
+.bottom-nav a[href^="profile"] { --tab-icon: var(--icon-user); }
+
+/* map view: a placeholder, out of scope; styled only so it belongs */
+#map-view { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
+.map-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  color: var(--text-2);
+  font-size: var(--size-proof);
+}
+.map-placeholder.has-pins { position: relative; align-items: flex-end; }
+.map-pin {
+  position: absolute;
+  transform: translate(calc(var(--map-pin-dot) / -2), calc(var(--map-pin-dot) / -2));
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+  border-radius: var(--radius-1);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.map-pin::before { content: ""; width: var(--map-pin-dot); height: var(--map-pin-dot); border-radius: 50%; background: var(--text-1); }
+.map-pin:hover { background: var(--bg-3); }
+.map-pin[hidden] { display: none; }
+.map-caption { margin: 0; color: var(--text-2); font-size: var(--size-label); }
+.map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
+.map-placeholder .state-actions { justify-content: center; }
+
+/* Filters sheet: a sheet floats, so it is the one place with a shadow */
+.sheet-backdrop { position: absolute; inset: 0; z-index: 5; background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-out); }
+.sheet-backdrop.open { opacity: 1; }
+.sheet-backdrop[hidden], .sheet[hidden] { display: none; }
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  max-height: var(--sheet-max);
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-4) var(--space-6);
+  border-radius: var(--radius-3) var(--radius-3) 0 0;
+  background: var(--bg-1);
+  box-shadow: var(--shadow-sheet);
+  transform: translateY(100%);
+  transition: transform var(--dur-sheet) var(--ease-out);
+}
+.sheet.open { transform: translateY(0); }
+.sheet-handle { width: var(--space-7); height: var(--space-1); margin: 0 auto var(--space-3); border-radius: var(--radius-1); background: var(--field-line); }
+.sheet h2 { margin: 0 0 var(--space-4); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); color: var(--text-1); }
+.sheet form > div:not(.sheet-actions), .sheet fieldset { margin: 0 0 var(--space-4); padding: 0; border: 0; display: grid; gap: var(--space-2); }
+.sheet form > div:has(> select) { position: relative; }
+.sheet form > div:has(> select)::after {   /* chevron, like the sort control */
+  content: "";
+  position: absolute;
+  right: var(--space-3);
+  bottom: calc((var(--target) - var(--icon-s)) / 2);
+  width: var(--icon-s);
+  height: var(--icon-s);
+  background: var(--text-1);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
+.sheet label, .sheet legend { font-size: var(--size-meta); color: var(--text-2); }
+.sheet legend { padding: 0; margin-bottom: var(--space-2); }
+.sheet fieldset label { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); color: var(--text-1); font-size: var(--size-body); }
+.sheet input[type="checkbox"] {   /* neutral, never the accent */
+  -webkit-appearance: none;
+  appearance: none;
+  flex: none;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin: 0;
+  border-radius: var(--radius-1);
+  background: var(--bg-0);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+.sheet input[type="checkbox"]::before { content: ""; width: var(--icon-s); height: var(--icon-s); background: var(--bg-0); -webkit-mask: var(--icon-check) center / contain no-repeat; mask: var(--icon-check) center / contain no-repeat; opacity: 0; }
+.sheet input[type="checkbox"]:checked { background: var(--text-1); box-shadow: none; }
+.sheet input[type="checkbox"]:checked::before { opacity: 1; }
+.sheet select, .sheet input[type="date"] {
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-0);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  color-scheme: dark;
+}
+.sheet select { -webkit-appearance: none; appearance: none; padding-right: calc(var(--space-3) * 2 + var(--icon-s)); }
+.sheet, .phone-screen, .chips-row { scrollbar-color: var(--field-line) transparent; scrollbar-width: thin; }
+.chips-row { scrollbar-width: none; }
+.sheet-actions { display: flex; gap: var(--space-3); margin-top: var(--space-2); }
+.sheet-actions button {
+  flex: 1;
+  min-height: var(--target);
+  border: 0;
+  border-radius: var(--radius-2);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.sheet-actions button[type="submit"] { background: var(--accent); color: var(--on-accent); }   /* the sheet's one primary */
+.sheet-actions button[type="submit"]:hover { background: var(--accent-hover); }
+.sheet-actions button[type="button"] { background: var(--bg-2); color: var(--text-1); }       /* Cancel: secondary */
+.sheet-actions button[type="button"]:hover { background: var(--bg-3); }
 
 /* =================================================================
    Stand layout (concept.html only). Tokens only, like everything above.
@@ -481,8 +652,6 @@
 .icon-cell { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-1); }
 .icon-cell .icon { width: var(--icon-l); height: var(--icon-l); flex: none; }
 .stand-link { color: var(--text-1); text-underline-offset: var(--space-1); }
-.photo--low { object-position: var(--photo-focus-low); }
-.photo--mid { object-position: var(--photo-focus-mid); }
 .type-sample { color: var(--text-1); }
 .type-sample--display { font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .type-sample--title { font-size: var(--size-title); }
@@ -497,7 +666,7 @@
 .space-bar--4 { width: var(--space-4); } .space-bar--5 { width: var(--space-5); } .space-bar--6 { width: var(--space-6); }
 .space-bar--7 { width: var(--space-7); } .space-bar--8 { width: var(--space-8); } .space-bar--9 { width: var(--space-9); }
 .swatch--bg-bar { background: var(--bg-bar); } .swatch--bg-0 { background: var(--bg-0); } .swatch--bg-1 { background: var(--bg-1); }
-.swatch--bg-2 { background: var(--bg-2); } .swatch--line { background: var(--line); } .swatch--field-line { background: var(--field-line); }
+.swatch--bg-2 { background: var(--bg-2); } .swatch--bg-3 { background: var(--bg-3); } .swatch--line { background: var(--line); } .swatch--field-line { background: var(--field-line); }
 .swatch--text-1 { background: var(--text-1); } .swatch--text-2 { background: var(--text-2); } .swatch--text-disabled { background: var(--text-disabled); }
 .swatch--chip-text { background: var(--chip-text); } .swatch--accent { background: var(--accent); } .swatch--accent-hover { background: var(--accent-hover); }
 .swatch--on-accent { background: var(--on-accent); } .swatch--error { background: var(--error); } .swatch--error-bg { background: var(--error-bg); }

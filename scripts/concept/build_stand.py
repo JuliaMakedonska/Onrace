@@ -36,7 +36,8 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Titles, item titles, finish time on a card', 'text-1', 'bg-1', 'text'),
     ('Secondary button label', 'text-1', 'bg-2', 'text'),
     ('Active filter chip label (transparent chip, on the page)', 'text-1', 'bg-0', 'text'),
-    ('Selected List/Map segment', 'text-1', 'line', 'text'),
+    ('Selected List/Map segment, hover and open fills', 'text-1', 'bg-3', 'text'),
+    ('Unselected List/Map segment on hover', 'text-2', 'bg-3', 'text'),
     ('Meta on the page (counts, sort)', 'text-2', 'bg-0', 'text'),
     ('Meta on a card (month and year, location, proof line)', 'text-2', 'bg-1', 'text'),
     ('Search placeholder', 'text-2', 'bg-1', 'text'),
@@ -71,6 +72,16 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Error icon in the state heading (non-text, 3:1)', 'error', 'bg-0', 'ui'),
     ('Disabled sort while loading', 'text-disabled', 'bg-0', 'exempt'),
     ('Skeleton bar on a card', 'bg-2', 'bg-1', 'info'),
+    ('Race browse · Filters sheet heading, checkbox labels', 'text-1', 'bg-1', 'text'),
+    ('Race browse · Filters sheet field labels and legend', 'text-2', 'bg-1', 'text'),
+    ('Race browse · Filters sheet field value (select, dates)', 'text-1', 'bg-0', 'text'),
+    ('Race browse · Filters sheet field outline (non-text, 3:1)', 'field-line', 'bg-1', 'ui'),
+    ('Race browse · checkbox against the sheet (non-text, 3:1)', 'text-1', 'bg-1', 'ui'),
+    ('Race browse · Cancel (secondary) in the sheet', 'text-1', 'bg-2', 'text'),
+    ('Race browse · Map placeholder caption', 'text-2', 'bg-1', 'text'),
+    ('Race browse · Map pin label', 'text-1', 'bg-2', 'text'),
+    ('Race browse · Map pin dot on its label (non-text, 3:1)', 'text-1', 'bg-2', 'ui'),
+    ('Race browse · Map placeholder outline (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
     ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
 ]
 rows, failures = [], []
@@ -93,9 +104,11 @@ CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contr
 # cache-busting: stylesheet links carry a short hash of tokens.css + components.css
 import hashlib
 CSS_V = hashlib.sha1((open(os.path.join(ROOT, 'concept/tokens.css')).read() + open(os.path.join(ROOT, 'concept/components.css')).read()).encode()).hexdigest()[:8]
-_fs = os.path.join(ROOT, 'concept/first-screen.html')
-_fs_html = re.sub(r'href="(tokens|components)\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(_fs).read())
-open(_fs, 'w').write(_fs_html)
+def _stamp(path):
+    html = re.sub(r'href="((?:\.\./concept/)?(?:tokens|components))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
+    open(path, 'w').write(html)
+for _p in ['concept/first-screen.html'] + [f'wireframes/race-browse{x}.html' for x in ('', '-empty', '-error', '-loading')]:
+    _stamp(os.path.join(ROOT, _p))
 
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
 import math
@@ -112,7 +125,8 @@ def selectors_using(*tokens):
 
 # Rule 1: amber only where you can act or where you are
 ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.header-action(:hover)?$', r'^\.state-action:not\(\.secondary\)(:hover)?$',
-             r'^\.bottom-nav a\[aria-current="page"\]$', r'^\.swatch--accent(-hover)?$', r'^\.swatch--on-accent$']
+             r'^\.bottom-nav a\[aria-current="page"\]$', r'^\.sheet-actions button\[type="submit"\](:hover)?$',
+             r'^\.swatch--accent(-hover)?$', r'^\.swatch--on-accent$']
 accent_sel = selectors_using('accent', 'accent-hover')
 accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK)]
 assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
@@ -124,7 +138,7 @@ success_bad = [x for x in success_sel if not any(re.match(p, x) for p in SUCCESS
 assert not success_bad, ('Color rule 2: success color outside the saved status', success_bad)
 
 # Rule 3a: depth of dark, not #000
-BG_LEVELS = ['bg-bar', 'bg-0', 'bg-1', 'bg-2']
+BG_LEVELS = ['bg-bar', 'bg-0', 'bg-1', 'bg-2', 'bg-3']
 L_MIN, L_MAX, C_MAX, STEP_MIN = 4.5, 20.0, 6.0, 1.5
 bg_rows, prev = [], None
 for t in BG_LEVELS:
@@ -132,6 +146,11 @@ for t in BG_LEVELS:
     ok = L_MIN <= L <= L_MAX and C <= C_MAX and (prev is None or L - prev >= STEP_MIN)
     assert ok, ('Color rule 3a: background level out of range', t, round(L, 2), round(C, 2))
     bg_rows.append((t, L, C, None if prev is None else L - prev)); prev = L
+
+# Rule 3a, usage: --line and --field-line are hairlines, never a fill (their L* is above the background range)
+line_fill = [x for sel, body in CSS_RULES if re.search(r'background(-color)?:\s*var\(--(field-)?line\)', body)
+             for x in sel.split(',') if not x.strip().startswith('.swatch--') and x.strip() != '.sheet-handle']   # the handle is a drawn 4px line, not a surface
+assert not line_fill, ('Color rule 3a: a hairline token used as a fill', [x.strip() for x in line_fill])
 
 # Rule 3b: amber, not HYROX yellow (reported, not blocking: the designer keeps the amber knowingly)
 HYROX_REFS = [('RoxFit', '#FFEC00', 'roxfit-how-it-works.png, 5,786 px'), ('RoxMatchUp', '#F5E401', 'roxmatchup-home.png, 2,770 px')]
@@ -222,8 +241,11 @@ BAND = {'current': {'ratio': '16/7', 'band': 143, 'card': 247, 'def': (1, 77), '
         'short':   {'ratio': '3/1',  'band': 109, 'card': 213, 'def': (2, 0),  'filt': (1, 79)},
         'boundary': {'ratio': '2.86/1', 'band': 114, 'card': 219}}
 
-# measured in the browser with first-screen.html at 390×844 on 2026-10-14, --photo-ratio 3 / 1 from tokens.css (re-measure after layout changes)
-FS = {'card_h': 213, 'band': 109, 'tab': 747, 'base': {'top': 298, 'full': 2, 'next': 0}, 'filtered': {'top': 354, 'full': 1, 'next': 79}}
+# measured in the browser with first-screen.html at 390×844 on 2026-10-14 after step 5 (box-sizing, 68px date column), --photo-ratio 3 / 1 from tokens.css
+FS = {'card_h': 215, 'band': 114, 'tab': 747, 'base': {'top': 290, 'full': 2, 'next': 2}, 'filtered': {'top': 346, 'full': 1, 'next': 81}}
+# the real screen, wireframes/race-browse.html, measured 2026-10-14 (step 5)
+FS_REAL = {'viewer': {'h': 757, 'tab': 693, 'base': (243, 2, 0, 8.6), 'filtered': (299, 1, 78, None)},
+           'direct': {'h': 844, 'tab': 780, 'base': (243, 2, 39, None), 'filtered': (299, 2, 13, None)}}
 
 # ---------------------------------------------------------------- shared markup (wireframe text and structure)
 def race_card(name, tag, iso, date, loc, src, pos, alt):
@@ -278,8 +300,9 @@ COLOR_ROWS = [
     ('bg-bar', 'Tab bar', 'The tab bar, the frame around a screen.', 'Never inside content.', 'Taste: dark with depth, not pure #000 (Tension C)'),
     ('bg-0', 'Ground', 'The page behind every screen.', 'Not on cards (cards sit one level up).', 'Attribute e: dark, intense · Taste: not #000'),
     ('bg-1', 'Surface', 'Race cards, result rows, the search field.', 'Not for controls you press (those are raised).', 'Attribute a: cards stay quiet so the time can lead'),
+    ('bg-3', 'Raised, pressed', 'Hover, open and pressed fills on raised controls: the selected List/Map segment, Filters while its sheet is open.', 'Never at rest, never a card.', 'Color rule 3a: Line is a hairline, so pressed fills get their own level'),
     ('bg-2', 'Raised', 'Secondary button, format chip, the date tile, segmented track, skeletons, disabled buttons.', 'Never for the primary action.', 'Hierarchy rule 3: secondary is tonal'),
-    ('line', 'Line', 'Hairline dividers, the selected List/Map segment.', 'Not as a boundary someone must see (fields use Field line), not as a frame around every card.', 'Attribute a: the frame stays quiet'),
+    ('line', 'Line', 'Hairline dividers.', 'Not as a boundary someone must see (fields use Field line), not as a frame around every card.', 'Attribute a: the frame stays quiet'),
     ('field-line', 'Field line', 'The boundary of the search field and other inputs.', 'Not on cards or chips.', 'WCAG 1.4.11: an input boundary needs 3:1 (critique fix)'),
     ('text-1', 'Text 1', 'Screen titles, item titles, finish times, body.', 'Not for meta (date month, location, proof).', 'Hierarchy rule 4: three levels'),
     ('text-2', 'Text 2', 'Meta: month and year, location, proof line, counts, inactive tab.', 'Not for titles or the finish time.', 'Attribute d: proof stated, not stamped (a quiet line)'),
@@ -552,8 +575,8 @@ page = f'''<!doctype html>
           </div>
         </div>
         <ul class="race-list" aria-busy="true" aria-hidden="true">
-          <li><div class="skeleton-card"><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
-          <li><div class="skeleton-card"><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
+          <li><div class="skeleton-card"><div class="bar photo"></div><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
+          <li><div class="skeleton-card"><div class="bar photo"></div><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
         </ul>
         {why("voice.md → Loading: a skeleton plus “Loading races…” for screen readers; no spinner, no invented progress", "Race card anatomy (designer): the skeleton has the card's shape: photo band, date tile, title, chip, location", "No shimmer: nothing moves that isn't real")}
       </div>
@@ -589,6 +612,10 @@ page = f'''<!doctype html>
     {wrap('First screen measurement', f'<table class="spec"><thead><tr><th>State</th><th>List starts at</th><th>Tab bar at</th><th>Fully visible</th><th>Next card visible</th></tr></thead><tbody>'
       + f'<tr><td>Default (no filters, 7 races)</td><td class="num">{FS["base"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["base"]["full"]} cards</td><td class="num">{FS["base"]["next"]}%</td></tr>'
       + f'<tr><td>2 filters on (chips row shown, 4 races)</td><td class="num">{FS["filtered"]["top"]}px</td><td class="num">{FS["tab"]}px</td><td class="num">{FS["filtered"]["full"]} card</td><td class="num">{FS["filtered"]["next"]}%</td></tr></tbody></table>')}
+    <h3 class="stand-label">The real screen (step 5): wireframes/race-browse.html</h3>
+    {wrap('First screen on the real page', '<table class="spec"><thead><tr><th>Where</th><th>Page height</th><th>List starts at</th><th>Tab bar at</th><th>No filters</th><th>2 filters on</th></tr></thead><tbody>'
+      + f'<tr><td>Inside the wireframes viewer (the phone: status bar and home strip are outside the page)</td><td class="num">{FS_REAL["viewer"]["h"]}px</td><td class="num">{FS_REAL["viewer"]["base"][0]}px</td><td class="num">{FS_REAL["viewer"]["tab"]}px</td><td class="num">{FS_REAL["viewer"]["base"][1]} full, {FS_REAL["viewer"]["base"][3]}px to spare</td><td class="num">{FS_REAL["viewer"]["filtered"][1]} full + {FS_REAL["viewer"]["filtered"][2]}%</td></tr>'
+      + f'<tr><td>Opened directly at 390×844 (no status bar or home strip)</td><td class="num">{FS_REAL["direct"]["h"]}px</td><td class="num">{FS_REAL["direct"]["base"][0]}px</td><td class="num">{FS_REAL["direct"]["tab"]}px</td><td class="num">{FS_REAL["direct"]["base"][1]} full + {FS_REAL["direct"]["base"][2]}%</td><td class="num">{FS_REAL["direct"]["filtered"][1]} full + {FS_REAL["direct"]["filtered"][2]}%</td></tr></tbody></table>')}
     <p class="stand-why"><b>Why (attribute b, a calendar, not a poster):</b> two full races on the first screen with no filters, so the list reads as a run of dates rather than one poster per screen. With two filters on, the chips row costs one card's worth of the second race (1 full + 79%).</p>
   </section>
 {rules_section()}

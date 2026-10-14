@@ -267,6 +267,24 @@ Lesson 6, step 3, 2026-10-13. These photos demonstrate each direction's card in 
 
 Also downloaded and viewed, not used: a close-up of runners' legs on a road race (Miguel A Amutio, https://unsplash.com/photos/people-running-on-gray-asphalt-road-during-daytime-Y0woUmyxGrw), and a motion-blurred runner's legs (Pierre-Antoine Franck, https://unsplash.com/photos/runners-in-motion-during-a-race-W2pBsQaT6FQ). Both were too abstract to place a race.
 
+### Step 5: the photos on Race browse (`wireframes/race-browse.html`), 2026-10-14
+
+Each card has a photo inside it (the race card anatomy in `concept.md`), shown black and white at 3:1. Each crop was checked at 390 wide. `alt=""`: the photos are illustrative, and the card's title already names the race inside the same link.
+
+| Card | Photo | Photographer | Unsplash page | Image | Crop at 3:1 |
+|---|---|---|---|---|---|
+| Berlin Marathon | City road race seen from above (illustrative; not Berlin) | Mārtiņš Zemlickis | https://unsplash.com/photos/people-running-on-road-during-daytime-NPFu4GfFZ7E | `photo-1452626038306-9aae5e071dd3` | `photo--mid`: the runners fill the band |
+| HYROX London | Sled-push start line | Leona Lee | https://unsplash.com/photos/athletes-compete-by-pushing-weighted-sleds-indoors-xGzdmd5lB6I | `photo-1743993414654-0be2b73a9620` | `photo--low`: the athletes on the sleds |
+| HYROX Dallas | Athlete pushing a sled in a HYROX lane | Mathieu Improvisato | https://unsplash.com/photos/athletes-compete-in-a-hyrox-race-event-v4P_DDrpRsk | `photo-1757147517623-ee9a76c9ead2` | `photo--mid`: the athlete and the lane |
+| DEKA STRONG Chicago | **New.** An athlete on an air bike at a functional-fitness competition, a judge beside her (Copa Sur, no HYROX branding) | Jose Valenzuela | https://unsplash.com/photos/athletes-cycle-intensely-during-a-competition-with-judges-watching-rHDNRphQqIk | `photo-1778346612273-93520f4b7918` | `photo--mid`: head, back and the judge; `--low` cut off the head |
+| Boston Marathon | Road-race runners wearing bibs (illustrative; not Boston) | Miguel A Amutio | https://unsplash.com/photos/people-running-on-gray-asphalt-road-during-daytime-QDv-uBc-poY | `photo-1613936360976-8f35cf0e5461` | `photo--high` (top edge): the bibs; `--mid` showed only legs |
+| Spartan Race Beast — Killington | Racer running up an obstacle wall | Nikita Pishchugin | https://unsplash.com/photos/man-climbing-a-wooden-obstacle-during-a-race-yNUBSKvl5d8 | `photo-1776938023428-60ddf175a2d1` | `photo--center`: head to thighs; `--mid` cut off the head |
+| UTMB — Ultra-Trail du Mont-Blanc | Trail runner, glaciated peaks behind | Brian Metzler | https://unsplash.com/photos/man-in-white-shirt-and-blue-shorts-running-on-brown-ground-between-green-grass-during-daytime-nmWQ2SKvj5M | `photo-1498581444814-7e44d2fbe0e2` | `photo--mid`: the runner and the mountains |
+
+**Viewed and rejected for DEKA** (both show HYROX equipment or come from a HYROX event, and on a DEKA card they would give it HYROX's look, against attribute 3):
+- athletes preparing for a fitness competition, under a HYROX wall-ball station (Mathieu Improvisato): https://unsplash.com/photos/athletes-preparing-for-a-fitness-competition-seOGJ4ZOOew
+- "Athletes competing in a fitness competition with weights and equipment", captioned Hyrox Hong Kong 2025 (Leona Lee): https://unsplash.com/photos/athletes-competing-in-a-fitness-competition-with-weights-and-equipment-5ADpBLL3240. Ruled out from its page caption; not downloaded.
+
 ### Downloaded, not used
 
 | Subject | Photographer | Unsplash page | Why not used |

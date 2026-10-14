@@ -4,428 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Race browse (Loading) — Onrace (wireframe)</title>
-<style>
-  /* STATE: loading — same structure and zones as race-browse.html (the
-     success/default state); only the content inside those zones changes,
-     per _conventions.md § 5. */
-
-  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
-     no custom fonts, no shadows, no content icons
-     (system-chrome glyphs only: tab bar, back chevron — § 1). Deferred per _conventions.md § 7:
-     color, fonts, shadows, icons, finished UI.
-
-     This file is a bare screen: no nav tree, no spec-note/caption chrome —
-     that lives once in index.html, which iframes this file into its own
-     phone-frame mockup (see _conventions.md § 6). Opening this file directly
-     still works: the body itself is the 390-wide, height-constrained,
-     internally-scrolling "phone screen," just without index.html's outer
-     device bezel. */
-
-  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
-     instead of pure black on white. Still no hue. Radii: --r-sm for small
-     controls (tags, chips, selects, small buttons), --r for large surfaces
-     (cards, primary buttons, segmented control, map, sheet). */
-  :root {
-    --ink: #1c1c1e;          /* primary text (iOS label) */
-    --ink-2: #6c6c70;        /* secondary text */
-    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
-    --line: #c6c6c8;         /* borders, separators */
-    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
-    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
-    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
-    --fill-track: #e9e9eb;   /* segmented-control track */
-    --skeleton: #e5e5ea;
-    --r-sm: 8px;
-    --r: 12px;
-  }
-
-  * { box-sizing: border-box; }
-
-  html, body { height: 100%; }
-  body {
-    margin: 0 auto;
-    max-width: 390px;
-    color: var(--ink);
-    background: #fff;
-    line-height: 1.4;
-    position: relative;
-    overflow: hidden;
-  }
-
-  a { color: var(--ink); }
-
-  .phone-screen {
-    height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 49px; /* clears the fixed bottom-nav below */
-  }
-
-  /* Global nav (sitemap.md → Navigation § 1, 3 tabs) as a real mobile bottom
-     tab bar — fixed to the frame's bottom edge, not part of the scrolling
-     content, and not styled as browser-style top tabs. */
-  .bottom-nav {
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 49px;            /* iOS tab bar, above the home-indicator area */
-    background: #fff;
-    border-top: 0.5px solid var(--line);
-    z-index: 3;
-  }
-  .bottom-nav ul {
-    list-style: none;
-    display: flex;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  .bottom-nav li { flex: 1; }
-  /* Icon over label, inactive tabs gray; the current tab is tinted dark
-     (iOS marks it with tint, not a filled background). */
-  .bottom-nav a {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1px;
-    padding-top: 5px;
-    text-decoration: none;
-    color: var(--ink-3);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-  }
-  .bottom-nav a[aria-current="page"] { color: var(--fill-strong); font-weight: 600; }
-  .tab-icon { display: block; }
-
-  /* --- main is a flex column so the visible view panel (list or map) can
-     take flex:1 and genuinely fill whatever space is left below the header/
-     controls/results row, down to the bottom nav — this is what makes the
-     map "fill the full space" without a hardcoded height, and lets a long
-     card list overflow into .phone-screen's own scroll instead. --- */
-  main {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-  }
-
-  /* iOS large title (34pt bold), the top-level screen's own title. */
-  header { padding: 6px 16px 6px; }
-  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0; }
-
-  /* --- shared controls: the control row (Filters + List/Map toggle) and the
-     active-filter chips, together in one sticky block whose bottom border is
-     the divider. Filtering is identical for both views — Map's own pan/zoom
-     is a viewport change, not a filter (see the map-view comment below) —
-     so there is exactly one Filters entry point, not one per view. --- */
-  .controls {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-  }
-  /* --- search (added 2026-09-30): an iOS search field under the large
-     title. It scrolls away with the title and sits outside the sticky
-     .controls block, so that block's height is unchanged (61px, or 97px
-     with chips). It's system chrome, like the title, so it uses the system
-     font. It matches race name or city (the same scope as Race picker) and
-     narrows together with the filters. An active search shows as the
-     first chip in the chips row. --- */
-  .race-search { margin: 10px 0 2px; }
-  .race-search input {
-    width: 100%;
-    height: 36px;
-    border: none;
-    border-radius: 10px;
-    background: var(--fill-track);
-    padding: 0 12px;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    font-size: 17px;
-    color: var(--ink);
-  }
-  .race-search input::placeholder { color: var(--ink-3); }
-
-  .control-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-  }
-
-  /* Filters is the primary control (it decides WHAT is shown; the toggle only
-     decides HOW), so it takes the row's spare width and a heavier, darker border
-     + bold label. It deliberately never uses the dark-gray current fill — that
-     style means "current/pressed" (the List/Map selected segment) on this
-     screen, and Filters is an action, not a state. Open = light gray. */
-  .filters-trigger {
-    flex: 1;
-    border: 1.5px solid var(--line-strong);
-    background: #fff;
-    padding: 8px 14px;
-    margin: 0;
-    font: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-align: left;
-    cursor: pointer;
-    border-radius: var(--r);
-  }
-  .filters-trigger[aria-expanded="true"] { background: var(--fill-soft); }
-
-  /* iOS segmented control: gray track, the selected segment filled. */
-  .view-toggle {
-    display: flex;
-    gap: 2px;
-    padding: 2px;
-    margin: 0;
-    border-radius: var(--r-sm);
-    background: var(--fill-track);
-  }
-  .view-btn {
-    border: none;
-    border-radius: 6px;
-    background: transparent;
-    color: var(--ink);
-    padding: 7px 12px;
-    font: inherit;
-    font-size: 0.85rem;
-    cursor: pointer;
-  }
-  .view-btn[aria-pressed="true"] { background: var(--fill-strong); color: #fff; }
-
-  /* --- active filter chips: shared, identical in both views, between the
-     control row and the divider. One row only — overflows sideways with its
-     own horizontal scroll instead of wrapping, so the sticky block's height
-     stays fixed however many filters are on. "Clear all filters" sits outside the
-     scrolling list so it's always visible, never scrolled off the end. --- */
-  .chips-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 16px 10px;
-  }
-  .chips-bar[hidden] { display: none; }
-  .chips-row {
-    list-style: none;
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 6px;
-    flex: 1;
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    overflow-x: auto;
-  }
-  .chips-row li { flex: none; }
-  .chip {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid var(--line);
-    background: #fff;
-    padding: 3px 8px;
-    font: inherit;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    cursor: pointer;
-    border-radius: var(--r-sm);
-  }
-  .clear-all {
-    flex: none;
-    border: none;
-    background: none;
-    padding: 3px 0;
-    font: inherit;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--fill-strong);
-    cursor: pointer;
-  }
-
-  /* --- results row: the filters' output sits with the results, below the
-     divider, in the same place in both views. List: "N upcoming races ·
-     Sort: …". Map: just "N races" — Sort is list-only (pins aren't
-     sequenced), so the row keeps its position and only loses its tail. --- */
-  .results-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
-  }
-  .results-count { margin: 0; }
-  .sort-control {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--ink-2);
-  }
-  .sort-control[hidden] { display: none; }
-  .sort-control::before { content: "·"; margin-right: 2px; color: var(--ink); }
-  .sort-control select {
-    border: 1px solid var(--line);
-    padding: 3px 6px;
-    font: inherit;
-    background: #fff;
-    border-radius: var(--r-sm);
-  }
-
-  /* Each view panel gets flex:1 when visible, so it fills the rest of main's
-     column. min-height:0 lets it shrink/scroll correctly instead of forcing
-     main taller than its flex basis. */
-  .view-panel { flex: 1; min-height: 0; }
-  /* #map-view sets display:flex, which beats the hidden attribute's UA
-     display:none and would show both panels at once. ID-level selectors so
-     this outranks #map-view / #list-view's own display rules. */
-  #list-view[hidden], #map-view[hidden] { display: none; }
-
-  #list-view { padding: 0 16px 16px; }
-
-  /* --- race cards: short by design — name, sport tag + date, location.
-     No field labels (the values are self-evident), no prose description
-     (that belongs on Race detail), no separate button: the whole card is
-     one link. Sized so 4 full cards fit on a phone-height screen, with the
-     5th peeking in to signal the list scrolls. --- */
-  .race-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin: 0;
-    padding: 0;
-  }
-  article.race-card { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
-  article.race-card a.card-link {
-    display: block;
-    padding: 20px 16px;
-    text-decoration: none;
-    color: inherit;
-  }
-  article.race-card a.card-link:hover,
-  article.race-card a.card-link:focus-visible { background: var(--fill-soft); }
-  article.race-card h3 { margin: 0 0 12px 0; font-size: 1rem; }
-  .card-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 0 8px 0;
-    font-size: 0.88rem;
-  }
-  .sport-tag {
-    border: 1px solid var(--line);
-    padding: 1px 6px;
-    font-size: 0.78rem;
-    border-radius: 6px;
-  }
-  .card-location { margin: 0; font-size: 0.88rem; color: var(--ink-2); }
-
-  /* --- map view: no padding (bleeds edge-to-edge), fills the remaining
-     space between the results row and the bottom nav. --- */
-  #map-view {
-    display: flex;
-    flex-direction: column;
-  }
-  .map-placeholder {
-    flex: 1;
-    border: 1px dashed var(--line-strong);
-    background: var(--fill-soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--ink-2);
-    padding: 16px;
-    border-radius: var(--r);
-  }
-
-  /* --- bottom-sheet drawer + backdrop: real overlay, slides up over content --- */
-  .sheet-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4); /* grayscale — black at reduced opacity, no hue */
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    z-index: 5;
-  }
-  .sheet-backdrop.open { opacity: 1; }
-  .sheet-backdrop[hidden] { display: none; }
-
-  .sheet {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    max-height: 75%;
-    overflow-y: auto;
-    background: #fff;
-    border-radius: var(--r) var(--r) 0 0;
-    padding: 6px 16px 20px;
-    transform: translateY(100%);
-    transition: transform 0.25s ease;
-    z-index: 6;
-  }
-  .sheet.open { transform: translateY(0); }
-  .sheet[hidden] { display: none; }
-
-  .sheet-handle {
-    width: 36px;
-    height: 5px;
-    border-radius: 3px;
-    background: var(--line);
-    margin: 0 auto 14px;
-  }
-
-  form div, form fieldset { margin-bottom: 12px; border: none; padding: 0; }
-  fieldset { border: 1px solid var(--line); padding: 8px 10px; border-radius: var(--r-sm); }
-  legend { font-size: 0.85rem; padding: 0 4px; }
-  form label { display: inline-block; margin-right: 14px; font-size: 0.9rem; }
-  fieldset label { display: block; margin: 4px 0; }
-  select, input[type="date"] {
-    border: 1px solid var(--line);
-    padding: 4px 6px;
-    background: #fff;
-    font: inherit;
-    border-radius: var(--r-sm);
-  }
-  .sheet-actions { display: flex; gap: 10px; margin-top: 4px; }
-  .sheet-actions button {
-    flex: 1;
-    border: 1px solid var(--line);
-    padding: 9px 12px;
-    font: inherit;
-    cursor: pointer;
-    border-radius: var(--r);
-  }
-  #filters-apply { background: var(--fill-strong); color: #fff; }
-  #filters-close { background: #fff; color: var(--ink); }
-
-  /* --- loading skeletons: gray placeholder bars shaped like a race card's
-     own zones (name, sport tag + date, location), same padding/border as a
-     real card, so the layout doesn't jump when cards arrive. Static — no
-     shimmer (finished-UI polish is deferred, _conventions.md § 7). --- */
-  .skeleton-card { border: 1px solid var(--line); padding: 20px 16px; border-radius: var(--r); }
-  .bar { background: var(--skeleton); height: 12px; border-radius: 4px; }
-  .bar.title { height: 16px; width: 60%; margin-bottom: 18px; }
-  .skel-meta { display: flex; gap: 8px; margin-bottom: 14px; }
-  .bar.tag { height: 18px; width: 72px; border-radius: 6px; }
-  .bar.date { height: 18px; width: 90px; }
-  .bar.location { height: 14px; width: 42%; }
-  .bar.count { display: inline-block; width: 120px; height: 12px; vertical-align: middle; }
-  .visually-hidden {
-    position: absolute; width: 1px; height: 1px; overflow: hidden;
-    clip: rect(0 0 0 0); white-space: nowrap;
-  }
-  .sort-control select:disabled { color: var(--ink-3); border-color: var(--line); }
-</style>
+<link rel="stylesheet" href="../concept/tokens.css?v=aab2d4c3">
+<link rel="stylesheet" href="../concept/components.css?v=aab2d4c3">
 </head>
-<body data-state="loading" role="application" aria-label="Onrace — Race browse, loading state (wireframe)">
+<body class="onrace" data-state="loading" role="application" aria-label="Onrace — Race browse, loading state (wireframe)">
 
   <div class="phone-screen">
 
@@ -492,7 +74,7 @@
         </div>
       </div>
 
-      <section class="view-area" aria-label="Map or list view" style="display: contents;">
+      <section class="view-area" aria-label="Map or list view">
 
         <div id="list-view" class="view-panel">
           <!-- ZONE: loading state (_screens.md → Race browse → Loading; flows.md
@@ -504,6 +86,7 @@
           <ul class="race-list" aria-busy="true" aria-hidden="true">
             <li>
               <div class="skeleton-card">
+                <div class="bar photo"></div>
                 <div class="bar title"></div>
                 <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
                 <div class="bar location"></div>
@@ -511,6 +94,7 @@
             </li>
             <li>
               <div class="skeleton-card">
+                <div class="bar photo"></div>
                 <div class="bar title"></div>
                 <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
                 <div class="bar location"></div>
@@ -518,6 +102,7 @@
             </li>
             <li>
               <div class="skeleton-card">
+                <div class="bar photo"></div>
                 <div class="bar title"></div>
                 <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
                 <div class="bar location"></div>
@@ -525,6 +110,7 @@
             </li>
             <li>
               <div class="skeleton-card">
+                <div class="bar photo"></div>
                 <div class="bar title"></div>
                 <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
                 <div class="bar location"></div>
@@ -532,6 +118,7 @@
             </li>
             <li>
               <div class="skeleton-card">
+                <div class="bar photo"></div>
                 <div class="bar title"></div>
                 <div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div>
                 <div class="bar location"></div>
