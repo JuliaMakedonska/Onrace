@@ -574,6 +574,37 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .map-placeholder .state-message { justify-items: center; text-align: center; padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); }
 .map-placeholder .state-actions { justify-content: center; }
 
+/* ---------- Results list screen (wireframes/results-list*.html) ---------- */
+.phone-screen header:has(> .header-action) { grid-template-columns: minmax(0, 1fr) auto; align-items: start; }   /* the title sits where it does on Race browse */
+.phone-screen header > .header-action { align-self: center; }
+/* one primary per screen: when a state block brings its own primary (Log your first result, Try again), the header action steps down to secondary */
+.phone-screen:has(.state-message .state-action:not(.secondary)) .header-action { background: var(--bg-2); color: var(--text-1); }
+.phone-screen:has(.state-message .state-action:not(.secondary)) .header-action:hover { background: var(--bg-3); }
+.result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.result-card .card-link:hover { box-shadow: inset 0 0 0 var(--border) var(--field-line); }   /* same hover as the race card */
+.results-order { margin-left: var(--space-2); padding-left: var(--space-2); border-left: var(--border) solid var(--line); color: var(--text-2); }
+.saved-status {   /* the saved confirmation: the one place success color appears (Color rule 2) */
+  display: block;
+  margin: var(--space-2) var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--success-bg);
+  color: var(--text-1);
+  font-size: var(--size-meta);
+}
+.saved-status::before { content: ""; display: inline-block; vertical-align: text-bottom; margin-right: var(--space-2); width: var(--icon-m); height: var(--icon-m); background: var(--success); -webkit-mask: var(--icon-saved) center / contain no-repeat; mask: var(--icon-saved) center / contain no-repeat; }
+.saved-status[hidden] { display: none; }
+/* loading: a skeleton result row (same shape and padding as .result-card .card-link) */
+.result-list .skeleton-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-4); }
+.result-list .skeleton-card .bar { grid-area: auto; }
+.result-list .skeleton-card .skel-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.result-list .skeleton-card .skel-meta { display: flex; align-items: center; gap: var(--space-3); }
+.result-list .skeleton-card .bar.title { width: var(--skel-row-title-w); height: var(--skel-title); }
+.result-list .skeleton-card .bar.time { width: var(--skel-time-w); height: var(--skel-time-h); }
+.result-list .skeleton-card .bar.tag { width: var(--skel-tag-w); height: var(--chip-height); }
+.result-list .skeleton-card .bar.date { align-self: center; width: var(--skel-date-w); height: var(--skel-line); }
+.result-list .skeleton-card .bar.proof { width: var(--skel-proof-w); height: var(--skel-line); margin-block: calc((var(--size-proof) * var(--leading-body) - var(--skel-line)) / 2); }
+
 /* Filters sheet: a sheet floats, so it is the one place with a shadow */
 .sheet-backdrop { position: absolute; inset: 0; z-index: 5; background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-out); }
 .sheet-backdrop.open { opacity: 1; }

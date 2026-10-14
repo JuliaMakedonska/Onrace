@@ -89,6 +89,11 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Race browse · Map leader line on water (non-text, 3:1)', 'text-2', 'bg-bar', 'ui'),
     ('Race browse · Map state panel text (empty, error) on its panel', 'text-1', 'bg-1', 'text'),
     ('Race browse · coastlines and borders on land', 'bg-3', 'bg-1', 'info'),
+    ('Results list · saved confirmation text ("Saved: HYROX London")', 'text-1', 'success-bg', 'text'),
+    ('Results list · saved confirmation icon (non-text, 3:1)', 'success', 'success-bg', 'ui'),
+    ('Results list · "Newest first" after the count', 'text-2', 'bg-0', 'text'),
+    ('Results list · Log result stepped down to secondary (empty, error)', 'text-1', 'bg-2', 'text'),
+    ('Results list · count separator hairline', 'line', 'bg-0', 'info'),
     ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
 ]
 rows, failures = [], []
@@ -114,7 +119,7 @@ CSS_V = hashlib.sha1((open(os.path.join(ROOT, 'concept/tokens.css')).read() + op
 def _stamp(path):
     html = re.sub(r'href="((?:\.\./concept/)?(?:tokens|components))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
     open(path, 'w').write(html)
-for _p in ['concept/first-screen.html'] + [f'wireframes/race-browse{x}.html' for x in ('', '-empty', '-error', '-loading')]:
+for _p in ['concept/first-screen.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]:
     _stamp(os.path.join(ROOT, _p))
 
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
@@ -139,7 +144,7 @@ accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK
 assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
 
 # Rule 2: no success color on results
-SUCCESS_OK = [r'^\.status--success( \.icon| strong)?$', r'^\.swatch--success(-bg)?$']
+SUCCESS_OK = [r'^\.status--success( \.icon| strong)?$', r'^\.saved-status(::before)?$', r'^\.swatch--success(-bg)?$']
 success_sel = selectors_using('success', 'success-bg')
 success_bad = [x for x in success_sel if not any(re.match(p, x) for p in SUCCESS_OK)]
 assert not success_bad, ('Color rule 2: success color outside the saved status', success_bad)
