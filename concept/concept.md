@@ -94,7 +94,7 @@ Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on ever
 ## Map (designer decision, 2026-10-14)
 
 **Map: static Natural Earth background (designer decision); the interactive Map upgrade stays deferred.**
-- **Background:** Natural Earth 1:110m land and country borders (public domain), Mercator, cropped to North America and Europe, centred on 43°N. `scripts/concept/build_map.py` turns them into two shape masks in `tokens.css`. The colors are tokens only: water `--bg-bar`, land `--bg-1`, coastlines and borders `--bg-3`, no accent (Color rule 1). It's a CSS layer, with no markup change and no network request.
+- **Background:** Natural Earth 1:110m land and country borders (public domain), Mercator, cropped to North America and Europe, centred on 43°N. `scripts/concept/build_map.py` turns them into two shape masks in `map.css` (moved out of `tokens.css` in step 7, so only the Race browse pages download them). The colors are tokens only: water `--bg-bar`, land `--bg-1`, coastlines and borders `--bg-3`, no accent (Color rule 1). It's a CSS layer, with no markup change and no network request.
 - **Pins:** each dot sits on its race's real latitude and longitude. Where labels would collide (London, Chamonix, Berlin; Boston, Killington), the label moves above or below on a leader line and the dot stays put. Pins are neutral.
 - **Still deferred:** clusters, floating controls, real tiles, pan and zoom.
 - **Caption text: a designer-approved exception (2026-10-14).** After the static map put each pin on its real coordinates, the old caption "[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]" became untrue. Only the untrue part changed; the new caption is "[ static map — pan/zoom changes what's visible, not which races match ]" (`wireframes/race-browse.html`; `microcopy.md` row 114).
@@ -113,6 +113,7 @@ Recorded 2026-10-14, before step 6. Each item needs a change to markup or script
 | Results list `-empty`: the header's "Log result" and the empty state's "Log your first result" do the same job. CSS keeps only one filled (the header action steps down to secondary), but two buttons remain | `wireframes/results-list-empty.html` | Removing or merging a button changes structure |
 | The saved confirmation ("Saved: …") has `role="status"`, which screen readers may not announce when the element is already present at page load | `wireframes/results-list.html` (`.saved-status`, shown by script from `?saved=`) | Fixing it means changing when the script fills or reveals the live region, which is script and markup |
 | The map pins' old approximate `left`/`top` values are still inline in the markup; `components.css` overrides them with the real coordinates. Remove the inline values | `wireframes/race-browse.html` (each `.map-pin`) | Removing an attribute is a markup change |
+| The old hand-drawn wireframe tab-bar `<svg>`s are still in the markup (3 per page, hidden by `components.css`; the tab icons are Solar masks). Remove them. Added in step 7 (defect #4) | `wireframes/race-browse*.html`, `wireframes/results-list*.html` (`.bottom-nav .tab-icon`) | Deleting elements is a markup change |
 | The race card's date splits into day and month only because CSS wraps the text (`time::first-line` in a 68px column). Long month names, other languages, text zoom or a font swap can break it; a separate day element is sturdier | `wireframes/race-browse.html` (each `<time>` in a card); `concept/components.css` (`.race-card time`) | A separate day element is a markup change |
 
 ---
@@ -265,4 +266,19 @@ Round 2, in `directions.html`. All three were built under the Hierarchy rules ab
 **Not picked:**
 - **Direction B, "Telemetry"** (periwinkle `#A9B8FF` on blue-black, Saira + Sofia Sans, 4px). Its Results list read like a timing board. But its critique found Race browse "could belong to any dark fintech or fitness app": blue on dark drifts toward a generic tech look, and its energy depended on dimming everything that isn't data.
 - **Direction C, "Bib number"** (orchid `#FF9BE6` on pine green, Mona Sans wide + Host Grotesk, 10px). It was the rich-color direction, with energy from the format chip. Under Hierarchy rule 2 the chips became neutral metadata, so its color and energy had nowhere left to go. Mona Sans is also flagged by the detector as an overused face, and pink risked reading as lifestyle, not race.
+
+---
+
+## Step 7 check (2026-10-14 to 2026-10-15)
+
+`concept.html`, Race browse (all states, filtered, Filters sheet, Map) and Results list (all states) checked against this file, plus `/impeccable audit`. Nine defects found, eight fixed (the ninth was a detector false positive: the `--` in token names counted as em-dashes):
+
+1. Hanken 700 was faked by the browser (`<strong>`, `<b>`): `strong` and `b` now use `--weight-strong` (600).
+2. The Filters sheet's date fields drew the browser's calendar glyph: now Solar calendar bold, from `--icon-calendar`.
+3. The filter chip's remove mark was a text "×": now Solar close-circle bold, from `--icon-close`, drawn by CSS (the text stays, aria-hidden, until Lesson 7).
+4. Hidden wireframe tab-bar SVGs: added to Deferred to Lesson 7 above.
+5. 69 tokens had no signed row on the stand: all signed now, and `build_stand.py` stops if a token in `tokens.css` or `map.css` has none.
+6. No reduced-motion version: under `prefers-reduced-motion: reduce`, `--dur-fast` and `--dur-sheet` are 0ms.
+7. Fonts came through a CSS `@import`: each page's `<head>` now preconnects and links the Google Fonts stylesheet.
+8. The map masks loaded on every page: they live in `map.css`, linked only by the Race browse pages.
 

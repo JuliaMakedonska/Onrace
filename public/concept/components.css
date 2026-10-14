@@ -15,6 +15,7 @@
   font-size: var(--size-body);
   line-height: var(--leading-body);
 }
+.onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
 .onrace ::selection { background: var(--text-1); color: var(--bg-0); }
 .onrace :focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
 .onrace .visually-hidden {
@@ -120,7 +121,16 @@
   text-transform: uppercase;
   cursor: pointer;
 }
-.chip span { color: var(--text-2); }
+.chip span {   /* the remove mark: Solar close-circle drawn in CSS; the text "×" stays in the markup (aria-hidden) until Lesson 7 */
+  display: inline-block;
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  font-size: 0;
+  background: var(--text-2);
+  -webkit-mask: var(--icon-close) center / contain no-repeat;
+  mask: var(--icon-close) center / contain no-repeat;
+}
 .chip::after, .clear-all::after { content: ""; position: absolute; inset: var(--tap-pad) 0; } /* 44px tap area */
 
 /* ---------- search field ---------- */
@@ -673,6 +683,15 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   font-size: var(--size-body);
   color-scheme: dark;
 }
+.sheet input[type="date"]::-webkit-calendar-picker-indicator {   /* Solar calendar instead of the browser's glyph */
+  width: var(--icon-m);
+  height: var(--icon-m);
+  padding: 0;
+  background: var(--text-1);
+  -webkit-mask: var(--icon-calendar) center / contain no-repeat;
+  mask: var(--icon-calendar) center / contain no-repeat;
+  cursor: pointer;
+}
 .sheet select { -webkit-appearance: none; appearance: none; padding-right: calc(var(--space-3) * 2 + var(--icon-s)); }
 .sheet, .phone-screen, .chips-row { scrollbar-color: var(--field-line) transparent; scrollbar-width: thin; }
 .chips-row { scrollbar-width: none; }
@@ -725,6 +744,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .stand-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .stand-stack { display: grid; gap: var(--space-3); }
 .stand-label { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
+h3.stand-label { font-weight: var(--weight-strong); }   /* a heading used as a label: 600, not the browser's 700 */
 .stand-why { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
 .stand-why b { color: var(--text-1); font-weight: var(--weight-strong); }
 

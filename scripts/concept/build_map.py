@@ -6,7 +6,7 @@ with Mercator, cropped to North America and Europe, into two SVG masks:
 land fill, and coastlines + borders as hairlines. Colors come from tokens.css
 (the masks only carry shape). Also writes each race pin's position from its
 real latitude/longitude. Output goes between the map markers in
-concept/tokens.css.
+concept/map.css (linked only by the Race browse pages).
 
 Usage, from the repo root:  python3 scripts/concept/build_map.py
 """
@@ -90,14 +90,10 @@ block = '\n'.join([
     *pin_lines,
     '  /* map:end */'])
 
-p = os.path.join(ROOT, 'concept/tokens.css')
+p = os.path.join(ROOT, 'concept/map.css')
 t = open(p).read()
-if '/* map:start' in t:
-    t = re.sub(r'  /\* map:start.*?/\* map:end \*/', lambda m: block, t, flags=re.S)
-else:
-    anchor = '  /* ---------- stand layout (concept.html only, never in the product) ---------- */'
-    assert t.count(anchor) == 1
-    t = t.replace(anchor, '  /* ---------- map (Race browse): static Natural Earth background ---------- */\n' + block + '\n\n' + anchor, 1)
+assert '/* map:start' in t
+t = re.sub(r'  /\* map:start.*?/\* map:end \*/', lambda m: block, t, flags=re.S)
 open(p, 'w').write(t)
 print(f'map: viewBox {vb}, ratio {RATIO:.4f}, land {len(land_d) // 1024} KB, borders {len(border_d) // 1024} KB')
 for slug, city, lat, lon in PINS:

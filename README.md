@@ -19,7 +19,7 @@ This is a living index — update it as folders fill up or their purpose shifts.
 | [`voice.md`](./voice.md) | Voice: principles, Dictionary, Forbidden list, Microcopy rules | Done, applied to every screen |
 | [`microcopy.md`](./microcopy.md) | Every interface line from the wireframes in one table (screen, zone, line, type), with inconsistencies flagged, becoming the source of truth for product copy | Done: Before / After for every line, matches the pages |
 | [`wireframes/`](./wireframes/README.md) | Low-fidelity, grayscale, iOS-structured wireframes for every sitemap screen and state, linked along the flows | Done: 10 screens, 35 pages ([live](https://juliamakedonska.github.io/Onrace/wireframes/)) |
-| [`concept/`](./concept/README.md) | Visual direction exploration — moodboards, style tiles | Empty |
+| [`concept/`](./concept/README.md) | Visual concept: the chosen direction (Podium), its rules, tokens, components and stand | Done for Lesson 6: two screens in Podium ([stand](https://juliamakedonska.github.io/Onrace/concept/concept.html)) |
 | [`tokens/`](./tokens/README.md) | Design tokens (color, type, spacing, radius, elevation) | Empty |
 | [`components/`](./components/README.md) | Reusable UI component specs | Empty |
 | [`design-system/`](./design-system/README.md) | Assembled tokens + components as a documented system | Empty |
@@ -52,10 +52,18 @@ The pages are wired along `flows.md`'s six flows (sign-in gate, catalog link, em
 
 Applied to all 10 screens (35 pages) on 2026-09-30. The latest audit found three small defects and fixed them. The pages and `microcopy.md` now match line for line. One known gap is open: accessible names for short buttons, left for a markup pass.
 
+## Concept
+
+The visual concept is **Podium**: graphite ground, one scarce sodium-amber accent, Schibsted Grotesk for the title and key numbers, Hanken Grotesk for everything else, small radii, Solar bold icons and black-and-white race photos. Every value lives in a token, and every token is signed on the stand with its reason.
+
+- **Stand:** [`concept/concept.html`](https://juliamakedonska.github.io/Onrace/concept/concept.html): color, type, shape, photos, icons and components, the color rules checked by the build, and every contrast pair.
+- **Screens in Podium:** [Race browse](https://juliamakedonska.github.io/Onrace/wireframes/race-browse.html) and [Results list](https://juliamakedonska.github.io/Onrace/wireframes/results-list.html), with all their states. The other 8 screens stay grayscale until Lesson 7.
+- **Rules and decisions:** [`concept/concept.md`](./concept/concept.md). References and photo sources: [`concept/references.md`](./concept/references.md).
+
 ## Tech stack
 
 React + Vite · Supabase (Postgres + Auth) · Leaflet + OpenStreetMap · deployed to GitHub Pages via GitHub Actions.
 
 ## Status
 
-Pre-implementation. IA and wireframes are done; product code hasn't started. See [`CLAUDE.md`](./CLAUDE.md) for the full brief, scope, and open gaps.
+Pre-implementation. IA, wireframes and the visual concept are done; product code hasn't started. See [`CLAUDE.md`](./CLAUDE.md) for the full brief, scope, and open gaps.

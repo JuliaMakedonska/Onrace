@@ -12,7 +12,7 @@ from colorlib import cr
 HERE = os.path.dirname(os.path.abspath(__file__))
 ICONS = os.path.join(HERE, 'icons')
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-TOK = open(os.path.join(ROOT, 'concept/tokens.css')).read()
+TOK = open(os.path.join(ROOT, 'concept/tokens.css')).read() + open(os.path.join(ROOT, 'concept/map.css')).read()
 
 def tok(name):
     m = re.search(r'--' + re.escape(name) + r':\s*([^;]+);', TOK)
@@ -95,6 +95,8 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Results list · Log result stepped down to secondary (empty, error)', 'text-1', 'bg-2', 'text'),
     ('Results list · count separator hairline', 'line', 'bg-0', 'info'),
     ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
+    ('Race browse · filter chip remove icon, close-circle (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
+    ('Race browse · Filters sheet calendar icon in a date field (non-text, 3:1)', 'text-1', 'bg-0', 'ui'),
 ]
 rows, failures = [], []
 for label, fg, bg, kind in PAIRS:
@@ -113,11 +115,11 @@ assert not failures, failures
 CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text</th><th>Background</th><th>Ratio</th><th>WCAG AA</th></tr></thead><tbody>'
             + ''.join(rows) + '</tbody></table></div>')
 
-# cache-busting: stylesheet links carry a short hash of tokens.css + components.css
+# cache-busting: stylesheet links carry a short hash of tokens.css + map.css + components.css
 import hashlib
-CSS_V = hashlib.sha1((open(os.path.join(ROOT, 'concept/tokens.css')).read() + open(os.path.join(ROOT, 'concept/components.css')).read()).encode()).hexdigest()[:8]
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, f'concept/{n}.css')).read() for n in ('tokens', 'map', 'components')).encode()).hexdigest()[:8]
 def _stamp(path):
-    html = re.sub(r'href="((?:\.\./concept/)?(?:tokens|components))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
+    html = re.sub(r'href="((?:\.\./concept/)?(?:tokens|map|components))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
     open(path, 'w').write(html)
 for _p in ['concept/first-screen.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]:
     _stamp(os.path.join(ROOT, _p))
@@ -382,7 +384,47 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('ease-out', 'Easing for hover and press', 'Fast start, soft stop', 'Attribute e: intense, not jittery'),
            ('stand-max', 'Stand page width (stand only)', 'Never used in the product', 'Stand layout'),
            ('phone-width', 'Phone frame on the stand (stand only)', '390px screen + border', 'Stand layout'),
-           ('dur-fast', 'Hover and press transitions', 'Quick, ease-out', 'Attribute e: intense, not jittery')]
+           ('dur-fast', 'Hover and press transitions', 'Quick, ease-out; 0ms under prefers-reduced-motion', 'Attribute e: intense, not jittery · WCAG 2.3.3: motion can be turned off'),
+           ('dur-sheet', 'Filters sheet slides up, backdrop fades in', 'Long enough to read as a sheet arriving from below; 0ms under prefers-reduced-motion', 'Wireframe conventions: modal sheets · WCAG 2.3.3'),
+           ('font-display', 'Display face: screen title, finish time, date day', 'Schibsted Grotesk 800, Hanken as fallback', 'Taste: Nike Run Club, bold but refined'),
+           ('font-text', 'Text face: everything else', 'Hanken Grotesk 400 and 600 (the only weights loaded)', 'Taste: no single heavy condensed face for everything'),
+           ('font-mono', 'Code samples on this stand only', 'System monospace, nothing to load', 'Stand layout: never in the product'),
+           ('hidden-size', 'Visually hidden text for screen readers', '1px box, clipped', 'voice.md → Loading: “Loading races…” is read, not shown'),
+           ('photo-focus-lower', 'Crop focus, DEKA STRONG Chicago', 'Lower band: keeps the other event’s banner out of frame', 'Attribute c: no other brand on our card (designer, step 5)'),
+           ('photo-focus-center', 'Crop focus, Spartan Beast Killington', 'Subject in the middle of a tall photo', 'Attribute b: the band shows the race, not the sky'),
+           ('photo-focus-high', 'Crop focus, Boston Marathon', 'Subject (race bibs) at the top edge', 'Attribute b'),
+           ('screen-w', 'Screen pages: the page width inside the viewer', 'iPhone logical width', 'Wireframe conventions: iOS-structured, 390pt'),
+           ('tabbar-h', 'Tab bar height on the screen pages', '44px targets + 26px icon + label, no home-indicator padding (the viewer draws it); the stand’s bar adds that padding, so it is taller', 'Wireframe conventions: iOS chrome · Critique fix: 44px targets'),
+           ('safe-bottom', 'Home-indicator inset under the sheet’s buttons', 'env(safe-area-inset-bottom), 0 inside the viewer', 'iOS chrome: buttons stay above the home indicator'),
+           ('sheet-max', 'Filters sheet maximum height', 'Three quarters: the list stays visible above it', 'Wireframe conventions: a sheet, not a new screen'),
+           ('scrim', 'Behind the Filters sheet', 'Black at 60%: the page dims, its colors stay', 'Depth comes from levels and one scrim, not from color · Hierarchy rule 1'),
+           ('fade-end', 'Active filter chips row: its end fades out', 'Mask, last 24px', 'Says the row scrolls without a scrollbar · Critique fix: hidden overflow'),
+           ('stand-col-min', 'Stand columns (stand only)', 'Narrowest panel before the grid wraps', 'Stand layout')]
+SKEL = [('skel-line', 'Meta bars (date, location, proof)', 'Same height as 12–13px meta text'),
+        ('skel-title', 'Title bar height', 'Same height as the 17px item title'),
+        ('skel-title-w', 'Race card title bar width', 'A typical race name'),
+        ('skel-tag-w', 'Format chip bar width', 'A typical chip'),
+        ('skel-loc-w', 'Location bar width', 'A typical “City, Country”'),
+        ('skel-count-w', 'Result count bar width', 'A typical “7 races”'),
+        ('skel-row-title-w', 'Result row title bar width', 'A typical race name beside the time'),
+        ('skel-time-w', 'Finish time bar width', 'Width of “1:18:42” at 32px'),
+        ('skel-time-h', 'Finish time bar height', 'The finish time’s own size, so the row doesn’t shift when it loads'),
+        ('skel-date-w', 'Result row date bar width', 'Width of “6 Dec 2025”'),
+        ('skel-proof-w', 'Proof line bar width', 'A typical “Self-reported · via …”')]
+SKEL_TRS = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{d}</td><td>voice.md → Loading: the skeleton has the content’s shape · impeccable: no layout shift</td></tr>' for t, u, d in SKEL)
+MAP_PINS = [('berlin-marathon', 'Berlin'), ('hyrox-london', 'London'), ('utmb', 'Chamonix'), ('hyrox-dallas', 'Dallas'),
+            ('deka-strong-chicago', 'Chicago'), ('spartan-beast-killington', 'Killington'), ('boston-marathon', 'Boston')]
+MAP_TRS = ''.join(f'<tr><td><code>--{t}</code> {v}</td><td>{u}</td><td>{w}</td></tr>' for t, v, u, w in [
+    ('map-water', f'= <code>--bg-bar</code> {tok("map-water")}', 'Water: the darkest level', 'Hierarchy rule 1: no accent on the map · Color rule 3a levels only'),
+    ('map-land', f'= <code>--bg-1</code> {tok("map-land")}', 'Land: the card surface', 'Color rule 3a'),
+    ('map-lines', f'= <code>--bg-3</code> {tok("map-lines")}', 'Coastlines and borders (decorative)', 'Attribute a: the frame stays quiet'),
+    ('map-pin-dot', tok('map-pin-dot'), 'The dot on a race’s coordinate', 'Designer: pins at real coordinates'),
+    ('pin-h', tok('pin-h'), 'Pin label height', 'Sized to the 11px label'),
+    ('pin-gap', tok('pin-gap'), 'Shortest leader line from label to dot', 'Designer: labels may move, dots don’t'),
+    ('map-ratio', tok('map-ratio'), 'Map height ÷ width', 'Generated by build_map.py from the Mercator crop'),
+    ('map-land-mask', 'SVG mask', 'Land shape', 'Natural Earth 1:110m, public domain · designer: static map'),
+    ('map-lines-mask', 'SVG mask', 'Coastline and border shape', 'Same source; colors come from the tokens above')]) + ''.join(
+    f'<tr><td><code>--pin-{slug}-x</code> {tok(f"pin-{slug}-x")}<br><code>--pin-{slug}-yf</code> {tok(f"pin-{slug}-yf")}<br><code>--pin-{slug}-dy</code> {tok(f"pin-{slug}-dy")}</td><td>{city}: x and y from the real latitude and longitude; dy moves the label off its neighbours</td><td>Designer: pins at real coordinates, with leader lines</td></tr>' for slug, city in MAP_PINS)
 METRIC_TRS = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{d}</td><td>{w}</td></tr>' for t, u, d, w in METRICS)
 SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii, borders and shadows"><table class="spec"><thead><tr><th>Token</th><th>Value</th><th>Used for</th><th>Why</th></tr></thead><tbody>
 <tr><td><code>--radius-1</code></td><td>{tok("radius-1")}</td><td>Inner shapes: the photo inside a card, chips, segments.</td><td>Taste: slightly rounded, small radius · inner shapes one step tighter than outer (4 inside 6)</td></tr>
@@ -395,28 +437,32 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 </tbody></table></div>
 <div class="spec-wrap" tabindex="0" role="region" aria-label="Spacing scale"><table class="spec"><thead><tr><th>Spacing scale</th><th>Size</th><th>Used for</th></tr></thead><tbody>{SPACE}</tbody></table></div>
 <p class="stand-why"><b>Why:</b> one 4px-based scale for every gap · Hierarchy rule 4: more space between groups than inside them</p>
-<div class="spec-wrap" tabindex="0" role="region" aria-label="Component metrics"><table class="spec"><thead><tr><th>Component metric</th><th>Used for</th><th>Sizing</th><th>Why</th></tr></thead><tbody>{METRIC_TRS}</tbody></table></div>'''
+<div class="spec-wrap" tabindex="0" role="region" aria-label="Component metrics"><table class="spec"><thead><tr><th>Component metric</th><th>Used for</th><th>Sizing</th><th>Why</th></tr></thead><tbody>{METRIC_TRS}</tbody></table></div>
+<div class="spec-wrap" tabindex="0" role="region" aria-label="Skeleton sizes"><table class="spec"><thead><tr><th>Skeleton (loading)</th><th>Used for</th><th>Sizing</th><th>Why</th></tr></thead><tbody>{SKEL_TRS}</tbody></table></div>
+<div class="spec-wrap" tabindex="0" role="region" aria-label="Map tokens"><table class="spec"><thead><tr><th>Map · <code>map.css</code> (Race browse only)</th><th>Used for</th><th>Why</th></tr></thead><tbody>{MAP_TRS}</tbody></table></div>'''
 
 # ---------------------------------------------------------------- icons
-ICON_PLAN = [
-    ('Tab bar', 'compass', 'Discover', 'in use'), ('Tab bar', 'stopwatch', 'My Results', 'in use'), ('Tab bar', 'user', 'Profile', 'in use'),
-    ('Card meta · date', 'calendar', 'Where a date is inline (Race detail, the Log result date field). In the race card the date column itself is the cue, so no icon there.', 'planned'),
-    ('Card meta · location', 'map-point', 'Before the city on every race card (CSS mask, no markup change).', 'in use'),
-    ('Format chip', None, 'No icon and no dot: the same neutral chip for every format (dot option dropped 2026-10-13).', 'none'),
-    ('Proof line', 'link-round', 'One link icon before "Self-reported · via …" (Hierarchy rule 6).', 'in use'),
-    ('Search field', 'magnifer', 'Inside the field, Text 2.', 'in use'),
-    ('Button · primary', 'add-circle', 'Log result.', 'in use'),
-    ('Button · external', 'arrow-right-up', 'Register on &lt;domain&gt;, Open official result: the arrow says it leaves Onrace (voice principle 2).', 'in use'),
-    ('Button · secondary', 'tuning-2', 'Filters, before the label (CSS mask, no markup change).', 'in use'),
-    ('Sort', 'alt-arrow-down', 'After the sort value (CSS mask on the sort control).', 'in use'),
-    ('Filter chip · remove', 'close-circle', 'Planned replacement for the × glyph in filter chips; the wireframe uses a text ×.', 'planned'),
-    ('State · empty', 'inbox', 'Results list empty state, above "Log your first result". Race browse empty uses no icon: the filters above are the context.', 'planned'),
-    ('State · error', 'danger-circle', 'Before the error heading ("Couldn’t load races"), in the error color (CSS mask).', 'in use'),
-    ('State · success', 'check-circle', 'Saved confirmation.', 'in use'),
-    ('State · warning', 'danger-triangle', 'Warning messages, when one exists.', 'planned'),
-    ('State · loading', None, 'No icon and no spinner: skeleton cards plus "Loading races…" for screen readers (voice.md → Loading).', 'none'),
+ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not built yet), use, status
+    ('Tab bar', 'compass', 'icon-compass', 'Discover', 'in use'), ('Tab bar', 'stopwatch', 'icon-stopwatch', 'My Results', 'in use'), ('Tab bar', 'user', 'icon-user', 'Profile', 'in use'),
+    ('Filters sheet · date fields', 'calendar', 'icon-calendar', 'Replaces the browser’s calendar glyph in the From and To date fields (step 7). In the race card the date column itself is the cue, so no icon there.', 'in use'),
+    ('Card meta · location', 'map-point', 'icon-pin', 'Before the city on every race card (CSS mask, no markup change).', 'in use'),
+    ('Format chip', None, None, 'No icon and no dot: the same neutral chip for every format (dot option dropped 2026-10-13).', 'none'),
+    ('Proof line', 'link-round', 'icon-link', 'One link icon before "Self-reported · via …" (Hierarchy rule 6).', 'in use'),
+    ('Search field', 'magnifer', 'icon-search', 'Inside the field, Text 2.', 'in use'),
+    ('Button · primary', 'add-circle', None, 'Log result.', 'in use'),
+    ('Button · external', 'arrow-right-up', None, 'Register on &lt;domain&gt;, Open official result: the arrow says it leaves Onrace (voice principle 2).', 'in use'),
+    ('Button · secondary', 'tuning-2', 'icon-filters', 'Filters, before the label (CSS mask, no markup change).', 'in use'),
+    ('Sort, sheet selects', 'alt-arrow-down', 'icon-chevron', 'After the sort value and in the sheet’s Region select (CSS mask).', 'in use'),
+    ('Filters sheet · checkbox', 'check', 'icon-check', 'The tick in a checked sport type, on Text 1 (neutral, never the accent).', 'in use'),
+    ('Filter chip · remove', 'close-circle', 'icon-close', 'Drawn by CSS over the chip’s text "×" (step 7); the text stays in the markup, aria-hidden, until Lesson 7.', 'in use'),
+    ('State · empty', 'inbox', None, 'Results list empty state, above "Log your first result". Race browse empty uses no icon: the filters above are the context.', 'planned'),
+    ('State · error', 'danger-circle', 'icon-error', 'Before the error heading ("Couldn’t load races"), in the error color (CSS mask).', 'in use'),
+    ('Saved confirmation', 'diskette', 'icon-saved', 'Results list after Save, in Text 2: neutral, not a success check (Color rule 2).', 'in use'),
+    ('State · success', 'check-circle', None, 'This stand’s success specimen only; no product screen uses it.', 'specimen'),
+    ('State · warning', 'danger-triangle', None, 'Warning messages, when one exists.', 'planned'),
+    ('State · loading', None, None, 'No icon and no spinner: skeleton cards plus "Loading races…" for screen readers (voice.md → Loading).', 'none'),
 ]
-icon_trs = ''.join(f'<tr><td>{p}</td><td>{("<span class=icon-cell>" + svg(n) + f"<code>{n}</code></span>") if n else "None"}</td><td>{u}</td><td>{s}</td></tr>' for p, n, u, s in ICON_PLAN)
+icon_trs = ''.join(f'<tr><td>{p}</td><td>{("<span class=icon-cell>" + svg(n) + f"<code>{n}</code></span>") if n else "None"}</td><td>{f"<code>--{t}</code>" if t else "None"}</td><td>{u}</td><td>{s}</td></tr>' for p, n, t, u, s in ICON_PLAN)
 
 STATUS = f'''<div class="stand-stack">
             <div class="status status--error">{svg("danger-circle")}<p><strong>Couldn’t load races</strong><br>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p></div>
@@ -430,6 +476,9 @@ page = f'''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Onrace concept stand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
 <link rel="stylesheet" href="tokens.css?v={CSS_V}">
 <link rel="stylesheet" href="components.css?v={CSS_V}">
 </head>
@@ -508,7 +557,7 @@ page = f'''<!doctype html>
     <h2 id="icon-h">Icons · Solar, bold</h2>
     <p>One library, one style: Solar bold, at 15px in meta, 18px in buttons and fields, 26px in the tab bar. Icons take the color of their text, never the accent on their own.</p>
     {why("Brief: Solar icons", "Hierarchy rule 6: one link icon on the proof line")}
-    {wrap('Icon coverage plan', f'<table class="spec"><thead><tr><th>Where</th><th>Icon</th><th>Use</th><th>Status</th></tr></thead><tbody>{icon_trs}</tbody></table>')}
+    {wrap('Icon coverage plan', f'<table class="spec"><thead><tr><th>Where</th><th>Icon</th><th>Token</th><th>Use</th><th>Status</th></tr></thead><tbody>{icon_trs}</tbody></table>')}
   </section>
 
   <section class="stand-section" id="components" aria-labelledby="comp-h">
@@ -655,5 +704,10 @@ page = f'''<!doctype html>
 for block in re.findall(r'<article class="result-card">.*?</article>', page, flags=re.S):
     assert 'check-circle' not in block and 'verified' not in block.lower(), 'Color rule 2: a result carries a success mark'
     assert 'Self-reported · via ' in block, 'Attribute d: the proof line states the source'
+# Every token is signed: each one defined in tokens.css or map.css appears on the stand with its reason
+_defined = set(re.findall(r'(?:^|;)\s*--([a-z0-9-]+):', TOK, flags=re.M))
+_unsigned = sorted(n for n in _defined if not re.search(r'--' + re.escape(n) + r'(?![a-z0-9-])', page))
+assert not _unsigned, ('Unsigned tokens (add a row with its reason)', _unsigned)
+print('Signed tokens:', len(_defined), 'of', len(_defined))
 open(os.path.join(ROOT, 'concept/concept.html'), 'w').write(page)
 print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b, k in PAIRS if k == 'text'))
