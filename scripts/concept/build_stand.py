@@ -82,6 +82,13 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Race browse · Map pin label', 'text-1', 'bg-2', 'text'),
     ('Race browse · Map pin dot on its label (non-text, 3:1)', 'text-1', 'bg-2', 'ui'),
     ('Race browse · Map placeholder outline (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
+    ('Race browse · Map caption on water', 'text-2', 'bg-bar', 'text'),
+    ('Race browse · Map pin dot on land (non-text, 3:1)', 'text-1', 'bg-1', 'ui'),
+    ('Race browse · Map pin dot on water (non-text, 3:1)', 'text-1', 'bg-bar', 'ui'),
+    ('Race browse · Map leader line on land (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
+    ('Race browse · Map leader line on water (non-text, 3:1)', 'text-2', 'bg-bar', 'ui'),
+    ('Race browse · Map state panel text (empty, error) on its panel', 'text-1', 'bg-1', 'text'),
+    ('Race browse · coastlines and borders on land', 'bg-3', 'bg-1', 'info'),
     ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
 ]
 rows, failures = [], []

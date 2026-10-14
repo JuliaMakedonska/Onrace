@@ -483,9 +483,13 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .bottom-nav a[href^="results-list"] { --tab-icon: var(--icon-stopwatch); }
 .bottom-nav a[href^="profile"] { --tab-icon: var(--icon-user); }
 
-/* map view: a placeholder, out of scope; styled only so it belongs */
+/* map view: static Natural Earth background (designer decision); the interactive Map stays deferred */
 #map-view { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
 .map-placeholder {
+  position: relative;
+  container-type: size;            /* pins compute their height from the map's width (cqw) */
+  isolation: isolate;              /* map layers sit under the container's own text, even bare text */
+  overflow: hidden;
   flex: 1;
   display: flex;
   align-items: center;
@@ -493,19 +497,37 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   text-align: center;
   padding: var(--space-4);
   border-radius: var(--radius-2);
-  background: var(--bg-1);
+  background: var(--map-water);
   box-shadow: inset 0 0 0 var(--border) var(--field-line);
   color: var(--text-2);
   font-size: var(--size-proof);
 }
-.map-placeholder.has-pins { position: relative; align-items: flex-end; }
-.map-pin {
+.map-placeholder::before, .map-placeholder::after {   /* land, then coastlines and borders; the masks carry shape, tokens carry color */
+  content: "";
   position: absolute;
-  transform: translate(calc(var(--map-pin-dot) / -2), calc(var(--map-pin-dot) / -2));
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-mask-size: 100% auto; mask-size: 100% auto;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
+.map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
+.map-placeholder > * { position: relative; z-index: 1; }
+.map-placeholder.has-pins { align-items: flex-end; }
+
+/* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line */
+.map-placeholder > .map-pin {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--x) * 1) !important;   /* overrides the wireframe's approximate inline position */
+  top: calc(50% + (var(--yf) - 0.5) * (100cqw + 2 * var(--space-4)) * var(--map-ratio)) !important;
+  transform: translate(-50%, calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
+  height: var(--pin-h);
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+  padding: 0 var(--space-2);
   border-radius: var(--radius-1);
   background: var(--bg-2);
   color: var(--text-1);
@@ -514,11 +536,42 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   text-decoration: none;
   white-space: nowrap;
 }
-.map-pin::before { content: ""; width: var(--map-pin-dot); height: var(--map-pin-dot); border-radius: 50%; background: var(--text-1); }
+.map-pin::before {   /* the dot, back on the coordinate */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(50% - var(--dy));
+  width: var(--map-pin-dot);
+  height: var(--map-pin-dot);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--text-1);
+  box-shadow: 0 0 0 calc(var(--border) * 2) var(--map-water);
+}
+.map-pin::after {   /* leader line from the label's edge to the dot */
+  content: "";
+  position: absolute;
+  left: calc(50% - var(--border) / 2);
+  width: var(--border);
+  height: calc(var(--dy-abs) - var(--pin-h) / 2 - var(--map-pin-dot) / 2);
+  background: var(--text-2);
+}
+.map-pin[href$="race=berlin-marathon"] { --x: var(--pin-berlin-marathon-x); --yf: var(--pin-berlin-marathon-yf); --dy: var(--pin-berlin-marathon-dy); }
+.map-pin[href$="race=hyrox-london"] { --x: var(--pin-hyrox-london-x); --yf: var(--pin-hyrox-london-yf); --dy: var(--pin-hyrox-london-dy); }
+.map-pin[href$="race=utmb"] { --x: var(--pin-utmb-x); --yf: var(--pin-utmb-yf); --dy: var(--pin-utmb-dy); }
+.map-pin[href$="race=hyrox-dallas"] { --x: var(--pin-hyrox-dallas-x); --yf: var(--pin-hyrox-dallas-yf); --dy: var(--pin-hyrox-dallas-dy); }
+.map-pin[href$="race=deka-strong-chicago"] { --x: var(--pin-deka-strong-chicago-x); --yf: var(--pin-deka-strong-chicago-yf); --dy: var(--pin-deka-strong-chicago-dy); }
+.map-pin[href$="race=spartan-beast-killington"] { --x: var(--pin-spartan-beast-killington-x); --yf: var(--pin-spartan-beast-killington-yf); --dy: var(--pin-spartan-beast-killington-dy); }
+.map-pin[href$="race=boston-marathon"] { --x: var(--pin-boston-marathon-x); --yf: var(--pin-boston-marathon-yf); --dy: var(--pin-boston-marathon-dy); }
+/* label above the dot: leader runs down from the label; below: up from the label */
+.map-pin[href$="race=berlin-marathon"], .map-pin[href$="race=hyrox-london"], .map-pin[href$="race=deka-strong-chicago"], .map-pin[href$="race=spartan-beast-killington"] { --dy-abs: calc(var(--dy) * -1); }
+.map-pin[href$="race=utmb"], .map-pin[href$="race=boston-marathon"], .map-pin[href$="race=hyrox-dallas"] { --dy-abs: var(--dy); }
+.map-pin[href$="race=berlin-marathon"]::after, .map-pin[href$="race=hyrox-london"]::after, .map-pin[href$="race=deka-strong-chicago"]::after, .map-pin[href$="race=spartan-beast-killington"]::after { top: 100%; }
+.map-pin[href$="race=utmb"]::after, .map-pin[href$="race=boston-marathon"]::after, .map-pin[href$="race=hyrox-dallas"]::after { bottom: 100%; }
 .map-pin:hover { background: var(--bg-3); }
 .map-pin[hidden] { display: none; }
 .map-caption { margin: 0; color: var(--text-2); font-size: var(--size-label); }
-.map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
+.map-placeholder .state-message { justify-items: center; text-align: center; padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); }
 .map-placeholder .state-actions { justify-content: center; }
 
 /* Filters sheet: a sheet floats, so it is the one place with a shadow */
@@ -533,7 +586,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   z-index: 6;
   max-height: var(--sheet-max);
   overflow-y: auto;
-  padding: var(--space-2) var(--space-4) var(--space-6);
+  padding: var(--space-2) var(--space-4) 0;          /* the footer carries the bottom padding */
   border-radius: var(--radius-3) var(--radius-3) 0 0;
   background: var(--bg-1);
   box-shadow: var(--shadow-sheet);
@@ -592,7 +645,17 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .sheet select { -webkit-appearance: none; appearance: none; padding-right: calc(var(--space-3) * 2 + var(--icon-s)); }
 .sheet, .phone-screen, .chips-row { scrollbar-color: var(--field-line) transparent; scrollbar-width: thin; }
 .chips-row { scrollbar-width: none; }
-.sheet-actions { display: flex; gap: var(--space-3); margin-top: var(--space-2); }
+.sheet-actions {   /* fixed footer: always visible, the options scroll under its hairline */
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-3);
+  margin: var(--space-2) calc(var(--space-4) * -1) 0;
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + var(--safe-bottom));
+  background: var(--bg-1);
+  border-top: var(--border) solid var(--line);
+}
 .sheet-actions button {
   flex: 1;
   min-height: var(--target);

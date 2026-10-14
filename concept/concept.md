@@ -84,6 +84,15 @@ Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on ever
 
 ---
 
+## Map (designer decision, 2026-10-14)
+
+**Map: static Natural Earth background (designer decision); the interactive Map upgrade stays deferred.**
+- **Background:** Natural Earth 1:110m land and country borders (public domain), Mercator, cropped to North America and Europe, centred on 43°N. `scripts/concept/build_map.py` turns them into two shape masks in `tokens.css`. The colors are tokens only: water `--bg-bar`, land `--bg-1`, coastlines and borders `--bg-3`, no accent (Color rule 1). It's a CSS layer, with no markup change and no network request.
+- **Pins:** each dot sits on its race's real latitude and longitude. Where labels would collide (London, Chamonix, Berlin; Boston, Killington), the label moves above or below on a leader line and the dot stays put. Pins are neutral.
+- **Still deferred:** clusters, floating controls, real tiles, pan and zoom.
+
+---
+
 ## Deferred to Lesson 7 (markup)
 
 Recorded 2026-10-14, before step 6. Each item needs a change to markup or script, which steps 5–6 don't allow (only the race card photo was allowed). **In step 7, these are reported as "deferred by designer", not as new defects.**
@@ -93,6 +102,7 @@ Recorded 2026-10-14, before step 6. Each item needs a change to markup or script
 | Heading levels skip h1 → h3 on Race browse: the race names are `<h3>` directly under the `<h1>` "Discover" | `wireframes/race-browse.html` | Fixing it means changing heading levels (`<h2>` for race names, or a visually hidden `<h2>`), which is structure |
 | The Filters sheet doesn't move focus into itself when it opens, and doesn't close on Escape | `wireframes/race-browse*.html` (the sheet's script: `openSheet()` / `closeSheet()`) | It's wireframe JavaScript, not styling |
 | Short buttons need full accessible names: "Try again" → "Try loading races again", the nav-bar "Save" → "Save result", "Dismiss" → "Dismiss this message" | "Try again" on Race browse, Race detail, Race picker, Results list, Result detail and Profile (their `-error` pages); "Save" on `log-result.html`; "Dismiss" on Race detail and Result detail. Rule: `voice.md` → Microcopy → Button; tracked in `wireframes/_critique.md` #10 | It's a markup pass (`aria-label` or visually hidden text), already planned as its own pass |
+| The map pins' old approximate `left`/`top` values are still inline in the markup; `components.css` overrides them with the real coordinates. Remove the inline values | `wireframes/race-browse.html` (each `.map-pin`) | Removing an attribute is a markup change |
 | The race card's date splits into day and month only because CSS wraps the text (`time::first-line` in a 68px column). Long month names, other languages, text zoom or a font swap can break it; a separate day element is sturdier | `wireframes/race-browse.html` (each `<time>` in a card); `concept/components.css` (`.race-card time`) | A separate day element is a markup change |
 
 ---
