@@ -90,6 +90,7 @@ Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on ever
 - **Background:** Natural Earth 1:110m land and country borders (public domain), Mercator, cropped to North America and Europe, centred on 43°N. `scripts/concept/build_map.py` turns them into two shape masks in `tokens.css`. The colors are tokens only: water `--bg-bar`, land `--bg-1`, coastlines and borders `--bg-3`, no accent (Color rule 1). It's a CSS layer, with no markup change and no network request.
 - **Pins:** each dot sits on its race's real latitude and longitude. Where labels would collide (London, Chamonix, Berlin; Boston, Killington), the label moves above or below on a leader line and the dot stays put. Pins are neutral.
 - **Still deferred:** clusters, floating controls, real tiles, pan and zoom.
+- **Caption text: a designer-approved exception (2026-10-14).** After the static map put each pin on its real coordinates, the old caption "[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]" became untrue. Only the untrue part changed; the new caption is "[ static map — pan/zoom changes what's visible, not which races match ]" (`wireframes/race-browse.html`; `microcopy.md` row 114).
 
 ---
 

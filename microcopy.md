@@ -188,7 +188,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 111 |Race browse|results row|Killington|unchanged|Not ours to rewrite: catalog data|button|base|catalog data||
 | 112 |Race browse|results row|Boston Marathon, Boston, 20 Apr 2027|unchanged|Not ours to rewrite: catalog data|a11y label|base|catalog data||
 | 113 |Race browse|results row|Boston|unchanged|Not ours to rewrite: catalog data|button|base|catalog data||
-| 114 |Race browse|results row|[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]|unchanged|Wireframe scaffolding, not product copy (P1): replaced by the real map/page, not rewritten|helper text|base|wireframe annotation|P1|
+| 114 |Race browse|results row|[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]|[ static map — pan/zoom changes what's visible, not which races match ]|Designer-approved text exception (2026-10-14): the old text became untrue after the static Natural Earth map put each pin on its race's real coordinates. Only the untrue part changed; still wireframe scaffolding (P1)|helper text|base|wireframe annotation|P1|
 | 115 |Race browse|shared controls|Filters · 2|unchanged|Label + count of active filters|button|base,empty (when filters are on)|UI copy||
 | 116 |Race browse|results row|3 races match your filters|unchanged|Plain count|body text|base (filtered)|UI copy||
 | 117 |Race browse|results row|1 race matches your filters|unchanged|Plain count|body text|base (filtered)|UI copy||
