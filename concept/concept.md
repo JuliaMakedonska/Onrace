@@ -261,7 +261,7 @@ Round 2, in `directions.html`. All three were built under the Hierarchy rules ab
 **Chosen: Direction A, "Podium".** Why: it keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.
 - Graphite ground `#131518`, sodium amber accent `#F5B649` (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.
 - Its values now live in `tokens.css`, its components in `components.css`, and its stand in `concept.html`.
-- **Still open:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in `research/screens/` (RoxFit `#FFEC00`), it is 19.2° of hue and ΔE 18.7 away, below Color rule 3b's threshold (≥ 25° and ΔE ≥ 24). **Decided 2026-10-14:** kept, as a designer override of rule 3b. The reason is recorded under Color rules → 3b.
+- **Settled:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in `research/screens/` (RoxFit `#FFEC00`), it is 19.2° of hue and ΔE 18.7 away, below Color rule 3b's threshold (≥ 25° and ΔE ≥ 24). **Decided 2026-10-14:** kept, as a designer override of rule 3b. The reason is recorded under Color rules → 3b.
 
 **Not picked:**
 - **Direction B, "Telemetry"** (periwinkle `#A9B8FF` on blue-black, Saira + Sofia Sans, 4px). Its Results list read like a timing board. But its critique found Race browse "could belong to any dark fintech or fitness app": blue on dark drifts toward a generic tech look, and its energy depended on dimming everything that isn't data.
