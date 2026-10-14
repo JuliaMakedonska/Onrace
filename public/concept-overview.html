@@ -75,6 +75,14 @@
   .navlinks a.active{color:var(--text); background:var(--bg-elev-2)}
 
   
+  /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
+  .lessonbar{border-bottom:1px solid var(--border)}
+  .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
+  .lessonbar-inner::-webkit-scrollbar{display:none}
+  .lessonbar a{flex:none; color:var(--text-faint); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:.04em; padding:8px 10px; border-bottom:2px solid transparent; white-space:nowrap}
+  .lessonbar a:hover{color:var(--text)}
+  .lessonbar a[aria-current="page"]{color:var(--text); border-bottom-color:var(--accent)}
+
   /* Hero (same as ia.html and voice.html) */
   header.hero{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px; }
   .kicker{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
@@ -99,6 +107,7 @@
   .tag-o{background:var(--ok-dim); color:var(--ok)}
   h2{font-size:28px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em}
   h3{font-size:19px; margin:34px 0 10px; font-weight:700}
+  h3[id]{scroll-margin-top:72px}
   .prose p, .prose li{color:var(--text-dim); font-size:15px; max-width:820px}
   .prose strong{color:var(--text)}
   .prose ul, .prose ol{padding-left:20px; margin:0 0 14px}
@@ -141,6 +150,7 @@
 </style>
 </head>
 <body>
+<!-- lessons:start --><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html" aria-current="page">06 · Concept</a></div></div><!-- lessons:end -->
 <nav>
   <div class="nav-inner">
     <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Concept</a>
@@ -201,7 +211,7 @@
 
 <section class="block" id="taste"><span class="section-tag tag-f">Step 2</span><h2>Taste and attributes</h2><div class="prose">
 <div class="two-col">
-  <div><h3>Like</h3><ol><li><strong>Strava.</strong> The date leads the race card in its own left column; the finish time is the row's largest, boldest figure. Clear hierarchy without decoration.</li><li><strong>The hybrid-racing products from Lesson 1</strong> (RoxFit, RoxConnect, RoxMatchUp, fitnessracingcalendar, ocrbase), both the dark and the light ones. Strong visuals; especially the race format as a small uppercase chip with a high-contrast fill ("DEKA FIT" on fitnessracingcalendar).</li><li><strong>Nike Run Club: typography.</strong> Bold but refined. (Added 2026-10-13, after round 1.)</li><li><strong>Whoop: typography.</strong> Technical and clean. (Added 2026-10-13, after round 1.)</li><li><strong>Black-and-white race photos.</strong> From round 1, Direction 1.</li><li><strong>A high-contrast accent.</strong> From round 1, Direction 3's yellow (<code>#F5B649</code>). <strong>Open question:</strong> it may read as HYROX yellow. See attribute 3 (c, "Each format by name, not one sport's look").</li></ol></div>
+  <div><h3>Like</h3><ol><li><strong>Strava.</strong> The date leads the race card in its own left column; the finish time is the row's largest, boldest figure. Clear hierarchy without decoration.</li><li><strong>The hybrid-racing products from Lesson 1</strong> (RoxFit, RoxConnect, RoxMatchUp, fitnessracingcalendar, ocrbase), both the dark and the light ones. Strong visuals; especially the race format as a small uppercase chip with a high-contrast fill ("DEKA FIT" on fitnessracingcalendar).</li><li><strong>Nike Run Club: typography.</strong> Bold but refined. (Added 2026-10-13, after round 1.)</li><li><strong>Whoop: typography.</strong> Technical and clean. (Added 2026-10-13, after round 1.)</li><li><strong>Black-and-white race photos.</strong> From round 1, Direction 1.</li><li><strong>A high-contrast accent.</strong> From round 1, Direction 3's yellow (<code>#F5B649</code>). It could read as HYROX yellow, against attribute 3 (c, "Each format by name, not one sport's look"). <strong>Settled 2026-10-14:</strong> the designer keeps this amber as an override of <a href="#color-rules">Color rules → 3b</a>. The accent is scarce, the ground is graphite, and the format chips are neutral.</li></ol></div>
   <div><h3>Don't want</h3><ul><li><strong>LinkedIn's look.</strong> The logic of a gray source line under a claim is good, but the styling feels corporate and dated.</li><li><strong>Letterboxd's diary.</strong> A dense dark list where it's unclear what matters.</li><li><strong>Aggressive "energy" red.</strong></li><li><strong>One heavy condensed display face used for everything.</strong> Crude, not stylish. (Added 2026-10-13, after round 1.)</li><li><strong>No radius at all.</strong> It looks like a wireframe, not a product. (Added 2026-10-13, after round 1.)</li></ul></div>
 </div>
 <p><strong>Shape: slightly rounded, small radius.</strong> This is a designer decision (2026-10-13).</p>
@@ -242,7 +252,7 @@
 </div>
 <p><a class="btn" href="concept/concept.html">Open the stand · concept.html →</a></p>
 <p>The stand is generated by <code>scripts/concept/build_stand.py</code> from <code>tokens.css</code>, <code>map.css</code> and <code>components.css</code>. The build stops if a text pair fails AA, if color rule 1, 2 or 3a breaks, or if a token has no signed row.</p>
-<h3>Color rules, checked by the build</h3>
+<h3 id="color-rules">Color rules, checked by the build</h3>
 <p>Added before step 5. <code>scripts/concept/build_stand.py</code> checks rules 1–3 on every build. Rules 1, 2 and 3a stop the build when broken. Rule 3b is reported on the stand and doesn't block, because the designer keeps the current amber knowingly.</p>
 <ol><li><strong>Accent placement.</strong> Amber only where you can act or where you are: the primary action, the current tab, an active state. Never on a result, a finish time, a count or a status. <em>Build check:</em> every <code>components.css</code> rule that uses <code>--accent</code> or <code>--accent-hover</code> must target an allowed selector (primary button, <code>.header-action</code>, primary <code>.state-action</code>, the current tab). Specimen swatches on the stand are the only other place.</li><li><strong>No success color on results.</strong> Results are self-reported, and Onrace can't verify them, so there's no green and no "verified" mark anywhere on a result. The proof line stays neutral (attribute 4, d: proof stated, not stamped). <em>Build check:</em> <code>--success</code> and <code>--success-bg</code> appear on no product screen: the build allows them only on the stand's status specimen and its swatch. The saved confirmation on Results list is neutral (decided 2026-10-14: a green check next to a race name reads as a "verified" stamp). No result row contains a check icon or the word "verified".</li><li><strong>Two taste rules, made measurable</strong> (CIELAB, D65):<ul><li><strong>a. Depth of dark, not #000.</strong> Every background level (<code>--bg-bar</code>, <code>--bg-0</code>, <code>--bg-1</code>, <code>--bg-2</code>) has a lightness L* between 4.5 and 20 and a chroma C* of at most 6 (near-neutral, not tinted). Each level is at least 1.5 L* lighter than the one below it, so the levels read as depth. For reference, #000 is L* 0 and the guardrail <code>#0B0C0E</code> is L* 3.3; both fall outside the range. <em>Current:</em> L* 4.99 / 6.69 / 12.10 / 17.33, C* 2.0–3.9. <strong>Passes.</strong></li><li><strong>b. Amber, not HYROX yellow.</strong> HYROX yellow [~] is measured from <code>research/screens/</code>. There's no screenshot of HYROX's own site there, so the reference is the HYROX-ecosystem apps: RoxFit <code>#FFEC00</code> (5,786 pixels in <code>roxfit-how-it-works.png</code>) and RoxMatchUp <code>#F5E401</code> (2,770 pixels in <code>roxmatchup-home.png</code>). The accent must be at least as far from the nearer of the two as named orange is: hue distance ≥ 25° and ΔE2000 ≥ 24. CSS <code>orange</code> <code>#FFA500</code> sits at 24.6° and ΔE 24.0 from <code>#FFEC00</code>. <em>Current amber <code>#F5B649</code>:</em> 19.2° and ΔE 18.7 from RoxFit's yellow (19.6° and ΔE 17.9 from RoxMatchUp's). It fails the threshold.<ul><li><strong>Overridden by the designer, with reason (2026-10-14).</strong> The amber <code>#F5B649</code> stays, as a conscious choice. Three things keep it from reading as HYROX's look:<ul><li>the accent is scarce: 1–2 uses per screen (rule 1)</li><li>the ground is graphite, not black (rule 3a)</li><li>the format chips are neutral (Hierarchy rule 2)</li></ul></li><li>The designer compared it side by side with a halfway version <code>#FCB24D</code> and a warmer <code>#FFB05C</code> that just passes. The warmer one moves toward Strava orange.</li><li>The build still measures rule 3b and shows it on the stand as "accepted by designer". The override covers this exact hex only: any other accent is checked against the threshold again.</li></ul></li></ul></li></ol>
 </div></section>

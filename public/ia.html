@@ -239,10 +239,21 @@
     .navlinks{gap:0}
     header.hero{padding:44px 20px 28px}
   }
+
+
+
+  /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
+  .lessonbar{border-bottom:1px solid var(--border)}
+  .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
+  .lessonbar-inner::-webkit-scrollbar{display:none}
+  .lessonbar a{flex:none; color:var(--text-faint); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:.04em; padding:8px 10px; border-bottom:2px solid transparent; white-space:nowrap}
+  .lessonbar a:hover{color:var(--text)}
+  .lessonbar a[aria-current="page"]{color:var(--text); border-bottom-color:var(--accent)}
 </style>
 </head>
 <body>
 
+<!-- lessons:start --><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html" aria-current="page">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html">06 · Concept</a></div></div><!-- lessons:end -->
 <nav>
   <div class="nav-inner">
     <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · IA</a>
@@ -255,7 +266,6 @@
       <a href="#flow-profile">Profile</a>
       <a href="#flow-reset">Reset</a>
       <a href="#traceability">Traceability</a>
-      <a href="concept-overview.html">06 · Concept</a>
     </div>
   </div>
 </nav>

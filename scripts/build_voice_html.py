@@ -6,6 +6,8 @@ Styling is taken from ia.html's :root tokens so the pages stay consistent.
 """
 import re, json, html
 import os
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lessons_nav import BAR_CSS, bar as lessons_bar
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root
 V=open(ROOT+'/voice.md').read()
 M=open(ROOT+'/microcopy.md').read()
@@ -112,7 +114,7 @@ PAGE=f'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Onrace — Voice</title>
 <style>
-  {root_css}
+  {root_css}{BAR_CSS}
   /* Hero (same as ia.html) */
   header.hero{{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px; }}
   .kicker{{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }}
@@ -191,6 +193,7 @@ PAGE=f'''<!DOCTYPE html>
 </style>
 </head>
 <body>
+{lessons_bar('voice.html')}
 <nav>
   <div class="nav-inner">
     <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Voice</a>
@@ -200,7 +203,6 @@ PAGE=f'''<!DOCTYPE html>
       <a href="#forbidden">Forbidden</a>
       <a href="#microcopy-rules">Microcopy rules</a>
       <a href="#microcopy-table">All lines</a>
-      <a href="concept-overview.html">06 · Concept</a>
     </div>
   </div>
 </nav>

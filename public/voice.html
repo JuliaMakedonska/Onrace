@@ -74,6 +74,14 @@
   .navlinks a.active{color:var(--text); background:var(--bg-elev-2)}
 
   
+  /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
+  .lessonbar{border-bottom:1px solid var(--border)}
+  .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
+  .lessonbar-inner::-webkit-scrollbar{display:none}
+  .lessonbar a{flex:none; color:var(--text-faint); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:.04em; padding:8px 10px; border-bottom:2px solid transparent; white-space:nowrap}
+  .lessonbar a:hover{color:var(--text)}
+  .lessonbar a[aria-current="page"]{color:var(--text); border-bottom-color:var(--accent)}
+
   /* Hero (same as ia.html) */
   header.hero{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px; }
   .kicker{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
@@ -152,6 +160,7 @@
 </style>
 </head>
 <body>
+<!-- lessons:start --><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html" aria-current="page">05 · Voice</a><a href="concept-overview.html">06 · Concept</a></div></div><!-- lessons:end -->
 <nav>
   <div class="nav-inner">
     <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Voice</a>
@@ -161,7 +170,6 @@
       <a href="#forbidden">Forbidden</a>
       <a href="#microcopy-rules">Microcopy rules</a>
       <a href="#microcopy-table">All lines</a>
-      <a href="concept-overview.html">06 · Concept</a>
     </div>
   </div>
 </nav>

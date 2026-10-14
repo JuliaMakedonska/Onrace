@@ -15,7 +15,7 @@ The designer's own judgment, recorded in their words. It isn't derived from rese
 3. **Nike Run Club: typography.** Bold but refined. (Added 2026-10-13, after round 1.)
 4. **Whoop: typography.** Technical and clean. (Added 2026-10-13, after round 1.)
 5. **Black-and-white race photos.** From round 1, Direction 1.
-6. **A high-contrast accent.** From round 1, Direction 3's yellow (`#F5B649`). **Open question:** it may read as HYROX yellow. See attribute 3 (c, "Each format by name, not one sport's look").
+6. **A high-contrast accent.** From round 1, Direction 3's yellow (`#F5B649`). It could read as HYROX yellow, against attribute 3 (c, "Each format by name, not one sport's look"). **Settled 2026-10-14:** the designer keeps this amber as an override of [Color rules → 3b](#color-rules-designer-2026-10-13). The accent is scarce, the ground is graphite, and the format chips are neutral.
 
 **Don't want:**
 
