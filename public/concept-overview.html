@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onrace — Concept</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root{
+    --bg:#0b0c0e;
+    --bg-elev:#141518;
+    --bg-elev-2:#1b1d21;
+    --border:#2a2c31;
+    --text:#eef0f2;
+    --text-dim:#9aa0a8;
+    --text-faint:#686e77;
+    --accent:#ff4d2e;
+    --accent-dim:#ff4d2e33;
+    --benchmark:#2dd4bf;
+    --benchmark-dim:#2dd4bf26;
+    --patterns:#a78bfa;
+    --patterns-dim:#a78bfa26;
+    --unconfirmed:#e6a23c;
+    --unconfirmed-dim:#e6a23c22;
+    --ok:#4ade80;
+    --ok-dim:#4ade8026;
+    --job-loc:#60a5fa;
+    --job-loc-dim:#60a5fa26;
+    --job-log:#f472b6;
+    --job-log-dim:#f472b626;
+    --job-retrieve:#fbbf24;
+    --job-retrieve-dim:#fbbf2426;
+    --radius:10px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+    font-size:16px;
+  }
+  a{color:var(--accent)}
+  a:hover{text-decoration-thickness:2px}
+  code{
+    background:var(--bg-elev-2);
+    padding:.1em .4em;
+    border-radius:4px;
+    font-size:.9em;
+    color:#d7dadf;
+  }
+
+  /* Nav */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,12,14,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .brand{font-weight:800; letter-spacing:.02em; text-transform:uppercase; font-size:14px; color:var(--text)}
+  .brand span{color:var(--accent)}
+  .navlinks{display:flex; gap:4px; margin-left:auto; flex-wrap:wrap}
+  .navlinks a{
+    color:var(--text-dim); text-decoration:none; font-size:13px; font-weight:700;
+    letter-spacing:.04em; text-transform:uppercase; padding:8px 12px; border-radius:6px;
+  }
+  .navlinks a:hover{background:var(--bg-elev-2); color:var(--text)}
+  .navlinks a.active{color:var(--text); background:var(--bg-elev-2)}
+
+  
+  /* Hero (same as ia.html and voice.html) */
+  header.hero{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px; }
+  .kicker{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
+  header.hero h1{ font-size:clamp(36px,6vw,60px); margin:0 0 14px; font-weight:800; letter-spacing:-.02em; }
+  .hero-desc{color:var(--text-dim); font-size:18px; max-width:720px; margin:0 0 6px; line-height:1.5}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin:24px 0 0}
+  .pill{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim); }
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:28px 0 0}
+  a.card-link{ display:block; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; text-decoration:none; transition:border-color .15s, transform .15s; }
+  a.card-link:hover{border-color:var(--accent); transform:translateY(-1px)}
+  .si-tag{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px}
+  .si-title{color:var(--text); font-weight:700; font-size:15px; display:block; margin-bottom:4px}
+  .si-desc{color:var(--text-dim); font-size:13px; display:block}
+  main{max-width:var(--maxw); margin:0 auto; padding:0 24px 80px}
+  section.block{padding:56px 0; border-top:1px solid var(--border); scroll-margin-top:72px}
+  .section-tag{ display:inline-flex; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:5px 12px; border-radius:999px; margin-bottom:16px; }
+  .tag-p{background:var(--accent-dim); color:var(--accent)}
+  .tag-d{background:var(--patterns-dim); color:var(--patterns)}
+  .tag-f{background:var(--unconfirmed-dim); color:var(--unconfirmed)}
+  .tag-m{background:var(--benchmark-dim); color:var(--benchmark)}
+  .tag-t{background:var(--job-loc-dim); color:var(--job-loc)}
+  .tag-o{background:var(--ok-dim); color:var(--ok)}
+  h2{font-size:28px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em}
+  h3{font-size:19px; margin:34px 0 10px; font-weight:700}
+  .prose p, .prose li{color:var(--text-dim); font-size:15px; max-width:820px}
+  .prose strong{color:var(--text)}
+  .prose ul, .prose ol{padding-left:20px; margin:0 0 14px}
+  .prose li{margin-bottom:6px}
+  .prose li ul{margin-top:6px}
+  .prose p.rule{font-size:16.5px; color:var(--text); background:var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:12px 16px}
+  .prose p.note{font-size:13.5px; color:var(--text-faint)}
+  .tbl-wrap{overflow-x:auto; margin:10px 0 20px; border:1px solid var(--border); border-radius:var(--radius)}
+  table{border-collapse:collapse; width:100%; font-size:13.5px}
+  th{text-align:left; background:var(--bg-elev-2); color:var(--text-faint); font-size:11px; text-transform:uppercase; letter-spacing:.05em; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap}
+  td{padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top; color:var(--text-dim)}
+  tr:last-child td{border-bottom:none}
+  td strong{color:var(--text)}
+  .two-col{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:18px}
+  .two-col h3{margin-top:6px}
+  .panel{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:6px 20px 8px}
+  .tech-grid, .attr-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:14px; margin:14px 0 8px}
+  .tech, .attr{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px}
+  .tech p, .attr p{margin:0 0 8px}
+  .tech-from{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--patterns)}
+  .prose .tech-name, .prose .attr-title{color:var(--text); font-weight:700; font-size:15.5px; margin-top:6px}
+  .prose .tech-meta, .prose .attr-strength{font-size:13px; color:var(--text-faint)}
+  .scope{color:var(--benchmark); font-weight:700}
+  a.btn{display:inline-block; background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-weight:700; font-size:14px; text-decoration:none}
+  a.btn:hover{border-color:var(--accent)}
+  .stat-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:6px 0 18px}
+  .stat{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px}
+  .stat-n{display:block; font-size:36px; font-weight:800; letter-spacing:-.02em; color:var(--text); line-height:1.1}
+  .stat-l{display:block; font-size:13px; color:var(--text-dim); margin-top:6px}
+  .phones{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:28px; margin:18px 0}
+  .phone-fig{margin:0}
+  .phone{width:100%; max-width:390px; height:757px; margin:0 auto; border:10px solid var(--bg-elev-2); border-radius:36px; overflow:hidden; background:#000}
+  .phone iframe{display:block; width:100%; height:100%; border:0}
+  figcaption{max-width:390px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}
+  figcaption strong{color:var(--text)}
+  .states{color:var(--text-faint)}
+  footer{max-width:var(--maxw); margin:0 auto; padding:24px; color:var(--text-faint); font-size:12.5px; border-top:1px solid var(--border)}
+  @media (max-width:640px){ .phone{height:640px; border-width:6px; border-radius:24px} }
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} a.card-link{transition:none} a.card-link:hover{transform:none} }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Concept</a>
+    <div class="navlinks">
+      <a href="#overview">Overview</a><a href="#references">References</a><a href="#taste">Taste</a><a href="#directions">Directions</a><a href="#stand">Stand</a><a href="#screens">Screens</a><a href="#check">Check</a><a href="#open">Open</a>
+    </div>
+  </div>
+</nav>
+<a id="top"></a>
+<header class="hero">
+  <p class="kicker">Lesson 6 · Concept</p>
+  <h1>Podium: how Onrace looks</h1>
+  <p class="hero-desc">Rendered from <code>concept/concept.md</code> (taste, attributes, rules, decisions) and <code>concept/references.md</code> (what we borrowed, and from where). The product's own values live in <code>concept/</code>; this page only documents them.</p>
+  <div class="meta-row">
+    <span class="pill">Direction A chosen 2026-10-13</span>
+    <span class="pill">139 tokens, all signed</span>
+    <span class="pill">65 contrast pairs</span>
+    <span class="pill">2 screens in Podium</span>
+    <span class="pill">Step 7: nine defects found, eight fixed</span>
+  </div>
+  <div class="card-grid">
+    <a class="card-link" href="concept/concept.html"><span class="si-tag" style="color:var(--accent)">Stand</span><span class="si-title">concept.html</span><span class="si-desc">Every token, component and contrast pair, signed with its reason →</span></a>
+    <a class="card-link" href="concept/directions.html"><span class="si-tag" style="color:var(--patterns)">Directions</span><span class="si-title">Round 2: A, B, C</span><span class="si-desc">Podium chosen; Telemetry and Bib number not picked →</span></a>
+    <a class="card-link" href="wireframes/race-browse.html"><span class="si-tag" style="color:var(--benchmark)">Screen</span><span class="si-title">Race browse</span><span class="si-desc">Live, in Podium →</span></a>
+    <a class="card-link" href="wireframes/results-list.html"><span class="si-tag" style="color:var(--job-loc)">Screen</span><span class="si-title">Results list</span><span class="si-desc">Live, in Podium →</span></a>
+  </div>
+</header>
+<main>
+<section class="block" id="overview"><span class="section-tag tag-p">Overview</span><h2>What we saw, what we decided</h2><div class="prose">
+<div class="two-col">
+  <div class="panel"><h3>What we saw</h3><ul><li>No HARD-tier product is on Mobbin. Every Mobbin reference below comes from a benchmark or aspirational product, and none is hybrid-racing branded. The HARD tier is covered instead from the Lesson 1 screenshots in <code>../research/screens/</code> (§ 4b).</li><li>Three dark (RoxFit, RoxConnect, RoxMatchUp) and two light (fitnessracingcalendar, ocrbase), though fitnessracingcalendar puts a dark head on every card. Across all five, color is one accent on small, high-signal elements, not a palette.</li><li>Three of the four Mobbin references are light-first, and three of the five hybrid-racing products (§ 4b) are dark.</li><li>Round 1: All three phone previews share the wireframe structure, so the layout carried no direction of its own.</li></ul></div>
+  <div class="panel"><h3>What we decided</h3><ul><li>Direction A, Podium, chosen. It keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.</li><li>Graphite ground <code>#131518</code>, sodium amber accent <code>#F5B649</code> (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.</li><li>Theme: dark. This is a designer decision.</li><li><strong>Accent is scarce.</strong> At most one or two accent uses per screen, reserved for the single most important thing (the primary action, or the active state). Not on every chip, not on every finish time.</li><li><code>scripts/concept/build_stand.py</code> checks rules 1–3 on every build. Rules 1, 2 and 3a stop the build when broken. Rule 3b is reported on the stand and doesn't block, because the designer keeps the current amber knowingly.</li><li>Race browse and Results list are in Podium; every markup change waits for Lesson 7 (8 items listed under What's open).</li></ul></div>
+</div>
+</div></section>
+
+<section class="block" id="references"><span class="section-tag tag-d">Step 1</span><h2>References</h2><div class="prose">
+<p class="rule">Source: Mobbin instead of Refero — Onrace is a mobile app and the research.md benchmarks are mobile products.</p>
+<p><strong>What these references are for:</strong> techniques to borrow, not a look to copy. One product is the base and two others each lend one or two techniques you can point at.</p>
+<h3>Which products were on Mobbin</h3>
+<p><strong>The consequence:</strong> no HARD-tier product is on Mobbin. Every Mobbin reference below comes from a benchmark or aspirational product, and none is hybrid-racing branded. The HARD tier is covered instead from the Lesson 1 screenshots in <code>../research/screens/</code> (§ 4b).</p>
+<h3>Base: Strava</h3>
+<ul><li><strong>What "base" means here:</strong> the structure and type hierarchy, <strong>not the color</strong>. Its orange is Strava's signature brand color, so it isn't carried over. Onrace may still use an orange of its own; that's an open taste decision.</li><li><strong>Light/dark:</strong> light by default, with a dark mode that keeps the same structure (e691c172). That suggests the structure survives either theme decision.</li></ul>
+<div class="tech-grid"><div class="tech"><span class="tech-from">Strava · base</span><p class="tech-name">The date leads the race card, in its own left column.</p><p class="tech-meta"><span class="scope">Visual only (reduced form)</span> · Race browse cards</p></div><div class="tech"><span class="tech-from">Strava · base</span><p class="tech-name">The finish time is the row's largest, boldest figure.</p><p class="tech-meta"><span class="scope">Visual only</span> · Results list rows (finish time)</p></div><div class="tech"><span class="tech-from">Strava · base</span><p class="tech-name">The empty state's button weight follows its cause.</p><p class="tech-meta"><span class="scope">Visual only</span> · Results list <code>-empty</code> (filled <strong>Log your first result</strong>); Race browse <code>-empty</code> (outlined <strong>Clear all filters</strong>)</p></div></div>
+<h3>Donor: LinkedIn, source-line logic only</h3>
+<ul><li><strong>What's taken: the logic of the source line only, not its styling.</strong> The designer finds LinkedIn's look corporate and dated (<code>concept.md</code> → Designer's taste). So its gray, its type and its link glyph aren't carried over; only the arrangement is: the proof as its own quieter line under the claim, not a badge.</li></ul>
+<div class="tech-grid"><div class="tech"><span class="tech-from">LinkedIn · donor</span><p class="tech-name">The source sits on its own line under the claim, not as a badge</p><p class="tech-meta"><span class="scope">Visual only</span> · Results list rows and Result detail: "Self-reported · via &lt;domain&gt;"</p></div></div>
+<h3>Hybrid-racing products (Lesson 1 screenshots)</h3>
+<p><strong>Tally:</strong> three dark (RoxFit, RoxConnect, RoxMatchUp) and two light (fitnessracingcalendar, ocrbase), though fitnessracingcalendar puts a dark head on every card. Across all five, color is one accent on small, high-signal elements, not a palette.</p>
+<p><strong>Technique taken: the format as a small uppercase chip with a high-contrast fill.</strong> Seen in fitnessracingcalendar's card chips ("DEKA FIT") and RoxFit's eyebrows.</p>
+<ul><li><strong>Scope: visual only.</strong> Every Race browse card and Results list row already has <code>&lt;span class="sport-tag"&gt;</code> (HYROX, DEKA, Marathon …). Uppercase, letterspacing and fill are CSS (<code>text-transform</code>); the text in the markup doesn't change.</li><li><strong>Open question [?]:</strong> whether CSS uppercase sits well with <code>../voice.md</code> principle 4, "Every format by its own name". The name is unchanged, but "Half marathon" would render as "HALF MARATHON".</li><li><strong>Persona worry:</strong> the Primary persona's "see what's coming up in the formats I actually care about" (<code>../research/jtbd.md</code> → Related job 1), so the format reads at a glance. Also the Emotional job, "recognized as what I actually am — a hybrid athlete" (<code>jtbd.md</code> → Emotional), since the format chip is the most hybrid-racing-native element in this set. That it reads as "for hybrid athletes" to real users is <strong>[?]</strong>.</li></ul>
+<p><strong>Anti-reference: what we don't take.</strong></p>
+<ul><li><strong>Big-number stat strips.</strong> RoxConnect's "+499,900 active competitors globally / +80 countries". These are hype numbers and crowd words, both on <code>../voice.md</code>'s Forbidden list.</li><li><strong>Pure black plus one hot accent.</strong> RoxConnect's look, and the fastest route back to the banned artifact-page values (<code>#0b0c0e</code> / <code>#ff4d2e</code>) by habit. If Onrace goes dark, its values have to be chosen fresh, not drifted into.</li><li><strong>Price and booking state on the card.</strong> fitnessracingcalendar's "From £80", "Book now" and pink "Sold out". Onrace has no price data and links out to register only (<code>../CLAUDE.md</code> → Out of scope).</li><li><strong>The tag-soup format list.</strong> ocrbase's gray chips ("DEKA MILE - Affiliate", "DEKA STRONG - Affiliate") repeat in every row, so no chip stands out.</li><li><strong>Marketing-tone card copy</strong> ("Salt Lake City, are you ready?"). That's catalog data, not ours, but it shows how quickly a race card turns into hype.</li></ul>
+<h3>Documented, not picked</h3>
+<ul><li><strong>Why not picked:</strong> "Designer finds the diary unclear: dense dark list where it's not obvious what matters." (<code>concept.md</code> → Designer's taste.)</li><li><strong>Its techniques, kept for the record only (not used in Lesson 6 or deferred to Lesson 7):</strong><ul><li><strong>Color only on the data, never on the chrome.</strong> The background, rows and type are neutral slate; saturated color appears only on the ratings and the like-heart. Would have been visual only. 483648e0, 37003650. No persona source <strong>[?]</strong>.</li><li><strong>Month-grouped log with a day box.</strong> A full-width uppercase month band ("OCTOBER 2025") heads each group. Each row starts with a small bordered square holding the day number, then the title (bold) and the year (lighter), then one data line. Flat rows, hairline separators, ~4px radius [~]. Would have been structural: it adds month headers and needs the day as its own element. 483648e0. Served the Archivist's "pull that proof up quickly" (<code>jtbd.md</code> → Related job 4); recall by date is <strong>[?]</strong>.</li></ul></li></ul>
+<p>Two styles: one base and one donor, plus one hybrid-racing source from the Lesson 1 screenshots (§ 4b). Letterboxd is documented below as not picked. AllTrails is documented above but not picked. Its strongest techniques are photo-led cards (Onrace has no race imagery, and content images are deferred in <code>../wireframes/_conventions.md</code> § 7) and the floating Map pill (map view is out of scope). Its one leftover technique, the dot-separated meta line, is already covered by Strava's card.</p>
+<p class="note">Mobbin screen IDs are shown as text: Mobbin pages need a login. The full links are in <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/references.md">references.md</a>.</p>
+</div></section>
+
+<section class="block" id="taste"><span class="section-tag tag-f">Step 2</span><h2>Taste and attributes</h2><div class="prose">
+<div class="two-col">
+  <div><h3>Like</h3><ol><li><strong>Strava.</strong> The date leads the race card in its own left column; the finish time is the row's largest, boldest figure. Clear hierarchy without decoration.</li><li><strong>The hybrid-racing products from Lesson 1</strong> (RoxFit, RoxConnect, RoxMatchUp, fitnessracingcalendar, ocrbase), both the dark and the light ones. Strong visuals; especially the race format as a small uppercase chip with a high-contrast fill ("DEKA FIT" on fitnessracingcalendar).</li><li><strong>Nike Run Club: typography.</strong> Bold but refined. (Added 2026-10-13, after round 1.)</li><li><strong>Whoop: typography.</strong> Technical and clean. (Added 2026-10-13, after round 1.)</li><li><strong>Black-and-white race photos.</strong> From round 1, Direction 1.</li><li><strong>A high-contrast accent.</strong> From round 1, Direction 3's yellow (<code>#F5B649</code>). <strong>Open question:</strong> it may read as HYROX yellow. See attribute 3 (c, "Each format by name, not one sport's look").</li></ol></div>
+  <div><h3>Don't want</h3><ul><li><strong>LinkedIn's look.</strong> The logic of a gray source line under a claim is good, but the styling feels corporate and dated.</li><li><strong>Letterboxd's diary.</strong> A dense dark list where it's unclear what matters.</li><li><strong>Aggressive "energy" red.</strong></li><li><strong>One heavy condensed display face used for everything.</strong> Crude, not stylish. (Added 2026-10-13, after round 1.)</li><li><strong>No radius at all.</strong> It looks like a wireframe, not a product. (Added 2026-10-13, after round 1.)</li></ul></div>
+</div>
+<p><strong>Shape: slightly rounded, small radius.</strong> This is a designer decision (2026-10-13).</p>
+<p><strong>Theme: dark.</strong> This is a designer decision. It isn't inherited from the brief (which also says dark) or from the artifact pages (which are dark too). The guardrail on artifact-page values still applies (<code>#0b0c0e</code>, the <code>#ff4d2e</code> family, <code>src/style.css</code>, the wireframe grays). Onrace's dark has to be derived from the attributes below, not copied from the docs.</p>
+<h3>The five attributes</h3>
+<p>Visual opposites, "X, not Y". Each one names:</p>
+<ul><li>the data line it comes from</li><li>the technique in <code>references.md</code> it relies on</li><li>its strength: <strong>data</strong> (research or brief) or <strong>hypothesis</strong> (a <code>[?]</code> line in <code>personas.md</code> or <code>jtbd.md</code>), marked <strong>[?]</strong></li></ul>
+<div class="attr-grid"><div class="attr"><p class="attr-title">1. The result is the loudest thing on the row, not the frame</p><p>The finish time carries the row. Cards, borders, headers and backgrounds stay quiet around it.</p><p class="attr-strength"><strong>Strength:</strong> data.</p></div><div class="attr"><p class="attr-title">2. A calendar, not a poster</p><p>A race card reads as a date and a place, not as an image or a promotion. The date leads, in its own column.</p><p class="attr-strength"><strong>Strength:</strong> data for the job. <strong>[?]</strong> That a date-first card scans faster than the date inside the meta line is untested (<code>references.md</code> § 4).</p></div><div class="attr"><p class="attr-title">3. Each format by name, not one sport's look</p><p>The format is the most visible label on a card: a small uppercase chip with a high-contrast fill. No single sport sets the look.</p><p class="attr-strength"><strong>Strength:</strong> data for the jobs. <strong>[?]</strong> That the chip reads as "made for hybrid athletes" to real users is untested (<code>references.md</code> § 4b).</p></div><div class="attr"><p class="attr-title">4. Proof stated, not stamped</p><p>The source sits as its own quieter line under the claim ("Self-reported · via results.hyrox.com"). No badge, no checkmark, no seal on the time or the race name.</p><p class="attr-strength"><strong>Strength:</strong> data. Hypothesis 4 in <code>jtbd.md</code> ("feel confident it won't be dismissed as fake") points the same way, but it's <strong>[?]</strong> and isn't needed for this pair.</p></div><div class="attr"><p class="attr-title">5. Intense, not aggressive</p><p>Dark and high-contrast, with bold type. The intensity comes from weight, contrast and the format chip, not from alarm colors.
+- <strong>The dark</strong> has depth, but it isn't pure <code>#000</code> and it isn't "black plus one hot accent" (Tension C).
+- <strong>How much color</strong> varies across the step-3 directions, from restrained to rich (Tension D). It isn't fixed by this attribute.</p><p class="attr-strength"><strong>Strength:</strong> data for "dark, intense, bold". <strong>[?]</strong> That type, contrast or the chip can carry the energy without red is a hypothesis; step 3 tests it (Tension B).</p></div></div>
+<h3>Hierarchy rules (designer)</h3>
+<p>Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yellow" variant, which broke basic hierarchy. They apply to every direction from round 2 on.</p>
+<ol><li><strong>Accent is scarce.</strong> At most one or two accent uses per screen, reserved for the single most important thing (the primary action, or the active state). Not on every chip, not on every finish time.</li><li><strong>Format chips are metadata.</strong> Neutral: a subtle fill or a quiet outline, never the accent. The active filter chip differs from inactive ones by a clear but calm state, not by being the brightest thing on screen.</li><li><strong>Button hierarchy.</strong> Exactly one primary per screen (filled). Secondary actions are tonal or outlined; tertiary actions are text links. On Race browse, Filters is secondary, not primary. On Results list, Log result is the primary.</li><li><strong>Type hierarchy.</strong> The display face only for the screen title and the key numbers (finish time, date day). Race names, chips, buttons, tab labels and meta use the text face, in sentence case. Chips stay uppercase via CSS (decision A). At least three clearly distinct levels: screen title, item title, meta.</li><li><strong>The finish time stays the loudest thing on the row</strong> (attribute 1) through size and weight, not through accent color on every row.</li><li><strong>The proof line has one link icon,</strong> not two.</li></ol>
+</div></section>
+
+<section class="block" id="directions"><span class="section-tag tag-m">Step 3</span><h2>Directions</h2><div class="prose">
+<h3>Round 1 · rejected</h3>
+<div class="tbl-wrap"><table><thead><tr><th>Direction</th><th>Color</th><th>Energy from</th><th>Type</th><th>Shape</th></tr></thead><tbody><tr><td>1 · Chalk on rubber</td><td>Restrained: warm charcoal <code>#1C1A17</code>, chalk <code>#F3EFE7</code>, pale magnesium blue <code>#BFE0EE</code> on times and chips only</td><td>Type</td><td>Big Shoulders Display (heavy condensed) + Barlow</td><td>Sharp, 0–2px</td></tr><tr><td>2 · Format colors</td><td>Rich: aubergine <code>#221827</code>, a pastel color per format</td><td>The format chip</td><td>Bricolage Grotesque + Onest</td><td>Soft, pills and 20px cards</td></tr><tr><td>3 · Floodlight</td><td>Middle: petrol night <code>#0C1820</code>, sodium amber <code>#F5B649</code> on times and the one action, glacier <code>#CFE6F2</code> chips</td><td>Contrast</td><td>Archivo (wide) + Martian Mono</td><td>Medium, 4–8px</td></tr></tbody></table></div>
+<p><strong>Why it was rejected (the designer's feedback):</strong></p>
+<ul><li><strong>Direction 1's layout is the wireframes.</strong> All three phone previews share the wireframe structure, so the layout carried no direction of its own.</li><li><strong>Direction 1's type is crude:</strong> one heavy condensed face used everywhere.</li><li><strong>No radius looks like a wireframe</strong>, not a product.</li></ul>
+<p><strong>What carries over to round 2:</strong></p>
+<ul><li>Direction 1's black-and-white photo treatment.</li><li>The high contrast of Direction 3's accent. A late comparison in round 1 put Direction 3's amber on Direction 1. It showed that the amber's pull is saturation, not luminance: <code>#F5B649</code> is 9.65:1 on <code>#1C1A17</code>, below magnesium's 12.49:1, but its chroma is 63 against magnesium's 13. Its distance from HYROX's yellow (<code>~#FFE600</code> [~]) is ΔE 17.1, the open question in Designer's taste → Like 6.</li></ul>
+<p><a class="btn" href="concept/directions-round-1.html">Open round 1 · directions-round-1.html →</a></p>
+<h3>Round 2 · Podium chosen</h3>
+<p>Round 2, in <code>directions.html</code>. All three were built under the Hierarchy rules above, and critiqued with <code>/impeccable critique</code>.</p>
+<p><strong>Chosen: Direction A, "Podium".</strong> Why: it keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.</p>
+<ul><li>Graphite ground <code>#131518</code>, sodium amber accent <code>#F5B649</code> (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.</li><li>Its values now live in <code>tokens.css</code>, its components in <code>components.css</code>, and its stand in <code>concept.html</code>.</li><li><strong>Still open:</strong> the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in <code>research/screens/</code> (RoxFit <code>#FFEC00</code>), it is 19.2° of hue and ΔE 18.7 away, below Color rule 3b's threshold (≥ 25° and ΔE ≥ 24). <strong>Decided 2026-10-14:</strong> kept, as a designer override of rule 3b. The reason is recorded under Color rules → 3b.</li></ul>
+<p><strong>Not picked:</strong></p>
+<ul><li><strong>Direction B, "Telemetry"</strong> (periwinkle <code>#A9B8FF</code> on blue-black, Saira + Sofia Sans, 4px). Its Results list read like a timing board. But its critique found Race browse "could belong to any dark fintech or fitness app": blue on dark drifts toward a generic tech look, and its energy depended on dimming everything that isn't data.</li><li><strong>Direction C, "Bib number"</strong> (orchid <code>#FF9BE6</code> on pine green, Mona Sans wide + Host Grotesk, 10px). It was the rich-color direction, with energy from the format chip. Under Hierarchy rule 2 the chips became neutral metadata, so its color and energy had nowhere left to go. Mona Sans is also flagged by the detector as an overused face, and pink risked reading as lifestyle, not race.</li></ul>
+<p><a class="btn" href="concept/directions.html">Open round 2 · directions.html →</a></p>
+</div></section>
+
+<section class="block" id="stand"><span class="section-tag tag-p">Step 4</span><h2>The stand</h2><div class="prose">
+<div class="stat-row">
+  <div class="stat"><span class="stat-n">139</span><span class="stat-l">tokens in <code>tokens.css</code> and <code>map.css</code>, every one signed on the stand with its reason</span></div>
+  <div class="stat"><span class="stat-n">65</span><span class="stat-l">contrast pairs in the build, 59 of them held to WCAG AA (the rest are disabled or decorative)</span></div>
+  <div class="stat"><span class="stat-n">3</span><span class="stat-l">color rules checked on every build; 1, 2 and 3a stop it</span></div>
+</div>
+<p><a class="btn" href="concept/concept.html">Open the stand · concept.html →</a></p>
+<p>The stand is generated by <code>scripts/concept/build_stand.py</code> from <code>tokens.css</code>, <code>map.css</code> and <code>components.css</code>. The build stops if a text pair fails AA, if color rule 1, 2 or 3a breaks, or if a token has no signed row.</p>
+<h3>Color rules, checked by the build</h3>
+<p>Added before step 5. <code>scripts/concept/build_stand.py</code> checks rules 1–3 on every build. Rules 1, 2 and 3a stop the build when broken. Rule 3b is reported on the stand and doesn't block, because the designer keeps the current amber knowingly.</p>
+<ol><li><strong>Accent placement.</strong> Amber only where you can act or where you are: the primary action, the current tab, an active state. Never on a result, a finish time, a count or a status. <em>Build check:</em> every <code>components.css</code> rule that uses <code>--accent</code> or <code>--accent-hover</code> must target an allowed selector (primary button, <code>.header-action</code>, primary <code>.state-action</code>, the current tab). Specimen swatches on the stand are the only other place.</li><li><strong>No success color on results.</strong> Results are self-reported, and Onrace can't verify them, so there's no green and no "verified" mark anywhere on a result. The proof line stays neutral (attribute 4, d: proof stated, not stamped). <em>Build check:</em> <code>--success</code> and <code>--success-bg</code> appear on no product screen: the build allows them only on the stand's status specimen and its swatch. The saved confirmation on Results list is neutral (decided 2026-10-14: a green check next to a race name reads as a "verified" stamp). No result row contains a check icon or the word "verified".</li><li><strong>Two taste rules, made measurable</strong> (CIELAB, D65):<ul><li><strong>a. Depth of dark, not #000.</strong> Every background level (<code>--bg-bar</code>, <code>--bg-0</code>, <code>--bg-1</code>, <code>--bg-2</code>) has a lightness L* between 4.5 and 20 and a chroma C* of at most 6 (near-neutral, not tinted). Each level is at least 1.5 L* lighter than the one below it, so the levels read as depth. For reference, #000 is L* 0 and the guardrail <code>#0B0C0E</code> is L* 3.3; both fall outside the range. <em>Current:</em> L* 4.99 / 6.69 / 12.10 / 17.33, C* 2.0–3.9. <strong>Passes.</strong></li><li><strong>b. Amber, not HYROX yellow.</strong> HYROX yellow [~] is measured from <code>research/screens/</code>. There's no screenshot of HYROX's own site there, so the reference is the HYROX-ecosystem apps: RoxFit <code>#FFEC00</code> (5,786 pixels in <code>roxfit-how-it-works.png</code>) and RoxMatchUp <code>#F5E401</code> (2,770 pixels in <code>roxmatchup-home.png</code>). The accent must be at least as far from the nearer of the two as named orange is: hue distance ≥ 25° and ΔE2000 ≥ 24. CSS <code>orange</code> <code>#FFA500</code> sits at 24.6° and ΔE 24.0 from <code>#FFEC00</code>. <em>Current amber <code>#F5B649</code>:</em> 19.2° and ΔE 18.7 from RoxFit's yellow (19.6° and ΔE 17.9 from RoxMatchUp's). It fails the threshold.<ul><li><strong>Overridden by the designer, with reason (2026-10-14).</strong> The amber <code>#F5B649</code> stays, as a conscious choice. Three things keep it from reading as HYROX's look:<ul><li>the accent is scarce: 1–2 uses per screen (rule 1)</li><li>the ground is graphite, not black (rule 3a)</li><li>the format chips are neutral (Hierarchy rule 2)</li></ul></li><li>The designer compared it side by side with a halfway version <code>#FCB24D</code> and a warmer <code>#FFB05C</code> that just passes. The warmer one moves toward Strava orange.</li><li>The build still measures rule 3b and shows it on the stand as "accepted by designer". The override covers this exact hex only: any other accent is checked against the threshold again.</li></ul></li></ul></li></ol>
+</div></section>
+
+<section class="block" id="screens"><span class="section-tag tag-t">Steps 5–6</span><h2>The two screens</h2><div class="prose">
+<div class="phones">
+  <figure class="phone-fig">
+    <div class="phone"><iframe src="wireframes/race-browse.html" title="Race browse, live" loading="lazy"></iframe></div>
+    <figcaption><strong>Race browse</strong><br>Race cards with black-and-white photos, the date on a tile, neutral chips. Filters and the List / Map switch above; the Map is a static Natural Earth background.<br><span class="states">States: <a href="wireframes/race-browse.html">Base</a> · <a href="wireframes/race-browse.html?sport=hyrox&amp;sport=marathon">Filtered</a> · <a href="wireframes/race-browse-empty.html">Empty</a> · <a href="wireframes/race-browse-loading.html">Loading</a> · <a href="wireframes/race-browse-error.html">Error</a></span></figcaption>
+  </figure>
+  <figure class="phone-fig">
+    <div class="phone"><iframe src="wireframes/results-list.html" title="Results list, live" loading="lazy"></iframe></div>
+    <figcaption><strong>Results list</strong><br>The finish time is the loudest thing on each row; the proof line states the source. Log result is the one primary.<br><span class="states">States: <a href="wireframes/results-list.html">Base</a> · <a href="wireframes/results-list.html?saved=1">Saved</a> · <a href="wireframes/results-list-empty.html">Empty</a> · <a href="wireframes/results-list-loading.html">Loading</a> · <a href="wireframes/results-list-error.html">Error</a></span></figcaption>
+  </figure>
+</div>
+<p class="note">Live pages, scrollable inside the frames. They link the concept's <code>tokens.css</code> and <code>components.css</code> and keep the wireframes' text and structure. The other 8 screens stay grayscale until Lesson 7. All 35 pages: <a href="wireframes/">wireframes viewer</a>.</p>
+<h3>First screen: how many race cards fit</h3>
+<p><strong>Photo band: 3:1 (decided 2026-10-14).</strong> <code>--photo-ratio: 3 / 1</code> in <code>tokens.css</code>, which gave a 109px band at 390px wide and a 213px card on the stand.</p>
+<ul><li><em>Step 5, on the real screen</em> (<code>wireframes/race-browse.html</code>): the card is 215px (114px band). The page now sizes boxes including their padding, so the photo is 342px wide, and the date column is 68px to fit "May 2027".<ul><li><strong>Inside the wireframes viewer, which is the phone</strong> (a 757px page between the status bar and home strip): <strong>2 full cards with no filters, with 8.6px to spare</strong>, and <strong>1 full + 78%</strong> with two filters on.</li><li>Opened directly at 390×844: 2 full + 39%, or 2 full + 13% with two filters on.</li></ul></li><li><em>First screen at 390×844</em> (measured with <code>concept/first-screen.html</code>): <strong>2 full race cards</strong> with no filters (7 races); <strong>1 full + 79% of the next</strong> with two filters on (4 races).</li><li><em>Compared with 16:7:</em> a 143px band and a 247px card, giving 1 full + 77% with no filters and 1 full + 54% with two filters on.</li><li><em>Attribute b (a calendar, not a poster):</em> two full races on the first screen make the list read as a run of dates, not one poster per screen. The photo stays, as a band, not a hero.</li><li><em>Margin:</em> 3:1 fits two cards with 6px to spare. The tightest fit, a 114px band (2.86:1), had 0px.</li></ul>
+<h3>Results list details</h3>
+<ul><li><strong>Saved confirmation: neutral.</strong> "Saved: …" sits on a neutral surface (<code>--bg-1</code>) with a neutral "save" glyph in Text 2. No success color and no green check: next to a race name, a green check reads as a "verified" stamp (attribute 4, d). The text carries the meaning. Color rule 2's build check no longer allows success color anywhere on Results list.</li><li><strong>Finish times: proportional figures.</strong> They stay proportional, so digit widths vary slightly down the column. Schibsted Grotesk's tabular figures space the colons wide ("24 : 36"), which breaks the time as one number. Decided in round 2, kept by the designer.</li></ul>
+</div></section>
+
+<section class="block" id="check"><span class="section-tag tag-o">Step 7</span><h2>The check</h2><div class="prose"><p><code>concept.html</code>, Race browse (all states, filtered, Filters sheet, Map) and Results list (all states) checked against this file, plus <code>/impeccable audit</code>. Nine defects found, eight fixed (the ninth was a detector false positive: the <code>--</code> in token names counted as em-dashes):</p>
+<ol><li>Hanken 700 was faked by the browser (<code>&lt;strong&gt;</code>, <code>&lt;b&gt;</code>): <code>strong</code> and <code>b</code> now use <code>--weight-strong</code> (600).</li><li>The Filters sheet's date fields drew the browser's calendar glyph: now Solar calendar bold, from <code>--icon-calendar</code>.</li><li>The filter chip's remove mark was a text "×": now Solar close-circle bold, from <code>--icon-close</code>, drawn by CSS (the text stays, aria-hidden, until Lesson 7).</li><li>Hidden wireframe tab-bar SVGs: added to Deferred to Lesson 7 above.</li><li>69 tokens had no signed row on the stand: all signed now, and <code>build_stand.py</code> stops if a token in <code>tokens.css</code> or <code>map.css</code> has none.</li><li>No reduced-motion version: under <code>prefers-reduced-motion: reduce</code>, <code>--dur-fast</code> and <code>--dur-sheet</code> are 0ms.</li><li>Fonts came through a CSS <code>@import</code>: each page's <code>&lt;head&gt;</code> now preconnects and links the Google Fonts stylesheet.</li><li>The map masks loaded on every page: they live in <code>map.css</code>, linked only by the Race browse pages.</li></ol></div></section>
+
+<section class="block" id="open"><span class="section-tag tag-f">Open</span><h2>What's open</h2><div class="prose">
+<h3>Deferred to Lesson 7 (markup)</h3>
+<p>Recorded 2026-10-14, before step 6. Each item needs a change to markup or script, which steps 5–6 don't allow (only the race card photo was allowed). <strong>In step 7, these are reported as "deferred by designer", not as new defects.</strong></p>
+<div class="tbl-wrap"><table><thead><tr><th>Item</th><th>File</th><th>Reason it waits</th></tr></thead><tbody><tr><td>Heading levels skip h1 → h3 on Race browse: the race names are <code>&lt;h3&gt;</code> directly under the <code>&lt;h1&gt;</code> "Discover"</td><td><code>wireframes/race-browse.html</code></td><td>Fixing it means changing heading levels (<code>&lt;h2&gt;</code> for race names, or a visually hidden <code>&lt;h2&gt;</code>), which is structure</td></tr><tr><td>The Filters sheet doesn't move focus into itself when it opens, and doesn't close on Escape</td><td><code>wireframes/race-browse*.html</code> (the sheet's script: <code>openSheet()</code> / <code>closeSheet()</code>)</td><td>It's wireframe JavaScript, not styling</td></tr><tr><td>Short buttons need full accessible names: "Try again" → "Try loading races again", the nav-bar "Save" → "Save result", "Dismiss" → "Dismiss this message"</td><td>"Try again" on Race browse, Race detail, Race picker, Results list, Result detail and Profile (their <code>-error</code> pages); "Save" on <code>log-result.html</code>; "Dismiss" on Race detail and Result detail. Rule: <code>voice.md</code> → Microcopy → Button; tracked in <code>wireframes/_critique.md</code> #10</td><td>It's a markup pass (<code>aria-label</code> or visually hidden text), already planned as its own pass</td></tr><tr><td>Results list <code>-empty</code>: the header's "Log result" and the empty state's "Log your first result" do the same job. CSS keeps only one filled (the header action steps down to secondary), but two buttons remain</td><td><code>wireframes/results-list-empty.html</code></td><td>Removing or merging a button changes structure</td></tr><tr><td>The saved confirmation ("Saved: …") has <code>role="status"</code>, which screen readers may not announce when the element is already present at page load</td><td><code>wireframes/results-list.html</code> (<code>.saved-status</code>, shown by script from <code>?saved=</code>)</td><td>Fixing it means changing when the script fills or reveals the live region, which is script and markup</td></tr><tr><td>The map pins' old approximate <code>left</code>/<code>top</code> values are still inline in the markup; <code>components.css</code> overrides them with the real coordinates. Remove the inline values</td><td><code>wireframes/race-browse.html</code> (each <code>.map-pin</code>)</td><td>Removing an attribute is a markup change</td></tr><tr><td>The old hand-drawn wireframe tab-bar <code>&lt;svg&gt;</code>s are still in the markup (3 per page, hidden by <code>components.css</code>; the tab icons are Solar masks). Remove them. Added in step 7 (defect #4)</td><td><code>wireframes/race-browse*.html</code>, <code>wireframes/results-list*.html</code> (<code>.bottom-nav .tab-icon</code>)</td><td>Deleting elements is a markup change</td></tr><tr><td>The race card's date splits into day and month only because CSS wraps the text (<code>time::first-line</code> in a 68px column). Long month names, other languages, text zoom or a font swap can break it; a separate day element is sturdier</td><td><code>wireframes/race-browse.html</code> (each <code>&lt;time&gt;</code> in a card); <code>concept/components.css</code> (<code>.race-card time</code>)</td><td>A separate day element is a markup change</td></tr></tbody></table></div>
+<h3>Structural techniques waiting for Lesson 7</h3>
+<p>Lesson 6 steps 5–6 forbid changing screen text and structure, so these wait.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Technique</th><th>From</th><th>Why it's structural</th><th>Onrace screen</th></tr></thead><tbody><tr><td><strong>The full date tile:</strong> the month on its own colored band, plus a weekday line.</td><td>Strava, cb844353</td><td>It splits the single <code>&lt;time&gt;</code> into month and day elements, and adds weekday text that isn't in the markup.</td><td>Race browse cards</td></tr><tr><td><strong>A gray label above the finish time</strong> ("Finish time").</td><td>Strava, 125cbc4d</td><td>Adds a label element (and text) the Results list row doesn't have.</td><td>Results list rows</td></tr><tr><td><strong>A dark card head</strong> holding the format chip and title, over a light body with the date and location.</td><td>fitnessracingcalendar, <code>../research/screens/fitnessracingcalendar-home.png</code></td><td>It regroups the card: in <code>race-browse.html</code> the sport tag sits in <code>.card-meta</code> beside the date, not with the title.</td><td>Race browse cards</td></tr></tbody></table></div>
+<h3>The Map upgrade</h3>
+<p><strong>Map: static Natural Earth background (designer decision); the interactive Map upgrade stays deferred.</strong></p>
+<ul><li><strong>Background:</strong> Natural Earth 1:110m land and country borders (public domain), Mercator, cropped to North America and Europe, centred on 43°N. <code>scripts/concept/build_map.py</code> turns them into two shape masks in <code>map.css</code> (moved out of <code>tokens.css</code> in step 7, so only the Race browse pages download them). The colors are tokens only: water <code>--bg-bar</code>, land <code>--bg-1</code>, coastlines and borders <code>--bg-3</code>, no accent (Color rule 1). It's a CSS layer, with no markup change and no network request.</li><li><strong>Pins:</strong> each dot sits on its race's real latitude and longitude. Where labels would collide (London, Chamonix, Berlin; Boston, Killington), the label moves above or below on a leader line and the dot stays put. Pins are neutral.</li><li><strong>Still deferred:</strong> clusters, floating controls, real tiles, pan and zoom.</li><li><strong>Caption text: a designer-approved exception (2026-10-14).</strong> After the static map put each pin on its real coordinates, the old caption "[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]" became untrue. Only the untrue part changed; the new caption is "[ static map — pan/zoom changes what's visible, not which races match ]" (<code>wireframes/race-browse.html</code>; <code>microcopy.md</code> row 114).</li></ul>
+</div></section>
+
+</main>
+<footer>Generated by <code>scripts/build_concept_overview.py</code> from <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md">concept/concept.md</a> and <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/references.md">concept/references.md</a>. Counts are read from <code>tokens.css</code>, <code>map.css</code> and <code>build_stand.py</code>.</footer>
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+  var byId = {};
+  links.forEach(function(l){ byId[l.getAttribute('href').slice(1)] = l; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section.block[id]'));
+  if(!('IntersectionObserver' in window) || !sections.length) return;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ links.forEach(function(l){ l.classList.remove('active'); }); var l = byId[e.target.id]; if(l) l.classList.add('active'); }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px'});
+  sections.forEach(function(s){ io.observe(s); });
+})();
+</script>
+</body>
+</html>
