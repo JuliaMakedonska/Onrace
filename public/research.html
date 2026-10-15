@@ -227,6 +227,8 @@
 
 
 
+
+
   /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
   .lessonbar{border-bottom:1px solid var(--border)}
   .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
@@ -234,11 +236,12 @@
   .lessonbar a{flex:none; color:var(--text-faint); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:.04em; padding:8px 10px; border-bottom:2px solid transparent; white-space:nowrap}
   .lessonbar a:hover{color:var(--text)}
   .lessonbar a[aria-current="page"]{color:var(--text); border-bottom-color:var(--accent)}
+  .in-shell .lessonbar{display:none}
 </style>
 </head>
 <body>
 
-<!-- lessons:start --><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html" aria-current="page">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html">06 · Concept</a></div></div><!-- lessons:end -->
+<!-- lessons:start --><script>if (window.top !== window.self) document.documentElement.classList.add("in-shell");</script><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html" aria-current="page">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html">06 · Concept</a></div></div><!-- lessons:end -->
 <nav>
   <div class="nav-inner">
     <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Research</a>

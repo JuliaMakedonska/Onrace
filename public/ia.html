@@ -195,7 +195,8 @@
   .persona-line{font-size:13px; color:var(--text-faint); margin:6px 0 0}
 
   .flow-detail{display:grid; grid-template-columns:1.05fr 1fr; gap:28px; margin-top:22px}
-  @media (max-width:820px){.flow-detail{grid-template-columns:1fr}}
+  @media (max-width:820px){.flow-detail{grid-template-columns:minmax(0,1fr)}}
+  .flow-col{min-width:0; overflow-wrap:anywhere}
   .flow-col ul{margin:0 0 20px; padding-left:18px; font-size:13.5px; color:var(--text-dim)}
   .flow-col li{margin-bottom:7px}
   .flow-col li .fl{color:var(--text-faint); font-size:11px; text-transform:uppercase; letter-spacing:.03em; margin-right:5px}
@@ -242,6 +243,8 @@
 
 
 
+
+
   /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
   .lessonbar{border-bottom:1px solid var(--border)}
   .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
@@ -249,11 +252,12 @@
   .lessonbar a{flex:none; color:var(--text-faint); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:.04em; padding:8px 10px; border-bottom:2px solid transparent; white-space:nowrap}
   .lessonbar a:hover{color:var(--text)}
   .lessonbar a[aria-current="page"]{color:var(--text); border-bottom-color:var(--accent)}
+  .in-shell .lessonbar{display:none}
 </style>
 </head>
 <body>
 
-<!-- lessons:start --><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html" aria-current="page">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html">06 · Concept</a></div></div><!-- lessons:end -->
+<!-- lessons:start --><script>if (window.top !== window.self) document.documentElement.classList.add("in-shell");</script><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html" aria-current="page">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html">06 · Concept</a></div></div><!-- lessons:end -->
 <nav>
   <div class="nav-inner">
     <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · IA</a>

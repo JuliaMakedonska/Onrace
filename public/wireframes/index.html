@@ -6,7 +6,7 @@
 <title>Onrace — Wireframes</title>
 <style>
   /* Same dark palette as ../public/research.html, ../public/personas.html,
-     ../public/ia.html, ../public/workspace.html — this page is the site's
+     ../public/ia.html, ../public/start.html — this page is the site's
      shell/chrome, so it matches their visual language. The wireframe content
      shown inside the device mockup stays grayscale (per _conventions.md) —
      only this shell (background, device frame, nav) is dark-themed. */
@@ -35,18 +35,14 @@
   }
   a { color: var(--accent); }
 
-  /* --- layout: left nav column + right content column. Grid, not flex, so
-     the nav and the device mockup are two guaranteed-separate regions at
-     any window width. --- */
+  /* --- layout: the tree rail + the content. Grid, so the tree and the phone
+     are always two separate regions. On a phone the tree folds under a
+     "Screens" button above the content. --- */
   .layout {
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 248px minmax(0, 1fr);
     min-height: 100vh;
   }
-
-  /* --- left: tree nav, same structural pattern as public/workspace.html's
-     .sidebar (brand + grouped links), extended into a nested tree
-     (group → screen → state). --- */
   .sidebar {
     position: sticky;
     top: 0;
@@ -56,69 +52,195 @@
     border-right: 1px solid var(--border);
     padding: 20px 0;
   }
+  .sidebar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 16px 16px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
   .sidebar-brand {
-    display: block;
-    padding: 0 20px 18px;
     font-weight: 800;
     letter-spacing: 0.02em;
     text-transform: uppercase;
     font-size: 14px;
     color: var(--text);
-    text-decoration: none;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
   }
   .sidebar-brand span { color: var(--accent); }
+  .tree-toggle {
+    display: none;
+    min-height: 36px;
+    padding: 0 12px;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
 
-  .tree, .tree ul { list-style: none; margin: 0; padding: 0; }
-  .tree { padding: 0 12px; }
-  .tree > li { margin-bottom: 20px; }
-  .tree ul { padding-left: 14px; margin-top: 4px; }
-  .tree-group {
-    display: block;
-    padding: 0 8px 6px;
-    margin-bottom: 6px;
+  /* --- tree: flow folders → screens → states (data: SCREENS, generated
+     from _screens.md by scripts/build_wireframes_viewer.py) --- */
+  .tree { padding: 0 10px; }
+  .tree ul { list-style: none; margin: 0; padding: 0; }
+  .tree details { margin-bottom: 10px; }
+  .tree summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 6px;
     font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-faint);
-    border-bottom: 1px solid var(--border);
   }
-  .tree a {
-    display: block;
+  .tree summary::-webkit-details-marker { display: none; }
+  .tree summary::before { content: "▸"; font-size: 10px; width: 10px; }
+  .tree details[open] > summary::before { content: "▾"; }
+  .tree summary:hover { color: var(--text-dim); }
+  .tree a { text-decoration: none; }
+  .tree-screen {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 6px 8px;
     border-radius: 6px;
-    text-decoration: none;
     color: var(--text-dim);
     font-size: 13.5px;
     font-weight: 600;
   }
+  .tree-screen.is-current { color: var(--text); }
   .tree a:hover { background: var(--bg-elev-2); color: var(--text); }
-  .tree a[aria-current="page"] { background: var(--accent-dim); color: var(--accent); }
-  .tree-state { font-weight: 400; font-size: 12.5px; }
-
-  /* --- right: content column — the device mockup, with the current
-     screen's zone notes beside it --- */
-  .content-col {
-    padding: 32px 32px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 40px;
-    min-height: 100vh;
+  .tree-states { margin: 2px 0 6px 16px !important; border-left: 1px solid var(--border); }
+  .tree-state {
+    display: block;
+    padding: 4px 10px;
+    border-radius: 0 6px 6px 0;
+    color: var(--text-dim);
+    font-size: 12.5px;
   }
-  .device-col { display: flex; flex-direction: column; gap: 18px; }
-  /* heading wraps to the device's width instead of widening the column */
-  .content-heading { width: 0; min-width: 100%; }
-  .content-heading h1 {
-    font-size: 20px;
-    margin: 0 0 4px;
+  .tree-state[aria-current="page"] { background: var(--accent-dim); color: var(--accent); }
+  .badge {
+    flex: none;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .tree a:focus-visible, .pill:focus-visible, .tree summary:focus-visible, .tree-toggle:focus-visible, .open-page:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  /* --- content: the phone on the left; the screen header and the zone
+     notes on the right. One column when there isn't room for both. --- */
+  .content-col {
+    display: grid;
+    grid-template-columns: auto minmax(280px, 400px);
+    grid-template-areas: "device head" "device notes";
+    grid-template-rows: auto 1fr;
+    justify-content: center;
+    align-items: start;
+    gap: 22px 40px;
+    padding: 28px 32px;
+    min-width: 0;
+  }
+  .screen-head { grid-area: head; min-width: 0; }
+  .device-col { grid-area: device; min-width: 0; }
+  .zone-notes { grid-area: notes; min-width: 0; }
+  .screen-kicker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+  }
+  .screen-head h1 {
+    margin: 0;
+    font-size: 22px;
     font-weight: 800;
     letter-spacing: -0.01em;
+    line-height: 1.25;
   }
-  .content-heading p { color: var(--text-dim); font-size: 13px; margin: 0; }
+  .screen-state { color: var(--text-dim); font-weight: 600; }
+  .screen-meta { margin: 14px 0 16px; display: grid; gap: 10px; }
+  .screen-meta div { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; }
+  .screen-meta dt {
+    padding-top: 2px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+  }
+  .screen-meta dd { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-dim); overflow-wrap: anywhere; }
+  .screen-meta dd strong { color: var(--text); }
+  .quote { display: block; margin-top: 4px; color: var(--text-faint); }
+  .unknown { color: #e6a23c; font-weight: 700; }
+  .screen-meta code, .state-note code {
+    padding: 0.05em 0.35em;
+    border-radius: 4px;
+    background: var(--bg-elev-2);
+    color: #d7dadf;
+    font-size: 0.9em;
+  }
+  .state-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
+  .pill {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .pill:hover { color: var(--text); border-color: var(--text-faint); }
+  .pill[aria-current="page"] { background: var(--accent-dim); border-color: transparent; color: var(--accent); }
+  .state-note { margin: 0 0 10px; font-size: 13px; line-height: 1.5; color: var(--text-dim); }
+  .open-page { font-size: 13px; font-weight: 700; color: var(--text-dim); }
+  .open-page:hover { color: var(--text); }
+
+  @media (max-width: 1100px) {
+    .content-col {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "head" "device" "notes";
+      grid-template-rows: auto;
+      justify-items: center;
+    }
+    .screen-head, .zone-notes { width: 100%; max-width: 560px; }
+  }
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .sidebar {
+      position: static;
+      height: auto;
+      padding: 12px 0 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-head { margin-bottom: 0; padding: 0 16px 12px; border-bottom: 0; }
+    .tree-toggle { display: inline-flex; align-items: center; }
+    .tree { display: none; padding: 0 10px 12px; }
+    .tree.is-open { display: block; }
+    .content-col { padding: 20px 16px 32px; }
+  }
 
   /* --- device mockup: iPhone 12/13/14 logical viewport (390×844 pt) —
      exactly the wireframes' own 390px width, so nothing is letterboxed.
@@ -214,10 +336,7 @@
   /* --- zone notes: what each zone of the current screen shows and why,
      condensed from the <!-- ZONE: ... --> comments in its file. Outside the
      frame, never inside the wireframe. --- */
-  .zone-notes {
-    width: 300px;
-    padding-top: 110px;   /* roughly level with the top of the screen content */
-  }
+  .zone-notes { padding-top: 6px; }
   .zone-notes-label {
     margin: 0 0 18px;
     padding-bottom: 8px;
@@ -246,118 +365,38 @@
 
 <div class="layout">
 
-  <!-- Tree nav: pulled from sitemap.md's Screens-section clusters (Discovery;
-       My Results/Archive) plus the ungrouped [INFRASTRUCTURE] screens,
-       Sign in/Sign up, Reset password, New password and Profile, exactly where sitemap.md's own tree places
-       them. State children come from _screens.md's state tables (Pass 1 and
-       Pass 2): only ✓ states get a node, and a Success child points at the
-       base file, since there's never a separate -success.html
-       (_conventions.md § 4–5). So: Race browse and Results list get
-       Empty/Error/Loading; Race detail and Result detail get
-       Error/Loading/Success; Log result gets Error/Loading (its blank form
-       is the base page); Race picker gets Empty/Error/Loading; Sign in/Sign
-       up and Reset password get Error/Loading plus Check inbox (the named
-       flow-step state, _conventions.md § 4); New password and Profile get
-       Error/Loading (flows.md Flows 6 and 5). -->
+  <!-- Tree: flow folders (Discovery, Archive, Infrastructure) → screens →
+       states, drawn by the script from SCREENS, which
+       scripts/build_wireframes_viewer.py generates from _screens.md (states
+       = the files that exist). A "main" badge marks the screens sitemap.md's
+       traceability matrix ticks for Main Job 1 or 2. Each state has its own
+       link: index.html#race-browse-empty. -->
   <aside class="sidebar">
-    <span class="sidebar-brand">ON<span>RACE</span> · Wireframes</span>
-    <ul class="tree">
-      <li>
-        <span class="tree-group">Discovery</span>
-        <ul>
-          <li>
-            <a href="race-browse.html" data-frame="race-browse.html" aria-current="page">Race browse</a>
-            <ul>
-              <li><a href="race-browse-empty.html" data-frame="race-browse-empty.html" class="tree-state">Empty</a></li>
-              <li><a href="race-browse-error.html" data-frame="race-browse-error.html" class="tree-state">Error</a></li>
-              <li><a href="race-browse-loading.html" data-frame="race-browse-loading.html" class="tree-state">Loading</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="race-detail.html" data-frame="race-detail.html">Race detail</a>
-            <ul>
-              <li><a href="race-detail-error.html" data-frame="race-detail-error.html" class="tree-state">Error</a></li>
-              <li><a href="race-detail-loading.html" data-frame="race-detail-loading.html" class="tree-state">Loading</a></li>
-              <li><a href="race-detail.html" data-frame="race-detail.html" class="tree-state">Success</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <span class="tree-group">My Results (Archive)</span>
-        <ul>
-          <li>
-            <a href="results-list.html" data-frame="results-list.html">Results list</a>
-            <ul>
-              <li><a href="results-list-empty.html" data-frame="results-list-empty.html" class="tree-state">Empty</a></li>
-              <li><a href="results-list-error.html" data-frame="results-list-error.html" class="tree-state">Error</a></li>
-              <li><a href="results-list-loading.html" data-frame="results-list-loading.html" class="tree-state">Loading</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="log-result.html" data-frame="log-result.html">Log result</a>
-            <ul>
-              <li><a href="log-result-error.html" data-frame="log-result-error.html" class="tree-state">Error</a></li>
-              <li><a href="log-result-loading.html" data-frame="log-result-loading.html" class="tree-state">Loading</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="race-picker.html" data-frame="race-picker.html">Race picker</a>
-            <ul>
-              <li><a href="race-picker-empty.html" data-frame="race-picker-empty.html" class="tree-state">Empty</a></li>
-              <li><a href="race-picker-error.html" data-frame="race-picker-error.html" class="tree-state">Error</a></li>
-              <li><a href="race-picker-loading.html" data-frame="race-picker-loading.html" class="tree-state">Loading</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="result-detail.html" data-frame="result-detail.html">Result detail</a>
-            <ul>
-              <li><a href="result-detail-error.html" data-frame="result-detail-error.html" class="tree-state">Error</a></li>
-              <li><a href="result-detail-loading.html" data-frame="result-detail-loading.html" class="tree-state">Loading</a></li>
-              <li><a href="result-detail.html" data-frame="result-detail.html" class="tree-state">Success</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a href="sign-in-sign-up.html" data-frame="sign-in-sign-up.html">Sign in / Sign up</a>
-        <ul>
-          <li><a href="sign-in-sign-up-error.html" data-frame="sign-in-sign-up-error.html" class="tree-state">Error</a></li>
-          <li><a href="sign-in-sign-up-loading.html" data-frame="sign-in-sign-up-loading.html" class="tree-state">Loading</a></li>
-          <li><a href="sign-in-sign-up-check-inbox.html" data-frame="sign-in-sign-up-check-inbox.html" class="tree-state">Check inbox</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="reset-password.html" data-frame="reset-password.html">Reset password</a>
-        <ul>
-          <li><a href="reset-password-error.html" data-frame="reset-password-error.html" class="tree-state">Error</a></li>
-          <li><a href="reset-password-loading.html" data-frame="reset-password-loading.html" class="tree-state">Loading</a></li>
-          <li><a href="reset-password-check-inbox.html" data-frame="reset-password-check-inbox.html" class="tree-state">Check inbox</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="new-password.html" data-frame="new-password.html">New password</a>
-        <ul>
-          <li><a href="new-password-error.html" data-frame="new-password-error.html" class="tree-state">Error</a></li>
-          <li><a href="new-password-loading.html" data-frame="new-password-loading.html" class="tree-state">Loading</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="profile.html" data-frame="profile.html">Profile</a>
-        <ul>
-          <li><a href="profile-error.html" data-frame="profile-error.html" class="tree-state">Error</a></li>
-          <li><a href="profile-loading.html" data-frame="profile-loading.html" class="tree-state">Loading</a></li>
-        </ul>
-      </li>
-    </ul>
+    <div class="sidebar-head">
+      <span class="sidebar-brand">ON<span>RACE</span> · Wireframes</span>
+      <button type="button" class="tree-toggle" id="tree-toggle" aria-controls="tree" aria-expanded="false">Screens</button>
+    </div>
+    <nav class="tree" id="tree" aria-label="Screens and states"></nav>
   </aside>
 
   <div class="content-col">
+    <!-- Screen header: Persona / Job / Flow quoted from _screens.md and
+         research/jtbd.md ([?] where they say nothing), the state pills, and
+         the page itself. -->
+    <header class="screen-head">
+      <p class="screen-kicker"><span id="screen-folder">Discovery</span><span class="badge" id="screen-badge">main</span></p>
+      <h1><span id="screen-title">Race browse</span> <span class="screen-state" id="screen-state">· Base</span></h1>
+      <dl class="screen-meta">
+        <div><dt>Persona</dt><dd id="meta-persona"></dd></div>
+        <div><dt>Job</dt><dd id="meta-job"></dd></div>
+        <div><dt>Flow</dt><dd id="meta-flow"></dd></div>
+      </dl>
+      <ul class="state-pills" id="state-pills" aria-label="States"></ul>
+      <p class="state-note" id="screen-job"></p>
+      <a class="open-page" id="open-page" href="race-browse.html" target="_blank" rel="noopener">Open as a page ↗</a>
+    </header>
+
     <div class="device-col">
-      <div class="content-heading">
-        <h1 id="screen-title">Race browse</h1>
-        <p id="screen-job">Main Job 1 — Discovery (research/jtbd.md). Base/default state.</p>
-      </div>
       <div class="device-slot" id="device-slot">
         <div class="device" id="device">
           <svg class="device-body" id="device-body" aria-hidden="true">
@@ -390,7 +429,7 @@
                 </svg>
               </span>
             </div>
-            <iframe id="screen-frame" src="race-browse.html" title="Onrace wireframe preview"></iframe>
+            <iframe id="screen-frame" src="about:blank" title="Onrace wireframe preview"></iframe>
             <div class="home-indicator" id="home-indicator" aria-hidden="true"></div>
           </div>
         </div>
@@ -412,10 +451,279 @@
 <script>
 (function () {
   var frame = document.getElementById('screen-frame');
-  var title = document.getElementById('screen-title');
   var job = document.getElementById('screen-job');
   var zoneList = document.getElementById('zone-list');
-  var links = Array.prototype.slice.call(document.querySelectorAll('.tree a[data-frame]'));
+
+  /* ---------- screens and states: the tree and the screen header ---------- */
+  /* screens:start (generated by scripts/build_wireframes_viewer.py; do not edit by hand) */
+  var SCREENS = [
+   {
+    "flow": "Discovery",
+    "screens": [
+     {
+      "slug": "race-browse",
+      "name": "Race browse",
+      "main": true,
+      "states": [
+       [
+        "race-browse",
+        "Base"
+       ],
+       [
+        "race-browse-empty",
+        "Empty"
+       ],
+       [
+        "race-browse-error",
+        "Error"
+       ],
+       [
+        "race-browse-loading",
+        "Loading"
+       ]
+      ],
+      "job": "Main Job 1 — Discovery.",
+      "jobQuote": "<strong>When</strong> I'm looking for hybrid races to enter, <strong>I want to</strong> see the full range of options — across countries, formats, and dates — instead of checking each source separately, <strong>so that</strong> I can compare them in one place. <strong>[?]</strong>",
+      "persona": "Primary — The HYROX-First Hybrid Athlete (+ Secondary — The Multi-Region Season Planner)",
+      "flow": "<code>../flows.md</code> → \"Main Job 1 — Discovery\": the entry node. <code>App opens → Race browse</code> at 0 taps — per <code>../sitemap.md</code> → Navigation § 2, it's the default/home tab, \"the one clean job gets the one screen that costs nothing to reach."
+     },
+     {
+      "slug": "race-detail",
+      "name": "Race detail",
+      "main": true,
+      "states": [
+       [
+        "race-detail",
+        "Base"
+       ],
+       [
+        "race-detail-error",
+        "Error"
+       ],
+       [
+        "race-detail-loading",
+        "Loading"
+       ]
+      ],
+      "job": "Main Job 1 — Discovery.",
+      "jobQuote": "<strong>When</strong> I'm looking for hybrid races to enter, <strong>I want to</strong> see the full range of options — across countries, formats, and dates — instead of checking each source separately, <strong>so that</strong> I can compare them in one place. <strong>[?]</strong>",
+      "persona": "Primary — The HYROX-First Hybrid Athlete (+ Secondary — The Multi-Region Season Planner)",
+      "flow": "<code>../flows.md</code> → \"Main Job 1 — Discovery\": reached from Race browse by \"taps a race card or pin,\" 1 tap deep (<code>../sitemap.md</code> → Navigation § 2: \"Total: 1 tap\")."
+     }
+    ]
+   },
+   {
+    "flow": "Archive",
+    "screens": [
+     {
+      "slug": "results-list",
+      "name": "Results list",
+      "main": true,
+      "states": [
+       [
+        "results-list",
+        "Base"
+       ],
+       [
+        "results-list-empty",
+        "Empty"
+       ],
+       [
+        "results-list-error",
+        "Error"
+       ],
+       [
+        "results-list-loading",
+        "Loading"
+       ]
+      ],
+      "job": "Related Job 4, retrieve proof (\"pull that proof up quickly\").",
+      "jobQuote": "<strong>When</strong> an elite race asks me to prove a past result, <strong>I want to</strong> pull that proof up quickly, <strong>so that</strong> I can apply without scrambling to find it.",
+      "persona": "Secondary — The Qualifying-Time Archivist",
+      "flow": "the My Results tab, gated by \"Signed in?\", then <code>Loading: fetching logged results</code> → \"Any results logged yet?\"."
+     },
+     {
+      "slug": "log-result",
+      "name": "Log result",
+      "main": false,
+      "states": [
+       [
+        "log-result",
+        "Base"
+       ],
+       [
+        "log-result-error",
+        "Error"
+       ],
+       [
+        "log-result-loading",
+        "Loading"
+       ]
+      ],
+      "job": "Related Job 3, log a result with source proof.",
+      "jobQuote": "<strong>When</strong> I finish a race, <strong>I want to</strong> log the result along with where it came from, <strong>so that</strong> I have proof ready without having to redo the work later.",
+      "persona": "Secondary — The Qualifying-Time Archivist (+ Primary, weak/general — see matrix)",
+      "flow": "opened from Results list's <strong>Log result</strong> action. The form's checks run in order: <code>official_result_url filled in?</code>, then <code>race_name/date/sport_type/finish_time all filled in?</code> <code>[?]</code>, then <code>Loading: saving result</code>, then <code>Submission succeeded?</code>."
+     },
+     {
+      "slug": "race-picker",
+      "name": "Race picker",
+      "main": false,
+      "states": [
+       [
+        "race-picker",
+        "Base"
+       ],
+       [
+        "race-picker-empty",
+        "Empty"
+       ],
+       [
+        "race-picker-error",
+        "Error"
+       ],
+       [
+        "race-picker-loading",
+        "Loading"
+       ]
+      ],
+      "job": "Related Job 3, log a result with source proof.",
+      "jobQuote": "<strong>When</strong> I finish a race, <strong>I want to</strong> log the result along with where it came from, <strong>so that</strong> I have proof ready without having to redo the work later.",
+      "persona": "Secondary — The Qualifying-Time Archivist (+ Primary, weak/general — see matrix)",
+      "flow": "<code>../flows.md</code> → Flow 2, catalog branch: Log result → <strong>Find in race catalog</strong> → <code>Loading: fetching past catalog races</code> → Race picker."
+     },
+     {
+      "slug": "result-detail",
+      "name": "Result detail",
+      "main": false,
+      "states": [
+       [
+        "result-detail",
+        "Base"
+       ],
+       [
+        "result-detail-error",
+        "Error"
+       ],
+       [
+        "result-detail-loading",
+        "Loading"
+       ]
+      ],
+      "job": "Related Job 4, \"pull that proof up quickly\".",
+      "jobQuote": "<strong>When</strong> an elite race asks me to prove a past result, <strong>I want to</strong> pull that proof up quickly, <strong>so that</strong> I can apply without scrambling to find it.",
+      "persona": "Secondary — The Qualifying-Time Archivist",
+      "flow": "Results list, \"taps a logged entry\" → <code>DetailLoading2</code> → Result detail → \"Source link still opens?\"."
+     }
+    ]
+   },
+   {
+    "flow": "Infrastructure",
+    "screens": [
+     {
+      "slug": "sign-in-sign-up",
+      "name": "Sign in / Sign up",
+      "main": false,
+      "states": [
+       [
+        "sign-in-sign-up",
+        "Base"
+       ],
+       [
+        "sign-in-sign-up-error",
+        "Error"
+       ],
+       [
+        "sign-in-sign-up-loading",
+        "Loading"
+       ],
+       [
+        "sign-in-sign-up-check-inbox",
+        "Check inbox"
+       ]
+      ],
+      "job": "none. It exists because accounts do (<code>../sitemap.md</code> → Entities → 5). It's the gate on the My Results and Profile tabs.",
+      "jobQuote": "",
+      "persona": "<span class=\"unknown\">[?]</span> No job, so <code>research/jtbd.md</code> names no persona.",
+      "flow": "\"Signed in?\" → \"no\" → Sign in / Sign up. Then \"submits credentials\" → <code>Loading: signing in</code> → \"Sign-in succeeded?\"."
+     },
+     {
+      "slug": "reset-password",
+      "name": "Reset password",
+      "main": false,
+      "states": [
+       [
+        "reset-password",
+        "Base"
+       ],
+       [
+        "reset-password-error",
+        "Error"
+       ],
+       [
+        "reset-password-loading",
+        "Loading"
+       ],
+       [
+        "reset-password-check-inbox",
+        "Check inbox"
+       ]
+      ],
+      "job": "none. It exists because email + password sign-in does: a forgotten password needs a way back in (<code>../sitemap.md</code> → Entities → 5).",
+      "jobQuote": "",
+      "persona": "<span class=\"unknown\">[?]</span> No job, so <code>research/jtbd.md</code> names no persona.",
+      "flow": "<code>../flows.md</code> → Flow 6: Sign in / Sign up → <strong>Forgot password?</strong> → Reset password → \"submits email\" → <code>Loading: sending reset link</code> → \"Request accepted?\" → Check inbox."
+     },
+     {
+      "slug": "new-password",
+      "name": "New password",
+      "main": false,
+      "states": [
+       [
+        "new-password",
+        "Base"
+       ],
+       [
+        "new-password-error",
+        "Error"
+       ],
+       [
+        "new-password-loading",
+        "Loading"
+       ]
+      ],
+      "job": "none (same reason as Reset password).",
+      "jobQuote": "",
+      "persona": "<span class=\"unknown\">[?]</span> No job, so <code>research/jtbd.md</code> names no persona.",
+      "flow": "<code>../flows.md</code> → Flow 6: opening the emailed reset link → \"Reset link valid?\" → New password (a recovery session exists) → \"taps Save\" → client checks → <code>Loading: saving new password</code> → \"Password updated?\"."
+     },
+     {
+      "slug": "profile",
+      "name": "Profile",
+      "main": false,
+      "states": [
+       [
+        "profile",
+        "Base"
+       ],
+       [
+        "profile-error",
+        "Error"
+       ],
+       [
+        "profile-loading",
+        "Loading"
+       ]
+      ],
+      "job": "none (<code>../sitemap.md</code> → Entities → 5, and its reversal note). It shows whose account this is and lets the person leave it.",
+      "jobQuote": "",
+      "persona": "<span class=\"unknown\">[?]</span> No job, so <code>research/jtbd.md</code> names no persona.",
+      "flow": "<code>../flows.md</code> → Flow 5, added 2026-09-25: the Profile tab → \"Signed in?\" → <code>Loading: fetching profile</code> → Profile."
+     }
+    ]
+   }
+  ];
+  /* screens:end */
 
   /* ---------- zone notes, per file (see the comment above .zone-notes) ---------- */
   var BROWSE_JOB = 'Main Job 1 — Discovery (research/jtbd.md).';
@@ -726,51 +1034,118 @@
     }
   }
 
-  frame.addEventListener('load', function () {
-    matchEdges();
-    var key;
-    try {
-      var loc = frame.contentWindow.location;
-      key = loc.pathname.split('/').pop();
-      // A file holding several causes (_conventions.md § 5) keys its
-      // non-default causes as "file?cause=<name>".
-      var cause = /[?&]cause=([a-z]+)/.exec(loc.search);
-      if (cause && NOTES[key + '?cause=' + cause[1]]) key += '?cause=' + cause[1];
-    } catch (e) {
-      key = frame.getAttribute('src');
-    }
-    renderNotes(key);
-    var shown = linkFor(key.split('?')[0]);
-    if (shown && shown.getAttribute('aria-current') !== 'page') markCurrent(shown);
-  });
-
-  // Heading and tree highlight name the screen *and* state ("Profile —
-  // Error"), and follow whatever the frame shows, including navigation from
-  // inside the wireframe.
-  function screenName(link) {
-    if (!link.classList.contains('tree-state')) return link.textContent;
-    var screen = link.closest('ul').parentElement.querySelector(':scope > a');
-    return screen.textContent + ' — ' + link.textContent;
-  }
-  function markCurrent(link) {
-    links.forEach(function (l) { l.removeAttribute('aria-current'); });
-    link.setAttribute('aria-current', 'page');
-    title.textContent = screenName(link);
-  }
-  function linkFor(file) {
-    // a base file is listed twice for screens with a Success state: prefer
-    // the screen node itself
-    var matches = links.filter(function (l) { return l.getAttribute('data-frame') === file; });
-    return matches.filter(function (l) { return !l.classList.contains('tree-state'); })[0] || matches[0];
-  }
-  links.forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      frame.src = link.getAttribute('data-frame');
-      markCurrent(link);
-      renderNotes(link.getAttribute('data-frame'));
+  /* ---------- routing: each state has its own link ----------
+     index.html#race-browse-empty shows that file; #log-result-error?cause=link
+     keeps the query. Navigation inside the frame (card → detail, retry →
+     loading, …) rewrites the hash too, so the link always names what's shown.
+     The workspace shell listens for "onrace:route" to mirror it. */
+  var STATES = {};
+  SCREENS.forEach(function (f) {
+    f.screens.forEach(function (s) {
+      s.states.forEach(function (st) { STATES[st[0]] = { screen: s, label: st[1], folder: f.flow }; });
     });
   });
+  var DEFAULT_KEY = SCREENS[0].screens[0].states[0][0];
+  var tree = document.getElementById('tree');
+  var treeToggle = document.getElementById('tree-toggle');
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+  SCREENS.forEach(function (f) {
+    var d = el('details'); d.open = true;
+    d.appendChild(el('summary', '', f.flow));
+    var ul = el('ul');
+    f.screens.forEach(function (s) {
+      var li = el('li');
+      var a = el('a', 'tree-screen'); a.href = '#' + s.states[0][0]; a.setAttribute('data-screen', s.slug);
+      a.appendChild(el('span', '', s.name));
+      if (s.main) a.appendChild(el('span', 'badge', 'main'));
+      li.appendChild(a);
+      var sub = el('ul', 'tree-states'); sub.hidden = true; sub.setAttribute('data-screen', s.slug);
+      s.states.forEach(function (st) {
+        var item = el('li'), link = el('a', 'tree-state', st[1]);
+        link.href = '#' + st[0]; link.setAttribute('data-key', st[0]);
+        item.appendChild(link); sub.appendChild(item);
+      });
+      li.appendChild(sub); ul.appendChild(li);
+    });
+    d.appendChild(ul); tree.appendChild(d);
+  });
+
+  function hashKey() {
+    var h = location.hash.replace(/^#/, '');
+    try { h = decodeURIComponent(h); } catch (e) {}
+    return STATES[h.split('?')[0]] ? h : DEFAULT_KEY;
+  }
+  function frameKey() {
+    try {
+      var loc = frame.contentWindow.location;
+      return loc.pathname.split('/').pop().replace(/\.html$/, '') + loc.search;
+    } catch (e) { return null; }
+  }
+  function notesKey(key) {
+    var base = key.split('?')[0] + '.html';
+    var cause = /[?&]cause=([a-z]+)/.exec(key);
+    return cause && NOTES[base + '?cause=' + cause[1]] ? base + '?cause=' + cause[1] : base;
+  }
+  function paint(key) {
+    var st = STATES[key.split('?')[0]], s = st.screen, file = key.split('?')[0];
+    document.getElementById('screen-folder').textContent = st.folder;
+    document.getElementById('screen-badge').hidden = !s.main;
+    document.getElementById('screen-title').textContent = s.name;
+    document.getElementById('screen-state').textContent = '· ' + st.label;
+    document.getElementById('meta-persona').innerHTML = s.persona;
+    document.getElementById('meta-job').innerHTML = s.job + (s.jobQuote ? '<span class="quote">' + s.jobQuote + '</span>' : '');
+    document.getElementById('meta-flow').innerHTML = s.flow;
+    var pills = document.getElementById('state-pills'); pills.textContent = '';
+    s.states.forEach(function (x) {
+      var li = el('li'), a = el('a', 'pill', x[1]); a.href = '#' + x[0];
+      if (x[0] === file) a.setAttribute('aria-current', 'page');
+      li.appendChild(a); pills.appendChild(li);
+    });
+    var q = key.indexOf('?');
+    document.getElementById('open-page').href = file + '.html' + (q >= 0 ? key.slice(q) : '');
+    Array.prototype.forEach.call(tree.querySelectorAll('.tree-screen'), function (a) {
+      a.classList.toggle('is-current', a.getAttribute('data-screen') === s.slug);
+    });
+    Array.prototype.forEach.call(tree.querySelectorAll('.tree-states'), function (u) {
+      u.hidden = u.getAttribute('data-screen') !== s.slug;
+    });
+    Array.prototype.forEach.call(tree.querySelectorAll('.tree-state'), function (a) {
+      if (a.getAttribute('data-key') === file) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    document.title = 'Onrace — Wireframes · ' + s.name + (st.label === 'Base' ? '' : ' · ' + st.label);
+    renderNotes(notesKey(key));
+  }
+  function show(key) {
+    if (frameKey() !== key) {
+      var q = key.indexOf('?');
+      frame.src = key.split('?')[0] + '.html' + (q >= 0 ? key.slice(q) : '');
+    }
+    paint(key);
+  }
+  frame.addEventListener('load', function () {
+    matchEdges();
+    var key = frameKey();
+    if (!key || !STATES[key.split('?')[0]]) return;
+    if (key !== hashKey() || location.hash.replace(/^#/, '') !== key) {
+      history.replaceState(null, '', '#' + key);
+      window.dispatchEvent(new Event('onrace:route'));
+    }
+    paint(key);
+  });
+  window.addEventListener('hashchange', function () { show(hashKey()); });
+  function setTree(open) {
+    tree.classList.toggle('is-open', open);
+    treeToggle.setAttribute('aria-expanded', String(open));
+  }
+  treeToggle.addEventListener('click', function () { setTree(!tree.classList.contains('is-open')); });
+  tree.addEventListener('click', function (e) { if (e.target.closest('a')) setTree(false); });
 
   /* ---------- continuous ("squircle") corners ----------
      Same construction as Figma's corner smoothing (60% ≈ iOS): each corner
@@ -820,21 +1195,24 @@
     screen.style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
   })();
 
-  // Scale the whole device (never its internals) to fit the window height.
-  // Two passes: the heading wraps to the slot's width, so a narrower slot
-  // can push the slot down, which changes the height available to it.
+  // Scale the whole device (never its internals) to fit: the window height
+  // beside the header on a wide screen, the column width on a narrow one
+  // (there the page scrolls, so height doesn't limit it).
   function fit() {
     var W = device.offsetWidth, H = device.offsetHeight;
+    var col = document.querySelector('.content-col'), cs = getComputedStyle(col);   // the column the device sits in, not its own wrapper
+    var narrow = window.matchMedia('(max-width: 760px)').matches;
     for (var i = 0; i < 2; i++) {
+      var availW = col.getBoundingClientRect().width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       var top = slot.getBoundingClientRect().top + window.scrollY;
-      var avail = window.innerHeight - top - 32;
-      var scale = Math.min(1, Math.max(0.55, avail / H));
+      var availH = window.innerHeight - top - 32;
+      var scale = narrow ? Math.min(1, availW / W) : Math.min(1, Math.max(0.55, availH / H), availW / W);
       device.style.transform = 'scale(' + scale + ')';
       slot.style.width = (W * scale) + 'px';
       slot.style.height = (H * scale) + 'px';
     }
   }
-  renderNotes('race-browse.html');   // also runs fit()
+  show(hashKey());   // also runs fit() through renderNotes
   window.addEventListener('resize', fit);
 })();
 </script>
