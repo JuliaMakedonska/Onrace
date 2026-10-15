@@ -208,7 +208,7 @@
     width: 134px;
     height: 5px;
     border-radius: 100px;
-    background: #000;
+    background: currentColor;   /* light or dark with the bottom edge, set by matchEdges() */
   }
 
   /* --- zone notes: what each zone of the current screen shows and why,
@@ -719,9 +719,10 @@
       statusBar.style.background = edgeColor(doc, 1);
       statusBar.style.color = statusContent(statusBar.style.background);
       homeStrip.style.background = edgeColor(doc, h - 1);
+      homeStrip.style.color = statusContent(homeStrip.style.background);
     } catch (e) {
       statusBar.style.background = homeStrip.style.background = '#fff';
-      statusBar.style.color = '#000';
+      statusBar.style.color = homeStrip.style.color = '#000';
     }
   }
 

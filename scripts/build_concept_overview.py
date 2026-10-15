@@ -266,7 +266,7 @@ DEVICE_JS = """(function () {
 """ + CONTENT_JS + """
   var SCREEN_R = """ + SCREEN_R + """, SMOOTH = """ + SMOOTH + """;
   // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge,
-  // and the status bar's content turns light or dark with it.
+  // and the status bar's content and the home indicator turn light or dark with them.
   function edgeColor(doc, y) {
     var el = doc.elementFromPoint(doc.documentElement.clientWidth / 2, y);
     while (el) {
@@ -287,8 +287,8 @@ DEVICE_JS = """(function () {
     device.querySelector('.device-screen').style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
     var frame = device.querySelector('iframe'), bar = device.querySelector('.status-bar'), home = device.querySelector('.home-indicator');
     frame.addEventListener('load', function () {
-      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); bar.style.color = statusContent(bar.style.background); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); }
-      catch (e) { bar.style.background = home.style.background = '#fff'; bar.style.color = '#000'; }
+      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); bar.style.color = statusContent(bar.style.background); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); home.style.color = statusContent(home.style.background); }
+      catch (e) { bar.style.background = home.style.background = '#fff'; bar.style.color = home.style.color = '#000'; }
     });
   });
   // Scale each device as one piece (never its internals) to fit its column, as the viewer does for the window.
