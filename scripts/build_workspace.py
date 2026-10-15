@@ -146,16 +146,37 @@ PAGE = f'''<!DOCTYPE html>
     if ((location.hash || '') !== h) history.replaceState(null, '', h || location.pathname + location.search);
   }}
   function frameDoc() {{ try {{ return frame.contentWindow.document; }} catch (e) {{ return null; }} }}
-  function lessonOfFrame() {{
-    try {{
-      var p = frame.contentWindow.location.pathname;
-      if (/\\/start\\.html$/.test(p)) return START;
-      for (var i = 0; i < LESSONS.length; i++) {{
-        var href = LESSONS[i].href; if (!href) continue;
-        if (p.slice(-href.length - 1) === '/' + href || (href === 'wireframes/index.html' && /\\/wireframes\\/$/.test(p))) return LESSONS[i];
-      }}
-    }} catch (e) {{}}
+  function lessonOfPath(p) {{
+    if (/\\/start\\.html$/.test(p)) return START;
+    for (var i = 0; i < LESSONS.length; i++) {{
+      var href = LESSONS[i].href; if (!href) continue;
+      if (p.slice(-href.length - 1) === '/' + href || (href === 'wireframes/index.html' && /\\/wireframes\\/$/.test(p))) return LESSONS[i];
+    }}
     return null;
+  }}
+  function lessonOfFrame() {{
+    try {{ return lessonOfPath(frame.contentWindow.location.pathname); }} catch (e) {{ return null; }}
+  }}
+  // Links inside a lesson page: an anchor on the same page scrolls as usual; a link to a lesson
+  // routes through the shell (so the rail and the address follow); any other page (the stand,
+  // directions, a screen opened as a page, GitHub) opens in a new tab, so the shell stays put.
+  function onFrameClick(e) {{
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
+    if (a.target && a.target !== '_self') return;
+    var w = frame.contentWindow, url;
+    try {{ url = new URL(a.getAttribute('href'), w.location.href); }} catch (err) {{ return; }}
+    if (!/^https?:$/.test(url.protocol)) return;
+    if (url.origin === w.location.origin && url.pathname === w.location.pathname && url.search === w.location.search) return;
+    var l = url.origin === location.origin ? lessonOfPath(url.pathname) : null;
+    e.preventDefault();
+    if (l) {{
+      var sub = url.hash.replace(/^#/, '');
+      try {{ sub = decodeURIComponent(sub); }} catch (err) {{}}
+      location.hash = hashFor(l, sub) || '#';
+    }} else {{
+      window.open(url.href, '_blank', 'noopener');
+    }}
   }}
   function route() {{
     var r = parse(location.hash);
@@ -196,6 +217,7 @@ PAGE = f'''<!DOCTYPE html>
     var w = frame.contentWindow;
     w.addEventListener('hashchange', sync);
     w.addEventListener('onrace:route', sync);
+    if (doc) doc.addEventListener('click', onFrameClick);
     sync();
   }});
 
