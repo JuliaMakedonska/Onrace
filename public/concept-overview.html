@@ -342,24 +342,24 @@
         <div class="status-bar" aria-hidden="true"><span>09:41</span>
               <span class="status-icons">
                 <!-- cellular signal: 4 bars, last one outline-only -->
-                <svg width="18" height="12" viewBox="0 0 18 12" fill="#000">
+                <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
                   <rect x="0" y="8" width="3" height="4" rx="1"/>
                   <rect x="5" y="5.5" width="3" height="6.5" rx="1"/>
                   <rect x="10" y="3" width="3" height="9" rx="1"/>
-                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="#000" stroke-width="1"/>
+                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="currentColor" stroke-width="1"/>
                 </svg>
                 <!-- Wi-Fi -->
-                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round">
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                   <path d="M1 4.2a10 10 0 0 1 14 0"/>
                   <path d="M3.4 6.8a6.5 6.5 0 0 1 9.2 0"/>
                   <path d="M5.8 9.3a3 3 0 0 1 4.4 0"/>
-                  <circle cx="8" cy="11" r="0.6" fill="#000"/>
+                  <circle cx="8" cy="11" r="0.6" fill="currentColor"/>
                 </svg>
                 <!-- battery: outline body + cap, grayscale fill -->
                 <svg width="27" height="13" viewBox="0 0 27 13">
-                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#000" stroke-opacity="0.45"/>
-                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="#000"/>
-                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="#000" fill-opacity="0.45"/>
+                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-opacity="0.45"/>
+                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="currentColor"/>
+                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity="0.45"/>
                 </svg>
               </span></div>
         <iframe src="wireframes/race-browse.html" title="Race browse, live" loading="lazy"></iframe>
@@ -375,24 +375,24 @@
         <div class="status-bar" aria-hidden="true"><span>09:41</span>
               <span class="status-icons">
                 <!-- cellular signal: 4 bars, last one outline-only -->
-                <svg width="18" height="12" viewBox="0 0 18 12" fill="#000">
+                <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
                   <rect x="0" y="8" width="3" height="4" rx="1"/>
                   <rect x="5" y="5.5" width="3" height="6.5" rx="1"/>
                   <rect x="10" y="3" width="3" height="9" rx="1"/>
-                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="#000" stroke-width="1"/>
+                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="currentColor" stroke-width="1"/>
                 </svg>
                 <!-- Wi-Fi -->
-                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round">
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                   <path d="M1 4.2a10 10 0 0 1 14 0"/>
                   <path d="M3.4 6.8a6.5 6.5 0 0 1 9.2 0"/>
                   <path d="M5.8 9.3a3 3 0 0 1 4.4 0"/>
-                  <circle cx="8" cy="11" r="0.6" fill="#000"/>
+                  <circle cx="8" cy="11" r="0.6" fill="currentColor"/>
                 </svg>
                 <!-- battery: outline body + cap, grayscale fill -->
                 <svg width="27" height="13" viewBox="0 0 27 13">
-                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#000" stroke-opacity="0.45"/>
-                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="#000"/>
-                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="#000" fill-opacity="0.45"/>
+                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-opacity="0.45"/>
+                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="currentColor"/>
+                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity="0.45"/>
                 </svg>
               </span></div>
         <iframe src="wireframes/results-list.html" title="Results list, live" loading="lazy"></iframe>
@@ -455,8 +455,19 @@
       'Z'
     ].map(function (v) { return typeof v === 'number' ? +v.toFixed(3) : v; }).join(' ');
   }
+  function luminance(color) {
+    var c = /^#([0-9a-f]{3})$/i.test(color) ? color.slice(1).split('').map(function (h) { return parseInt(h + h, 16); })
+      : /^#([0-9a-f]{6})$/i.test(color) ? [1, 3, 5].map(function (i) { return parseInt(color.substr(i, 2), 16); })
+      : (color.match(/[\d.]+/g) || [255, 255, 255]).slice(0, 3).map(Number);
+    var lin = c.map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+  }
+  function statusContent(bg) {
+    return luminance(bg) < 0.179 ? '#fff' : '#000';
+  }
   var SCREEN_R = 47, SMOOTH = 0.6;
-  // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge.
+  // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge,
+  // and the status bar's content turns light or dark with it.
   function edgeColor(doc, y) {
     var el = doc.elementFromPoint(doc.documentElement.clientWidth / 2, y);
     while (el) {
@@ -477,8 +488,8 @@
     device.querySelector('.device-screen').style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
     var frame = device.querySelector('iframe'), bar = device.querySelector('.status-bar'), home = device.querySelector('.home-indicator');
     frame.addEventListener('load', function () {
-      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); }
-      catch (e) { bar.style.background = home.style.background = '#fff'; }
+      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); bar.style.color = statusContent(bar.style.background); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); }
+      catch (e) { bar.style.background = home.style.background = '#fff'; bar.style.color = '#000'; }
     });
   });
   // Scale each device as one piece (never its internals) to fit its column, as the viewer does for the window.

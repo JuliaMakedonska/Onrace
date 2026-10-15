@@ -193,6 +193,8 @@ VIEWER = open(ROOT + '/wireframes/index.html').read()
 DEVICE_CSS = VIEWER[VIEWER.index('  .device-slot {'):VIEWER.index('  /* --- zone notes')].rstrip()
 STATUS_BAR = re.search(r'<div class="status-bar" id="status-bar" aria-hidden="true">(.*?)</div>\s*<iframe', VIEWER, re.S).group(1).strip()
 SQUIRCLE_JS = VIEWER[VIEWER.index('  function corner(r, s) {'):VIEWER.index(".join(' ');\n  }", VIEWER.index('  function squircle(')) + len(".join(' ');\n  }")]
+_c0 = VIEWER.index('  function luminance(color) {')
+CONTENT_JS = VIEWER[_c0:VIEWER.index("return luminance(bg) < 0.179 ? '#fff' : '#000';\n  }", _c0) + len("return luminance(bg) < 0.179 ? '#fff' : '#000';\n  }")]
 CORNER = re.search(r'var SCREEN_R = (\d+), SMOOTH = ([\d.]+);', VIEWER)
 SCREEN_R, SMOOTH = CORNER.group(1), CORNER.group(2)
 assert 'status-icons' in STATUS_BAR and 'function squircle' in SQUIRCLE_JS and '--status-h: 47px' in DEVICE_CSS
@@ -261,8 +263,10 @@ overview_body = f'''
 
 DEVICE_JS = """(function () {
 """ + SQUIRCLE_JS + """
+""" + CONTENT_JS + """
   var SCREEN_R = """ + SCREEN_R + """, SMOOTH = """ + SMOOTH + """;
-  // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge.
+  // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge,
+  // and the status bar's content turns light or dark with it.
   function edgeColor(doc, y) {
     var el = doc.elementFromPoint(doc.documentElement.clientWidth / 2, y);
     while (el) {
@@ -283,8 +287,8 @@ DEVICE_JS = """(function () {
     device.querySelector('.device-screen').style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
     var frame = device.querySelector('iframe'), bar = device.querySelector('.status-bar'), home = device.querySelector('.home-indicator');
     frame.addEventListener('load', function () {
-      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); }
-      catch (e) { bar.style.background = home.style.background = '#fff'; }
+      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); bar.style.color = statusContent(bar.style.background); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); }
+      catch (e) { bar.style.background = home.style.background = '#fff'; bar.style.color = '#000'; }
     });
   });
   // Scale each device as one piece (never its internals) to fit its column, as the viewer does for the window.
