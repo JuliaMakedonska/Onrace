@@ -54,6 +54,9 @@ Intended flow: `research/` → `sitemap.md`/`flows.md` (IA) → `wireframes/` �
 | [`_conventions.md`](./wireframes/_conventions.md) | The contract every page follows: fidelity, tokens, iOS chrome, linking, states, test switches |
 | [`_screens.md`](./wireframes/_screens.md) | Per-screen state scoping (✓ or — with reasons) and shared sample data |
 | [`_critique.md`](./wireframes/_critique.md) | The 2026-09-25 review: defects found and fixed, and what was checked clean |
+| [`_wireframe/`](./wireframes/_wireframe/README.md) | The frozen snapshot: all 35 pages as they were at the end of Lesson 5 (commit `7347c27`), shown by the viewer's **Wireframe** mode |
+
+The viewer has a **Wireframe / Design** toggle beside "Open as a page". **Design** (the default) shows the working screens in `wireframes/`, which Lessons 6 and 7 update in place. **Wireframe** shows the frozen Lesson 5 snapshot. The mode is in the URL (`#race-browse?mode=wireframe`, also through the workspace: `workspace.html#04/race-browse?mode=wireframe`) and survives switching screens and states. The snapshot is frozen history, not a copy to maintain.
 
 The pages are wired along `flows.md`'s six flows (sign-in gate, catalog link, email confirmation, sign-out, password reset), so every path can be clicked through. Color, brand type and content icons are deferred to `concept/`.
 

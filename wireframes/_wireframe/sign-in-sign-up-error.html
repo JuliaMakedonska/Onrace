@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in / Sign up (Error) — Onrace (wireframe)</title>
+<style>
+  /* STATE: error — same structure and zones as sign-in-sign-up.html,
+     plus an alert at the top of the form (_conventions.md § 5). Three
+     causes on one page, all real markup; the script un-hides one
+     (_conventions.md § 5: the file grain is state, not cause):
+       default        AuthError, sign-in failed (flows.md, Flows 2 & 3).
+       ?cause=signup  SignUpError, couldn't create the account (Flow 4);
+                      the form is in Create account mode.
+       ?cause=confirm ConfirmError, the confirmation link expired or was
+                      already used (Flow 4). No form: the exit is a new
+                      link, or Cancel as giving up.
+     ?next and ?email are carried through every exit. */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons (system-chrome glyphs
+     only, and this screen needs none: Cancel is a text button). Deferred per
+     _conventions.md § 7. Bare screen (_conventions.md § 1): index.html
+     provides the device frame and nav tree.
+
+     Gate, not a place (_conventions.md § 1, "Gates are modals, not
+     drill-downs"): a full-screen modal. The top bar holds Cancel on the left
+     (text, no chevron) and the title; there is never a "‹ Back" and never
+     the global tab bar. The one action (Sign in / Create account) sits at
+     the end of the form, in the flow of the content: no sticky bottom bar,
+     so nothing collides with the on-screen keyboard. The body is a flex
+     column: the top bar sits above the scrolling .phone-screen, outside it.
+
+     Auth method decided 2026-09-25: email + password through Supabase Auth,
+     with Confirm email on (_screens.md → Sign in / Sign up; sitemap.md →
+     Entities 5; flows.md → Flow 4). Create account ends on Check inbox
+     (sign-in-sign-up-check-inbox.html), not signed in. */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (inputs, segmented control), --r for large surfaces (primary
+     button, alert). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* placeholder regions, alert background */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { color: var(--ink); }
+  [hidden] { display: none !important; }
+
+  /* --- modal top bar: Cancel (leading, text button) + centered title.
+     iOS navigation bar metrics; system chrome = system font. --- */
+  .top-bar {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    flex: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 8px;
+    background: #fff;
+    border-bottom: 0.5px solid var(--line);
+    font-size: 17px;
+  }
+  .close {
+    position: relative;
+    z-index: 1;
+    padding: 4px 8px;
+    color: var(--fill-strong);
+    text-decoration: none;
+  }
+  .bar-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .phone-screen {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gate { padding: 20px 16px 32px; }
+  .context { margin: 0 0 20px 0; font-size: 0.95rem; color: var(--ink-2); }
+
+  /* iOS segmented control — same CSS as Race browse's List/Map toggle
+     (.view-toggle / .view-btn), stretched to full width here. */
+  .view-toggle {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    margin: 0 0 24px 0;
+    border-radius: var(--r-sm);
+    background: var(--fill-track);
+  }
+  .view-btn {
+    flex: 1;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    padding: 7px 12px;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .view-btn[aria-pressed="true"] { background: var(--fill-strong); color: #fff; }
+  .view-btn:disabled { cursor: default; }
+
+  /* --- the form: label above each field, full-width inputs. --- */
+  fieldset { border: none; margin: 0; padding: 0; min-width: 0; }
+  .field { margin: 0 0 16px 0; }
+  .field label { display: block; font-size: 0.85rem; color: var(--ink-2); margin: 0 0 6px 0; }
+  .field input {
+    display: block;
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 0 12px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+  }
+  .field input::placeholder { color: var(--ink-3); }
+  .field input:disabled { background: var(--fill-soft); color: var(--ink-2); }
+
+  .submit-btn {
+    display: block;
+    width: 100%;
+    margin: 8px 0 0 0;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 12px 16px;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    border-radius: var(--r);
+    cursor: pointer;
+  }
+  .submit-btn:disabled { cursor: default; }
+
+  /* --- inline alert: bordered, because it has to read as one unit above
+     the fields (same styling as Race detail's RegLinkError). --- */
+  .inline-error { border: 1px solid var(--line-strong); padding: 10px 12px; margin: 0 0 20px 0; border-radius: var(--r); background: var(--fill-soft); }
+  .inline-error h2 { font-size: 0.95rem; margin: 0 0 6px 0; }
+  .inline-error p { font-size: 0.85rem; margin: 0; }
+  .inline-error p + p { margin-top: 6px; }
+
+  /* Under the password field: "Forgot password?" in Sign in mode, the
+     length hint in Create account mode. One small line either way. */
+  .field-hint { margin: 6px 0 0 0; font-size: 0.8rem; color: var(--ink-2); }
+  .forgot { margin: 8px 0 0 0; font-size: 0.85rem; text-align: right; }
+  .forgot a { color: var(--fill-strong); }
+  .forgot a[aria-disabled="true"] { color: var(--ink-3); }
+
+  /* One short line under the action, Create account mode only. */
+  .form-note { margin: 10px 0 0 0; font-size: 0.85rem; color: var(--ink-2); text-align: center; }
+
+  /* The confirm cause's one action is a link, styled as the primary button. */
+  a.submit-btn { color: #fff; text-decoration: none; }
+  .addr { font-weight: 600; word-break: break-all; }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Sign in / Sign up, error state (wireframe)">
+
+  <!-- ZONE: modal top bar — Cancel + title (_conventions.md § 1, Gates;
+       _screens.md → Sign in / Sign up → Chrome). Cancel is flows.md's
+       "closes without attempting" edge (Related Job 3 → DeadEnd2, Related
+       Job 4 → DeadEnd4: leaves without getting signed in), and on this
+       error page it is also every Retry? → no: sign-in failed (DeadEnd2 /
+       DeadEnd4), couldn't create the account (Flow 4 → DeadEnd8), and the
+       expired link's "gives up" (Flow 4 → DeadEnd9: the account exists,
+       unconfirmed; signing in later routes back to Check inbox). It lands
+       on Race browse, the one screen that needs no account (sitemap.md →
+       Navigation § 1). The title follows the Sign in | Create account
+       toggle; for ?cause=confirm it reads "Check your inbox", the step
+       this error belongs to. -->
+  <header class="top-bar">
+    <a class="close" href="race-browse.html">Cancel</a>
+    <h1 class="bar-title"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span><span data-cause="confirm" hidden>Check your inbox</span></h1>
+  </header>
+
+  <div class="phone-screen">
+    <main class="gate">
+
+      <!-- ZONE: why you're signing in — one line naming where the person
+           was heading (?next=), so a signed-out person sees why before
+           being asked (sitemap.md → Navigation § 2). The gate is reached
+           from the My Results tab (next = a Results list file) or the
+           Profile tab (next = profile-loading.html / profile.html) —
+           sitemap.md → Navigation § 1 & § 3; the generic line covers
+           opening the file directly. All six lines are real markup; the
+           script un-hides one. Not shown for ?cause=confirm: that person
+           isn't at the form. -->
+      <p class="context" data-mode="signin" data-for="archive" hidden>Sign in to see your results archive.</p>
+      <p class="context" data-mode="signup" data-for="archive" hidden>Create an account to start your results archive.</p>
+      <p class="context" data-mode="signin" data-for="account" hidden>Sign in to see your account.</p>
+      <p class="context" data-mode="signup" data-for="account" hidden>Create an account to start your results archive.</p>
+      <p class="context" data-mode="signin" data-for="generic">Sign in to see your results archive: each result with its official result link.</p>
+      <p class="context" data-mode="signup" data-for="generic" hidden>Create an account to start your results archive: each result with its official result link.</p>
+
+      <!-- ZONE: expired or used confirmation link — ConfirmError (flows.md →
+           Flow 4, "Confirmation link valid?" → no), shown only for
+           ?cause=confirm. Supabase confirmation links expire and work once;
+           the app can't tell which happened, so the copy covers both. The
+           one action is Flow 4's "resends the email" edge → Resending:
+           Check inbox with &resend=1, which runs its own "Sending…" and then
+           shows "Sent" (sign-in-sign-up-check-inbox.html), carrying ?email
+           and ?next. "Gives up" (→ DeadEnd9) is Cancel in the top bar. The
+           address is the one from ?email=, else a sample. -->
+      <section data-cause="confirm" hidden>
+        <div class="inline-error" role="alert">
+          <h2>This confirmation link has expired</h2>
+          <p>It may also have been used already. Each link works once and expires after a while. Your account is still there. It isn’t confirmed yet.</p>
+          <p>We’ll send a new link to <span class="addr" data-email>maya.rossi@example.com</span>.</p>
+        </div>
+        <a class="submit-btn" id="send-new-link" href="sign-in-sign-up-check-inbox.html?resend=1">Send a new link</a>
+      </section>
+
+      <!-- ZONE: Sign in | Create account — one screen, two modes
+           (_screens.md → Sign in / Sign up → Chrome). A real iOS segmented
+           control (Race browse's .view-toggle CSS). ?cause=signup opens in
+           Create account; otherwise ?mode= decides, defaulting to the mode
+           the failed attempt was made in. Not shown for ?cause=confirm. -->
+      <div class="view-toggle" role="group" aria-label="Sign in or create an account" data-form-zone>
+        <button type="button" class="view-btn" data-set-mode="signin" aria-pressed="true">Sign in</button>
+        <button type="button" class="view-btn" data-set-mode="signup" aria-pressed="false">Create account</button>
+      </div>
+
+      <!-- ZONE: credentials form — Email, Password, then the one action at
+           the end of the form, in content flow (_conventions.md § 1,
+           Gates). Auth method decided 2026-09-25: email + password through
+           Supabase Auth, with Confirm email on (_screens.md → Sign in /
+           Sign up → Chrome; sitemap.md → Entities 5; flows.md → Flow 4).
+           Create account asks for nothing more: name, country and language
+           are edited on Profile (sitemap.md → Entities 5). Submitting again
+           is Retry? → yes (→ SigningIn / CreatingAccount on
+           sign-in-sign-up-loading.html?run=1, carrying ?next, ?mode and
+           ?email). The email is kept (?email=, else a sample), the password
+           cleared. Not shown for ?cause=confirm. -->
+      <form id="auth-form" data-form-zone>
+        <!-- ZONE: inline alert — one per form cause, at the top of the form,
+             directly above the fields it's about (same placement rule as a
+             failed save, _conventions.md § 1, Forms). Retry? → no is Cancel
+             in the top bar, so it isn't repeated here. An alert belongs to
+             the mode it was raised in; switching mode hides it.
+             Default: AuthError, sign-in failed (flows.md, Flows 2 & 3). The
+             copy names both causes a wireframe can't tell apart: wrong
+             credentials or no connection. An unconfirmed email is not this
+             error: it goes to Check inbox (AuthResult "no — email not
+             confirmed yet").
+             ?cause=signup: SignUpError (Flow 4, "Account created?" → no —
+             email already registered, or connection). The copy covers both,
+             since the wireframe can't tell them apart, and points an
+             existing account at Sign in. -->
+        <div class="inline-error" data-mode="signin" data-cause="signin" role="alert">
+          <h2>Couldn’t sign you in</h2>
+          <p>The email or password didn’t match, or the connection dropped. Check your email and password, then try again.</p>
+        </div>
+        <div class="inline-error" data-mode="signup" data-cause="signup" role="alert" hidden>
+          <h2>Couldn’t create your account</h2>
+          <p>This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you’re connected, then try again.</p>
+        </div>
+        <fieldset>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required value="maya.rossi@example.com">
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+            <!-- ZONE: under the password field — two lines, one per mode, both
+                 real markup (setMode shows one).
+                 Sign in mode: "Forgot password?", flows.md Flows 2 & 3's
+                 "forgot password" edge → [[Flow 6: Reset password]]
+                 (reset-password.html). Its href is built at click time from
+                 what's typed in Email now, plus ?next, so Reset password is
+                 pre-filled and the person lands back where they were
+                 heading (_screens.md → Sign in / Sign up changes). Hidden
+                 in Create account mode: no account to recover yet.
+                 Create account mode: the hint "At least 8 characters." [?]
+                 — Flow 6 → Decisions: the same minimum as New password
+                 should apply at sign-up; 8 is Onrace's choice (a Supabase
+                 project setting; Supabase's default is 6). There's no
+                 client-side length check here: Flow 4 draws none, and its
+                 "Account created?" rejects a shorter password server-side
+                 either way (→ sign-in-sign-up-error.html?cause=signup). -->
+            <p class="field-hint" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
+            <p class="forgot" data-mode="signin"><a id="forgot" href="reset-password.html">Forgot password?</a></p>
+          </div>
+          <button type="submit" class="submit-btn"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></button>
+          <p class="form-note" data-mode="signup" hidden>We’ll send a link to confirm your email.</p>
+        </fieldset>
+      </form>
+
+    </main>
+  </div><!-- /.phone-screen -->
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+
+  // ?next= is where a successful sign-in lands (_screens.md → Sign in /
+  // Sign up: "Yes lands on where the person was heading"). Only owner-only
+  // screens are accepted, so the gate can't be pointed anywhere else.
+  // profile-loading.html is where the Profile tab now goes (?run=1).
+  var next = params.get('next') || '';
+  if (!/^(results-list[a-z-]*|log-result[a-z-]*|result-detail[a-z-]*|profile(-loading)?)\.html(\?[^#]*)?$/.test(next)) next = '';
+  var dest = /^profile/.test(next) ? 'account' : (next ? 'archive' : 'generic');
+
+  // Which of the three causes (_conventions.md § 5). The form causes each
+  // belong to a mode: signup → Create account, default → Sign in.
+  var cause = params.get('cause');
+  if (cause !== 'signup' && cause !== 'confirm') cause = 'signin';
+  var errorMode = cause === 'signup' ? 'signup' : 'signin';
+  var mode = params.get('mode') === 'signup' ? 'signup' : (params.get('mode') === 'signin' ? 'signin' : errorMode);
+
+  // ?email= keeps the entered address (prefilled, and named on the
+  // confirm cause). Else the sample address stays.
+  var email = params.get('email') || '';
+  if (!/^[^\s@<>"]{1,64}@[^\s@<>"]{1,190}$/.test(email)) email = '';
+  if (email) {
+    document.getElementById('email').value = email;
+    document.querySelectorAll('[data-email]').forEach(function (el) { el.textContent = email; });
+  }
+
+  function query(m) {
+    var q = [];
+    if (next) q.push('next=' + encodeURIComponent(next));
+    if (m === 'signup') q.push('mode=signup');
+    return q.length ? '?' + q.join('&') : '';
+  }
+
+  // The confirm cause: no form, one link to a fresh email.
+  if (cause === 'confirm') {
+    document.querySelectorAll('[data-mode], [data-form-zone]').forEach(function (el) { el.hidden = true; });
+    document.querySelectorAll('[data-cause="confirm"]').forEach(function (el) { el.hidden = false; });
+    var link = 'sign-in-sign-up-check-inbox.html?resend=1';
+    if (email) link += '&email=' + encodeURIComponent(email);
+    if (next) link += '&next=' + encodeURIComponent(next);
+    document.getElementById('send-new-link').setAttribute('href', link);
+    document.title = 'Check your inbox (Error) — Onrace (wireframe)';
+    return;
+  }
+
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('[data-set-mode]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-set-mode') === m));
+    });
+    document.querySelectorAll('[data-mode]').forEach(function (el) {
+      var f = el.getAttribute('data-for');
+      var c = el.getAttribute('data-cause');
+      el.hidden = el.getAttribute('data-mode') !== m || (f !== null && f !== dest) ||
+        (c !== null && (c !== cause || m !== errorMode));
+    });
+    document.getElementById('password').setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
+    // The length hint describes the field only in Create account mode.
+    if (m === 'signup') document.getElementById('password').setAttribute('aria-describedby', 'pw-hint');
+    else document.getElementById('password').removeAttribute('aria-describedby');
+    document.title = (m === 'signup' ? 'Create account' : 'Sign in') + ' (Error) — Onrace (wireframe)';
+    // Keep the URL in step, so reloading shows the same cause and mode.
+    var q = [];
+    if (cause !== 'signin') q.push('cause=' + cause);
+    if (next) q.push('next=' + encodeURIComponent(next));
+    q.push('mode=' + m);
+    if (email) q.push('email=' + encodeURIComponent(email));
+    try { history.replaceState(null, '', window.location.pathname + '?' + q.join('&')); } catch (err) {}
+  }
+
+  // "Forgot password?" (Sign in mode only) → Flow 6's Reset password,
+  // carrying what's typed in Email right now and ?next. Built at click
+  // time, so the address is the current one, not the one on arrival.
+  document.getElementById('forgot').addEventListener('click', function () {
+    var q = [];
+    var typed = document.getElementById('email').value.trim();
+    if (typed) q.push('email=' + encodeURIComponent(typed));
+    if (next) q.push('next=' + encodeURIComponent(next));
+    this.setAttribute('href', 'reset-password.html' + (q.length ? '?' + q.join('&') : ''));
+  });
+
+  document.querySelectorAll('[data-set-mode]').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.getAttribute('data-set-mode')); });
+  });
+  setMode(mode);
+
+  // Retry? → yes: submit again (flows.md) → SigningIn / CreatingAccount.
+  // Native `required` validation stops an empty field; a whitespace-only
+  // password is caught here too. Then go to the loading page, carrying
+  // ?next, ?mode and the entered email.
+  var form = document.getElementById('auth-form');
+  var password = document.getElementById('password');
+  password.addEventListener('input', function () { password.setCustomValidity(''); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!password.value.trim()) {
+      password.setCustomValidity('Enter your password.');
+      password.reportValidity();
+      return;
+    }
+    var q = query(mode);
+    var typed = document.getElementById('email').value.trim();
+    window.location.href = 'sign-in-sign-up-loading.html?run=1' + (q ? '&' + q.slice(1) : '') +
+      (typed ? '&email=' + encodeURIComponent(typed) : '');
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -105,6 +105,7 @@ Low-fidelity, grayscale, iOS-structured HTML wireframes for **every screen in `s
 - **Live flows:** every primary action is a real link along `flows.md`'s six flows. System decisions are real checks, and failure branches use reviewer switches (`&fail=1`, `&empty=1`, `?confirmed=1`, …).
 - **Review:** `wireframes/_critique.md` holds the 2026-09-25 review: 8 defects found and fixed (dead ends first), with everything else checked clean.
 - **Deferred:** color, brand typography, content icons and finished-UI polish (`_conventions.md` § 7).
+- **Wireframe / Design toggle (2026-10-18):** the viewer shows either the working page (**Design**, the default: `wireframes/`, updated in place through Lessons 6–7) or its frozen snapshot (**Wireframe**: `wireframes/_wireframe/`, the 35 pages byte-for-byte at commit `7347c27`, the end of Lesson 5 before any painting). The mode is in the URL: `#race-browse?mode=wireframe`, or in the workspace `#04/race-browse?mode=wireframe`. **The snapshot is frozen history, not a copy to maintain:** never edit it, never link it to `ui/kit.css`, and keep it out of the build checks, the inventory and step 7 (`_conventions.md` § 6, `wireframes/_wireframe/README.md`).
 
 ## Voice
 

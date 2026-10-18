@@ -216,6 +216,26 @@
   .state-note { margin: 0 0 10px; font-size: 13px; line-height: 1.5; color: var(--text-dim); }
   .open-page { font-size: 13px; font-weight: 700; color: var(--text-dim); }
   .open-page:hover { color: var(--text); }
+  /* Wireframe / Design: which version of the page the frame shows (?mode=, in the hash with the state) */
+  .page-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .mode-toggle { display: inline-flex; padding: 2px; border: 1px solid var(--border); border-radius: 999px; }
+  .mode-btn {
+    min-height: 32px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-dim);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .mode-btn:hover { color: var(--text); }
+  .mode-btn[aria-pressed="true"] { background: var(--accent-dim); color: var(--accent); }
+  .mode-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .mode-note { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--text-faint); }
+  .mode-note[hidden] { display: none; }
 
   @media (max-width: 1100px) {
     .content-col {
@@ -393,7 +413,14 @@
       </dl>
       <ul class="state-pills" id="state-pills" aria-label="States"></ul>
       <p class="state-note" id="screen-job"></p>
-      <a class="open-page" id="open-page" href="race-browse.html" target="_blank" rel="noopener">Open as a page ↗</a>
+      <div class="page-actions">
+        <div class="mode-toggle" role="group" aria-label="Show the page as">
+          <button type="button" class="mode-btn" data-mode="wireframe" aria-pressed="false" title="The frozen Lesson 5 wireframe (_wireframe/)">Wireframe</button>
+          <button type="button" class="mode-btn" data-mode="design" aria-pressed="true" title="The working screen, updated in place">Design</button>
+        </div>
+        <a class="open-page" id="open-page" href="race-browse.html" target="_blank" rel="noopener">Open as a page ↗</a>
+      </div>
+      <p class="mode-note" id="mode-note" hidden>Frozen snapshot: the end of Lesson 5 (commit <code>7347c27</code>), grayscale, before any screen was painted. Read-only history; the working screen is Design.</p>
     </header>
 
     <div class="device-col">
@@ -1065,7 +1092,7 @@
     var ul = el('ul');
     f.screens.forEach(function (s) {
       var li = el('li');
-      var a = el('a', 'tree-screen'); a.href = '#' + s.states[0][0]; a.setAttribute('data-screen', s.slug);
+      var a = el('a', 'tree-screen'); a.href = '#' + s.states[0][0]; a.setAttribute('data-screen', s.slug); a.setAttribute('data-first', s.states[0][0]);
       a.appendChild(el('span', '', s.name));
       if (s.main) a.appendChild(el('span', 'badge', 'main'));
       li.appendChild(a);
@@ -1082,10 +1109,38 @@
 
   // A state is a file, or a file plus URL parameters (Race browse · Filtered): exact key first, then the file
   function stateKey(key) { return STATES[key] ? key : key.split('?')[0]; }
+  /* ---------- Wireframe / Design ----------
+     Design (the default) shows the working page in wireframes/; Wireframe shows
+     its frozen Lesson 5 snapshot in wireframes/_wireframe/. The mode rides in the
+     hash with the state (#race-browse?mode=wireframe), so it survives switching
+     screens and states and the workspace shell routes it (#04/race-browse?mode=wireframe).
+     index.html?mode=wireframe works as an entry link too. A key never carries
+     the mode: it's split off here and added back only in the hash. */
+  var MODES = { design: '', wireframe: '_wireframe/' };
+  var mode = 'design';
+  function splitMode(h) {   // 'log-result-error?cause=link&mode=wireframe' → { key: 'log-result-error?cause=link', mode: 'wireframe' }
+    var q = h.indexOf('?'); if (q < 0) return { key: h, mode: null };
+    var p = new URLSearchParams(h.slice(q + 1)), m = p.get('mode');
+    p.delete('mode');
+    var rest = p.toString();
+    return { key: h.slice(0, q) + (rest ? '?' + rest : ''), mode: MODES.hasOwnProperty(m) ? m : null };
+  }
+  function withMode(key, m) {
+    return m === 'wireframe' ? key + (key.indexOf('?') >= 0 ? '&' : '?') + 'mode=wireframe' : key;
+  }
+  function pageUrl(key, m) {   // the page the frame (and Open as a page) shows for this key and mode
+    var q = key.indexOf('?');
+    return MODES[m] + key.split('?')[0] + '.html' + (q >= 0 ? key.slice(q) : '');
+  }
   function hashKey() {
     var h = location.hash.replace(/^#/, '');
     try { h = decodeURIComponent(h); } catch (e) {}
-    return STATES[h.split('?')[0]] ? h : DEFAULT_KEY;
+    var sm = splitMode(h);
+    mode = sm.mode || 'design';
+    return STATES[sm.key.split('?')[0]] ? sm.key : DEFAULT_KEY;
+  }
+  function frameMode() {
+    try { return /\/_wireframe\/[^\/]*$/.test(frame.contentWindow.location.pathname) ? 'wireframe' : 'design'; } catch (e) { return mode; }
   }
   function frameKey() {
     try {
@@ -1109,12 +1164,21 @@
     document.getElementById('meta-flow').innerHTML = s.flow;
     var pills = document.getElementById('state-pills'); pills.textContent = '';
     s.states.forEach(function (x) {
-      var li = el('li'), a = el('a', 'pill', x[1]); a.href = '#' + x[0];
+      var li = el('li'), a = el('a', 'pill', x[1]); a.href = '#' + withMode(x[0], mode);
       if (x[0] === sk) a.setAttribute('aria-current', 'page');
       li.appendChild(a); pills.appendChild(li);
     });
-    var q = key.indexOf('?');
-    document.getElementById('open-page').href = file + '.html' + (q >= 0 ? key.slice(q) : '');
+    document.getElementById('open-page').href = pageUrl(key, mode);
+    Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === mode));
+    });
+    document.getElementById('mode-note').hidden = mode !== 'wireframe';
+    Array.prototype.forEach.call(tree.querySelectorAll('.tree-screen'), function (a) {   // tree links keep the mode
+      a.href = '#' + withMode(a.getAttribute('data-first'), mode);
+    });
+    Array.prototype.forEach.call(tree.querySelectorAll('.tree-state'), function (a) {
+      a.href = '#' + withMode(a.getAttribute('data-key'), mode);
+    });
     Array.prototype.forEach.call(tree.querySelectorAll('.tree-screen'), function (a) {
       a.classList.toggle('is-current', a.getAttribute('data-screen') === s.slug);
     });
@@ -1125,25 +1189,30 @@
       if (a.getAttribute('data-key') === sk) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
-    document.title = 'Onrace — Wireframes · ' + s.name + (st.label === 'Base' ? '' : ' · ' + st.label);
+    document.title = 'Onrace — Wireframes · ' + s.name + (st.label === 'Base' ? '' : ' · ' + st.label) + (mode === 'wireframe' ? ' · Wireframe' : '');
     renderNotes(notesKey(key));
   }
   function show(key) {
-    if (frameKey() !== key) {
-      var q = key.indexOf('?');
-      frame.src = key.split('?')[0] + '.html' + (q >= 0 ? key.slice(q) : '');
-    }
+    if (frameKey() !== key || frameMode() !== mode) frame.src = pageUrl(key, mode);
     paint(key);
   }
   frame.addEventListener('load', function () {
     matchEdges();
     var key = frameKey();
     if (!key || !STATES[key.split('?')[0]]) return;
-    if (key !== hashKey() || location.hash.replace(/^#/, '') !== key) {
-      history.replaceState(null, '', '#' + key);
+    mode = frameMode();   // navigation inside the frame stays in its folder, so the frame knows the mode
+    var h = '#' + withMode(key, mode);
+    if (location.hash !== h) {
+      history.replaceState(null, '', h);
       window.dispatchEvent(new Event('onrace:route'));
     }
     paint(key);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'), function (b) {
+    b.addEventListener('click', function () {
+      var m = b.getAttribute('data-mode'); if (m === mode) return;
+      location.hash = withMode(hashKey(), m);   // hashchange → show() loads the other version of the same state
+    });
   });
   window.addEventListener('hashchange', function () { show(hashKey()); });
   function setTree(open) {
@@ -1218,6 +1287,16 @@
       slot.style.height = (H * scale) + 'px';
     }
   }
+  (function () {   // an entry link index.html?mode=wireframe#… : the mode moves into the hash, the one place it lives
+    var sp = new URLSearchParams(location.search), m = sp.get('mode');
+    if (!m) return;
+    sp.delete('mode');
+    var h = location.hash.replace(/^#/, '');
+    try { h = decodeURIComponent(h); } catch (e) {}
+    var sm = splitMode(h), key = STATES[sm.key.split('?')[0]] ? sm.key : DEFAULT_KEY;
+    var rest = sp.toString();
+    history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + '#' + withMode(key, sm.mode || (MODES.hasOwnProperty(m) ? m : 'design')));
+  })();
   show(hashKey());   // also runs fit() through renderNotes
   window.addEventListener('resize', fit);
 })();

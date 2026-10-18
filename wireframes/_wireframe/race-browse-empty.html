@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Race browse (Empty) — Onrace (wireframe)</title>
+<style>
+  /* STATE: empty — same structure and zones as race-browse.html (the
+     success/default state); only the content inside those zones changes,
+     per _conventions.md § 5. */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: tab bar, back chevron — § 1). Deferred per _conventions.md § 7:
+     color, fonts, shadows, icons, finished UI.
+
+     This file is a bare screen: no nav tree, no spec-note/caption chrome —
+     that lives once in index.html, which iframes this file into its own
+     phone-frame mockup (see _conventions.md § 6). Opening this file directly
+     still works: the body itself is the 390-wide, height-constrained,
+     internally-scrolling "phone screen," just without index.html's outer
+     device bezel. */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1): system-gray values
+     instead of pure black on white. Still no hue. Radii: --r-sm for small
+     controls (tags, chips, selects, small buttons), --r for large surfaces
+     (cards, primary buttons, segmented control, map, sheet). */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a { color: var(--ink); }
+
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 49px; /* clears the fixed bottom-nav below */
+  }
+
+  /* Global nav (sitemap.md → Navigation § 1, 3 tabs) as a real mobile bottom
+     tab bar — fixed to the frame's bottom edge, not part of the scrolling
+     content, and not styled as browser-style top tabs. */
+  .bottom-nav {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 49px;            /* iOS tab bar, above the home-indicator area */
+    background: #fff;
+    border-top: 0.5px solid var(--line);
+    z-index: 3;
+  }
+  .bottom-nav ul {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav li { flex: 1; }
+  /* Icon over label, inactive tabs gray; the current tab is tinted dark
+     (iOS marks it with tint, not a filled background). */
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1px;
+    padding-top: 5px;
+    text-decoration: none;
+    color: var(--ink-3);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .bottom-nav a[aria-current="page"] { color: var(--fill-strong); font-weight: 600; }
+  .tab-icon { display: block; }
+
+  /* --- main is a flex column so the visible view panel (list or map) can
+     take flex:1 and genuinely fill whatever space is left below the header/
+     controls/results row, down to the bottom nav — this is what makes the
+     map "fill the full space" without a hardcoded height, and lets a long
+     card list overflow into .phone-screen's own scroll instead. --- */
+  main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  /* iOS large title (34pt bold), the top-level screen's own title. */
+  header { padding: 6px 16px 6px; }
+  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0; }
+
+  /* --- shared controls: the control row (Filters + List/Map toggle) and the
+     active-filter chips, together in one sticky block whose bottom border is
+     the divider. Filtering is identical for both views — Map's own pan/zoom
+     is a viewport change, not a filter (see the map-view comment below) —
+     so there is exactly one Filters entry point, not one per view. --- */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  /* --- search (added 2026-09-30): an iOS search field under the large
+     title. It scrolls away with the title and sits outside the sticky
+     .controls block, so that block's height is unchanged (61px, or 97px
+     with chips). It's system chrome, like the title, so it uses the system
+     font. It matches race name or city (the same scope as Race picker) and
+     narrows together with the filters. An active search shows as the
+     first chip in the chips row. --- */
+  .race-search { margin: 10px 0 2px; }
+  .race-search input {
+    width: 100%;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: var(--fill-track);
+    padding: 0 12px;
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .race-search input::placeholder { color: var(--ink-3); }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  /* Filters is the primary control (it decides WHAT is shown; the toggle only
+     decides HOW), so it takes the row's spare width and a heavier, darker border
+     + bold label. It deliberately never uses the dark-gray current fill — that
+     style means "current/pressed" (the List/Map selected segment) on this
+     screen, and Filters is an action, not a state. Open = light gray. */
+  .filters-trigger {
+    flex: 1;
+    border: 1.5px solid var(--line-strong);
+    background: #fff;
+    padding: 8px 14px;
+    margin: 0;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    border-radius: var(--r);
+  }
+  .filters-trigger[aria-expanded="true"] { background: var(--fill-soft); }
+
+  /* iOS segmented control: gray track, the selected segment filled. */
+  .view-toggle {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    margin: 0;
+    border-radius: var(--r-sm);
+    background: var(--fill-track);
+  }
+  .view-btn {
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    padding: 7px 12px;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .view-btn[aria-pressed="true"] { background: var(--fill-strong); color: #fff; }
+
+  /* --- active filter chips: shared, identical in both views, between the
+     control row and the divider. One row only — overflows sideways with its
+     own horizontal scroll instead of wrapping, so the sticky block's height
+     stays fixed however many filters are on. "Clear all filters" sits outside the
+     scrolling list so it's always visible, never scrolled off the end. --- */
+  .chips-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px 10px;
+  }
+  .chips-bar[hidden] { display: none; }
+  .chips-row {
+    list-style: none;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+  }
+  .chips-row li { flex: none; }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 3px 8px;
+    font: inherit;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    cursor: pointer;
+    border-radius: var(--r-sm);
+  }
+  .clear-all {
+    flex: none;
+    border: none;
+    background: none;
+    padding: 3px 0;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--fill-strong);
+    cursor: pointer;
+  }
+
+  /* --- results row: the filters' output sits with the results, below the
+     divider, in the same place in both views. List: "N upcoming races ·
+     Sort: …". Map: just "N races" — Sort is list-only (pins aren't
+     sequenced), so the row keeps its position and only loses its tail. --- */
+  .results-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .results-count { margin: 0; }
+  .sort-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-2);
+  }
+  .sort-control[hidden] { display: none; }
+  .sort-control::before { content: "·"; margin-right: 2px; color: var(--ink); }
+  .sort-control select {
+    border: 1px solid var(--line);
+    padding: 3px 6px;
+    font: inherit;
+    background: #fff;
+    border-radius: var(--r-sm);
+  }
+
+  /* Each view panel gets flex:1 when visible, so it fills the rest of main's
+     column. min-height:0 lets it shrink/scroll correctly instead of forcing
+     main taller than its flex basis. */
+  .view-panel { flex: 1; min-height: 0; }
+  /* #map-view sets display:flex, which beats the hidden attribute's UA
+     display:none and would show both panels at once. ID-level selectors so
+     this outranks #map-view / #list-view's own display rules. */
+  #list-view[hidden], #map-view[hidden] { display: none; }
+
+  #list-view { padding: 0 16px 16px; }
+
+  /* --- race cards: short by design — name, sport tag + date, location.
+     No field labels (the values are self-evident), no prose description
+     (that belongs on Race detail), no separate button: the whole card is
+     one link. Sized so 4 full cards fit on a phone-height screen, with the
+     5th peeking in to signal the list scrolls. --- */
+  .race-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+  }
+  article.race-card { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+  article.race-card a.card-link {
+    display: block;
+    padding: 20px 16px;
+    text-decoration: none;
+    color: inherit;
+  }
+  article.race-card a.card-link:hover,
+  article.race-card a.card-link:focus-visible { background: var(--fill-soft); }
+  article.race-card h3 { margin: 0 0 12px 0; font-size: 1rem; }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px 0;
+    font-size: 0.88rem;
+  }
+  .sport-tag {
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    font-size: 0.78rem;
+    border-radius: 6px;
+  }
+  .card-location { margin: 0; font-size: 0.88rem; color: var(--ink-2); }
+
+  /* --- map view: no padding (bleeds edge-to-edge), fills the remaining
+     space between the results row and the bottom nav. --- */
+  #map-view {
+    display: flex;
+    flex-direction: column;
+  }
+  .map-placeholder {
+    flex: 1;
+    border: 1px dashed var(--line-strong);
+    background: var(--fill-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+    padding: 16px;
+    border-radius: var(--r);
+  }
+
+  /* --- bottom-sheet drawer + backdrop: real overlay, slides up over content --- */
+  .sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); /* grayscale — black at reduced opacity, no hue */
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 5;
+  }
+  .sheet-backdrop.open { opacity: 1; }
+  .sheet-backdrop[hidden] { display: none; }
+
+  .sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 75%;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: var(--r) var(--r) 0 0;
+    padding: 6px 16px 20px;
+    transform: translateY(100%);
+    transition: transform 0.25s ease;
+    z-index: 6;
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet[hidden] { display: none; }
+
+  .sheet-handle {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--line);
+    margin: 0 auto 14px;
+  }
+
+  form div, form fieldset { margin-bottom: 12px; border: none; padding: 0; }
+  fieldset { border: 1px solid var(--line); padding: 8px 10px; border-radius: var(--r-sm); }
+  legend { font-size: 0.85rem; padding: 0 4px; }
+  form label { display: inline-block; margin-right: 14px; font-size: 0.9rem; }
+  fieldset label { display: block; margin: 4px 0; }
+  select, input[type="date"] {
+    border: 1px solid var(--line);
+    padding: 4px 6px;
+    background: #fff;
+    font: inherit;
+    border-radius: var(--r-sm);
+  }
+  .sheet-actions { display: flex; gap: 10px; margin-top: 4px; }
+  .sheet-actions button {
+    flex: 1;
+    border: 1px solid var(--line);
+    padding: 9px 12px;
+    font: inherit;
+    cursor: pointer;
+    border-radius: var(--r);
+  }
+  #filters-apply { background: var(--fill-strong); color: #fff; }
+  #filters-close { background: #fff; color: var(--ink); }
+
+  /* --- state message (empty/error): replaces the card list inside the same
+     view panels. No box around it — spacing alone groups heading, copy, and
+     actions (_conventions.md § 1, "zone separation is spacing"). --- */
+  .state-message { padding: 32px 8px; text-align: center; }
+  .state-message h2 { font-size: 1rem; margin: 0 0 6px 0; }
+  .state-message p { font-size: 0.9rem; margin: 0 0 16px 0; color: var(--ink-2); }
+  .state-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .state-action {
+    display: inline-block;
+    border: 1px solid var(--line);
+    background: var(--fill-strong);
+    color: #fff;
+    padding: 9px 18px;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: var(--r);
+  }
+  .state-action.secondary { background: #fff; color: var(--ink); }
+  .map-placeholder .state-message { padding: 0; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .results-row[hidden] { display: none; }
+</style>
+</head>
+<body role="application" aria-label="Onrace — Race browse, empty state (wireframe)">
+
+  <div class="phone-screen">
+
+    <main>
+
+      <header>
+        <h1>Discover</h1>
+        <!-- ZONE: search — find a race you already know by name or city
+             (jtbd.md → Hypothesis 7 [?], added 2026-09-30). Outside the
+             sticky controls, under the large title, so it scrolls away with
+             the title (_conventions.md § 1, Search). Submitting is a filter
+             change: flows.md "searches by race name or city" → Loading. -->
+        <form class="race-search" id="race-search" role="search">
+          <label class="visually-hidden" for="race-q">Search races by name or city</label>
+          <input type="search" id="race-q" name="q" placeholder="Race name or city" autocomplete="off" enterkeyhint="search">
+        </form>
+      </header>
+
+      <!-- ZONE: shared controls (sitemap.md: "Race browse (map + list)" — one
+           screen, two representations of one result set). Sticky at the top of
+           the scroll area so Filters, the List/Map toggle, and the active
+           chips stay reachable while the list scrolls beneath; its bottom
+           border is the divider. Filtering is identical for both views —
+           panning or zooming the map only changes the viewport (see the
+           map-view comment below), so the Filters drawer (region/date/sport)
+           and the chips are the only ways either view gets narrowed.
+           Filters and the toggle are siblings in one row (Filters decides
+           WHAT you see, the toggle decides HOW), with Filters weighted as the
+           primary control. Its label carries the active-filter count
+           ("Filters · 2") once any filter is on. -->
+      <div class="controls">
+        <div class="control-row">
+          <button type="button" id="filters-open" class="filters-trigger" aria-haspopup="dialog" aria-controls="filters-sheet" aria-expanded="false">Filters · 3</button>
+          <div class="view-toggle" role="group" aria-label="Choose view">
+            <button type="button" class="view-btn" data-view="list" aria-pressed="true">List</button>
+            <button type="button" class="view-btn" data-view="map" aria-pressed="false">Map</button>
+          </div>
+        </div>
+
+        <!-- ZONE: active filter chips — one removable chip per active facet,
+             plus "Clear all filters". Hidden here: no filters are applied in this
+             default state. Removing a chip is a filter change, which in the
+             real app re-runs the fetch (flows.md: filter change → Loading);
+             the wireframe only removes the chip and resets the matching
+             field in the Filters drawer, it doesn't fake new results. -->
+        <div class="chips-bar">
+          <ul class="chips-row" aria-label="Active filters">
+            <li><button type="button" class="chip" data-filter="region" aria-label="Remove filter: Middle East">Middle East <span aria-hidden="true">×</span></button></li>
+            <li><button type="button" class="chip" data-filter="sport" data-value="triathlon" aria-label="Remove filter: Triathlon">Triathlon <span aria-hidden="true">×</span></button></li>
+            <li><button type="button" class="chip" data-filter="dates" aria-label="Remove filter: 1 Oct – 30 Nov 2026">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li>
+          </ul>
+          <button type="button" class="clear-all" data-clear-filters>Clear all filters</button>
+        </div>
+      </div>
+
+      <!-- ZONE: results row — the count row, as on the base page. Hidden in this state (2026-09-30, `_critique.md` #9): the empty
+           state's heading already says it ("No races match…"), so a count
+           line above it only repeated the message. -->
+      <div class="results-row" hidden>
+        <p class="results-count" aria-live="polite"></p>
+      </div>
+
+      <section class="view-area" aria-label="Map or list view" style="display: contents;">
+
+        <div id="list-view" class="view-panel">
+          <!-- ZONE: empty state (_screens.md → Race browse → Empty; flows.md
+               HasResults → "no" → Empty). A legitimate data state, not an
+               error — so no retry. Exits are all "adjusts filters" (loops
+               back to Browse): the one-tap fixes are a chip's × or "Clear all filters"
+               (in the chips bar, and repeated here);
+               "Change filters" reopens the drawer with the current selections
+               still set, for a finer adjustment. "Gives up" (DeadEnd1) is just
+               leaving via the bottom nav — no button needed. -->
+          <div class="state-message" role="status">
+            <h2 data-if-filters>No races match your current filters</h2>
+            <p data-if-filters>Remove a filter above, or try a wider date range, another region, or more sport types.</p>
+            <!-- Search variant (2026-09-30): shown instead when a search is
+                 active, because then the search is the likelier cause.
+                 "Clear all filters" clears the search too: it's a chip in
+                 the same row (voice.md → Dictionary). -->
+            <h2 data-if-search hidden>No races match “<span data-q></span>”</h2>
+            <p data-if-search hidden>Only races in the race catalog appear here. Check the spelling, try the city instead of the race name, or clear your search and filters.</p>
+            <div class="state-actions">
+              <button type="button" class="state-action" data-opens-filters>Change filters</button>
+              <button type="button" class="state-action secondary" data-clear-filters>Clear all filters</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map view of the same empty result set: no pins to plot, same
+             message and exits as the list, so switching views never hides
+             the way out. -->
+        <div id="map-view" class="view-panel" hidden>
+          <div class="map-placeholder">
+            <div class="state-message">
+              <p>[ map placeholder — no pins: 0 races match ]</p>
+              <h2 data-if-filters>No races match your current filters</h2>
+              <p data-if-filters>Remove a filter above, or try a wider date range, another region, or more sport types.</p>
+              <h2 data-if-search hidden>No races match “<span data-q></span>”</h2>
+              <p data-if-search hidden>Only races in the race catalog appear here. Check the spelling, try the city instead of the race name, or clear your search and filters.</p>
+              <div class="state-actions">
+                <button type="button" class="state-action" data-opens-filters>Change filters</button>
+                <button type="button" class="state-action secondary" data-clear-filters>Clear all filters</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: global nav — 3 tabs, all destinations (sitemap.md → Navigation
+       § 1, revised 2026-09-25): Discover / My Results / Profile. Profile is
+       account infrastructure, always one tap away; signed out, it opens the
+       same Sign in / Sign up gate as My Results. "Log result" is still not a
+       tab: it's the primary action button inside My Results (header + empty
+       state), since tabs are for places and actions are buttons. Supersedes
+       the 2-tab bar (2026-09-24) and the earlier Discover / Log Result /
+       My Results bar. -->
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="race-browse.html" aria-current="page"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="13" cy="13" r="10.5"/><path d="m17.2 8.8-2.6 5.8-5.8 2.6 2.6-5.8z"/></svg><span>Discover</span></a></li>
+      <!-- My Results and Profile are owner-only: data-requires-auth sends a
+           signed-out person to the Sign in / Sign up gate first (flows.md
+           "Signed in?"; the snippet at the end of this file). -->
+      <li><a href="results-list-loading.html?run=1" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
+      <li><a href="profile-loading.html?run=1" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="9" r="4.5"/><path d="M4.5 22.5c.9-4.3 4.2-7 8.5-7s7.6 2.7 8.5 7"/></svg><span>Profile</span></a></li>
+    </ul>
+  </nav>
+
+  <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
+
+  <div id="filters-sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="filters-sheet-heading" hidden>
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <h2 id="filters-sheet-heading">Filters</h2>
+    <form id="filters-form">
+      <div>
+        <label for="region">Region</label>
+        <select id="region" name="region">
+          <option value="">All regions</option>
+          <option>Europe</option>
+          <option>North America</option>
+          <option selected>Middle East</option>
+          <option>Asia-Pacific</option>
+          <option>Africa</option>
+        </select>
+      </div>
+      <div>
+        <label for="date-from">Race date from</label>
+        <input type="date" id="date-from" name="date-from" value="2026-10-01" data-unfiltered="2026-09-23">
+        <label for="date-to">Race date to</label>
+        <input type="date" id="date-to" name="date-to" value="2026-11-30" data-unfiltered="2027-09-23">
+      </div>
+      <fieldset>
+        <legend>Sport type</legend>
+        <label><input type="checkbox" name="sport" value="hyrox"> HYROX</label>
+        <label><input type="checkbox" name="sport" value="deka"> DEKA / functional fitness</label>
+        <label><input type="checkbox" name="sport" value="marathon"> Marathon</label>
+        <label><input type="checkbox" name="sport" value="half-marathon"> Half marathon</label>
+        <label><input type="checkbox" name="sport" value="triathlon" checked> Triathlon</label>
+        <label><input type="checkbox" name="sport" value="ultra"> Ultra</label>
+        <label><input type="checkbox" name="sport" value="ocr"> OCR</label>
+      </fieldset>
+      <div class="sheet-actions">
+        <button type="button" id="filters-close">Cancel</button>
+        <button type="submit" id="filters-apply">Apply filters</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+(function () {
+  // Shared by race-browse.html and its three state pages. Wires Main Job 1's
+  // Race browse half of flows.md → "Main Job 1 — Discovery":
+  //   Browse → "changes region/date/sport filters" → Loading
+  //   Loading → HasResults? yes → Browse · no → Empty · connection fails → FetchError
+  //   Empty → "adjusts filters" → Browse (via Loading) · FetchError → Retry? yes → Loading
+  //   Browse → "taps a race card" → DetailLoading (race-detail-loading.html)
+  // Filter state travels in the URL (region, from, to, sport) so every page
+  // in the loop shows the same filters. The "fetch" is the seven sample races
+  // below — the same ones as the cards and race-detail.html.
+  var RACES = [
+    { slug: 'berlin-marathon', name: 'Berlin Marathon', city: 'Berlin', sport: 'marathon', date: '2026-09-27', region: 'Europe' },
+    { slug: 'hyrox-london', name: 'HYROX London', city: 'London', sport: 'hyrox', date: '2026-12-06', region: 'Europe' },
+    { slug: 'hyrox-dallas', name: 'HYROX Dallas', city: 'Dallas', sport: 'hyrox', date: '2027-01-17', region: 'North America' },
+    { slug: 'deka-strong-chicago', name: 'DEKA STRONG Chicago', city: 'Chicago', sport: 'deka', date: '2027-03-14', region: 'North America' },
+    { slug: 'boston-marathon', name: 'Boston Marathon', city: 'Boston', sport: 'marathon', date: '2027-04-20', region: 'North America' },
+    { slug: 'spartan-beast-killington', name: 'Spartan Race Beast — Killington', city: 'Killington', sport: 'ocr', date: '2027-07-11', region: 'North America' },
+    { slug: 'utmb', name: 'UTMB — Ultra-Trail du Mont-Blanc', city: 'Chamonix', sport: 'ultra', date: '2027-08-24', region: 'Europe' }
+  ];
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  var params = new URLSearchParams(window.location.search);
+  var filtersBtn = document.getElementById('filters-open');
+  var openBtns = document.querySelectorAll('.filters-trigger, [data-opens-filters]');
+  var closeBtn = document.getElementById('filters-close');
+  var sheet = document.getElementById('filters-sheet');
+  var backdrop = document.getElementById('sheet-backdrop');
+  var form = document.getElementById('filters-form');
+  var fromInput = document.getElementById('date-from');
+  var toInput = document.getElementById('date-to');
+  var chipsBar = document.querySelector('.chips-bar');
+  var chipsRow = document.querySelector('.chips-row');
+  var searchForm = document.getElementById('race-search');
+  var searchInput = document.getElementById('race-q');
+
+  // --- Filter state: the drawer's form is the single source of truth.
+  function readForm() {
+    return {
+      q: (searchInput.value || '').trim(),
+      region: form.elements.region.value,
+      from: fromInput.value,
+      to: toInput.value,
+      sports: Array.prototype.map.call(form.querySelectorAll('input[name="sport"]:checked'), function (b) { return b.value; })
+    };
+  }
+  function unfiltered() {
+    return { q: '', region: '', from: fromInput.getAttribute('data-unfiltered'), to: toInput.getAttribute('data-unfiltered'), sports: [] };
+  }
+  function datesFiltered(f) {
+    return f.from !== fromInput.getAttribute('data-unfiltered') || f.to !== toInput.getAttribute('data-unfiltered');
+  }
+  function toParams(f) {
+    var p = new URLSearchParams();
+    if (f.q) p.set('q', f.q);
+    if (f.region) p.set('region', f.region);
+    if (datesFiltered(f)) { p.set('from', f.from); p.set('to', f.to); }
+    f.sports.forEach(function (s) { p.append('sport', s); });
+    return p;
+  }
+  function hasFilterParams(p) {
+    return p.has('q') || p.has('region') || p.has('from') || p.has('to') || p.has('sport');
+  }
+  function writeForm(p) {
+    var u = unfiltered();
+    searchInput.value = p.get('q') || '';
+    form.elements.region.value = p.get('region') || '';
+    fromInput.value = p.get('from') || u.from;
+    toInput.value = p.get('to') || u.to;
+    var sports = p.getAll('sport');
+    form.querySelectorAll('input[name="sport"]').forEach(function (b) { b.checked = sports.indexOf(b.value) > -1; });
+  }
+  function matches(f) {
+    return RACES.filter(function (r) {
+      return (!f.q || (r.name + ' ' + r.city).toLowerCase().indexOf(f.q.toLowerCase()) > -1) &&
+        (!f.region || r.region === f.region) &&
+        r.date >= f.from && r.date <= f.to &&
+        (!f.sports.length || f.sports.indexOf(r.sport) > -1);
+    });
+  }
+  function withRun(f) {
+    var p = toParams(f);
+    p.set('run', '1');
+    return 'race-browse-loading.html?' + p.toString();
+  }
+
+  // --- Chips mirror the form: one removable chip per active facet.
+  function fmt(iso, withYear) {
+    var d = iso.split('-');
+    return (+d[2]) + ' ' + MONTHS[+d[1] - 1] + (withYear ? ' ' + d[0] : '');
+  }
+  function addChip(label, facet, value, aria) {
+    var li = document.createElement('li');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip';
+    btn.setAttribute('data-filter', facet);
+    if (value) btn.setAttribute('data-value', value);
+    btn.setAttribute('aria-label', aria || 'Remove filter: ' + label);
+    btn.appendChild(document.createTextNode(label + ' '));
+    var x = document.createElement('span');
+    x.setAttribute('aria-hidden', 'true');
+    x.textContent = '×';
+    btn.appendChild(x);
+    li.appendChild(btn);
+    chipsRow.appendChild(li);
+  }
+  function renderChips(f) {
+    chipsRow.innerHTML = '';
+    if (f.q) addChip('“' + f.q + '”', 'q', null, 'Clear search: “' + f.q + '”');
+    if (f.region) addChip(f.region, 'region');
+    f.sports.forEach(function (s) {
+      var box = form.querySelector('input[name="sport"][value="' + s + '"]');
+      addChip(box.parentNode.textContent.trim(), 'sport', s);
+    });
+    if (datesFiltered(f)) {
+      var sameYear = f.from.slice(0, 4) === f.to.slice(0, 4);
+      addChip(fmt(f.from, !sameYear) + ' – ' + fmt(f.to, true), 'dates');
+    }
+    var n = chipsRow.children.length;
+    var nf = n - (f.q ? 1 : 0); // the search chip isn't a filter in the count
+    filtersBtn.textContent = nf ? 'Filters · ' + nf : 'Filters';
+    chipsBar.hidden = n === 0;
+  }
+
+  if (hasFilterParams(params)) writeForm(params);
+  renderChips(readForm());
+
+  // --- Every filter change is flows.md's "changes region/date/sport
+  // filters" → Loading: Apply, a chip's ×, and Clear all all go to the
+  // loading page, which then decides the outcome.
+  chipsRow.addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    var f = readForm();
+    var facet = chip.getAttribute('data-filter');
+    if (facet === 'q') f.q = '';
+    if (facet === 'region') f.region = '';
+    if (facet === 'sport') f.sports = f.sports.filter(function (s) { return s !== chip.getAttribute('data-value'); });
+    if (facet === 'dates') { var u = unfiltered(); f.from = u.from; f.to = u.to; }
+    window.location.href = withRun(f);
+  });
+  document.querySelectorAll('[data-clear-filters]').forEach(function (btn) {
+    btn.addEventListener('click', function () { window.location.href = withRun(unfiltered()); });
+  });
+
+  // --- Filters drawer.
+  function openSheet() {
+    sheet.hidden = false;
+    backdrop.hidden = false;
+    requestAnimationFrame(function () {
+      sheet.classList.add('open');
+      backdrop.classList.add('open');
+    });
+    filtersBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeSheet() {
+    sheet.classList.remove('open');
+    backdrop.classList.remove('open');
+    filtersBtn.setAttribute('aria-expanded', 'false');
+    window.setTimeout(function () {
+      sheet.hidden = true;
+      backdrop.hidden = true;
+    }, 220);
+  }
+  openBtns.forEach(function (btn) { btn.addEventListener('click', openSheet); });
+  closeBtn.addEventListener('click', closeSheet);
+  backdrop.addEventListener('click', closeSheet);
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    window.location.href = withRun(readForm());
+  });
+  // Search: submitting (the keyboard's Search key) is a filter change →
+  // Loading, keeping the current filters (flows.md Flow 1).
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    window.location.href = withRun(readForm());
+  });
+
+  // Result count, in the same words whether it's a search, filters or both.
+  function countText(n, f) {
+    var filtered = f.region || f.sports.length || datesFiltered(f);
+    var what = f.q ? '“' + f.q + '”' + (filtered ? ' and your filters' : '') : 'your filters';
+    return '<strong>' + n + '</strong> ' + (n === 1 ? 'race matches ' : 'races match ') + what;
+  }
+
+  // --- Success page with filters applied: show only the matching sample
+  // races (real markup, un-hidden or hidden) and the filtered count.
+  var cards = document.querySelectorAll('.race-list .race-card');
+  if (cards.length && hasFilterParams(params)) {
+    var keep = matches(readForm()).map(function (r) { return r.slug; });
+    cards.forEach(function (card) {
+      var slug = new URLSearchParams(card.querySelector('a').search).get('race');
+      card.parentNode.hidden = keep.indexOf(slug) === -1;
+    });
+    document.querySelector('.results-count').innerHTML = countText(keep.length, readForm());
+  }
+
+  // --- Empty page: the count and the message name the search when there is
+  // one (real markup variants, un-hidden here; the query goes in as text).
+  if (document.querySelector('[data-if-search]')) {
+    var ef = readForm();
+    document.querySelectorAll('[data-if-search]').forEach(function (el) { el.hidden = !ef.q; });
+    document.querySelectorAll('[data-if-filters]').forEach(function (el) { el.hidden = !!ef.q; });
+    document.querySelectorAll('[data-q]').forEach(function (el) { el.textContent = ef.q; });
+  }
+
+  // --- Error page: "Try again" re-runs the same fetch, keeping filters
+  // (FetchError → Retry? yes → Loading).
+  document.querySelectorAll('[data-retry]').forEach(function (a) { a.href = withRun(readForm()); });
+
+  // --- Loading page: only when reached through the flow (?run=1) — opened
+  // on its own (e.g. from index.html) it stays put for inspection. After a
+  // short fetch delay it takes one of flows.md's three exits: connection
+  // fails → FetchError; no matches → Empty; otherwise → Race browse with
+  // the results. A static wireframe can't make a real fetch fail (offline,
+  // the next page wouldn't load either), so "connection fails" is taken
+  // when the browser reports offline or the URL carries the test switch
+  // &fail=1 (_conventions.md § 2).
+  if (document.body.getAttribute('data-state') === 'loading' && params.get('run') === '1') {
+    window.setTimeout(function () {
+      var f = readForm();
+      var q = toParams(f).toString();
+      var failed = !navigator.onLine || params.get('fail') === '1';
+      var next = failed ? 'race-browse-error.html'
+        : matches(f).length === 0 ? 'race-browse-empty.html'
+        : 'race-browse.html';
+      window.location.replace(next + (q ? '?' + q : ''));
+    }, 1200);
+  }
+
+  // --- List/Map toggle. Swaps the visible panel, and hides the results
+  // row's list-only parts (Sort, and "upcoming" in the count) in Map.
+  var viewButtons = document.querySelectorAll('.view-btn');
+  var panels = {
+    list: document.getElementById('list-view'),
+    map: document.getElementById('map-view')
+  };
+  var listOnly = document.querySelectorAll('[data-list-only]');
+  viewButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var view = btn.getAttribute('data-view');
+      viewButtons.forEach(function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      Object.keys(panels).forEach(function (key) {
+        panels[key].hidden = key !== view;
+      });
+      listOnly.forEach(function (el) {
+        el.hidden = view !== 'list';
+      });
+    });
+  });
+})();
+</script>
+
+<script>
+/* Signed in? (flows.md) — the auth session is modeled as a sessionStorage
+   flag (_conventions.md § 2). Links to owner-only screens carry
+   data-requires-auth; signed out, they go to the sign-in gate instead,
+   carrying where to land after. Pages never redirect themselves. */
+(function () {
+  function signedIn() {
+    try { return sessionStorage.getItem('onrace-signed-in') === '1'; } catch (e) { return false; }
+  }
+  document.querySelectorAll('a[data-requires-auth]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (signedIn()) return;
+      e.preventDefault();
+      location.href = 'sign-in-sign-up.html?next=' + encodeURIComponent(a.getAttribute('href'));
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

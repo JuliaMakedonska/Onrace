@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile (Loading) — Onrace (wireframe)</title>
+<style>
+  /* STATE: loading — same structure and zones as profile.html (the loaded
+     profile); only the content inside those zones changes, per
+     _conventions.md § 5. */
+
+  /* Structure/hierarchy/zones + real interaction only — grayscale, no color,
+     no custom fonts, no shadows, no content icons
+     (system-chrome glyphs only: tab bar — § 1). Deferred per _conventions.md § 7:
+     color, fonts, shadows, icons, finished UI.
+
+     Profile ([INFRASTRUCTURE], _screens.md → Pass 2 → Profile; flows.md →
+     Flow 5 — Profile and sign out): a top-level screen, so it keeps the
+     3-tab bar with Profile current and an iOS large title. The Profile tab
+     goes to profile-loading.html?run=1 (the fetch runs on every visit).
+     Files: profile.html (base: the loaded profile), profile-loading.html
+     (ProfileLoading), profile-error.html (ProfileError by default,
+     SaveError on ?cause=save). Empty and Success are "—" in _screens.md.
+
+     This file is a bare screen: no nav tree, no spec-note/caption chrome —
+     that lives once in index.html, which iframes this file into its own
+     phone-frame mockup (see _conventions.md § 6). */
+
+  /* Softer iOS-style grayscale (_conventions.md § 1) — same tokens as
+     race-browse.html. Radii: --r-sm small controls, --r large surfaces;
+     the sign-out alert uses iOS's own 14px alert radius. */
+  :root {
+    --ink: #1c1c1e;          /* primary text (iOS label) */
+    --ink-2: #6c6c70;        /* secondary text */
+    --ink-3: #8e8e93;        /* tertiary: inactive tab, placeholder */
+    --line: #c6c6c8;         /* borders, separators */
+    --line-strong: #8e8e93;  /* emphasized border (primary control, alert) */
+    --fill-strong: #3a3a3c;  /* current / pressed / primary action */
+    --fill-soft: #f2f2f7;    /* hover, open, placeholder regions */
+    --fill-track: #e9e9eb;   /* segmented-control track */
+    --skeleton: #e5e5ea;
+    --r-sm: 8px;
+    --r: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0 auto;
+    max-width: 390px;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a { color: var(--ink); }
+
+  /* iOS inset-grouped list convention (Settings): the screen behind the
+     groups is the light system gray, each group a white rounded surface.
+     That contrast is what makes a group read as one unit, so the groups
+     need no border (_conventions.md § 1: spacing, not boxing). */
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 49px; /* clears the fixed bottom-nav below */
+    background: var(--fill-soft);
+  }
+
+  /* Global nav (sitemap.md → Navigation § 1, 3 tabs) — copied from
+     race-browse.html. */
+  .bottom-nav {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; /* system chrome = system font */
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 49px;            /* iOS tab bar, above the home-indicator area */
+    background: #fff;
+    border-top: 0.5px solid var(--line);
+    z-index: 3;
+  }
+  .bottom-nav ul {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .bottom-nav li { flex: 1; }
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1px;
+    padding-top: 5px;
+    text-decoration: none;
+    color: var(--ink-3);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .bottom-nav a[aria-current="page"] { color: var(--fill-strong); font-weight: 600; }
+  .tab-icon { display: block; }
+
+  main { padding: 0 16px 24px; }
+
+  /* iOS large title (34pt bold), the top-level screen's own title. */
+  header { padding: 6px 0 6px; }
+  h1 { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 2.125rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin: 0; }
+
+  /* --- identity: initials placeholder, name, email --- */
+  .identity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px 0 24px;
+  }
+  .initials {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--skeleton);
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+  }
+  .identity h2 { margin: 0 0 2px; font-size: 1.3rem; }
+  .identity p { margin: 0; font-size: 0.9rem; color: var(--ink-2); }
+
+  /* --- grouped list: rounded white group, hairline separators between
+     rows (inset from the leading edge, as iOS does), footer text below. --- */
+  .group { margin-bottom: 28px; }
+  .group-heading {
+    margin: 0 0 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+  }
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .rows li { position: relative; }
+  .rows li + li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 0;
+    border-top: 0.5px solid var(--line);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 0 16px;
+  }
+  .row label, .row .row-label { flex: none; font-size: 1rem; }
+  .row input, .row select, .row .row-value {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink-2);
+    text-align: right;
+    text-align-last: right;
+    padding: 10px 0;
+    border-radius: var(--r-sm);
+  }
+  .row .row-value { margin: 0; }
+  .group-footer {
+    margin: 6px 16px 0;
+    font-size: 0.8rem;
+    color: var(--ink-2);
+  }
+
+  /* --- loading skeletons: gray placeholders shaped like each zone of
+     profile.html (initials circle, name + email lines, the four rows,
+     Sign out), same sizes and white groups, so nothing jumps when the
+     profile arrives. Static, no shimmer (finished-UI polish is deferred,
+     _conventions.md § 7). --- */
+  .bar { background: var(--skeleton); height: 12px; border-radius: 4px; }
+  .identity .initials.skel { background: var(--skeleton); }
+  .bar.name { height: 18px; width: 140px; margin: 4px 0 8px; }
+  .bar.email { height: 12px; width: 180px; }
+  .bar.heading { height: 10px; width: 64px; margin: 0 0 8px 16px; }
+  .row .bar.label { flex: none; width: 72px; height: 14px; }
+  .row .bar.value { margin-left: auto; width: 96px; height: 14px; }
+  .skel-signout { display: flex; align-items: center; justify-content: center; min-height: 44px; background: #fff; border-radius: var(--r); }
+  .skel-signout .bar { width: 72px; height: 14px; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+</head>
+<body data-state="loading" role="application" aria-label="Onrace — Profile, loading state (wireframe)">
+
+  <div class="phone-screen">
+
+    <main>
+
+      <header>
+        <h1>Profile</h1>
+      </header>
+
+      <!-- ZONE: loading state (_screens.md → Profile → Loading; flows.md
+           Flow 5 ProfileLoading "fetching profile") — fires on every tap of
+           the Profile tab and on Try again from the load error. Every zone
+           of profile.html is a gray placeholder in its own place: the
+           initials circle, the name and email lines, the Account group's
+           four rows, and the Sign out row — so nothing jumps when the
+           profile arrives. Sign out isn't live yet: the account it would
+           sign out of hasn't loaded. Placeholders are hidden from assistive
+           tech; aria-busy plus the visually-hidden status carry the
+           meaning. The tab bar works throughout. -->
+      <div aria-busy="true" aria-live="polite">
+        <p class="visually-hidden">Loading your account…</p>
+        <div aria-hidden="true">
+          <div class="identity">
+            <div class="initials skel"></div>
+            <div class="bar name"></div>
+            <div class="bar email"></div>
+          </div>
+          <div class="group">
+            <div class="bar heading"></div>
+            <ul class="rows">
+            <li><div class="row"><div class="bar label"></div><div class="bar value"></div></div></li>
+            <li><div class="row"><div class="bar label"></div><div class="bar value"></div></div></li>
+            <li><div class="row"><div class="bar label"></div><div class="bar value"></div></div></li>
+            <li><div class="row"><div class="bar label"></div><div class="bar value"></div></div></li>
+            </ul>
+          </div>
+          <div class="group">
+            <div class="skel-signout"><div class="bar"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div><!-- /.phone-screen -->
+
+  <!-- ZONE: global nav — 3 tabs, all destinations (sitemap.md → Navigation
+       § 1, revised 2026-09-25): Discover / My Results / Profile, Profile
+       current here (_conventions.md § 1). My Results and Profile are
+       owner-only and carry data-requires-auth (the snippet at the end of
+       this file; flows.md Flow 5 "Signed in?"). Both go through their
+       loading page, since each screen's fetch runs on every visit
+       (flows.md Flows 3 and 5). Works in every Profile state, and is the
+       "no" edge out of ProfileError's Retry? (DeadEnd10). -->
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="race-browse.html"><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="13" cy="13" r="10.5"/><path d="m17.2 8.8-2.6 5.8-5.8 2.6 2.6-5.8z"/></svg><span>Discover</span></a></li>
+      <li><a href="results-list-loading.html?run=1" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="14.5" r="9"/><path d="M10.5 2.5h5M13 2.5v3M13 14.5V9.5M20.5 6.5l1.5-1.5"/></svg><span>My Results</span></a></li>
+      <li><a href="profile-loading.html?run=1" aria-current="page" data-requires-auth><svg class="tab-icon" aria-hidden="true" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="13" cy="9" r="4.5"/><path d="M4.5 22.5c.9-4.3 4.2-7 8.5-7s7.6 2.7 8.5 7"/></svg><span>Profile</span></a></li>
+    </ul>
+  </nav>
+
+<script>
+(function () {
+  // Shared by profile.html, profile-loading.html and profile-error.html.
+  // Wires flows.md → "Flow 5 — Profile and sign out":
+  //   ProfileLoading → loads → Profile · connection fails → ProfileError
+  //   ProfileError → Retry? yes → ProfileLoading (Try again link)
+  //   Profile → changes a field → SavingField → Saved? yes → Profile
+  //                                                  no → SaveError
+  //   SaveError → tries again → SavingField · leaves it → Profile
+  //   Profile → Sign out → Confirm dialog → Cancel → Profile
+  //                                       → Sign out → Success5 (Race browse)
+  var params = new URLSearchParams(window.location.search);
+  var state = document.body.getAttribute('data-state'); // loading | error | (base)
+  var FIELDS = ['name', 'country', 'language'];
+  // "Connection fails" can't really happen in a static wireframe, so it's
+  // the browser reporting offline or the reviewer's &fail=1 switch
+  // (_conventions.md § 2). Nothing about it is rendered in the screen.
+  function connectionFails() { return !navigator.onLine || params.get('fail') === '1'; }
+
+  // --- Loading page: moves on only when reached through the flow (?run=1);
+  // opened on its own (e.g. from index.html) it stays put for inspection.
+  if (state === 'loading') {
+    if (params.get('run') === '1') {
+      window.setTimeout(function () {
+        window.location.replace(connectionFails() ? 'profile-error.html' : 'profile.html');
+      }, 1000);
+    }
+    return;
+  }
+
+  // --- Error page: two causes on one page (_conventions.md § 5). Both are
+  // real markup; this un-hides the one the URL names. Default = load.
+  var field = null;
+  if (state === 'error') {
+    var cause = params.get('cause') === 'save' ? 'save' : 'load';
+    document.getElementById('cause-load').hidden = cause !== 'load';
+    document.getElementById('cause-save').hidden = cause !== 'save';
+    if (cause === 'load') return; // nothing loaded: no fields, no Sign out to wire
+    field = FIELDS.indexOf(params.get('field')) >= 0 ? params.get('field') : 'name';
+  }
+
+  function setValue(el, v) {
+    if (el.tagName === 'SELECT') {
+      for (var i = 0; i < el.options.length; i++) {
+        if (el.options[i].text === v) { el.selectedIndex = i; return true; }
+      }
+      return false;
+    }
+    el.value = v;
+    return true;
+  }
+  function showIdentity(name) {
+    document.getElementById('profile-name').textContent = name || 'Maya Rossi';
+    var initials = (name || '').trim().split(/\s+/).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase();
+    document.getElementById('profile-initials').textContent = initials || 'MR';
+  }
+
+  // SaveError: the named field shows its previous value and says so; Try
+  // again carries the attempted value back to profile.html.
+  if (field) {
+    var fEl = document.getElementById(field);
+    var prev = params.get('prev');
+    if (prev !== null) setValue(fEl, prev);
+    if (field === 'name') showIdentity(fEl.value);
+    var err = document.getElementById(field + '-error');
+    err.querySelector('[data-prev]').textContent = fEl.value;
+    var attempted = params.get('value');
+    if (attempted !== null) {
+      err.querySelector('[data-retry]').href = 'profile.html?retry=' + field + '&value=' + encodeURIComponent(attempted);
+    }
+    err.hidden = false;
+  }
+
+  // --- Save as you go. Last saved value per field, so a failed save can
+  // say what the field went back to.
+  var saved = {};
+  var timers = {};
+  FIELDS.forEach(function (f) { saved[f] = document.getElementById(f).value; });
+
+  function save(f) {
+    var el = document.getElementById(f);
+    var note = document.getElementById(f + '-status');
+    var saving = note.querySelector('[data-saving]');
+    var done = note.querySelector('[data-saved]');
+    var errNote = document.getElementById(f + '-error');
+    if (errNote) errNote.hidden = true; // a new attempt replaces the old error
+    window.clearTimeout(timers[f]);
+    saving.hidden = false; done.hidden = true; note.hidden = false;
+    timers[f] = window.setTimeout(function () {
+      if (connectionFails()) {
+        window.location.href = 'profile-error.html?cause=save&field=' + f +
+          '&value=' + encodeURIComponent(el.value) + '&prev=' + encodeURIComponent(saved[f]);
+        return;
+      }
+      saved[f] = el.value;
+      if (f === 'name') showIdentity(el.value);
+      saving.hidden = true; done.hidden = false;
+      timers[f] = window.setTimeout(function () { note.hidden = true; }, 2000);
+    }, 700);
+  }
+  FIELDS.forEach(function (f) {
+    document.getElementById(f).addEventListener('change', function () { save(f); });
+  });
+
+  // Arriving from SaveError's Try again: re-apply the attempted change and
+  // save it again (SaveError → "tries the change again" → SavingField).
+  var retry = params.get('retry');
+  if (state !== 'error' && FIELDS.indexOf(retry) >= 0 && params.get('value') !== null) {
+    if (setValue(document.getElementById(retry), params.get('value'))) save(retry);
+  }
+
+  // --- Sign out: confirm first (iOS alert), then clear the session.
+  var alertEl = document.getElementById('signout-alert');
+  var cancelBtn = document.getElementById('signout-cancel');
+  document.getElementById('sign-out').addEventListener('click', function () {
+    alertEl.showModal();
+    cancelBtn.focus();
+  });
+  cancelBtn.addEventListener('click', function () { alertEl.close(); });
+  document.getElementById('signout-confirm').addEventListener('click', function () {
+    try { sessionStorage.removeItem('onrace-signed-in'); } catch (e) {}
+    location.href = 'race-browse.html';
+  });
+})();
+</script>
+
+<script>
+/* Signed in? (flows.md) — the auth session is modeled as a sessionStorage
+   flag (_conventions.md § 2). Links to owner-only screens carry
+   data-requires-auth; signed out, they go to the sign-in gate instead,
+   carrying where to land after. Pages never redirect themselves. */
+(function () {
+  function signedIn() {
+    try { return sessionStorage.getItem('onrace-signed-in') === '1'; } catch (e) { return false; }
+  }
+  document.querySelectorAll('a[data-requires-auth]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (signedIn()) return;
+      e.preventDefault();
+      location.href = 'sign-in-sign-up.html?next=' + encodeURIComponent(a.getAttribute('href'));
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
