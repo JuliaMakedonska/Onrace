@@ -29,6 +29,15 @@
         ],
         "createdAt": "2026-10-18T16:39:57.891Z",
         "reason": "Claude: showcase specimens carry their screens' own h1 (bar titles, large titles) inside the showcase's h2/h3 outline"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-18T16:44:57.027Z",
+        "reason": "Claude: the two hits are the Profile .rows list; each row is 44px tall with its text centred and 16px side padding (iOS grouped-list anatomy), so the list itself needs no top/bottom inset"
       }
     ]
   }
