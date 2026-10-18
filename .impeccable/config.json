@@ -1,7 +1,10 @@
 {
   "detector": {
     "ignoreRules": [],
-    "ignoreFiles": [],
+    "ignoreFiles": [
+      "wireframes/_wireframe/**",
+      "public/wireframes/_wireframe/**"
+    ],
     "ignoreValues": [
       {
         "rule": "design-system-font",
