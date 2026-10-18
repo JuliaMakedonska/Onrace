@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "sf mono",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-18T16:39:57.854Z",
+        "reason": "Claude: showcase code labels use --font-mono, the stand/showcase token (signed on the stand as 'never in the product')"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-18T16:39:57.873Z",
+        "reason": "Claude: ui/kit.html is a component showcase; each specimen sits in a showcase frame, which the product never does"
+      },
+      {
+        "rule": "skipped-heading",
+        "value": "*",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-18T16:39:57.891Z",
+        "reason": "Claude: showcase specimens carry their screens' own h1 (bar titles, large titles) inside the showcase's h2/h3 outline"
+      }
+    ]
+  }
+}

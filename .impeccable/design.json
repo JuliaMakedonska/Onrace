@@ -466,7 +466,7 @@
       "**Do** show every photo in black and white (`--photo-filter`), inset at 3:1 with a 4px radius.",
       "**Do** state proof as its own 13px `--text-2` line with one link icon: \"Self-reported · via \\<domain\\>\".",
       "**Do** step a secondary action up or down so the screen keeps exactly one filled button.",
-      "**Do** take every value from `tokens.css`. Pages and `components.css` hold no raw values.",
+      "**Do** take every value from `ui/kit.css`. Pages and the kit's classes hold no raw values.",
       "**Do** draw icons as Solar bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar.",
       "**Do** keep 44px targets, a 2px `--text-1` focus ring, and 0ms motion under `prefers-reduced-motion`."
     ],

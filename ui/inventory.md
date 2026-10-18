@@ -112,19 +112,9 @@ Single-screen blocks, by screen.
 
 ---
 
-## Reported, not decided
+## Closed (designer, 2026-10-18)
 
-**"Qualifier" tag.** No wireframe page, CSS file, `microcopy.md` row or product doc has a "Qualifier" tag, chip or label. The word appears only in prose:
-- `wireframes/_screens.md:80` (mirrored at `public/wireframes/_screens.md:80`): "Berlin 3:12:48 is the Boston-qualifier-style proof that Related Job 4 is about". This describes the sample data; nothing on a screen.
-- `research/research.md:251`: HYROX's "Last-Chance Qualifier", explaining that HYROX qualification is placement-based.
-- Related, not a tag:
-  - the persona name "Qualifying-Time Archivist", in `sitemap.md`, `flows.md`, `research/` and the `result-detail*.html` comments
-  - `voice.md`'s Dictionary, which allows "qualifying time" only "when naming what an elite race asks for" (lines 136 and 175)
-  - Boston's catalog description in `race-detail.html` and `race-detail-error.html` ("requires a qualifying time or charity entry"), which is catalog data.
-
-**"Filtered, with results."** There's no page of its own. No `race-browse-filtered.html` exists, and `_screens.md` lists only empty, error and loading for Race browse. It exists only through URL parameters on `race-browse.html`:
-- the parameters are `region`, `from`, `to`, `sport` (repeatable) and `q` (`_conventions.md` § 2: "filters as `region`/`from`/`to`/`sport`")
-- the page's script reads them, checks the boxes in the sheet and draws the chips row
-- a filter change goes through `race-browse-loading.html?run=1&…`, which lands back on `race-browse.html` with the same parameters.
-
-The Lesson 6 docs name it as a state of the base page ("filtered = base page with active chips", `concept/concept.md` line 3 and `concept/references.md` line 5). The overview script builds it as `race-browse.html?sport=hyrox&sport=marathon` (`scripts/build_concept_overview.py:188`). The wireframes viewer (`wireframes/index.html`) has no entry for it.
+- **"Qualifier" tag:** no such element exists in any wireframe, CSS or microcopy row (the word appears only in prose: `wireframes/_screens.md:80`, `research/research.md:251`). Closed; not an open decision.
+- **"Filtered, with results":** kept as it is: `race-browse.html` plus URL parameters (`region`, `from`, `to`, `sport`, `q`), no page of its own. It's now a state in the wireframes viewer tree, **Race browse · Filtered** → `race-browse.html?sport=hyrox&sport=marathon` (`scripts/build_wireframes_viewer.py` → `URL_STATES`).
+- **G21 (Sort with two options):** the control is decided in the markup pass.
+- **HIG gaps on the eight grayscale screens:** checked per group in step 5. Until then, the Gaps column lists only gaps that share markup with the two Podium screens.

@@ -57,6 +57,8 @@ for row in trace.group(2).split('\n'):
 # ---- _screens.md: one section per screen
 SLUG = lambda name: re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
 STATE_ORDER = [('', 'Base'), ('-empty', 'Empty'), ('-error', 'Error'), ('-loading', 'Loading'), ('-check-inbox', 'Check inbox')]
+# States that are a base page plus URL parameters, not files of their own (designer, 2026-10-18: "filtered, with results" is Race browse with its filter parameters)
+URL_STATES = {'race-browse': [('race-browse?sport=hyrox&sport=marathon', 'Filtered')]}
 pass1_end = S.index('## Pass 2')
 flows = {'Discovery': [], 'Archive': [], 'Infrastructure': []}
 for m in re.finditer(r'^## ([^\n]+)\n(.*?)(?=^## |\Z)', S, flags=re.M | re.S):
@@ -76,6 +78,7 @@ for m in re.finditer(r'^## ([^\n]+)\n(.*?)(?=^## |\Z)', S, flags=re.M | re.S):
     first = first if first.rstrip().endswith(('.', '"', '”', '?')) else first + '.'
     states = [[slug + suf, label] for suf, label in STATE_ORDER if os.path.exists(f'{ROOT}/wireframes/{slug}{suf}.html')]
     assert states and states[0][1] == 'Base', slug
+    states[1:1] = [list(x) for x in URL_STATES.get(slug, [])]
     flows[folder].append({
         'slug': slug, 'name': name, 'main': name in MAIN, 'states': states,
         'job': inline(job_line if job_line.startswith('none') else re.split(r'(?<=[.?!])(?:["”])?\s+(?=[A-Z`"])', job_line)[0]),   # 'none' keeps its reason
@@ -84,7 +87,7 @@ for m in re.finditer(r'^## ([^\n]+)\n(.*?)(?=^## |\Z)', S, flags=re.M | re.S):
         'flow': (inline(ref) + ': ' if ref else '') + inline(first),
     })
 DATA = [{'flow': f, 'screens': s} for f, s in flows.items()]
-n_screens = sum(len(f['screens']) for f in DATA); n_states = sum(len(s['states']) for f in DATA for s in f['screens'])
+n_screens = sum(len(f['screens']) for f in DATA); n_states = sum(1 for f in DATA for s in f['screens'] for st in s['states'] if '?' not in st[0])
 files = [os.path.basename(p) for p in glob.glob(ROOT + '/wireframes/*.html') if not p.endswith('/index.html')]
 assert n_states == len(files), (n_states, len(files))
 

@@ -128,25 +128,35 @@ How Onrace speaks, decided 2026-09-26 to 2026-09-30 and applied to every wirefra
 
 ## Concept
 
-The visual concept, Lesson 6 (2026-10-13 to 2026-10-15). Direction A, **Podium**: graphite ground `#131518`, one scarce sodium-amber accent `#F5B649`, Schibsted Grotesk 800 (title, finish time, date day) + Hanken Grotesk 400/600 (everything else), radii 4/6 (12 on the stand only), Solar bold icons, black-and-white race photos.
+The visual concept, Lesson 6 (2026-10-13 to 2026-10-15). Direction A, **Podium**: graphite ground `#131518`, one scarce sodium-amber accent `#F5B649`, Schibsted Grotesk 800 (title, finish time, date day) + Hanken Grotesk 400/600 (everything else), radii 4/6 (12 on the stand panels and, until step 3b, the Filters sheet), Solar bold icons, black-and-white race photos.
 
 - **Where it lives (`concept/`):**
   - `concept.md`: the rules and every decision.
   - `references.md`: references and the photo log.
-  - `tokens.css`: every value.
-  - `map.css`: the map tokens and Natural Earth masks, linked by the Race browse pages only.
-  - `components.css`: components, built from tokens only.
-  - `concept.html`: the stand, live at https://juliamakedonska.github.io/Onrace/concept/concept.html.
-  - Build scripts: `scripts/concept/build_stand.py` writes the stand and runs the checks; `scripts/concept/build_map.py` regenerates the map block in `map.css`.
+  - `concept.html`: the stand, live at https://juliamakedonska.github.io/Onrace/concept/concept.html. Its own layout is `stand.css`.
+  - The values and components moved to the kit in Lesson 7 step 3a (2026-10-18): `concept/tokens.css` and `concept/components.css` are now `ui/kit.css`, and `concept/map.css` is now `ui/map.css` (see UI kit below).
+  - Build scripts: `scripts/concept/build_stand.py` runs the checks, writes the stand, stamps the pages that link the kit and mirrors the stand, the kit and the map to `public/`; `scripts/concept/build_map.py` regenerates the map block in `ui/map.css`.
   - Mirror: `concept/` pages and CSS → `public/concept/`.
 - **The rules:**
-  - Values only from tokens: pages and `components.css` hold no raw values. The one exception is the map pins' inline `left`/`top` (deferred to Lesson 7).
+  - Values only from tokens: pages and `ui/kit.css`'s classes hold no raw values. The one exception is the map pins' inline `left`/`top` (deferred to Lesson 7).
   - Every token is signed on the stand with its reason, and the build stops if one isn't.
   - Fonts load from each page's `<head>`, not from CSS.
-  - Color rules 1–3 (`concept.md` → Color rules) are checked by `build_stand.py` on every build: 1 accent placement, 2 no success color on results, 3a depth of dark. Each stops the build when broken. So does any contrast pair below AA (65 pairs).
+  - Color rules 1–3 (`concept.md` → Color rules) are checked by `build_stand.py` on every build: 1 accent placement, 2 no success color on results, 3a depth of dark. Each stops the build when broken. So does any contrast pair below AA (81 pairs since the kit).
   - **3b** (amber vs HYROX yellow) is reported, not blocking: the amber is a **designer override** of 3b (2026-10-14), valid for this exact hex only.
-- **Screens in Podium:** Race browse (`race-browse.html` + `-empty`, `-error`, `-loading`) and Results list (`results-list.html` + the same three). They link the concept CSS and keep the wireframes' text and structure. **The other 8 screens stay grayscale until Lesson 7**, as does every markup change listed in `concept.md` → Deferred to Lesson 7 (markup).
+- **Screens in Podium:** Race browse (`race-browse.html` + `-empty`, `-error`, `-loading`) and Results list (`results-list.html` + the same three). They link `ui/kit.css` (Race browse also `ui/map.css`) and keep the wireframes' text and structure. **The other 8 screens stay grayscale until Lesson 7**, as does every markup change listed in `concept.md` → Deferred to Lesson 7 (markup).
 - **Checked:** step 7 (2026-10-15) found 9 defects against `concept.md` and `/impeccable audit`: 8 fixed, 1 detector false positive (`concept.md` → Step 7 check).
+
+## UI kit
+
+Lesson 7 (2026-10-18). `DESIGN.md` (repo root) is the design system documented from the two painted screens; `concept/concept.md` follows the screens. `concept.md` → Native iOS holds the HIG rule, the decided HIG-vs-Podium conflicts (C1–C7), and the 33 gaps triaged into kit, markup pass and out of scope.
+
+- **`ui/inventory.md`:** every component of all 10 screens, with its screens, states, photo, HIG link and gaps.
+- **`ui/kit.css`:** the one source of truth. Every variable in `:root` (flat; two-level tokens are Lesson 8) and every component class, with no values in the classes. Grayscale screens' components are in it too, styled from DESIGN.md, though those screens don't link it yet.
+- **`ui/map.css`:** the static map's data (tokens and Natural Earth masks), linked by the Race browse pages and the kit showcase only.
+- **`ui/shell.html`:** the shell (large-title header and tab bar), no status bar.
+- **`ui/kit.html`:** the showcase, every inventory component in its states, live at https://juliamakedonska.github.io/Onrace/ui/kit.html.
+- **Step 3a** extracted the kit exactly as the screens look. The 8 Podium pages are byte-identical before and after at 390×844 (12 states). **Step 3b** brings the native iOS changes.
+- **Mirror:** `ui/` → `public/ui/` (`build_stand.py` does it).
 
 ## Status
 

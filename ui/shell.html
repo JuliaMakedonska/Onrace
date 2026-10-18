@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onrace shell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="kit.css?v=f57bcb1a">
+</head>
+<!-- The shell: what every top-level screen (Discover, My Results, Profile)
+     shares. The large-title header at the top of the scrolling page, and the
+     3-tab bar fixed to the bottom (sitemap.md → Navigation § 1). No status bar:
+     the wireframes viewer draws it outside the page. Classes and values from
+     kit.css only. ?tab=results or ?tab=profile shows the other two tabs. -->
+<body class="onrace">
+
+  <div class="phone-screen">
+    <main>
+      <header>
+        <h1 data-title>Discover</h1>
+        <a class="header-action" href="../wireframes/log-result.html" data-results-only hidden>Log result</a>
+      </header>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="../wireframes/race-browse.html" data-tab="discover" aria-current="page"><span>Discover</span></a></li>
+      <li><a href="../wireframes/results-list-loading.html?run=1" data-tab="results"><span>My Results</span></a></li>
+      <li><a href="../wireframes/profile-loading.html?run=1" data-tab="profile"><span>Profile</span></a></li>
+    </ul>
+  </nav>
+
+<script>
+(function () {
+  var TITLES = { discover: 'Discover', results: 'My Results', profile: 'Profile' };
+  var tab = new URLSearchParams(location.search).get('tab');
+  if (!TITLES[tab]) return;
+  document.querySelector('[data-title]').textContent = TITLES[tab];
+  document.querySelectorAll('[data-tab]').forEach(function (a) {
+    if (a.getAttribute('data-tab') === tab) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+  // The large-title header carries Log result on My Results only (its primary action)
+  document.querySelector('[data-results-only]').hidden = tab !== 'results';
+})();
+</script>
+</body>
+</html>

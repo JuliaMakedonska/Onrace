@@ -202,7 +202,7 @@ Documented on 2026-10-18 (Lesson 7, step 1) from the two painted screens and all
 - `wireframes/race-browse.html`, `-empty`, `-error`, `-loading`; the filtered state (`?sport=hyrox&sport=marathon`); the Filters sheet open; the Map view
 - `wireframes/results-list.html`, `-empty`, `-error`, `-loading`; the saved state (`?saved=`)
 
-Every value comes from `concept/tokens.css`, `concept/map.css` and `concept/components.css`, and was checked against the computed styles of the rendered screens at 390×844. The screens are the source of truth. The artifact pages (`concept.html`, `directions*.html`, `voice.html`, `ia.html`, the workspace shell) are not the product, and nothing here describes them.
+Every value comes from `ui/kit.css` and `ui/map.css` (until Lesson 7 step 3a, `concept/tokens.css`, `concept/map.css` and `concept/components.css`), and was checked against the computed styles of the rendered screens at 390×844. The screens are the source of truth. The artifact pages (`concept.html`, `directions*.html`, `voice.html`, `ia.html`, the workspace shell) are not the product, and nothing here describes them.
 
 The other eight screens are still grayscale wireframes. They take this system in Lesson 7.
 
@@ -253,7 +253,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 - **Coral Wash** (`#3A2F31`, `--error-bg`): the error status surface (defined; not shown on these two screens).
 - **Scrim** (`rgba(0, 0, 0, 0.6)`, `--scrim`): behind the open Filters sheet.
 
-`--success` and `--success-bg` exist in `tokens.css` for the stand's specimen only. No product screen uses them.
+`--success` and `--success-bg` exist in `ui/kit.css` for the stand's specimen only. No product screen uses them.
 
 ### Named Rules
 **The Two Lights Rule.** The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Every other active state stays neutral: the active filter chip is an outline, the pressed segment is `--bg-3`, a checked checkbox is `--text-1`, the focus ring is `--text-1`.
@@ -283,7 +283,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 
 There is no 700. `strong` and `b` render at 600, because Hanken loads only 400 and 600.
 
-The sizes above are today's. On 2026-10-18 the designer decided to map them onto the HIG text styles (C3); the proposed mapping is in Native iOS: the title goes to 34px and meta to 15px.
+The sizes above are today's. On 2026-10-18 the designer approved mapping them onto the HIG text styles (C3), landing in step 3b: the title goes to 34px and meta to 15px; finish time (32px) and date day (30px) stay as display figures (attribute a).
 
 ### Named Rules
 **The Three Shouts Rule.** The display face is used for the screen title, the finish time and the date day, and nowhere else. Race names, chips, buttons, tabs and meta are the text face.
@@ -325,7 +325,7 @@ Decided 2026-10-18 (C1), lands in step 3: the bars (tab bar, top bar, controls b
 Slightly rounded, never pills, never sharp.
 - **4px** (`--radius-1`), inner shapes: the photo inside a card, the date tile, format and filter chips, List/Map segments, skeleton bars, map pin labels, checkboxes, the sheet handle.
 - **6px** (`--radius-2`), outer shapes: cards, result rows, buttons, the search field, sheet fields, the List/Map track, the saved confirmation, the map frame.
-- **12px** (`--radius-3`): today, the Filters sheet's top corners only (`tokens.css` and the stand label it "stand panels only"). Decided 2026-10-18: the sheet follows the native iOS sheet, so this becomes the system's sheet radius in step 3 (see Native iOS).
+- **12px** (`--radius-3`): today, the Filters sheet's top corners only (`ui/kit.css` and the stand label it "stand panels only"). Decided 2026-10-18: the sheet follows the native iOS sheet, so this becomes the system's sheet radius in step 3 (see Native iOS).
 - **Circles:** the map pin dot only.
 - **Borders** are drawn as 1px inset box-shadows (`--border`), so they never change a box's size.
 
@@ -379,7 +379,7 @@ A frame in `--bg-bar` (water) with a 1px `--field-line` boundary and a 6px radiu
 - **Do** show every photo in black and white (`--photo-filter`), inset at 3:1 with a 4px radius.
 - **Do** state proof as its own 13px `--text-2` line with one link icon: "Self-reported · via \<domain\>".
 - **Do** step a secondary action up or down so the screen keeps exactly one filled button.
-- **Do** take every value from `tokens.css`. Pages and `components.css` hold no raw values.
+- **Do** take every value from `ui/kit.css`. Pages and the kit's classes hold no raw values.
 - **Do** draw icons as Solar bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar.
 - **Do** keep 44px targets, a 2px `--text-1` focus ring, and 0ms motion under `prefers-reduced-motion`.
 
@@ -436,8 +436,8 @@ The Filters sheet follows the native iOS sheet, not a one-off radius (designer d
 
 - **C1 Liquid Glass:** adopted for bars (tab bar, top bar, controls bar) and the Filters sheet: translucent graphite with blur, in Podium's tones. Never on cards; content stays flat.
 - **C2 Icons:** Solar stays for our icons. Controls the system draws (the date picker, system menus) stay system.
-- **C3 Fonts:** Schibsted Grotesk and Hanken Grotesk stay, with Podium's scale mapped onto the HIG text styles. Proposed: title 38 → Large Title 34; item 17 = Headline; body and buttons 15 = Subheadline; meta 14 → Subheadline 15; proof 13 = Footnote; labels 11 = Caption 2; finish time 32 and date day 30 stay as display figures. Measured: the first screen keeps two full race cards (9.7px to spare in the viewer, was 8.6px).
-- **C4 Control tint:** neutral (text color) for checkmarks and switches. Amber stays only per Color rule 1. The sheet's background is the raised graphite level, `--bg-2`.
+- **C3 Fonts:** Schibsted Grotesk and Hanken Grotesk stay, with Podium's scale mapped onto the HIG text styles. Approved 2026-10-18: title 38 → Large Title 34; item 17 = Headline; body and buttons 15 = Subheadline; meta 14 → Subheadline 15; proof 13 = Footnote; labels 11 = Caption 2; finish time 32 and date day 30 stay as display figures (attribute a). Measured: the first screen keeps two full race cards (9.7px to spare in the viewer, was 8.6px).
+- **C4 Control tint:** neutral (text color) for checkmarks and switches. Amber stays only per Color rule 1. The sheet's background is the raised graphite level, `--bg-2` (confirmed 2026-10-18).
 - **C5 Dark only:** kept, as a designer decision. Dark is Onrace's identity from the brand tone and the attributes, and every color rule and contrast check is built for it.
 - **C6 Loading:** a subtle pulse on skeletons, still under reduced motion.
 - **C7 Corners:** concentric only for elements inside bars (the search field, the segmented control). Content keeps 4/6px.
@@ -446,4 +446,4 @@ The Filters sheet follows the native iOS sheet, not a one-off radius (designer d
 
 - [`concept/concept.md`](concept/concept.md): the rules and every decision behind these values (Designer's taste, Hierarchy rules, Color rules, race card anatomy, Results list details, Map, Deferred to Lesson 7).
 - [`concept/references.md`](concept/references.md): the references, the techniques taken and the anti-references, and the photo log.
-- Values: [`concept/tokens.css`](concept/tokens.css), [`concept/map.css`](concept/map.css), [`concept/components.css`](concept/components.css). Signed reasons for each token: the stand, [`concept/concept.html`](concept/concept.html).
+- Values and components: [`ui/kit.css`](ui/kit.css), [`ui/map.css`](ui/map.css); the showcase [`ui/kit.html`](ui/kit.html) and the shell [`ui/shell.html`](ui/shell.html); the inventory [`ui/inventory.md`](ui/inventory.md). Signed reasons for each token: the stand, [`concept/concept.html`](concept/concept.html).

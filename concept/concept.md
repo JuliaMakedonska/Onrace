@@ -50,7 +50,7 @@ Decided 2026-10-13, after reviewing screenshots of round 1's "Direction 1 + yell
 
 Added before step 5. `scripts/concept/build_stand.py` checks rules 1–3 on every build. Rules 1, 2 and 3a stop the build when broken. Rule 3b is reported on the stand and doesn't block, because the designer keeps the current amber knowingly.
 
-1. **Accent placement.** Amber only where you can act or where you are: the primary action, the current tab, an active state. Never on a result, a finish time, a count or a status. *Build check:* every `components.css` rule that uses `--accent` or `--accent-hover` must target an allowed selector (primary button, `.header-action`, primary `.state-action`, the Filters sheet's Apply filters button `.sheet-actions button[type="submit"]`, the current tab). Specimen swatches on the stand are the only other place.
+1. **Accent placement.** Amber only where you can act or where you are: the primary action, the current tab, an active state. Never on a result, a finish time, a count or a status. *Build check:* every rule in `ui/kit.css` and `stand.css` (until 2026-10-18, `components.css`) that uses `--accent` or `--accent-hover` must target an allowed selector (primary button, `.header-action`, primary `.state-action`, the Filters sheet's Apply filters button `.sheet-actions button[type="submit"]`, the grayscale screens' primary `.register-btn`, `.open-btn` and `.submit-btn` (added with the kit, 2026-10-18), the current tab). Specimen swatches on the stand are the only other place.
    - **Updated 2026-10-18 (Lesson 7, step 1), to match the screens.**
      - *The sheet's primary button was missing from the list above.* Apply filters is filled amber on the screen, and `build_stand.py` already allows `.sheet-actions button[type="submit"]`. With the sheet open, Race browse shows two amber uses: the current tab and Apply filters.
      - *"An active state" is never amber on the screens.* The only amber "where you are" is the current tab. Every other active state is neutral: the active filter chip is a `--text-2` outline, the pressed List/Map segment is `--bg-3` with a `--field-line` outline, Filters with its sheet open is `--bg-3`, a checked checkbox is `--text-1`, and the focus ring is `--text-1`. The rule's wording still allows an amber active state; the screens don't use one.
@@ -331,7 +331,7 @@ The Filters sheet follows the native iOS sheet instead of a one-off 12px excepti
 - **Detents:** large (fully expanded) is always supported; medium is about half. A filter form is more useful at full height, but medium allows progressive disclosure. Which detents Filters uses is for step 3; today the sheet has one fixed height (75%).
 - **Buttons:** a top toolbar with Cancel on the leading edge and the confirming action on the trailing edge (Done in HIG; here Apply filters, `.prominent`). Not a bottom footer.
 - **Dismissal:** swipe down to dismiss. If filters were changed but not applied, ask to confirm with an action sheet. Cancel stays as the on-screen alternative.
-- **Background:** our raised graphite level, `--bg-2` (**C4**, decided 2026-10-18), translucent with blur (**C1**). Today the sheet is `--bg-1`.
+- **Background:** our raised graphite level, `--bg-2` (**C4**, decided 2026-10-18), translucent with blur (**C1**). Confirmed by the designer, 2026-10-18; today the sheet is still `--bg-1` and changes in step 3b.
 
 ### Gaps: the two screens against HIG (2026-10-18)
 
@@ -391,13 +391,13 @@ The seven conflicts, as they were put to the designer, and the decision on each.
 
 ### Type scale on the HIG text styles (C3): the proposed mapping
 
-Proposed 2026-10-18 for the designer's approval. Fonts stay Schibsted Grotesk 800 and Hanken Grotesk 400/600; only sizes change. HIG's default (Large) sizes from [Typography](https://developer.apple.com/design/human-interface-guidelines/typography); leading stays Podium's (`--leading-*`) until the Dynamic Type work (G28).
+**Approved as proposed by the designer, 2026-10-18.** Lands in step 3b. Fonts stay Schibsted Grotesk 800 and Hanken Grotesk 400/600; only sizes change. HIG's default (Large) sizes from [Typography](https://developer.apple.com/design/human-interface-guidelines/typography); leading stays Podium's (`--leading-*`) until the Dynamic Type work (G28).
 
 | Podium role | Now | HIG text style | Proposed | Change |
 |---|---|---|---|---|
 | Screen title (`--size-title`) | Schibsted 800, 38px | Large Title (34) | 34px | −4 |
-| Finish time (`--size-time`) | Schibsted 800, 32px | none: a display figure, not text; not in the five styles named | 32px, scales with Large Title under Dynamic Type | 0 (designer to confirm) |
-| Date day (`--size-day`) | Schibsted 800, 30px | none: a display figure | 30px, scales with Large Title | 0 (designer to confirm) |
+| Finish time (`--size-time`) | Schibsted 800, 32px | none: a display figure, not text; not in the five styles named | 32px, scales with Large Title under Dynamic Type | 0. **Decided 2026-10-18 (designer): stays 32px as a display figure** (attribute a: the finish time is the loudest thing on the row) |
+| Date day (`--size-day`) | Schibsted 800, 30px | none: a display figure | 30px, scales with Large Title | 0. **Decided 2026-10-18 (designer): stays 30px as a display figure** (attribute a) |
 | Item title (`--size-item`) | Hanken 600, 17px | Headline (17, Semibold) | 17px | 0 |
 | Body, buttons (`--size-body`) | Hanken 400/600, 15px | Subheadline (15; emphasized Semibold) | 15px | 0 |
 | Meta (`--size-meta`): location, counts, sort, result date, state body | Hanken 400, 14px | Subheadline (15) | 15px | +1 |
@@ -420,6 +420,8 @@ Attribute b holds: two full race cards on the first screen. This measure is befo
 
 ### Gap triage (2026-10-18)
 
+The triage covers the two Podium screens. The HIG gap check of the eight grayscale screens is done per group in step 5 (designer, 2026-10-18).
+
 The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C7 are applied.
 
 **Kit: styles only, steps 3 and 5 (15).**
@@ -440,7 +442,7 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G26 Busy button indicator | A spinner drawn by CSS on `[aria-busy]` buttons |
 | G27 12pt between bezeled chips | `gap` on the chips row |
 | G28 Dynamic Type and Bold Text | Sizes in scalable units anchored to the system text size. The date tile's day split depends on the markup item already deferred |
-| G29 Text sizes | The C3 mapping, in `tokens.css` |
+| G29 Text sizes | The C3 mapping, in `ui/kit.css` |
 
 **Markup pass: changes structure, controls or text, between steps 5 and 6 (13).**
 
@@ -456,7 +458,7 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G18 Compact date picker | Replaces the two date fields with date-picker buttons |
 | G19 Sport types as checkmark rows | Replaces checkboxes with selectable list rows |
 | G20 Sheet form as grouped list | Regroups the sheet's fields into list sections |
-| G21 Sort as a menu button | Replaces the two-option `<select>`; with only two options, the control itself is open (HIG asks for three items in a menu) |
+| G21 Sort as a menu button | Replaces the two-option `<select>`; with only two options, which control replaces it is decided in the markup pass (designer, 2026-10-18; HIG asks for three items in a menu) |
 | G32 Sheet focus and Escape | Script and markup (already in Deferred to Lesson 7) |
 | G33 Heading levels | Heading structure (already in Deferred to Lesson 7) |
 

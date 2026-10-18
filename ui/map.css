@@ -1,6 +1,6 @@
 /* Onrace map tokens: Race browse's static Map (concept.md → Map).
-   Linked only by wireframes/race-browse*.html, so other screens don't download
-   the Natural Earth masks. Colors are tokens.css levels; the masks carry shape only.
+   Linked only by wireframes/race-browse*.html (and the ui/kit.html showcase), so other screens don't download
+   the Natural Earth masks. Colors are ui/kit.css levels; the masks carry shape only.
    Reasons for each value: concept.html (the concept stand). */
 
 :root {

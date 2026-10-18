@@ -1,10 +1,12 @@
 """Generate concept/concept.html (the concept stand).
 
 Usage, from the repo root:  python3 scripts/concept/build_stand.py
-The page holds no style values: it links tokens.css and components.css. Every
-contrast ratio is computed here from the hex values in concept/tokens.css, and
-the build stops if any text pair fails WCAG AA. Re-run after changing a token,
-then copy concept.html, tokens.css and components.css to public/concept/."""
+The page holds no style values: it links ui/kit.css (every value and every
+component, since Lesson 7 step 3a) and concept/stand.css (the stand's own layout).
+Every contrast ratio is computed here from the hex values in ui/kit.css, and
+the build stops if any text pair fails WCAG AA. Re-run after changing a token;
+it stamps the pages that link the kit and mirrors the stand, the kit and the
+map to public/."""
 import sys, os, re
 sys.path.insert(0, os.path.dirname(__file__))
 from colorlib import cr
@@ -12,7 +14,9 @@ from colorlib import cr
 HERE = os.path.dirname(os.path.abspath(__file__))
 ICONS = os.path.join(HERE, 'icons')
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-TOK = open(os.path.join(ROOT, 'concept/tokens.css')).read() + open(os.path.join(ROOT, 'concept/map.css')).read()
+KIT = open(os.path.join(ROOT, 'ui/kit.css')).read()
+# the tokens: every :root block of ui/kit.css (the reduced-motion one included) plus ui/map.css
+TOK = ''.join(re.findall(r':root\s*\{(.*?)\n\}', KIT, flags=re.S)) + open(os.path.join(ROOT, 'ui/map.css')).read()
 
 def tok(name):
     m = re.search(r'--' + re.escape(name) + r':\s*([^;]+);', TOK)
@@ -70,6 +74,22 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Empty and error state heading', 'text-1', 'bg-0', 'text'),
     ('Empty and error state body', 'text-2', 'bg-0', 'text'),
     ('Error icon in the state heading (non-text, 3:1)', 'error', 'bg-0', 'ui'),
+    ('Kit · top bar: back link, title, Cancel, Save', 'text-1', 'bg-0', 'text'),
+    ('Kit · Save while saving ("Saving…")', 'text-2', 'bg-0', 'text'),
+    ('Kit · detail facts label (Sport type, Race date)', 'text-2', 'bg-0', 'text'),
+    ('Kit · inline error and form alert text', 'text-1', 'error-bg', 'text'),
+    ('Kit · error icon in an inline error (non-text, 3:1)', 'error', 'error-bg', 'ui'),
+    ('Kit · action bar caption ("Opens in a new tab.")', 'text-2', 'bg-bar', 'text'),
+    ('Kit · primary button in the action bar', 'on-accent', 'accent', 'text'),
+    ('Kit · text field value and label on a field', 'text-1', 'bg-1', 'text'),
+    ('Kit · field label and hint on the page', 'text-2', 'bg-0', 'text'),
+    ('Kit · field boundary against the page (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
+    ('Kit · field error icon on the page (non-text, 3:1)', 'error', 'bg-0', 'ui'),
+    ('Kit · Profile row value and note', 'text-2', 'bg-1', 'text'),
+    ('Kit · Profile initials on their tile', 'text-1', 'bg-2', 'text'),
+    ('Kit · confirm alert body', 'text-2', 'bg-1', 'text'),
+    ('Kit · small secondary button (Dismiss, Unlink race)', 'text-1', 'bg-2', 'text'),
+    ('Kit · disabled catalog row label', 'text-disabled', 'bg-1', 'exempt'),
     ('Disabled sort while loading', 'text-disabled', 'bg-0', 'exempt'),
     ('Skeleton bar on a card', 'bg-2', 'bg-1', 'info'),
     ('Race browse · Filters sheet heading, checkbox labels', 'text-1', 'bg-1', 'text'),
@@ -115,19 +135,20 @@ assert not failures, failures
 CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text</th><th>Background</th><th>Ratio</th><th>WCAG AA</th></tr></thead><tbody>'
             + ''.join(rows) + '</tbody></table></div>')
 
-# cache-busting: stylesheet links carry a short hash of tokens.css + map.css + components.css
+# cache-busting: stylesheet links carry a short hash of ui/kit.css + ui/map.css + concept/stand.css
 import hashlib
-CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, f'concept/{n}.css')).read() for n in ('tokens', 'map', 'components')).encode()).hexdigest()[:8]
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/map.css', 'concept/stand.css')).encode()).hexdigest()[:8]
 def _stamp(path):
-    html = re.sub(r'href="((?:\.\./concept/)?(?:tokens|map|components))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
+    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|map|stand))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
     open(path, 'w').write(html)
-for _p in ['concept/first-screen.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]:
+STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
+for _p in STAMPED:
     _stamp(os.path.join(ROOT, _p))
 
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
 import math
 from colorlib import lab, de2000, hue as lab_hue
-CSS = open(os.path.join(ROOT, 'concept/components.css')).read()
+CSS = KIT + open(os.path.join(ROOT, 'concept/stand.css')).read()   # every component rule the color rules check
 CSS_RULES = [(sel.strip(), body) for sel, body in re.findall(r'([^{}]+)\{([^{}]*)\}', re.sub(r'/\*.*?\*/', '', CSS, flags=re.S))]
 
 def selectors_using(*tokens):
@@ -139,6 +160,7 @@ def selectors_using(*tokens):
 
 # Rule 1: amber only where you can act or where you are
 ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.header-action(:hover)?$', r'^\.state-action:not\(\.secondary\)(:hover)?$',
+             r'^\.(register|open|submit)-btn(:hover)?$',   # the grayscale screens' one primary (kit, 2026-10-18)
              r'^\.bottom-nav a\[aria-current="page"\]$', r'^\.sheet-actions button\[type="submit"\](:hover)?$',
              r'^\.swatch--accent(-hover)?$', r'^\.swatch--on-accent$']
 accent_sel = selectors_using('accent', 'accent-hover')
@@ -399,7 +421,10 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('sheet-max', 'Filters sheet maximum height', 'Three quarters: the list stays visible above it', 'Wireframe conventions: a sheet, not a new screen'),
            ('scrim', 'Behind the Filters sheet', 'Black at 60%: the page dims, its colors stay', 'Depth comes from levels and one scrim, not from color · Hierarchy rule 1'),
            ('fade-end', 'Active filter chips row: its end fades out', 'Mask, last 24px', 'Says the row scrolls without a scrollbar · Critique fix: hidden overflow'),
-           ('stand-col-min', 'Stand columns (stand only)', 'Narrowest panel before the grid wraps', 'Stand layout')]
+           ('stand-col-min', 'Stand columns (stand only)', 'Narrowest panel before the grid wraps', 'Stand layout'),
+           ('avatar-size', 'Profile initials tile', '80px, the iOS profile size; a 6px tile like the date tile, not a circle', 'DESIGN.md → Shapes: 4/6, no circles in content · kit, 2026-10-18'),
+           ('alert-width', 'The Sign out confirm alert', '270px, the iOS alert width', 'Native iOS (HIG Alerts) · kit, 2026-10-18'),
+           ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (ui/kit.html only)', 'Tall enough for the Filters sheet at 75%', 'Showcase layout: never in the product')]
 SKEL = [('skel-line', 'Meta bars (date, location, proof)', 'Same height as 12–13px meta text'),
         ('skel-title', 'Title bar height', 'Same height as the 17px item title'),
         ('skel-title-w', 'Race card title bar width', 'A typical race name'),
@@ -439,10 +464,11 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <p class="stand-why"><b>Why:</b> one 4px-based scale for every gap · Hierarchy rule 4: more space between groups than inside them</p>
 <div class="spec-wrap" tabindex="0" role="region" aria-label="Component metrics"><table class="spec"><thead><tr><th>Component metric</th><th>Used for</th><th>Sizing</th><th>Why</th></tr></thead><tbody>{METRIC_TRS}</tbody></table></div>
 <div class="spec-wrap" tabindex="0" role="region" aria-label="Skeleton sizes"><table class="spec"><thead><tr><th>Skeleton (loading)</th><th>Used for</th><th>Sizing</th><th>Why</th></tr></thead><tbody>{SKEL_TRS}</tbody></table></div>
-<div class="spec-wrap" tabindex="0" role="region" aria-label="Map tokens"><table class="spec"><thead><tr><th>Map · <code>map.css</code> (Race browse only)</th><th>Used for</th><th>Why</th></tr></thead><tbody>{MAP_TRS}</tbody></table></div>'''
+<div class="spec-wrap" tabindex="0" role="region" aria-label="Map tokens"><table class="spec"><thead><tr><th>Map · <code>ui/map.css</code> (Race browse only)</th><th>Used for</th><th>Why</th></tr></thead><tbody>{MAP_TRS}</tbody></table></div>'''
 
 # ---------------------------------------------------------------- icons
 ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not built yet), use, status
+    ('Top bar · back', 'alt-arrow-left', 'icon-back', 'Before the parent screen’s name in a grayscale screen’s top bar (‹ Discover, ‹ My Results, ‹ Sign in); replaces the wireframe’s drawn chevron (kit, 2026-10-18).', 'in kit'),
     ('Tab bar', 'compass', 'icon-compass', 'Discover', 'in use'), ('Tab bar', 'stopwatch', 'icon-stopwatch', 'My Results', 'in use'), ('Tab bar', 'user', 'icon-user', 'Profile', 'in use'),
     ('Filters sheet · date fields', 'calendar', 'icon-calendar', 'Replaces the browser’s calendar glyph in the From and To date fields (step 7). In the race card the date column itself is the cue, so no icon there.', 'in use'),
     ('Card meta · location', 'map-point', 'icon-pin', 'Before the city on every race card (CSS mask, no markup change).', 'in use'),
@@ -479,15 +505,15 @@ page = f'''<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="tokens.css?v={CSS_V}">
-<link rel="stylesheet" href="components.css?v={CSS_V}">
+<link rel="stylesheet" href="../ui/kit.css?v={CSS_V}">
+<link rel="stylesheet" href="stand.css?v={CSS_V}">
 </head>
 <body class="onrace">
 <main class="stand">
 
   <header class="stand-head">
     <h1>Onrace concept · Podium</h1>
-    <p>Direction A, chosen 2026-10-13 (<code>concept.md</code> → Directions). Every value on this page comes from <code>tokens.css</code>; every component from <code>components.css</code>. The page itself holds no style values. Each decision below is signed with its reason: an attribute (a–e), the designer's taste, or a hierarchy rule. The full comparison is in <a class="stand-link" href="directions.html">directions.html</a>.</p>
+    <p>Direction A, chosen 2026-10-13 (<code>concept.md</code> → Directions). Every value and every component on this page comes from <code>ui/kit.css</code>; the stand's own layout from <code>stand.css</code>. The page itself holds no style values. Each decision below is signed with its reason: an attribute (a–e), the designer's taste, or a hierarchy rule. The full comparison is in <a class="stand-link" href="directions.html">directions.html</a>.</p>
   </header>
 
   <section class="stand-section" id="language" aria-labelledby="language-h">
@@ -591,7 +617,7 @@ page = f'''<!doctype html>
 
   <section class="stand-section" id="race-browse-parts" aria-labelledby="rb-h">
     <h2 id="rb-h">Race browse parts, live</h2>
-    <p>Everything Race browse needs besides the card, in the wireframes' own markup and copy, styled only from <code>components.css</code>. The screen can link the same file without markup changes.</p>
+    <p>Everything Race browse needs besides the card, in the wireframes' own markup and copy, styled only from <code>ui/kit.css</code>. The screen can link the same file without markup changes.</p>
     <div class="stand-grid">
       <div class="stand-panel">
         <h3>Controls · Filters, List/Map, active filter chips, result count and sort</h3>
@@ -683,7 +709,7 @@ page = f'''<!doctype html>
 {decisions_section()}
   <section class="stand-section" aria-labelledby="contrast-h">
     <h2 id="contrast-h">Contrast · every text pair and the key non-text pairs</h2>
-    <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>tokens.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>
+    <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>ui/kit.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>
     {CONTRAST}
   </section>
 
@@ -704,10 +730,17 @@ page = f'''<!doctype html>
 for block in re.findall(r'<article class="result-card">.*?</article>', page, flags=re.S):
     assert 'check-circle' not in block and 'verified' not in block.lower(), 'Color rule 2: a result carries a success mark'
     assert 'Self-reported · via ' in block, 'Attribute d: the proof line states the source'
-# Every token is signed: each one defined in tokens.css or map.css appears on the stand with its reason
+# Every token is signed: each one defined in ui/kit.css or ui/map.css appears on the stand with its reason
 _defined = set(re.findall(r'(?:^|;)\s*--([a-z0-9-]+):', TOK, flags=re.M))
 _unsigned = sorted(n for n in _defined if not re.search(r'--' + re.escape(n) + r'(?![a-z0-9-])', page))
 assert not _unsigned, ('Unsigned tokens (add a row with its reason)', _unsigned)
 print('Signed tokens:', len(_defined), 'of', len(_defined))
 open(os.path.join(ROOT, 'concept/concept.html'), 'w').write(page)
 print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b, k in PAIRS if k == 'text'))
+# mirror to public/ (GitHub Pages serves public/)
+import shutil
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
+    if os.path.exists(os.path.join(ROOT, _f)):
+        os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
+        shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
+print('mirrored to public/')

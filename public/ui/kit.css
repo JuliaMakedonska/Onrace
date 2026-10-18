@@ -1,0 +1,1381 @@
+/* Onrace kit: Direction A "Podium", flat (two-level tokens are Lesson 8).
+   One file: every value in :root, then every component class. Classes hold no
+   values of their own, only these variables.
+   Extracted 2026-10-18 (Lesson 7, step 3a) from concept/tokens.css and
+   concept/components.css, exactly as the two Podium screens look today; the
+   native iOS changes (concept.md → Native iOS) come in step 3b.
+   Map data (tokens and Natural Earth masks): ui/map.css, linked by the Race
+   browse pages only. Stand layout: concept/stand.css (concept.html only).
+   Reasons for each value: the stand, concept/concept.html.
+   Fonts load from each page's <head> (preconnect + stylesheet), not from here. */
+
+:root {
+  color-scheme: dark;
+
+  /* ---------- color: background levels (darkest to lightest) ---------- */
+  --bg-bar: #0F1114;       /* tab bar: the frame, darker than the page */
+  --bg-0: #131518;         /* ground: the page */
+  --bg-1: #1D2024;         /* surface: cards, rows, search field */
+  --bg-2: #272B30;         /* raised: secondary button, format chip, segmented track */
+  --bg-3: #2C3035;         /* pressed / hover / open fills on raised controls (rule 3a: L* 19.67) */
+  --line: #31363C;         /* hairline dividers, selected segment (decorative, not a boundary) */
+  --field-line: #686E75;   /* boundary of inputs: 3:1 against bg-0 and bg-1 (WCAG 1.4.11) */
+
+  /* ---------- color: text levels ---------- */
+  --text-1: #F4F5F6;       /* titles, finish times, body */
+  --text-2: #A3A9B0;       /* meta: date month, location, proof line, inactive tab */
+  --text-disabled: #6B7178;/* disabled controls only (exempt from AA; never for content) */
+  --chip-text: #BFC4CA;    /* format chip label */
+
+  /* ---------- color: accent (scarce: 1-2 uses per screen) ---------- */
+  --accent: #F5B649;       /* primary button fill, current tab; nothing else */
+  --accent-hover: #FFC46A;
+  --on-accent: #131518;    /* text and icons on the accent */
+
+  /* ---------- color: states ---------- */
+  --error: #EE8B84;        /* soft coral, not the banned aggressive red */
+  --error-bg: #3A2F31;     /* error at 14% on bg-1 */
+  --success: #7DCB9A;
+  --success-bg: #2A3835;   /* success at 14% on bg-1 */
+  --warning: var(--text-1);/* no hue of its own: any warm hue reads as the accent */
+  --warning-bg: var(--bg-2);
+  --warning-line: var(--text-2);
+  --focus: var(--text-1);  /* focus ring is neutral, so it never adds an accent use */
+
+  /* ---------- type ---------- */
+  --font-display: "Schibsted Grotesk", "Hanken Grotesk", sans-serif; /* screen title, key numbers */
+  --font-text: "Hanken Grotesk", sans-serif;                          /* everything else */
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;            /* stand code samples only */
+
+  --size-title: 38px;      /* display · screen title (h1) */
+  --size-time: 32px;       /* display · finish time */
+  --size-day: 30px;        /* display · date day */
+  --size-item: 17px;       /* text · item title (race name) */
+  --size-body: 15px;       /* text · body, buttons, search */
+  --size-meta: 14px;       /* text · meta (date month, location, counts) */
+  --size-proof: 13px;      /* text · proof line, month/year under the day */
+  --size-label: 11px;      /* text · chip label (uppercase by CSS), tab label */
+
+  --weight-display: 800;
+  --weight-strong: 600;
+  --weight-regular: 400;
+  --leading-tight: 1;
+  --leading-item: 1.2;
+  --leading-body: 1.45;
+  --tracking-display: -0.03em;
+  --tracking-label: 0.07em;
+
+  /* ---------- shape ---------- */
+  --radius-1: 4px;         /* inner: photo inset, chip */
+  --radius-2: 6px;         /* outer: card, button, field */
+  --radius-3: 12px;        /* stand panels only */
+  --border: 1px;
+  --focus-ring: 2px;
+  --shadow-sheet: 0 12px 32px -12px rgba(0, 0, 0, 0.6); /* sheets and menus only; cards are flat */
+  --target: 44px;          /* minimum touch target */
+  --measure: 65ch;         /* longest line of running text */
+  --tap-pad: calc((var(--target) - var(--filter-chip-height)) / -2); /* extends a 32px chip to a 44px tap area */
+  --hidden-size: 1px;      /* visually hidden text (screen readers only) */
+  --chip-height: 24px;
+  --filter-chip-height: 32px;
+
+  /* ---------- spacing scale ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 48px;
+  --space-9: 64px;
+
+  /* ---------- race card ---------- */
+  --date-col: 68px;        /* fits "May 2027", the widest month and year at 13px, plus the tile padding */
+  --photo-ratio: 3 / 1;     /* decided 2026-10-14: 109px band at 390 wide, two full cards on the first screen (attribute b) */
+  --photo-filter: grayscale(1) contrast(1.12) brightness(0.85); /* every photo: black and white */
+  --photo-focus-low: 50% 72%;  /* crop focus for photos whose subject sits low */
+  --photo-focus-mid: 50% 60%;
+  --photo-focus-lower: 50% 74%;   /* lower band: keeps a banner above the subject out of frame (DEKA photo) */
+  --photo-focus-center: 50% 44%;  /* subject in the middle of a tall photo */
+  --photo-focus-high: 50% 0%;     /* subject at the top edge (race bibs) */
+  --icon-s: 15px;
+  --icon-m: 18px;
+  --icon-l: 26px;
+
+  /* ---------- icons: Solar, bold style (masks, so the markup stays the wireframes') ---------- */
+  --icon-search: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M11.5%202C16.7467%202%2021%206.25329%2021%2011.5C21%2013.8541%2020.1417%2016.0064%2018.7236%2017.666C18.7315%2017.6732%2018.7404%2017.6799%2018.748%2017.6875L22.5303%2021.4697C22.8228%2021.7626%2022.8228%2022.2384%2022.5303%2022.5312C22.2375%2022.8236%2021.7625%2022.8237%2021.4697%2022.5312L17.6875%2018.748C17.6797%2018.7403%2017.6724%2018.7317%2017.665%2018.7236C16.0055%2020.1414%2013.8538%2021%2011.5%2021C6.25329%2021%202%2016.7467%202%2011.5C2%206.25329%206.25329%202%2011.5%202Z%22/%3E%3C/svg%3E");
+  --icon-pin: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M12%202C7.58172%202%204%206.00258%204%2010.5C4%2014.9622%206.55332%2019.8124%2010.5371%2021.6744C11.4657%2022.1085%2012.5343%2022.1085%2013.4629%2021.6744C17.4467%2019.8124%2020%2014.9622%2020%2010.5C20%206.00258%2016.4183%202%2012%202ZM12%2012C13.1046%2012%2014%2011.1046%2014%2010C14%208.89543%2013.1046%208%2012%208C10.8954%208%2010%208.89543%2010%2010C10%2011.1046%2010.8954%2012%2012%2012Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
+  --icon-link: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M1.25%209C1.25%205.27208%204.27208%202.25%208%202.25H12C15.7279%202.25%2018.75%205.27208%2018.75%209C18.75%2012.7279%2015.7279%2015.75%2012%2015.75H10C9.58579%2015.75%209.25%2015.4142%209.25%2015C9.25%2014.5858%209.58579%2014.25%2010%2014.25H12C14.8995%2014.25%2017.25%2011.8995%2017.25%209C17.25%206.10051%2014.8995%203.75%2012%203.75H8C5.10051%203.75%202.75%206.10051%202.75%209C2.75%2010.3451%203.25487%2011.5705%204.08664%2012.4998C4.36288%2012.8085%204.33662%2013.2826%204.02797%2013.5589C3.71933%2013.8351%203.24518%2013.8088%202.96894%2013.5002C1.90054%2012.3065%201.25%2010.7283%201.25%209ZM12%209.75C9.10051%209.75%206.75%2012.1005%206.75%2015C6.75%2017.8995%209.10051%2020.25%2012%2020.25H16C18.8995%2020.25%2021.25%2017.8995%2021.25%2015C21.25%2013.6549%2020.7451%2012.4295%2019.9134%2011.5002C19.6371%2011.1915%2019.6634%2010.7174%2019.972%2010.4411C20.2807%2010.1649%2020.7548%2010.1912%2021.0311%2010.4998C22.0995%2011.6935%2022.75%2013.2717%2022.75%2015C22.75%2018.7279%2019.7279%2021.75%2016%2021.75H12C8.27208%2021.75%205.25%2018.7279%205.25%2015C5.25%2011.2721%208.27208%208.25%2012%208.25H14C14.4142%208.25%2014.75%208.58579%2014.75%209C14.75%209.41421%2014.4142%209.75%2014%209.75H12Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
+  --icon-filters: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M9.25%2014C10.9069%2014%2012.25%2015.3431%2012.25%2017C12.25%2018.6569%2010.9069%2020%209.25%2020C7.59315%2020%206.25%2018.6569%206.25%2017C6.25%2015.3431%207.59315%2014%209.25%2014Z%22/%3E%3Cpath%20d%3D%22M14.25%204C12.5931%204%2011.25%205.34315%2011.25%207C11.25%208.65685%2012.5931%2010%2014.25%2010C15.9069%2010%2017.25%208.65685%2017.25%207C17.25%205.34315%2015.9069%204%2014.25%204Z%22/%3E%3Cpath%20d%3D%22M8.75%206.20852C9.16421%206.20852%209.5%206.54431%209.5%206.95852C9.5%207.37273%209.16421%207.70852%208.75%207.70852L1.75%207.70852C1.33579%207.70852%201%207.37273%201%206.95852C1%206.54431%201.33579%206.20852%201.75%206.20852H8.75Z%22/%3E%3Cpath%20d%3D%22M14.75%2016.2085C14.3358%2016.2085%2014%2016.5443%2014%2016.9585C14%2017.3727%2014.3358%2017.7085%2014.75%2017.7085H21.75C22.1642%2017.7085%2022.5%2017.3727%2022.5%2016.9585C22.5%2016.5443%2022.1642%2016.2085%2021.75%2016.2085H14.75Z%22/%3E%3Cpath%20d%3D%22M1%2016.9585C1%2016.5443%201.33579%2016.2085%201.75%2016.2085H3.75C4.16421%2016.2085%204.5%2016.5443%204.5%2016.9585C4.5%2017.3727%204.16421%2017.7085%203.75%2017.7085H1.75C1.33579%2017.7085%201%2017.3727%201%2016.9585Z%22/%3E%3Cpath%20d%3D%22M21.75%206.20852C22.1642%206.20852%2022.5%206.54431%2022.5%206.95852C22.5%207.37273%2022.1642%207.70852%2021.75%207.70852L19.75%207.70852C19.3358%207.70852%2019%207.37273%2019%206.95852C19%206.54431%2019.3358%206.20852%2019.75%206.20852H21.75Z%22/%3E%3C/g%3E%3C/svg%3E");
+  --icon-chevron: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M12.3704%2015.8351L18.8001%209.20467C19.2013%208.79094%2018.9581%208%2018.4297%208H5.5703C5.04189%208%204.79869%208.79094%205.1999%209.20467L11.6296%2015.8351C11.8427%2016.0549%2012.1573%2016.0549%2012.3704%2015.8351Z%22/%3E%3C/svg%3E");
+  --icon-error: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M22%2012C22%206.47715%2017.5228%202%2012%202C6.47715%202%202%206.47715%202%2012C2%2017.5228%206.47715%2022%2012%2022C17.5228%2022%2022%2017.5228%2022%2012ZM12%206.25C12.4142%206.25%2012.75%206.58579%2012.75%207V13C12.75%2013.4142%2012.4142%2013.75%2012%2013.75C11.5858%2013.75%2011.25%2013.4142%2011.25%2013V7C11.25%206.58579%2011.5858%206.25%2012%206.25ZM12%2017C12.5523%2017%2013%2016.5523%2013%2016C13%2015.4477%2012.5523%2015%2012%2015C11.4477%2015%2011%2015.4477%2011%2016C11%2016.5523%2011.4477%2017%2012%2017Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
+  --icon-check: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M18.4697%206.46967C18.7626%206.17678%2019.2373%206.17678%2019.5302%206.46967C19.8231%206.76256%2019.8231%207.23732%2019.5302%207.53022L9.53022%2017.5302C9.23732%2017.8231%208.76256%2017.8231%208.46967%2017.5302L4.46967%2013.5302C4.17678%2013.2373%204.17678%2012.7626%204.46967%2012.4697C4.76256%2012.1768%205.23732%2012.1768%205.53022%2012.4697L8.99994%2015.9394L18.4697%206.46967Z%22/%3E%3C/svg%3E");
+  --icon-saved: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M20.5355%2020.5355C22%2019.0711%2022%2016.714%2022%2012C22%2011.6585%2022%2011.4878%2021.9848%2011.3142C21.9142%2010.5049%2021.586%209.71257%2021.0637%209.09034C20.9516%208.95687%2020.828%208.83317%2020.5806%208.58578L15.4142%203.41944C15.1668%203.17206%2015.0431%203.04835%2014.9097%202.93631C14.2874%202.414%2013.4951%202.08581%2012.6858%202.01515C12.5122%202%2012.3415%202%2012%202C7.28595%202%204.92893%202%203.46447%203.46447C2%204.92893%202%207.28595%202%2012C2%2016.714%202%2019.0711%203.46447%2020.5355C4.1485%2021.2196%205.02727%2021.5841%206.25%2021.7784L6.25%2020.948C6.24997%2020.0495%206.24995%2019.3003%206.32991%2018.7055C6.41432%2018.0777%206.59999%2017.5109%207.05546%2017.0555C7.51093%2016.6%208.07773%2016.4143%208.70552%2016.3299C9.3003%2016.2499%2010.0495%2016.25%2010.948%2016.25H13.052C13.9505%2016.25%2014.6997%2016.2499%2015.2945%2016.3299C15.9223%2016.4143%2016.4891%2016.6%2016.9445%2017.0555C17.4%2017.5109%2017.5857%2018.0777%2017.6701%2018.7055C17.7501%2019.3003%2017.75%2020.0495%2017.75%2020.948L17.75%2021.7784C18.9727%2021.5841%2019.8515%2021.2196%2020.5355%2020.5355ZM6.25%208C6.25%207.58579%206.58579%207.25%207%207.25H13C13.4142%207.25%2013.75%207.58579%2013.75%208C13.75%208.41421%2013.4142%208.75%2013%208.75H7C6.58579%208.75%206.25%208.41421%206.25%208Z%22%20clip-rule%3D%22evenodd%22/%3E%3Cpath%20d%3D%22M16.1835%2018.9054C16.2484%2019.3884%2016.25%2020.036%2016.25%2021V21.9313C15.0942%2022%2013.7004%2022%2012%2022C10.2996%2022%208.9058%2022%207.75%2021.9313V21C7.75%2020.036%207.75159%2019.3884%207.81654%2018.9054C7.87858%2018.4439%207.9858%2018.2464%208.11612%2018.1161C8.24643%2017.9858%208.44393%2017.8786%208.90539%2017.8165C9.38843%2017.7516%2010.036%2017.75%2011%2017.75H13C13.964%2017.75%2014.6116%2017.7516%2015.0946%2017.8165C15.5561%2017.8786%2015.7536%2017.9858%2015.8839%2018.1161C16.0142%2018.2464%2016.1214%2018.4439%2016.1835%2018.9054Z%22/%3E%3C/g%3E%3C/svg%3E");   /* neutral "save" glyph, not a checkmark */
+  --icon-compass: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M12%2022C17.5228%2022%2022%2017.5228%2022%2012C22%206.47715%2017.5228%202%2012%202C6.47715%202%202%206.47715%202%2012C2%2017.5228%206.47715%2022%2012%2022ZM13.9563%2014.0949C13.763%2014.2644%2013.5167%2014.3629%2013.024%2014.56C10.7142%2015.4839%209.55936%2015.9459%208.89971%2015.4976C8.7433%2015.3913%208.6084%2015.2564%208.50212%2015.1C8.05386%2014.4404%208.51582%2013.2855%209.43973%2010.9757C9.6368%2010.483%209.73533%2010.2367%209.9048%2010.0434C9.94799%209.99419%209.99435%209.94782%2010.0436%209.90464C10.2368%209.73517%2010.4832%209.63663%2010.9759%209.43956C13.2856%208.51565%2014.4405%208.0537%2015.1002%208.50196C15.2566%208.60824%2015.3915%208.74314%2015.4978%208.89954C15.946%209.5592%2015.4841%2010.7141%2014.5602%2013.0239C14.3631%2013.5165%2014.2646%2013.7629%2014.0951%2013.9561C14.0519%2014.0054%2014.0055%2014.0517%2013.9563%2014.0949Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
+  --icon-stopwatch: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%3E%3Cpath%20d%3D%22M12%2022C16.9706%2022%2021%2017.9706%2021%2013C21%208.02944%2016.9706%204%2012%204C7.02944%204%203%208.02944%203%2013C3%2017.9706%207.02944%2022%2012%2022ZM12%208.25C12.4142%208.25%2012.75%208.58579%2012.75%209V13C12.75%2013.4142%2012.4142%2013.75%2012%2013.75C11.5858%2013.75%2011.25%2013.4142%2011.25%2013V9C11.25%208.58579%2011.5858%208.25%2012%208.25Z%22/%3E%3Cpath%20d%3D%22M9.25%202C9.25%201.58579%209.58579%201.25%2010%201.25H14C14.4142%201.25%2014.75%201.58579%2014.75%202C14.75%202.41421%2014.4142%202.75%2014%202.75H10C9.58579%202.75%209.25%202.41421%209.25%202Z%22/%3E%3C/g%3E%3C/svg%3E");
+  --icon-user: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M12%2013C16.4183%2013%2020%2015.0147%2020%2017.5C20%2019.9853%2020%2022%2012%2022C4%2022%204%2019.9853%204%2017.5C4%2015.0147%207.58172%2013%2012%2013Z%22/%3E%3Cpath%20d%3D%22M12%202C14.2091%202%2016%203.79086%2016%206C16%208.20914%2014.2091%2010%2012%2010C9.79086%2010%208%208.20914%208%206C8%203.79086%209.79086%202%2012%202Z%22/%3E%3C/g%3E%3C/svg%3E");
+  --icon-calendar: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M7.75%202.5C7.75%202.08579%207.41421%201.75%207%201.75C6.58579%201.75%206.25%202.08579%206.25%202.5V4.07926C4.81067%204.19451%203.86577%204.47737%203.17157%205.17157C2.47737%205.86577%202.19451%206.81067%202.07926%208.25H21.9207C21.8055%206.81067%2021.5226%205.86577%2020.8284%205.17157C20.1342%204.47737%2019.1893%204.19451%2017.75%204.07926V2.5C17.75%202.08579%2017.4142%201.75%2017%201.75C16.5858%201.75%2016.25%202.08579%2016.25%202.5V4.0129C15.5847%204%2014.839%204%2014%204H10C9.16097%204%208.41527%204%207.75%204.0129V2.5Z%22/%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M2%2012C2%2011.161%202%2010.4153%202.0129%209.75H21.9871C22%2010.4153%2022%2011.161%2022%2012V14C22%2017.7712%2022%2019.6569%2020.8284%2020.8284C19.6569%2022%2017.7712%2022%2014%2022H10C6.22876%2022%204.34315%2022%203.17157%2020.8284C2%2019.6569%202%2017.7712%202%2014V12ZM17%2014C17.5523%2014%2018%2013.5523%2018%2013C18%2012.4477%2017.5523%2012%2017%2012C16.4477%2012%2016%2012.4477%2016%2013C16%2013.5523%2016.4477%2014%2017%2014ZM17%2018C17.5523%2018%2018%2017.5523%2018%2017C18%2016.4477%2017.5523%2016%2017%2016C16.4477%2016%2016%2016.4477%2016%2017C16%2017.5523%2016.4477%2018%2017%2018ZM13%2013C13%2013.5523%2012.5523%2014%2012%2014C11.4477%2014%2011%2013.5523%2011%2013C11%2012.4477%2011.4477%2012%2012%2012C12.5523%2012%2013%2012.4477%2013%2013ZM13%2017C13%2017.5523%2012.5523%2018%2012%2018C11.4477%2018%2011%2017.5523%2011%2017C11%2016.4477%2011.4477%2016%2012%2016C12.5523%2016%2013%2016.4477%2013%2017ZM7%2014C7.55228%2014%208%2013.5523%208%2013C8%2012.4477%207.55228%2012%207%2012C6.44772%2012%206%2012.4477%206%2013C6%2013.5523%206.44772%2014%207%2014ZM7%2018C7.55228%2018%208%2017.5523%208%2017C8%2016.4477%207.55228%2016%207%2016C6.44772%2016%206%2016.4477%206%2017C6%2017.5523%206.44772%2018%207%2018Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/g%3E%3C/svg%3E");
+  --icon-close: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M22%2012C22%2017.5228%2017.5228%2022%2012%2022C6.47715%2022%202%2017.5228%202%2012C2%206.47715%206.47715%202%2012%202C17.5228%202%2022%206.47715%2022%2012ZM8.96963%208.96965C9.26252%208.67676%209.73739%208.67676%2010.0303%208.96965L12%2010.9393L13.9696%208.96967C14.2625%208.67678%2014.7374%208.67678%2015.0303%208.96967C15.3232%209.26256%2015.3232%209.73744%2015.0303%2010.0303L13.0606%2012L15.0303%2013.9696C15.3232%2014.2625%2015.3232%2014.7374%2015.0303%2015.0303C14.7374%2015.3232%2014.2625%2015.3232%2013.9696%2015.0303L12%2013.0607L10.0303%2015.0303C9.73742%2015.3232%209.26254%2015.3232%208.96965%2015.0303C8.67676%2014.7374%208.67676%2014.2625%208.96965%2013.9697L10.9393%2012L8.96963%2010.0303C8.67673%209.73742%208.67673%209.26254%208.96963%208.96965Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
+  --icon-back: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M8.16485%2011.6296L14.7953%205.1999C15.2091%204.79869%2016%205.04189%2016%205.5703L16%2018.4297C16%2018.9581%2015.2091%2019.2013%2014.7953%2018.8001L8.16485%2012.3704C7.94505%2012.1573%207.94505%2011.8427%208.16485%2011.6296Z%22/%3E%3C/svg%3E");   /* Solar alt-arrow-left bold: the back chevron in a top bar */
+
+  /* ---------- skeleton (loading): mirrors the race card, no shimmer ---------- */
+  --skel-line: 12px;       /* meta bars */
+  --skel-title: 16px;      /* title bar height */
+  --skel-title-w: 70%;
+  --skel-tag-w: 64px;
+  --skel-loc-w: 45%;
+  --skel-count-w: 140px;
+  --skel-row-title-w: 55%;  /* result row skeleton */
+  --skel-time-w: 96px;
+  --skel-time-h: var(--size-time);   /* same height as the finish time line, so loading doesn't shift */
+  --skel-date-w: 72px;
+  --skel-proof-w: 62%;
+
+  /* ---------- screens (wireframes/race-browse*.html), inside the viewer's phone frame ---------- */
+  --screen-w: 390px;       /* iPhone logical width; the viewer adds status bar and home strip outside the page */
+  --tabbar-h: 64px;        /* tab bar: 44px targets + 26px icon + label, no home-indicator padding (the viewer draws it) */
+  --scrim: rgba(0, 0, 0, 0.6);  /* behind the Filters sheet */
+  --sheet-max: 75%;        /* the Filters sheet's maximum height */
+  --dur-sheet: 250ms;      /* sheet slides up */
+  --safe-bottom: env(safe-area-inset-bottom, 0px);  /* home-indicator inset on a real device; 0 inside the viewer */
+  --fade-end: linear-gradient(to right, #000 calc(100% - var(--space-6)), transparent);  /* mask: a scrolling row fades out at its end */
+
+  /* ---------- stand layout (concept.html only, never in the product) ---------- */
+  --stand-max: 1152px;
+  --phone-width: 392px;
+  --stand-col-min: 320px;
+
+  /* ---------- grayscale screens (structure from their wireframes, look from DESIGN.md) ---------- */
+  --avatar-size: 80px;     /* Profile initials tile */
+  --alert-width: 270px;    /* the confirm alert (iOS alert width) */
+
+  /* ---------- showcase (ui/kit.html only, never in the product) ---------- */
+  --kit-stage-h: 600px;    /* stage for the sheet, the map and the alert */
+
+  /* ---------- motion ---------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 160ms;
+}
+
+/* Reduced motion: the sheet and the button fades become instant (the states still change) */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-sheet: 0ms; }
+}
+
+/* =================================================================
+   Components. Selectors cover both the stand's classes and the wireframes'
+   own class names (.header-action, .filters-trigger, .clear-all, .sport-tag,
+   .chip, .race-card, .result-card, .proof-label, .race-search, .bottom-nav),
+   so the screens link this file without markup changes.
+   ================================================================= */
+/* ---------- base ---------- */
+.onrace, .onrace *, .onrace *::before, .onrace *::after { box-sizing: border-box; }
+.onrace { margin: 0; }
+.onrace {
+  background: var(--bg-0);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+}
+.onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
+.onrace ::selection { background: var(--text-1); color: var(--bg-0); }
+.onrace :focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.onrace .visually-hidden {
+  position: absolute; width: var(--hidden-size); height: var(--hidden-size); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.onrace h1, .screen-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--size-title);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);
+}
+
+/* ---------- buttons: one primary per screen ---------- */
+.btn, .header-action, .filters-trigger, .state-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-2);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.btn:active, .header-action:active, .filters-trigger:active, .state-action:active { transform: translateY(var(--border)); }
+.btn .icon { width: var(--icon-m); height: var(--icon-m); flex: none; }
+
+/* primary: filled accent (Log result, Register on <domain>) */
+.btn--primary, .header-action, .state-action:not(.secondary) { background: var(--accent); color: var(--on-accent); }
+.btn--primary:hover, .header-action:hover, .state-action:not(.secondary):hover { background: var(--accent-hover); }
+
+/* secondary: tonal (Filters, Clear all filters on an empty state) */
+.btn--secondary, .filters-trigger, .state-action.secondary { background: var(--bg-2); color: var(--text-1); }
+.btn--secondary:hover, .filters-trigger:hover, .state-action.secondary:hover { background: var(--bg-3); }
+
+/* tertiary: text link (Clear all filters in the chips row, Cancel) */
+.btn--tertiary, .clear-all {
+  position: relative;
+  min-height: var(--target);
+  padding: 0 var(--space-1);
+  background: none;
+  border: 0;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-regular);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.btn--tertiary:hover, .clear-all:hover { color: var(--text-2); }
+
+/* states */
+.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
+.btn--tertiary:disabled { background: none; }
+.btn[aria-busy="true"] { cursor: progress; pointer-events: none; }  /* busy: same fill, verb in the present tense ("Saving…"), aria-disabled blocks keys */
+
+/* ---------- format chip: metadata, neutral ---------- */
+.sport-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--chip-height);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--bg-2);
+  color: var(--chip-text);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;  /* decision A: CSS only, markup keeps "Half marathon" */
+  white-space: nowrap;
+}
+
+/* active filter chip: calm outline, removable */
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--filter-chip-height);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border) var(--text-2);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.chip span {   /* the remove mark: Solar close-circle drawn in CSS; the text "×" stays in the markup (aria-hidden) until Lesson 7 */
+  display: inline-block;
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  font-size: 0;
+  background: var(--text-2);
+  -webkit-mask: var(--icon-close) center / contain no-repeat;
+  mask: var(--icon-close) center / contain no-repeat;
+}
+.chip::after, .clear-all::after { content: ""; position: absolute; inset: var(--tap-pad) 0; } /* 44px tap area */
+
+/* ---------- search field ---------- */
+.race-search { position: relative; }
+.race-search::before {
+  content: "";
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin-top: calc(var(--icon-m) / -2);
+  background: var(--text-2);
+  -webkit-mask: var(--icon-search) center / contain no-repeat;
+  mask: var(--icon-search) center / contain no-repeat;
+  pointer-events: none;
+}
+.race-search input {
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-3) 0 calc(var(--space-3) * 2 + var(--icon-m));
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.race-search input::placeholder { color: var(--text-2); opacity: 1; }
+.race-search input:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
+.race-search input:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+.race-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+/* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
+.race-card {
+  position: relative;
+  padding: var(--space-2);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+}
+.race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
+.race-card .card-link:focus-visible { outline: none; }
+.race-card .card-link:focus-visible::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.race-card .photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--photo-ratio);
+  object-fit: cover;
+  border-radius: var(--radius-1);
+  filter: var(--photo-filter);
+}
+.race-card .card-link {
+  display: grid;
+  grid-template-columns: var(--date-col) minmax(0, 1fr);
+  grid-template-areas: "date name" "date meta" "date loc";
+  column-gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3) 0 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-1);
+}
+.race-card h3 {
+  grid-area: name;
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.race-card .card-meta { display: contents; }
+.race-card .sport-tag { grid-area: meta; justify-self: start; margin-bottom: var(--space-1); }
+.race-card time {
+  grid-area: date;
+  display: block;
+  width: var(--date-col);
+  text-align: center;
+  font-family: var(--font-text);
+  font-size: var(--size-proof);
+  line-height: var(--leading-item);
+  color: var(--text-2);
+  align-self: stretch;                         /* the date sits on a tile */
+  padding: var(--space-3) var(--space-1);
+  border-radius: var(--radius-1);
+  background: var(--bg-2);
+}
+.race-card time::first-line {
+  font-family: var(--font-display);
+  font-size: var(--size-day);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);
+}
+.race-card .card-location {
+  grid-area: loc;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--size-meta);
+  color: var(--text-2);
+}
+.race-card .card-location::before, .proof-label::before {
+  content: "";
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  background: currentColor;
+  -webkit-mask: var(--icon-pin) center / contain no-repeat;
+  mask: var(--icon-pin) center / contain no-repeat;
+}
+
+/* ---------- result row: the finish time is the loudest thing on the row ---------- */
+.result-card .card-link {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  color: inherit;
+  text-decoration: none;
+}
+.card-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.card-top h2 {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.finish-time {
+  font-family: var(--font-display);
+  font-size: var(--size-time);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);  /* not the accent: rule 5 */
+  white-space: nowrap;
+}
+.result-card .card-meta { margin: 0; display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
+
+/* ---------- proof line: one link icon, stated not stamped ---------- */
+.proof-label {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--size-proof);
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+.proof-label::before { -webkit-mask-image: var(--icon-link); mask-image: var(--icon-link); }
+
+/* ---------- segmented List / Map ---------- */
+.view-toggle { display: inline-flex; padding: var(--space-1); border-radius: var(--radius-2); background: var(--bg-2); }
+.view-btn {
+  min-height: calc(var(--target) - var(--space-2));
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.view-btn[aria-pressed="true"] { background: var(--bg-3); color: var(--text-1); box-shadow: inset 0 0 0 var(--border) var(--field-line); }  /* pressed: calm outline, like the active chip */
+.view-btn { position: relative; }
+.view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
+
+/* ---------- tab bar: current tab is the screen's one accent on Race browse ---------- */
+.bottom-nav { background: var(--bg-bar); border-top: var(--border) solid var(--line); padding: var(--space-2) var(--space-2) var(--space-6); }
+.bottom-nav ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.bottom-nav a {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  min-height: var(--target);
+  padding: var(--space-1) 0;
+  color: var(--text-2);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
+}
+.bottom-nav a[aria-current="page"] { color: var(--accent); }
+.bottom-nav .tab-icon { width: var(--icon-l); height: var(--icon-l); }
+
+/* ---------- status messages: icon + text, color second ---------- */
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  font-size: var(--size-meta);
+  color: var(--text-1);
+}
+.status .icon { width: var(--icon-m); height: var(--icon-m); flex: none; margin-top: calc(var(--space-1) / 2); }
+.status--error { background: var(--error-bg); }
+.status--error .icon, .status--error strong { color: var(--error); }
+.status--success { background: var(--success-bg); }
+.status--success .icon, .status--success strong { color: var(--success); }
+.status--warning { background: var(--warning-bg); box-shadow: inset 0 0 0 var(--border) var(--warning-line); }
+.status--warning .icon, .status--warning strong { color: var(--warning); }
+.status p { margin: 0; }
+
+/* ---------- skeleton (loading): no spinner, no invented progress ---------- */
+.skeleton { border-radius: var(--radius-1); background: var(--bg-2); }
+
+/* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
+.controls { display: grid; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
+.control-row { display: flex; align-items: center; gap: var(--space-3); }
+.control-row .filters-trigger { flex: 1; }
+.filters-trigger::before {
+  content: "";
+  width: var(--icon-m);
+  height: var(--icon-m);
+  flex: none;
+  background: currentColor;
+  -webkit-mask: var(--icon-filters) center / contain no-repeat;
+  mask: var(--icon-filters) center / contain no-repeat;
+}
+
+/* active filter chips + "Clear all filters" (tertiary) */
+.chips-bar { display: flex; align-items: center; gap: var(--space-2); }
+.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-2); flex: 1; min-width: 0; overflow-x: auto; }
+.chips-row li { flex: none; }
+.chips-row { -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }  /* the row scrolls: its end fades */
+.chips-bar .clear-all { flex: none; }
+.chips-bar[hidden] { display: none; }
+
+/* ---------- result count + sort ---------- */
+.results-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; font-size: var(--size-meta); color: var(--text-2); }
+.results-count { margin: 0; }
+.results-count strong { color: var(--text-1); font-weight: var(--weight-strong); }
+.sort-control { position: relative; display: flex; align-items: center; gap: var(--space-1); }
+.sort-control label { color: var(--text-2); }
+.sort-control select {
+  min-height: var(--target);
+  padding: 0 calc(var(--icon-s) + var(--space-1)) 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.sort-control::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  margin-top: calc(var(--icon-s) / -2);
+  background: var(--text-1);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
+.sort-control select:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.sort-control:has(select:disabled)::after { background: var(--text-disabled); }
+
+/* ---------- loading: skeleton race card (wireframe markup; photo band drawn by CSS) ---------- */
+.race-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.bar { border-radius: var(--radius-1); background: var(--bg-2); }
+.results-count .bar.count { display: inline-block; width: var(--skel-count-w); height: var(--skel-line); vertical-align: middle; }
+.skeleton-card {
+  display: grid;
+  grid-template-columns: var(--date-col) minmax(0, 1fr);
+  grid-template-areas: "photo photo" "date name" "date meta" "date loc";
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+}
+.skeleton-card .bar.photo { grid-area: photo; aspect-ratio: var(--photo-ratio); margin-bottom: var(--space-1); }
+.skeleton-card .skel-meta { display: contents; }
+.skeleton-card .bar.title { grid-area: name; width: var(--skel-title-w); height: var(--skel-title); }
+.skeleton-card .bar.tag { grid-area: meta; width: var(--skel-tag-w); height: var(--chip-height); }
+.skeleton-card .bar.date { grid-area: date; align-self: stretch; }   /* the empty date tile */
+.skeleton-card .bar.location { grid-area: loc; width: var(--skel-loc-w); height: var(--skel-line); margin-bottom: var(--space-1); }
+
+/* ---------- empty and error states: message + actions in the button hierarchy ---------- */
+.state-message { display: grid; gap: var(--space-2); justify-items: start; padding: var(--space-6) 0; }
+.state-message h2 {
+  margin: 0;
+  font-family: var(--font-text);   /* text face: not a screen title, not a key number (rule 4) */
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.state-message p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
+.state-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+.state-message[role="alert"] h2::before, .state-message.is-error h2::before, .state-message:has([data-retry]) h2::before {   /* error: one icon, in the error color; the stand uses .is-error so a static specimen isn't announced */
+  content: "";
+  display: inline-block;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin-right: var(--space-2);
+  vertical-align: text-bottom;
+  background: var(--error);
+  -webkit-mask: var(--icon-error) center / contain no-repeat;
+  mask: var(--icon-error) center / contain no-repeat;
+}
+
+/* =================================================================
+   Race browse screen (wireframes/race-browse*.html): the wireframes' own
+   markup, laid out here. Tokens only, like everything above.
+   ================================================================= */
+:where(.onrace) a { color: var(--text-1); }   /* zero specificity: components always win */
+html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
+body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
+.phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-h); }
+.phone-screen main { display: flex; flex-direction: column; min-height: 100%; }
+.phone-screen header { display: grid; gap: var(--space-3); padding: var(--space-2) var(--space-4) var(--space-1); }  /* the viewer draws the status bar above the page */
+.phone-screen .controls { position: sticky; top: 0; z-index: 2; background: var(--bg-0); padding: var(--space-3) var(--space-4); }
+.phone-screen .results-row { padding-inline: var(--space-4); }
+.results-row[hidden], .sort-control[hidden] { display: none; }
+.filters-trigger[aria-expanded="true"] { background: var(--bg-3); }
+.view-area { display: contents; }
+.view-panel { flex: 1; min-height: 0; }
+#list-view[hidden], #map-view[hidden] { display: none; }
+#list-view { padding: 0 var(--space-4) var(--space-4); }
+.photo--low { object-position: var(--photo-focus-low); }
+.photo--mid { object-position: var(--photo-focus-mid); }
+.photo--lower { object-position: var(--photo-focus-lower); }
+.photo--center { object-position: var(--photo-focus-center); }
+.photo--high { object-position: var(--photo-focus-high); }
+.race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
+
+/* tab bar on a screen: fixed to the frame's bottom; Solar icons from tokens (the markup's own glyphs are hidden) */
+body > .bottom-nav:not(.fs-tabbar) { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; height: var(--tabbar-h); padding: var(--space-1) var(--space-2); display: grid; align-items: center; }
+body > .bottom-nav:not(.fs-tabbar) .tab-icon { display: none; }
+body > .bottom-nav:not(.fs-tabbar) a::before {
+  content: "";
+  width: var(--icon-l);
+  height: var(--icon-l);
+  background: currentColor;
+  -webkit-mask: var(--tab-icon) center / contain no-repeat;
+  mask: var(--tab-icon) center / contain no-repeat;
+}
+.bottom-nav a[href*="race-browse"] { --tab-icon: var(--icon-compass); }
+.bottom-nav a[href*="results-list"] { --tab-icon: var(--icon-stopwatch); }
+.bottom-nav a[href*="profile"] { --tab-icon: var(--icon-user); }
+
+/* map view: static Natural Earth background (designer decision); the interactive Map stays deferred */
+#map-view { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
+.map-placeholder {
+  position: relative;
+  container-type: size;            /* pins compute their height from the map's width (cqw) */
+  isolation: isolate;              /* map layers sit under the container's own text, even bare text */
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--map-water);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  color: var(--text-2);
+  font-size: var(--size-proof);
+}
+.map-placeholder::before, .map-placeholder::after {   /* land, then coastlines and borders; the masks carry shape, tokens carry color */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-mask-size: 100% auto; mask-size: 100% auto;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
+.map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
+.map-placeholder > * { position: relative; z-index: 1; }
+.map-placeholder.has-pins { align-items: flex-end; }
+
+/* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line */
+.map-placeholder > .map-pin {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--x) * 1) !important;   /* overrides the wireframe's approximate inline position */
+  top: calc(50% + (var(--yf) - 0.5) * (100cqw + 2 * var(--space-4)) * var(--map-ratio)) !important;
+  transform: translate(-50%, calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
+  height: var(--pin-h);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.map-pin::before {   /* the dot, back on the coordinate */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(50% - var(--dy));
+  width: var(--map-pin-dot);
+  height: var(--map-pin-dot);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--text-1);
+  box-shadow: 0 0 0 calc(var(--border) * 2) var(--map-water);
+}
+.map-pin::after {   /* leader line from the label's edge to the dot */
+  content: "";
+  position: absolute;
+  left: calc(50% - var(--border) / 2);
+  width: var(--border);
+  height: calc(var(--dy-abs) - var(--pin-h) / 2 - var(--map-pin-dot) / 2);
+  background: var(--text-2);
+}
+.map-pin[href$="race=berlin-marathon"] { --x: var(--pin-berlin-marathon-x); --yf: var(--pin-berlin-marathon-yf); --dy: var(--pin-berlin-marathon-dy); }
+.map-pin[href$="race=hyrox-london"] { --x: var(--pin-hyrox-london-x); --yf: var(--pin-hyrox-london-yf); --dy: var(--pin-hyrox-london-dy); }
+.map-pin[href$="race=utmb"] { --x: var(--pin-utmb-x); --yf: var(--pin-utmb-yf); --dy: var(--pin-utmb-dy); }
+.map-pin[href$="race=hyrox-dallas"] { --x: var(--pin-hyrox-dallas-x); --yf: var(--pin-hyrox-dallas-yf); --dy: var(--pin-hyrox-dallas-dy); }
+.map-pin[href$="race=deka-strong-chicago"] { --x: var(--pin-deka-strong-chicago-x); --yf: var(--pin-deka-strong-chicago-yf); --dy: var(--pin-deka-strong-chicago-dy); }
+.map-pin[href$="race=spartan-beast-killington"] { --x: var(--pin-spartan-beast-killington-x); --yf: var(--pin-spartan-beast-killington-yf); --dy: var(--pin-spartan-beast-killington-dy); }
+.map-pin[href$="race=boston-marathon"] { --x: var(--pin-boston-marathon-x); --yf: var(--pin-boston-marathon-yf); --dy: var(--pin-boston-marathon-dy); }
+/* label above the dot: leader runs down from the label; below: up from the label */
+.map-pin[href$="race=berlin-marathon"], .map-pin[href$="race=hyrox-london"], .map-pin[href$="race=deka-strong-chicago"], .map-pin[href$="race=spartan-beast-killington"] { --dy-abs: calc(var(--dy) * -1); }
+.map-pin[href$="race=utmb"], .map-pin[href$="race=boston-marathon"], .map-pin[href$="race=hyrox-dallas"] { --dy-abs: var(--dy); }
+.map-pin[href$="race=berlin-marathon"]::after, .map-pin[href$="race=hyrox-london"]::after, .map-pin[href$="race=deka-strong-chicago"]::after, .map-pin[href$="race=spartan-beast-killington"]::after { top: 100%; }
+.map-pin[href$="race=utmb"]::after, .map-pin[href$="race=boston-marathon"]::after, .map-pin[href$="race=hyrox-dallas"]::after { bottom: 100%; }
+.map-pin:hover { background: var(--bg-3); }
+.map-pin[hidden] { display: none; }
+.map-caption { margin: 0; color: var(--text-2); font-size: var(--size-label); }
+.map-placeholder .state-message { justify-items: center; text-align: center; padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); }
+.map-placeholder .state-actions { justify-content: center; }
+
+/* ---------- Results list screen (wireframes/results-list*.html) ---------- */
+.phone-screen header:has(> .header-action) { grid-template-columns: minmax(0, 1fr) auto; align-items: start; }   /* the title sits where it does on Race browse */
+.phone-screen header > .header-action { align-self: center; }
+.header-action[hidden] { display: none; }
+/* one primary per screen: when a state block brings its own primary (Log your first result, Try again), the header action steps down to secondary */
+.phone-screen:has(.state-message .state-action:not(.secondary)) .header-action { background: var(--bg-2); color: var(--text-1); }
+.phone-screen:has(.state-message .state-action:not(.secondary)) .header-action:hover { background: var(--bg-3); }
+.result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.result-card .card-link:hover { box-shadow: inset 0 0 0 var(--border) var(--field-line); }   /* same hover as the race card */
+.results-order { margin-left: var(--space-2); padding-left: var(--space-2); border-left: var(--border) solid var(--line); color: var(--text-2); }
+.saved-status {   /* the saved confirmation: neutral, so it never reads as a "verified" stamp (attribute d, Color rule 2) */
+  display: block;
+  margin: var(--space-2) var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  color: var(--text-1);
+  font-size: var(--size-meta);
+}
+.saved-status::before { content: ""; display: inline-block; vertical-align: text-bottom; margin-right: var(--space-2); width: var(--icon-m); height: var(--icon-m); background: var(--text-2); -webkit-mask: var(--icon-saved) center / contain no-repeat; mask: var(--icon-saved) center / contain no-repeat; }
+.saved-status[hidden] { display: none; }
+/* loading: a skeleton result row (same shape and padding as .result-card .card-link) */
+.result-list .skeleton-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-4); }
+.result-list .skeleton-card .bar { grid-area: auto; }
+.result-list .skeleton-card .skel-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.result-list .skeleton-card .skel-meta { display: flex; align-items: center; gap: var(--space-3); }
+.result-list .skeleton-card .bar.title { width: var(--skel-row-title-w); height: var(--skel-title); }
+.result-list .skeleton-card .bar.time { width: var(--skel-time-w); height: var(--skel-time-h); }
+.result-list .skeleton-card .bar.tag { width: var(--skel-tag-w); height: var(--chip-height); }
+.result-list .skeleton-card .bar.date { align-self: center; width: var(--skel-date-w); height: var(--skel-line); }
+.result-list .skeleton-card .bar.proof { width: var(--skel-proof-w); height: var(--skel-line); margin-block: calc((var(--size-proof) * var(--leading-body) - var(--skel-line)) / 2); }
+
+/* Filters sheet: a sheet floats, so it is the one place with a shadow */
+.sheet-backdrop { position: absolute; inset: 0; z-index: 5; background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-out); }
+.sheet-backdrop.open { opacity: 1; }
+.sheet-backdrop[hidden], .sheet[hidden] { display: none; }
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  max-height: var(--sheet-max);
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-4) 0;          /* the footer carries the bottom padding */
+  border-radius: var(--radius-3) var(--radius-3) 0 0;
+  background: var(--bg-1);
+  box-shadow: var(--shadow-sheet);
+  transform: translateY(100%);
+  transition: transform var(--dur-sheet) var(--ease-out);
+}
+.sheet.open { transform: translateY(0); }
+.sheet-handle { width: var(--space-7); height: var(--space-1); margin: 0 auto var(--space-3); border-radius: var(--radius-1); background: var(--field-line); }
+.sheet h2 { margin: 0 0 var(--space-4); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); color: var(--text-1); }
+.sheet form > div:not(.sheet-actions), .sheet fieldset { margin: 0 0 var(--space-4); padding: 0; border: 0; display: grid; gap: var(--space-2); }
+.sheet form > div:has(> select) { position: relative; }
+.sheet form > div:has(> select)::after {   /* chevron, like the sort control */
+  content: "";
+  position: absolute;
+  right: var(--space-3);
+  bottom: calc((var(--target) - var(--icon-s)) / 2);
+  width: var(--icon-s);
+  height: var(--icon-s);
+  background: var(--text-1);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
+.sheet label, .sheet legend { font-size: var(--size-meta); color: var(--text-2); }
+.sheet legend { padding: 0; margin-bottom: var(--space-2); }
+.sheet fieldset label { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); color: var(--text-1); font-size: var(--size-body); }
+.sheet input[type="checkbox"] {   /* neutral, never the accent */
+  -webkit-appearance: none;
+  appearance: none;
+  flex: none;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin: 0;
+  border-radius: var(--radius-1);
+  background: var(--bg-0);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+.sheet input[type="checkbox"]::before { content: ""; width: var(--icon-s); height: var(--icon-s); background: var(--bg-0); -webkit-mask: var(--icon-check) center / contain no-repeat; mask: var(--icon-check) center / contain no-repeat; opacity: 0; }
+.sheet input[type="checkbox"]:checked { background: var(--text-1); box-shadow: none; }
+.sheet input[type="checkbox"]:checked::before { opacity: 1; }
+.sheet select, .sheet input[type="date"] {
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-0);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  color-scheme: dark;
+}
+.sheet input[type="date"]::-webkit-calendar-picker-indicator {   /* Solar calendar instead of the browser's glyph */
+  width: var(--icon-m);
+  height: var(--icon-m);
+  padding: 0;
+  background: var(--text-1);
+  -webkit-mask: var(--icon-calendar) center / contain no-repeat;
+  mask: var(--icon-calendar) center / contain no-repeat;
+  cursor: pointer;
+}
+.sheet select { -webkit-appearance: none; appearance: none; padding-right: calc(var(--space-3) * 2 + var(--icon-s)); }
+.sheet, .phone-screen, .chips-row { scrollbar-color: var(--field-line) transparent; scrollbar-width: thin; }
+.chips-row { scrollbar-width: none; }
+.sheet-actions {   /* fixed footer: always visible, the options scroll under its hairline */
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-3);
+  margin: var(--space-2) calc(var(--space-4) * -1) 0;
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + var(--safe-bottom));
+  background: var(--bg-1);
+  border-top: var(--border) solid var(--line);
+}
+.sheet-actions button {
+  flex: 1;
+  min-height: var(--target);
+  border: 0;
+  border-radius: var(--radius-2);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.sheet-actions button[type="submit"] { background: var(--accent); color: var(--on-accent); }   /* the sheet's one primary */
+.sheet-actions button[type="submit"]:hover { background: var(--accent-hover); }
+.sheet-actions button[type="button"] { background: var(--bg-2); color: var(--text-1); }       /* Cancel: secondary */
+.sheet-actions button[type="button"]:hover { background: var(--bg-3); }
+
+/* =================================================================
+   Grayscale screens (Race detail, Log result, Race picker, Result detail,
+   Sign in / Sign up, Reset password, New password, Profile): structure from
+   their wireframes (the wireframes' own class names), look from DESIGN.md.
+   None of these selectors match an element on the two Podium screens.
+   Extracted 2026-10-18 (Lesson 7, step 3a); not yet linked by those screens.
+   ================================================================= */
+
+/* ---------- top bar: back link, centered title, text actions ---------- */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  background: var(--bg-0);
+  border-bottom: var(--border) solid var(--line);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+}
+.top-bar a, .top-bar .save-btn, .top-bar .save-progress {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  color: var(--text-1);
+  text-decoration: none;
+}
+.top-bar a:has(> .back-chevron)::before {   /* Solar back chevron; the wireframe's drawn chevron is hidden */
+  content: "";
+  flex: none;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  background: currentColor;
+  -webkit-mask: var(--icon-back) center / contain no-repeat;
+  mask: var(--icon-back) center / contain no-repeat;
+}
+.top-bar .back-chevron { display: none; }
+.top-bar .bar-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  letter-spacing: normal;
+  color: var(--text-1);
+}
+.top-bar .save-btn {   /* Save: a text action at the trailing edge (the amber stays with the screen's one primary) */
+  margin-left: auto;
+  border: 0;
+  background: none;
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.top-bar .save-progress { margin-left: auto; color: var(--text-2); font-weight: var(--weight-strong); }
+.top-bar a:hover, .top-bar .save-btn:hover { color: var(--text-2); }
+
+/* ---------- detail screens (Race detail, Result detail) ---------- */
+.race, .result { padding: var(--space-5) var(--space-4) var(--space-7); }
+.race[hidden], .result[hidden] { display: none; }
+.race h1, .result h1 { margin: 0 0 var(--space-4); }
+.facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin: 0 0 var(--space-6);
+  font-size: var(--size-meta);
+}
+.facts dt { color: var(--text-2); }
+.facts dd { margin: 0; color: var(--text-1); }
+.finish { margin: 0 0 var(--space-4); }
+.finish dt { font-size: var(--size-meta); color: var(--text-2); }
+.finish dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--size-time);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-1);
+}
+.race h2, .result h2, .state-msg h2 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.about p, .official p { margin: 0 0 var(--space-6); font-size: var(--size-body); }
+.official a, .row-note a, .alert-link, .forgot a {
+  color: var(--text-1);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+}
+.result .proof p { margin: 0 0 var(--space-2); }
+.proof-url { font-size: var(--size-body); color: var(--text-1); overflow-wrap: anywhere; }
+.proof-note { font-size: var(--size-proof); color: var(--text-2); }
+
+/* ---------- sticky action bar: one primary link + its caption ---------- */
+.action-bar {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  background: var(--bg-bar);
+  border-top: var(--border) solid var(--line);
+}
+.action-bar[hidden] { display: none; }
+.register-btn, .open-btn, .submit-btn {   /* the screen's one primary */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.register-btn:hover, .open-btn:hover, .submit-btn:hover { background: var(--accent-hover); }
+.register-btn:active, .open-btn:active, .submit-btn:active { transform: translateY(var(--border)); }
+.action-caption { margin: var(--space-2) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-2); }
+
+/* ---------- secondary and small buttons on the grayscale screens ---------- */
+.secondary-btn, .dismiss, .alert-btn, .unlink-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.secondary-btn { display: flex; width: 100%; font-size: var(--size-body); }
+.secondary-btn:hover:not(:disabled), .dismiss:hover, .alert-btn:hover, .unlink-btn:hover:not(:disabled) { background: var(--bg-3); }
+.secondary-btn:disabled, .unlink-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.text-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target);
+  margin: var(--space-5) 0 0;
+  color: var(--text-1);
+  font-size: var(--size-meta);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+}
+.text-link:hover, .official a:hover, .row-note a:hover, .alert-link:hover, .forgot a:hover { color: var(--text-2); }
+
+/* ---------- inline error and form alert: icon + text, color second ---------- */
+.inline-error, .form-alert {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--error-bg);
+  color: var(--text-1);
+}
+.inline-error[hidden], .form-alert[hidden] { display: none; }
+.inline-error h2, .form-alert h2 {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-1);
+}
+.inline-error h2::before, .form-alert h2::before, .state-msg h2::before, .field-error::before, .row-note.is-error::before {   /* one error icon, in the error color */
+  content: "";
+  display: inline-block;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin-right: var(--space-2);
+  vertical-align: text-bottom;
+  background: var(--error);
+  -webkit-mask: var(--icon-error) center / contain no-repeat;
+  mask: var(--icon-error) center / contain no-repeat;
+}
+.inline-error p, .form-alert p { margin: var(--space-1) 0 0; font-size: var(--size-meta); color: var(--text-1); }
+.inline-error .alert-actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
+.inline-error > .dismiss { margin-top: var(--space-3); }
+.form-alert .alert-link { display: inline-block; margin-top: var(--space-2); font-size: var(--size-meta); font-weight: var(--weight-strong); }
+
+/* ---------- forms: fields, hints, errors ---------- */
+#log-form { padding: var(--space-4) var(--space-4) var(--space-7); }
+.form-intro { margin: 0 0 var(--space-4); font-size: var(--size-meta); color: var(--text-2); }
+.gate fieldset, fieldset.locked { margin: 0; padding: 0; border: 0; min-width: 0; }
+.field { margin: 0 0 var(--space-5); }
+.field label { display: block; margin: 0 0 var(--space-2); font-size: var(--size-meta); color: var(--text-2); }
+.field input, .field select {
+  display: block;
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  color-scheme: dark;
+}
+.field input::placeholder { color: var(--text-2); opacity: 1; }
+.field input:hover, .field select:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
+.field input:focus-visible, .field select:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+.field input:disabled, .field select:disabled { color: var(--text-2); cursor: not-allowed; }
+.field input[aria-invalid="true"], .field select[aria-invalid="true"] { box-shadow: inset 0 0 0 var(--focus-ring) var(--text-1); }
+.field select { -webkit-appearance: none; appearance: none; padding-right: calc(var(--space-3) * 2 + var(--icon-s)); }
+.field:has(> select) { position: relative; }
+.field:has(> select)::after {   /* chevron, like the sort control; sits in the select below the label */
+  content: "";
+  position: absolute;
+  right: var(--space-3);
+  top: calc(var(--size-meta) * var(--leading-body) + var(--space-2) + (var(--target) - var(--icon-s)) / 2);
+  width: var(--icon-s);
+  height: var(--icon-s);
+  background: var(--text-1);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+  width: var(--icon-m);
+  height: var(--icon-m);
+  padding: 0;
+  background: var(--text-1);
+  -webkit-mask: var(--icon-calendar) center / contain no-repeat;
+  mask: var(--icon-calendar) center / contain no-repeat;
+  cursor: pointer;
+}
+.field.proof { margin-top: var(--space-6); padding-top: var(--space-5); border-top: var(--border) solid var(--line); }
+.hint, .field-hint { margin: var(--space-2) 0 0; font-size: var(--size-proof); color: var(--text-2); }
+.field-error { margin: var(--space-2) 0 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-1); }
+.field-error[hidden], .field-hint[hidden], .hint[hidden] { display: none; }
+.field-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+
+/* ---------- Log result: catalog row and the linked race ---------- */
+.catalog-row {
+  position: relative;
+  display: block;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  color: var(--text-1);
+  text-decoration: none;
+}
+a.catalog-row[href]:hover { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
+.catalog-row-label { display: block; font-size: var(--size-body); font-weight: var(--weight-strong); }
+.catalog-row-hint { display: block; margin-top: var(--space-1); font-size: var(--size-proof); color: var(--text-2); }
+.catalog-row[aria-disabled="true"] { cursor: not-allowed; }
+.catalog-row[aria-disabled="true"] .catalog-row-label { color: var(--text-disabled); }
+.linked-race { margin: 0 0 var(--space-5); padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); }
+.linked-race[hidden] { display: none; }
+.linked-source { margin: 0 0 var(--space-2); font-size: var(--size-proof); font-weight: var(--weight-strong); color: var(--text-2); }
+.linked-race h3 { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+.linked-fact { margin: 0 0 var(--space-1); font-size: var(--size-meta); color: var(--text-1); }
+.linked-fact.place { color: var(--text-2); }
+.linked-race .unlink-btn { margin-top: var(--space-2); }
+
+/* ---------- Race picker: a sheet with a top bar and a search field ---------- */
+.sheet .top-bar { background: var(--bg-1); }
+.sheet form.search { padding: var(--space-3) 0; }
+.list-intro { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
+.race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
+
+/* ---------- gates: Sign in / Sign up, Reset password, New password ---------- */
+.gate { padding: var(--space-5) var(--space-4) var(--space-7); }
+.context { margin: 0 0 var(--space-5); font-size: var(--size-body); color: var(--text-2); }
+.context[hidden] { display: none; }
+.gate .view-toggle { display: flex; margin: 0 0 var(--space-6); }
+.gate .view-btn { flex: 1; }
+.view-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.submit-btn { margin: var(--space-2) 0 0; }
+fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the label in the present tense ("Signing in…") */
+.forgot { margin: var(--space-2) 0 0; text-align: right; font-size: var(--size-meta); }
+.forgot a[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
+.form-note, .sent-note { margin: var(--space-3) 0 0; text-align: center; font-size: var(--size-meta); color: var(--text-2); }
+.reset-done {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  color: var(--text-1);
+  font-size: var(--size-meta);
+}
+.inbox-heading { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+.inbox-line { margin: 0 0 var(--space-6); font-size: var(--size-body); color: var(--text-1); }
+.addr { font-weight: var(--weight-strong); overflow-wrap: anywhere; }
+.expiry-note { margin: var(--space-7) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-2); }
+.state-msg { display: grid; gap: var(--space-2); justify-items: stretch; padding: var(--space-6) 0; }
+.state-msg[hidden] { display: none; }
+.state-msg p { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
+
+/* ---------- Profile: identity, grouped rows, Sign out, the confirm alert ---------- */
+.identity { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-4) 0 var(--space-6); }
+.initials {   /* initials on a raised tile, the date tile's shape (DESIGN.md → Shapes: 4/6, no circles in content) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-2);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-day);
+  font-weight: var(--weight-strong);
+}
+.identity h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+.identity p { margin: 0; font-size: var(--size-meta); color: var(--text-2); }
+.group { margin: 0 var(--space-4) var(--space-7); }
+.group-heading {
+  margin: 0 0 var(--space-2) var(--space-4);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.rows { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-2); background: var(--bg-1); overflow: hidden; }
+.rows li { position: relative; }
+.rows li + li::before { content: ""; position: absolute; top: 0; left: var(--space-4); right: 0; border-top: var(--border) solid var(--line); }
+.row { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); padding: 0 var(--space-4); }
+.row label, .row .row-label { flex: none; font-size: var(--size-body); color: var(--text-1); }
+.row input, .row select, .row .row-value {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-3) 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  text-align: right;
+  text-align-last: right;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.row input:focus-visible, .row select:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-1); }
+.row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-2); }
+.row-note[hidden] { display: none; }
+.row-note.is-error { text-align: left; color: var(--text-1); }
+.row-note.is-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+.row-note.is-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }
+.group-footer { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); color: var(--text-2); }
+.signout {
+  display: block;
+  width: 100%;
+  min-height: var(--target);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.signout:hover { background: var(--bg-2); }
+dialog.alert {   /* the confirm alert floats like a sheet, so it takes the sheet's shadow */
+  width: var(--alert-width);
+  max-width: calc(100% - var(--space-8));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--bg-1);
+  box-shadow: var(--shadow-sheet);
+  color: var(--text-1);
+  text-align: center;
+  overflow: hidden;
+}
+dialog.alert::backdrop { background: var(--scrim); }
+.alert-body { padding: var(--space-5) var(--space-4) var(--space-4); }
+dialog.alert h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+dialog.alert p { margin: 0; font-size: var(--size-meta); color: var(--text-2); }
+dialog.alert .alert-actions { display: flex; border-top: var(--border) solid var(--line); }
+dialog.alert .alert-actions button {
+  flex: 1;
+  min-height: var(--target);
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  cursor: pointer;
+}
+dialog.alert .alert-actions button + button { border-left: var(--border) solid var(--line); font-weight: var(--weight-strong); }
+dialog.alert .alert-actions button:hover { background: var(--bg-2); }
+
+/* ---------- skeletons on the grayscale screens: the content's shape, no shimmer ---------- */
+.bar.h1 { width: var(--skel-title-w); height: var(--size-title); margin-bottom: var(--space-4); }
+.skel-facts { display: grid; grid-template-columns: var(--skel-tag-w) minmax(0, 1fr); gap: var(--space-2) var(--space-4); margin-bottom: var(--space-6); }
+.skel-facts .bar { height: var(--skel-line); }
+.skel-facts .bar:nth-child(even) { width: var(--skel-loc-w); }
+.bar.h2 { width: var(--skel-count-w); height: var(--skel-title); margin-bottom: var(--space-2); }
+.bar.line { height: var(--skel-line); margin-bottom: var(--space-2); }
+.bar.line.short { width: var(--skel-row-title-w); }
+.bar.line.end { width: var(--skel-loc-w); margin-bottom: var(--space-6); }
+.bar.link { width: var(--skel-proof-w); height: var(--skel-line); }
+.bar.label { width: var(--skel-tag-w); height: var(--skel-line); margin-bottom: var(--space-2); }
+.bar.finish-bar { width: var(--skel-time-w); height: var(--skel-time-h); margin-bottom: var(--space-4); }
+.action-bar .bar.button { height: var(--target); border-radius: var(--radius-2); }
+.action-bar .bar.caption { width: var(--skel-title-w); height: var(--skel-line); margin: var(--space-2) auto 0; }
+.initials.skel { background: var(--bg-2); }
+.bar.name { width: var(--skel-row-title-w); height: var(--skel-title); margin-bottom: var(--space-2); }
+.bar.email { width: var(--skel-loc-w); height: var(--skel-line); }
+.bar.heading { width: var(--skel-tag-w); height: var(--skel-line); margin: 0 0 var(--space-2) var(--space-4); }
+.row .bar.label { margin: 0; }
+.row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
+.skel-signout .bar { height: var(--target); border-radius: var(--radius-2); }
+
+/* =================================================================
+   Showcase layout (ui/kit.html only, never in the product). Tokens only.
+   ================================================================= */
+.kit { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-9); }
+.kit-head { display: grid; gap: var(--space-3); }
+.kit-head p, .kit-section > p { margin: 0; max-width: var(--measure); color: var(--text-2); }
+.kit-toc { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; font-size: var(--size-meta); }
+.kit-toc a { color: var(--text-1); text-underline-offset: var(--space-1); }
+.kit-section { display: grid; gap: var(--space-7); }
+.kit-section > h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--size-time);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+}
+.kit-item { display: grid; gap: var(--space-3); padding-top: var(--space-6); border-top: var(--border) solid var(--line); }
+.kit-item > h3 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+.kit-item > p { margin: 0; max-width: var(--measure); font-size: var(--size-proof); color: var(--text-2); }
+.kit-item code { font-family: var(--font-mono); font-size: var(--size-proof); color: var(--text-1); }
+.kit-states { display: grid; gap: var(--space-5); grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--screen-w)), 1fr)); align-items: start; }
+.kit-state { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
+.kit-label { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
+.kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
+  width: 100%;
+  max-width: var(--screen-w);
+  padding: var(--space-4);
+  border-radius: var(--radius-3);
+  background: var(--bg-0);
+  box-shadow: inset 0 0 0 var(--border) var(--line);
+  overflow: hidden;
+}
+.kit-frame--flush { padding: 0; }
+.kit-stage {   /* a positioned screen-height stage for sheets, the map and the alert */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: var(--kit-stage-h);
+  padding: 0;
+}
+.kit-stage > .phone-screen { flex: 1; min-height: 0; overflow: hidden; padding-bottom: 0; }
+.kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.kit-stack { display: grid; gap: var(--space-3); }
+.kit-shell { display: block; width: 100%; max-width: var(--screen-w); height: var(--kit-stage-h); border: 0; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--line); background: var(--bg-0); }
+.kit-stage dialog.alert { position: absolute; inset: 0; z-index: 6; margin: auto; height: max-content; }
+.kit-frame .phone-screen { height: auto; overflow: visible; padding-bottom: 0; }   /* a strip of a screen, not the whole scrolling page */
+.kit-map { flex: 1; display: flex; flex-direction: column; padding: var(--space-4); }   /* the map's own panel, as #map-view on Race browse */

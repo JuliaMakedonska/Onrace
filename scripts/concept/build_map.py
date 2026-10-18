@@ -3,10 +3,10 @@
 Projects Natural Earth 1:110m land and country borders (public domain,
 naturalearthdata.com; GeoJSON from github.com/nvkelso/natural-earth-vector)
 with Mercator, cropped to North America and Europe, into two SVG masks:
-land fill, and coastlines + borders as hairlines. Colors come from tokens.css
+land fill, and coastlines + borders as hairlines. Colors come from ui/kit.css
 (the masks only carry shape). Also writes each race pin's position from its
 real latitude/longitude. Output goes between the map markers in
-concept/map.css (linked only by the Race browse pages).
+ui/map.css (linked only by the Race browse pages and the ui/kit.html showcase).
 
 Usage, from the repo root:  python3 scripts/concept/build_map.py
 """
@@ -90,7 +90,7 @@ block = '\n'.join([
     *pin_lines,
     '  /* map:end */'])
 
-p = os.path.join(ROOT, 'concept/map.css')
+p = os.path.join(ROOT, 'ui/map.css')
 t = open(p).read()
 assert '/* map:start' in t
 t = re.sub(r'  /\* map:start.*?/\* map:end \*/', lambda m: block, t, flags=re.S)

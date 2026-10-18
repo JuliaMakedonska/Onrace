@@ -470,6 +470,10 @@
         "Base"
        ],
        [
+        "race-browse?sport=hyrox&sport=marathon",
+        "Filtered"
+       ],
+       [
         "race-browse-empty",
         "Empty"
        ],
@@ -1076,6 +1080,8 @@
     d.appendChild(ul); tree.appendChild(d);
   });
 
+  // A state is a file, or a file plus URL parameters (Race browse · Filtered): exact key first, then the file
+  function stateKey(key) { return STATES[key] ? key : key.split('?')[0]; }
   function hashKey() {
     var h = location.hash.replace(/^#/, '');
     try { h = decodeURIComponent(h); } catch (e) {}
@@ -1093,7 +1099,7 @@
     return cause && NOTES[base + '?cause=' + cause[1]] ? base + '?cause=' + cause[1] : base;
   }
   function paint(key) {
-    var st = STATES[key.split('?')[0]], s = st.screen, file = key.split('?')[0];
+    var sk = stateKey(key), st = STATES[sk], s = st.screen, file = key.split('?')[0];
     document.getElementById('screen-folder').textContent = st.folder;
     document.getElementById('screen-badge').hidden = !s.main;
     document.getElementById('screen-title').textContent = s.name;
@@ -1104,7 +1110,7 @@
     var pills = document.getElementById('state-pills'); pills.textContent = '';
     s.states.forEach(function (x) {
       var li = el('li'), a = el('a', 'pill', x[1]); a.href = '#' + x[0];
-      if (x[0] === file) a.setAttribute('aria-current', 'page');
+      if (x[0] === sk) a.setAttribute('aria-current', 'page');
       li.appendChild(a); pills.appendChild(li);
     });
     var q = key.indexOf('?');
@@ -1116,7 +1122,7 @@
       u.hidden = u.getAttribute('data-screen') !== s.slug;
     });
     Array.prototype.forEach.call(tree.querySelectorAll('.tree-state'), function (a) {
-      if (a.getAttribute('data-key') === file) a.setAttribute('aria-current', 'page');
+      if (a.getAttribute('data-key') === sk) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
     document.title = 'Onrace — Wireframes · ' + s.name + (st.label === 'Base' ? '' : ' · ' + st.label);
