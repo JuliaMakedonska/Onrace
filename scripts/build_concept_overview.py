@@ -24,6 +24,7 @@ def inline(t):
     t = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', t)
     t = re.sub(r'(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])', r'<em>\1</em>', t)
     t = t.replace('](#color-rules-designer-2026-10-13)', '](#color-rules)')   # concept.md's GitHub anchor → this page's Color rules
+    t = t.replace('](#native-ios-designer-rule-2026-10-18)', '](' + GH + 'concept/concept.md#native-ios-designer-rule-2026-10-18)')   # Lesson 7: not on this page, so link to concept.md
     t = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', t)
     return t.replace('\\&lt;', '&lt;').replace('\\&gt;', '&gt;').replace('\\|', '|')
 

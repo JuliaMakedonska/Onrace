@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-18T16:08:45+00:00",
+  "title": "Design System: Onrace",
+  "extensions": {
+    "colorMeta": {
+      "bg-bar": {
+        "role": "neutral",
+        "displayName": "Tab-bar Black",
+        "canonical": "#0F1114",
+        "oklch": "oklch(17.7% 0.007 258.4)",
+        "tonalRamp": [
+          "#090B0E",
+          "#232528",
+          "#404246",
+          "#5F6165",
+          "#808287",
+          "#A2A5A9",
+          "#C6C9CE",
+          "#ECEFF3"
+        ]
+      },
+      "bg-0": {
+        "role": "neutral",
+        "displayName": "Graphite Ground",
+        "canonical": "#131518",
+        "oklch": "oklch(19.5% 0.007 258.4)",
+        "tonalRamp": [
+          "#090B0E",
+          "#232528",
+          "#404246",
+          "#5F6165",
+          "#808286",
+          "#A2A5A9",
+          "#C6C9CE",
+          "#ECEFF3"
+        ]
+      },
+      "bg-1": {
+        "role": "neutral",
+        "displayName": "Graphite Surface",
+        "canonical": "#1D2024",
+        "oklch": "oklch(24.2% 0.009 255.6)",
+        "tonalRamp": [
+          "#090B0F",
+          "#222529",
+          "#3F4247",
+          "#5E6266",
+          "#7F8388",
+          "#A1A5AB",
+          "#C5C9CF",
+          "#EBEFF4"
+        ]
+      },
+      "bg-2": {
+        "role": "neutral",
+        "displayName": "Graphite Raised",
+        "canonical": "#272B30",
+        "oklch": "oklch(28.7% 0.011 254.0)",
+        "tonalRamp": [
+          "#080B10",
+          "#21252A",
+          "#3E4248",
+          "#5D6267",
+          "#7E8389",
+          "#A0A5AC",
+          "#C4CAD0",
+          "#EAEFF6"
+        ]
+      },
+      "bg-3": {
+        "role": "neutral",
+        "displayName": "Graphite Pressed",
+        "canonical": "#2C3035",
+        "oklch": "oklch(30.7% 0.011 254.0)",
+        "tonalRamp": [
+          "#080B10",
+          "#22252A",
+          "#3E4248",
+          "#5D6267",
+          "#7E8389",
+          "#A1A5AC",
+          "#C4CAD0",
+          "#EAEFF6"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#31363C",
+        "oklch": "oklch(33.0% 0.013 253.0)",
+        "tonalRamp": [
+          "#080C10",
+          "#21262B",
+          "#3D4349",
+          "#5C6268",
+          "#7D838A",
+          "#A0A6AD",
+          "#C3CAD1",
+          "#E9EFF7"
+        ]
+      },
+      "field-line": {
+        "role": "neutral",
+        "displayName": "Field Line",
+        "canonical": "#686E75",
+        "oklch": "oklch(53.5% 0.013 252.2)",
+        "tonalRamp": [
+          "#070C11",
+          "#21262B",
+          "#3D4349",
+          "#5C6269",
+          "#7D838A",
+          "#9FA6AD",
+          "#C3CAD2",
+          "#E8EFF7"
+        ]
+      },
+      "text-1": {
+        "role": "neutral",
+        "displayName": "Chalk",
+        "canonical": "#F4F5F6",
+        "oklch": "oklch(97.0% 0.002 247.8)",
+        "tonalRamp": [
+          "#0B0B0C",
+          "#242526",
+          "#414243",
+          "#606162",
+          "#818283",
+          "#A4A5A6",
+          "#C8C9CA",
+          "#EDEEEF"
+        ]
+      },
+      "text-2": {
+        "role": "neutral",
+        "displayName": "Ash",
+        "canonical": "#A3A9B0",
+        "oklch": "oklch(73.2% 0.012 252.1)",
+        "tonalRamp": [
+          "#080C10",
+          "#21262B",
+          "#3D4348",
+          "#5C6268",
+          "#7D838A",
+          "#A0A6AD",
+          "#C4CAD1",
+          "#E9EFF7"
+        ]
+      },
+      "text-disabled": {
+        "role": "neutral",
+        "displayName": "Disabled",
+        "canonical": "#6B7178",
+        "oklch": "oklch(54.6% 0.013 252.2)",
+        "tonalRamp": [
+          "#070C11",
+          "#21262B",
+          "#3D4349",
+          "#5C6269",
+          "#7D838A",
+          "#9FA6AD",
+          "#C3CAD2",
+          "#E8EFF7"
+        ]
+      },
+      "chip-text": {
+        "role": "neutral",
+        "displayName": "Chip Text",
+        "canonical": "#BFC4CA",
+        "oklch": "oklch(81.8% 0.010 252.8)",
+        "tonalRamp": [
+          "#080B0F",
+          "#22252A",
+          "#3E4247",
+          "#5D6267",
+          "#7E8388",
+          "#A1A6AB",
+          "#C5CAD0",
+          "#EAEFF5"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Sodium Amber",
+        "canonical": "#F5B649",
+        "oklch": "oklch(81.6% 0.142 77.8)",
+        "tonalRamp": [
+          "#270000",
+          "#481000",
+          "#693200",
+          "#8C5300",
+          "#B07500",
+          "#D59821",
+          "#FCBC50",
+          "#FFE278"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "Amber, hover",
+        "canonical": "#FFC46A",
+        "oklch": "oklch(85.6% 0.127 76.2)",
+        "tonalRamp": [
+          "#250000",
+          "#451400",
+          "#663400",
+          "#895400",
+          "#AD7603",
+          "#D2993C",
+          "#F8BD63",
+          "#FFE389"
+        ]
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "On Accent",
+        "canonical": "#131518",
+        "oklch": "oklch(19.5% 0.007 258.4)",
+        "tonalRamp": [
+          "#090B0E",
+          "#232528",
+          "#404246",
+          "#5F6165",
+          "#808286",
+          "#A2A5A9",
+          "#C6C9CE",
+          "#ECEFF3"
+        ]
+      },
+      "error": {
+        "role": "state",
+        "displayName": "Soft Coral",
+        "canonical": "#EE8B84",
+        "oklch": "oklch(74.0% 0.122 24.7)",
+        "tonalRamp": [
+          "#2E0000",
+          "#510001",
+          "#751E1E",
+          "#9B403D",
+          "#C1625D",
+          "#E7857E",
+          "#FFA9A1",
+          "#FFCEC6"
+        ]
+      },
+      "error-bg": {
+        "role": "state",
+        "displayName": "Coral Wash",
+        "canonical": "#3A2F31",
+        "oklch": "oklch(31.8% 0.016 5.7)",
+        "tonalRamp": [
+          "#11080A",
+          "#2C2224",
+          "#4A3F41",
+          "#6A5E60",
+          "#8C7E81",
+          "#AFA1A3",
+          "#D3C5C7",
+          "#F9EAED"
+        ]
+      },
+      "scrim": {
+        "role": "state",
+        "displayName": "Scrim",
+        "canonical": "rgba(0, 0, 0, 0.6)"
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Title",
+        "purpose": "Screen title (h1), Schibsted 800."
+      },
+      "finish-time": {
+        "displayName": "Finish Time",
+        "purpose": "Finish time on a result row; the loudest thing on the row."
+      },
+      "date-day": {
+        "displayName": "Date Day",
+        "purpose": "Day on the race card date tile (::first-line)."
+      },
+      "item": {
+        "displayName": "Item",
+        "purpose": "Race names, state headings, sheet heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Base text, search, sheet fields and checkbox labels."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Primary and secondary buttons."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Location, counts, sort, result dates, state body, tertiary link."
+      },
+      "proof": {
+        "displayName": "Proof",
+        "purpose": "Proof line; month and year under the day."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Format and filter chips, uppercase by CSS only."
+      },
+      "tab-label": {
+        "displayName": "Tab Label",
+        "purpose": "Tab labels and map pin labels, sentence case."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-sheet",
+        "value": "0 12px 32px -12px rgba(0, 0, 0, 0.6)",
+        "purpose": "The Filters sheet only; cards are flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Every transition."
+      },
+      {
+        "name": "dur-fast",
+        "value": "160ms",
+        "purpose": "Button background and press; 0ms under prefers-reduced-motion."
+      },
+      {
+        "name": "dur-sheet",
+        "value": "250ms",
+        "purpose": "Filters sheet slide and scrim fade; 0ms under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "screen",
+        "value": "390px",
+        "purpose": "iPhone logical width; single layout, no breakpoints."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The screen's one filled action: amber fill, on-accent label.",
+      "html": "<button class=\"ds-btn-primary\">Log result</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:0 20px; border:0; border-radius:var(--radius-2, 6px); background:var(--accent, #F5B649); color:var(--on-accent, #131518); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; line-height:1; cursor:pointer; transition: background-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1); } .ds-btn-primary:hover { background:var(--accent-hover, #FFC46A); } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Tonal action, e.g. Filters on Race browse.",
+      "html": "<button class=\"ds-btn-secondary\">Filters</button>",
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:0 20px; border:0; border-radius:var(--radius-2, 6px); background:var(--bg-2, #272B30); color:var(--text-1, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; line-height:1; cursor:pointer; transition: background-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1); } .ds-btn-secondary:hover { background:var(--bg-3, #2C3035); } .ds-btn-secondary:active { transform: translateY(1px); } .ds-btn-secondary:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+    },
+    {
+      "name": "Tertiary Link Button",
+      "kind": "button",
+      "refersTo": "button-tertiary",
+      "description": "Text link action, e.g. Clear all filters in the chips row.",
+      "html": "<button class=\"ds-btn-tertiary\">Clear all filters</button>",
+      "css": ".ds-btn-tertiary { min-height:44px; padding:0 4px; border:0; background:none; color:var(--text-1, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; font-size:14px; font-weight:400; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:4px; cursor:pointer; } .ds-btn-tertiary:hover { color:var(--text-2, #A3A9B0); } .ds-btn-tertiary:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Race browse search: surface fill, field-line boundary, magnifier icon.",
+      "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M11.5 2C16.7467 2 21 6.25329 21 11.5C21 13.8541 20.1417 16.0064 18.7236 17.666C18.7315 17.6732 18.7404 17.6799 18.748 17.6875L22.5303 21.4697C22.8228 21.7626 22.8228 22.2384 22.5303 22.5312C22.2375 22.8236 21.7625 22.8237 21.4697 22.5312L17.6875 18.748C17.6797 18.7403 17.6724 18.7317 17.665 18.7236C16.0055 20.1414 13.8538 21 11.5 21C6.25329 21 2 16.7467 2 11.5C2 6.25329 6.25329 2 11.5 2Z\"/></svg><input type=\"search\" placeholder=\"Race name or city\" aria-label=\"Search races by name or city\"></label>",
+      "css": ".ds-search { position:relative; display:block; width:100%; } .ds-search svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-2, #A3A9B0); pointer-events:none; } .ds-search input { width:100%; min-height:44px; padding:0 12px 0 42px; border:0; border-radius:var(--radius-2, 6px); background:var(--bg-1, #1D2024); box-shadow: inset 0 0 0 1px var(--field-line, #686E75); color:var(--text-1, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; -webkit-appearance:none; appearance:none; box-sizing:border-box; } .ds-search input::placeholder { color:var(--text-2, #A3A9B0); opacity:1; } .ds-search input:hover { box-shadow: inset 0 0 0 1px var(--text-2, #A3A9B0); } .ds-search input:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:0; box-shadow:none; }"
+    },
+    {
+      "name": "Format Chip",
+      "kind": "chip",
+      "refersTo": "format-chip",
+      "description": "Neutral metadata chip, identical for every format; uppercase by CSS only.",
+      "html": "<span class=\"ds-format-chip\">Half marathon</span>",
+      "css": ".ds-format-chip { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:var(--radius-1, 4px); background:var(--bg-2, #272B30); color:var(--chip-text, #BFC4CA); font-family:\"Hanken Grotesk\", sans-serif; font-size:11px; font-weight:600; letter-spacing:0.07em; line-height:1; text-transform:uppercase; white-space:nowrap; }"
+    },
+    {
+      "name": "Active Filter Chip",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "A removable active filter: calm outline, never the accent.",
+      "html": "<button class=\"ds-filter-chip\">HYROX <svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" aria-hidden=\"true\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM8.96963 8.96965C9.26252 8.67676 9.73739 8.67676 10.0303 8.96965L12 10.9393L13.9696 8.96967C14.2625 8.67678 14.7374 8.67678 15.0303 8.96967C15.3232 9.26256 15.3232 9.73744 15.0303 10.0303L13.0606 12L15.0303 13.9696C15.3232 14.2625 15.3232 14.7374 15.0303 15.0303C14.7374 15.3232 14.2625 15.3232 13.9696 15.0303L12 13.0607L10.0303 15.0303C9.73742 15.3232 9.26254 15.3232 8.96965 15.0303C8.67676 14.7374 8.67676 14.2625 8.96965 13.9697L10.9393 12L8.96963 10.0303C8.67673 9.73742 8.67673 9.26254 8.96963 8.96965Z\" clip-rule=\"evenodd\"/></svg></button>",
+      "css": ".ds-filter-chip { display:inline-flex; align-items:center; gap:8px; min-height:32px; padding:0 12px; border:0; border-radius:var(--radius-1, 4px); background:transparent; box-shadow: inset 0 0 0 1px var(--text-2, #A3A9B0); color:var(--text-1, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; cursor:pointer; } .ds-filter-chip svg { color:var(--text-2, #A3A9B0); } .ds-filter-chip:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+    },
+    {
+      "name": "List / Map Segmented Control",
+      "kind": "custom",
+      "refersTo": "segmented-track",
+      "description": "Raised track, pressed segment in bg-3 with a field-line outline. Native iOS: segments of equal width (gap G11).",
+      "html": "<div class=\"ds-seg\" role=\"group\" aria-label=\"View\"><button aria-pressed=\"true\">List</button><button aria-pressed=\"false\">Map</button></div>",
+      "css": ".ds-seg { display:inline-flex; padding:4px; border-radius:var(--radius-2, 6px); background:var(--bg-2, #272B30); } .ds-seg button { min-height:36px; padding:0 16px; border:0; border-radius:var(--radius-1, 4px); background:transparent; color:var(--text-2, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:14px; font-weight:600; cursor:pointer; } .ds-seg button:hover { background:var(--bg-3, #2C3035); } .ds-seg button[aria-pressed=\"true\"] { background:var(--bg-3, #2C3035); color:var(--text-1, #F4F5F6); box-shadow: inset 0 0 0 1px var(--field-line, #686E75); } .ds-seg button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+    },
+    {
+      "name": "Result Row",
+      "kind": "card",
+      "refersTo": "result-row",
+      "description": "Signature: the finish time is the loudest thing on the row; proof stated, not stamped.",
+      "html": "<a class=\"ds-result\" href=\"#\"><span class=\"ds-result-top\"><span class=\"ds-result-name\">HYROX London</span><span class=\"ds-result-time\">1:18:42</span></span><span class=\"ds-result-meta\"><span class=\"ds-result-chip\">HYROX</span> 6 Dec 2025</span><span class=\"ds-result-proof\">Self-reported · via results.hyrox.com</span></a>",
+      "css": ".ds-result { display:grid; gap:8px; padding:12px 16px 16px; border-radius:var(--radius-2, 6px); background:var(--bg-1, #1D2024); color:var(--text-1, #F4F5F6); text-decoration:none; font-family:\"Hanken Grotesk\", sans-serif; } .ds-result:hover { box-shadow: inset 0 0 0 1px var(--field-line, #686E75); } .ds-result:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; } .ds-result-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; } .ds-result-name { font-size:17px; font-weight:600; line-height:1.2; } .ds-result-time { font-family:\"Schibsted Grotesk\", \"Hanken Grotesk\", sans-serif; font-size:32px; font-weight:800; line-height:1; letter-spacing:-0.03em; white-space:nowrap; } .ds-result-meta { display:flex; align-items:center; gap:12px; font-size:14px; color:var(--text-2, #A3A9B0); } .ds-result-chip { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:var(--radius-1, 4px); background:var(--bg-2, #272B30); color:var(--chip-text, #BFC4CA); font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; } .ds-result-proof { font-size:13px; line-height:1.45; color:var(--text-2, #A3A9B0); }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "Three destinations; the current tab is the screen's amber. Native iOS floats it on Liquid Glass (gap G1, conflict C1).",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Global navigation\"><a href=\"#\" aria-current=\"page\">Discover</a><a href=\"#\">My Results</a><a href=\"#\">Profile</a></nav>",
+      "css": ".ds-tabs { display:grid; grid-template-columns:repeat(3, 1fr); height:64px; align-items:center; padding:4px 8px; background:var(--bg-bar, #0F1114); border-top:1px solid var(--line, #31363C); } .ds-tabs a { display:grid; justify-items:center; min-height:44px; align-content:center; color:var(--text-2, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:11px; font-weight:600; text-decoration:none; } .ds-tabs a[aria-current=\"page\"] { color:var(--accent, #F5B649); } .ds-tabs a:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Podium",
+    "overview": "A graphite stand with one amber light on it. The ground is dark but never black, and it gets lighter in small, even steps from the tab bar up to the raised controls. Type and contrast carry the energy, not color: the screen title and the key numbers (finish time, date day) sit in a heavy display face, and everything else is a quiet text face in sentence case. The amber accent appears once or twice per screen, only where you can act or where you are.\n\nThe product is an iPhone-shaped app (390px wide) in Operate mode: athletes scan a calendar of races and pull up their own results as proof. So hierarchy beats decoration. On a race card the date and the place lead and the photo is a black-and-white band, not a poster. On a result row the finish time is the loudest thing. The proof line under it says where the result comes from (\"Self-reported · via results.hyrox.com\"). It never stamps the result as verified.\n\nWhat the screens refuse: aggressive \"energy\" red, pure black with one hot accent, one heavy condensed face for everything, no radius at all, per-format colors, success-green on results, and the artifact pages' values (`#0b0c0e`, the `#ff4d2e` family).",
+    "keyCharacteristics": [
+      "Dark with depth: five background levels between L* 4.99 and 19.67, all near-neutral (C* ≤ 3.87).",
+      "One scarce accent, sodium amber `#F5B649`: the primary action and the current tab, and nothing else.",
+      "Two faces: Schibsted Grotesk 800 for the title and key numbers, Hanken Grotesk 400/600 for everything else.",
+      "Small radii: 4px inside, 6px outside. The Filters sheet's corners follow the native iOS sheet (12px today; see Native iOS).",
+      "Flat surfaces. The one shadow belongs to the Filters sheet.",
+      "Neutral metadata: format chips, filter chips, map pins, the saved confirmation and every pressed state stay gray.",
+      "Black-and-white photos, 3:1, inset in the race card.",
+      "Solar bold icons, drawn as CSS masks in the color of their text."
+    ],
+    "rules": [
+      {
+        "name": "The Two Lights Rule",
+        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Every other active state stays neutral: the active filter chip is an outline, the pressed segment is `--bg-3`, a checked checkbox is `--text-1`, the focus ring is `--text-1`.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stated, Not Stamped Rule",
+        "body": "No green, no check icon and no \"verified\" mark on any result or anywhere on Results list. The saved confirmation is `--bg-1` with a gray save glyph.",
+        "section": "colors"
+      },
+      {
+        "name": "The Depth of Dark Rule",
+        "body": "Every background level has L* between 4.5 and 20 and C* ≤ 6, and each level is at least 1.5 L* above the one below it. `#000` and `#0B0C0E` are out.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Shouts Rule",
+        "body": "The display face is used for the screen title, the finish time and the date day, and nowhere else. Race names, chips, buttons, tabs and meta are the text face.",
+        "section": "typography"
+      },
+      {
+        "name": "The Name Stays Rule",
+        "body": "Uppercase is `text-transform` only. The format name in the markup never changes.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Float Rule",
+        "body": "Only a sheet casts a shadow. Everything else is a tone step.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep the amber to the one primary button and the current tab: at most two uses per screen.",
+      "**Do** make the finish time the loudest thing on a result row, through Schibsted 800 at 32px in `--text-1`, not through color.",
+      "**Do** lead a race card with the date tile (day 30px over month and year 13px) beside the name, chip and place.",
+      "**Do** show every photo in black and white (`--photo-filter`), inset at 3:1 with a 4px radius.",
+      "**Do** state proof as its own 13px `--text-2` line with one link icon: \"Self-reported · via \\<domain\\>\".",
+      "**Do** step a secondary action up or down so the screen keeps exactly one filled button.",
+      "**Do** take every value from `tokens.css`. Pages and `components.css` hold no raw values.",
+      "**Do** draw icons as Solar bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar.",
+      "**Do** keep 44px targets, a 2px `--text-1` focus ring, and 0ms motion under `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, a focus ring, an icon in content, a status, or the map.",
+      "**Don't** use green, a check icon or the word \"verified\" on a result or on Results list.",
+      "**Don't** give formats their own colors. Every format chip is the same neutral chip.",
+      "**Don't** use pure `#000`, `#0B0C0E`, the `#ff4d2e` family, `src/style.css` or the wireframe grays.",
+      "**Don't** use aggressive \"energy\" red. Errors are soft coral `#EE8B84`, on the icon only.",
+      "**Don't** set race names, chips, buttons or tabs in the display face, or use one heavy condensed face for everything.",
+      "**Don't** drop the radius to 0 or round into pills.",
+      "**Don't** give cards a shadow or a border at rest.",
+      "**Don't** use `--line` or `--field-line` as a fill.",
+      "**Don't** use tabular figures on finish times: Schibsted spaces the colons wide (\"24 : 36\")."
+    ]
+  }
+}

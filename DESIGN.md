@@ -220,7 +220,7 @@ What the screens refuse: aggressive "energy" red, pure black with one hot accent
 - Dark with depth: five background levels between L* 4.99 and 19.67, all near-neutral (C* ≤ 3.87).
 - One scarce accent, sodium amber `#F5B649`: the primary action and the current tab, and nothing else.
 - Two faces: Schibsted Grotesk 800 for the title and key numbers, Hanken Grotesk 400/600 for everything else.
-- Small radii: 4px inside, 6px outside; 12px only on the Filters sheet's top corners.
+- Small radii: 4px inside, 6px outside. The Filters sheet's corners follow the native iOS sheet (12px today; see Native iOS).
 - Flat surfaces. The one shadow belongs to the Filters sheet.
 - Neutral metadata: format chips, filter chips, map pins, the saved confirmation and every pressed state stay gray.
 - Black-and-white photos, 3:1, inset in the race card.
@@ -321,7 +321,7 @@ Flat by default. Depth comes from tonal layering: the tab bar (`--bg-bar`) under
 Slightly rounded, never pills, never sharp.
 - **4px** (`--radius-1`), inner shapes: the photo inside a card, the date tile, format and filter chips, List/Map segments, skeleton bars, map pin labels, checkboxes, the sheet handle.
 - **6px** (`--radius-2`), outer shapes: cards, result rows, buttons, the search field, sheet fields, the List/Map track, the saved confirmation, the map frame.
-- **12px** (`--radius-3`): the Filters sheet's top corners only. `tokens.css` and the stand label this radius "stand panels only"; the sheet uses it anyway. This waits for the designer's decision (see the concept.md diff in Lesson 7, step 1).
+- **12px** (`--radius-3`): today, the Filters sheet's top corners only (`tokens.css` and the stand label it "stand panels only"). Decided 2026-10-18: the sheet follows the native iOS sheet, so this becomes the system's sheet radius in step 3 (see Native iOS).
 - **Circles:** the map pin dot only.
 - **Borders** are drawn as 1px inset box-shadows (`--border`), so they never change a box's size.
 
@@ -361,7 +361,7 @@ Exactly one filled button per screen.
 A message block, left-aligned, 24px of vertical padding: a 17px / 600 heading, 14px `--text-2` body (65ch max), then actions in the button hierarchy, 12px apart. An error heading gets one 18px Solar danger-circle in `--error`. Nothing else turns red.
 
 ### Filters sheet (signature)
-`--bg-1`, 12px top corners, the sheet shadow, over the scrim. It slides up over 250ms (`--dur-sheet`, `--ease-out`; 0ms under reduced motion). A 32×4px handle in `--field-line`; a 17px / 600 heading; 14px `--text-2` labels; fields and checkboxes as above; a sticky footer with Cancel (secondary) and Apply filters (the sheet's one primary), each half the width.
+`--bg-1`, 12px top corners today (native sheet corners from step 3), the sheet shadow, over the scrim. It slides up over 250ms (`--dur-sheet`, `--ease-out`; 0ms under reduced motion). A 32×4px handle in `--field-line`; a 17px / 600 heading; 14px `--text-2` labels; fields and checkboxes as above; a sticky footer with Cancel (secondary) and Apply filters (the sheet's one primary), each half the width. Native iOS moves these to a top toolbar and adds detents and swipe-to-dismiss (G12–G16).
 
 ### Static map (signature)
 A frame in `--bg-bar` (water) with a 1px `--field-line` boundary and a 6px radius. Natural Earth land is masked in `--bg-1`, coastlines and borders in `--bg-3`. Pins: a 10px `--text-1` dot ringed in water color on the real coordinate, and a 22px `--bg-2` label (11px / 600, `--text-1`, 4px radius) joined by a 1px `--text-2` leader line. Hover lifts the label to `--bg-3`. No accent anywhere on the map. The caption is 11px `--text-2`.
@@ -390,6 +390,52 @@ A frame in `--bg-bar` (water) with a 1px `--field-line` boundary and a 6px radiu
 - **Don't** give cards a shadow or a border at rest.
 - **Don't** use `--line` or `--field-line` as a fill.
 - **Don't** use tabular figures on finish times: Schibsted spaces the colons wide ("24 : 36").
+
+## Native iOS
+
+**The rule (designer, 2026-10-18).** Every element with a native iOS counterpart follows Apple's Human Interface Guidelines for anatomy, metrics and behavior: sizes, placement, grabber, large title, safe areas, 44pt targets, sheet detents, and search and segmented-control behavior. Podium keeps the visual language: colors, fonts, Solar icons and photos. Where the two conflict, the designer decides. Open conflicts are marked **C1–C7** below and listed in `concept/concept.md` → Native iOS, with the 33 gaps (G1–G33) between today's screens and HIG. The screens change through the kit in steps 3 and 5.
+
+HIG read on 2026-10-18; every link returned HTTP 200. "System" means HIG publishes no number and the system draws it.
+
+| Component on the screens | HIG page | What native means for it | What Podium keeps |
+|---|---|---|---|
+| Tab bar (Discover, My Results, Profile) | [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars) | For navigation, not actions. Visible in every section; only a modal may cover it. Labels under icons, single words where possible. Prefer filled icons. On iOS it floats above content at the bottom on a Liquid Glass background, and content shows through beneath it. It may include a search tab at the trailing end. | Solar bold icons (filled, as HIG prefers), Hanken labels, amber on the current tab. Material: open, **C1**. Symbols: open, **C2**. |
+| Screen title ("Discover", "My Results") and top bar | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars), [Typography](https://developer.apple.com/design/human-interface-guidelines/typography) | A large title that turns into a standard inline title in the top bar as people scroll, and back to large at the top. Titles under 15 characters. Actions sit in the toolbar; the key action uses the `.prominent` style, only one, on the trailing side. Prefer symbols to text for toolbar items. Fewer custom toolbar backgrounds: a scroll edge effect separates bar and content. | The title's text and Podium's display face (open, **C3**). The amber on the one primary action. |
+| Search field (Race browse) | [Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields), [Text fields](https://developer.apple.com/design/human-interface-guidelines/text-fields) | A search icon, placeholder text, and a Clear button at the trailing end. Search starts as people type. An inline field sits above the list it filters and can pin to the top toolbar on scroll. Bottom-toolbar search or a search tab are the other native placements. | `--bg-1` field, `--field-line` boundary, Solar magnifier (**C2**), the placeholder "Race name or city". |
+| List / Map segmented control | [Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls) | For closely related subviews (List and Map qualify). Segments of equal width, text only, nouns, at most about five on iPhone. | `--bg-2` track, `--bg-3` selected segment, Hanken 14/600. Shape: open, **C7**. |
+| Buttons (Filters, Log result, state actions, sheet actions) | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Hit region at least 44×44pt. A press state on every custom button. One or two prominent buttons per view. Style, not size, separates the preferred choice. The primary role takes the accent. A delayed action shows an activity indicator inside the button, with an alternative label ("Checking out…"). | Amber primary, tonal secondary, underlined tertiary, Hanken 15/600, the 1px press. Radius: open, **C7**. |
+| Filters sheet | [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets) | See *Native sheet anatomy* below. | `--bg-1` surface, the scrim, Hanken type, Solar icons inside. |
+| Region select (sheet) | [Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons), [Pickers](https://developer.apple.com/design/human-interface-guidelines/pickers) | A short list of choices (6 regions) is a menu from a button, not a picker. Mutually exclusive choices that aren't commands belong in a pop-up button, which shows the current value. | Hanken 15, `--text-1` value. Chevron glyph: **C2**. |
+| Race date from / to (sheet) | [Pickers](https://developer.apple.com/design/human-interface-guidelines/pickers) | A compact date picker: a button showing the current value in the app's accent color, which opens a calendar editor in a modal view. Values and their order follow the device's locale. | Hanken type. Accent on the value: open, **C4**. |
+| Sport-type choices (sheet) | [Toggles](https://developer.apple.com/design/human-interface-guidelines/toggles), [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables) | iOS has no checkbox. In a list row, use a switch (default green, or the app's accent), or a selectable row that adds a checkmark when chosen. Outside a list, use a button that behaves like a toggle. | Hanken 15 labels, `--text-1`. Switch or checkmark tint: open, **C4**. |
+| Sort ("Sort: Soonest first") | [Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons) | A button that opens a menu; sorting is HIG's own example. A menu should list at least three items; for one or two, consider other controls. For mutually exclusive choices, use a pop-up button. | Hanken 14/600, "Sort:" in `--text-2`. Chevron glyph: **C2**. |
+| Result rows; race cards | [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables) | A row that drills into a detail view shows a disclosure indicator. Selection gives feedback (a highlight). Items that vary in size or carry many images suit a collection rather than a list, so the photo-led race cards are a collection. | Cards, photos, the date tile, the finish time, the proof line, 4/6px radii (**C7**). Disclosure glyph: **C2**. |
+| Error states | [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts) | Don't use an alert only to inform, or for a connection problem: show it in context with a non-intrusive label. An alert is for something people must act on. | The inline state message, the coral icon. No gap: the screens already do this. |
+| Loading | [Progress indicators](https://developer.apple.com/design/human-interface-guidelines/progress-indicators) | Indeterminate loading uses an activity indicator, and indicators keep moving ("people associate a stationary indicator with a stalled process"). Lists support pull-to-refresh, and content also refreshes on its own. | Skeleton shapes in `--bg-2`. Motion: open, **C6**. |
+| Status bar | [Status bars](https://developer.apple.com/design/human-interface-guidelines/status-bars) | Transparent, never permanently hidden. Content under it is obscured, preferably with a scroll edge effect. | Light content on the graphite ground (as the viewer already samples). The scroll edge effect: **C1**. |
+| Safe areas and margins | [Layout](https://developer.apple.com/design/human-interface-guidelines/layout) | Respect the safe areas (Dynamic Island at the top, home indicator at the bottom) and system margins. Layouts adapt to text-size changes. Controls are set off from content by Liquid Glass and a scroll edge effect, not a solid background. | 16px gutter and the spacing scale, where HIG doesn't set the margin. The background: **C1**. |
+| Type | [Typography](https://developer.apple.com/design/human-interface-guidelines/typography) | SF Pro and the text styles. At the default size: Large Title 34pt Regular (Bold when emphasized), Headline 17 Semibold, Body 17, Subhead 15, Footnote 13, Caption 2 11. Minimum 11pt. Support Dynamic Type; custom fonts must implement Dynamic Type and Bold Text themselves. | Schibsted Grotesk 800 and Hanken Grotesk 400/600, and their sizes: open, **C3**. |
+| Appearance | [Dark Mode](https://developer.apple.com/design/human-interface-guidelines/dark-mode) | Respect the system appearance; don't offer an in-app setting. Dark-only only "in rare cases", such as immersive media. Prefer system background colors, base and elevated (a modal sheet takes the elevated one). Contrast at least 4.5:1; aim for 7:1 for custom colors in small text. | The graphite levels and the dark theme: open, **C4**, **C5**. |
+| Accessibility | [Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility) | Controls 44×44pt (28×28 minimum). About 12pt of space around elements with a bezel, 24pt around those without. Contrast 4.5:1 up to 17pt; 3:1 at 18pt or in bold. Text can grow to 200%. Respect Reduce Motion. Don't convey meaning with color alone. Label everything for VoiceOver. Give every swipe an on-screen alternative. | AA contrast on all 65 pairs, 44px targets, reduced motion at 0ms, icon plus text in state messages. |
+
+### Native sheet anatomy
+
+The Filters sheet follows the native iOS sheet, not a one-off radius (designer decision 2026-10-18):
+- **Corners:** the system's sheet radius. Step 3 takes the value from Apple's iOS design resources and makes it a token; it replaces today's 12px.
+- **Grabber:** at the top edge of a resizable sheet. Drag to resize, tap to cycle detents, operable with VoiceOver.
+- **Detents:** large always; medium (about half) is optional. Which ones Filters uses is decided in step 3.
+- **Buttons:** Cancel on the leading edge of a top toolbar, Apply filters (prominent) on the trailing edge.
+- **Dismissal:** swipe down; confirm with an action sheet if changes weren't applied.
+
+### Open conflicts (awaiting the designer)
+
+- **C1** Liquid Glass and scroll edge effects vs flat, solid graphite levels.
+- **C2** SF Symbols vs Solar bold.
+- **C3** SF Pro and the text styles (Large Title 34pt, Body 17pt) vs Schibsted 800 at 38px and Hanken at 15/14/13/11px.
+- **C4** System colors and accent-tinted native controls (date picker value, switch or checkmark; the switch is green by default) vs Podium's tokens and Color rules 1–2.
+- **C5** Following the system's light or dark setting vs dark only.
+- **C6** A moving activity indicator vs still skeletons.
+- **C7** Concentric and system control shapes vs 4/6px.
 
 ## Sources
 
