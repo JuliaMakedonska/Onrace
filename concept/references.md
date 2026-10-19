@@ -279,11 +279,23 @@ Each card has a photo inside it (the race card anatomy in `concept.md`), shown b
 | DEKA STRONG Chicago | **New.** An athlete on an air bike at a functional-fitness competition, a judge beside her (Copa Sur, no HYROX branding) | Jose Valenzuela | https://unsplash.com/photos/athletes-cycle-intensely-during-a-competition-with-judges-watching-rHDNRphQqIk | `photo-1778346612273-93520f4b7918` | `photo--lower` (74%, changed 2026-10-14): the athlete's back, the air bike and the judge. The other event's "COPA SUR" banner is out of frame; the athlete's head is cropped. At 70% the banner's edge still shows |
 | Boston Marathon | Road-race runners wearing bibs (illustrative; not Boston) | Miguel A Amutio | https://unsplash.com/photos/people-running-on-gray-asphalt-road-during-daytime-QDv-uBc-poY | `photo-1613936360976-8f35cf0e5461` | `photo--high` (top edge): the bibs; `--mid` showed only legs |
 | Spartan Race Beast — Killington | Racer running up an obstacle wall | Nikita Pishchugin | https://unsplash.com/photos/man-climbing-a-wooden-obstacle-during-a-race-yNUBSKvl5d8 | `photo-1776938023428-60ddf175a2d1` | `photo--center`: head to thighs; `--mid` cut off the head |
-| UTMB — Ultra-Trail du Mont-Blanc | Trail runner, glaciated peaks behind | Brian Metzler | https://unsplash.com/photos/man-in-white-shirt-and-blue-shorts-running-on-brown-ground-between-green-grass-during-daytime-nmWQ2SKvj5M | `photo-1498581444814-7e44d2fbe0e2` | `photo--mid`: the runner and the mountains |
+| UTMB — Ultra-Trail du Mont-Blanc | Trail runner, glaciated peaks behind (*replaced 2026-10-20 by a generated photo, see Step 4 below*) | Brian Metzler | https://unsplash.com/photos/man-in-white-shirt-and-blue-shorts-running-on-brown-ground-between-green-grass-during-daytime-nmWQ2SKvj5M | `photo-1498581444814-7e44d2fbe0e2` | `photo--mid`: the runner and the mountains |
 
 **Viewed and rejected for DEKA** (both show HYROX equipment or come from a HYROX event, and on a DEKA card they would give it HYROX's look, against attribute 3):
 - athletes preparing for a fitness competition, under a HYROX wall-ball station (Mathieu Improvisato): https://unsplash.com/photos/athletes-preparing-for-a-fitness-competition-seOGJ4ZOOew
 - "Athletes competing in a fitness competition with weights and equipment", captioned Hyrox Hong Kong 2025 (Leona Lee): https://unsplash.com/photos/athletes-competing-in-a-fitness-competition-with-weights-and-equipment-5ADpBLL3240. Ruled out from its page caption; not downloaded.
+
+### Step 4: our own visuals (Lesson 7, 2026-10-20)
+
+**Generated, not photographed.** Our own photos are generated with ChatGPT image generation: illustrations of each format, **not taken at the named race**. A UTMB card's photo shows a trail ultra on a glaciated ridge, not UTMB itself. The alt text stays as it is (`alt=""`): the photos are illustrative, and the card's title already names the race inside the same link. Tool, workflow, the style block, the 7 scene prompts and the check of each file: `visuals/README.md`.
+
+**Checked 2026-10-20:** 1 of 7 passed. The other six show clothing logos (swooshes), bib numbers or printed text at full size. They aren't used and wait in `visuals/incoming/` for a regenerate with the text fix.
+
+| Card | Photo | Source | File | Crop at 3:1 |
+|---|---|---|---|---|
+| UTMB — Ultra-Trail du Mont-Blanc | **Replaced.** A single trail runner on a rocky ridge, snow-capped peaks and a glacier behind (generated; not UTMB) | ChatGPT image generation, scene `trail-ultra-ridge-1` | `visuals/trail-ultra-ridge-1.jpg` | `photo--low` (50% 72%, re-checked): the runner centered in the band; `--mid` left her low in the frame |
+
+Berlin Marathon, HYROX London, HYROX Dallas, DEKA STRONG Chicago, Boston Marathon and Spartan Race Beast — Killington keep their Unsplash photos (Step 5 table above) until their generated images pass. `directions.html` and `directions-round-1.html` keep their Unsplash photos as history.
 
 ### Downloaded, not used
 

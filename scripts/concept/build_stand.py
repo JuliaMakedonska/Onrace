@@ -854,4 +854,8 @@ for _f in ['concept/concept.html', 'concept/stand.css', 'concept/first-screen.ht
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
+import glob   # our own photos (visuals/*.jpg), linked by the screens as ../visuals/<file>
+os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
+for _v in glob.glob(os.path.join(ROOT, 'visuals/*.jpg')):
+    shutil.copyfile(_v, os.path.join(ROOT, 'public/visuals', os.path.basename(_v)))
 print('mirrored to public/')
