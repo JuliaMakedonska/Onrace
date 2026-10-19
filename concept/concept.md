@@ -387,7 +387,7 @@ The seven conflicts, as they were put to the designer, and the decision on each.
 | **C4** | System base/elevated backgrounds; native controls tint with the accent (date picker value, switch, checkmark); the switch defaults to green | Graphite tokens; amber only on the one primary and the current tab; no green | **Control tint is neutral (text color)** for checkmarks and switches. **Amber stays only per Color rule 1.** The sheet's background is our raised graphite level. |
 | **C5** | Respect the system appearance; dark-only in rare cases | Dark only | **Dark only, kept.** Reason, the designer's decision: dark is Onrace's identity (Designer's taste → Theme, 2026-10-13: "Theme: dark"), derived from the brand tone ("dark, intense, bold", `../CLAUDE.md`) and the five attributes, and every color rule (1–3a), the 65 checked contrast pairs and the black-and-white photos were built for it. A light appearance would be a second visual system to design and check, not a toggle. |
 | **C6** | A moving activity indicator; indicators keep moving | Still skeletons, "no spinner, no shimmer" | **A subtle pulse on skeletons**, off under `prefers-reduced-motion` (skeletons stay still). Still no spinner and no shimmer. |
-| **C7** | Corners concentric with the bar for components inside bars; system controls draw their own shapes | 4px inner / 6px outer everywhere | **Concentric only for elements inside bars** (the search field, the segmented control). **Content keeps 4/6px.** |
+| **C7** | Corners concentric with the bar for components inside bars; system controls draw their own shapes | 4px inner / 6px outer everywhere | **Concentric only for elements inside bars** (the search field, the segmented control). **Content keeps 4/6px.** **Designer decision, 2026-10-19 (3b review):** bar controls are all full capsules, iOS 26 style (radius = half the height, `--radius-bar-control`): the search field, the Filters button and the List/Map control, with the List/Map segment concentric inside (`--radius-bar-inner`). Content (cards, chips, tiles, buttons outside bars) keeps 4/6px. |
 
 ### Type scale on the HIG text styles (C3): the proposed mapping
 
@@ -529,7 +529,7 @@ A separate signed pass, in `ui/kit.css` only (plus the showcase and the stand). 
 | **G28** Dynamic Type | Every `--size-*` and the date column are type units (`--type-unit` = 1rem ÷ 16; on iOS the root takes `-apple-system-body` and the unit is 1rem ÷ 17), so text follows the system size at 1:1 by default. Bold Text has no web hook; untested on a device. |
 | **G29** text sizes | The C3 mapping. |
 
-**Not in this pass:** the action bar on Race detail and Result detail (the inventory notes C1 could apply to it as a bar; the designer's list named the tab bar, top bar, controls bar and sheet). The Filters button keeps 6px beside the capsule List/Map control (C7 names only the search field and the segmented control); that pair now has two shapes side by side, which needs a decision.
+**Not in this pass, then decided in the 3b review (2026-10-19):** the action bar and the Filters button. See Step 3b review below.
 
 **First screen, re-measured with content under the glass tab bar** (Chrome, 390 wide, step 3b CSS):
 
@@ -543,4 +543,27 @@ A separate signed pass, in `ui/kit.css` only (plus the showcase and the stand). 
 Attribute b holds (two full cards clear of the bar on the first screen), but only by 1.7px inside the viewer: the floating bar's top sits 8px higher than the old bar's. Any growth of the card or the header will push the second card under the glass.
 
 **Checked:** `build_stand.py`: Color rules 1, 2, 3a pass (3b accepted by designer), 99 contrast pairs pass (88 solid, 11 over glass), 172 of 172 tokens signed. The look changed on purpose, so there's no pixel-identical check; every painted state was shot at 390×844 before and after, side by side on the review page.
+
+### Step 3b review (designer, 2026-10-19)
+
+1. **Bar controls are all capsules (C7, designer decision).** The search field, the Filters button and the List/Map control get full capsule corners, radius = half the height (`--radius-bar-control`, 22px at 44px); the List/Map segment is concentric inside (`--radius-bar-inner`, 18px). The search field's icon and text move in to 16px so they clear the curve. Content (cards, chips, tiles, buttons outside bars) keeps 4/6px. Recorded under C7 above.
+2. **Action bar (Race detail, Result detail): glass, like every other bar.** `--glass-bar` (the Tab bar level it had, at 85%), the blur, a rim instead of the hairline, padding for the bottom safe area. Same contrast floor: its caption (`--text-2`) is checked over the worst case behind it (4.65:1). The build now checks 12 pairs over glass.
+3. **Result rows: the chevron stays, the layout doesn't move.** The disclosure indicator now ends the meta row (`.card-meta::after`, pushed to the trailing edge), under the finish time's right edge, instead of taking 23px from the whole row. Measured at 390×844 against commit `f7492ca` (before 3b): all 4 finish times sit at exactly the same left and right pixel (right edge 358px), every proof line is one line (Valencia included), and every row has its chevron, in the base and saved states. Empty and error have no rows; the loading skeleton is back to the row's own 16px padding.
+4. **`.impeccable/design.json` refreshed from DESIGN.md** by a new script, `scripts/build_design_sidecar.py` (re-run it after every DESIGN.md change). 21 colors with OKLCH and tonal ramps (the four new ones included), 10 type styles, 10 components (segmented control, result row and tab bar updated; Filters sheet added), and the narrative quoted from DESIGN.md.
+5. **Empty and error states: one component, the iOS ContentUnavailableView pattern.** `.state-message` is centered horizontally and vertically in the free area below the header and above the floating tab bar (`#list-view` fills that area when it holds a state). A 48px Solar icon on top (`--icon-state`), drawn as a CSS mask, then the title, the body and the actions, centered. Text and markup unchanged.
+   - **Race browse empty:** magnifer, `--text-2`: nothing matches a search or filter (iOS's own search-unavailable pattern).
+   - **Results list empty:** archive (`--icon-archive`, new), `--text-2`: the results archive.
+   - **Errors** (`role="alert"`, `.is-error`, or a block with a retry action): the error icon in `--error`, the screen's only coral. It replaces the 18px icon before the heading.
+   - The same component fills the map panel's empty and error messages. Race picker, Race detail, Result detail and Profile use `.state-message` too and pick it up in step 5. Race picker empty will show the magnifier as well.
+
+**First screen, re-measured after these changes** (Chrome, 390 wide): unchanged from step 3b, because none of the five changes alters a height above the list.
+
+| Where | Clear of the bar | On screen, through the glass |
+|---|---|---|
+| Viewer (757px), no filters | 2 full, 1.7px to spare | 2 full + 29% |
+| Viewer, two filters | **1 full + 75%** | 2 full + 3% |
+| 390×844, no filters | 2 full + 35% | 2 full + 69% |
+| 390×844, two filters | 2 full + 10% | 2 full + 43% |
+
+One figure is below 2 full cards: the viewer with two filters on, 1 full + 75% clear of the bar. It was already below before step 3b (1 full + 78%), and counting what shows through the glass it's 2 full + 3%.
 

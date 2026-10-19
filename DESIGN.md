@@ -232,7 +232,7 @@ What the screens refuse: aggressive "energy" red, pure black with one hot accent
 - One scarce accent, sodium amber `#F5B649`: the primary action and the current tab, and nothing else.
 - Two faces: Schibsted Grotesk 800 for the title and key numbers, Hanken Grotesk 400/600 for everything else.
 - Small radii: 4px inside, 6px outside in content. Bar chrome is native: the floating tab bar is a capsule, controls inside bars are concentric capsules (C7), the Filters sheet takes the sheet radius (38px [?]), and Profile initials are the one circle.
-- Flat content, glass chrome: the tab bar, the controls bar, the top bar and the Filters sheet are translucent graphite with blur (C1). Cards never are. Shadows belong to what floats: the sheet and the tab bar.
+- Flat content, glass chrome: the tab bar, the controls bar, the top bar, the action bar and the Filters sheet are translucent graphite with blur (C1). Cards never are. Shadows belong to what floats: the sheet and the tab bar.
 - Neutral metadata: format chips, filter chips, map pins, the saved confirmation and every pressed state stay gray.
 - Black-and-white photos, 3:1, inset in the race card.
 - Solar bold icons, drawn as CSS masks in the color of their text.
@@ -261,7 +261,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 - **Disabled** (`#6B7178`, `--text-disabled`): a disabled sort control only. Never content.
 
 ### Glass (C1, step 3b)
-- **Tab-bar glass** (`--glass-bar`): `--bg-bar` at 85% with a 20px blur [?] and a faint Chalk rim at 8% [?]. The floating tab bar, a shade darker than the page so it separates.
+- **Tab-bar glass** (`--glass-bar`): `--bg-bar` at 85% with a 20px blur [?] and a faint Chalk rim at 8% [?]. The floating tab bar and the sticky action bar on Race detail and Result detail, a shade darker than the page so they separate.
 - **Ground glass** (`--glass-ground`): `--bg-0` at 85% with the same blur. Bars that sit on the page (the controls bar, the top bar, the status-bar edge): at rest they match the page; they show only when content runs under them, as a scroll edge effect.
 - **Sheet glass** (`--glass-sheet`): `--bg-2` at 90% with the blur, over the scrim (C4: the raised level).
 - **How the opacities were set:** the build composites each glass over the worst case behind it (Text 1, the brightest thing that can scroll under; for the sheet, Text 1 under the scrim), without counting on the blur, and every text pair on it must pass AA. The lowest passing opacities are 81% (tab bar), 82% (ground), 87% (sheet); the values carry a margin. All are above HIG's 35% dimming layer.
@@ -343,8 +343,8 @@ Flat by default. Depth comes from tonal layering: the tab bar (`--bg-bar`) under
 
 Slightly rounded in content, never sharp. Pills only in bar chrome (C7).
 - **4px** (`--radius-1`), inner shapes: the photo inside a card, the date tile, format and filter chips, List/Map segments, skeleton bars, map pin labels, checkboxes, the sheet handle.
-- **6px** (`--radius-2`), outer shapes: cards, result rows, buttons, the search field in content, sheet fields, the Sign in segmented track, the saved confirmation, the map frame.
-- **Bar chrome (step 3b):** the floating tab bar is a capsule (`--radius-tabbar`, 32px); a control inside a bar is a capsule (`--radius-bar-control`, 22px) and a segment inside it is concentric (`--radius-bar-inner`, 18px = 22 − the 4px track padding). Today that's the List/Map control in the controls bar; the search field takes it once the markup pass pins it to a bar (G8). The Filters button beside it keeps 6px (C7 names only the search field and the segmented control).
+- **6px** (`--radius-2`), outer shapes: cards, result rows, buttons outside bars, sheet fields, the Sign in segmented track, the saved confirmation, the map frame.
+- **Bar chrome (step 3b; designer decision 2026-10-19, C7):** bar controls are all full capsules, iOS 26 style: radius = half the height. The floating tab bar (`--radius-tabbar`, 32px); the search field, the Filters button and the List/Map track (`--radius-bar-control`, 22px); the List/Map segment concentric inside (`--radius-bar-inner`, 18px = 22 − the 4px track padding). Content (cards, chips, tiles, buttons outside bars) keeps 4/6px.
 - **Sheet** (`--radius-sheet`, 38px [?]): the Filters sheet's and Race picker's top corners, the native sheet radius. Replaces the 12px they had until step 3b. `--radius-3` (12px) is now stand panels only.
 - **Circles:** the map pin dot, the busy spinner, and **Profile initials** (`--radius-avatar`, 50%): the one exception to "no circles in content", because iOS avatars are circular (designer, 2026-10-19).
 - **Borders** are drawn as 1px inset box-shadows (`--border`), so they never change a box's size.
@@ -367,12 +367,12 @@ Exactly one filled button per screen.
 
 ### Cards / Containers
 - **Race card:** `--bg-1`, 6px radius, 8px padding, flat. The whole card is one link, photo included. Inside it: a black-and-white photo (`grayscale(1) contrast(1.12) brightness(0.85)`) at 3:1 with a 4px radius; then the date tile (68px wide, `--bg-2`, 4px radius, `12px 4px` padding, the day in Schibsted 30px `--text-1` over the month and year in 13px `--text-2`); then the race name (17px / 600), the format chip, and the location (14px `--text-2` with a 15px Solar map-point icon).
-- **Result row:** `--bg-1`, 6px radius, `12px 39px 16px 16px` padding (room for the disclosure indicator), 8px gaps. A 15px Solar alt-arrow-right in `--text-2` sits at the trailing edge, centered: the row drills into Result detail (G22). Race cards are a collection, so they have none. The race name on the left and the finish time (Schibsted 32px) on the right, sharing a baseline; then the format chip and the date (14px `--text-2`); then the proof line (13px `--text-2`, one 15px Solar link icon, wraps anywhere).
+- **Result row:** `--bg-1`, 6px radius, `12px 16px 16px` padding, 8px gaps. A 15px Solar alt-arrow-right in `--text-2` ends the meta row, under the finish time's right edge: the row drills into Result detail (G22). The finish time and the proof line keep the row's full width, so the time sits where it always did and no proof line wraps. Race cards are a collection, so they have none. The race name on the left and the finish time (Schibsted 32px) on the right, sharing a baseline; then the format chip and the date (14px `--text-2`); then the proof line (13px `--text-2`, one 15px Solar link icon, wraps anywhere).
 - **Saved confirmation:** `--bg-1`, 6px radius, `12px 16px`, 14px `--text-1` with the race name in 600, and an 18px Solar save glyph in `--text-2`. Never green, never a check.
 - **Skeletons (loading):** `--bg-2` bars with a 4px radius, in the exact shape of the card or row they stand for. The finish-time bar is 32px tall, so nothing shifts. A subtle pulse (opacity to 0.55 and back over 1.6s), still under reduced motion (C6). No spinner, no shimmer.
 
 ### Inputs / Fields
-- **Search field:** `--bg-1`, 6px radius (a capsule inside a bar, C7), 44px tall, a 1px `--field-line` inset boundary, an 18px Solar magnifier in `--text-2`, placeholder in `--text-2`. Hover: the boundary turns `--text-2`. Focus: a 2px `--text-1` outline replaces it. Filled and focused, it shows the browser's own Clear button (system-drawn, C2; G10).
+- **Search field:** `--bg-1`, a full capsule (C7), 44px tall, a 1px `--field-line` inset boundary, an 18px Solar magnifier in `--text-2` 16px in from the start, placeholder in `--text-2`. Hover: the boundary turns `--text-2`. Focus: a 2px `--text-1` outline replaces it. Filled and focused, it shows the browser's own Clear button (system-drawn, C2; G10).
 - **Text fields (grayscale screens):** invalid is a 2px `--invalid` (coral) ring inside the field; focus is the 2px white ring outside. An invalid field with focus shows both, so invalid and focus never look alike.
 - **Sheet select and date fields:** `--bg-0`, 6px radius, 44px tall, 1px `--field-line-sheet`, 15px text. The select has a 15px Solar chevron; the date field has an 18px Solar calendar instead of the browser's glyph.
 - **Checkbox:** 18px, 4px radius, `--bg-0` with a 1px `--field-line-sheet` boundary; checked fills `--control-tint` (Text 1) with a `--bg-0` tick. Never the accent. Every system-drawn control takes the same tint (`accent-color`, C4).
@@ -382,11 +382,15 @@ Exactly one filled button per screen.
 ### Navigation
 - **Tab bar:** a floating 64px capsule of tab-bar glass with a faint rim and the float shadow, three tabs (Discover, My Results, Profile). Each has a 26px Solar icon (compass, stopwatch, user) over an 11px / 600 label. Inactive: `--text-2`. Current: `--accent`, icon and label.
 - **List / Map segmented control:** a `--bg-2` track with 4px padding; in the controls bar a 22px capsule with 18px segments (C7), in content (Sign in) 6px with 4px segments. Segments are of equal width (G11), 36px (44px tap area), 15px / 600, `--text-2`.
+- **Action bar (Race detail, Result detail):** tab-bar glass with a rim instead of the hairline, above the bottom safe area (C1, designer 2026-10-19). Its caption passes AA over the worst case behind it.
 - **Top bar (grayscale screens):** ground glass with a rim, below the top safe area. Back and Cancel in `--text-1`; Save on Log result in `--accent` (that screen's one primary); "Saving…" in `--text-2` with the spinner.
 - **Confirm alert:** Sign out, the destructive action, is `--destructive` (coral) text; Cancel stays `--text-1` (HIG Alerts). The pressed segment is `--bg-3`, `--text-1`, with a 1px `--field-line` outline.
 
 ### Empty and error states
-A message block, left-aligned, 24px of vertical padding: a 17px / 600 heading, 15px `--text-2` body (65ch max), then actions in the button hierarchy, 12px apart. An error heading gets one 18px Solar danger-circle in `--error`. Nothing else turns red.
+One component, the iOS ContentUnavailableView pattern (designer, 2026-10-19). Centered horizontally and vertically in the free area below the header and above the floating tab bar: a 48px Solar icon on top (`--icon-state`), then a 17px / 600 heading, 15px `--text-2` body (65ch max), then actions in the button hierarchy, centered, 12px apart.
+- **Empty:** a muted `--text-2` icon that names what's missing: magnifier on Race browse (nothing matches), archive on Results list (the results archive is empty).
+- **Error:** Solar danger-circle in `--error`, the screen's only coral. Nothing else turns red.
+- Icons are CSS masks chosen by context; the markup is the wireframes'. In the map panel the same block sits on `--bg-1`.
 
 ### Filters sheet (signature)
 Sheet glass (`--bg-2` at 90%, blurred), 38px top corners [?] with a rim along the top edge, the float shadow, over the scrim. It rests at the large detent only, and slides up over 250ms (`--dur-sheet`, `--ease-out`; 0ms under reduced motion). A 32×4px handle in `--field-line-sheet`; a 17px / 600 heading; 15px `--text-2` labels; fields and checkboxes as above; a sticky footer at the sheet's bottom edge, solid `--bg-2`, with Cancel (outlined) and Apply filters (the sheet's one primary), each half the width. The markup pass moves these to a top toolbar and makes the grabber a real control (G12, G14); swipe-to-dismiss stays out of scope (G15).
@@ -460,13 +464,13 @@ The Filters sheet follows the native iOS sheet, not a one-off radius (designer d
 
 ### HIG vs Podium: decided (designer, 2026-10-18)
 
-- **C1 Liquid Glass:** adopted for bars (tab bar, top bar, controls bar) and the Filters sheet: translucent graphite with blur, in Podium's tones. Never on cards; content stays flat. Applied in step 3b (see Colors → Glass).
+- **C1 Liquid Glass:** adopted for bars (tab bar, top bar, controls bar, and the action bar, added 2026-10-19) and the Filters sheet: translucent graphite with blur, in Podium's tones. Never on cards; content stays flat. Applied in step 3b (see Colors → Glass).
 - **C2 Icons:** Solar stays for our icons. Controls the system draws (the date picker, system menus) stay system.
 - **C3 Fonts:** Schibsted Grotesk and Hanken Grotesk stay, with Podium's scale mapped onto the HIG text styles. Approved 2026-10-18: title 38 → Large Title 34; item 17 = Headline; body and buttons 15 = Subheadline; meta 14 → Subheadline 15; proof 13 = Footnote; labels 11 = Caption 2; finish time 32 and date day 30 stay as display figures (attribute a). Measured before C1: the first screen kept two full race cards (9.7px to spare in the viewer, was 8.6px). After C1 (step 3b), with content under the floating glass tab bar: two full cards clear of the bar, 1.7px to spare (see Layout).
 - **C4 Control tint:** neutral (text color) for checkmarks and switches. Amber stays only per Color rule 1. The sheet's background is the raised graphite level, `--bg-2` (confirmed 2026-10-18).
 - **C5 Dark only:** kept, as a designer decision. Dark is Onrace's identity from the brand tone and the attributes, and every color rule and contrast check is built for it.
 - **C6 Loading:** a subtle pulse on skeletons, still under reduced motion.
-- **C7 Corners:** concentric only for elements inside bars (the search field, the segmented control). Content keeps 4/6px.
+- **C7 Corners:** concentric only for elements inside bars. **Designer decision, 2026-10-19:** bar controls are all full capsules, iOS 26 style (radius = half the height): the search field, the Filters button and the List/Map control, with the segment concentric inside. Content (cards, chips, tiles, buttons outside bars) keeps 4/6px.
 
 ## Sources
 

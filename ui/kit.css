@@ -145,6 +145,9 @@
 
   --icon-disclosure: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M15.8351%2011.6296L9.20467%205.1999C8.79094%204.79869%208%205.04189%208%205.5703L8%2018.4297C8%2018.9581%208.79094%2019.2013%209.20467%2018.8001L15.8351%2012.3704C16.055%2012.1573%2016.0549%2011.8427%2015.8351%2011.6296Z%22/%3E%3C/svg%3E");   /* Solar alt-arrow-right bold: the disclosure indicator on a row that drills in (G22) */
 
+  --icon-archive: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M20.5%2013C20.5%2016.7712%2020.4997%2018.6566%2019.3281%2019.8281C18.1565%2020.9996%2016.2712%2021%2012.5%2021H11.5C7.72882%2021%205.84345%2020.9996%204.67188%2019.8281C3.50031%2018.6566%203.5%2016.7712%203.5%2013V8.49805C3.64472%208.50004%203.78966%208.50006%203.93066%208.5H20.0693C20.2103%208.50006%2020.3553%208.50004%2020.5%208.49805V13ZM10.5%2010.5C10.0341%2010.5%209.80096%2010.5001%209.61719%2010.5762C9.37225%2010.6777%209.17765%2010.8722%209.07617%2011.1172C9.00005%2011.301%209%2011.5341%209%2012C9%2012.4659%209.00006%2012.6991%209.07617%2012.8828C9.17768%2013.1277%209.37228%2013.3224%209.61719%2013.4238C9.80096%2013.4999%2010.0341%2013.5%2010.5%2013.5H13.5C13.9659%2013.5%2014.199%2013.4999%2014.3828%2013.4238C14.6277%2013.3224%2014.8223%2013.1277%2014.9238%2012.8828C14.9999%2012.6991%2015%2012.4659%2015%2012C15%2011.5341%2014.9999%2011.301%2014.9238%2011.1172C14.8224%2010.8722%2014.6278%2010.6777%2014.3828%2010.5762C14.199%2010.5001%2013.9659%2010.5%2013.5%2010.5H10.5Z%22%20clip-rule%3D%22evenodd%22/%3E%3Cpath%20d%3D%22M20%203C20.9428%203%2021.4141%203.00008%2021.707%203.29297C21.9999%203.58586%2022%204.05719%2022%205C22%205.94281%2021.9999%206.41414%2021.707%206.70703C21.4141%206.99992%2020.9428%207%2020%207H4C3.05719%207%202.58586%206.99992%202.29297%206.70703C2.00008%206.41414%202%205.94281%202%205C2%204.05719%202.00008%203.58586%202.29297%203.29297C2.58586%203.00008%203.05719%203%204%203H20Z%22/%3E%3C/g%3E%3C/svg%3E");   /* Solar archive bold: Results list empty (the results archive) */
+  --icon-state: 48px;      /* the icon on top of an empty or error state (ContentUnavailableView pattern; HIG gives no number) */
+
   /* ---------- skeleton (loading): mirrors the race card; a subtle pulse, no shimmer (C6) ---------- */
   --skel-pulse-dim: 0.55;  /* the pulse's low point (opacity); still under reduced motion */
   --dur-pulse: 1600ms;     /* one breath in and out */
@@ -364,7 +367,7 @@
 .race-search::before {
   content: "";
   position: absolute;
-  left: var(--space-3);
+  left: var(--space-4);
   top: 50%;
   width: var(--icon-m);
   height: var(--icon-m);
@@ -377,9 +380,9 @@
 .race-search input {
   width: 100%;
   min-height: var(--target);
-  padding: 0 var(--space-3) 0 calc(var(--space-3) * 2 + var(--icon-m));
+  padding: 0 var(--space-4) 0 calc(var(--space-4) + var(--icon-m) + var(--space-2));
   border: 0;
-  border-radius: var(--radius-2);
+  border-radius: var(--radius-bar-control);   /* C7 (designer, 2026-10-19): the search field is a bar control, a full capsule (iOS 26) */
   background: var(--bg-1);
   box-shadow: inset 0 0 0 var(--border) var(--field-line);
   color: var(--text-1);
@@ -392,7 +395,6 @@
 .race-search input:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
 .race-search input:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
 .race-search input::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
-:is(.controls, .top-bar, .bottom-nav) .race-search input { border-radius: var(--radius-bar-control); }   /* C7: inside a bar, a capsule */
 
 /* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
 .race-card {
@@ -538,6 +540,7 @@
 .view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
 :is(.controls, .top-bar) .view-toggle { border-radius: var(--radius-bar-control); }   /* C7: inside a bar, the track is a capsule */
 :is(.controls, .top-bar) .view-btn { border-radius: var(--radius-bar-inner); }        /* and each segment is concentric with it */
+:is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-bar-control); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
 
 /* ---------- tab bar: current tab is the screen's one accent on Race browse ---------- */
 .bottom-nav { background: var(--glass-bar); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); border-top: var(--border) solid var(--line); padding: var(--space-2) var(--space-2) var(--space-6); }   /* C1: glass */
@@ -662,7 +665,26 @@
 .skeleton-card .bar.location { grid-area: loc; width: var(--skel-loc-w); height: var(--skel-line); margin-bottom: var(--space-1); }
 
 /* ---------- empty and error states: message + actions in the button hierarchy ---------- */
-.state-message { display: grid; gap: var(--space-2); justify-items: start; padding: var(--space-6) 0; }
+.state-message {   /* empty and error: the iOS ContentUnavailableView pattern (designer, 2026-10-19): icon on top, title, body, action, all centered */
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  text-align: center;
+  padding: var(--space-6) 0;
+  --state-icon: var(--icon-search);    /* empty, by default: nothing matches a search or filter (Race browse) */
+  --state-icon-color: var(--text-2);   /* muted */
+}
+.state-message::before {
+  content: "";
+  width: var(--icon-state);
+  height: var(--icon-state);
+  margin-bottom: var(--space-2);
+  background: var(--state-icon-color);
+  -webkit-mask: var(--state-icon) center / contain no-repeat;
+  mask: var(--state-icon) center / contain no-repeat;
+}
+section:is(#list-view, [aria-label="Results archive"]) > .state-message:not([role="alert"], .is-error, :has([data-retry])) { --state-icon: var(--icon-archive); }   /* Results list empty: the results archive */
+#list-view:has(> .state-message) { flex: 1; display: flex; flex-direction: column; justify-content: center; }   /* centered in the free area below the header, above the floating tab bar */
 .state-message h2 {
   margin: 0;
   font-family: var(--font-text);   /* text face: not a screen title, not a key number (rule 4) */
@@ -672,17 +694,10 @@
   color: var(--text-1);
 }
 .state-message p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
-.state-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
-.state-message[role="alert"] h2::before, .state-message.is-error h2::before, .state-message:has([data-retry]) h2::before {   /* error: one icon, in the error color; the stand uses .is-error so a static specimen isn't announced */
-  content: "";
-  display: inline-block;
-  width: var(--icon-m);
-  height: var(--icon-m);
-  margin-right: var(--space-2);
-  vertical-align: text-bottom;
-  background: var(--error);
-  -webkit-mask: var(--icon-error) center / contain no-repeat;
-  mask: var(--icon-error) center / contain no-repeat;
+.state-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); margin-top: var(--space-2); }
+.state-message[role="alert"], .state-message.is-error, .state-message:has([data-retry]) {   /* error: the error icon, the screen's only coral; the stand uses .is-error so a static specimen isn't announced */
+  --state-icon: var(--icon-error);
+  --state-icon-color: var(--error);
 }
 
 /* =================================================================
@@ -861,15 +876,13 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
 .result-card .card-link:hover { box-shadow: inset 0 0 0 var(--border) var(--field-line); }   /* same hover as the race card */
 .result-card .card-link:active, .result-card .card-link.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap */
-.result-card .card-link { position: relative; padding-right: calc(var(--space-4) + var(--icon-s) + var(--space-2)); }   /* room for the disclosure indicator */
-.result-card .card-link::after {   /* G22: the row drills into Result detail, so it shows a disclosure indicator (Solar, C2) */
+.result-card .card-meta::after {   /* G22: the row drills into Result detail, so it shows a disclosure indicator (Solar, C2).
+     It ends the short meta row, under the finish time's right edge: the time and the proof line keep the full width */
   content: "";
-  position: absolute;
-  right: var(--space-4);
-  top: 50%;
+  flex: none;
+  margin-left: auto;
   width: var(--icon-s);
   height: var(--icon-s);
-  margin-top: calc(var(--icon-s) / -2);
   background: var(--text-2);
   -webkit-mask: var(--icon-disclosure) center / contain no-repeat;
   mask: var(--icon-disclosure) center / contain no-repeat;
@@ -887,7 +900,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .saved-status::before { content: ""; display: inline-block; vertical-align: text-bottom; margin-right: var(--space-2); width: var(--icon-m); height: var(--icon-m); background: var(--text-2); -webkit-mask: var(--icon-saved) center / contain no-repeat; mask: var(--icon-saved) center / contain no-repeat; }
 .saved-status[hidden] { display: none; }
 /* loading: a skeleton result row (same shape and padding as .result-card .card-link) */
-.result-list .skeleton-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: var(--space-2); padding: var(--space-3) calc(var(--space-4) + var(--icon-s) + var(--space-2)) var(--space-4) var(--space-4); }   /* same box as the row, disclosure room included */
+.result-list .skeleton-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-4); }
 .result-list .skeleton-card .bar { grid-area: auto; }
 .result-list .skeleton-card .skel-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .result-list .skeleton-card .skel-meta { display: flex; align-items: center; gap: var(--space-3); }
@@ -1126,10 +1139,12 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .proof-note { font-size: var(--size-proof); color: var(--text-2); }
 
 /* ---------- sticky action bar: one primary link + its caption ---------- */
-.action-bar {
-  padding: var(--space-3) var(--space-4) var(--space-4);
-  background: var(--bg-bar);
-  border-top: var(--border) solid var(--line);
+.action-bar {   /* C1 (designer, 2026-10-19): glass like every bar, on the Tab bar level it had; a rim instead of the hairline */
+  padding: var(--space-3) var(--space-4) calc(var(--space-4) + var(--safe-bottom));
+  background: var(--glass-bar);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border-top: var(--border) solid var(--glass-edge);
 }
 .action-bar[hidden] { display: none; }
 .register-btn, .open-btn, .submit-btn {   /* the screen's one primary */

@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=d5ab5b83">
-<link rel="stylesheet" href="map.css?v=d5ab5b83">
+<link rel="stylesheet" href="kit.css?v=fec4fe05">
+<link rel="stylesheet" href="map.css?v=fec4fe05">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -98,7 +98,7 @@
 
     <div class="kit-item" id="search">
       <h3>Search field</h3>
-      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>), Race picker (<code>form.search</code>). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). In content it keeps 6px; inside a bar it becomes a capsule (C7), ready for when the markup pass pins it (G8).</p>
+      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>), Race picker (<code>form.search</code>). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). A bar control, so a full capsule (C7, designer 2026-10-19).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Empty, placeholder</p>
           <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q1">Search races by name or city</label><input type="search" id="k-q1" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div>
@@ -106,7 +106,7 @@
         <div class="kit-state"><p class="kit-label">Filled (?q=), with Clear</p>
           <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q2">Search races by name or city</label><input type="search" id="k-q2" value="Berlin" autocomplete="off" enterkeyhint="search"></form></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Inside a bar: a capsule (C7)</p>
+        <div class="kit-state"><p class="kit-label">In the controls bar: the same capsule (C7)</p>
           <div class="kit-frame"><div class="controls"><form class="race-search" role="search"><label class="visually-hidden" for="k-q3">Search races by name or city</label><input type="search" id="k-q3" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div></div>
         </div>
       </div>
@@ -114,7 +114,7 @@
 
     <div class="kit-item" id="segmented">
       <h3>Segmented control</h3>
-      <p><code>.view-toggle</code> / <code>.view-btn</code> · Race browse (List / Map), Sign in / Sign up (Sign in / Create account). Segments of equal width (G11). Inside the controls bar the track is a capsule and each segment is concentric with it (C7); in content (Sign in) it keeps 6/4.</p>
+      <p><code>.view-toggle</code> / <code>.view-btn</code> · Race browse (List / Map), Sign in / Sign up (Sign in / Create account). Segments of equal width (G11). In the controls bar the track is a full capsule and each segment is concentric with it, and Filters beside it is a capsule too (C7, designer 2026-10-19); in content (Sign in) it keeps 6/4.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">List selected, in the controls bar (C7)</p>
           <div class="kit-frame"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div>
@@ -397,7 +397,7 @@
 
     <div class="kit-item" id="state-message">
       <h3>State message</h3>
-      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. Empty (status) or error (alert, with the error icon); one or two actions in the button hierarchy.</p>
+      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. One component, the iOS ContentUnavailableView pattern: on a screen it is centered in the free area below the header; a 48px icon on top (muted for empty: magnifier, or archive on Results list; the coral error icon for errors), then the title, the body and the actions, centered. Icons are CSS masks; the markup is the wireframes'. Empty (status) or error (alert); one or two actions in the button hierarchy.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse -empty</p>
           <div class="kit-frame"><div class="state-message" role="status"><h2>No races match your current filters</h2><p>Remove a filter above, or try a wider date range, another region, or more sport types.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button><button type="button" class="state-action secondary">Clear all filters</button></div></div></div>
@@ -409,7 +409,7 @@
           <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load races</h2><p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Results list -empty</p>
-          <div class="kit-frame"><div class="state-message" role="status"><h2>No results logged yet</h2><p>Keep your official race results here.</p><div class="state-actions"><a class="state-action" href="#">Log your first result</a></div></div></div>
+          <div class="kit-frame"><section id="list-view" aria-label="Results archive"><div class="state-message" role="status"><h2>No results logged yet</h2><p>Keep your official race results here.</p><div class="state-actions"><a class="state-action" href="#">Log your first result</a></div></div></section></div>
         </div>
         <div class="kit-state"><p class="kit-label">Results list -error</p>
           <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load your results</h2><p>The connection may have dropped. Check it, then try again. Nothing in your results archive has changed.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
@@ -457,7 +457,7 @@
 
     <div class="kit-item" id="action-bar">
       <h3>Sticky action bar</h3>
-      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and what happens next.</p>
+      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and what happens next. Glass like every bar (tab-bar glass, a rim, the bottom safe area; designer 2026-10-19); its caption passes AA over the worst case behind it.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race detail</p>
           <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens in a new tab — registration and payment happen there.</p></div></div>

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-18T16:08:45+00:00",
+  "generatedAt": "2026-10-19T20:46:48+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -116,6 +116,22 @@
           "#E8EFF7"
         ]
       },
+      "field-line-sheet": {
+        "role": "neutral",
+        "displayName": "Field Line, sheet",
+        "canonical": "#757B82",
+        "oklch": "oklch(58.0% 0.013 252.2)",
+        "tonalRamp": [
+          "#070C11",
+          "#21262B",
+          "#3D4349",
+          "#5C6269",
+          "#7D838A",
+          "#9FA6AD",
+          "#C3CAD2",
+          "#E8EFF7"
+        ]
+      },
       "text-1": {
         "role": "neutral",
         "displayName": "Chalk",
@@ -186,14 +202,14 @@
         "canonical": "#F5B649",
         "oklch": "oklch(81.6% 0.142 77.8)",
         "tonalRamp": [
-          "#270000",
-          "#481000",
-          "#693200",
-          "#8C5300",
-          "#B07500",
+          "#120900",
+          "#332101",
+          "#593C01",
+          "#815802",
+          "#AB7702",
           "#D59821",
           "#FCBC50",
-          "#FFE278"
+          "#FFECD0"
         ]
       },
       "accent-hover": {
@@ -202,14 +218,14 @@
         "canonical": "#FFC46A",
         "oklch": "oklch(85.6% 0.127 76.2)",
         "tonalRamp": [
-          "#250000",
-          "#451400",
-          "#663400",
-          "#895400",
+          "#130900",
+          "#342101",
+          "#593B01",
+          "#825802",
           "#AD7603",
           "#D2993C",
           "#F8BD63",
-          "#FFE389"
+          "#FFEBD1"
         ]
       },
       "on-accent": {
@@ -234,14 +250,14 @@
         "canonical": "#EE8B84",
         "oklch": "oklch(74.0% 0.122 24.7)",
         "tonalRamp": [
-          "#2E0000",
-          "#510001",
+          "#1F0001",
+          "#4C0107",
           "#751E1E",
           "#9B403D",
           "#C1625D",
           "#E7857E",
-          "#FFA9A1",
-          "#FFCEC6"
+          "#FFB3AC",
+          "#FEE9E7"
         ]
       },
       "error-bg": {
@@ -264,55 +280,70 @@
         "role": "state",
         "displayName": "Scrim",
         "canonical": "rgba(0, 0, 0, 0.6)"
+      },
+      "glass-bar": {
+        "role": "material",
+        "displayName": "Tab-bar glass",
+        "canonical": "color-mix(in srgb, #0F1114 85%, transparent)"
+      },
+      "glass-ground": {
+        "role": "material",
+        "displayName": "Ground glass",
+        "canonical": "color-mix(in srgb, #131518 85%, transparent)"
+      },
+      "glass-sheet": {
+        "role": "material",
+        "displayName": "Sheet glass",
+        "canonical": "color-mix(in srgb, #272B30 90%, transparent)"
       }
     },
     "typographyMeta": {
       "title": {
         "displayName": "Title",
-        "purpose": "Screen title (h1), Schibsted 800."
+        "purpose": "the screen's `h1` (\"Discover\", \"My Results\")."
       },
       "finish-time": {
         "displayName": "Finish Time",
-        "purpose": "Finish time on a result row; the loudest thing on the row."
+        "purpose": "the finish time on a result row. Proportional figures, `--text-1`, never the accent."
       },
       "date-day": {
         "displayName": "Date Day",
-        "purpose": "Day on the race card date tile (::first-line)."
+        "purpose": "the day on a race card's date tile (the tile's `::first-line`)."
       },
       "item": {
         "displayName": "Item",
-        "purpose": "Race names, state headings, sheet heading."
+        "purpose": "race names on cards and rows, empty and error headings, the sheet's heading."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Base text, search, sheet fields and checkbox labels."
+        "purpose": "base text, the search field, sheet checkbox labels and fields."
       },
       "button": {
         "displayName": "Button",
-        "purpose": "Primary and secondary buttons."
+        "purpose": "primary and secondary buttons, sheet buttons."
       },
       "meta": {
         "displayName": "Meta",
-        "purpose": "Location, counts, sort, result dates, state body, tertiary link."
+        "purpose": "location, counts (\"**7** upcoming races\", the number in 600), the sort label, result dates, state body text, the tertiary \"Clear all filters\". The List/Map segments and the sort value use 15px at 600. Meta shares body's size and stays apart from it by color (`--text-2`)."
       },
       "proof": {
         "displayName": "Proof",
-        "purpose": "Proof line; month and year under the day."
+        "purpose": "the proof line; the month and year under the date day (line-height 1.2 there)."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Format and filter chips, uppercase by CSS only."
+        "purpose": "format chips and active filter chips. The markup keeps the format's own name (\"Half marathon\")."
       },
       "tab-label": {
         "displayName": "Tab Label",
-        "purpose": "Tab labels and map pin labels, sentence case."
+        "purpose": "tab labels and map pin labels."
       }
     },
     "shadows": [
       {
         "name": "shadow-sheet",
         "value": "0 12px 32px -12px rgba(0, 0, 0, 0.6)",
-        "purpose": "The Filters sheet only; cards are flat."
+        "purpose": "What floats over content: the Filters sheet and the floating tab bar (The Float Rule). Cards are flat."
       }
     ],
     "motion": [
@@ -320,6 +351,11 @@
         "name": "ease-out",
         "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
         "purpose": "Every transition."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.45, 0, 0.55, 1)",
+        "purpose": "The skeleton pulse."
       },
       {
         "name": "dur-fast",
@@ -330,6 +366,16 @@
         "name": "dur-sheet",
         "value": "250ms",
         "purpose": "Filters sheet slide and scrim fade; 0ms under prefers-reduced-motion."
+      },
+      {
+        "name": "dur-pulse",
+        "value": "1600ms",
+        "purpose": "One breath of the skeleton pulse (C6); still under prefers-reduced-motion."
+      },
+      {
+        "name": "dur-spin",
+        "value": "800ms",
+        "purpose": "One turn of the busy spinner (G26); keeps turning under reduced motion (HIG: a still indicator reads as stalled)."
       }
     ],
     "breakpoints": [
@@ -393,25 +439,33 @@
       "name": "List / Map Segmented Control",
       "kind": "custom",
       "refersTo": "segmented-track",
-      "description": "Raised track, pressed segment in bg-3 with a field-line outline. Native iOS: segments of equal width (gap G11).",
+      "description": "In the controls bar: a capsule track with concentric segments of equal width (C7, G11); the pressed segment is bg-3 with a field-line outline.",
       "html": "<div class=\"ds-seg\" role=\"group\" aria-label=\"View\"><button aria-pressed=\"true\">List</button><button aria-pressed=\"false\">Map</button></div>",
-      "css": ".ds-seg { display:inline-flex; padding:4px; border-radius:var(--radius-2, 6px); background:var(--bg-2, #272B30); } .ds-seg button { min-height:36px; padding:0 16px; border:0; border-radius:var(--radius-1, 4px); background:transparent; color:var(--text-2, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:14px; font-weight:600; cursor:pointer; } .ds-seg button:hover { background:var(--bg-3, #2C3035); } .ds-seg button[aria-pressed=\"true\"] { background:var(--bg-3, #2C3035); color:var(--text-1, #F4F5F6); box-shadow: inset 0 0 0 1px var(--field-line, #686E75); } .ds-seg button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+      "css": ".ds-seg { display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; padding:4px; border-radius:var(--radius-bar-control, 22px); background:var(--bg-2, #272B30); } .ds-seg button { min-height:36px; padding:0 16px; border:0; border-radius:var(--radius-bar-inner, 18px); background:transparent; color:var(--text-2, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } .ds-seg button:hover { background:var(--bg-3, #2C3035); } .ds-seg button[aria-pressed=\"true\"] { background:var(--bg-3, #2C3035); color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line, #686E75); } .ds-seg button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
     },
     {
       "name": "Result Row",
       "kind": "card",
       "refersTo": "result-row",
-      "description": "Signature: the finish time is the loudest thing on the row; proof stated, not stamped.",
-      "html": "<a class=\"ds-result\" href=\"#\"><span class=\"ds-result-top\"><span class=\"ds-result-name\">HYROX London</span><span class=\"ds-result-time\">1:18:42</span></span><span class=\"ds-result-meta\"><span class=\"ds-result-chip\">HYROX</span> 6 Dec 2025</span><span class=\"ds-result-proof\">Self-reported · via results.hyrox.com</span></a>",
-      "css": ".ds-result { display:grid; gap:8px; padding:12px 16px 16px; border-radius:var(--radius-2, 6px); background:var(--bg-1, #1D2024); color:var(--text-1, #F4F5F6); text-decoration:none; font-family:\"Hanken Grotesk\", sans-serif; } .ds-result:hover { box-shadow: inset 0 0 0 1px var(--field-line, #686E75); } .ds-result:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; } .ds-result-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; } .ds-result-name { font-size:17px; font-weight:600; line-height:1.2; } .ds-result-time { font-family:\"Schibsted Grotesk\", \"Hanken Grotesk\", sans-serif; font-size:32px; font-weight:800; line-height:1; letter-spacing:-0.03em; white-space:nowrap; } .ds-result-meta { display:flex; align-items:center; gap:12px; font-size:14px; color:var(--text-2, #A3A9B0); } .ds-result-chip { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:var(--radius-1, 4px); background:var(--bg-2, #272B30); color:var(--chip-text, #BFC4CA); font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; } .ds-result-proof { font-size:13px; line-height:1.45; color:var(--text-2, #A3A9B0); }"
+      "description": "Signature: the finish time is the loudest thing on the row; proof stated, not stamped. The disclosure indicator ends the meta row (G22), so the time and the proof keep the full width.",
+      "html": "<a class=\"ds-result\" href=\"#\"><span class=\"ds-result-top\"><span class=\"ds-result-name\">HYROX London</span><span class=\"ds-result-time\">1:18:42</span></span><span class=\"ds-result-meta\"><span class=\"ds-result-chip\">HYROX</span> 6 Dec 2025<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M15.8351 11.6296L9.20467 5.1999C8.79094 4.79869 8 5.04189 8 5.5703L8 18.4297C8 18.9581 8.79094 19.2013 9.20467 18.8001L15.8351 12.3704C16.055 12.1573 16.0549 11.8427 15.8351 11.6296Z\"/></svg></span><span class=\"ds-result-proof\">Self-reported · via results.hyrox.com</span></a>",
+      "css": ".ds-result { display:grid; gap:8px; padding:12px 16px 16px; border-radius:var(--radius-2, 6px); background:var(--bg-1, #1D2024); color:var(--text-1, #F4F5F6); text-decoration:none; font-family:\"Hanken Grotesk\", sans-serif; } .ds-result:hover { box-shadow:inset 0 0 0 1px var(--field-line, #686E75); } .ds-result:active { background:var(--bg-3, #2C3035); } .ds-result:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; } .ds-result-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; } .ds-result-name { font-size:17px; font-weight:600; line-height:1.2; } .ds-result-time { font-family:\"Schibsted Grotesk\", \"Hanken Grotesk\", sans-serif; font-size:32px; font-weight:800; line-height:1; letter-spacing:-0.03em; white-space:nowrap; } .ds-result-meta { display:flex; align-items:center; gap:12px; font-size:15px; color:var(--text-2, #A3A9B0); } .ds-result-meta svg { margin-left:auto; flex:none; } .ds-result-chip { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:var(--radius-1, 4px); background:var(--bg-2, #272B30); color:var(--chip-text, #BFC4CA); font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; } .ds-result-proof { font-size:13px; color:var(--text-2, #A3A9B0); }"
     },
     {
       "name": "Tab Bar",
       "kind": "nav",
       "refersTo": "tab-bar",
-      "description": "Three destinations; the current tab is the screen's amber. Native iOS floats it on Liquid Glass (gap G1, conflict C1).",
+      "description": "Three destinations; the current tab is the screen's amber. Floats above content as a glass capsule (C1, G1, G2).",
       "html": "<nav class=\"ds-tabs\" aria-label=\"Global navigation\"><a href=\"#\" aria-current=\"page\">Discover</a><a href=\"#\">My Results</a><a href=\"#\">Profile</a></nav>",
-      "css": ".ds-tabs { display:grid; grid-template-columns:repeat(3, 1fr); height:64px; align-items:center; padding:4px 8px; background:var(--bg-bar, #0F1114); border-top:1px solid var(--line, #31363C); } .ds-tabs a { display:grid; justify-items:center; min-height:44px; align-content:center; color:var(--text-2, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:11px; font-weight:600; text-decoration:none; } .ds-tabs a[aria-current=\"page\"] { color:var(--accent, #F5B649); } .ds-tabs a:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+      "css": ".ds-tabs { display:grid; grid-template-columns:repeat(3, 1fr); height:64px; align-items:center; margin:0 16px; padding:4px 8px; border-radius:32px; background:color-mix(in srgb, var(--bg-bar, #0F1114) 85%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px rgba(244, 245, 246, 0.08), 0 12px 32px -12px rgba(0, 0, 0, 0.6); } .ds-tabs a { display:grid; justify-items:center; min-height:44px; align-content:center; color:var(--text-2, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:11px; font-weight:600; text-decoration:none; } .ds-tabs a[aria-current=\"page\"] { color:var(--accent, #F5B649); } .ds-tabs a:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+    },
+    {
+      "name": "Filters Sheet",
+      "kind": "custom",
+      "refersTo": "filters-sheet",
+      "description": "Signature: a native sheet on raised glass (C1, C4), 38px corners [?], the large detent only; Cancel outlined, Apply filters the one primary.",
+      "html": "<div class=\"ds-sheet\" role=\"dialog\" aria-label=\"Filters\"><div class=\"ds-sheet-grab\"></div><p class=\"ds-sheet-h\">Filters</p><label class=\"ds-sheet-check\"><input type=\"checkbox\" checked> HYROX</label><div class=\"ds-sheet-actions\"><button type=\"button\">Cancel</button><button type=\"submit\">Apply filters</button></div></div>",
+      "css": ".ds-sheet { display:grid; gap:12px; padding:8px 16px 12px; border-radius:38px 38px 0 0; background:color-mix(in srgb, var(--bg-2, #272B30) 90%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 1px 0 rgba(244, 245, 246, 0.08), 0 12px 32px -12px rgba(0, 0, 0, 0.6); color:var(--text-1, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; } .ds-sheet-grab { width:32px; height:4px; margin:0 auto; border-radius:4px; background:var(--field-line-sheet, #757B82); } .ds-sheet-h { margin:0; font-size:17px; font-weight:600; } .ds-sheet-check { display:flex; align-items:center; gap:12px; min-height:44px; font-size:15px; accent-color:var(--text-1, #F4F5F6); } .ds-sheet-actions { display:flex; gap:12px; } .ds-sheet-actions button { flex:1; min-height:44px; border:0; border-radius:var(--radius-2, 6px); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } .ds-sheet-actions button[type=\"button\"] { background:transparent; color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line-sheet, #757B82); } .ds-sheet-actions button[type=\"submit\"] { background:var(--accent, #F5B649); color:var(--on-accent, #131518); } .ds-sheet-actions button[type=\"submit\"]:hover { background:var(--accent-hover, #FFC46A); } .ds-sheet-actions button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
     }
   ],
   "narrative": {
@@ -421,8 +475,8 @@
       "Dark with depth: five background levels between L* 4.99 and 19.67, all near-neutral (C* ≤ 3.87).",
       "One scarce accent, sodium amber `#F5B649`: the primary action and the current tab, and nothing else.",
       "Two faces: Schibsted Grotesk 800 for the title and key numbers, Hanken Grotesk 400/600 for everything else.",
-      "Small radii: 4px inside, 6px outside. The Filters sheet's corners follow the native iOS sheet (12px today; see Native iOS).",
-      "Flat surfaces. The one shadow belongs to the Filters sheet.",
+      "Small radii: 4px inside, 6px outside in content. Bar chrome is native: the floating tab bar is a capsule, controls inside bars are concentric capsules (C7), the Filters sheet takes the sheet radius (38px [?]), and Profile initials are the one circle.",
+      "Flat content, glass chrome: the tab bar, the controls bar, the top bar, the action bar and the Filters sheet are translucent graphite with blur (C1). Cards never are. Shadows belong to what floats: the sheet and the tab bar.",
       "Neutral metadata: format chips, filter chips, map pins, the saved confirmation and every pressed state stay gray.",
       "Black-and-white photos, 3:1, inset in the race card.",
       "Solar bold icons, drawn as CSS masks in the color of their text."
@@ -430,7 +484,7 @@
     "rules": [
       {
         "name": "The Two Lights Rule",
-        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Every other active state stays neutral: the active filter chip is an outline, the pressed segment is `--bg-3`, a checked checkbox is `--text-1`, the focus ring is `--text-1`.",
+        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is an outline, the pressed segment is `--bg-3`, a checked checkbox is `--control-tint` (Text 1, C4), the focus ring is `--text-1`.",
         "section": "colors"
       },
       {
@@ -454,8 +508,13 @@
         "section": "typography"
       },
       {
-        "name": "The One Float Rule",
-        "body": "Only a sheet casts a shadow. Everything else is a tone step.",
+        "name": "The Float Rule",
+        "body": "Only what floats casts a shadow: the sheet and the floating tab bar. Everything else is a tone step.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Glass Rule (C1, step 3b)",
+        "body": "Bars and the sheet are glass (see Colors → Glass); content never is. A card, a row, a chip or a field stays a flat tone.",
         "section": "elevation"
       }
     ],
@@ -468,7 +527,8 @@
       "**Do** step a secondary action up or down so the screen keeps exactly one filled button.",
       "**Do** take every value from `ui/kit.css`. Pages and the kit's classes hold no raw values.",
       "**Do** draw icons as Solar bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar.",
-      "**Do** keep 44px targets, a 2px `--text-1` focus ring, and 0ms motion under `prefers-reduced-motion`."
+      "**Do** keep 44px targets, a 2px `--text-1` focus ring, and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).",
+      "**Do** check text on glass against the worst case behind it, not against the glass's own tint."
     ],
     "donts": [
       "**Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, a focus ring, an icon in content, a status, or the map.",
@@ -477,9 +537,10 @@
       "**Don't** use pure `#000`, `#0B0C0E`, the `#ff4d2e` family, `src/style.css` or the wireframe grays.",
       "**Don't** use aggressive \"energy\" red. Errors are soft coral `#EE8B84`, on the icon only.",
       "**Don't** set race names, chips, buttons or tabs in the display face, or use one heavy condensed face for everything.",
-      "**Don't** drop the radius to 0 or round into pills.",
-      "**Don't** give cards a shadow or a border at rest.",
-      "**Don't** use `--line` or `--field-line` as a fill.",
+      "**Don't** drop the radius to 0, or round content into pills (pills belong to bar chrome only).",
+      "**Don't** give cards a shadow, a border at rest, or glass.",
+      "**Don't** use `--line`, `--field-line` or `--field-line-sheet` as a fill (the sheet's grabber is a drawn 4px line, the one exception).",
+      "**Don't** let invalid and focus look alike: coral inside for invalid, white outside for focus.",
       "**Don't** use tabular figures on finish times: Schibsted spaces the colons wide (\"24 : 36\")."
     ]
   }

@@ -122,6 +122,9 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
     ('Race browse · filter chip remove icon, close-circle (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
     ('Race browse · Filters sheet calendar icon in a date field (non-text, 3:1)', 'text-1', 'bg-0', 'ui'),
+    ('Empty state icon, muted, on the page (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
+    ('Error state icon, coral, on the page (non-text, 3:1)', 'error', 'bg-0', 'ui'),
+    ('Empty or error state icon inside the map panel (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
     ('Kit · Sign out in the confirm alert (destructive, coral)', 'destructive', 'bg-1', 'text'),
     ('Kit · invalid field ring against the field (non-text, 3:1)', 'invalid', 'bg-1', 'ui'),
     ('Kit · invalid field ring against the page (non-text, 3:1)', 'invalid', 'bg-0', 'ui'),
@@ -148,6 +151,7 @@ def glass_bg(where, alpha=None):
 GLASS_PAIRS = [   # label, text token, glass, kind
     ('Tab bar · inactive tab label over content', 'text-2', 'bar', 'text'),
     ('Tab bar · current tab (accent) over content', 'accent', 'bar', 'text'),
+    ('Action bar · caption over content (“Opens in a new tab.”)', 'text-2', 'bar', 'text'),
     ('Controls bar · active filter chip label, Clear all filters', 'text-1', 'ground', 'text'),
     ('Controls bar · filter chip outline and remove icon (non-text, 3:1)', 'text-2', 'ground', 'ui'),
     ('Top bar · back link, title, Cancel', 'text-1', 'ground', 'text'),
@@ -503,11 +507,12 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('sheet-large', 'Filters sheet height: the large detent only', 'Full height less the top safe area and the gap', 'G13 · designer, 2026-10-19: large detent only'),
            ('glass-opacity', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge)', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
            ('glass-opacity-sheet', 'Glass fill on the Filters sheet', f'Lowest that passes AA over the scrim and the worst case: {GLASS_MIN["sheet"]}%; set with margin · {P}', 'C1, C4: the sheet on the raised level'),
-           ('glass-bar', 'Tab bar glass: the Tab bar level at the glass opacity', 'color-mix with transparent; the floating bar stays a shade darker than the page', 'C1: translucent graphite'),
+           ('glass-bar', 'Tab bar and action bar glass: the Tab bar level at the glass opacity', 'color-mix with transparent; the floating tab bar and the sticky action bar (Race detail, Result detail) stay a shade darker than the page', 'C1: translucent graphite · action bar added by the designer, 2026-10-19'),
            ('glass-ground', 'Glass for bars on the page (controls bar, top bar, status-bar edge): the Ground level at the glass opacity', 'color-mix with transparent; at rest it matches the page, so the bar shows only when content runs under it', 'C1 · G7: a scroll edge, not a custom bar background'),
            ('glass-sheet', 'Sheet glass: Raised level at the sheet opacity', 'color-mix with transparent', 'C1 · C4: the raised graphite level'),
            ('glass-blur', 'Backdrop blur on all glass', f'20px · {P}', 'C1: blur, so content under a bar reads as shape, not text'),
            ('glass-edge', 'The glass rim (in place of a hairline)', f'Text 1 at 8% · {P}', 'C1, G7: a scroll edge, not a solid bar border · decorative, no contrast requirement'),
+           ('icon-state', 'Icon on top of an empty or error state', '48px, centered above the title', 'Designer, 2026-10-19: the iOS ContentUnavailableView pattern · HIG gives no number'),
            ('dur-spin', 'Busy spinner: one turn', '800ms, linear; keeps turning under reduced motion (HIG: a still indicator reads as stalled)', 'G26'),
            ('spinner-size', 'Busy spinner size', 'Meta icon size, inside the button before its label', 'G26: an activity indicator inside the button'),
            ('ease-in-out', 'Easing for the skeleton pulse', 'Even in, even out', 'C6: a subtle pulse'),
@@ -550,7 +555,7 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-2</code></td><td>{tok("radius-2")}</td><td>Outer shapes: cards, buttons, the search field.</td><td>Taste: "no radius looks like a wireframe" · one small value, not pills</td></tr>
 <tr><td><code>--radius-3</code></td><td>{tok("radius-3")}</td><td>Stand panels only, never in the product. (The Filters sheet had it until step 3b; it now takes <code>--radius-sheet</code>.)</td><td>Keeps the product's shapes at 4 and 6</td></tr>
 <tr><td><code>--radius-sheet</code></td><td>{tok("radius-sheet")}</td><td>The Filters sheet's (and Race picker's) top corners. {P}.</td><td>G16 · Native sheet anatomy (designer, 2026-10-18): the system's sheet radius, not a Podium radius</td></tr>
-<tr><td><code>--radius-bar-control</code></td><td>{tok("radius-bar-control")} = 22px</td><td>A control inside a bar: the segmented track in the controls bar; the search field once it pins to a bar (G8).</td><td>C7: concentric only inside bars; content keeps 4/6</td></tr>
+<tr><td><code>--radius-bar-control</code></td><td>{tok("radius-bar-control")} = 22px</td><td>A control inside a bar: the Filters button and the segmented track in the controls bar (Filters added by the designer, 2026-10-19); the search field once it pins to a bar (G8).</td><td>C7: concentric only inside bars; content keeps 4/6</td></tr>
 <tr><td><code>--radius-bar-inner</code></td><td>{tok("radius-bar-inner")} = 18px</td><td>A segment inside that track: the outer radius minus the track's 4px padding.</td><td>C7: concentric corners</td></tr>
 <tr><td><code>--radius-avatar</code></td><td>{tok("radius-avatar")}</td><td>Profile initials (a circle); also the busy spinner's ring.</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers, filter chip outline.</td><td>Attribute a: the frame stays quiet</td></tr>
@@ -580,8 +585,9 @@ ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not buil
     ('Sort, sheet selects', 'alt-arrow-down', 'icon-chevron', 'After the sort value and in the sheet’s Region select (CSS mask).', 'in use'),
     ('Filters sheet · checkbox', 'check', 'icon-check', 'The tick in a checked sport type, on Text 1 (neutral, never the accent).', 'in use'),
     ('Filter chip · remove', 'close-circle', 'icon-close', 'Drawn by CSS over the chip’s text "×" (step 7); the text stays in the markup, aria-hidden, until Lesson 7.', 'in use'),
-    ('State · empty', 'inbox', None, 'Results list empty state, above "Log your first result". Race browse empty uses no icon: the filters above are the context.', 'planned'),
-    ('State · error', 'danger-circle', 'icon-error', 'Before the error heading ("Couldn’t load races"), in the error color (CSS mask).', 'in use'),
+    ('State · empty, Race browse', 'magnifer', 'icon-search', 'On top of the empty state (“No races match…”), 48px, Text 2: iOS’s own search-unavailable pattern (designer, 2026-10-19: ContentUnavailableView).', 'in use'),
+    ('State · empty, Results list', 'archive', 'icon-archive', 'On top of “No results logged yet”, 48px, Text 2: the results archive (designer, 2026-10-19).', 'in use'),
+    ('State · error', 'danger-circle', 'icon-error', 'On top of an error state (“Couldn’t load races”), 48px, the screen’s only coral (since 2026-10-19; before, 18px before the heading). Still 18px before headings in inline errors and form alerts.', 'in use'),
     ('Saved confirmation', 'diskette', 'icon-saved', 'Results list after Save, in Text 2: neutral, not a success check (Color rule 2).', 'in use'),
     ('State · success', 'check-circle', None, 'This stand’s success specimen only; no product screen uses it.', 'specimen'),
     ('State · warning', 'danger-triangle', None, 'Warning messages, when one exists.', 'planned'),

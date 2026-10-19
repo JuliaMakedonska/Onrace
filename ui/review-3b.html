@@ -30,6 +30,7 @@
 <main class="rv">
   <header class="rv-head">
     <h1>Step 3b · before and after</h1>
+    <p><b>Round 2 (3b review, 2026-10-19):</b> every bar control is a full capsule (search, Filters, List/Map); the action bar is glass; the result-row chevron moved onto the meta row so the times and proof lines don't move; empty and error states follow the iOS ContentUnavailableView pattern. The after-shots below are round 2.</p>
     <p>Lesson 7, 2026-10-19. The kit feedback and the native iOS pass (the Kit (CSS) gaps plus C1, C3, C4, C6, C7), in <code>ui/kit.css</code> only: no screen's markup changed. Every painted Podium state at 390×844, before (commit <code>f7492ca</code>) and after, plus one scrolled state that shows content under the glass. The look changes on purpose, so there's no pixel-identical check.</p>
     <p><b>Provisional [?]:</b> glass opacity margins, the 20px blur, the rim, the 38px sheet radius and the 12px gap above the sheet. Apple's iOS 26 kit wasn't read; the one Apple number used is HIG Materials' 35% dimming layer, as a floor. The opacities themselves come from contrast: AA over the worst case behind the glass. Record: <code>concept/concept.md</code> → Step 3b. Values, signed: <a href="../concept/concept.html">the stand</a>. Components in their states: <a href="kit.html">the kit</a>.</p>
   </header>
@@ -49,7 +50,7 @@
   </section>
 
   <section class="rv-pair" aria-labelledby="p1"><h2 id="p1">Race browse</h2>
-    <p>Title 38 → 34, meta 14 → 15 (C3). Controls bar on ground glass with a rim, no hairline (C1, G7). List/Map: equal segments (G11), a capsule with concentric segments inside the bar (C7); Filters keeps 6px. Tab bar: a floating glass capsule, the third card shows through (C1, G1).</p>
+    <p>Title 38 → 34, meta 14 → 15 (C3). Controls bar on ground glass with a rim, no hairline (C1, G7). Bar controls are full capsules (C7): the search field, Filters, and List/Map with equal, concentric segments (G11). Tab bar: a floating glass capsule, the third card shows through (C1, G1).</p>
     <div class="rv-shots"><figure><img src="review-3b/rb-base-before.jpg" alt="Race browse before step 3b" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-base-after.jpg" alt="Race browse after step 3b" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p2"><h2 id="p2">Race browse · Filtered (?sport=hyrox&amp;sport=marathon)</h2>
@@ -69,10 +70,11 @@
     <div class="rv-shots"><figure><img src="review-3b/rb-scrolled-before.jpg" alt="Scrolled, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-scrolled-after.jpg" alt="Scrolled, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p6"><h2 id="p6">Race browse · empty</h2>
-    <p>State body at 15px (meta, C3).</p>
+    <p>The ContentUnavailableView pattern: centered in the free area, a 48px muted magnifier on top, title, body, actions centered. Text unchanged.</p>
     <div class="rv-shots"><figure><img src="review-3b/rb-empty-before.jpg" alt="Empty, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-empty-after.jpg" alt="Empty, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p7"><h2 id="p7">Race browse · error</h2>
+    <p>Same component: the 48px error icon on top, the screen's only coral.</p>
     <div class="rv-shots"><figure><img src="review-3b/rb-error-before.jpg" alt="Error, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-error-after.jpg" alt="Error, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p8"><h2 id="p8">Race browse · loading</h2>
@@ -80,20 +82,22 @@
     <div class="rv-shots"><figure><img src="review-3b/rb-loading-before.jpg" alt="Loading, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-loading-after.jpg" alt="Loading, after" width="780" height="1688"><figcaption>After (mid-pulse frame)</figcaption></figure><figure><img src="review-3b/rb-loading-after-rm.jpg" alt="Loading, after, reduced motion" width="780" height="1688"><figcaption>After, reduced motion</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p9"><h2 id="p9">Results list</h2>
-    <p>A disclosure indicator on each row (G22); the time moves 24px left to make room, and one long proof domain now wraps. Title 34, meta 15.</p>
+    <p>A disclosure indicator on each row (G22), ending the meta row under the finish time's right edge. Measured: all 4 finish times at exactly the pre-3b pixels (right edge 358px), every proof line on one line, Valencia included. Title 34, meta 15.</p>
     <div class="rv-shots"><figure><img src="review-3b/rl-base-before.jpg" alt="Results list, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-base-after.jpg" alt="Results list, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p10"><h2 id="p10">Results list · saved (?saved=HYROX London)</h2>
     <div class="rv-shots"><figure><img src="review-3b/rl-saved-before.jpg" alt="Saved, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-saved-after.jpg" alt="Saved, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p11"><h2 id="p11">Results list · empty</h2>
+    <p>Centered, with a 48px muted archive icon (the results archive).</p>
     <div class="rv-shots"><figure><img src="review-3b/rl-empty-before.jpg" alt="Results list empty, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-empty-after.jpg" alt="Results list empty, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p12"><h2 id="p12">Results list · error</h2>
+    <p>Centered, with the coral error icon on top.</p>
     <div class="rv-shots"><figure><img src="review-3b/rl-error-before.jpg" alt="Results list error, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-error-after.jpg" alt="Results list error, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
   <section class="rv-pair" aria-labelledby="p13"><h2 id="p13">Results list · loading</h2>
-    <p>The skeleton row keeps the row's new right padding, so nothing shifts when it loads; it pulses (C6).</p>
+    <p>The skeleton row keeps the row's own padding, so nothing shifts when it loads; it pulses (C6).</p>
     <div class="rv-shots"><figure><img src="review-3b/rl-loading-before.jpg" alt="Results list loading, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-loading-after.jpg" alt="Results list loading, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
   </section>
 </main>
