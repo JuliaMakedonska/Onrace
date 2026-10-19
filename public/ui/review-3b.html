@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 3b review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* review page only: tokens from kit.css, no values of its own */
+  .rv { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-8); }
+  .rv-head { display: grid; gap: var(--space-3); }
+  .rv-head p, .rv-pair > p { margin: 0; max-width: var(--measure); color: var(--text-2); }
+  .rv-head a, .rv-pair a { color: var(--text-1); text-underline-offset: var(--space-1); }
+  .rv-pair { display: grid; gap: var(--space-3); padding-top: var(--space-6); border-top: var(--border) solid var(--line); }
+  .rv-pair h2 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+  .rv-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), var(--screen-w))); gap: var(--space-5); }
+  .rv-shots figure { margin: 0; display: grid; gap: var(--space-2); }
+  .rv-shots figcaption { font-size: var(--size-proof); color: var(--text-2); }
+  .rv-shots img { display: block; width: 100%; height: auto; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--line); }
+  .rv table { width: 100%; border-collapse: collapse; font-size: var(--size-proof); }
+  .rv th, .rv td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: var(--border) solid var(--line); vertical-align: top; }
+  .rv th { color: var(--text-2); font-weight: var(--weight-strong); }
+  .rv-wrap { overflow-x: auto; }
+</style>
+</head>
+<body class="onrace">
+<main class="rv">
+  <header class="rv-head">
+    <h1>Step 3b · before and after</h1>
+    <p>Lesson 7, 2026-10-19. The kit feedback and the native iOS pass (the Kit (CSS) gaps plus C1, C3, C4, C6, C7), in <code>ui/kit.css</code> only: no screen's markup changed. Every painted Podium state at 390×844, before (commit <code>f7492ca</code>) and after, plus one scrolled state that shows content under the glass. The look changes on purpose, so there's no pixel-identical check.</p>
+    <p><b>Provisional [?]:</b> glass opacity margins, the 20px blur, the rim, the 38px sheet radius and the 12px gap above the sheet. Apple's iOS 26 kit wasn't read; the one Apple number used is HIG Materials' 35% dimming layer, as a floor. The opacities themselves come from contrast: AA over the worst case behind the glass. Record: <code>concept/concept.md</code> → Step 3b. Values, signed: <a href="../concept/concept.html">the stand</a>. Components in their states: <a href="kit.html">the kit</a>.</p>
+  </header>
+
+  <section class="rv-pair" aria-labelledby="m-h">
+    <h2 id="m-h">First screen, re-measured with content under the glass tab bar</h2>
+    <div class="rv-wrap"><table>
+      <thead><tr><th>Where</th><th>Before (step 5, 64px solid bar)</th><th>After: clear of the bar</th><th>After: on screen, through the glass</th></tr></thead>
+      <tbody>
+        <tr><td>Viewer (757px), no filters</td><td>2 full, 8.6px to spare</td><td>2 full, <b>1.7px to spare</b></td><td>2 full + 29%</td></tr>
+        <tr><td>Viewer, two filters</td><td>1 full + 78%</td><td>1 full + 75%</td><td>2 full + 3%</td></tr>
+        <tr><td>390×844, no filters</td><td>2 full + 39%</td><td>2 full + 35%</td><td>2 full + 69%</td></tr>
+        <tr><td>390×844, two filters</td><td>2 full + 13%</td><td>2 full + 10%</td><td>2 full + 43%</td></tr>
+      </tbody>
+    </table></div>
+    <p>Attribute b holds (two full race cards clear of the bar), but only just inside the viewer: the floating bar's top sits 8px higher than the old bar's.</p>
+  </section>
+
+  <section class="rv-pair" aria-labelledby="p1"><h2 id="p1">Race browse</h2>
+    <p>Title 38 → 34, meta 14 → 15 (C3). Controls bar on ground glass with a rim, no hairline (C1, G7). List/Map: equal segments (G11), a capsule with concentric segments inside the bar (C7); Filters keeps 6px. Tab bar: a floating glass capsule, the third card shows through (C1, G1).</p>
+    <div class="rv-shots"><figure><img src="review-3b/rb-base-before.jpg" alt="Race browse before step 3b" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-base-after.jpg" alt="Race browse after step 3b" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p2"><h2 id="p2">Race browse · Filtered (?sport=hyrox&amp;sport=marathon)</h2>
+    <p>Active filter chips 12px apart, and 12px before Clear all filters (G27).</p>
+    <div class="rv-shots"><figure><img src="review-3b/rb-filtered-before.jpg" alt="Filtered, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-filtered-after.jpg" alt="Filtered, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p3"><h2 id="p3">Race browse · Filters sheet open</h2>
+    <p>Sheet glass on the raised level (C1, C4), 38px corners [?] (G16), the large detent only (G13), the footer at the bottom edge. Boundaries in Field line on the sheet; Cancel outlined, since a tonal button would vanish on the raised level.</p>
+    <div class="rv-shots"><figure><img src="review-3b/rb-sheet-before.jpg" alt="Filters sheet, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-sheet-after.jpg" alt="Filters sheet, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p4"><h2 id="p4">Race browse · Map view</h2>
+    <p>The map frame ends above the floating bar; Map selected in the capsule control.</p>
+    <div class="rv-shots"><figure><img src="review-3b/rb-map-before.jpg" alt="Map view, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-map-after.jpg" alt="Map view, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p5"><h2 id="p5">Race browse · scrolled 400px (not a state of its own: it shows the glass)</h2>
+    <p>Content runs under the controls bar and the tab bar; at 85% it reads as shape, not text.</p>
+    <div class="rv-shots"><figure><img src="review-3b/rb-scrolled-before.jpg" alt="Scrolled, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-scrolled-after.jpg" alt="Scrolled, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p6"><h2 id="p6">Race browse · empty</h2>
+    <p>State body at 15px (meta, C3).</p>
+    <div class="rv-shots"><figure><img src="review-3b/rb-empty-before.jpg" alt="Empty, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-empty-after.jpg" alt="Empty, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p7"><h2 id="p7">Race browse · error</h2>
+    <div class="rv-shots"><figure><img src="review-3b/rb-error-before.jpg" alt="Error, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-error-after.jpg" alt="Error, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p8"><h2 id="p8">Race browse · loading</h2>
+    <p>Skeletons pulse to 0.55 and back over 1.6s (C6, G25); a still frame can't show it. Under reduced motion they stay still (third shot).</p>
+    <div class="rv-shots"><figure><img src="review-3b/rb-loading-before.jpg" alt="Loading, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rb-loading-after.jpg" alt="Loading, after" width="780" height="1688"><figcaption>After (mid-pulse frame)</figcaption></figure><figure><img src="review-3b/rb-loading-after-rm.jpg" alt="Loading, after, reduced motion" width="780" height="1688"><figcaption>After, reduced motion</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p9"><h2 id="p9">Results list</h2>
+    <p>A disclosure indicator on each row (G22); the time moves 24px left to make room, and one long proof domain now wraps. Title 34, meta 15.</p>
+    <div class="rv-shots"><figure><img src="review-3b/rl-base-before.jpg" alt="Results list, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-base-after.jpg" alt="Results list, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p10"><h2 id="p10">Results list · saved (?saved=HYROX London)</h2>
+    <div class="rv-shots"><figure><img src="review-3b/rl-saved-before.jpg" alt="Saved, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-saved-after.jpg" alt="Saved, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p11"><h2 id="p11">Results list · empty</h2>
+    <div class="rv-shots"><figure><img src="review-3b/rl-empty-before.jpg" alt="Results list empty, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-empty-after.jpg" alt="Results list empty, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p12"><h2 id="p12">Results list · error</h2>
+    <div class="rv-shots"><figure><img src="review-3b/rl-error-before.jpg" alt="Results list error, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-error-after.jpg" alt="Results list error, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+  <section class="rv-pair" aria-labelledby="p13"><h2 id="p13">Results list · loading</h2>
+    <p>The skeleton row keeps the row's new right padding, so nothing shifts when it loads; it pulses (C6).</p>
+    <div class="rv-shots"><figure><img src="review-3b/rl-loading-before.jpg" alt="Results list loading, before" width="780" height="1688"><figcaption>Before</figcaption></figure><figure><img src="review-3b/rl-loading-after.jpg" alt="Results list loading, after" width="780" height="1688"><figcaption>After</figcaption></figure></div>
+  </section>
+</main>
+</body>
+</html>

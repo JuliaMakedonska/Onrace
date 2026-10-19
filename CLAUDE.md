@@ -129,7 +129,7 @@ How Onrace speaks, decided 2026-09-26 to 2026-09-30 and applied to every wirefra
 
 ## Concept
 
-The visual concept, Lesson 6 (2026-10-13 to 2026-10-15). Direction A, **Podium**: graphite ground `#131518`, one scarce sodium-amber accent `#F5B649`, Schibsted Grotesk 800 (title, finish time, date day) + Hanken Grotesk 400/600 (everything else), radii 4/6 (12 on the stand panels and, until step 3b, the Filters sheet), Solar bold icons, black-and-white race photos.
+The visual concept, Lesson 6 (2026-10-13 to 2026-10-15). Direction A, **Podium**: graphite ground `#131518`, one scarce sodium-amber accent `#F5B649`, Schibsted Grotesk 800 (title, finish time, date day) + Hanken Grotesk 400/600 (everything else), radii 4/6 in content (12 on the stand panels; since step 3b the Filters sheet takes the native sheet radius, 38 [?], and bar controls are capsules), Solar bold icons, black-and-white race photos.
 
 - **Where it lives (`concept/`):**
   - `concept.md`: the rules and every decision.
@@ -156,7 +156,8 @@ Lesson 7 (2026-10-18). `DESIGN.md` (repo root) is the design system documented f
 - **`ui/map.css`:** the static map's data (tokens and Natural Earth masks), linked by the Race browse pages and the kit showcase only.
 - **`ui/shell.html`:** the shell (large-title header and tab bar), no status bar.
 - **`ui/kit.html`:** the showcase, every inventory component in its states, live at https://juliamakedonska.github.io/Onrace/ui/kit.html.
-- **Step 3a** extracted the kit exactly as the screens look. The 8 Podium pages are byte-identical before and after at 390×844 (12 states). **Step 3b** brings the native iOS changes.
+- **Step 3a** extracted the kit exactly as the screens look. The 8 Podium pages are byte-identical before and after at 390×844 (12 states).
+- **Kit feedback + step 3b (2026-10-19):** initials a circle, Save amber on Log result, destructive Sign out, coral invalid ring; then the native iOS pass (Kit (CSS) gaps + C1, C3, C4, C6, C7): glass bars and sheet, floating tab bar, HIG type sizes, Dynamic Type units, skeleton pulse, busy spinner, disclosure, pressed states. Glass blur, rim, margins and the sheet radius are **provisional [?]** (Apple's iOS 26 kit wasn't read). Record: `concept.md` → Step 3b. Before/after of every painted state: `ui/review-3b.html`.
 - **Mirror:** `ui/` → `public/ui/` (`build_stand.py` does it).
 
 ## Status

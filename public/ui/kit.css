@@ -2,8 +2,10 @@
    One file: every value in :root, then every component class. Classes hold no
    values of their own, only these variables.
    Extracted 2026-10-18 (Lesson 7, step 3a) from concept/tokens.css and
-   concept/components.css, exactly as the two Podium screens look today; the
-   native iOS changes (concept.md → Native iOS) come in step 3b.
+   concept/components.css, exactly as the two Podium screens looked then.
+   Step 3b (2026-10-19), a separate signed pass: the native iOS changes
+   (concept.md → Native iOS: the Kit (CSS) gap group plus C1, C3, C4, C6, C7).
+   Values marked [?] are provisional: Apple's iOS 26 kit wasn't read (see the stand).
    Map data (tokens and Natural Earth masks): ui/map.css, linked by the Race
    browse pages only. Stand layout: concept/stand.css (concept.html only).
    Reasons for each value: the stand, concept/concept.html.
@@ -20,6 +22,7 @@
   --bg-3: #2C3035;         /* pressed / hover / open fills on raised controls (rule 3a: L* 19.67) */
   --line: #31363C;         /* hairline dividers, selected segment (decorative, not a boundary) */
   --field-line: #686E75;   /* boundary of inputs: 3:1 against bg-0 and bg-1 (WCAG 1.4.11) */
+  --field-line-sheet: #757B82; /* boundary of inputs on the glass sheet: 3:1 against its worst-case surface (3b) */
 
   /* ---------- color: text levels ---------- */
   --text-1: #F4F5F6;       /* titles, finish times, body */
@@ -41,20 +44,37 @@
   --warning-bg: var(--bg-2);
   --warning-line: var(--text-2);
   --focus: var(--text-1);  /* focus ring is neutral, so it never adds an accent use */
+  --invalid: var(--error); /* invalid field ring: coral, so it never looks like focus (white) */
+  --destructive: var(--error); /* destructive action text in an alert (Sign out), per HIG Alerts */
+  --control-tint: var(--text-1); /* C4: checkmarks, switches, system-drawn controls; never amber or green */
+
+  /* ---------- glass (C1): bars and the Filters sheet; never cards ---------- */
+  --glass-opacity: 85%;    /* bar fill; the build checks AA over the worst-case content behind it [?] */
+  --glass-opacity-sheet: 90%; /* sheet fill, over the scrim [?] */
+  --glass-bar: color-mix(in srgb, var(--bg-bar) var(--glass-opacity), transparent);      /* the floating tab bar: the frame's level, so it separates from the page */
+  --glass-ground: color-mix(in srgb, var(--bg-0) var(--glass-opacity), transparent);     /* bars on the page (controls bar, top bar, status-bar edge): invisible at rest */
+  --glass-sheet: color-mix(in srgb, var(--bg-2) var(--glass-opacity-sheet), transparent);
+  --glass-blur: 20px;      /* [?] not from Apple's kit */
+  --glass-edge: rgba(244, 245, 246, 0.08); /* the glass rim: a faint light edge instead of a hairline [?] */
 
   /* ---------- type ---------- */
   --font-display: "Schibsted Grotesk", "Hanken Grotesk", sans-serif; /* screen title, key numbers */
   --font-text: "Hanken Grotesk", sans-serif;                          /* everything else */
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;            /* stand code samples only */
 
-  --size-title: 38px;      /* display · screen title (h1) */
-  --size-time: 32px;       /* display · finish time */
-  --size-day: 30px;        /* display · date day */
-  --size-item: 17px;       /* text · item title (race name) */
-  --size-body: 15px;       /* text · body, buttons, search */
-  --size-meta: 14px;       /* text · meta (date month, location, counts) */
-  --size-proof: 13px;      /* text · proof line, month/year under the day */
-  --size-label: 11px;      /* text · chip label (uppercase by CSS), tab label */
+  /* G28: sizes scale with the system text size. One type unit is 1px at the
+     default size: 1rem / 16 in browsers, 1rem / 17 on iOS, where the root
+     takes -apple-system-body (Dynamic Type; see the @supports block below). */
+  --type-root: 16;
+  --type-unit: calc(1rem / var(--type-root));
+  --size-title: calc(34 * var(--type-unit));  /* display · screen title (h1) · HIG Large Title (C3: was 38) */
+  --size-time: calc(32 * var(--type-unit));   /* display · finish time (a display figure, C3) */
+  --size-day: calc(30 * var(--type-unit));    /* display · date day (a display figure, C3) */
+  --size-item: calc(17 * var(--type-unit));   /* text · item title (race name) · HIG Headline */
+  --size-body: calc(15 * var(--type-unit));   /* text · body, buttons, search · HIG Subheadline */
+  --size-meta: calc(15 * var(--type-unit));   /* text · meta (location, counts) · HIG Subheadline (C3: was 14) */
+  --size-proof: calc(13 * var(--type-unit));  /* text · proof line, month/year under the day · HIG Footnote */
+  --size-label: calc(11 * var(--type-unit));  /* text · chip label (uppercase by CSS), tab label · HIG Caption 2 */
 
   --weight-display: 800;
   --weight-strong: 600;
@@ -68,7 +88,11 @@
   /* ---------- shape ---------- */
   --radius-1: 4px;         /* inner: photo inset, chip */
   --radius-2: 6px;         /* outer: card, button, field */
-  --radius-3: 12px;        /* stand panels only */
+  --radius-3: 12px;        /* stand panels only (the Filters sheet had it until step 3b; it now has --radius-sheet) */
+  --radius-sheet: 38px;    /* the native sheet's top corners (G16) [?] not from Apple's kit */
+  --radius-bar-control: calc(var(--target) / 2);   /* C7: a control inside a bar is a capsule, concentric with the bar */
+  --radius-bar-inner: calc(var(--radius-bar-control) - var(--space-1));  /* C7: a segment inside it: outer radius minus the track's padding */
+  --radius-avatar: 50%;    /* Profile initials: a circle, as iOS avatars are (DESIGN.md → Shapes, the one circle) */
   --border: 1px;
   --focus-ring: 2px;
   --shadow-sheet: 0 12px 32px -12px rgba(0, 0, 0, 0.6); /* sheets and menus only; cards are flat */
@@ -91,7 +115,7 @@
   --space-9: 64px;
 
   /* ---------- race card ---------- */
-  --date-col: 68px;        /* fits "May 2027", the widest month and year at 13px, plus the tile padding */
+  --date-col: calc(68 * var(--type-unit));  /* fits "May 2027", the widest month and year at 13px, plus the tile padding; grows with the text (G28) */
   --photo-ratio: 3 / 1;     /* decided 2026-10-14: 109px band at 390 wide, two full cards on the first screen (attribute b) */
   --photo-filter: grayscale(1) contrast(1.12) brightness(0.85); /* every photo: black and white */
   --photo-focus-low: 50% 72%;  /* crop focus for photos whose subject sits low */
@@ -119,7 +143,11 @@
   --icon-close: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M22%2012C22%2017.5228%2017.5228%2022%2012%2022C6.47715%2022%202%2017.5228%202%2012C2%206.47715%206.47715%202%2012%202C17.5228%202%2022%206.47715%2022%2012ZM8.96963%208.96965C9.26252%208.67676%209.73739%208.67676%2010.0303%208.96965L12%2010.9393L13.9696%208.96967C14.2625%208.67678%2014.7374%208.67678%2015.0303%208.96967C15.3232%209.26256%2015.3232%209.73744%2015.0303%2010.0303L13.0606%2012L15.0303%2013.9696C15.3232%2014.2625%2015.3232%2014.7374%2015.0303%2015.0303C14.7374%2015.3232%2014.2625%2015.3232%2013.9696%2015.0303L12%2013.0607L10.0303%2015.0303C9.73742%2015.3232%209.26254%2015.3232%208.96965%2015.0303C8.67676%2014.7374%208.67676%2014.2625%208.96965%2013.9697L10.9393%2012L8.96963%2010.0303C8.67673%209.73742%208.67673%209.26254%208.96963%208.96965Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
   --icon-back: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M8.16485%2011.6296L14.7953%205.1999C15.2091%204.79869%2016%205.04189%2016%205.5703L16%2018.4297C16%2018.9581%2015.2091%2019.2013%2014.7953%2018.8001L8.16485%2012.3704C7.94505%2012.1573%207.94505%2011.8427%208.16485%2011.6296Z%22/%3E%3C/svg%3E");   /* Solar alt-arrow-left bold: the back chevron in a top bar */
 
-  /* ---------- skeleton (loading): mirrors the race card, no shimmer ---------- */
+  --icon-disclosure: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M15.8351%2011.6296L9.20467%205.1999C8.79094%204.79869%208%205.04189%208%205.5703L8%2018.4297C8%2018.9581%208.79094%2019.2013%209.20467%2018.8001L15.8351%2012.3704C16.055%2012.1573%2016.0549%2011.8427%2015.8351%2011.6296Z%22/%3E%3C/svg%3E");   /* Solar alt-arrow-right bold: the disclosure indicator on a row that drills in (G22) */
+
+  /* ---------- skeleton (loading): mirrors the race card; a subtle pulse, no shimmer (C6) ---------- */
+  --skel-pulse-dim: 0.55;  /* the pulse's low point (opacity); still under reduced motion */
+  --dur-pulse: 1600ms;     /* one breath in and out */
   --skel-line: 12px;       /* meta bars */
   --skel-title: 16px;      /* title bar height */
   --skel-title-w: 70%;
@@ -134,11 +162,17 @@
 
   /* ---------- screens (wireframes/race-browse*.html), inside the viewer's phone frame ---------- */
   --screen-w: 390px;       /* iPhone logical width; the viewer adds status bar and home strip outside the page */
-  --tabbar-h: 64px;        /* tab bar: 44px targets + 26px icon + label, no home-indicator padding (the viewer draws it) */
+  --tabbar-h: 64px;        /* tab bar capsule: 44px targets + 26px icon + label */
+  --tabbar-inset: var(--space-4);  /* G1: the floating tab bar sits in from the screen edges by the gutter (HIG gives no number) */
+  --tabbar-gap: var(--space-2);    /* G1/G2: space between the floating tab bar and the bottom safe area */
+  --radius-tabbar: calc(var(--tabbar-h) / 2);  /* G1: the floating tab bar is a capsule */
+  --tabbar-clear: calc(var(--tabbar-h) + var(--tabbar-gap) + var(--safe-bottom));  /* how far the last item must scroll to clear the bar */
   --scrim: rgba(0, 0, 0, 0.6);  /* behind the Filters sheet */
-  --sheet-max: 75%;        /* the Filters sheet's maximum height */
+  --sheet-gap-top: var(--space-3); /* G13: the large detent stops this far below the top safe area [?] */
+  --sheet-large: calc(100% - var(--safe-top) - var(--sheet-gap-top));  /* G13: the Filters sheet rests at the large detent only */
   --dur-sheet: 250ms;      /* sheet slides up */
-  --safe-bottom: env(safe-area-inset-bottom, 0px);  /* home-indicator inset on a real device; 0 inside the viewer */
+  --safe-top: env(safe-area-inset-top, 0px);         /* G6: status bar / Dynamic Island inset on a real device; 0 inside the viewer */
+  --safe-bottom: env(safe-area-inset-bottom, 0px);  /* G2: home-indicator inset on a real device; 0 inside the viewer */
   --fade-end: linear-gradient(to right, #000 calc(100% - var(--space-6)), transparent);  /* mask: a scrolling row fades out at its end */
 
   /* ---------- stand layout (concept.html only, never in the product) ---------- */
@@ -147,7 +181,7 @@
   --stand-col-min: 320px;
 
   /* ---------- grayscale screens (structure from their wireframes, look from DESIGN.md) ---------- */
-  --avatar-size: 80px;     /* Profile initials tile */
+  --avatar-size: 80px;     /* Profile initials, a circle */
   --alert-width: 270px;    /* the confirm alert (iOS alert width) */
 
   /* ---------- showcase (ui/kit.html only, never in the product) ---------- */
@@ -156,11 +190,26 @@
   /* ---------- motion ---------- */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur-fast: 160ms;
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);  /* the skeleton pulse: even in, even out */
+  --dur-spin: 800ms;       /* G26: one turn of the busy spinner */
+  --spinner-size: var(--icon-s);  /* G26: the activity indicator inside a busy button */
 }
 
-/* Reduced motion: the sheet and the button fades become instant (the states still change) */
+/* G28: on iOS the root text size follows Dynamic Type (Body is 17 at the default size) */
+@supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
+  html { font: -apple-system-body; }
+  :root { --type-root: 17; }
+}
+
+/* Reduced motion: the sheet and the button fades become instant (the states still change);
+   skeletons stay still (C6). The busy spinner keeps turning: HIG, a still indicator reads as stalled. */
 @media (prefers-reduced-motion: reduce) {
   :root { --dur-fast: 0ms; --dur-sheet: 0ms; }
+}
+
+/* Reduce Transparency: glass becomes the solid level it's tinted from (C1) */
+@media (prefers-reduced-transparency: reduce) {
+  :root { --glass-opacity: 100%; --glass-opacity-sheet: 100%; --glass-blur: 0px; }
 }
 
 /* =================================================================
@@ -178,6 +227,7 @@
   font-family: var(--font-text);
   font-size: var(--size-body);
   line-height: var(--leading-body);
+  accent-color: var(--control-tint);   /* C4: system-drawn controls tint neutral */
 }
 .onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
 .onrace ::selection { background: var(--text-1); color: var(--bg-0); }
@@ -246,6 +296,18 @@
 .btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
 .btn--tertiary:disabled { background: none; }
 .btn[aria-busy="true"] { cursor: progress; pointer-events: none; }  /* busy: same fill, verb in the present tense ("Saving…"), aria-disabled blocks keys */
+/* G26: an activity indicator inside a busy button, before its present-tense label */
+:is(.btn, button, .submit-btn)[aria-busy="true"]::before, .top-bar .save-progress::before {
+  content: "";
+  flex: none;
+  width: var(--spinner-size);
+  height: var(--spinner-size);
+  border-radius: var(--radius-avatar);
+  border: var(--focus-ring) solid currentColor;
+  border-right-color: transparent;
+  animation: onrace-spin var(--dur-spin) linear infinite;
+}
+@keyframes onrace-spin { to { transform: rotate(1turn); } }
 
 /* ---------- format chip: metadata, neutral ---------- */
 .sport-tag {
@@ -329,7 +391,8 @@
 .race-search input::placeholder { color: var(--text-2); opacity: 1; }
 .race-search input:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
 .race-search input:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
-.race-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.race-search input::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
+:is(.controls, .top-bar, .bottom-nav) .race-search input { border-radius: var(--radius-bar-control); }   /* C7: inside a bar, a capsule */
 
 /* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
 .race-card {
@@ -457,7 +520,7 @@
 .proof-label::before { -webkit-mask-image: var(--icon-link); mask-image: var(--icon-link); }
 
 /* ---------- segmented List / Map ---------- */
-.view-toggle { display: inline-flex; padding: var(--space-1); border-radius: var(--radius-2); background: var(--bg-2); }
+.view-toggle { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: var(--space-1); border-radius: var(--radius-2); background: var(--bg-2); }   /* G11: segments of equal width */
 .view-btn {
   min-height: calc(var(--target) - var(--space-2));
   padding: 0 var(--space-4);
@@ -473,9 +536,11 @@
 .view-btn[aria-pressed="true"] { background: var(--bg-3); color: var(--text-1); box-shadow: inset 0 0 0 var(--border) var(--field-line); }  /* pressed: calm outline, like the active chip */
 .view-btn { position: relative; }
 .view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
+:is(.controls, .top-bar) .view-toggle { border-radius: var(--radius-bar-control); }   /* C7: inside a bar, the track is a capsule */
+:is(.controls, .top-bar) .view-btn { border-radius: var(--radius-bar-inner); }        /* and each segment is concentric with it */
 
 /* ---------- tab bar: current tab is the screen's one accent on Race browse ---------- */
-.bottom-nav { background: var(--bg-bar); border-top: var(--border) solid var(--line); padding: var(--space-2) var(--space-2) var(--space-6); }
+.bottom-nav { background: var(--glass-bar); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); border-top: var(--border) solid var(--line); padding: var(--space-2) var(--space-2) var(--space-6); }   /* C1: glass */
 .bottom-nav ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .bottom-nav a {
   display: grid;
@@ -513,6 +578,10 @@
 
 /* ---------- skeleton (loading): no spinner, no invented progress ---------- */
 .skeleton { border-radius: var(--radius-1); background: var(--bg-2); }
+/* C6/G25: skeletons breathe, subtly; still under reduced motion */
+.skeleton, .bar, .initials.skel { animation: onrace-pulse var(--dur-pulse) var(--ease-in-out) infinite; }
+@keyframes onrace-pulse { 50% { opacity: var(--skel-pulse-dim); } }
+@media (prefers-reduced-motion: reduce) { .skeleton, .bar, .initials.skel { animation: none; } }
 
 /* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
 .controls { display: grid; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
@@ -529,8 +598,8 @@
 }
 
 /* active filter chips + "Clear all filters" (tertiary) */
-.chips-bar { display: flex; align-items: center; gap: var(--space-2); }
-.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-2); flex: 1; min-width: 0; overflow-x: auto; }
+.chips-bar { display: flex; align-items: center; gap: var(--space-3); }   /* G27: about 12pt around bezeled elements */
+.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-3); flex: 1; min-width: 0; overflow-x: auto; }
 .chips-row li { flex: none; }
 .chips-row { -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }  /* the row scrolls: its end fades */
 .chips-bar .clear-all { flex: none; }
@@ -623,10 +692,31 @@
 :where(.onrace) a { color: var(--text-1); }   /* zero specificity: components always win */
 html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
 body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
-.phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-h); }
+.phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
 .phone-screen main { display: flex; flex-direction: column; min-height: 100%; }
-.phone-screen header { display: grid; gap: var(--space-3); padding: var(--space-2) var(--space-4) var(--space-1); }  /* the viewer draws the status bar above the page */
-.phone-screen .controls { position: sticky; top: 0; z-index: 2; background: var(--bg-0); padding: var(--space-3) var(--space-4); }
+.phone-screen header { display: grid; gap: var(--space-3); padding: calc(var(--space-2) + var(--safe-top)) var(--space-4) var(--space-1); }  /* G6: below the top safe area (0 in the viewer, which draws the status bar above the page) */
+.phone-screen .controls {   /* C1/G7: glass, with a rim instead of a hairline; content scrolls under it */
+  position: sticky;
+  top: var(--safe-top);
+  z-index: 2;
+  background: var(--glass-ground);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border-bottom-color: var(--glass-edge);
+  padding: var(--space-3) var(--space-4);
+}
+body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status bar, glass; 0px tall inside the viewer */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: var(--safe-top);
+  background: var(--glass-ground);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
 .phone-screen .results-row { padding-inline: var(--space-4); }
 .results-row[hidden], .sort-control[hidden] { display: none; }
 .filters-trigger[aria-expanded="true"] { background: var(--bg-3); }
@@ -640,9 +730,23 @@ body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position
 .photo--center { object-position: var(--photo-focus-center); }
 .photo--high { object-position: var(--photo-focus-high); }
 .race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
+.race-card:has(.card-link:active), .race-card.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
 
 /* tab bar on a screen: fixed to the frame's bottom; Solar icons from tokens (the markup's own glyphs are hidden) */
-body > .bottom-nav:not(.fs-tabbar) { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; height: var(--tabbar-h); padding: var(--space-1) var(--space-2); display: grid; align-items: center; }
+body > .bottom-nav:not(.fs-tabbar) {   /* G1/G2: floats above content, in from the edges, above the bottom safe area */
+  position: absolute;
+  left: var(--tabbar-inset);
+  right: var(--tabbar-inset);
+  bottom: calc(var(--tabbar-gap) + var(--safe-bottom));
+  z-index: 3;
+  height: var(--tabbar-h);
+  padding: var(--space-1) var(--space-2);
+  display: grid;
+  align-items: center;
+  border: 0;
+  border-radius: var(--radius-tabbar);
+  box-shadow: inset 0 0 0 var(--border) var(--glass-edge), var(--shadow-sheet);
+}
 body > .bottom-nav:not(.fs-tabbar) .tab-icon { display: none; }
 body > .bottom-nav:not(.fs-tabbar) a::before {
   content: "";
@@ -756,6 +860,20 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .phone-screen:has(.state-message .state-action:not(.secondary)) .header-action:hover { background: var(--bg-3); }
 .result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
 .result-card .card-link:hover { box-shadow: inset 0 0 0 var(--border) var(--field-line); }   /* same hover as the race card */
+.result-card .card-link:active, .result-card .card-link.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap */
+.result-card .card-link { position: relative; padding-right: calc(var(--space-4) + var(--icon-s) + var(--space-2)); }   /* room for the disclosure indicator */
+.result-card .card-link::after {   /* G22: the row drills into Result detail, so it shows a disclosure indicator (Solar, C2) */
+  content: "";
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  margin-top: calc(var(--icon-s) / -2);
+  background: var(--text-2);
+  -webkit-mask: var(--icon-disclosure) center / contain no-repeat;
+  mask: var(--icon-disclosure) center / contain no-repeat;
+}
 .results-order { margin-left: var(--space-2); padding-left: var(--space-2); border-left: var(--border) solid var(--line); color: var(--text-2); }
 .saved-status {   /* the saved confirmation: neutral, so it never reads as a "verified" stamp (attribute d, Color rule 2) */
   display: block;
@@ -769,7 +887,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .saved-status::before { content: ""; display: inline-block; vertical-align: text-bottom; margin-right: var(--space-2); width: var(--icon-m); height: var(--icon-m); background: var(--text-2); -webkit-mask: var(--icon-saved) center / contain no-repeat; mask: var(--icon-saved) center / contain no-repeat; }
 .saved-status[hidden] { display: none; }
 /* loading: a skeleton result row (same shape and padding as .result-card .card-link) */
-.result-list .skeleton-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-4); }
+.result-list .skeleton-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: var(--space-2); padding: var(--space-3) calc(var(--space-4) + var(--icon-s) + var(--space-2)) var(--space-4) var(--space-4); }   /* same box as the row, disclosure room included */
 .result-list .skeleton-card .bar { grid-area: auto; }
 .result-list .skeleton-card .skel-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .result-list .skeleton-card .skel-meta { display: flex; align-items: center; gap: var(--space-3); }
@@ -779,7 +897,8 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .result-list .skeleton-card .bar.date { align-self: center; width: var(--skel-date-w); height: var(--skel-line); }
 .result-list .skeleton-card .bar.proof { width: var(--skel-proof-w); height: var(--skel-line); margin-block: calc((var(--size-proof) * var(--leading-body) - var(--skel-line)) / 2); }
 
-/* Filters sheet: a sheet floats, so it is the one place with a shadow */
+/* Filters sheet: a native sheet (concept.md → Native sheet anatomy): glass on the raised level (C1, C4),
+   the system sheet radius (G16), resting at the large detent (G13). It floats, so it keeps the shadow. */
 .sheet-backdrop { position: absolute; inset: 0; z-index: 5; background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-out); }
 .sheet-backdrop.open { opacity: 1; }
 .sheet-backdrop[hidden], .sheet[hidden] { display: none; }
@@ -789,18 +908,23 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   right: 0;
   bottom: 0;
   z-index: 6;
-  max-height: var(--sheet-max);
+  height: var(--sheet-large);
   overflow-y: auto;
   padding: var(--space-2) var(--space-4) 0;          /* the footer carries the bottom padding */
-  border-radius: var(--radius-3) var(--radius-3) 0 0;
-  background: var(--bg-1);
-  box-shadow: var(--shadow-sheet);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--glass-sheet);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: inset 0 var(--border) 0 var(--glass-edge), var(--shadow-sheet);
+  display: flex;
+  flex-direction: column;
   transform: translateY(100%);
   transition: transform var(--dur-sheet) var(--ease-out);
 }
 .sheet.open { transform: translateY(0); }
-.sheet-handle { width: var(--space-7); height: var(--space-1); margin: 0 auto var(--space-3); border-radius: var(--radius-1); background: var(--field-line); }
+.sheet-handle { flex: none; width: var(--space-7); height: var(--space-1); margin: 0 auto var(--space-3); border-radius: var(--radius-1); background: var(--field-line-sheet); }
 .sheet h2 { margin: 0 0 var(--space-4); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); color: var(--text-1); }
+.sheet form { display: flex; flex-direction: column; flex: 1 0 auto; }   /* the large detent: the footer sits at the sheet's bottom edge */
 .sheet form > div:not(.sheet-actions), .sheet fieldset { margin: 0 0 var(--space-4); padding: 0; border: 0; display: grid; gap: var(--space-2); }
 .sheet form > div:has(> select) { position: relative; }
 .sheet form > div:has(> select)::after {   /* chevron, like the sort control */
@@ -827,13 +951,13 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   margin: 0;
   border-radius: var(--radius-1);
   background: var(--bg-0);
-  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet);
   display: grid;
   place-content: center;
   cursor: pointer;
 }
 .sheet input[type="checkbox"]::before { content: ""; width: var(--icon-s); height: var(--icon-s); background: var(--bg-0); -webkit-mask: var(--icon-check) center / contain no-repeat; mask: var(--icon-check) center / contain no-repeat; opacity: 0; }
-.sheet input[type="checkbox"]:checked { background: var(--text-1); box-shadow: none; }
+.sheet input[type="checkbox"]:checked { background: var(--control-tint); box-shadow: none; }   /* C4: neutral tint */
 .sheet input[type="checkbox"]:checked::before { opacity: 1; }
 .sheet select, .sheet input[type="date"] {
   min-height: var(--target);
@@ -841,7 +965,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   border: 0;
   border-radius: var(--radius-2);
   background: var(--bg-0);
-  box-shadow: inset 0 0 0 var(--border) var(--field-line);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet);
   color: var(--text-1);
   font-family: var(--font-text);
   font-size: var(--size-body);
@@ -865,9 +989,9 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   z-index: 1;
   display: flex;
   gap: var(--space-3);
-  margin: var(--space-2) calc(var(--space-4) * -1) 0;
+  margin: auto calc(var(--space-4) * -1) 0;
   padding: var(--space-3) var(--space-4) calc(var(--space-3) + var(--safe-bottom));
-  background: var(--bg-1);
+  background: var(--bg-2);   /* solid: the options scroll under it */
   border-top: var(--border) solid var(--line);
 }
 .sheet-actions button {
@@ -882,7 +1006,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 }
 .sheet-actions button[type="submit"] { background: var(--accent); color: var(--on-accent); }   /* the sheet's one primary */
 .sheet-actions button[type="submit"]:hover { background: var(--accent-hover); }
-.sheet-actions button[type="button"] { background: var(--bg-2); color: var(--text-1); }       /* Cancel: secondary */
+.sheet-actions button[type="button"] { background: transparent; box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet); color: var(--text-1); }   /* Cancel: secondary, outlined (a tonal bg-2 button would vanish on the bg-2 sheet) */
 .sheet-actions button[type="button"]:hover { background: var(--bg-3); }
 
 /* =================================================================
@@ -900,10 +1024,12 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   z-index: 2;
   display: flex;
   align-items: center;
-  min-height: var(--target);
-  padding: 0 var(--space-2);
-  background: var(--bg-0);
-  border-bottom: var(--border) solid var(--line);
+  min-height: calc(var(--target) + var(--safe-top));
+  padding: var(--safe-top) var(--space-2) 0;   /* G6 */
+  background: var(--glass-ground);   /* C1: glass, with a rim instead of a hairline */
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border-bottom: var(--border) solid var(--glass-edge);
   font-family: var(--font-text);
   font-size: var(--size-body);
 }
@@ -942,7 +1068,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   letter-spacing: normal;
   color: var(--text-1);
 }
-.top-bar .save-btn {   /* Save: a text action at the trailing edge (the amber stays with the screen's one primary) */
+.top-bar .save-btn {   /* Save: Log result's one primary (no tab bar there, no other amber), so amber text like a native bar button (Color rule 1) */
   margin-left: auto;
   border: 0;
   background: none;
@@ -951,8 +1077,10 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
+.top-bar .save-btn { color: var(--accent); }
+.top-bar .save-btn:hover { color: var(--accent-hover); }
 .top-bar .save-progress { margin-left: auto; color: var(--text-2); font-weight: var(--weight-strong); }
-.top-bar a:hover, .top-bar .save-btn:hover { color: var(--text-2); }
+.top-bar a:hover { color: var(--text-2); }
 
 /* ---------- detail screens (Race detail, Result detail) ---------- */
 .race, .result { padding: var(--space-5) var(--space-4) var(--space-7); }
@@ -1008,6 +1136,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
   width: 100%;
   min-height: var(--target);
   padding: 0 var(--space-5);
@@ -1119,9 +1248,10 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 }
 .field input::placeholder { color: var(--text-2); opacity: 1; }
 .field input:hover, .field select:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
-.field input:focus-visible, .field select:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+.field input:focus-visible, .field select:focus-visible, .field input.is-focus { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }   /* .is-focus: the showcase's still stand-in */
 .field input:disabled, .field select:disabled { color: var(--text-2); cursor: not-allowed; }
-.field input[aria-invalid="true"], .field select[aria-invalid="true"] { box-shadow: inset 0 0 0 var(--focus-ring) var(--text-1); }
+.field input[aria-invalid="true"], .field select[aria-invalid="true"],
+.field input[aria-invalid="true"]:focus-visible, .field select[aria-invalid="true"]:focus-visible { box-shadow: inset 0 0 0 var(--focus-ring) var(--invalid); }   /* invalid: coral ring inside; focus adds the white ring outside, so the two never look alike */
 .field select { -webkit-appearance: none; appearance: none; padding-right: calc(var(--space-3) * 2 + var(--icon-s)); }
 .field:has(> select) { position: relative; }
 .field:has(> select)::after {   /* chevron, like the sort control; sits in the select below the label */
@@ -1176,7 +1306,7 @@ a.catalog-row[href]:hover { box-shadow: inset 0 0 0 var(--border) var(--field-li
 .linked-race .unlink-btn { margin-top: var(--space-2); }
 
 /* ---------- Race picker: a sheet with a top bar and a search field ---------- */
-.sheet .top-bar { background: var(--bg-1); }
+.sheet .top-bar { background: var(--glass-sheet); }
 .sheet form.search { padding: var(--space-3) 0; }
 .list-intro { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
@@ -1211,14 +1341,14 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
 
 /* ---------- Profile: identity, grouped rows, Sign out, the confirm alert ---------- */
 .identity { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-4) 0 var(--space-6); }
-.initials {   /* initials on a raised tile, the date tile's shape (DESIGN.md → Shapes: 4/6, no circles in content) */
+.initials {   /* initials in a circle on the raised level: the one circle in content, as iOS avatars are (DESIGN.md → Shapes) */
   display: flex;
   align-items: center;
   justify-content: center;
   width: var(--avatar-size);
   height: var(--avatar-size);
   margin-bottom: var(--space-3);
-  border-radius: var(--radius-2);
+  border-radius: var(--radius-avatar);
   background: var(--bg-2);
   color: var(--text-1);
   font-family: var(--font-text);
@@ -1307,6 +1437,7 @@ dialog.alert .alert-actions button {
   cursor: pointer;
 }
 dialog.alert .alert-actions button + button { border-left: var(--border) solid var(--line); font-weight: var(--weight-strong); }
+dialog.alert #signout-confirm { color: var(--destructive); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1 */
 dialog.alert .alert-actions button:hover { background: var(--bg-2); }
 
 /* ---------- skeletons on the grayscale screens: the content's shape, no shimmer ---------- */

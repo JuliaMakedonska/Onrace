@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=f57bcb1a">
-<link rel="stylesheet" href="map.css?v=f57bcb1a">
+<link rel="stylesheet" href="kit.css?v=d5ab5b83">
+<link rel="stylesheet" href="map.css?v=d5ab5b83">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -49,7 +49,7 @@
 
     <div class="kit-item" id="tab-bar">
       <h3>Tab bar</h3>
-      <p><code>nav.bottom-nav</code> · Race browse, Results list, Profile. States: the current tab (amber, the screen's place); the same in every loading and error state. Shown in the Shell above.</p>
+      <p><code>nav.bottom-nav</code> · Race browse, Results list, Profile. Floats above content as a glass capsule, in from the edges and above the bottom safe area; content runs under it (C1, G1, G2). States: the current tab (amber, the screen's place); the same in every loading and error state. Shown in the Shell above.</p>
     </div>
 
     <div class="kit-item" id="large-title">
@@ -73,15 +73,15 @@
 
     <div class="kit-item" id="top-bar">
       <h3>Top bar</h3>
-      <p><code>.top-bar</code> · the grayscale screens. Back to the parent screen by name, a centered title, text actions (Cancel, Save).</p>
+      <p><code>.top-bar</code> · the grayscale screens. Glass on the ground level with a rim, below the top safe area (C1, G6). Back to the parent screen by name, a centered title, text actions (Cancel, Save). Save is Log result's one primary (that screen has no tab bar and no other amber), so it takes amber text, like a native bar button.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Back only (Race detail; Result detail: ‹ My Results)</p>
           <div class="kit-frame kit-frame--flush"><nav class="top-bar" aria-label="Back"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Discover</span></a></nav></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Back, title and Save (Log result)</p>
+        <div class="kit-state"><p class="kit-label">Back, title and Save, amber: the screen's one primary (Log result)</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>My Results</span></a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn">Save</button></header></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Saving (log-result-loading)</p>
+        <div class="kit-state"><p class="kit-label">Saving, with the spinner (log-result-loading)</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>My Results</span></a><h1 class="bar-title">Log result</h1><span class="save-progress" aria-hidden="true">Saving…</span></header></div>
         </div>
         <div class="kit-state"><p class="kit-label">Cancel and title (Sign in / Sign up; Race picker: Find a race)</p>
@@ -98,26 +98,29 @@
 
     <div class="kit-item" id="search">
       <h3>Search field</h3>
-      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>), Race picker (<code>form.search</code>). Submits on the keyboard's Search key.</p>
+      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>), Race picker (<code>form.search</code>). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). In content it keeps 6px; inside a bar it becomes a capsule (C7), ready for when the markup pass pins it (G8).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Empty, placeholder</p>
           <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q1">Search races by name or city</label><input type="search" id="k-q1" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Filled (?q=)</p>
+        <div class="kit-state"><p class="kit-label">Filled (?q=), with Clear</p>
           <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q2">Search races by name or city</label><input type="search" id="k-q2" value="Berlin" autocomplete="off" enterkeyhint="search"></form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Inside a bar: a capsule (C7)</p>
+          <div class="kit-frame"><div class="controls"><form class="race-search" role="search"><label class="visually-hidden" for="k-q3">Search races by name or city</label><input type="search" id="k-q3" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div></div>
         </div>
       </div>
     </div>
 
     <div class="kit-item" id="segmented">
       <h3>Segmented control</h3>
-      <p><code>.view-toggle</code> / <code>.view-btn</code> · Race browse (List / Map), Sign in / Sign up (Sign in / Create account).</p>
+      <p><code>.view-toggle</code> / <code>.view-btn</code> · Race browse (List / Map), Sign in / Sign up (Sign in / Create account). Segments of equal width (G11). Inside the controls bar the track is a capsule and each segment is concentric with it (C7); in content (Sign in) it keeps 6/4.</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">List selected</p>
-          <div class="kit-frame"><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div>
+        <div class="kit-state"><p class="kit-label">List selected, in the controls bar (C7)</p>
+          <div class="kit-frame"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Map selected</p>
-          <div class="kit-frame"><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="false">List</button><button type="button" class="view-btn" aria-pressed="true">Map</button></div></div>
+        <div class="kit-state"><p class="kit-label">Map selected, in the controls bar (C7)</p>
+          <div class="kit-frame"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="false">List</button><button type="button" class="view-btn" aria-pressed="true">Map</button></div></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Sign in / Sign up, full width</p>
           <div class="kit-frame"><div class="gate"><div class="view-toggle" role="group" aria-label="Sign in or create an account"><button type="button" class="view-btn" aria-pressed="true">Sign in</button><button type="button" class="view-btn" aria-pressed="false">Create account</button></div></div></div>
@@ -130,7 +133,7 @@
 
     <div class="kit-item" id="race-card">
       <h3>Race card</h3>
-      <p><code>article.race-card</code> · Race browse (with a black-and-white photo at 3:1), Race picker (no photo). One link: the whole card opens the race.</p>
+      <p><code>article.race-card</code> · Race browse (with a black-and-white photo at 3:1), Race picker (no photo). One link: the whole card opens the race. Pressed, it takes the pressed level (G23; shown here with <code>.is-pressed</code>, the showcase's still stand-in for <code>:active</code>). A collection, so no disclosure indicator.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse, with photo</p>
           <div class="kit-frame"><ul class="race-list"><li>
@@ -142,6 +145,14 @@
             <article class="race-card">
               <img class="photo photo--center" src="https://images.unsplash.com/photo-1776938023428-60ddf175a2d1?w=900&amp;q=75&amp;fm=jpg" alt="" width="900" height="300" loading="lazy">
               <a class="card-link" href="#"><h3>Spartan Race Beast — Killington</h3><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11">11 Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Pressed (G23)</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card is-pressed">
+              <img class="photo photo--low" src="https://images.unsplash.com/photo-1743993414654-0be2b73a9620?w=900&amp;q=75&amp;fm=jpg" alt="" width="900" height="300">
+              <a class="card-link" href="#"><h3>HYROX London</h3><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06">6 Dec 2026</time></p><p class="card-location">London, UK</p></a>
             </article>
           </li></ul></div>
         </div>
@@ -190,8 +201,8 @@
         <div class="kit-state"><p class="kit-label">Grayscale screens, full width</p>
           <div class="kit-frame kit-stack"><a class="register-btn" href="#">Register on hyrox.com</a><a class="open-btn" href="#">Open official result on results.hyrox.com</a><div class="gate"><button type="button" class="submit-btn">Sign in</button></div></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Busy: same fill, the verb in the present tense</p>
-          <div class="kit-frame"><form class="gate" onsubmit="return false;"><fieldset disabled><button type="submit" class="submit-btn">Signing in…</button><button type="submit" class="submit-btn">Sending…</button><button type="submit" class="submit-btn">Saving…</button></fieldset></form></div>
+        <div class="kit-state"><p class="kit-label">Busy: same fill, a spinner, the verb in the present tense (G26: on <code>aria-busy="true"</code>)</p>
+          <div class="kit-frame"><form class="gate" onsubmit="return false;"><fieldset disabled><button type="submit" class="submit-btn" aria-busy="true">Signing in…</button><button type="submit" class="submit-btn" aria-busy="true">Sending…</button><button type="submit" class="submit-btn" aria-busy="true">Saving…</button></fieldset></form></div>
         </div>
       </div>
     </div>
@@ -230,7 +241,7 @@
 
     <div class="kit-item" id="sheet">
       <h3>Modal sheet</h3>
-      <p><code>.sheet</code> · the Filters sheet on Race browse (handle, heading, form, sticky footer, over a scrim), and Race picker, a whole screen in a sheet over Log result.</p>
+      <p><code>.sheet</code> · the Filters sheet on Race browse (handle, heading, form, sticky footer, over a scrim), and Race picker, a whole screen in a sheet over Log result. A native sheet: glass on the raised level (C1, C4), the system sheet radius (G16, provisional [?]), resting at the large detent only (G13). Boundaries on it use Field line on the sheet; Cancel is outlined, since a tonal button would vanish on the raised level.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Filters sheet, open</p>
           <div class="kit-frame kit-stage">
@@ -316,7 +327,7 @@
 
     <div class="kit-item" id="text-field">
       <h3>Text field, field hint, field error</h3>
-      <p><code>.field</code> (label, input, hint) · Log result, Sign in / Sign up, Reset password, New password. <code>.hint</code> / <code>.field-hint</code>, <code>.field-error</code>.</p>
+      <p><code>.field</code> (label, input, hint) · Log result, Sign in / Sign up, Reset password, New password. <code>.hint</code> / <code>.field-hint</code>, <code>.field-error</code>. Invalid is a coral ring inside the field; focus is the white ring outside it. An invalid field with focus shows both, so the two states never look alike.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Empty, placeholder · with a hint</p>
           <div class="kit-frame">
@@ -341,6 +352,12 @@
           <div class="kit-frame">
             <div class="field"><label for="k-e1">Official result link</label><input type="url" id="k-e1" aria-invalid="true" aria-describedby="k-e1-e"><p class="field-error" id="k-e1-e">Add the official result link. It’s the proof this result is yours.</p></div>
             <div class="field"><label for="k-e2">Confirm new password</label><input type="password" id="k-e2" value="correcthors" aria-invalid="true" aria-describedby="k-e2-e"><p class="field-error" id="k-e2-e">The passwords don’t match. Enter the same password in both fields.</p></div>
+          </div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Focus (white, outside) beside invalid (coral, inside). Tab into either field to compare.</p>
+          <div class="kit-frame">
+            <div class="field"><label for="k-f1">Race name</label><input type="text" id="k-f1" value="Berlin Marathon" autocomplete="off" class="is-focus"></div>
+            <div class="field"><label for="k-f2">Finish time</label><input type="text" id="k-f2" value="3h12" autocomplete="off" aria-invalid="true" aria-describedby="k-f2-e"><p class="field-error" id="k-f2-e">Enter the finish time as hours:minutes:seconds, e.g. 3:12:48.</p></div>
           </div>
         </div>
       </div>
@@ -415,7 +432,7 @@
 
     <div class="kit-item" id="skeleton">
       <h3>Skeleton</h3>
-      <p><code>.bar</code>, <code>.skeleton-card</code> · every loading state. The content's shape, no spinner, no shimmer (the pulse is step 3b); screen readers hear a hidden status line.</p>
+      <p><code>.bar</code>, <code>.skeleton-card</code> · every loading state. The content's shape with a subtle pulse (C6), still under reduced motion; no spinner, no shimmer. Screen readers hear a hidden status line.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse: race card with its photo band</p>
           <div class="kit-frame"><ul class="race-list" aria-hidden="true"><li><div class="skeleton-card"><div class="bar photo"></div><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li></ul></div>
@@ -496,12 +513,12 @@
     <h2 id="archive-h">Archive</h2>
     <div class="kit-item" id="finish-time">
       <h3>Finish time · Proof line</h3>
-      <p><code>.finish-time</code>, <code>dl.finish</code>; <code>.proof-label</code> · Results list, Result detail. The finish time is the loudest thing on the row; the proof is stated, not stamped.</p>
+      <p><code>.finish-time</code>, <code>dl.finish</code>; <code>.proof-label</code> · Results list, Result detail. The finish time is the loudest thing on the row; the proof is stated, not stamped. The row drills into Result detail, so it shows a disclosure indicator (G22); pressed, it takes the pressed level (G23).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Results list: the result row</p>
           <div class="kit-frame"><ul class="result-list">
             <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
-            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
           </ul></div>
         </div>
         <div class="kit-state"><p class="kit-label">Result detail: the finish time and the proof section are under Detail above</p></div>
@@ -622,7 +639,7 @@
 
     <div class="kit-item" id="profile-parts">
       <h3>Profile · identity, grouped rows, Sign out, confirm alert</h3>
-      <p><code>.identity</code> (initials; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code>, <code>dialog.alert</code>.</p>
+      <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code>, <code>dialog.alert</code> (Sign out in the destructive style, coral text, per HIG Alerts).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Profile</p>
           <div class="kit-frame kit-frame--flush">
@@ -642,10 +659,10 @@
         <div class="kit-state"><p class="kit-label">-error?cause=save: a row didn't save</p>
           <div class="kit-frame kit-frame--flush"><section class="group"><ul class="rows"><li><div class="row"><label for="k-c3">Country</label><select id="k-c3"><option selected>Italy</option></select></div><p class="row-note is-error" role="alert">Couldn’t save — back to <span>Italy</span>. The connection may have dropped.<a href="#">Try again</a></p></li></ul></section></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Sign out: the confirm alert</p>
+        <div class="kit-state"><p class="kit-label">Sign out: the confirm alert (Sign out in the destructive style)</p>
           <div class="kit-frame kit-stage">
             <div class="sheet-backdrop open"></div>
-            <dialog class="alert" open aria-labelledby="k-so" aria-describedby="k-sod"><div class="alert-body"><h2 id="k-so">Sign out of Onrace?</h2><p id="k-sod">Your results stay saved. Sign back in anytime to see them.</p></div><div class="alert-actions"><button type="button">Cancel</button><button type="button">Sign out</button></div></dialog>
+            <dialog class="alert" open aria-labelledby="k-so" aria-describedby="k-sod"><div class="alert-body"><h2 id="k-so">Sign out of Onrace?</h2><p id="k-sod">Your results stay saved. Sign back in anytime to see them.</p></div><div class="alert-actions"><button type="button">Cancel</button><button type="button" id="signout-confirm">Sign out</button></div></dialog>
           </div>
         </div>
       </div>

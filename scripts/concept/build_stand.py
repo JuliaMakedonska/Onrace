@@ -24,6 +24,11 @@ def tok(name):
     r = re.match(r'var\(--([a-z0-9-]+)\)', v)
     return tok(r.group(1)) if r else v
 
+def px(name):
+    """A type-scaled size as shown on the stand: 'calc(34 * var(--type-unit))' → '34px'."""
+    v = tok(name); m = re.match(r'calc\((\d+(?:\.\d+)?) \* var\(--type-unit\)\)', v)
+    return f'{m.group(1)}px' if m else v
+
 def svg(name, cls='icon'):
     s = open(f'{ICONS}/{name}-bold.svg').read().strip()
     return s.replace('<svg ', f'<svg class="{cls}" aria-hidden="true" focusable="false" ', 1).replace(' width="1em" height="1em"', '')
@@ -117,7 +122,55 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
     ('Race browse · filter chip remove icon, close-circle (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
     ('Race browse · Filters sheet calendar icon in a date field (non-text, 3:1)', 'text-1', 'bg-0', 'ui'),
+    ('Kit · Sign out in the confirm alert (destructive, coral)', 'destructive', 'bg-1', 'text'),
+    ('Kit · invalid field ring against the field (non-text, 3:1)', 'invalid', 'bg-1', 'ui'),
+    ('Kit · invalid field ring against the page (non-text, 3:1)', 'invalid', 'bg-0', 'ui'),
+    ('Kit · Filters sheet field boundary against a field (non-text, 3:1)', 'field-line-sheet', 'bg-0', 'ui'),
+    ('Results list · disclosure indicator on a row (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
+    ('Pressed card or row: meta on the pressed level', 'text-2', 'bg-3', 'text'),
+    ('Pressed race card: format chip label (the chip keeps bg-2)', 'chip-text', 'bg-2', 'text'),
 ]
+# ---------------------------------------------------------------- glass (C1): text over glass, against the worst case behind it
+def _rgb(h): h = h.lstrip('#'); return [int(h[i:i+2], 16) for i in (0, 2, 4)]
+def over(fg, a, bg): return '#' + ''.join(f'{round(a * f + (1 - a) * b):02X}' for f, b in zip(_rgb(fg), _rgb(bg)))   # sRGB "over", as the browser blends
+def glass_parts(name):
+    m = re.match(r'color-mix\(in srgb, var\(--([a-z0-9-]+)\) var\(--([a-z0-9-]+)\), transparent\)', tok(name))
+    return tok(m.group(1)), float(tok(m.group(2)).rstrip('%')) / 100, m.group(1), m.group(2)
+_scrim = re.match(r'rgba\(0, 0, 0, ([0-9.]+)\)', tok('scrim')); SCRIM_A = float(_scrim.group(1))
+# The brightest thing that can scroll under a bar is Text 1 (a title); a photo's lightest tone after the
+# black-and-white filter is #D9D9D9, below it. Under the sheet the same Text 1 sits behind the scrim.
+# Measured with no help from the blur (a blurred glyph is darker than its solid color), so this is the floor.
+WORST = tok('text-1')
+UNDER = {'bar': WORST, 'ground': WORST, 'sheet': over('#000000', SCRIM_A, WORST)}
+GLASS = {'bar': 'glass-bar', 'ground': 'glass-ground', 'sheet': 'glass-sheet'}
+def glass_bg(where, alpha=None):
+    base, a, _, _ = glass_parts(GLASS[where]); return over(base, a if alpha is None else alpha, UNDER[where])
+GLASS_PAIRS = [   # label, text token, glass, kind
+    ('Tab bar · inactive tab label over content', 'text-2', 'bar', 'text'),
+    ('Tab bar · current tab (accent) over content', 'accent', 'bar', 'text'),
+    ('Controls bar · active filter chip label, Clear all filters', 'text-1', 'ground', 'text'),
+    ('Controls bar · filter chip outline and remove icon (non-text, 3:1)', 'text-2', 'ground', 'ui'),
+    ('Top bar · back link, title, Cancel', 'text-1', 'ground', 'text'),
+    ('Top bar · Save, Log result’s one primary (accent text)', 'accent', 'ground', 'text'),
+    ('Top bar · “Saving…” with its spinner', 'text-2', 'ground', 'text'),
+    ('Filters sheet · heading, checkbox labels', 'text-1', 'sheet', 'text'),
+    ('Filters sheet · field labels and legend', 'text-2', 'sheet', 'text'),
+    ('Filters sheet · field and checkbox boundary, outlined Cancel (non-text, 3:1)', 'field-line-sheet', 'sheet', 'ui'),
+    ('Filters sheet · checked box, neutral tint (non-text, 3:1)', 'control-tint', 'sheet', 'ui'),
+]
+def min_alpha(where):   # the lowest fill opacity at which every pair on this glass still passes
+    for pct in range(0, 101):
+        if all(cr(tok(fg), glass_bg(where, pct / 100)) >= (4.5 if k == 'text' else 3.0) for _, fg, w, k in GLASS_PAIRS if w == where):
+            return pct
+    return None
+GLASS_MIN = {w: min_alpha(w) for w in GLASS}
+P = '[?] provisional: Apple’s iOS 26 kit wasn’t read; to be replaced from it (designer, 2026-10-19)'
+HIG_DIM = 35   # HIG Materials: "consider adding a dark dimming layer of 35% opacity" under clear Liquid Glass over bright content
+for w in GLASS:
+    _, a, _, _ = glass_parts(GLASS[w])
+    assert GLASS_MIN[w] is not None and a * 100 >= GLASS_MIN[w], ('Glass too clear for AA over the worst case', w, a, GLASS_MIN[w])
+    assert a * 100 >= HIG_DIM, ('Glass lighter than HIG’s 35% dimming floor', w)
+
 rows, failures = [], []
 for label, fg, bg, kind in PAIRS:
     f, b = tok(fg), tok(bg)
@@ -131,7 +184,17 @@ for label, fg, bg, kind in PAIRS:
                else f'<span class="pass">pass</span> · needs {need:g}:1' if ok else f'<b>fail</b> · needs {need:g}:1')
     rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {f}</td>'
                 f'<td class="sample">{sw(bg)}<code>--{bg}</code> {b}</td><td class="num">{r:.2f}:1</td><td>{verdict}</td></tr>')
+for label, fg, where, kind in GLASS_PAIRS:
+    f, b = tok(fg), glass_bg(where)
+    r = cr(f, b); need = 4.5 if kind == 'text' else 3.0; ok = r >= need
+    if not ok: failures.append((label, r))
+    base, a, bt, at = glass_parts(GLASS[where])
+    under = f'the scrim ({SCRIM_A:g}) over Text 1' if where == 'sheet' else 'Text 1'
+    rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {f}</td>'
+                f'<td class="sample"><code>--{GLASS[where]}</code> (<code>--{bt}</code> at {a * 100:g}%) over {under} = {b}</td><td class="num">{r:.2f}:1</td>'
+                f'<td>{"<span class=pass>pass</span>" if ok else "<b>fail</b>"} · needs {need:g}:1</td></tr>')
 assert not failures, failures
+print('Glass: bar', glass_bg('bar'), 'min opacity', GLASS_MIN['bar'], '% · ground', glass_bg('ground'), 'min', GLASS_MIN['ground'], '% · sheet', glass_bg('sheet'), 'min opacity', GLASS_MIN['sheet'], '%')
 CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text</th><th>Background</th><th>Ratio</th><th>WCAG AA</th></tr></thead><tbody>'
             + ''.join(rows) + '</tbody></table></div>')
 
@@ -161,6 +224,7 @@ def selectors_using(*tokens):
 # Rule 1: amber only where you can act or where you are
 ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.header-action(:hover)?$', r'^\.state-action:not\(\.secondary\)(:hover)?$',
              r'^\.(register|open|submit)-btn(:hover)?$',   # the grayscale screens' one primary (kit, 2026-10-18)
+             r'^\.top-bar \.save-btn(:hover)?$',            # Save: Log result's one primary, amber text (no tab bar there; kit feedback, 2026-10-19)
              r'^\.bottom-nav a\[aria-current="page"\]$', r'^\.sheet-actions button\[type="submit"\](:hover)?$',
              r'^\.swatch--accent(-hover)?$', r'^\.swatch--on-accent$']
 accent_sel = selectors_using('accent', 'accent-hover')
@@ -184,7 +248,7 @@ for t in BG_LEVELS:
     bg_rows.append((t, L, C, None if prev is None else L - prev)); prev = L
 
 # Rule 3a, usage: --line and --field-line are hairlines, never a fill (their L* is above the background range)
-line_fill = [x for sel, body in CSS_RULES if re.search(r'background(-color)?:\s*var\(--(field-)?line\)', body)
+line_fill = [x for sel, body in CSS_RULES if re.search(r'background(-color)?:\s*var\(--(field-)?line(-sheet)?\)', body)
              for x in sel.split(',') if not x.strip().startswith('.swatch--') and x.strip() != '.sheet-handle']   # the handle is a drawn 4px line, not a surface
 assert not line_fill, ('Color rule 3a: a hairline token used as a fill', [x.strip() for x in line_fill])
 
@@ -235,7 +299,7 @@ def rules_section():
     <div class="stand-grid">
       <div class="stand-panel">
         <h3>1 · Accent placement · pass</h3>
-        <p class="stand-why">Amber only where you can act or where you are. The build found the accent on {len(accent_sel)} selectors, all allowed: the primary button and its hover, <code>.header-action</code>, the primary <code>.state-action</code>, the current tab, and the specimen swatches. It is never on a result, a finish time, a count or a status.</p>
+        <p class="stand-why">Amber only where you can act or where you are. The build found the accent on {len(accent_sel)} selectors, all allowed: the primary button and its hover, <code>.header-action</code>, the primary <code>.state-action</code>, the grayscale screens' one primary (<code>.register-btn</code>, <code>.open-btn</code>, <code>.submit-btn</code>), Apply filters in the sheet, Save in Log result's top bar (amber text: that screen has no tab bar and no other amber), the current tab, and the specimen swatches. It is never on a result, a finish time, a count or a status.</p>
       </div>
       <div class="stand-panel">
         <h3>2 · No success color on results · pass</h3>
@@ -280,6 +344,12 @@ BAND = {'current': {'ratio': '16/7', 'band': 143, 'card': 247, 'def': (1, 77), '
 # measured in the browser with first-screen.html at 390×844 on 2026-10-14 after step 5 (box-sizing, 68px date column), --photo-ratio 3 / 1 from tokens.css
 FS = {'card_h': 215, 'band': 114, 'tab': 747, 'base': {'top': 290, 'full': 2, 'next': 2}, 'filtered': {'top': 346, 'full': 1, 'next': 81}}
 # the real screen, wireframes/race-browse.html, measured 2026-10-14 (step 5)
+# step 3b (2026-10-19): content runs under the floating glass tab bar; C3 sizes. Measured in Chrome at 390 wide.
+# (page height, list top, tab bar top, cards clear of the bar: full + % of the next, cards on screen incl. under the glass)
+FS_3B = [('Inside the viewer, no filters', 757, 239, 685, (2, 0, 1.7), (2, 29)),
+         ('Inside the viewer, two filters', 757, 295, 685, (1, 75, None), (2, 3)),
+         ('Direct at 390×844, no filters', 844, 239, 772, (2, 35, None), (2, 69)),
+         ('Direct at 390×844, two filters', 844, 295, 772, (2, 10, None), (2, 43))]
 FS_REAL = {'viewer': {'h': 757, 'tab': 693, 'base': (243, 2, 0, 8.6), 'filtered': (299, 1, 78, None)},
            'direct': {'h': 844, 'tab': 780, 'base': (243, 2, 39, None), 'filtered': (299, 2, 13, None)}}
 
@@ -340,6 +410,10 @@ COLOR_ROWS = [
     ('bg-2', 'Raised', 'Secondary button, format chip, the date tile, segmented track, skeletons, disabled buttons.', 'Never for the primary action.', 'Hierarchy rule 3: secondary is tonal'),
     ('line', 'Line', 'Hairline dividers.', 'Not as a boundary someone must see (fields use Field line), not as a frame around every card.', 'Attribute a: the frame stays quiet'),
     ('field-line', 'Field line', 'The boundary of the search field and other inputs.', 'Not on cards or chips.', 'WCAG 1.4.11: an input boundary needs 3:1 (critique fix)'),
+    ('field-line-sheet', 'Field line on the sheet', 'Boundaries on the Filters sheet: its fields, checkboxes, the outlined Cancel, the grabber.', 'Off the sheet (Field line serves there).', 'WCAG 1.4.11 on the glass sheet: Field line is 2.6:1 there, this is 3:1 against the sheet’s worst case (step 3b)'),
+    ('control-tint', 'Control tint', 'Checked boxes and checkmarks, switches, and the tint of system-drawn controls (<code>accent-color</code>).', 'Never amber, never green.', 'C4 (designer, 2026-10-18): control tint is neutral · Color rule 1'),
+    ('invalid', 'Invalid', 'The 2px ring inside a field that failed (= Error).', 'Never on a focused-only field: focus is the white ring outside.', 'Kit feedback (designer, 2026-10-19): invalid and focus never look alike'),
+    ('destructive', 'Destructive', 'The text of a destructive action in an alert: Sign out (= Error).', 'Not on Cancel, not as a fill.', 'Kit feedback (designer, 2026-10-19), HIG Alerts: a destructive button uses the destructive style'),
     ('text-1', 'Text 1', 'Screen titles, item titles, finish times, body.', 'Not for meta (date month, location, proof).', 'Hierarchy rule 4: three levels'),
     ('text-2', 'Text 2', 'Meta: month and year, location, proof line, counts, inactive tab.', 'Not for titles or the finish time.', 'Attribute d: proof stated, not stamped (a quiet line)'),
     ('chip-text', 'Chip text', 'The format chip label only.', 'Not on filter chips (those are Text 1).', 'Hierarchy rule 2: chips are metadata'),
@@ -360,12 +434,12 @@ COLOR_TABLE = wrap('Color tokens', f'<table class="spec"><thead><tr><th>Token</t
 
 # ---------------------------------------------------------------- type rows
 TYPE_ROWS = [
-    ('size-title', 'display', 'Discover', 'Screen title (level 1)', 'Hierarchy rule 4 · Taste: Nike Run Club, bold but refined'),
+    ('size-title', 'display', 'Discover', 'Screen title (level 1) · HIG Large Title', 'Hierarchy rule 4 · Taste: Nike Run Club, bold but refined · C3: 38 → 34 (designer, 2026-10-18)'),
     ('size-time', 'display', '1:18:42', 'Finish time, the loudest thing on the row', 'Attribute a · Hierarchy rule 5'),
     ('size-day', 'display', '27', 'Date day, the first thing read on a race card', 'Attribute b: a calendar, not a poster'),
     ('size-item', 'text-strong', 'HYROX London', 'Item title (level 2): race name', 'Hierarchy rule 4'),
     ('size-body', 'text', 'Registration and payment happen on hyrox.com.', 'Body text, primary and secondary buttons, search', 'Voice principle 3: plain words'),
-    ('size-meta', 'text-2', 'London, UK', 'Meta (level 3): location, counts; tertiary text links', 'Hierarchy rule 4'),
+    ('size-meta', 'text-2', 'London, UK', 'Meta (level 3): location, counts; tertiary text links · HIG Subheadline', 'Hierarchy rule 4 · C3: 14 → 15, apart from body by color (designer, 2026-10-18)'),
     ('size-proof', 'text-2', 'Self-reported · via results.hyrox.com', 'Proof line, month and year under the day', 'Attribute d: proof stated, not stamped'),
     ('size-label', 'label', 'Half marathon', 'Format chip (uppercase by CSS), tab label', 'Decision A: markup keeps the name, CSS uppercases'),
 ]
@@ -376,7 +450,7 @@ def type_sample(kind, text, t):
     if kind == 'label':
         return f'<span class="sport-tag">{text}</span>'
     return f'<span class="type-sample {TYPE_CLASS[t]}">{text}</span>'
-type_trs = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}<br>{"Schibsted Grotesk 800" if k == "display" else "Hanken Grotesk"}</td><td>{type_sample(k, x, t)}</td><td>{lvl}</td><td>{w}</td></tr>' for t, k, x, lvl, w in TYPE_ROWS)
+type_trs = ''.join(f'<tr><td><code>--{t}</code> {px(t)} at the default text size<br>{"Schibsted Grotesk 800" if k == "display" else "Hanken Grotesk"}</td><td>{type_sample(k, x, t)}</td><td>{lvl}</td><td>{w}</td></tr>' for t, k, x, lvl, w in TYPE_ROWS)
 
 # ---------------------------------------------------------------- shape rows
 SPACE_USE = {1: 'Icon to label, title to chip, tile padding sides', 2: 'Card inset around the photo, chip padding, button icon gap',
@@ -387,6 +461,8 @@ SPACE = ''.join(f'<tr><td><code>--space-{i}</code> {tok(f"space-{i}")}</td><td><
 METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside the 17px title', 'Hierarchy rule 2'),
            ('filter-chip-height', 'Active filter chip height (44px tap area via ::after)', 'Removable, so a bigger target than the metadata chip', 'Critique fix: touch targets'),
            ('date-col', 'Date column width', 'Fits "Sep 2026" on one line under the day', 'Attribute b: the date leads'),
+           ('type-root', 'Type root: the text size one rem stands for', '16 in browsers, 17 on iOS, where the root takes <code>-apple-system-body</code>', 'G28: sizes follow the system text size (Dynamic Type on iOS, the browser’s text size elsewhere)'),
+           ('type-unit', 'One type unit: 1px at the default text size', 'Every <code>--size-*</code> and the date column are a number of these', 'G28: text grows to 200% with the system setting, layout keeps its ratios'),
            ('photo-ratio', 'Photo band ratio in the card', '3:1, 109px at 390 wide (decided 2026-10-14)', 'Attribute b: two full cards on the first screen'),
            ('icon-s', 'Icons in meta (location, proof line)', 'Matches 13–14px meta text', 'Hierarchy rule 4: meta is level 3'),
            ('icon-m', 'Icons in buttons, search, states', 'Matches 15px button text', 'Hierarchy rule 3'),
@@ -416,15 +492,31 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('photo-focus-center', 'Crop focus, Spartan Beast Killington', 'Subject in the middle of a tall photo', 'Attribute b: the band shows the race, not the sky'),
            ('photo-focus-high', 'Crop focus, Boston Marathon', 'Subject (race bibs) at the top edge', 'Attribute b'),
            ('screen-w', 'Screen pages: the page width inside the viewer', 'iPhone logical width', 'Wireframe conventions: iOS-structured, 390pt'),
-           ('tabbar-h', 'Tab bar height on the screen pages', '44px targets + 26px icon + label, no home-indicator padding (the viewer draws it); the stand’s bar adds that padding, so it is taller', 'Wireframe conventions: iOS chrome · Critique fix: 44px targets'),
-           ('safe-bottom', 'Home-indicator inset under the sheet’s buttons', 'env(safe-area-inset-bottom), 0 inside the viewer', 'iOS chrome: buttons stay above the home indicator'),
-           ('sheet-max', 'Filters sheet maximum height', 'Three quarters: the list stays visible above it', 'Wireframe conventions: a sheet, not a new screen'),
+           ('tabbar-h', 'Tab bar capsule height on the screen pages', '44px targets + 26px icon + label', 'Wireframe conventions: iOS chrome · Critique fix: 44px targets'),
+           ('tabbar-inset', 'Floating tab bar: in from the screen edges', 'The 16px gutter (HIG gives no number)', 'G1: on iOS the tab bar floats above content'),
+           ('tabbar-gap', 'Floating tab bar: above the bottom safe area', '8px', 'G1, G2'),
+           ('radius-tabbar', 'Floating tab bar corners', 'Half its height: a capsule', 'G1 · C7: shapes in the bar chrome are concentric capsules'),
+           ('tabbar-clear', 'Scroll padding under the content', 'Bar + gap + safe area: content runs under the glass, the last item still scrolls clear', 'G1: content shows through beneath the tab bar'),
+           ('safe-top', 'Top safe area (status bar, Dynamic Island)', 'env(safe-area-inset-top), 0 inside the viewer', 'G6: respect the top safe area'),
+           ('safe-bottom', 'Home-indicator inset under the tab bar and the sheet’s buttons', 'env(safe-area-inset-bottom), 0 inside the viewer', 'G2: buttons stay above the home indicator'),
+           ('sheet-gap-top', 'Filters sheet: space left above the large detent', f'12px below the top safe area · {P}', 'G13: the sheet rests at its detent'),
+           ('sheet-large', 'Filters sheet height: the large detent only', 'Full height less the top safe area and the gap', 'G13 · designer, 2026-10-19: large detent only'),
+           ('glass-opacity', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge)', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
+           ('glass-opacity-sheet', 'Glass fill on the Filters sheet', f'Lowest that passes AA over the scrim and the worst case: {GLASS_MIN["sheet"]}%; set with margin · {P}', 'C1, C4: the sheet on the raised level'),
+           ('glass-bar', 'Tab bar glass: the Tab bar level at the glass opacity', 'color-mix with transparent; the floating bar stays a shade darker than the page', 'C1: translucent graphite'),
+           ('glass-ground', 'Glass for bars on the page (controls bar, top bar, status-bar edge): the Ground level at the glass opacity', 'color-mix with transparent; at rest it matches the page, so the bar shows only when content runs under it', 'C1 · G7: a scroll edge, not a custom bar background'),
+           ('glass-sheet', 'Sheet glass: Raised level at the sheet opacity', 'color-mix with transparent', 'C1 · C4: the raised graphite level'),
+           ('glass-blur', 'Backdrop blur on all glass', f'20px · {P}', 'C1: blur, so content under a bar reads as shape, not text'),
+           ('glass-edge', 'The glass rim (in place of a hairline)', f'Text 1 at 8% · {P}', 'C1, G7: a scroll edge, not a solid bar border · decorative, no contrast requirement'),
+           ('dur-spin', 'Busy spinner: one turn', '800ms, linear; keeps turning under reduced motion (HIG: a still indicator reads as stalled)', 'G26'),
+           ('spinner-size', 'Busy spinner size', 'Meta icon size, inside the button before its label', 'G26: an activity indicator inside the button'),
+           ('ease-in-out', 'Easing for the skeleton pulse', 'Even in, even out', 'C6: a subtle pulse'),
            ('scrim', 'Behind the Filters sheet', 'Black at 60%: the page dims, its colors stay', 'Depth comes from levels and one scrim, not from color · Hierarchy rule 1'),
            ('fade-end', 'Active filter chips row: its end fades out', 'Mask, last 24px', 'Says the row scrolls without a scrollbar · Critique fix: hidden overflow'),
            ('stand-col-min', 'Stand columns (stand only)', 'Narrowest panel before the grid wraps', 'Stand layout'),
-           ('avatar-size', 'Profile initials tile', '80px, the iOS profile size; a 6px tile like the date tile, not a circle', 'DESIGN.md → Shapes: 4/6, no circles in content · kit, 2026-10-18'),
+           ('avatar-size', 'Profile initials', '80px, the iOS profile size, in a circle (<code>--radius-avatar</code>)', 'Kit feedback (designer, 2026-10-19): iOS avatars are circular · DESIGN.md → Shapes, the one circle'),
            ('alert-width', 'The Sign out confirm alert', '270px, the iOS alert width', 'Native iOS (HIG Alerts) · kit, 2026-10-18'),
-           ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (ui/kit.html only)', 'Tall enough for the Filters sheet at 75%', 'Showcase layout: never in the product')]
+           ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (ui/kit.html only)', 'Tall enough for the Filters sheet at its large detent', 'Showcase layout: never in the product')]
 SKEL = [('skel-line', 'Meta bars (date, location, proof)', 'Same height as 12–13px meta text'),
         ('skel-title', 'Title bar height', 'Same height as the 17px item title'),
         ('skel-title-w', 'Race card title bar width', 'A typical race name'),
@@ -435,7 +527,9 @@ SKEL = [('skel-line', 'Meta bars (date, location, proof)', 'Same height as 12–
         ('skel-time-w', 'Finish time bar width', 'Width of “1:18:42” at 32px'),
         ('skel-time-h', 'Finish time bar height', 'The finish time’s own size, so the row doesn’t shift when it loads'),
         ('skel-date-w', 'Result row date bar width', 'Width of “6 Dec 2025”'),
-        ('skel-proof-w', 'Proof line bar width', 'A typical “Self-reported · via …”')]
+        ('skel-proof-w', 'Proof line bar width', 'A typical “Self-reported · via …”'),
+        ('skel-pulse-dim', 'Skeleton pulse: the low point', 'Opacity 0.55 at mid-breath; still under reduced motion (C6)'),
+        ('dur-pulse', 'Skeleton pulse: one breath', '1.6s, so it reads as waiting, not as an alarm (C6, G25)')]
 SKEL_TRS = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{d}</td><td>voice.md → Loading: the skeleton has the content’s shape · impeccable: no layout shift</td></tr>' for t, u, d in SKEL)
 MAP_PINS = [('berlin-marathon', 'Berlin'), ('hyrox-london', 'London'), ('utmb', 'Chamonix'), ('hyrox-dallas', 'Dallas'),
             ('deka-strong-chicago', 'Chicago'), ('spartan-beast-killington', 'Killington'), ('boston-marathon', 'Boston')]
@@ -454,7 +548,11 @@ METRIC_TRS = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{
 SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii, borders and shadows"><table class="spec"><thead><tr><th>Token</th><th>Value</th><th>Used for</th><th>Why</th></tr></thead><tbody>
 <tr><td><code>--radius-1</code></td><td>{tok("radius-1")}</td><td>Inner shapes: the photo inside a card, chips, segments.</td><td>Taste: slightly rounded, small radius · inner shapes one step tighter than outer (4 inside 6)</td></tr>
 <tr><td><code>--radius-2</code></td><td>{tok("radius-2")}</td><td>Outer shapes: cards, buttons, the search field.</td><td>Taste: "no radius looks like a wireframe" · one small value, not pills</td></tr>
-<tr><td><code>--radius-3</code></td><td>{tok("radius-3")}</td><td>Stand panels only, never in the product.</td><td>Keeps the product's shapes at 4 and 6</td></tr>
+<tr><td><code>--radius-3</code></td><td>{tok("radius-3")}</td><td>Stand panels only, never in the product. (The Filters sheet had it until step 3b; it now takes <code>--radius-sheet</code>.)</td><td>Keeps the product's shapes at 4 and 6</td></tr>
+<tr><td><code>--radius-sheet</code></td><td>{tok("radius-sheet")}</td><td>The Filters sheet's (and Race picker's) top corners. {P}.</td><td>G16 · Native sheet anatomy (designer, 2026-10-18): the system's sheet radius, not a Podium radius</td></tr>
+<tr><td><code>--radius-bar-control</code></td><td>{tok("radius-bar-control")} = 22px</td><td>A control inside a bar: the segmented track in the controls bar; the search field once it pins to a bar (G8).</td><td>C7: concentric only inside bars; content keeps 4/6</td></tr>
+<tr><td><code>--radius-bar-inner</code></td><td>{tok("radius-bar-inner")} = 18px</td><td>A segment inside that track: the outer radius minus the track's 4px padding.</td><td>C7: concentric corners</td></tr>
+<tr><td><code>--radius-avatar</code></td><td>{tok("radius-avatar")}</td><td>Profile initials (a circle); also the busy spinner's ring.</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers, filter chip outline.</td><td>Attribute a: the frame stays quiet</td></tr>
 <tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus, in Text 1, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
 <tr><td><code>--shadow-sheet</code></td><td>{tok("shadow-sheet")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
@@ -469,6 +567,7 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 # ---------------------------------------------------------------- icons
 ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not built yet), use, status
     ('Top bar · back', 'alt-arrow-left', 'icon-back', 'Before the parent screen’s name in a grayscale screen’s top bar (‹ Discover, ‹ My Results, ‹ Sign in); replaces the wireframe’s drawn chevron (kit, 2026-10-18).', 'in kit'),
+    ('Result row · disclosure', 'alt-arrow-right', 'icon-disclosure', 'At the trailing edge of a result row, which drills into Result detail (G22, step 3b). Race cards are a collection, so none there.', 'in use'),
     ('Tab bar', 'compass', 'icon-compass', 'Discover', 'in use'), ('Tab bar', 'stopwatch', 'icon-stopwatch', 'My Results', 'in use'), ('Tab bar', 'user', 'icon-user', 'Profile', 'in use'),
     ('Filters sheet · date fields', 'calendar', 'icon-calendar', 'Replaces the browser’s calendar glyph in the From and To date fields (step 7). In the race card the date column itself is the cue, so no icon there.', 'in use'),
     ('Card meta · location', 'map-point', 'icon-pin', 'Before the city on every race card (CSS mask, no markup change).', 'in use'),
@@ -486,7 +585,7 @@ ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not buil
     ('Saved confirmation', 'diskette', 'icon-saved', 'Results list after Save, in Text 2: neutral, not a success check (Color rule 2).', 'in use'),
     ('State · success', 'check-circle', None, 'This stand’s success specimen only; no product screen uses it.', 'specimen'),
     ('State · warning', 'danger-triangle', None, 'Warning messages, when one exists.', 'planned'),
-    ('State · loading', None, None, 'No icon and no spinner: skeleton cards plus "Loading races…" for screen readers (voice.md → Loading).', 'none'),
+    ('State · loading', None, None, 'No icon and no spinner: skeleton cards, pulsing subtly (C6), plus "Loading races…" for screen readers (voice.md → Loading). A busy button draws its own CSS spinner (G26).', 'none'),
 ]
 icon_trs = ''.join(f'<tr><td>{p}</td><td>{("<span class=icon-cell>" + svg(n) + f"<code>{n}</code></span>") if n else "None"}</td><td>{f"<code>--{t}</code>" if t else "None"}</td><td>{u}</td><td>{s}</td></tr>' for p, n, t, u, s in ICON_PLAN)
 
@@ -665,7 +764,7 @@ page = f'''<!doctype html>
           <li><div class="skeleton-card"><div class="bar photo"></div><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
           <li><div class="skeleton-card"><div class="bar photo"></div><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li>
         </ul>
-        {why("voice.md → Loading: a skeleton plus “Loading races…” for screen readers; no spinner, no invented progress", "Race card anatomy (designer): the skeleton has the card's shape: photo band, date tile, title, chip, location", "No shimmer: nothing moves that isn't real")}
+        {why("voice.md → Loading: a skeleton plus “Loading races…” for screen readers; no spinner, no invented progress", "Race card anatomy (designer): the skeleton has the card's shape: photo band, date tile, title, chip, location", "C6: a subtle pulse, still under reduced motion; no shimmer")}
       </div>
       <div class="stand-panel">
         <h3>Empty · no races match</h3>
@@ -703,6 +802,10 @@ page = f'''<!doctype html>
     {wrap('First screen on the real page', '<table class="spec"><thead><tr><th>Where</th><th>Page height</th><th>List starts at</th><th>Tab bar at</th><th>No filters</th><th>2 filters on</th></tr></thead><tbody>'
       + f'<tr><td>Inside the wireframes viewer (the phone: status bar and home strip are outside the page)</td><td class="num">{FS_REAL["viewer"]["h"]}px</td><td class="num">{FS_REAL["viewer"]["base"][0]}px</td><td class="num">{FS_REAL["viewer"]["tab"]}px</td><td class="num">{FS_REAL["viewer"]["base"][1]} full, {FS_REAL["viewer"]["base"][3]}px to spare</td><td class="num">{FS_REAL["viewer"]["filtered"][1]} full + {FS_REAL["viewer"]["filtered"][2]}%</td></tr>'
       + f'<tr><td>Opened directly at 390×844 (no status bar or home strip)</td><td class="num">{FS_REAL["direct"]["h"]}px</td><td class="num">{FS_REAL["direct"]["base"][0]}px</td><td class="num">{FS_REAL["direct"]["tab"]}px</td><td class="num">{FS_REAL["direct"]["base"][1]} full + {FS_REAL["direct"]["base"][2]}%</td><td class="num">{FS_REAL["direct"]["filtered"][1]} full + {FS_REAL["direct"]["filtered"][2]}%</td></tr></tbody></table>')}
+    <h3 class="stand-label">Step 3b (2026-10-19): content runs under the floating glass tab bar</h3>
+    {wrap('First screen after step 3b', '<table class="spec"><thead><tr><th>Where</th><th>Page height</th><th>List starts at</th><th>Tab bar top</th><th>Clear of the bar</th><th>On screen, through the glass</th></tr></thead><tbody>'
+      + ''.join(f'<tr><td>{w}</td><td class="num">{h}px</td><td class="num">{t}px</td><td class="num">{tb}px</td><td class="num">{c[0]} full + {c[1]}%{f", {c[2]}px to spare" if c[2] is not None else ""}</td><td class="num">{o[0]} full + {o[1]}%</td></tr>' for w, h, t, tb, c, o in FS_3B) + '</tbody></table>')}
+    <p class="stand-why"><b>Step 3b:</b> the race card is 216px (the C3 meta line); the floating bar's top sits 8px higher than the old bar's, and the title is 4px shorter. Attribute b still holds inside the viewer, two full cards clear of the bar, but with 1.7px to spare (9.7px with C3 alone). Under the glass a third card shows through.</p>
     <p class="stand-why"><b>Why (attribute b, a calendar, not a poster):</b> two full races on the first screen with no filters, so the list reads as a run of dates rather than one poster per screen. With two filters on, the chips row costs one card's worth of the second race (1 full + 79%).</p>
   </section>
 {rules_section()}
@@ -743,4 +846,6 @@ for _f in ['concept/concept.html', 'concept/stand.css', 'concept/first-screen.ht
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
+shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
+shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 print('mirrored to public/')

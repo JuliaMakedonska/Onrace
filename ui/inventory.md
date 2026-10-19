@@ -10,6 +10,7 @@ Lesson 7, step 2, 2026-10-18. Every component in the product, read from all 35 w
 - **Native iOS:** the HIG page from `concept/concept.md` → Native iOS, or "none" when iOS has no counterpart.
 - **Gaps:** from `concept/concept.md` → Native iOS → Gap triage. **K** = kit (CSS, steps 3 and 5), **M** = markup pass (between steps 5 and 6), **O** = out of scope. The gaps were measured on the two Podium screens, so a gap is listed for a grayscale screen only where the same markup is there.
 - Class names are the wireframes' own, quoted so the kit can find them.
+- **Step 3b (2026-10-19)** closed every **K** gap listed here in `ui/kit.css` (`concept/concept.md` → Step 3b). The codes stay for the record; **M** and **O** are unchanged.
 
 File-name shorthand: `race-browse` = `race-browse.html`; `-empty`, `-error`, `-loading`, `-check-inbox` are that screen's state pages.
 

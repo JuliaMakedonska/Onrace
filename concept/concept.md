@@ -266,7 +266,7 @@ Round 2, in `directions.html`. All three were built under the Hierarchy rules ab
 
 **Chosen: Direction A, "Podium".** Why: it keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.
 - Graphite ground `#131518`, sodium amber accent `#F5B649` (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.
-  - **Updated 2026-10-18 (Lesson 7, step 1), to match the screens.** "6px radius" describes the round-2 direction. On the screens, Podium has two product radii: 4px for inner shapes (the photo inside a card, the date tile, chips, List/Map segments, map pin labels, checkboxes) and 6px for outer shapes (cards, result rows, buttons, fields, the List/Map track, the saved confirmation, the map frame). The Filters sheet isn't one of these: it follows the native iOS sheet (designer decision 2026-10-18, see [Native iOS](#native-ios-designer-rule-2026-10-18)), so its current 12px top corners are a gap to close in step 3, not a third Podium radius.
+  - **Updated 2026-10-18 (Lesson 7, step 1), to match the screens.** "6px radius" describes the round-2 direction. On the screens, Podium has two product radii: 4px for inner shapes (the photo inside a card, the date tile, chips, List/Map segments, map pin labels, checkboxes) and 6px for outer shapes (cards, result rows, buttons, fields, the List/Map track, the saved confirmation, the map frame). The Filters sheet isn't one of these: it follows the native iOS sheet (designer decision 2026-10-18, see [Native iOS](#native-ios-designer-rule-2026-10-18)), so its current 12px top corners are a gap to close in step 3, not a third Podium radius. *(Closed 2026-10-19, step 3b: the sheet takes `--radius-sheet`, 38px [?]; `--radius-3` (12px) is stand panels only.)*
 - Its values now live in `tokens.css`, its components in `components.css`, and its stand in `concept.html`.
 - **Settled:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in `research/screens/` (RoxFit `#FFEC00`), it is 19.2° of hue and ΔE 18.7 away, below Color rule 3b's threshold (≥ 25° and ΔE ≥ 24). **Decided 2026-10-14:** kept, as a designer override of rule 3b. The reason is recorded under Color rules → 3b.
 
@@ -326,12 +326,12 @@ HIG gives no point values for a sheet's corner radius, the grabber, the tab bar'
 ### Native sheet anatomy (the Filters sheet, designer decision 2026-10-18)
 
 The Filters sheet follows the native iOS sheet instead of a one-off 12px exception ([Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets), iOS):
-- **Corner radius:** the system's sheet radius. HIG publishes no number; step 3 takes the value from Apple's iOS design resources and records it as a token. It replaces the 12px from `--radius-3`. `tokens.css`'s comment, the stand and CLAUDE.md change in step 3.
+- **Corner radius:** the system's sheet radius. HIG publishes no number; step 3 takes the value from Apple's iOS design resources and records it as a token. It replaces the 12px from `--radius-3`. `tokens.css`'s comment, the stand and CLAUDE.md change in step 3. *(Step 3b, 2026-10-19: `--radius-sheet: 38px`, **provisional [?]**: Apple's kit couldn't be read, see [Step 3b](#step-3b-native-ios-pass-in-the-kit-2026-10-19). The kit's and the stand's 12px comments are updated.)*
 - **Grabber:** a small horizontal indicator at the top edge, shown because the sheet is resizable. Dragging it resizes; tapping it cycles through the detents; VoiceOver can operate it. System size and color; HIG gives no number.
-- **Detents:** large (fully expanded) is always supported; medium is about half. A filter form is more useful at full height, but medium allows progressive disclosure. Which detents Filters uses is for step 3; today the sheet has one fixed height (75%).
+- **Detents:** large (fully expanded) is always supported; medium is about half. A filter form is more useful at full height, but medium allows progressive disclosure. Which detents Filters uses is for step 3; today the sheet has one fixed height (75%). *(Decided 2026-10-19: the large detent only.)*
 - **Buttons:** a top toolbar with Cancel on the leading edge and the confirming action on the trailing edge (Done in HIG; here Apply filters, `.prominent`). Not a bottom footer.
 - **Dismissal:** swipe down to dismiss. If filters were changed but not applied, ask to confirm with an action sheet. Cancel stays as the on-screen alternative.
-- **Background:** our raised graphite level, `--bg-2` (**C4**, decided 2026-10-18), translucent with blur (**C1**). Confirmed by the designer, 2026-10-18; today the sheet is still `--bg-1` and changes in step 3b.
+- **Background:** our raised graphite level, `--bg-2` (**C4**, decided 2026-10-18), translucent with blur (**C1**). Confirmed by the designer, 2026-10-18; applied in step 3b (sheet glass, `--bg-2` at 90%).
 
 ### Gaps: the two screens against HIG (2026-10-18)
 
@@ -471,3 +471,76 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G24 Pull to refresh | Prototype behavior: there's nothing to refresh in sample data. Re-tapping My Results reloads (`flows.md`) |
 | G30 7:1 for small custom text | Our standard is WCAG AA (4.5:1), checked on all 65 pairs by `build_stand.py`; HIG's 7:1 is "strive for", not its minimum |
 | G31 System light appearance | Dark only is a designer decision (C5) |
+
+### Kit feedback (designer, 2026-10-19)
+
+Applied in `ui/kit.css` and `ui/kit.html` before step 3b; the grayscale screens pick it up in step 5.
+
+1. **Profile initials: a circle.** iOS avatars are circular. `--radius-avatar: 50%`. Recorded in `DESIGN.md` → Shapes as the one exception to "no circles in content".
+2. **Save on Log result: amber text.** Counted: Log result (all three pages) has no tab bar and no other primary (no `.state-action`, `.submit-btn`, `.register-btn`, `.open-btn` or `.header-action`), so it shows 0 amber uses today. Save is the screen's one primary (Color rule 1) and takes `--accent` text, `--accent-hover` on hover, like a native bar button. `build_stand.py` allows `.top-bar .save-btn` under rule 1. "Saving…" stays `--text-2`.
+3. **Sign out alert: destructive style.** `dialog.alert #signout-confirm` takes `--destructive` (= `--error`, coral) text; Cancel stays Text 1 (HIG Alerts). The kit's specimen carries the screen's `id="signout-confirm"`. 6.74:1 on `--bg-1`.
+4. **Invalid field: coral ring.** `--invalid` (= `--error`), 2px inside the field; focus keeps the white 2px ring outside. An invalid field with focus shows both, so the two never look alike.
+5. **Detector, cramped padding.** The file-wide ignore of `cramped-padding` on `ui/kit.html` is removed from `.impeccable/config.json`; the check stays on. It reports two known hits, each printed twice (the static and the rendered pass), both on the Profile `.rows` list:
+   - `<ul> "rows": children flush against bg on top/bottom (no inset)`
+   - `<ul> "rows": children flush against bg on all sides (no inset)`
+
+   **Known false positives.** Each row inside the list is 44px tall with its text centred and 16px side padding (`.row`), the iOS grouped-list anatomy ([Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables)), so the list itself needs no inset. Report them as known, not as defects; any third `cramped-padding` hit is new.
+
+**Also checked:** `public/workspace.html` routes the Filtered state correctly. `#04/race-browse?sport=hyrox&sport=marathon` opens the viewer on that state and the screen shows 2 chips and "4 races match your filters"; clicking Filtered in the viewer's tree writes the same hash to the workspace; with `&mode=wireframe` the frozen snapshot loads with the same filters, and a reload keeps it.
+
+### Step 3b: native iOS pass in the kit (2026-10-19)
+
+A separate signed pass, in `ui/kit.css` only (plus the showcase and the stand). Scope, as the designer set it: the **Kit (CSS)** gap group plus **C1, C3, C4, C6, C7**. No markup changed on any screen.
+
+**Values from Apple: what was and wasn't available.** Apple's resources page (developer.apple.com/design/resources, read 2026-10-19) links only the **iOS and iPadOS 27** kits now. The iOS 26 kit exists in Figma's and Sketch's libraries, but it couldn't be opened from this session. HIG publishes one number for the material: [Materials](https://developer.apple.com/design/human-interface-guidelines/materials), "If the underlying content is bright, consider adding a dark dimming layer of 35% opacity" (for clear Liquid Glass). [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets) gives no radius. **Designer decision (2026-10-19): provisional values, marked [?]**, to be replaced from Apple's kit:
+
+| Token | Value | Status |
+|---|---|---|
+| `--glass-opacity` (tab bar, controls bar, top bar, status-bar edge) | 85% | Set by contrast: the lowest that passes AA over the worst case is 81% (tab-bar glass) and 82% (ground glass), checked by the build; the margin is [?]. Above HIG's 35% floor. |
+| `--glass-opacity-sheet` | 90% | Lowest passing over the scrim and the worst case: 87%; margin [?] |
+| `--glass-blur` | 20px | [?] |
+| `--glass-edge` (the rim) | Text 1 at 8% | [?] |
+| `--radius-sheet` | 38px | [?] |
+| `--sheet-gap-top` (above the large detent) | 12px | [?] |
+
+**Worst case behind the glass.** The brightest thing that can scroll under a bar is Text 1 (`#F4F5F6`, a title); a photo's lightest tone after the black-and-white filter is about `#D9D9D9`, below it. Under the sheet the same Text 1 sits behind the 60% scrim. The build composites each glass over that worst case in sRGB, with no help from the blur, and every text pair on the glass must pass AA (11 pairs). `build_stand.py` also stops if a glass opacity drops below the computed minimum or below HIG's 35%.
+
+**What changed, by item:**
+
+| Item | In the kit |
+|---|---|
+| **C1** glass | `--glass-bar` (`--bg-bar` 85%) on the floating tab bar; `--glass-ground` (`--bg-0` 85%) on the controls bar, the top bar and the status-bar edge, so at rest they match the page and show only when content runs under them; `--glass-sheet` (`--bg-2` 90%) on the Filters sheet and Race picker's top bar. Blur 20px, a rim instead of hairlines. Never on cards. Under Reduce Transparency every glass is solid. |
+| **C3** type | `--size-title` 38 → 34 (Large Title), `--size-meta` 14 → 15 (Subheadline); the rest unchanged (finish time 32 and date day 30 as display figures). |
+| **C4** tint | `--control-tint` (Text 1) on checked boxes and as `accent-color` for every system-drawn control. The sheet on `--bg-2`. Consequence: on the `--bg-2` sheet, Field line is 2.6:1, so boundaries there take `--field-line-sheet` `#757B82` (3:1 against the sheet's worst case), and Cancel is outlined, since a tonal `--bg-2` button would vanish. |
+| **C6** pulse | Skeletons pulse to 0.55 opacity and back over 1.6s; still under reduced motion. |
+| **C7** concentric | Inside a bar: a capsule (`--radius-bar-control`, 22px), a segment concentric inside it (`--radius-bar-inner`, 18 = 22 − 4). Today that's List/Map in the controls bar; the search field gets it once the markup pass pins it (G8). |
+| **G1, G2** tab bar | Floats 16px in from the sides and 8px above the bottom safe area, a 64px capsule with the float shadow; content runs under it, and the scroll padding lets the last item clear it. |
+| **G6** top safe area | `--safe-top` (`env(safe-area-inset-top)`) on the header, the sticky controls and the top bar, and a ground-glass edge under the status bar (0px inside the viewer). |
+| **G7** controls bar | Ground glass with a rim, no solid `--bg-0` and no hairline. |
+| **G10** Clear | The browser's own Clear button is shown (system-drawn, C2) instead of hidden. |
+| **G11** equal segments | The segmented track is a grid of equal columns. |
+| **G13** detent | The large detent only: full height less the top safe area and 12px [?]; the footer sits at the sheet's bottom edge. |
+| **G16** sheet corners | `--radius-sheet` 38px [?], replacing the 12px. |
+| **G22** disclosure | A 15px Solar alt-arrow-right in Text 2 at a result row's trailing edge. |
+| **G23** pressed | Race cards and result rows take `--bg-3` while pressed. |
+| **G25** loading motion | The pulse (C6). |
+| **G26** busy button | A CSS spinner before the label on `[aria-busy="true"]` and before "Saving…" in the top bar. It keeps turning under reduced motion: HIG, "people associate a stationary indicator with a stalled process". The grayscale screens' busy buttons need `aria-busy` in their markup to show it (step 5 / markup pass). |
+| **G27** chip spacing | 12px between active filter chips, and before "Clear all filters". |
+| **G28** Dynamic Type | Every `--size-*` and the date column are type units (`--type-unit` = 1rem ÷ 16; on iOS the root takes `-apple-system-body` and the unit is 1rem ÷ 17), so text follows the system size at 1:1 by default. Bold Text has no web hook; untested on a device. |
+| **G29** text sizes | The C3 mapping. |
+
+**Not in this pass:** the action bar on Race detail and Result detail (the inventory notes C1 could apply to it as a bar; the designer's list named the tab bar, top bar, controls bar and sheet). The Filters button keeps 6px beside the capsule List/Map control (C7 names only the search field and the segmented control); that pair now has two shapes side by side, which needs a decision.
+
+**First screen, re-measured with content under the glass tab bar** (Chrome, 390 wide, step 3b CSS):
+
+| Where | List starts | Tab bar top | Clear of the bar | On screen, through the glass |
+|---|---|---|---|---|
+| Viewer (757px), no filters | 239px | 685px | 2 full + 0%, **1.7px to spare** | 2 full + 29% |
+| Viewer, two filters | 295px | 685px | 1 full + 75% | 2 full + 3% |
+| 390×844, no filters | 239px | 772px | 2 full + 35% | 2 full + 69% |
+| 390×844, two filters | 295px | 772px | 2 full + 10% | 2 full + 43% |
+
+Attribute b holds (two full cards clear of the bar on the first screen), but only by 1.7px inside the viewer: the floating bar's top sits 8px higher than the old bar's. Any growth of the card or the header will push the second card under the glass.
+
+**Checked:** `build_stand.py`: Color rules 1, 2, 3a pass (3b accepted by designer), 99 contrast pairs pass (88 solid, 11 over glass), 172 of 172 tokens signed. The look changed on purpose, so there's no pixel-identical check; every painted state was shot at 390×844 before and after, side by side on the review page.
+
