@@ -370,10 +370,10 @@ def race_card(name, tag, iso, date, loc, src, pos, alt):
 
 CARD_LONDON = race_card('HYROX London', 'HYROX', '2026-12-06', '6 Dec 2026', 'London, UK',
                         '../visuals/hyrox-sled-hall-1.jpg', 'photo--mid',
-                        'A row of athletes leaning on loaded sleds at the start line of an indoor fitness race')
+                        'Athletes pushing weighted sleds down parallel lanes in a large indoor hall, spectators behind the barriers')
 CARD_BERLIN = race_card('Berlin Marathon', 'Marathon', '2026-09-27', '27 Sep 2026', 'Berlin, Germany',
                         '../visuals/marathon-city-1.jpg', 'photo--lower',
-                        'Runners filling a tree-lined city avenue during a road race, seen from above')
+                        'A dense field of runners mid-race on a wide sunlit city avenue, seen from slightly above')
 
 RESULT_ROW = '''<article class="result-card">
           <a class="card-link" href="#components">
