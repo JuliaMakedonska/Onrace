@@ -123,6 +123,7 @@
   --photo-focus-lower: 50% 74%;   /* lower band: keeps a banner above the subject out of frame (DEKA photo) */
   --photo-focus-center: 50% 44%;  /* subject in the middle of a tall photo */
   --photo-focus-high: 50% 0%;     /* subject at the top edge (race bibs) */
+  --photo-focus-upper: 50% 18%;   /* subject high in the frame: DEKA and OCR photos (step 4, round 3) */
   --icon-s: 15px;
   --icon-m: 18px;
   --icon-l: 26px;
@@ -744,6 +745,7 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 .photo--lower { object-position: var(--photo-focus-lower); }
 .photo--center { object-position: var(--photo-focus-center); }
 .photo--high { object-position: var(--photo-focus-high); }
+.photo--upper { object-position: var(--photo-focus-upper); }
 .race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
 .race-card:has(.card-link:active), .race-card.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
 

@@ -360,7 +360,7 @@ FS_REAL = {'viewer': {'h': 757, 'tab': 693, 'base': (243, 2, 0, 8.6), 'filtered'
 # ---------------------------------------------------------------- shared markup (wireframe text and structure)
 def race_card(name, tag, iso, date, loc, src, pos, alt):
     return f'''<article class="race-card">
-          <img class="photo {pos}" src="{src}" alt="{alt}" width="900" height="600">
+          <img class="photo {pos}" src="{src}" alt="{alt}" width="1200" height="800">
           <a class="card-link" href="#components">
             <h3>{name}</h3>
             <p class="card-meta"><span class="sport-tag">{tag}</span> <time datetime="{iso}">{date}</time></p>
@@ -369,10 +369,10 @@ def race_card(name, tag, iso, date, loc, src, pos, alt):
         </article>'''
 
 CARD_LONDON = race_card('HYROX London', 'HYROX', '2026-12-06', '6 Dec 2026', 'London, UK',
-                        'https://images.unsplash.com/photo-1743993414654-0be2b73a9620?w=900&q=75&fm=jpg', 'photo--low',
+                        '../visuals/hyrox-sled-hall-1.jpg', 'photo--mid',
                         'A row of athletes leaning on loaded sleds at the start line of an indoor fitness race')
 CARD_BERLIN = race_card('Berlin Marathon', 'Marathon', '2026-09-27', '27 Sep 2026', 'Berlin, Germany',
-                        'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=900&q=75&fm=jpg', 'photo--mid',
+                        '../visuals/marathon-city-1.jpg', 'photo--lower',
                         'Runners filling a tree-lined city avenue during a road race, seen from above')
 
 RESULT_ROW = '''<article class="result-card">
@@ -492,9 +492,10 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('font-text', 'Text face: everything else', 'Hanken Grotesk 400 and 600 (the only weights loaded)', 'Taste: no single heavy condensed face for everything'),
            ('font-mono', 'Code samples on this stand only', 'System monospace, nothing to load', 'Stand layout: never in the product'),
            ('hidden-size', 'Visually hidden text for screen readers', '1px box, clipped', 'voice.md → Loading: “Loading races…” is read, not shown'),
-           ('photo-focus-lower', 'Crop focus, DEKA STRONG Chicago', 'Lower band: keeps the other event’s banner out of frame', 'Attribute c: no other brand on our card (designer, step 5)'),
-           ('photo-focus-center', 'Crop focus, Spartan Beast Killington', 'Subject in the middle of a tall photo', 'Attribute b: the band shows the race, not the sky'),
-           ('photo-focus-high', 'Crop focus, Boston Marathon', 'Subject (race bibs) at the top edge', 'Attribute b'),
+           ('photo-focus-lower', 'Crop focus, Berlin Marathon (generated photo)', 'Lower band: the runners fill it; the city sits above it', 'Attribute b · step 4, round 3'),
+           ('photo-focus-center', 'Crop focus, HYROX Dallas (generated photo)', 'Subject in the middle of the frame', 'Attribute b: the band shows the race, not the ceiling'),
+           ('photo-focus-high', 'Crop focus at the top edge', 'Unused since step 4 (the generated Boston photo is photo--low); kept for photos whose subject is at the top', 'Attribute b'),
+           ('photo-focus-upper', 'Crop focus, DEKA STRONG Chicago and Spartan Killington (generated photos)', 'Subject high in the frame: the band keeps heads and the action, no empty floor', 'Attribute b · step 4, round 3 (designer OK, 2026-10-21)'),
            ('screen-w', 'Screen pages: the page width inside the viewer', 'iPhone logical width', 'Wireframe conventions: iOS-structured, 390pt'),
            ('tabbar-h', 'Tab bar capsule height on the screen pages', '44px targets + 26px icon + label', 'Wireframe conventions: iOS chrome · Critique fix: 44px targets'),
            ('tabbar-inset', 'Floating tab bar: in from the screen edges', 'The 16px gutter (HIG gives no number)', 'G1: on iOS the tab bar floats above content'),
@@ -677,7 +678,7 @@ page = f'''<!doctype html>
     <div class="stand-grid">
       <div class="stand-stack">
         <p>Every photo is black and white: <code>--photo-filter</code> ({tok("photo-filter")}), set inside the card at 3:1 with a 4px radius. Color stays reserved for the accent and the states.</p>
-        <p>Source: Unsplash, free license, on topic: hybrid and functional-fitness racing, road races, trail and OCR. No stairs, no generic gym selfies, no posed portraits. Each photo is downloaded and looked at before use, and logged in <code>references.md</code> → Photos.</p>
+        <p>Source: our own generated illustrations of each format (ChatGPT image generation, checked and retouched; <code>visuals/README.md</code>), not photos taken at the named race. Until Lesson 7 step 4 they were Unsplash photos, logged in <code>references.md</code> → Photos.</p>
         {why("Taste: black-and-white race photos (round 1 Direction 1)", "Hierarchy rule 1: photos never compete with the accent", "Attribute c: no single sport's look")}
       </div>
       <div class="stand-stack">{CARD_BERLIN}</div>

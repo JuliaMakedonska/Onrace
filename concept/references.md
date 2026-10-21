@@ -297,7 +297,16 @@ Each card has a photo inside it (the race card anatomy in `concept.md`), shown b
 |---|---|---|---|---|
 | UTMB — Ultra-Trail du Mont-Blanc | **Replaced.** A single trail runner on a rocky ridge, snow-capped peaks and a glacier behind (generated; not UTMB) | ChatGPT image generation, scene `trail-ultra-ridge-1` | `visuals/trail-ultra-ridge-1.jpg` | `photo--low` (50% 72%, re-checked): the runner centered in the band; `--mid` left her low in the frame |
 
-Berlin Marathon, HYROX London, HYROX Dallas, DEKA STRONG Chicago, Boston Marathon and Spartan Race Beast — Killington keep their Unsplash photos (Step 5 table above) until their generated images pass. `directions.html` and `directions-round-1.html` keep their Unsplash photos as history.
+**Round 3 (2026-10-21, designer OK):** the other six cards now carry generated photos too, retouched locally (marks inside each card's 3:1 band removed; `visuals/README.md` → Round 3). Every race card is now a generated illustration; no Unsplash photo is left in the product (Race browse, `first-screen.html`, `ui/kit.html`, the stand).
+
+| Card | File | Crop at 3:1 |
+|---|---|---|
+| Berlin Marathon | `visuals/marathon-city-1.jpg` | `photo--lower` (74%): the runners fill the band, the city above it |
+| HYROX London | `visuals/hyrox-sled-hall-1.jpg` | `photo--mid` (60%): the athletes on the sleds |
+| HYROX Dallas | `visuals/hyrox-wallball-hall-1.jpg` | `photo--center` (44%): the wall-ball throws |
+| DEKA STRONG Chicago | `visuals/deka-airbike-1.jpg` | `photo--upper` (18%, new): the athlete on the air bike, the judge |
+| Boston Marathon | `visuals/marathon-city-2.jpg` | `photo--low` (72%): the runners, the skyline above the band |
+| Spartan Race Beast — Killington | `visuals/ocr-wall-1.jpg` | `photo--upper` (18%, new): the racers on the wall | `directions.html` and `directions-round-1.html` keep their Unsplash photos as history.
 
 ### Downloaded, not used
 

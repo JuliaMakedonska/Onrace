@@ -99,5 +99,5 @@ The six round-2 images, retouched locally (the workflow's step 5). For each card
 | deka-airbike-1 | DEKA STRONG Chicago | new `photo--upper`, 18% (y 92–604) | none | the judge's shoe swoosh (213, 1014) and sock lettering (258, 936) |
 | ocr-wall-1 | Spartan Race Beast — Killington | new `photo--upper`, 18% (y 92–604) | 1: the mark on the man's T-shirt chest | none |
 
-**Status: waiting for the designer's OK.** None of the six is on a card yet. The full files still carry the marks outside their bands, so a different crop would need another pass.
+**Status: approved by the designer (2026-10-21) and on their cards** (Race browse, `first-screen.html`, `ui/kit.html`, the stand). The full files still carry the marks outside their bands, so a different crop would need another pass.
 
