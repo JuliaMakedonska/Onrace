@@ -27,3 +27,6 @@ dist-ssr
 
 # One-time review aids (not part of the concept)
 concept/_review.html
+
+# Visuals waiting for the check, and the retouch work files (never published)
+visuals/incoming/

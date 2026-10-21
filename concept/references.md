@@ -287,6 +287,8 @@ Each card has a photo inside it (the race card anatomy in `concept.md`), shown b
 
 ### Step 4: our own visuals (Lesson 7, 2026-10-20)
 
+**City landmarks are generated too (designer, 2026-10-21).** The Berlin and Boston images show the Brandenburg Gate, the TV tower and a Boston skyline. They're generated, not photographed at the race. They're kept because they match each card's city; on the cards' 3:1 bands they sit above the visible crop.
+
 **Generated, not photographed.** Our own photos are generated with ChatGPT image generation: illustrations of each format, **not taken at the named race**. A UTMB card's photo shows a trail ultra on a glaciated ridge, not UTMB itself. The alt text stays as it is (`alt=""`): the photos are illustrative, and the card's title already names the race inside the same link. Tool, workflow, the style block, the 7 scene prompts and the check of each file: `visuals/README.md`.
 
 **Checked 2026-10-20:** 1 of 7 passed. The other six show clothing logos (swooshes), bib numbers or printed text at full size. They aren't used and wait in `visuals/incoming/` for a regenerate with the text fix.
