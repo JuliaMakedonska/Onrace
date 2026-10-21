@@ -27,7 +27,9 @@ ChatGPT names the downloads after its own title for the image (in the interface 
 
 Send this with every scene, verbatim:
 
-> Black and white documentary sports photography, high contrast, deep blacks and bright highlights, fine film grain, natural light, shot with a 35mm lens from eye level or slightly above. Wide landscape format. The main action sits in the middle third of the frame vertically, with calm space above and below. Absolutely no text anywhere: no logos, no banners with print, no signs, no brand names, no numbers on race bibs.
+> Black and white documentary sports photography, high contrast, deep blacks and bright highlights, fine film grain, natural light, shot with a 35mm lens from eye level or slightly above. Wide landscape format. The main action sits in the middle third of the frame vertically, with calm space above and below. Absolutely no text anywhere: no logos, no banners with print, no signs, no brand names, no numbers on race bibs. All clothing and equipment plain and unbranded: solid colors, no logos, no swooshes, no printed lettering; race bibs completely blank.
+
+The last sentence was added on 2026-10-21, after rounds 1 and 2: both rounds' failures were almost all clothing and shoe logos, which the "no text" line alone didn't prevent. Images generated before that date didn't have it.
 
 ## Scene prompts
 
@@ -54,3 +56,23 @@ Checked 2026-10-20, each at full size (1536 × 1024) with close crops of every f
 | deka-airbike-1 | `Напружене змагання на аеробайках.png` | **Failed:** lettering down the air bike's upright; a logo on the judge's shirt; a swoosh on the athlete's sports bra | none | DEKA STRONG Chicago keeps its Unsplash photo |
 | ocr-wall-1 | `Мудрий прорив крізь перешкоду.png` | **Failed:** a swoosh logo on the racer's sports bra; a small chest logo on the man's shirt | none | Spartan Race Beast — Killington keeps its Unsplash photo |
 | trail-ultra-ridge-1 | `Самотня бігунка серед альпійських вершин.png` | **Passed:** on topic, black and white, no text or logos, a clean 3:1 crop | `trail-ultra-ridge-1.jpg` | UTMB — Ultra-Trail du Mont-Blanc, `photo--low` (50% 72%): the runner centered in the band, the glacier behind |
+
+## Round 2 (2026-10-21): targeted edits of the six rejected images
+
+**The fixes.** The designer edited each rejected image in the same ChatGPT conversation, aiming at round 1's failures: remove the swooshes, logos, lettering and bib numbers. **The edit prompts aren't recorded yet.** Paste them here verbatim, one per image, so the next round can reuse what worked. ChatGPT named the downloads after its own titles again (not the scene names), so the table maps them by content.
+
+**Checked 2026-10-21**, the same way as round 1: each image at full size (1536 × 1024), with close crops of every person, shoe and piece of equipment. Positions are pixels in the 1536 × 1024 file (x, y).
+
+| Scene | ChatGPT file name | Fixed since round 1 | Still fails, exactly where | Result |
+|---|---|---|---|---|
+| marathon-city-1 | `Марафон до Тріумфальної брами.png` | Bibs are blank | A swoosh on the front-left runner's white vest (190, 560); a swoosh on the leading woman's shorts (855, 720); a printed patch on a runner's shorts (1205, 665). Also shows the Brandenburg Gate and the Berlin TV tower (see below) | **Failed** |
+| marathon-city-2 | `Монохромний марафон міською вулицею.png` | Bibs are blank | Swooshes on the right runner's white vest (1410, 495), on the dark vest beside him (1155, 500) and on his shorts (1165, 705); a logo on a cap (585, 405). Also shows Boston's skyline with the Prudential Tower (see below) | **Failed** |
+| hyrox-sled-hall-1 | `Змагання на санях у арені.png` | The sports bra is plain | A small swoosh at the hem of the front athlete's shorts (670, 535) | **Failed** (the only mark) |
+| hyrox-wallball-hall-1 | `Чорно-біле змагання з кросфіту.png` | The judge's back is plain | A swoosh on the kneeling judge's right shoe (515, 985) | **Failed** (the only clear mark) |
+| deka-airbike-1 | `Напружений заїзд на аеробайках.png` | No lettering on the bikes; the athlete's top is plain | A swoosh stripe on the kneeling judge's shoe (213, 1014); small lettering on his sock cuff (258, 936) | **Failed** |
+| ocr-wall-1 | `Брудний штурм дерев’яної перешкоди.png` | The racer's sports bra is plain | A faint swoosh-shaped mark on the man's T-shirt, left chest (1340, 450), about 10 px wide | **Failed** (borderline; the only mark) |
+
+None passed, so no card changed in round 2. All six stay in `visuals/incoming/`.
+
+**Real landmarks (not a check criterion, flagged for a decision).** The round-2 Berlin image shows the Brandenburg Gate and the Fernsehturm, and the Boston image shows the Prudential Tower skyline. The scene prompts don't ask for landmarks. A recognizable landmark makes a generated image read as a photo of that race, which `concept/references.md` § 7 says these aren't. If they're kept, the cards would show a generated Berlin as if it were the Berlin Marathon.
+
