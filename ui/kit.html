@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=49c8b628">
-<link rel="stylesheet" href="map.css?v=49c8b628">
+<link rel="stylesheet" href="kit.css?v=965858ec">
+<link rel="stylesheet" href="map.css?v=965858ec">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -443,8 +443,8 @@
         <div class="kit-state"><p class="kit-label">Results list: result row</p>
           <div class="kit-frame"><ul class="result-list" aria-hidden="true"><li><div class="skeleton-card"><div class="skel-top"><div class="bar title"></div><div class="bar time"></div></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar proof"></div></div></li></ul></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Race detail, with the action bar</p>
-          <div class="kit-frame kit-frame--flush"><article class="race" aria-hidden="true"><div class="bar h1"></div><div class="skel-facts"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><div class="bar h2"></div><div class="bar line"></div><div class="bar line end"></div><div class="bar h2"></div><div class="bar link"></div></article><div class="action-bar" aria-hidden="true"><div class="bar button"></div><div class="bar caption"></div></div></div>
+        <div class="kit-state"><p class="kit-label">Race detail, with the photo band and the action bar</p>
+          <div class="kit-frame kit-frame--flush"><article class="race" aria-hidden="true"><div class="bar photo"></div><div class="bar h1"></div><div class="skel-facts"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><div class="bar h2"></div><div class="bar line"></div><div class="bar line end"></div><div class="bar h2"></div><div class="bar link"></div></article><div class="action-bar" aria-hidden="true"><div class="bar button"></div><div class="bar caption"></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Result detail</p>
           <div class="kit-frame kit-frame--flush"><article class="result" aria-hidden="true"><div class="bar h1"></div><div class="bar label"></div><div class="bar finish-bar"></div><div class="skel-facts"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><div class="bar h2"></div><div class="bar line"></div><div class="bar line short"></div><div class="bar line end"></div></article></div>
@@ -457,7 +457,7 @@
 
     <div class="kit-item" id="action-bar">
       <h3>Sticky action bar</h3>
-      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and what happens next. Glass like every bar (tab-bar glass, a rim, the bottom safe area; designer 2026-10-19); its caption passes AA over the worst case behind it.</p>
+      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and what happens next. Glass like every bar (tab-bar glass, a rim, the bottom safe area; designer 2026-10-19); its caption passes AA over the worst case behind it. Its button is a capsule, as every control inside a bar (C7, step 5). On a drill-down screen the page scrolls above the bar and stops at its top edge (the bar’s height changes with the inline error; G35, markup pass).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race detail</p>
           <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens in a new tab — registration and payment happen there.</p></div></div>
@@ -470,10 +470,11 @@
 
     <div class="kit-item" id="detail">
       <h3>Detail header and facts · Detail section</h3>
-      <p><code>h1</code> + <code>dl.facts</code>; <code>section</code> with an <code>h2</code> · Race detail, Result detail.</p>
+      <p><code>h1</code> + <code>dl.facts</code>; <code>section</code> with an <code>h2</code> · Race detail, Result detail. Race detail opens with the race’s photo (<code>.race &gt; .photo</code>, step 5): the race card’s 3:1 band and focus class at full content width, so it shows exactly the band retouched in round 3, with the outer 6px radius. The official site link has a 44pt target.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race detail</p>
           <div class="kit-frame kit-frame--flush"><article class="race" aria-labelledby="k-race-h">
+            <img class="photo photo--mid" src="../visuals/hyrox-sled-hall-1.jpg" alt="" width="1200" height="400" loading="lazy">
             <h1 id="k-race-h">HYROX London</h1>
             <dl class="facts"><dt>Sport type</dt><dd>HYROX</dd><dt>Race date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd><dt>Location</dt><dd>London, England, United Kingdom</dd></dl>
             <section class="about" aria-labelledby="k-about"><h2 id="k-about">About this race</h2><p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p></section>

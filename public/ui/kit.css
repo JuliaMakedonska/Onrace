@@ -1136,6 +1136,19 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   text-decoration-thickness: var(--border);
   text-underline-offset: var(--space-1);
 }
+.race > .photo {   /* Race detail: the race's photo, the card's band at full content width. Same 3:1 ratio and focus class as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--photo-ratio);
+  object-fit: cover;
+  margin: 0 0 var(--space-4);
+  border-radius: var(--radius-2);   /* outer: it sits on the page, not inside a card */
+  filter: var(--photo-filter);
+}
+.race .bar.photo { aspect-ratio: var(--photo-ratio); margin-bottom: var(--space-4); border-radius: var(--radius-2); }   /* loading: the photo band's place, so nothing shifts */
+.official a { display: inline-flex; align-items: center; min-height: var(--target); }   /* 44pt target on the one inline link (HIG Accessibility) */
+.official p { margin-block-start: calc((var(--target) - var(--size-body) * var(--leading-body)) / -2); }   /* the taller link keeps the line where it was */
 .result .proof p { margin: 0 0 var(--space-2); }
 .proof-url { font-size: var(--size-body); color: var(--text-1); overflow-wrap: anywhere; }
 .proof-note { font-size: var(--size-proof); color: var(--text-2); }
@@ -1149,6 +1162,17 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   border-top: var(--border) solid var(--glass-edge);
 }
 .action-bar[hidden] { display: none; }
+/* drill-down screen with an action bar (Race detail, Result detail): no tab bar; the page scrolls above the bar, which stays put.
+   The bar's height changes (the inline error), so content stops at its top edge instead of running under the glass (markup pass, G35) */
+body:has(> .action-bar) { display: flex; flex-direction: column; }
+body:has(> .action-bar) > .phone-screen { flex: 1; min-height: 0; height: auto; }
+body:has(> .action-bar) > .action-bar { flex: none; position: relative; z-index: 3; }
+body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
+.phone-screen:has(> .top-bar) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
+.phone-screen:has(> .top-bar) > main { flex: 1 0 auto; min-height: 0; }
+.phone-screen main > .state-message { flex: 1; align-content: center; padding-inline: var(--space-4); }   /* a full-screen state: centered in the area under the top bar */
+.state-message[hidden] { display: none; }
+.action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-bar-control); }   /* C7: a control inside a bar is a capsule */
 .register-btn, .open-btn, .submit-btn {   /* the screen's one primary */
   display: flex;
   align-items: center;
@@ -1469,7 +1493,7 @@ dialog.alert .alert-actions button:hover { background: var(--bg-2); }
 .bar.link { width: var(--skel-proof-w); height: var(--skel-line); }
 .bar.label { width: var(--skel-tag-w); height: var(--skel-line); margin-bottom: var(--space-2); }
 .bar.finish-bar { width: var(--skel-time-w); height: var(--skel-time-h); margin-bottom: var(--space-4); }
-.action-bar .bar.button { height: var(--target); border-radius: var(--radius-2); }
+.action-bar .bar.button { height: var(--target); border-radius: var(--radius-bar-control); }   /* C7: the capsule it stands in for */
 .action-bar .bar.caption { width: var(--skel-title-w); height: var(--skel-line); margin: var(--space-2) auto 0; }
 .initials.skel { background: var(--bg-2); }
 .bar.name { width: var(--skel-row-title-w); height: var(--skel-title); margin-bottom: var(--space-2); }

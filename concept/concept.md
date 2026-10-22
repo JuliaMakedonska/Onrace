@@ -424,7 +424,7 @@ The triage covers the two Podium screens. The HIG gap check of the eight graysca
 
 The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C7 are applied.
 
-**Kit: styles only, steps 3 and 5 (15).**
+**Kit: styles only, steps 3 and 5 (17; G36 and G38 added in step 5, Discovery).**
 
 | Gap | Why it's styles only |
 |---|---|
@@ -443,8 +443,10 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G27 12pt between bezeled chips | `gap` on the chips row |
 | G28 Dynamic Type and Bold Text | Sizes in scalable units anchored to the system text size. The date tile's day split depends on the markup item already deferred |
 | G29 Text sizes | The C3 mapping, in `ui/kit.css` |
+| G36 Official site link target (Race detail) | `min-height` on the link, the line kept in place (step 5) |
+| G38 Register / Open button in the action bar | C7: a control inside a bar is a capsule (step 5) |
 
-**Markup pass: changes structure, controls or text, between steps 5 and 6 (13).**
+**Markup pass: changes structure, controls or text, between steps 5 and 6 (16; G34, G35, G37 added in step 5, Discovery).**
 
 | Gap | Why it needs markup |
 |---|---|
@@ -461,8 +463,11 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G21 Sort as a menu button | Replaces the two-option `<select>`; with only two options, which control replaces it is decided in the markup pass (designer, 2026-10-18; HIG asks for three items in a menu) |
 | G32 Sheet focus and Escape | Script and markup (already in Deferred to Lesson 7) |
 | G33 Heading levels | Heading structure (already in Deferred to Lesson 7) |
+| G34 Race detail: inline title on scroll | The race name has to appear in the top bar (a centered `.bar-title`) once the `h1` scrolls under it: a new element plus a scroll trigger, as G4 |
+| G35 Race detail: content under the action bar | Running content under the glass needs the bar’s live height as scroll padding (it grows with the inline error): a script, or the bar moved inside the scroll area |
+| G37 Race detail `-error`: no `h1` | DetailError’s heading is an `h2` and the page has no `h1`; it needs a heading level change (or a visually hidden `h1`) |
 
-**Out of scope: prototype behavior, or not our standard (5).**
+**Out of scope: prototype behavior, or not our standard (6).**
 
 | Gap | Reason |
 |---|---|
@@ -471,6 +476,7 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G24 Pull to refresh | Prototype behavior: there's nothing to refresh in sample data. Re-tapping My Results reloads (`flows.md`) |
 | G30 7:1 for small custom text | Our standard is WCAG AA (4.5:1), checked on all 65 pairs by `build_stand.py`; HIG's 7:1 is "strive for", not its minimum |
 | G31 System light appearance | Dark only is a designer decision (C5) |
+| G39 Swipe from the edge to go back (Race detail) | A gesture in a static prototype; the "‹ Discover" back button is the on-screen way, which HIG asks for anyway |
 
 ### Kit feedback (designer, 2026-10-19)
 
@@ -566,4 +572,29 @@ Attribute b holds (two full cards clear of the bar on the first screen), but onl
 | 390×844, two filters | 2 full + 10% | 2 full + 43% |
 
 One figure is below 2 full cards: the viewer with two filters on, 1 full + 75% clear of the bar. It was already below before step 3b (1 full + 78%), and counting what shows through the glass it's 2 full + 3%.
+
+### Step 5, Discovery: Race detail on the kit (2026-10-22)
+
+Lesson 7 step 5, first group. `race-detail.html`, `-error` and `-loading` link `ui/kit.css` and lost their `<style>` blocks; `class="onrace"` on the body. Structure and text are the wireframes', checked by `git diff`: the only markup added is one `<img class="photo">` per race and one photo bar in the loading skeleton; the only markup removed is three inline `style="width:…"` on skeleton bars (the kit sizes them). Race detail is a drill-down screen, so the shell's large title and tab bar don't apply; its top bar was already in the markup. The filtered Race browse state (`?sport=`) was already on the kit; nothing was left.
+
+**Photo.** Each race's card file and focus class, at 3:1 like the card, full content width (358 × 119 at 390). Measured in the browser, in the 1536 × 1024 source: Berlin y 379–891, London 307–819, Dallas 225–737, DEKA and Spartan 92–604, Boston and UTMB 369–881, the full width in every case. The same as the round-3 bands, so no unretouched mark shows. `alt=""` as on the card: the photo is decorative, the race name is the `h1` under it.
+
+**Added to the kit** (`ui/kit.css`, `ui/kit.html`, `ui/inventory.md` first, then used):
+- `.race > .photo` and `.race .bar.photo`: the detail photo and its skeleton, outer 6px radius (it sits on the page).
+- The drill-down layout: a page with an action bar is a column, the page scrolls above the bar; a page without a tab bar has no tab-bar scroll padding; the top bar and `main` fill the screen with no stray scroll.
+- A full-screen `.state-message` (DetailError) centered under the top bar, with the 16px gutter; `.state-message[hidden]`.
+- G36, G38 (below). No new token, no new color pair: every color on these pages is an existing pair (the build re-ran all 91 solid + 12 glass pairs).
+
+**HIG check, Discovery group** (Race browse was checked in step 1; this is Race detail against the Native iOS table):
+
+| # | Element | HIG | Race detail now | Fix |
+|---|---|---|---|---|
+| G34 | Top bar title | A detail view's title shows inline in the navigation bar once the large title scrolls away ([Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars)) | Back button only; the race name scrolls out of view | **M** (markup pass) |
+| G35 | Action bar | Content scrolls under bars, separated by the scroll edge effect ([Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars), [Layout](https://developer.apple.com/design/human-interface-guidelines/layout)) | Glass, but the page stops at its top edge, because the bar's height changes with the inline error | **M** |
+| G36 | Official site link | 44 × 44pt targets ([Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility)) | A 22px inline text link | **K, fixed:** 44px tall, the text line unmoved |
+| G37 | DetailError headings | Label the interface for VoiceOver ([Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility)) | The page has no `h1`; the message is an `h2` | **M** |
+| G38 | Register in the action bar | Controls in a bar are concentric with it (C7, 3b review: bar controls are capsules) | 6px corners | **K, fixed:** `--radius-bar-control`, the skeleton too |
+| G39 | Back | Swipe from the leading edge goes back | Back button only | **O** (a gesture in a static prototype) |
+
+**Already native on Race detail:** the back button names the destination ("‹ Discover"); one primary (Register, amber) per state, Try again on DetailError; errors in context (ContentUnavailableView for DetailError, the inline error beside Register for RegLinkError), no alert; the skeleton pulses and the back button works while loading; 44px Register and Dismiss; Dynamic Type sizes from the kit. "Dismiss" and "Try again" still need full accessible names (Deferred to Lesson 7).
 

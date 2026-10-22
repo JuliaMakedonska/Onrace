@@ -209,6 +209,7 @@ def _stamp(path):
     html = re.sub(r'href="((?:\.\./ui/|)(?:kit|map|stand))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
     open(path, 'w').write(html)
 STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
+STAMPED += [f'wireframes/race-detail{x}.html' for x in ('', '-error', '-loading')]   # step 5, Discovery group (2026-10-22)
 for _p in STAMPED:
     _stamp(os.path.join(ROOT, _p))
 
