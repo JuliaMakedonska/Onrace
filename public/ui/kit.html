@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=bcbec869">
-<link rel="stylesheet" href="map.css?v=bcbec869">
+<link rel="stylesheet" href="kit.css?v=9aafa41b">
+<link rel="stylesheet" href="map.css?v=9aafa41b">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -502,8 +502,8 @@
         <div class="kit-state"><p class="kit-label">Sign in ?reset=done · Check inbox: Sent</p>
           <div class="kit-frame gate"><p class="reset-done" role="status">Password changed. Sign in with your new password.</p><p class="sent-note">Sent. Check your inbox again.</p></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Profile: a field saving, then saved</p>
-          <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-nm">Name</label><input type="text" id="k-nm" value="Maya Rossi"></div><p class="row-note">Saving…</p></li><li><div class="row"><label for="k-lg">Language</label><select id="k-lg"><option selected>English</option><option>Italiano</option></select></div><p class="row-note">Saved</p></li></ul></div>
+        <div class="kit-state"><p class="kit-label">Profile: a field saving (the spinner before "Saving…", G26), then saved</p>
+          <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-nm">Name</label><input type="text" id="k-nm" value="Maya Rossi"></div><p class="row-note"><span data-saving>Saving…</span><span data-saved hidden>Saved</span></p></li><li><div class="row"><label for="k-lg">Language</label><select id="k-lg"><option selected>English</option><option>Italiano</option></select></div><p class="row-note"><span data-saving hidden>Saving…</span><span data-saved>Saved</span></p></li></ul></div>
         </div>
       </div>
     </div>
@@ -523,6 +523,26 @@
           </ul></div>
         </div>
         <div class="kit-state"><p class="kit-label">Result detail: the finish time and the proof section are under Detail above</p></div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="archive-step5">
+      <h3>Log result and Race picker on the kit (step 5)</h3>
+      <p>Log result’s top bar is a <code>header.top-bar</code> inside <code>.phone-screen</code>: it keeps the bar’s layout (back, centered title, amber Save), not the large-title header’s. Race picker is a whole screen in a page sheet over Log result: on the screen the sheet rests at the large detent below the top safe area, with Log result receded under the scrim above its edge; its top bar spans the sheet, the search field keeps the gutter and only the list scrolls. On the sheet, a secondary state action is outlined in Field line on the sheet, as the Filters sheet’s Cancel (a tonal button would vanish on the raised level). The empty and error states sit on the sheet itself, no panel.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Log result: the top bar inside the screen</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>My Results</span></a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn">Save</button></header></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Race picker -error, on the sheet: two actions, the secondary outlined</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <div class="sheet open" role="dialog" aria-modal="false" aria-labelledby="k-picker-err-h">
+              <header class="top-bar"><a class="cancel" href="#">Cancel</a><h1 class="bar-title" id="k-picker-err-h">Find a race</h1></header>
+              <form class="search" role="search" onsubmit="return false;"><label for="k-pq2" class="visually-hidden">Search races by name or city</label><input type="search" id="k-pq2" value="kona" placeholder="Race name or city" enterkeyhint="search" autocomplete="off"></form>
+              <div class="state-message is-error"><h2>Couldn’t load the race catalog</h2><p>The connection may have dropped. Check it, then try again, or type the race in yourself. What you’ve entered on the form stays as it is.</p><div class="state-actions"><a class="state-action" href="#">Try again</a><a class="state-action secondary" href="#">Type it in instead</a></div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -559,7 +579,17 @@
             <p class="expiry-note">Each link works once and expires after a while. If it doesn’t work, send a new link.</p>
           </div>
         </div>
+        <div class="kit-state"><p class="kit-label">Sign up: sending a new link (busy: the spinner before "Sending…", G26; label stays Text 1), then "Sent"</p>
+          <div class="kit-frame gate">
+            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn" disabled><span data-resend="idle" hidden>Send a new link</span><span data-resend="sending">Sending…</span></button></section>
+            <section aria-label="Send a new confirmation link, sent"><button type="button" class="secondary-btn"><span data-resend="idle">Send a new link</span><span data-resend="sending" hidden>Sending…</span></button><p class="sent-note">Sent. Check your inbox again.</p></section>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="kit-item" id="gate-layout">
+      <h3>Gate layout · top bar over the page</h3>
+      <p><code>body &gt; .top-bar</code> before <code>.phone-screen</code> (step 5, Infrastructure): on the gates the bar is the body's own child, not inside the scrolling page. It floats over the page's top edge in ground glass (C1); the page starts below it and scrolls under it, and nothing overflows the screen. Sign in / Sign up, Reset password, New password, every state. The bars themselves (Cancel + title on the modal gate, "‹ Sign in" on a step inside it) are under <a href="#top-bar">Top bar</a>.</p>
     </div>
   </section>
 
@@ -626,8 +656,8 @@
     </div>
 
     <div class="kit-item" id="gate-parts">
-      <h3>Sign in / Sign up · New password: form note, expired link</h3>
-      <p><code>.form-note</code> (Create account), <code>section.state-msg</code> (New password -error?cause=expired: no form).</p>
+      <h3>Sign in / Sign up · New password: form note, expired links</h3>
+      <p><code>.form-note</code> (Create account). The two expired-link errors have no form, so they are the screen's whole state and sit on the page like <code>.state-message</code> (step 5, Infrastructure): the 48px coral error icon on top, title, body, the one action sized to its label, centered under the top bar, no frame or surface. New password <code>-error?cause=expired</code>: <code>section.state-msg</code>. Sign in <code>-error?cause=confirm</code>: the section holding an <code>.inline-error</code> and Send a new link (inside a form, an <code>.inline-error</code> keeps its surface).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Create account</p>
           <div class="kit-frame gate"><button type="button" class="submit-btn">Create account</button><p class="form-note">We’ll send a link to confirm your email.</p></div>
@@ -635,12 +665,18 @@
         <div class="kit-state"><p class="kit-label">Expired reset link</p>
           <div class="kit-frame gate"><section class="state-msg" aria-labelledby="k-expired"><h2 id="k-expired">This reset link has expired</h2><p>Each link works once and expires after a while. This one has expired or was already used. Reset your password again to get a new one.</p><a class="submit-btn" href="#">Reset password again</a></section></div>
         </div>
+        <div class="kit-state"><p class="kit-label">Expired confirmation link (Sign in -error?cause=confirm)</p>
+          <div class="kit-frame gate"><section><div class="inline-error"><h2>This confirmation link has expired</h2><p>It may also have been used already. Each link works once and expires after a while. Your account is still there. It isn’t confirmed yet.</p><p>We’ll send a new link to <span class="addr">maya.rossi@example.com</span>.</p></div><a class="submit-btn" href="#">Send a new link</a></section></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Forgot password? (44pt tap area, the line unmoved)</p>
+          <div class="kit-frame gate"><div class="field"><p class="forgot"><a href="#">Forgot password?</a></p></div></div>
+        </div>
       </div>
     </div>
 
     <div class="kit-item" id="profile-parts">
       <h3>Profile · identity, grouped rows, Sign out, confirm alert</h3>
-      <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code>, <code>dialog.alert</code> (Sign out in the destructive style, coral text, per HIG Alerts).</p>
+      <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code>, <code>dialog.alert</code> (Sign out in the destructive style, coral text, per HIG Alerts; the focus ring on Cancel, which takes focus on open, is drawn inside the button so the alert's edge never clips it). Step 5, Infrastructure: Country and Language are pop-up rows, a Solar chevron after the value in Text 2; every row is 44pt to its edges; the row's "Try again" link has a 44pt tap area. Profile <code>-error</code> (cause=load) is a <code>.state-message</code> centered between the large title and the tab bar.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Profile</p>
           <div class="kit-frame kit-frame--flush">

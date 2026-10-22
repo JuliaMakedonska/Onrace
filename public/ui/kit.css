@@ -1509,6 +1509,175 @@ dialog.alert .alert-actions button:hover { background: var(--bg-2); }
 .row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
 .skel-signout .bar { height: var(--target); border-radius: var(--radius-2); }
 
+/* ---------- step 5 · Archive (2026-10-22) ---------- */
+/* Log result: its top bar is a <header>, which the large-title header rule above (.phone-screen header: a grid with the
+   header's padding) also matches. The top bar is a bar, not a large-title header: back it out to the .top-bar layout. */
+.phone-screen > header.top-bar { display: flex; gap: 0; padding: var(--safe-top) var(--space-2) 0; }
+
+/* Race picker: a whole screen in a page sheet over Log result (the wireframe's own .sheet, never .open). The Filters
+   sheet's off-screen slide-in doesn't apply: here the sheet is the screen's surface, resting at the large detent (G13),
+   with the form it came from receded under the scrim above its top edge. Its top bar spans the sheet; search and list
+   sit inside it with the 16px gutter; only the list scrolls (the search stays reachable, as in the wireframe). */
+html:has(body > .sheet > .top-bar) { height: 100%; }
+body:has(> .sheet > .top-bar) {
+  height: 100%;
+  margin: 0 auto;
+  max-width: var(--screen-w);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(var(--scrim), var(--scrim)) var(--bg-0);   /* the presenting screen, receded under the scrim */
+}
+body > .sheet:has(> .top-bar) {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  margin-top: calc(var(--safe-top) + var(--sheet-gap-top));
+  padding: 0;
+  overflow: hidden;
+  transform: none;
+  transition: none;
+}
+.sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }   /* the safe area is above the sheet; nothing scrolls under this bar, so it is the sheet's own glass, not a second layer */
+.sheet > form.search { position: relative; flex: none; }
+body > .sheet > form.search { padding-inline: var(--space-4); }   /* the screen's sheet has no padding of its own (its top bar spans it), so the search takes the gutter */
+.sheet > form.search::before {   /* the search field of Race browse (.race-search), on the sheet */
+  content: "";
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin-top: calc(var(--icon-m) / -2);
+  background: var(--text-2);
+  -webkit-mask: var(--icon-search) center / contain no-repeat;
+  mask: var(--icon-search) center / contain no-repeat;
+  pointer-events: none;
+}
+.sheet > form.search input[type="search"] {
+  display: block;
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-4) 0 calc(var(--space-4) + var(--icon-m) + var(--space-2));
+  border: 0;
+  border-radius: var(--radius-bar-control);   /* C7: a search field is a bar control, a capsule */
+  background: var(--bg-1);
+  box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet);   /* C4: boundaries on the sheet take Field line on the sheet */
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  -webkit-appearance: none;
+  appearance: none;
+}
+body > .sheet > form.search::before { left: calc(var(--space-4) * 2); }
+.sheet > form.search input[type="search"]::placeholder { color: var(--text-2); opacity: 1; }
+.sheet > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
+.sheet > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+.sheet > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10 */
+.sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; }
+.sheet > .phone-screen > main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
+.sheet > .phone-screen > main > .state-message { padding-inline: 0; }   /* the main's gutter is enough; on the sheet itself, no panel around it */
+.sheet .state-action.secondary { background: transparent; box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet); }   /* C4, as the Filters sheet's Cancel: a tonal bg-2 button would vanish on the bg-2 sheet, so it is outlined */
+.sheet .state-action.secondary:hover { background: var(--bg-3); }
+
+/* ---------- step 5 · Infrastructure (2026-10-22) ---------- */
+/* Gates (Sign in / Sign up, Reset password, New password): the top bar is the body's own child, before the scrolling
+   .phone-screen (not inside it, as on Race detail). It floats over the page's top edge and the page scrolls under its
+   glass (C1, HIG Toolbars: a scroll edge effect, not a solid bar); the page starts below the bar, so nothing is covered
+   at rest and nothing overflows the screen. */
+body > .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
+body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--safe-top) + var(--border)); }   /* the bar's height: 44pt, the top safe area, its rim */
+.view-toggle[hidden] { display: none; }   /* .gate .view-toggle's display beat the hidden attribute (Sign in -error?cause=confirm hides the toggle) */
+
+/* Full-screen error states on the gates sit directly on the page, as .state-message does (ContentUnavailableView,
+   3b review 5): the 48px coral error icon on top, title, body, then the one action, centered in the area under the top
+   bar. No frame, surface or outline around them.
+   - New password -error?cause=expired: section.state-msg (no form).
+   - Sign in -error?cause=confirm (ConfirmError, no form): the expired confirmation link, an .inline-error followed by
+     its Send a new link. Inside a form an .inline-error stays an alert on its --error-bg surface; here it is the
+     screen's whole state, so it loses the surface. */
+.gate > .state-msg:not([hidden]),
+.gate > section:not([hidden]):has(> .inline-error + .submit-btn) {
+  flex: 1;
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+.gate > .state-msg::before,
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error::before {
+  content: "";
+  justify-self: center;
+  width: var(--icon-state);
+  height: var(--icon-state);
+  margin-bottom: var(--space-2);
+  background: var(--error);
+  -webkit-mask: var(--icon-error) center / contain no-repeat;
+  mask: var(--icon-error) center / contain no-repeat;
+}
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+}
+.gate > .state-msg h2, .gate > section:has(> .inline-error + .submit-btn) > .inline-error h2 { margin: 0; font-size: var(--size-item); }
+.gate > .state-msg h2::before, .gate > section:has(> .inline-error + .submit-btn) > .inline-error h2::before { content: none; }   /* the icon is on top now */
+.gate > .state-msg p, .gate > section:has(> .inline-error + .submit-btn) > .inline-error p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
+.gate > .state-msg .submit-btn, .gate > section:has(> .inline-error + .submit-btn) > .submit-btn { width: auto; margin-top: var(--space-2); }   /* a state's action is sized to its label, like .state-action */
+
+/* Profile -error (cause=load): the state is inside section#cause-load, not a direct child of main; the section fills
+   the free area between the large title and the floating tab bar, the state centered in it, with the 16px gutter. */
+.phone-screen main > section:not([hidden]):has(> .state-message:only-child) { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-inline: var(--space-4); }
+
+/* G26 on script-driven busy labels: an activity indicator before "Sending…" (Check inbox, Send a new link) and
+   before "Saving…" (Profile row note). The wireframe swaps the label's spans; the spinner keys on the visible one. */
+[data-resend="sending"]:not([hidden]), .row-note [data-saving]:not([hidden]) { display: inline-flex; align-items: center; gap: var(--space-2); }
+[data-resend="sending"]:not([hidden])::before, .row-note [data-saving]:not([hidden])::before {
+  content: "";
+  flex: none;
+  width: var(--spinner-size);
+  height: var(--spinner-size);
+  border-radius: var(--radius-avatar);
+  border: var(--focus-ring) solid currentColor;
+  border-right-color: transparent;
+  animation: onrace-spin var(--dur-spin) linear infinite;
+}
+.secondary-btn:disabled:has([data-resend="sending"]:not([hidden])) { color: var(--text-1); cursor: progress; }   /* busy, not disabled: same fill and label color, as a busy primary keeps its fill */
+
+/* 44pt targets on the gates' and Profile's inline links (HIG Accessibility), the text lines unmoved: padding extends
+   the hit area, an equal negative margin gives the space back. */
+.forgot a { padding-block: calc((var(--target) - var(--size-meta)) / 2); }   /* inline: vertical padding never moves the line; measured from the font size, as an inline box is the glyphs' height, not the line's */
+.row-note a { padding-block: calc((var(--target) - var(--size-proof)) / 2); }
+.form-alert .alert-link {
+  padding-block: calc((var(--target) - var(--size-meta) * var(--leading-body)) / 2);
+  margin-block: calc(var(--space-2) - (var(--target) - var(--size-meta) * var(--leading-body)) / 2) calc((var(--target) - var(--size-meta) * var(--leading-body)) / -2);
+}
+.row select { min-height: var(--target); }   /* the row's own 44pt height, so the whole row opens the menu */
+dialog.alert .alert-actions button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }   /* the alert clips its edges (overflow: hidden): the ring sits inside the button, whole, instead of a clipped half (Cancel takes focus on open) */
+
+/* Profile's Country and Language rows are pop-up buttons (HIG Pull-down buttons: a pop-up button shows its value and
+   an indicator). The value stays where it is; a Solar chevron after it, in Text 2 like the value (C2). */
+.row:has(> select)::after {
+  content: "";
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  margin-left: calc(var(--space-3) * -1 + var(--space-1));
+  background: var(--text-2);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
+
 /* =================================================================
    Showcase layout (ui/kit.html only, never in the product). Tokens only.
    ================================================================= */

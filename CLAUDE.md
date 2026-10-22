@@ -144,7 +144,7 @@ The visual concept, Lesson 6 (2026-10-13 to 2026-10-15). Direction A, **Podium**
   - Fonts load from each page's `<head>`, not from CSS.
   - Color rules 1–3 (`concept.md` → Color rules) are checked by `build_stand.py` on every build: 1 accent placement, 2 no success color on results, 3a depth of dark. Each stops the build when broken. So does any contrast pair below AA (81 pairs since the kit).
   - **3b** (amber vs HYROX yellow) is reported, not blocking: the amber is a **designer override** of 3b (2026-10-14), valid for this exact hex only.
-- **Screens in Podium:** Race browse (`race-browse.html` + `-empty`, `-error`, `-loading`) and Results list (`results-list.html` + the same three). They link `ui/kit.css` (Race browse also `ui/map.css`) and keep the wireframes' text and structure. **Race detail** (`race-detail.html` + `-error`, `-loading`) joined them in Lesson 7 step 5, Discovery group (2026-10-22): kit only, the card's photo band on top (`concept.md` → Step 5, Discovery). **The other 7 screens stay grayscale until their step 5 group**, as does every markup change listed in `concept.md` → Deferred to Lesson 7 (markup).
+- **Screens in Podium:** Race browse (`race-browse.html` + `-empty`, `-error`, `-loading`) and Results list (`results-list.html` + the same three). They link `ui/kit.css` (Race browse also `ui/map.css`) and keep the wireframes' text and structure. **Since Lesson 7 step 5 (2026-10-22), all 10 screens are on the kit:** Race detail (Discovery, with the card's photo band on top, a designer decision), then the Archive and Infrastructure groups (`concept.md` → Step 5). Every markup change listed in `concept.md` → Deferred to Lesson 7 (markup) and Gap triage → Markup pass still waits for the markup pass.
 - **Checked:** step 7 (2026-10-15) found 9 defects against `concept.md` and `/impeccable audit`: 8 fixed, 1 detector false positive (`concept.md` → Step 7 check).
 
 ## UI kit
@@ -152,7 +152,7 @@ The visual concept, Lesson 6 (2026-10-13 to 2026-10-15). Direction A, **Podium**
 Lesson 7 (2026-10-18). `DESIGN.md` (repo root) is the design system documented from the two painted screens; `concept/concept.md` follows the screens. `concept.md` → Native iOS holds the HIG rule, the decided HIG-vs-Podium conflicts (C1–C7), and the 33 gaps triaged into kit, markup pass and out of scope.
 
 - **`ui/inventory.md`:** every component of all 10 screens, with its screens, states, photo, HIG link and gaps.
-- **`ui/kit.css`:** the one source of truth. Every variable in `:root` (flat; two-level tokens are Lesson 8) and every component class, with no values in the classes. Grayscale screens' components are in it too, styled from DESIGN.md, though those screens don't link it yet.
+- **`ui/kit.css`:** the one source of truth. Every variable in `:root` (flat; two-level tokens are Lesson 8) and every component class, with no values in the classes. Every screen links it (step 5, 2026-10-22); the step 5 additions are in its `step 5 · Archive` and `step 5 · Infrastructure` blocks.
 - **`ui/map.css`:** the static map's data (tokens and Natural Earth masks), linked by the Race browse pages and the kit showcase only.
 - **`ui/shell.html`:** the shell (large-title header and tab bar), no status bar.
 - **`ui/kit.html`:** the showcase, every inventory component in its states, live at https://juliamakedonska.github.io/Onrace/ui/kit.html.

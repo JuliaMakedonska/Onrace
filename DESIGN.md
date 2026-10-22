@@ -86,6 +86,7 @@ rounded:
   radius-bar-control: "22px"
   radius-bar-inner: "18px"
   radius-avatar: "50%"
+  radius-filter-chip: "16px"
 spacing:
   space-1: "4px"
   space-2: "8px"
@@ -132,11 +133,23 @@ components:
     padding: "0 8px"
     height: "24px"
   filter-chip:
+    backgroundColor: "{colors.bg-2}"
     textColor: "{colors.text-1}"
-    typography: "{typography.label}"
-    rounded: "{rounded.radius-1}"
-    padding: "0 12px"
+    typography: "{typography.proof}"
+    rounded: "{rounded.radius-filter-chip}"
+    padding: "0 8px 0 12px"
     height: "32px"
+  filter-chip-hover:
+    backgroundColor: "{colors.bg-3}"
+    textColor: "{colors.text-1}"
+  race-detail-photo:
+    rounded: "{rounded.radius-2}"
+  action-bar-button:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.on-accent}"
+    typography: "{typography.button}"
+    rounded: "{rounded.radius-bar-control}"
+    height: "44px"
   search-field:
     backgroundColor: "{colors.bg-1}"
     textColor: "{colors.text-1}"
@@ -210,10 +223,14 @@ components:
 Documented on 2026-10-18 (Lesson 7, step 1) from the two painted screens and all their states:
 - `wireframes/race-browse.html`, `-empty`, `-error`, `-loading`; the filtered state (`?sport=hyrox&sport=marathon`); the Filters sheet open; the Map view
 - `wireframes/results-list.html`, `-empty`, `-error`, `-loading`; the saved state (`?saved=`)
+- `wireframes/race-detail.html`, `-error` (both causes), `-loading`: added 2026-10-22 (Lesson 7 step 5, Discovery)
+- Archive and Infrastructure, added 2026-10-22 (step 5): `log-result`, `race-picker`, `result-detail`, `sign-in-sign-up`, `reset-password`, `new-password`, `profile`, each with all its state pages. Every screen is now on the kit.
 
 Every value comes from `ui/kit.css` and `ui/map.css` (until Lesson 7 step 3a, `concept/tokens.css`, `concept/map.css` and `concept/components.css`), and was checked against the computed styles of the rendered screens at 390×844. The screens are the source of truth. The artifact pages (`concept.html`, `directions*.html`, `voice.html`, `ia.html`, the workspace shell) are not the product, and nothing here describes them.
 
-The other eight screens are still grayscale wireframes. They take this system in Lesson 7.
+All ten screens use this system since Lesson 7 step 5 (2026-10-22).
+
+**Updated 2026-10-22 (Lesson 7 step 5, Discovery, and its review).** Race detail is on the kit, with the race’s photo on top (a designer decision). Two kit fixes reach every screen: active filter chips are tonal capsules (C7), and empty and error states are never framed.
 
 **Updated 2026-10-19 (Lesson 7, step 3b), the native iOS pass.** The kit changed on purpose: glass bars and sheet (C1), the HIG type mapping (C3), a neutral control tint (C4), a skeleton pulse (C6), concentric controls in bars (C7), and the Kit (CSS) gaps (G1, G2, G6, G7, G10, G11, G13, G16, G22, G23, G25–G29). The sections below describe the screens after that pass. Values marked **[?]** (glass opacity margins, blur, rim, sheet radius, the sheet's top gap) are provisional: Apple's iOS 26 design kit wasn't read; the one Apple number used is HIG Materials' 35% dimming layer, as a floor.
 
@@ -233,8 +250,8 @@ What the screens refuse: aggressive "energy" red, pure black with one hot accent
 - Two faces: Schibsted Grotesk 800 for the title and key numbers, Hanken Grotesk 400/600 for everything else.
 - Small radii: 4px inside, 6px outside in content. Bar chrome is native: the floating tab bar is a capsule, controls inside bars are concentric capsules (C7), the Filters sheet takes the sheet radius (38px [?]), and Profile initials are the one circle.
 - Flat content, glass chrome: the tab bar, the controls bar, the top bar, the action bar and the Filters sheet are translucent graphite with blur (C1). Cards never are. Shadows belong to what floats: the sheet and the tab bar.
-- Neutral metadata: format chips, filter chips, map pins, the saved confirmation and every pressed state stay gray.
-- Black-and-white photos, 3:1, inset in the race card.
+- Neutral metadata: format chips, filter chips (gray capsules), map pins, the saved confirmation and every pressed state stay gray.
+- Black-and-white photos, 3:1: inset in the race card, and at full content width on top of Race detail (the same band).
 - Solar bold icons, drawn as CSS masks in the color of their text.
 
 ## Colors
@@ -256,7 +273,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 - **Field Line** (`#686E75`, `--field-line`): the 1px boundary of inputs, the pressed segment's outline, the hover ring on cards, the map frame. 3:1 against `--bg-0` and `--bg-1`.
 - **Field Line, sheet** (`#757B82`, `--field-line-sheet`): the same boundary on the glass Filters sheet (its fields, checkboxes, the outlined Cancel, the grabber). Field Line is only 2.6:1 there; this is 3:1 against the sheet's worst case.
 - **Chalk** (`#F4F5F6`, `--text-1`): titles, race names, finish times, date days, body text, links, focus rings, the dot on a map pin, a checked checkbox. 16.76:1 on `--bg-0`.
-- **Ash** (`#A3A9B0`, `--text-2`): meta (date month and year, location, counts, proof line), placeholder text, inactive tabs, sheet labels, the active filter chip's outline. 6.90:1 on `--bg-1`.
+- **Ash** (`#A3A9B0`, `--text-2`): meta (date month and year, location, counts, proof line), placeholder text, inactive tabs, sheet labels, the active filter chip's remove mark. 6.90:1 on `--bg-1`.
 - **Chip Text** (`#BFC4CA`, `--chip-text`): the format chip's label. 8.11:1 on `--bg-2`.
 - **Disabled** (`#6B7178`, `--text-disabled`): a disabled sort control only. Never content.
 
@@ -275,7 +292,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 `--success` and `--success-bg` exist in `ui/kit.css` for the stand's specimen only. No product screen uses them.
 
 ### Named Rules
-**The Two Lights Rule.** The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is an outline, the pressed segment is `--bg-3`, a checked checkbox is `--control-tint` (Text 1, C4), the focus ring is `--text-1`.
+**The Two Lights Rule.** The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--bg-3`, a checked checkbox is `--control-tint` (Text 1, C4), the focus ring is `--text-1`.
 
 **The Stated, Not Stamped Rule.** No green, no check icon and no "verified" mark on any result or anywhere on Results list. The saved confirmation is `--bg-1` with a gray save glyph.
 
@@ -297,7 +314,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 - **Button** (Hanken 600, 15px, line-height 1): primary and secondary buttons, sheet buttons.
 - **Meta** (Hanken 400, 15px = HIG Subheadline, line-height 1.45): location, counts ("**7** upcoming races", the number in 600), the sort label, result dates, state body text, the tertiary "Clear all filters". The List/Map segments and the sort value use 15px at 600. Meta shares body's size and stays apart from it by color (`--text-2`).
 - **Proof** (Hanken 400, 13px, line-height 1.45): the proof line; the month and year under the date day (line-height 1.2 there).
-- **Label** (Hanken 600, 11px, 0.07em, UPPERCASE by CSS only): format chips and active filter chips. The markup keeps the format's own name ("Half marathon").
+- **Label** (Hanken 600, 11px, 0.07em, UPPERCASE by CSS only): format chips. (Active filter chips are 13px / 600 in sentence case, since 2026-10-22.) The markup keeps the format's own name ("Half marathon").
 - **Tab label** (Hanken 600, 11px, line-height 1.45, sentence case): tab labels and map pin labels.
 
 There is no 700. `strong` and `b` render at 600, because Hanken loads only 400 and 600.
@@ -342,9 +359,9 @@ Flat by default. Depth comes from tonal layering: the tab bar (`--bg-bar`) under
 ## Shapes
 
 Slightly rounded in content, never sharp. Pills only in bar chrome (C7).
-- **4px** (`--radius-1`), inner shapes: the photo inside a card, the date tile, format and filter chips, List/Map segments, skeleton bars, map pin labels, checkboxes, the sheet handle.
-- **6px** (`--radius-2`), outer shapes: cards, result rows, buttons outside bars, sheet fields, the Sign in segmented track, the saved confirmation, the map frame.
-- **Bar chrome (step 3b; designer decision 2026-10-19, C7):** bar controls are all full capsules, iOS 26 style: radius = half the height. The floating tab bar (`--radius-tabbar`, 32px); the search field, the Filters button and the List/Map track (`--radius-bar-control`, 22px); the List/Map segment concentric inside (`--radius-bar-inner`, 18px = 22 − the 4px track padding). Content (cards, chips, tiles, buttons outside bars) keeps 4/6px.
+- **4px** (`--radius-1`), inner shapes: the photo inside a card, the date tile, format chips, List/Map segments, skeleton bars, map pin labels, checkboxes, the sheet handle.
+- **6px** (`--radius-2`), outer shapes: cards, result rows, the Race detail photo (it sits on the page), buttons outside bars, sheet fields, the Sign in segmented track, the saved confirmation, the map frame.
+- **Bar chrome (step 3b; designer decision 2026-10-19, C7):** bar controls are all full capsules, iOS 26 style: radius = half the height. The floating tab bar (`--radius-tabbar`, 32px); the search field, the Filters button and the List/Map track (`--radius-bar-control`, 22px); the List/Map segment concentric inside (`--radius-bar-inner`, 18px = 22 − the 4px track padding); the action bar's Register / Open button (22px, step 5); the active filter chips (`--radius-filter-chip`, 16px = half of 32; designer 2026-10-22). Content (cards, format chips, tiles, buttons outside bars) keeps 4/6px.
 - **Sheet** (`--radius-sheet`, 38px [?]): the Filters sheet's and Race picker's top corners, the native sheet radius. Replaces the 12px they had until step 3b. `--radius-3` (12px) is now stand panels only.
 - **Circles:** the map pin dot, the busy spinner, and **Profile initials** (`--radius-avatar`, 50%): the one exception to "no circles in content", because iOS avatars are circular (designer, 2026-10-19).
 - **Borders** are drawn as 1px inset box-shadows (`--border`), so they never change a box's size.
@@ -363,11 +380,12 @@ Exactly one filled button per screen.
 
 ### Chips
 - **Format chip** (metadata): `--bg-2` fill, `--chip-text`, 4px radius, 24px tall, `0 8px`, 11px / 600 uppercase, 0.07em. The same for every format: no per-format color.
-- **Active filter chip** (a removable state): transparent with a 1px `--text-2` outline, `--text-1` label, 32px tall, `0 12px`, 4px radius, and a 15px Solar close-circle in `--text-2`.
+- **Active filter chip** (a removable state, in the controls bar): an iOS capsule (16px radius, C7) in a quiet `--bg-2` fill with no outline; the format's own name in sentence case, 13px / 600 `--text-1` (13.05:1); 32px tall (44px tap area), `0 8px 0 12px`; the 15px Solar close-circle inside, 4px after the name, in `--text-2` (6.01:1). Hover `--bg-3`. Designer, 2026-10-22.
 
 ### Cards / Containers
 - **Race card:** `--bg-1`, 6px radius, 8px padding, flat. The whole card is one link, photo included. Inside it: a black-and-white photo (`grayscale(1) contrast(1.12) brightness(0.85)`) at 3:1 with a 4px radius; then the date tile (68px wide, `--bg-2`, 4px radius, `12px 4px` padding, the day in Schibsted 30px `--text-1` over the month and year in 13px `--text-2`); then the race name (17px / 600), the format chip, and the location (14px `--text-2` with a 15px Solar map-point icon).
 - **Result row:** `--bg-1`, 6px radius, `12px 16px 16px` padding, 8px gaps. A 15px Solar alt-arrow-right in `--text-2` ends the meta row, under the finish time's right edge: the row drills into Result detail (G22). The finish time and the proof line keep the row's full width, so the time sits where it always did and no proof line wraps. Race cards are a collection, so they have none. The race name on the left and the finish time (Schibsted 32px) on the right, sharing a baseline; then the format chip and the date (14px `--text-2`); then the proof line (13px `--text-2`, one 15px Solar link icon, wraps anywhere).
+- **Race detail** (step 5, 2026-10-22): a drill-down with no tab bar. Under the ground-glass top bar ("‹ Discover", a Solar back chevron): the race's photo, the same file, 3:1 band and focus class as its card (so exactly the band retouched in round 3), at full content width (358 × 119 at 390), 6px radius, black and white (a designer decision, 2026-10-22: a structural exception to the wireframe); the race name as the 34px title; the facts as a two-column list (labels 15px `--text-2`, values `--text-1`); "About this race" and "Official race website" as 17px / 600 headings over 15px body; the official site an underlined `--text-1` link with a 44pt target (G36). The page scrolls above the action bar and stops at its top edge (G35, markup pass). Loading: the same zones as `--bg-2` bars, the photo band included.
 - **Saved confirmation:** `--bg-1`, 6px radius, `12px 16px`, 14px `--text-1` with the race name in 600, and an 18px Solar save glyph in `--text-2`. Never green, never a check.
 - **Skeletons (loading):** `--bg-2` bars with a 4px radius, in the exact shape of the card or row they stand for. The finish-time bar is 32px tall, so nothing shifts. A subtle pulse (opacity to 0.55 and back over 1.6s), still under reduced motion (C6). No spinner, no shimmer.
 
@@ -382,21 +400,29 @@ Exactly one filled button per screen.
 ### Navigation
 - **Tab bar:** a floating 64px capsule of tab-bar glass with a faint rim and the float shadow, three tabs (Discover, My Results, Profile). Each has a 26px Solar icon (compass, stopwatch, user) over an 11px / 600 label. Inactive: `--text-2`. Current: `--accent`, icon and label.
 - **List / Map segmented control:** a `--bg-2` track with 4px padding; in the controls bar a 22px capsule with 18px segments (C7), in content (Sign in) 6px with 4px segments. Segments are of equal width (G11), 36px (44px tap area), 15px / 600, `--text-2`.
-- **Action bar (Race detail, Result detail):** tab-bar glass with a rim instead of the hairline, above the bottom safe area (C1, designer 2026-10-19). Its caption passes AA over the worst case behind it.
+- **Action bar (Race detail, Result detail):** tab-bar glass with a rim instead of the hairline, above the bottom safe area (C1, designer 2026-10-19). Its caption passes AA over the worst case behind it. Its one button (Register on \<domain\>, Open official result) is the screen's amber primary and a 22px capsule, as every control inside a bar (C7, step 5). On Race detail, "Couldn't open the link" shows as an inline error inside the bar for now; the markup pass makes it a native alert (designer, 2026-10-22).
 - **Top bar (grayscale screens):** ground glass with a rim, below the top safe area. Back and Cancel in `--text-1`; Save on Log result in `--accent` (that screen's one primary); "Saving…" in `--text-2` with the spinner.
 - **Confirm alert:** Sign out, the destructive action, is `--destructive` (coral) text; Cancel stays `--text-1` (HIG Alerts). The pressed segment is `--bg-3`, `--text-1`, with a 1px `--field-line` outline.
+
+### The other screens (step 5, 2026-10-22)
+- **Log result:** a drill-down form under the ground-glass top bar ("‹ My Results", the centered title, **Save in amber text**, the screen's one primary; "Saving…" in `--text-2` with the spinner). Fields on `--bg-1` with a 1px `--field-line` boundary; invalid fields take the 2px coral ring inside plus an 18px coral icon on the error line, so color is never the only signal; the form alert under the bar on `--error-bg`. The catalog row and the linked race on `--bg-1`; Unlink race tonal.
+- **Race picker:** a sheet screen. It rests at the large detent (38px [?] corners, sheet glass, the float shadow) over Log result under the scrim. Inside: a plain top bar (Cancel, "Find a race"; no second glass), the search capsule with the Solar magnifier and the `--field-line-sheet` boundary (C4, C7), the list intro, race cards without photos. Its secondary "Type it in instead" is outlined on the sheet, as the Filters sheet's Cancel.
+- **Result detail:** as Race detail, without a photo: the race name, the finish time (Schibsted 32px) under its label, the facts, the proof section (the full link, the proof line, the note "Onrace doesn't verify results."), and the action bar's capsule "Open official result on \<domain\>".
+- **Sign in / Sign up, Reset password, New password (the gates):** modals with a ground-glass top bar (Cancel or "‹ Sign in", the centered title) that floats over the page, which scrolls under it. A gate intro in `--text-2`, the Sign in / Create account segmented control (6px in content), fields, one full-width amber submit; busy: the spinner and the present-tense label, the form locked. Small text links (Forgot password?, Reset password again) have 44pt targets. Check your inbox: the address in 600, Send a new link (secondary, a spinner while sending). Full-screen errors (an expired reset or confirmation link) are the empty/error component on the page, not a box.
+- **Profile:** a top-level tab with the large title and the floating tab bar (the current tab its one amber). The initials in an 80px circle on `--bg-2`; the name and email; the grouped Account rows on `--bg-1` (44px, values in `--text-2`, a Solar chevron after Country and Language), the group footer; Sign out as a full-width `--bg-1` button in Text 1; its confirm alert with Cancel and Sign out in coral (`--destructive`).
 
 ### Empty and error states
 One component, the iOS ContentUnavailableView pattern (designer, 2026-10-19). Centered horizontally and vertically in the free area below the header and above the floating tab bar: a 48px Solar icon on top (`--icon-state`), then a 17px / 600 heading, 15px `--text-2` body (65ch max), then actions in the button hierarchy, centered, 12px apart.
 - **Empty:** a muted `--text-2` icon that names what's missing: magnifier on Race browse (nothing matches), archive on Results list (the results archive is empty).
 - **Error:** Solar danger-circle in `--error`, the screen's only coral. Nothing else turns red.
-- Icons are CSS masks chosen by context; the markup is the wireframes'. In the map panel the same block sits on `--bg-1`.
+- Icons are CSS masks chosen by context; the markup is the wireframes'.
+- **On the page, never framed** (designer, 2026-10-22): no outline, frame or surface around the state, on any screen. In Race browse's Map view, while the map holds an empty or error state, the map frame drops its outline, water and land, and the state has no panel: it looks as it does in List view. On a drill-down (Race detail) it is centered in the area under the top bar, with the 16px gutter.
 
 ### Filters sheet (signature)
 Sheet glass (`--bg-2` at 90%, blurred), 38px top corners [?] with a rim along the top edge, the float shadow, over the scrim. It rests at the large detent only, and slides up over 250ms (`--dur-sheet`, `--ease-out`; 0ms under reduced motion). A 32×4px handle in `--field-line-sheet`; a 17px / 600 heading; 15px `--text-2` labels; fields and checkboxes as above; a sticky footer at the sheet's bottom edge, solid `--bg-2`, with Cancel (outlined) and Apply filters (the sheet's one primary), each half the width. The markup pass moves these to a top toolbar and makes the grabber a real control (G12, G14); swipe-to-dismiss stays out of scope (G15).
 
 ### Static map (signature)
-A frame in `--bg-bar` (water) with a 1px `--field-line` boundary and a 6px radius. Natural Earth land is masked in `--bg-1`, coastlines and borders in `--bg-3`. Pins: a 10px `--text-1` dot ringed in water color on the real coordinate, and a 22px `--bg-2` label (11px / 600, `--text-1`, 4px radius) joined by a 1px `--text-2` leader line. Hover lifts the label to `--bg-3`. No accent anywhere on the map. The caption is 11px `--text-2`.
+A frame in `--bg-bar` (water) with a 1px `--field-line` boundary and a 6px radius. Natural Earth land is masked in `--bg-1`, coastlines and borders in `--bg-3`. Pins: a 10px `--text-1` dot ringed in water color on the real coordinate, and a 22px `--bg-2` label (11px / 600, `--text-1`, 4px radius) joined by a 1px `--text-2` leader line. Hover lifts the label to `--bg-3`. No accent anywhere on the map. The caption is 11px `--text-2`. While the map holds an empty or error state, the frame gives way (see Empty and error states).
 
 ## Do's and Don'ts
 

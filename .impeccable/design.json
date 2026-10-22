@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-19T20:46:48+00:00",
+  "generatedAt": "2026-10-22T19:52:09+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -332,7 +332,7 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "format chips and active filter chips. The markup keeps the format's own name (\"Half marathon\")."
+        "purpose": "format chips. (Active filter chips are 13px / 600 in sentence case, since 2026-10-22.) The markup keeps the format's own name (\"Half marathon\")."
       },
       "tab-label": {
         "displayName": "Tab Label",
@@ -477,14 +477,14 @@
       "Two faces: Schibsted Grotesk 800 for the title and key numbers, Hanken Grotesk 400/600 for everything else.",
       "Small radii: 4px inside, 6px outside in content. Bar chrome is native: the floating tab bar is a capsule, controls inside bars are concentric capsules (C7), the Filters sheet takes the sheet radius (38px [?]), and Profile initials are the one circle.",
       "Flat content, glass chrome: the tab bar, the controls bar, the top bar, the action bar and the Filters sheet are translucent graphite with blur (C1). Cards never are. Shadows belong to what floats: the sheet and the tab bar.",
-      "Neutral metadata: format chips, filter chips, map pins, the saved confirmation and every pressed state stay gray.",
-      "Black-and-white photos, 3:1, inset in the race card.",
+      "Neutral metadata: format chips, filter chips (gray capsules), map pins, the saved confirmation and every pressed state stay gray.",
+      "Black-and-white photos, 3:1: inset in the race card, and at full content width on top of Race detail (the same band).",
       "Solar bold icons, drawn as CSS masks in the color of their text."
     ],
     "rules": [
       {
         "name": "The Two Lights Rule",
-        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is an outline, the pressed segment is `--bg-3`, a checked checkbox is `--control-tint` (Text 1, C4), the focus ring is `--text-1`.",
+        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--bg-3`, a checked checkbox is `--control-tint` (Text 1, C4), the focus ring is `--text-1`.",
         "section": "colors"
       },
       {

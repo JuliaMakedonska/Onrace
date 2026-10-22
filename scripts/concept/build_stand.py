@@ -133,6 +133,8 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Results list · disclosure indicator on a row (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
     ('Pressed card or row: meta on the pressed level', 'text-2', 'bg-3', 'text'),
     ('Pressed race card: format chip label (the chip keeps bg-2)', 'chip-text', 'bg-2', 'text'),
+    ('Race picker · search field boundary against its fill (non-text, 3:1)', 'field-line-sheet', 'bg-1', 'ui'),
+    ('Profile · pop-up chevron on a row, Saving… spinner (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
 ]
 # ---------------------------------------------------------------- glass (C1): text over glass, against the worst case behind it
 def _rgb(h): h = h.lstrip('#'); return [int(h[i:i+2], 16) for i in (0, 2, 4)]
@@ -161,6 +163,8 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Filters sheet · field labels and legend', 'text-2', 'sheet', 'text'),
     ('Filters sheet · field and checkbox boundary, outlined Cancel (non-text, 3:1)', 'field-line-sheet', 'sheet', 'ui'),
     ('Filters sheet · checked box, neutral tint (non-text, 3:1)', 'control-tint', 'sheet', 'ui'),
+    ('Race picker sheet · error state icon (non-text, 3:1)', 'error', 'sheet', 'ui'),
+    ('Race picker sheet · race name, state heading, Cancel, title', 'text-1', 'sheet', 'text'),
 ]
 def min_alpha(where):   # the lowest fill opacity at which every pair on this glass still passes
     for pct in range(0, 101):
@@ -210,6 +214,12 @@ def _stamp(path):
     open(path, 'w').write(html)
 STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
 STAMPED += [f'wireframes/race-detail{x}.html' for x in ('', '-error', '-loading')]   # step 5, Discovery group (2026-10-22)
+STAMPED += [f'wireframes/{p}.html' for p in (   # step 5, Archive and Infrastructure groups (2026-10-22)
+    'log-result', 'log-result-error', 'log-result-loading', 'race-picker', 'race-picker-empty', 'race-picker-error', 'race-picker-loading',
+    'result-detail', 'result-detail-error', 'result-detail-loading',
+    'sign-in-sign-up', 'sign-in-sign-up-check-inbox', 'sign-in-sign-up-error', 'sign-in-sign-up-loading',
+    'reset-password', 'reset-password-check-inbox', 'reset-password-error', 'reset-password-loading',
+    'new-password', 'new-password-error', 'new-password-loading', 'profile', 'profile-error', 'profile-loading')]
 for _p in STAMPED:
     _stamp(os.path.join(ROOT, _p))
 
@@ -857,6 +867,8 @@ for _f in ['concept/concept.html', 'concept/stand.css', 'concept/first-screen.ht
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots
+shutil.copyfile(os.path.join(ROOT, 'ui/review-step5.html'), os.path.join(ROOT, 'public/ui/review-step5.html'))
 import glob   # our own photos (visuals/*.jpg), linked by the screens as ../visuals/<file>
 os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
 for _v in glob.glob(os.path.join(ROOT, 'visuals/*.jpg')):

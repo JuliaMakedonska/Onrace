@@ -424,7 +424,7 @@ The triage covers the two Podium screens. The HIG gap check of the eight graysca
 
 The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C7 are applied.
 
-**Kit: styles only, steps 3 and 5 (17; G36 and G38 added in step 5, Discovery).**
+**Kit: styles only, steps 3 and 5 (24; G36, G38 from step 5, Discovery; G51, G52, G62, G63, G65, G66 from Archive and Infrastructure, fixed; G67 open).**
 
 | Gap | Why it's styles only |
 |---|---|
@@ -445,8 +445,14 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G29 Text sizes | The C3 mapping, in `ui/kit.css` |
 | G36 Official site link target (Race detail) | `min-height` on the link, the line kept in place (step 5) |
 | G38 Register / Open button in the action bar | C7: a control inside a bar is a capsule (step 5) |
+| G51 Race picker search field | The search capsule, icon and sheet boundary (C4, C7) on `form.search` |
+| G52 Race picker as a sheet | Rests at the large detent over Log result under the scrim |
+| G62 44pt on small text links | Forgot password?, Reset password again, a row's Try again: tap padding, the lines unmoved |
+| G63, G66 Busy indicators | The spinner on "Sending…" (Send a new link) and on Profile's "Saving…" row note |
+| G65 Profile pop-up rows | A Solar chevron after Country and Language; rows 44px |
+| G67 Confirm alert material and radius | **Open:** needs the system alert's radius and material from Apple's kit (like `--radius-sheet` [?]); not applied |
 
-**Markup pass: changes structure, controls or text, between steps 5 and 6 (16; G34, G35, G37 added in step 5, Discovery).**
+**Markup pass: changes structure, controls or text, between steps 5 and 6 (33; G34, G35, G37 added in step 5, Discovery; two rows from the Discovery review, designer 2026-10-22; G40–G64 from step 5, Archive and Infrastructure).**
 
 | Gap | Why it needs markup |
 |---|---|
@@ -466,8 +472,25 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G34 Race detail: inline title on scroll | The race name has to appear in the top bar (a centered `.bar-title`) once the `h1` scrolls under it: a new element plus a scroll trigger, as G4 |
 | G35 Race detail: content under the action bar | Running content under the glass needs the bar’s live height as scroll padding (it grows with the inline error): a script, or the bar moved inside the scroll area |
 | G37 Race detail `-error`: no `h1` | DetailError’s heading is an `h2` and the page has no `h1`; it needs a heading level change (or a visually hidden `h1`) |
+| Race detail: "Couldn’t open the link" as a native alert (designer, 2026-10-22) | RegLinkError becomes a native alert ([Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts)) instead of an inline error that grows the bottom action bar: a `dialog.alert` like Profile’s Sign out confirm, opened by the Register script. The action bar keeps one fixed height, which also makes G35 simpler |
+| Race detail: action caption "Opens in a new tab" → "Opens the race website" (designer, 2026-10-22) | A text change: on iOS the link opens Safari or an in-app browser, not a tab. When the pass runs, update `microcopy.md` (the Race detail action-bar caption rows) and re-run `scripts/build_voice_html.py` for `voice.html` |
+| G40 Log result as a modal | A self-contained create task is a sheet with Cancel and the confirming action ([Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets)); today a pushed drill-down with "‹ My Results" + Save. Changes navigation (`flows.md`) |
+| G41 Log result: confirm before discarding | Back drops typed data silently; HIG asks to confirm. Script and an alert |
+| G42 Log result form as a grouped list | Stacked label-over-field, as G20 |
+| G43 Log result: Sport type as a pop-up button | A `<select>` drawn as a field, as G17 |
+| G44 Log result: compact date picker | `input type=date` shows the browser's locale format, as G18 |
+| G45 Log result: Finish time keyboard | `type=text` without `inputmode`: the full keyboard opens |
+| G47 Race picker: mark the linked race | With `?catalog=` the chosen race isn't checkmarked |
+| G48 Race picker: heading levels | `h1` then row `h3`s, as G33 |
+| G53 Result detail: inline title on scroll | As G34 |
+| G54 Result detail: content under the action bar | As G35 |
+| G55 Result detail `-error`: no `h1` | As G37 |
+| G56 Result detail: Open button label | "Open official result on valenciaciudaddelrunning.com" wraps the capsule to two lines; a text change (`voice.md`) |
+| G60 Gates: confirming action in the bar | Sign in, Reset password, New password: Cancel leading, the confirm action trailing in the bar, instead of a full-width button at the form's end. Designer decides (Log result already uses a bar Save) |
+| G61 Gates: forms as grouped lists | As G42 |
+| G64 Gates' full-screen errors: heading levels | New password `-error?cause=expired`, Sign in `-error?cause=confirm`: only the bar title is an `h1`, the state heading an `h2` (as G37) |
 
-**Out of scope: prototype behavior, or not our standard (6).**
+**Out of scope: prototype behavior, or not our standard (10).**
 
 | Gap | Reason |
 |---|---|
@@ -477,6 +500,10 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G30 7:1 for small custom text | Our standard is WCAG AA (4.5:1), checked on all 65 pairs by `build_stand.py`; HIG's 7:1 is "strive for", not its minimum |
 | G31 System light appearance | Dark only is a designer decision (C5) |
 | G39 Swipe from the edge to go back (Race detail) | A gesture in a static prototype; the "‹ Discover" back button is the on-screen way, which HIG asks for anyway |
+| G46 Log result: Save as `.prominent` | Amber text Save is a designer decision (Kit feedback #2, 2026-10-19) |
+| G49 Race picker: swipe down to dismiss | As G15 |
+| G50 Race picker: search as you type | As G9 |
+| G57 Log result, Result detail: edge swipe back | As G39 |
 
 ### Kit feedback (designer, 2026-10-19)
 
@@ -577,7 +604,7 @@ One figure is below 2 full cards: the viewer with two filters on, 1 full + 75% c
 
 Lesson 7 step 5, first group. `race-detail.html`, `-error` and `-loading` link `ui/kit.css` and lost their `<style>` blocks; `class="onrace"` on the body. Structure and text are the wireframes', checked by `git diff`: the only markup added is one `<img class="photo">` per race and one photo bar in the loading skeleton; the only markup removed is three inline `style="width:…"` on skeleton bars (the kit sizes them). Race detail is a drill-down screen, so the shell's large title and tab bar don't apply; its top bar was already in the markup. The filtered Race browse state (`?sport=`) was already on the kit; nothing was left.
 
-**Photo.** Each race's card file and focus class, at 3:1 like the card, full content width (358 × 119 at 390). Measured in the browser, in the 1536 × 1024 source: Berlin y 379–891, London 307–819, Dallas 225–737, DEKA and Spartan 92–604, Boston and UTMB 369–881, the full width in every case. The same as the round-3 bands, so no unretouched mark shows. `alt=""` as on the card: the photo is decorative, the race name is the `h1` under it.
+**Photo: kept, a designer decision (2026-10-22).** A structural exception to "structure exactly as in the wireframe": Race detail opens with the race’s photo, the same file, 3:1 band and focus class as the race’s card on Race browse, so it shows exactly the band retouched in round 3. Any other crop needs another retouch pass first (`visuals/README.md`). Each race's card file and focus class, at 3:1 like the card, full content width (358 × 119 at 390). Measured in the browser, in the 1536 × 1024 source: Berlin y 379–891, London 307–819, Dallas 225–737, DEKA and Spartan 92–604, Boston and UTMB 369–881, the full width in every case. The same as the round-3 bands, so no unretouched mark shows. `alt=""` as on the card: the photo is decorative, the race name is the `h1` under it.
 
 **Added to the kit** (`ui/kit.css`, `ui/kit.html`, `ui/inventory.md` first, then used):
 - `.race > .photo` and `.race .bar.photo`: the detail photo and its skeleton, outer 6px radius (it sits on the page).
@@ -597,4 +624,27 @@ Lesson 7 step 5, first group. `race-detail.html`, `-error` and `-loading` link `
 | G39 | Back | Swipe from the leading edge goes back | Back button only | **O** (a gesture in a static prototype) |
 
 **Already native on Race detail:** the back button names the destination ("‹ Discover"); one primary (Register, amber) per state, Try again on DetailError; errors in context (ContentUnavailableView for DetailError, the inline error beside Register for RegLinkError), no alert; the skeleton pulses and the back button works while loading; 44px Register and Dismiss; Dynamic Type sizes from the kit. "Dismiss" and "Try again" still need full accessible names (Deferred to Lesson 7).
+
+**Discovery review (designer, 2026-10-22).** The photo stays (above). Two items go to the markup pass (Gap triage → Markup pass): "Couldn’t open the link" becomes a native alert, and the action caption becomes "Opens the race website". DESIGN.md now covers Race detail. Two kit fixes reach every screen:
+- **Active filter chips:** iOS capsules (`--radius-filter-chip`, half the 32px height; C7, they sit in the controls bar) in a quiet `--bg-2` fill with no outline, the format’s name in sentence case (13px / 600), the Solar close-circle inside in `--text-2`; hover `--bg-3`. Format chips on cards keep 4px and uppercase. Contrast by the build: label 13.05:1 on `--bg-2` (12.17:1 on hover), the remove icon 6.01:1 (5.60:1). The old outline pair and the chip pairs over glass are gone (the capsule is opaque).
+- **Empty and error states never framed.** The frame on `race-browse-error.html` (and `-empty`) was in the Map view: `.map-placeholder { box-shadow: inset 0 0 0 var(--border) var(--field-line); background: var(--map-water) }` (a 1px `#686E75` outline on the water, with the land masks over it) plus `.map-placeholder .state-message { background: var(--bg-1); border-radius: var(--radius-2); padding: var(--space-4) }` (a raised panel). Now, while the map holds a state, it drops its outline, water and land, and the state has no panel: it sits on the page as in List view. Checked on every painted empty and error state; the other screens' states are checked as their groups are painted. Before and after: `ui/review-step5.html`.
+
+### Step 5, Archive and Infrastructure on the kit (2026-10-22)
+
+The rest of step 5, in parallel, one subagent per group, with the Discovery rules. **Every screen is now on the kit:** all 35 pages link `ui/kit.css`, with no `<style>` block and no inline style (the map pins' `left`/`top` on Race browse stay, deferred). `wireframes/_wireframe/` untouched.
+
+**Archive** (Log result, Race picker, Result detail; 10 pages). Markup touches: the busy and invalid hooks were already in the markup; Result detail `-loading` lost two inline skeleton widths. No shell (drill-downs and a sheet). In the kit, block `step 5 · Archive`:
+- Log result's `header.top-bar` stays a bar (the large-title header grid no longer catches it).
+- **Race picker is a sheet screen:** the page shows the sheet at its large detent over Log result under the scrim (it rendered blank before: the Filters sheet's off-screen start); its top bar is plain inside the sheet (no second glass); its search field is the search capsule with the Solar magnifier and the sheet boundary (C4, C7); the secondary "Type it in instead" is outlined on the sheet, as the Filters sheet's Cancel (a tonal button vanishes on `--bg-2`).
+- The state message inside the sheet takes the sheet's gutter.
+
+**Infrastructure** (Sign in / Sign up, Reset password, New password, Profile; 14 pages). Markup touches: `aria-busy="true"` on the busy submit button of the three gates' `-loading` pages (G26 spinner). Profile's header and tab bar already matched the shell; the gates are modals with top bars, no shell. In the kit, block `step 5 · Infrastructure`:
+- A top bar that is a child of `body` (the gates) floats over the page, which starts below it and scrolls under its glass (before: 45px cut off at the bottom).
+- `.view-toggle[hidden]` hides (it showed on `cause=confirm`).
+- **Full-screen gate errors as ContentUnavailableView:** New password `-error?cause=expired` and Sign in `-error?cause=confirm` (the form is gone, so the inline error is the whole state and loses its `--error-bg` surface there only; inside a form, inline errors and form alerts keep theirs). A judgment call by the subagent, to review.
+- Profile's load error centered with the gutter; spinners on "Sending…" and Profile "Saving…"; 44pt on small text links (G62); Profile rows 44px with a pop-up chevron (G65); the alert's focus ring no longer clipped.
+
+**Checked by the lead:** `build_stand.py` passes (rules 1, 2, 3a; 94 solid pairs + 13 over glass; 176 of 176 tokens; four new pairs: the picker's search boundary, Profile's row chevron, and the error icon and Text 1 on the picker's sheet glass). Every empty and error state on every screen audited in the browser: none has an outline, border, shadow or surface around it except Race picker's own sheet (the screen itself). Amber per state: at most the one primary and the current tab (Profile `-error`: Try again + the tab). Shots of every state: `ui/review-step5.html`.
+
+**HIG, the two groups:** Archive G40–G57, Infrastructure G60–G68, in the triage above. Two need the designer: **G67** (the confirm alert's system radius and material, a value from Apple's kit) and **G68** (HIG shows Sign Out in red in Settings; the kit keeps coral only in the alert, decision 2026-10-19), out of scope until decided.
 
