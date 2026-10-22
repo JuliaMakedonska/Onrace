@@ -44,7 +44,8 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Titles, body, finish time on the page', 'text-1', 'bg-0', 'text'),
     ('Titles, item titles, finish time on a card', 'text-1', 'bg-1', 'text'),
     ('Secondary button label', 'text-1', 'bg-2', 'text'),
-    ('Active filter chip label (transparent chip, on the page)', 'text-1', 'bg-0', 'text'),
+    ('Active filter chip label on its tonal capsule (designer, 2026-10-22)', 'text-1', 'bg-2', 'text'),
+    ('Active filter chip label, hover', 'text-1', 'bg-3', 'text'),
     ('Selected List/Map segment, hover and open fills', 'text-1', 'bg-3', 'text'),
     ('Unselected List/Map segment on hover', 'text-2', 'bg-3', 'text'),
     ('Meta on the page (counts, sort)', 'text-2', 'bg-0', 'text'),
@@ -67,7 +68,6 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Stand panels: secondary text', 'text-2', 'bg-bar', 'text'),
     ('Focus ring against the page (non-text, 3:1)', 'focus', 'bg-0', 'ui'),
     ('Focus ring against a card (non-text, 3:1)', 'focus', 'bg-1', 'ui'),
-    ('Filter chip outline against the page (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
     ('Search field outline against its own fill (non-text, 3:1)', 'field-line', 'bg-1', 'ui'),
     ('Search field outline against the page (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
     ('Disabled button label', 'text-disabled', 'bg-2', 'exempt'),
@@ -120,7 +120,8 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Results list · Log result stepped down to secondary (empty, error)', 'text-1', 'bg-2', 'text'),
     ('Results list · count separator hairline', 'line', 'bg-0', 'info'),
     ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
-    ('Race browse · filter chip remove icon, close-circle (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
+    ('Race browse · filter chip remove icon on the capsule, close-circle (non-text, 3:1)', 'text-2', 'bg-2', 'ui'),
+    ('Race browse · filter chip remove icon on the capsule, hover (non-text, 3:1)', 'text-2', 'bg-3', 'ui'),
     ('Race browse · Filters sheet calendar icon in a date field (non-text, 3:1)', 'text-1', 'bg-0', 'ui'),
     ('Empty state icon, muted, on the page (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
     ('Error state icon, coral, on the page (non-text, 3:1)', 'error', 'bg-0', 'ui'),
@@ -152,8 +153,7 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Tab bar · inactive tab label over content', 'text-2', 'bar', 'text'),
     ('Tab bar · current tab (accent) over content', 'accent', 'bar', 'text'),
     ('Action bar · caption over content (“Opens in a new tab.”)', 'text-2', 'bar', 'text'),
-    ('Controls bar · active filter chip label, Clear all filters', 'text-1', 'ground', 'text'),
-    ('Controls bar · filter chip outline and remove icon (non-text, 3:1)', 'text-2', 'ground', 'ui'),
+    ('Controls bar · Clear all filters (the chips are opaque capsules: their pairs are solid)', 'text-1', 'ground', 'text'),
     ('Top bar · back link, title, Cancel', 'text-1', 'ground', 'text'),
     ('Top bar · Save, Log result’s one primary (accent text)', 'accent', 'ground', 'text'),
     ('Top bar · “Saving…” with its spinner', 'text-2', 'ground', 'text'),
@@ -559,8 +559,9 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-sheet</code></td><td>{tok("radius-sheet")}</td><td>The Filters sheet's (and Race picker's) top corners. {P}.</td><td>G16 · Native sheet anatomy (designer, 2026-10-18): the system's sheet radius, not a Podium radius</td></tr>
 <tr><td><code>--radius-bar-control</code></td><td>{tok("radius-bar-control")} = 22px</td><td>A control inside a bar: the Filters button and the segmented track in the controls bar (Filters added by the designer, 2026-10-19); the search field once it pins to a bar (G8).</td><td>C7: concentric only inside bars; content keeps 4/6</td></tr>
 <tr><td><code>--radius-bar-inner</code></td><td>{tok("radius-bar-inner")} = 18px</td><td>A segment inside that track: the outer radius minus the track's 4px padding.</td><td>C7: concentric corners</td></tr>
+<tr><td><code>--radius-filter-chip</code></td><td>{tok("radius-filter-chip")} = 16px</td><td>Active filter chips in the controls bar: a capsule, half the 32px chip height.</td><td>C7: a control inside a bar is a capsule (designer, 2026-10-22). Format chips on cards keep 4px</td></tr>
 <tr><td><code>--radius-avatar</code></td><td>{tok("radius-avatar")}</td><td>Profile initials (a circle); also the busy spinner's ring.</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
-<tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers, filter chip outline.</td><td>Attribute a: the frame stays quiet</td></tr>
+<tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
 <tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus, in Text 1, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
 <tr><td><code>--shadow-sheet</code></td><td>{tok("shadow-sheet")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
 <tr><td><code>--target</code></td><td>{tok("target")}</td><td>Minimum height of every control or its tap area.</td><td>Critique fix (round 2): touch targets</td></tr>

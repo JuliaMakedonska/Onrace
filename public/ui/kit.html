@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=965858ec">
-<link rel="stylesheet" href="map.css?v=965858ec">
+<link rel="stylesheet" href="kit.css?v=bcbec869">
+<link rel="stylesheet" href="map.css?v=bcbec869">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -397,7 +397,7 @@
 
     <div class="kit-item" id="state-message">
       <h3>State message</h3>
-      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. One component, the iOS ContentUnavailableView pattern: on a screen it is centered in the free area below the header; a 48px icon on top (muted for empty: magnifier, or archive on Results list; the coral error icon for errors), then the title, the body and the actions, centered. Icons are CSS masks; the markup is the wireframes'. Empty (status) or error (alert); one or two actions in the button hierarchy.</p>
+      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. One component, the iOS ContentUnavailableView pattern: on a screen it is centered in the free area below the header; a 48px icon on top (muted for empty: magnifier, or archive on Results list; the coral error icon for errors), then the title, the body and the actions, centered. Icons are CSS masks; the markup is the wireframes'. Empty (status) or error (alert); one or two actions in the button hierarchy. <b>It sits directly on the page (designer, 2026-10-22):</b> no outline, frame or surface around it, on any screen. In Race browse's Map view the map frame drops its outline, water and land while it holds a state, and the state has no panel. (The white frames on this page are the showcase's specimen frames, not part of the component.)</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse -empty</p>
           <div class="kit-frame"><div class="state-message" role="status"><h2>No races match your current filters</h2><p>Remove a filter above, or try a wider date range, another region, or more sport types.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button><button type="button" class="state-action secondary">Clear all filters</button></div></div></div>
@@ -569,7 +569,7 @@
 
     <div class="kit-item" id="controls">
       <h3>Race browse · controls bar, active filter chips, sort control</h3>
-      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. The chips row scrolls and fades at its end.</p>
+      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. The chips row scrolls and fades at its end. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">No filters</p>
           <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></main></div></div>
@@ -601,7 +601,7 @@
             </div>
           </div></div>
         </div>
-        <div class="kit-state"><p class="kit-label">No races match: the state message on the map</p>
+        <div class="kit-state"><p class="kit-label">No races match, in Map view: the map frame gives way, the state sits on the page</p>
           <div class="kit-frame kit-stage"><div class="view-panel kit-map">
             <div class="map-placeholder"><div class="state-message"><h2>No races match your current filters</h2><p>Remove a filter above, or try a wider date range, another region, or more sport types.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button><button type="button" class="state-action secondary">Clear all filters</button></div></div></div>
           </div></div>
