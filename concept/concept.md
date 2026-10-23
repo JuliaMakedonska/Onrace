@@ -678,3 +678,5 @@ The rest of step 5, in parallel, one subagent per group, with the Discovery rule
 - **Computed styles:** every element and `::before`/`::after` on all 35 pages (2,491 boxes), old kit against merged kit. The only differences are on boxes that don't render: a hidden segmented control's margin, an `h2::before` that was `content: none` and is now not generated at all, and `gap: 0px` vs `normal` on Log result's flex top bar (both 0).
 - **Interaction states:** all 60 `:hover`, `:active` and `:focus` rules compared declaration by declaration: identical.
 
+**Loading Map view (designer, 2026-10-23):** the map surface pulses like the skeletons (C6), so a loading map no longer reads as an empty one. The kit adds `.map-placeholder[aria-busy="true"]` to the skeletons' pulse rule and to their reduced-motion rule, so it shares the same keyframes, 1.6s, ease and 0.55 low point, and stands still under `prefers-reduced-motion`. Checked in the browser: running with the skeleton bars' exact timing; opacity 0.55 at the low point; no animation under reduced motion; no other map (base, empty, error) animates. Every page and state at 390×844, frozen at frame 0: unchanged.
+

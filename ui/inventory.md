@@ -78,7 +78,7 @@ Single-screen blocks, by screen.
 - **Filters trigger with count** ("Filters · N").
 - **Sort control** (`.sort-control`, "Sort: Soonest first"; two options; hidden in Map view; disabled on `-loading`). Native: [Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons). Gaps: G21 M.
 - **Sport-type checkboxes** (seven, in the Filters sheet). Native: [Toggles](https://developer.apple.com/design/human-interface-guidelines/toggles), [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables). Gaps: G19 M.
-- **Static map** (`.map-placeholder.has-pins`, `a.map-pin` ×7, `.map-caption`). States: pins filtered with the list; empty, error and loading messages inside the map. The bracketed wireframe notes (`.map-caption`, the `p` before a map state's heading, the loading map's text) are hidden by the kit since 2026-10-23; removing them from the markup is in the markup pass.
+- **Static map** (`.map-placeholder.has-pins`, `a.map-pin` ×7, `.map-caption`). States: pins filtered with the list; empty, error and loading messages inside the map. The bracketed wireframe notes (`.map-caption`, the `p` before a map state's heading, the loading map's text) are hidden by the kit since 2026-10-23; removing them from the markup is in the markup pass. Loading: the map surface pulses with the skeletons (C6), still under reduced motion.
 - **Race photo** (`img.photo` with `.photo--low/mid/lower/center/high` crops). Photo: yes.
 
 **Race detail**

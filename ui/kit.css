@@ -570,9 +570,9 @@ body > .sheet > form.search::before { left: calc(var(--space-4) * 2); }
 
 /* ---------- skeleton (loading): no spinner, no invented progress ---------- */
 /* C6/G25: skeletons breathe, subtly; still under reduced motion */
-.bar, .initials.skel { animation: onrace-pulse var(--dur-pulse) var(--ease-in-out) infinite; }
+.bar, .initials.skel, .map-placeholder[aria-busy="true"] { animation: onrace-pulse var(--dur-pulse) var(--ease-in-out) infinite; }   /* the loading Map view breathes too (designer, 2026-10-23) */
 @keyframes onrace-pulse { 50% { opacity: var(--skel-pulse-dim); } }
-@media (prefers-reduced-motion: reduce) { .bar, .initials.skel { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .bar, .initials.skel, .map-placeholder[aria-busy="true"] { animation: none; } }
 
 /* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
 .controls { display: grid; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
