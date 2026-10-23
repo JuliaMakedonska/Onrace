@@ -134,7 +134,7 @@ Single-screen blocks, by screen.
 
 ## Consolidated (2026-10-23)
 
-- **Kit decisions applied:** G67 (the alert as iOS 26: glass, `--radius-alert` [?]), G68 (Sign out coral in its row), Race picker's cards one background level above the sheet (`--bg-3`; pressed keeps the level and takes a `--text-2` ring), Log result's locked values kept in Text 2 in Safari too (`-webkit-text-fill-color`).
+- **Kit decisions applied:** G67 (the alert as iOS 26: glass, `--radius-alert` [?]), G68 (Sign out coral in its row), Race picker's cards one background level above the sheet (`--bg-3`) with a `--line` hairline (decorative, 1.22:1 against the sheet; pressed keeps the level and takes a `--text-2` ring), Log result's locked values kept in Text 2 in Safari too (`-webkit-text-fill-color`).
 - **`ui/kit.css` consolidated:** the step 5 override blocks are merged into the components they override (top bar, sheet, search field, race card, state message, buttons, rows, the alert, text links). Checked with no visual change (`concept/concept.md` → Consolidation).
 - **Removed, no screen uses them:** `.photo--high` (and its token), `.screen-title`, the plain `.skeleton`. **Moved to `concept/specimens.css`** (the stand and the first-screen study use them, no screen does): the `.btn` family, `.icon` in a button, `.status` messages.
 - **`ui/kit.html` against this inventory:** every specimen is an inventory component; it uses no class the screens don't (beyond its own showcase layout and the `.is-pressed` / `.is-focus` stand-ins).

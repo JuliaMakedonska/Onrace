@@ -129,6 +129,7 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Profile · Sign out in its row (destructive, coral; G68, designer 2026-10-23)', 'destructive', 'bg-1', 'text'),
     ('Profile · Sign out row, hover', 'destructive', 'bg-2', 'text'),
     ('Race picker · race card meta and chip on the raised card (designer, 2026-10-23)', 'text-2', 'bg-3', 'text'),
+    ('Race picker · card hairline (Line) on the raised card; 1.22:1 against the sheet at rest (decorative)', 'line', 'bg-3', 'info'),
     ('Kit · invalid field ring against the field (non-text, 3:1)', 'invalid', 'bg-1', 'ui'),
     ('Kit · invalid field ring against the page (non-text, 3:1)', 'invalid', 'bg-0', 'ui'),
     ('Kit · Filters sheet field boundary against a field (non-text, 3:1)', 'field-line-sheet', 'bg-0', 'ui'),
