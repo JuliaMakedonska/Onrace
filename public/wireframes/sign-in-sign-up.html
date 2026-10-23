@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=35aa0f0a">
+<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Sign in / Sign up (wireframe)">
 
@@ -49,7 +49,7 @@
            above the form, role=status (a confirmation, not an alert). Mode
            is forced to Sign in; it hides again if the person switches to
            Create account. Real markup, un-hidden by the script. -->
-      <p class="reset-done" id="reset-done" role="status" hidden>Password changed. Sign in with your new password.</p>
+      <div role="status"><p class="reset-done" id="reset-done" hidden>Password changed. Sign in with your new password.</p></div>
 
       <!-- ZONE: Sign in | Create account — one screen, two modes
            (_screens.md → Sign in / Sign up → Chrome: "One screen toggles
@@ -159,7 +159,9 @@
       el.hidden = el.getAttribute('data-mode') !== m || (f !== null && f !== dest);
     });
     document.getElementById('password').setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
-    document.getElementById('reset-done').hidden = !(resetDone && m === 'signin');
+    // inside a live region that already exists, revealed a moment later, so screen readers announce it
+    var rd = document.getElementById('reset-done');
+    if (resetDone && m === 'signin') window.setTimeout(function () { rd.hidden = false; }, 150); else rd.hidden = true;
     // The length hint describes the field only in Create account mode.
     if (m === 'signup') document.getElementById('password').setAttribute('aria-describedby', 'pw-hint');
     else document.getElementById('password').removeAttribute('aria-describedby');

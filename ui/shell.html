@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=35aa0f0a">
+<link rel="stylesheet" href="kit.css?v=ce3b09c2">
 </head>
 <!-- The shell: what every top-level screen (Discover, My Results, Profile)
      shares. The large-title header at the top of the scrolling page, and the
@@ -17,10 +17,15 @@
 <body class="onrace">
 
   <div class="phone-screen">
+    <!-- the top bar floats over the large title: empty at rest, the small title once the h1 scrolls away (G4);
+         Log result is Results' primary, a text button at its trailing edge (G5) -->
+    <div class="top-bar top-bar--large" data-collapse>
+      <span class="bar-title" aria-hidden="true" data-title>Discover</span>
+      <a class="bar-action" href="../wireframes/log-result.html" data-results-only hidden>Log result</a>
+    </div>
     <main>
       <header>
         <h1 data-title>Discover</h1>
-        <a class="header-action" href="../wireframes/log-result.html" data-results-only hidden>Log result</a>
       </header>
     </main>
   </div>
@@ -28,22 +33,22 @@
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
       <li><a href="../wireframes/race-browse.html" data-tab="discover" aria-current="page"><span>Discover</span></a></li>
-      <li><a href="../wireframes/results-list-loading.html?run=1" data-tab="results"><span>My Results</span></a></li>
+      <li><a href="../wireframes/results-list-loading.html?run=1" data-tab="results"><span>Results</span></a></li>
       <li><a href="../wireframes/profile-loading.html?run=1" data-tab="profile"><span>Profile</span></a></li>
     </ul>
   </nav>
 
 <script>
 (function () {
-  var TITLES = { discover: 'Discover', results: 'My Results', profile: 'Profile' };
+  var TITLES = { discover: 'Discover', results: 'Results', profile: 'Profile' };
   var tab = new URLSearchParams(location.search).get('tab');
   if (!TITLES[tab]) return;
-  document.querySelector('[data-title]').textContent = TITLES[tab];
+  document.querySelectorAll('[data-title]').forEach(function (t) { t.textContent = TITLES[tab]; });
   document.querySelectorAll('[data-tab]').forEach(function (a) {
     if (a.getAttribute('data-tab') === tab) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  // The large-title header carries Log result on My Results only (its primary action)
+  // The top bar carries Log result on Results only (its primary action)
   document.querySelector('[data-results-only]').hidden = tab !== 'results';
 })();
 </script>

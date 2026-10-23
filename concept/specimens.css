@@ -74,3 +74,38 @@
 .status--warning { background: var(--warning-bg); box-shadow: inset 0 0 0 var(--border) var(--warning-line); }
 .status--warning .icon, .status--warning strong { color: var(--warning); }
 .status p { margin: 0; }
+
+/* ---------- the old Sort pop-up (a <select>): the stand and first-screen study still show it; the screens use .sort-toggle ---------- */
+.sort-control { position: relative; display: flex; align-items: center; gap: var(--space-1); }
+.sort-control label { color: var(--text-2); }
+.sort-control select {
+  min-height: var(--target);
+  padding: 0 calc(var(--icon-s) + var(--space-1)) 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.sort-control::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  margin-top: calc(var(--icon-s) / -2);
+  background: var(--text-1);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
+.sort-control select:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.sort-control:has(select:disabled)::after { background: var(--text-disabled); }
+/* ---------- the old drawn tab icons: first-screen.html still has them (the screens use Solar masks) ---------- */
+.bottom-nav .tab-icon { width: var(--icon-l); height: var(--icon-l); }
+.sort-control[hidden] { display: none; }

@@ -102,10 +102,10 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 25 |Race browse|empty state|Remove a filter above, or try a wider date range, another region, or more sport types.|unchanged|Empty rule: the action, concretely|state message|empty|UI copy||
 | 26 |Race browse|empty state|Loosen filters|**Change filters**|Button rule: name the result of the tap. It opens the Filters sheet; it doesn't loosen anything by itself|button|empty|UI copy||
 | 27 |Race browse|empty state|Clear all filters|unchanged|Already the Dictionary term (A5)|button|empty|UI copy|A5|
-| 28 |Race browse|empty state|[ map placeholder — no pins: 0 races match ]|unchanged|Wireframe scaffolding, not product copy (P1): replaced by the real map/page, not rewritten|state message|empty|wireframe annotation|P1|
+| 28 |Race browse|empty state|[ map placeholder — no pins: 0 races match ]| **(removed)** | Markup pass (designer, 2026-10-23): wireframe scaffolding taken out of the working pages; the frozen _wireframe/ snapshot keeps it |state message|empty|wireframe annotation|P1|
 | 29 |Race browse|global nav|Global navigation|unchanged|Already follows voice.md (Dictionary terms, Microcopy rule for its type)|a11y label|empty; error; loading (state=loading); base|UI copy||
 | 30 |Race browse|global nav|Discover|unchanged|Heading rule: the place's name; also the tab and the future back label "‹ Discover"|tab label|empty; error; loading (state=loading); base|UI copy||
-| 31 |Race browse|global nav|My Results|unchanged|Already follows voice.md (Dictionary terms, Microcopy rule for its type)|tab label|empty; error; loading (state=loading); base|UI copy|T1|
+| 31 |Race browse|global nav|My Results| **Results** | Markup pass (designer, 2026-10-23): one word on the tab (G3, HIG Tab bars); the place keeps its running-copy name, "results archive" |tab label|empty; error; loading (state=loading); base|UI copy|T1|
 | 32 |Race browse|global nav|Profile|unchanged|Already follows voice.md (Dictionary terms, Microcopy rule for its type)|tab label|empty; error; loading (state=loading); base|UI copy||
 | 33 |Race browse|filters sheet|Filters|unchanged|The sheet's name|heading|empty; error; loading (state=loading); base|UI copy||
 | 34 |Race browse|filters sheet|Region|unchanged|Already follows voice.md (Dictionary terms, Microcopy rule for its type)|field label|empty; error; loading (state=loading); base|UI copy||
@@ -135,16 +135,16 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 58 |Race browse|error state|Couldn't load races|**Couldn’t load races**|C3 curly apostrophe; wording already follows the Error rule (what happened)|heading|error|UI copy||
 | 59 |Race browse|error state|Check your connection and try again. Your filters will stay as they are.|**The connection may have dropped. Check it, then try again. Your filters stay as they are.**|Error rule: adds the missing "why", as a possibility (principle 1: Onrace can't know it dropped), then what to do next|state message|error|UI copy||
 | 60 |Race browse|error state|Try again|unchanged|Dictionary term. The Button rule wants an accessible name ("Try loading races again"), but that's an attribute, not text, so it's left for the markup pass|button|error|UI copy||
-| 61 |Race browse|error state|[ map placeholder — no pins: races failed to load ]|unchanged|Wireframe scaffolding, not product copy (P1): replaced by the real map/page, not rewritten|state message|error|wireframe annotation|P1|
+| 61 |Race browse|error state|[ map placeholder — no pins: races failed to load ]| **(removed)** | Markup pass (designer, 2026-10-23): wireframe scaffolding taken out of the working pages; the frozen _wireframe/ snapshot keeps it |state message|error|wireframe annotation|P1|
 | 62 |Race browse|global nav|2026-09-23|unchanged|Not ours to rewrite: user-written|field value (prefilled)|error; loading (state=loading); base|user-written||
 | 63 |Race browse|global nav|2027-09-23|unchanged|Not ours to rewrite: user-written|field value (prefilled)|error; loading (state=loading); base|user-written||
 | 64 |Race browse|(page)|Onrace — Race browse, loading state (wireframe)|unchanged|Wireframe scaffolding, not product copy (P1): replaced by the real map/page, not rewritten|a11y label|loading|wireframe annotation|P1|
 | 65 |Race browse|results row|Loading races…|unchanged|Loading rule: names what's loading|body text|loading (state=loading)|UI copy||
-| 66 |Race browse|results row|Sort:|unchanged|Clear with the new option labels|field label|loading (state=loading); base|UI copy||
-| 67 |Race browse|results row|Soonest first|unchanged|Pairs with "Latest first"|option|loading (state=loading); base|UI copy||
-| 68 |Race browse|results row|Farthest first|**Latest first**|On a map-first screen "farthest" reads as distance; the sort is by race date|option|loading (state=loading); base|UI copy||
+| 66 |Race browse|results row|Sort:| **Sort: (visually hidden, first words of the Sort button's name)** | Markup pass (designer, 2026-10-23): Sort is one button that flips the order (G21); the visible label is the current order, the name says what it is |field label|loading (state=loading); base|UI copy||
+| 67 |Race browse|results row|Soonest first| **Soonest first** (the Sort button's label while that order is on) | Markup pass (designer, 2026-10-23): G21, one button showing the current order; tapping flips it |option|loading (state=loading); base|UI copy||
+| 68 |Race browse|results row|Farthest first| **Latest first** (the Sort button's label while that order is on) | Markup pass (designer, 2026-10-23): G21; "Latest first" kept (date, not distance) |option|loading (state=loading); base|UI copy||
 | 69 |Race browse|loading state|Map loading; race pins appear once races have loaded|**Loading races on the map…**|Loading rule: name what's loading, no explanation of the mechanics|a11y label|loading (state=loading)|UI copy||
-| 70 |Race browse|loading state|[ map placeholder — loading race pins… ]|unchanged|Wireframe scaffolding, not product copy (P1): replaced by the real map/page, not rewritten|body text|loading (state=loading)|wireframe annotation|P1|
+| 70 |Race browse|loading state|[ map placeholder — loading race pins… ]| **(removed)** | Markup pass (designer, 2026-10-23): wireframe scaffolding taken out of the working pages; the frozen _wireframe/ snapshot keeps it |body text|loading (state=loading)|wireframe annotation|P1|
 | 71 |Race browse|(page)|Onrace — Race browse (wireframe)|unchanged|Wireframe scaffolding, not product copy (P1): replaced by the real map/page, not rewritten|a11y label|base|wireframe annotation|P1|
 | 72 |Race browse|results row|7 upcoming races|unchanged|Plain count of what's on screen (Forbidden: counts only as facts)|body text|base|UI copy||
 | 73 |Race browse|results row|Berlin Marathon|unchanged|Not ours to rewrite: catalog data|heading|base|catalog data||
@@ -188,7 +188,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 111 |Race browse|results row|Killington|unchanged|Not ours to rewrite: catalog data|button|base|catalog data||
 | 112 |Race browse|results row|Boston Marathon, Boston, 20 Apr 2027|unchanged|Not ours to rewrite: catalog data|a11y label|base|catalog data||
 | 113 |Race browse|results row|Boston|unchanged|Not ours to rewrite: catalog data|button|base|catalog data||
-| 114 |Race browse|results row|[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]|[ static map — pan/zoom changes what's visible, not which races match ]|Designer-approved text exception (2026-10-14): the old text became untrue after the static Natural Earth map put each pin on its race's real coordinates. Only the untrue part changed; still wireframe scaffolding (P1)|helper text|base|wireframe annotation|P1|
+| 114 |Race browse|results row|[ map placeholder — pin positions are approximate; pan/zoom changes what's visible, not which races match ]| **(removed)** | Markup pass (designer, 2026-10-23): wireframe scaffolding taken out of the working pages; the frozen _wireframe/ snapshot keeps it |helper text|base|wireframe annotation|P1|
 | 115 |Race browse|shared controls|Filters · 2|unchanged|Label + count of active filters|button|base,empty (when filters are on)|UI copy||
 | 116 |Race browse|results row|3 races match your filters|unchanged|Plain count|body text|base (filtered)|UI copy||
 | 117 |Race browse|results row|1 race matches your filters|unchanged|Plain count|body text|base (filtered)|UI copy||
@@ -245,7 +245,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 168 |Race detail|sticky action bar|The registration link didn't open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.| **The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.** | C3 curly apostrophe |state message|error (cause=registration)|UI copy||
 | 169 |Race detail|sticky action bar|Dismiss| unchanged | Checked against voice.md; already follows it |button|error (cause=registration)|UI copy|A3|
 | 170 |Race detail|sticky action bar|Register on bmw-berlin-marathon.com| unchanged | Checked against voice.md; already follows it |button|error (cause=registration); base|UI copy + catalog data (domain)|A2|
-| 171 |Race detail|sticky action bar|Opens in a new tab — sign-up and payment happen there.| **Opens in a new tab — registration and payment happen there.** | A2: races are "registration"; "sign-up" isn't used |helper text|error (cause=registration); base|UI copy|A2|
+| 171 |Race detail|sticky action bar|Opens in a new tab — sign-up and payment happen there.| **Opens the race website — registration and payment happen there.** | Markup pass (designer, 2026-10-23): on iOS the link opens Safari or an in-app browser, not a tab; the line names where it goes |helper text|error (cause=registration); base|UI copy|A2|
 | 172 |Race detail|sticky action bar|Register on hyrox.com| unchanged | Checked against voice.md; already follows it |button|error (cause=registration); base|UI copy + catalog data (domain)|A2|
 | 173 |Race detail|sticky action bar|Register on spartan.com| unchanged | Checked against voice.md; already follows it |button|error (cause=registration); base|UI copy + catalog data (domain)|A2|
 | 174 |Race detail|sticky action bar|Register on baa.org| unchanged | Checked against voice.md; already follows it |button|error (cause=registration); base|UI copy + catalog data (domain)|A2|
@@ -254,7 +254,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 177 |Race detail|race|Loading race details…| unchanged | Checked against voice.md; already follows it |status (a11y / live)|loading|UI copy||
 | 178 |Race detail|(page)|Onrace — Race detail (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|base|wireframe annotation|P1|
 | 179 |Results list|(page)|Onrace — Results list, empty state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|empty|wireframe annotation|P1|
-| 180 |Results list|header|My Results| unchanged | Checked against voice.md; already follows it |heading|empty; error; loading (state=loading); base|UI copy|T1|
+| 180 |Results list|header|My Results| **Results** | Markup pass (designer, 2026-10-23): the screen title matches its tab (G3) |heading|empty; error; loading (state=loading); base|UI copy|T1|
 | 181 |Results list|header|Log result| unchanged | Checked against voice.md; already follows it |button|empty; error; loading (state=loading); base|UI copy||
 | 182 |Results list|results row|0 logged results| *(removed: row hidden in this state)* | Redundant: "No results logged yet" directly below says it (#9) |body text|empty|UI copy|T1|
 | 183 |Results list|empty state|Logged results| **Results archive** | T1: "results archive" / "results"; T1: the collection is the "results archive" |a11y label|empty|UI copy||
@@ -263,7 +263,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 186 |Results list|empty state|Log your first result| unchanged | Checked against voice.md; already follows it |button|empty|UI copy||
 | 187 |Results list|global nav|Global navigation| unchanged | Checked against voice.md; already follows it |a11y label|empty; error; loading (state=loading); base|UI copy||
 | 188 |Results list|global nav|Discover| unchanged | Checked against voice.md; already follows it |tab label|empty; error; loading (state=loading); base|UI copy||
-| 189 |Results list|global nav|My Results| unchanged | Checked against voice.md; already follows it |tab label|empty; error; loading (state=loading); base|UI copy|T1|
+| 189 |Results list|global nav|My Results| **Results** | Markup pass (designer, 2026-10-23): one word on the tab (G3, HIG Tab bars); the place keeps its running-copy name, "results archive" |tab label|empty; error; loading (state=loading); base|UI copy|T1|
 | 190 |Results list|global nav|Profile| unchanged | Checked against voice.md; already follows it |tab label|empty; error; loading (state=loading); base|UI copy||
 | 191 |Results list|(page)|Onrace — Results list, error state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|error|wireframe annotation|P1|
 | 192 |Results list|results row|Results couldn't be loaded| *(removed: row hidden in this state)* | Redundant: "Couldn't load your logged results" directly below says it (#9) |body text|error|UI copy||
@@ -299,7 +299,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 222 |Results list|logged results|21 Sep 2025| unchanged | Not ours to rewrite: catalog data |body text (in tappable row)|base|catalog data||
 | 223 |Results list|logged results|Self-reported · via berlin.r.mikatiming.com| unchanged | Checked against voice.md; already follows it |body text (in tappable row)|base|UI copy + user data (domain)||
 | 224 |Log result|(page)|Onrace — Log result, error state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|error|wireframe annotation|P1|
-| 225 |Log result|top bar|My Results| unchanged | Checked against voice.md; already follows it |button (nav)|error; loading; base|UI copy|T1 A4|
+| 225 |Log result|top bar|My Results| **Results** | Markup pass (designer, 2026-10-23): back label = the destination screen's title (A4), now "Results" |button (nav)|error; loading; base|UI copy|T1 A4|
 | 226 |Log result|top bar|Log result| unchanged | Checked against voice.md; already follows it |heading|error; loading; base|UI copy||
 | 227 |Log result|top bar|Save| unchanged | Checked against voice.md; already follows it |button|error; base|UI copy||
 | 228 |Log result|form|Result details| unchanged | Checked against voice.md; already follows it |heading (screen-reader only)|error; loading; base|UI copy||
@@ -390,7 +390,7 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 313 |Race picker|past races|Killington, USA| unchanged | Not ours to rewrite: catalog data |body text (in tappable row)|base|catalog data||
 | 314 |Result detail|(page)|Onrace — Result detail, error state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|error|wireframe annotation|P1|
 | 315 |Result detail|top bar|Back| unchanged | Checked against voice.md; already follows it |a11y label|error; loading; base|UI copy||
-| 316 |Result detail|top bar|Back to My Results| **My Results** | A4: back label = the destination screen's title |button (nav)|error; loading; base|UI copy|T1 A4|
+| 316 |Result detail|top bar|Back to My Results| **Results** | Markup pass (designer, 2026-10-23): back label = the destination screen's title (A4), now "Results" |button (nav)|error; loading; base|UI copy|T1 A4|
 | 317 |Result detail|result|Couldn’t load this result| unchanged | Checked against voice.md; already follows it |heading|error (cause=detail)|UI copy|C3|
 | 318 |Result detail|result|Check your connection and try again.| **The connection may have dropped. Check it, then try again.** | Error rule: adds the missing "why", as a possibility (principle 1), in the Race browse sample's words |state message|error (cause=detail)|UI copy||
 | 319 |Result detail|result|Try again| unchanged | Checked against voice.md; already follows it |button|error (cause=detail)|UI copy||
@@ -603,11 +603,28 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 526 |Profile|sign-out confirm|Sign out| unchanged | Checked against voice.md; already follows it |button|error (state=error); base|UI copy||
 | 527 |Profile|global nav|Global navigation| unchanged | Checked against voice.md; already follows it |a11y label|error (state=error); loading (state=loading); base|UI copy||
 | 528 |Profile|global nav|Discover| unchanged | Checked against voice.md; already follows it |tab label|error (state=error); loading (state=loading); base|UI copy||
-| 529 |Profile|global nav|My Results| unchanged | Checked against voice.md; already follows it |tab label|error (state=error); loading (state=loading); base|UI copy|T1|
+| 529 |Profile|global nav|My Results| **Results** | Markup pass (designer, 2026-10-23): one word on the tab (G3, HIG Tab bars); the place keeps its running-copy name, "results archive" |tab label|error (state=error); loading (state=loading); base|UI copy|T1|
 | 530 |Profile|global nav|Profile| unchanged | Checked against voice.md; already follows it |tab label|error (state=error); loading (state=loading); base|UI copy|T5|
 | 531 |Profile|(page)|Onrace — Profile, loading state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|loading|wireframe annotation|T5 P1|
 | 532 |Profile|loading state|Loading your profile…| **Loading your account…** | T5: "account" in running copy |status (a11y / live)|loading (state=loading)|UI copy|T5|
 | 533 |Profile|(page)|Onrace — Profile (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|base|wireframe annotation|T5 P1|
 | 534 |Profile|identity|MR| unchanged | Not ours to rewrite: user-written |text|base|user-written||
+| 535 |Race browse|error state|(none)| **Try loading races again** | Markup pass (designer, 2026-10-23). Button rule: the full accessible name of "Try again" (voice.md → Button), list and map |a11y label|error|UI copy||
+| 536 |Race detail|race|(none)| **Try loading the race again** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Try again" |a11y label|error (cause=detail)|UI copy||
+| 537 |Results list|error state|(none)| **Try loading your results again** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Try again" |a11y label|error|UI copy||
+| 538 |Race picker|error state|(none)| **Try loading the race catalog again** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Try again" |a11y label|error|UI copy||
+| 539 |Result detail|result|(none)| **Try loading this result again** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Try again" |a11y label|error (cause=detail)|UI copy||
+| 540 |Result detail|sticky action bar|(none)| **Try opening the official result again** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Try again" beside a link that didn't open |a11y label|error (cause=link)|UI copy||
+| 541 |Profile|load error|(none)| **Try loading your account again** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Try again" |a11y label|error (state=error)|UI copy||
+| 542 |Profile|account fields|(none)| **Try saving again** | Markup pass (designer, 2026-10-23). Button rule: accessible name of the row's "Try again" |a11y label|error (state=error)|UI copy||
+| 543 |Log result|top bar|(none)| **Save result** | Markup pass (designer, 2026-10-23). Button rule: accessible name of the nav-bar "Save" (voice.md → Button) |a11y label|error; base|UI copy||
+| 544 |Race detail|registration alert|(none)| **Dismiss this message** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Dismiss"; the message is now a native alert (designer, 2026-10-22) |a11y label|error (cause=registration)|UI copy||
+| 545 |Result detail|sticky action bar|(none)| **Dismiss this message** | Markup pass (designer, 2026-10-23). Button rule: accessible name of "Dismiss" |a11y label|error (cause=link)|UI copy||
+| 546 |Race browse|results row|(none)| **Sort: Soonest first** / **Sort: Latest first** | Markup pass (designer, 2026-10-23). The Sort button's accessible name: what it is, then the current order (G21) |a11y label|base; loading (state=loading)|UI copy||
+| 547 |Race browse|top bar|(none)| **Discover** | Markup pass (designer, 2026-10-23). The small title in the top bar once the large title scrolls away (G4); the same word as the h1, hidden from screen readers (the h1 is the heading) |heading|empty; error; loading (state=loading); base|UI copy||
+| 548 |Results list|top bar|(none)| **Results** | Markup pass (designer, 2026-10-23). The small title in the top bar once the large title scrolls away (G4); hidden from screen readers |heading|empty; error; loading (state=loading); base|UI copy||
+| 549 |Profile|top bar|(none)| **Profile** | Markup pass (designer, 2026-10-23). The small title in the top bar once the large title scrolls away (G4); hidden from screen readers |heading|error (state=error); loading (state=loading); base|UI copy||
+| 550 |Race detail|top bar|(none)| **\<race name\>** | Markup pass (designer, 2026-10-23). The race name in the top bar once its h1 scrolls away (G34); catalog data, hidden from screen readers |heading|error (cause=registration); base|UI copy||
+| 551 |Result detail|top bar|(none)| **\<race name\>** | Markup pass (designer, 2026-10-23). The race name in the top bar once its h1 scrolls away (G53); hidden from screen readers |heading|error (cause=link); base|UI copy||
 
-*534 rows. 291 are ours (UI copy, some around a value we don't write); the rest are catalog data, reference data, user-written text or wireframe annotations.*
+*551 rows. 308 are ours (UI copy, some around a value we don't write); the rest are catalog data, reference data, user-written text or wireframe annotations.*

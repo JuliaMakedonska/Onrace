@@ -130,6 +130,15 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Profile · Sign out row, hover', 'destructive', 'bg-2', 'text'),
     ('Race picker · race card meta and chip on the raised card (designer, 2026-10-23)', 'text-2', 'bg-3', 'text'),
     ('Race picker · card hairline (Line) on the raised card; 1.22:1 against the sheet at rest (decorative)', 'line', 'bg-3', 'info'),
+    ('Filters sheet · row label and checked sport type on the raised rows (G19, G20)', 'text-1', 'bg-3', 'text'),
+    ('Filters sheet · neutral checkmark on a raised row (non-text, 3:1; G19, C4)', 'control-tint', 'bg-3', 'ui'),
+    ('Filters sheet · Region value on a raised row (a native menu, G17)', 'text-2', 'bg-3', 'text'),
+    ('Filters sheet · Region pop-up chevron on a raised row (non-text, 3:1)', 'text-2', 'bg-3', 'ui'),
+    ('Filters sheet · date value on its compact-picker pill (G18)', 'text-1', 'bg-2', 'text'),
+    ('Filters sheet · calendar glyph on the date pill (non-text, 3:1)', 'text-2', 'bg-2', 'ui'),
+    ('Race browse · Sort button: the current order and its icon (G21)', 'text-1', 'bg-0', 'text'),
+    ('Race browse · Sort button disabled while loading', 'text-disabled', 'bg-0', 'exempt'),
+    ('Results list · Log result stepped down to Text 1 when a state brings its own primary (-error)', 'text-1', 'bg-0', 'text'),
     ('Kit · invalid field ring against the field (non-text, 3:1)', 'invalid', 'bg-1', 'ui'),
     ('Kit · invalid field ring against the page (non-text, 3:1)', 'invalid', 'bg-0', 'ui'),
     ('Kit · Filters sheet field boundary against a field (non-text, 3:1)', 'field-line-sheet', 'bg-0', 'ui'),
@@ -167,6 +176,8 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Filters sheet · field and checkbox boundary, outlined Cancel (non-text, 3:1)', 'field-line-sheet', 'sheet', 'ui'),
     ('Filters sheet · checked box, neutral tint (non-text, 3:1)', 'control-tint', 'sheet', 'ui'),
     ('Race picker sheet · error state icon (non-text, 3:1)', 'error', 'sheet', 'ui'),
+    ('Filters sheet · Apply filters, the sheet’s one primary, in its top bar (accent text; G12)', 'accent', 'sheet', 'text'),
+    ('Collapsed title bar · Log result, Results list’s one primary (accent text; G5)', 'accent', 'ground', 'text'),
     ('Race picker sheet · race name, state heading, Cancel, title', 'text-1', 'sheet', 'text'),
     ('Confirm alert (glass, G67) · title, Cancel', 'text-1', 'sheet', 'text'),
     ('Confirm alert (glass, G67) · body', 'text-2', 'sheet', 'text'),
@@ -243,10 +254,10 @@ def selectors_using(*tokens):
     return out
 
 # Rule 1: amber only where you can act or where you are
-ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.header-action(:hover)?$', r'^\.state-action:not\(\.secondary\)(:hover)?$',
+ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.state-action:not\(\.secondary\)(:hover)?$',
              r'^\.(register|open|submit)-btn(:hover)?$',   # the grayscale screens' one primary (kit, 2026-10-18)
-             r'^\.top-bar \.save-btn(:hover)?$',            # Save: Log result's one primary, amber text (no tab bar there; kit feedback, 2026-10-19)
-             r'^\.bottom-nav a\[aria-current="page"\]$', r'^\.sheet-actions button\[type="submit"\](:hover)?$',
+             r'^\.top-bar \.(save-btn|bar-action)(:hover)?$',   # the bar action: Save on Log result (kit feedback, 2026-10-19), Log result on Results list (G5), Apply filters on the sheet (G12; markup pass, 2026-10-23)
+             r'^\.bottom-nav a\[aria-current="page"\]$',
              r'^\.swatch--accent(-hover)?$', r'^\.swatch--on-accent$']
 accent_sel = selectors_using('accent', 'accent-hover')
 accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK)]
@@ -380,7 +391,7 @@ def race_card(name, tag, iso, date, loc, src, pos, alt):
           <img class="photo {pos}" src="{src}" alt="{alt}" width="1200" height="800">
           <a class="card-link" href="#components">
             <h3>{name}</h3>
-            <p class="card-meta"><span class="sport-tag">{tag}</span> <time datetime="{iso}">{date}</time></p>
+            <p class="card-meta"><span class="sport-tag">{tag}</span> <time datetime="{iso}"><span class="day">{date.split(' ', 1)[0]}</span> {date.split(' ', 1)[1]}</time></p>
             <p class="card-location">{loc}</p>
           </a>
         </article>'''
@@ -404,7 +415,7 @@ RESULT_ROW = '''<article class="result-card">
         </article>'''
 
 def tabbar(current):
-    items = [('Discover', 'compass'), ('My Results', 'stopwatch'), ('Profile', 'user')]
+    items = [('Discover', 'compass'), ('Results', 'stopwatch'), ('Profile', 'user')]
     cur = ' aria-current="page"'
     lis = ''.join(f'<li><a href="#language"{cur if l == current else ""}>{svg(i, "tab-icon")}<span>{l}</span></a></li>' for l, i in items)
     return f'<nav class="bottom-nav" aria-label="Global navigation"><ul>{lis}</ul></nav>'
@@ -590,9 +601,9 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 
 # ---------------------------------------------------------------- icons
 ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not built yet), use, status
-    ('Top bar · back', 'alt-arrow-left', 'icon-back', 'Before the parent screen’s name in a grayscale screen’s top bar (‹ Discover, ‹ My Results, ‹ Sign in); replaces the wireframe’s drawn chevron (kit, 2026-10-18).', 'in kit'),
+    ('Top bar · back', 'alt-arrow-left', 'icon-back', 'Before the parent screen’s name in a grayscale screen’s top bar (‹ Discover, ‹ Results, ‹ Sign in); replaces the wireframe’s drawn chevron (kit, 2026-10-18).', 'in kit'),
     ('Result row · disclosure', 'alt-arrow-right', 'icon-disclosure', 'At the trailing edge of a result row, which drills into Result detail (G22, step 3b). Race cards are a collection, so none there.', 'in use'),
-    ('Tab bar', 'compass', 'icon-compass', 'Discover', 'in use'), ('Tab bar', 'stopwatch', 'icon-stopwatch', 'My Results', 'in use'), ('Tab bar', 'user', 'icon-user', 'Profile', 'in use'),
+    ('Tab bar', 'compass', 'icon-compass', 'Discover', 'in use'), ('Tab bar', 'stopwatch', 'icon-stopwatch', 'Results', 'in use'), ('Tab bar', 'user', 'icon-user', 'Profile', 'in use'),
     ('Filters sheet · date fields', 'calendar', 'icon-calendar', 'Replaces the browser’s calendar glyph in the From and To date fields (step 7). In the race card the date column itself is the cue, so no icon there.', 'in use'),
     ('Card meta · location', 'map-point', 'icon-pin', 'Before the city on every race card (CSS mask, no markup change).', 'in use'),
     ('Format chip', None, None, 'No icon and no dot: the same neutral chip for every format (dot option dropped 2026-10-13).', 'none'),
@@ -605,6 +616,7 @@ ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not buil
     ('Filters sheet · checkbox', 'check', 'icon-check', 'The tick in a checked sport type, on Text 1 (neutral, never the accent).', 'in use'),
     ('Filter chip · remove', 'close-circle', 'icon-close', 'Drawn by CSS over the chip’s text "×" (step 7); the text stays in the markup, aria-hidden, until Lesson 7.', 'in use'),
     ('State · empty, Race browse', 'magnifer', 'icon-search', 'On top of the empty state (“No races match…”), 48px, Text 2: iOS’s own search-unavailable pattern (designer, 2026-10-19: ContentUnavailableView).', 'in use'),
+    ('Race browse · Sort', 'sort-vertical', 'icon-sort', 'After the current order on the Sort button (“Soonest first”), which flips it (G21; markup pass, 2026-10-23).', 'in use'),
     ('State · empty, Results list', 'archive', 'icon-archive', 'On top of “No results logged yet”, 48px, Text 2: the results archive (designer, 2026-10-19).', 'in use'),
     ('State · error', 'danger-circle', 'icon-error', 'On top of an error state (“Couldn’t load races”), 48px, the screen’s only coral (since 2026-10-19; before, 18px before the heading). Still 18px before headings in inline errors and form alerts.', 'in use'),
     ('Saved confirmation', 'diskette', 'icon-saved', 'Results list after Save, in Text 2: neutral, not a success check (Color rule 2).', 'in use'),
@@ -876,6 +888,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/u
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-step5.html'), os.path.join(ROOT, 'public/ui/review-step5.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-markup'), os.path.join(ROOT, 'public/ui/review-markup'), dirs_exist_ok=True)   # markup pass before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-markup.html'), os.path.join(ROOT, 'public/ui/review-markup.html'))
 import glob   # our own photos (visuals/*.jpg), linked by the screens as ../visuals/<file>
 os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
 for _v in glob.glob(os.path.join(ROOT, 'visuals/*.jpg')):

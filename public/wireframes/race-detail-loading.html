@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=35aa0f0a">
+<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race detail, loading state (wireframe)">
 
@@ -17,8 +17,9 @@
            drill-down screen (no global tab bar, _conventions.md § 1). This
            is flows.md's "back / compares another race" edge, and the "no"
            edge of WantsToEnter: not worth entering → back to browsing. -->
-      <nav class="top-bar" aria-label="Back">
+      <nav class="top-bar" aria-label="Back" data-collapse>
         <a href="race-browse.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Discover</span></a>
+        <span class="bar-title" aria-hidden="true"></span>
       </nav>
 
     <main>
@@ -48,15 +49,15 @@
 
     </main>
 
-  </div><!-- /.phone-screen -->
+    <!-- ZONE: sticky action bar — shown from the first frame with a gray
+         placeholder where Register will be (not a disabled button: nothing
+         to tap yet), so the layout doesn't jump when the race arrives. -->
+    <div class="action-bar" aria-hidden="true">
+      <div class="bar button"></div>
+      <div class="bar caption"></div>
+    </div>
 
-  <!-- ZONE: sticky action bar — shown from the first frame with a gray
-       placeholder where Register will be (not a disabled button: nothing
-       to tap yet), so the layout doesn't jump when the race arrives. -->
-  <div class="action-bar" aria-hidden="true">
-    <div class="bar button"></div>
-    <div class="bar caption"></div>
-  </div>
+  </div><!-- /.phone-screen -->
 
 <script>
 (function () {
@@ -73,6 +74,24 @@
     var failed = !navigator.onLine || params.get('fail') === '1';
     window.location.replace((failed ? 'race-detail-error.html' : 'race-detail.html') + '?race=' + slug);
   }, 1000);
+})();
+</script>
+
+<script>
+/* The collapsing title (markup pass; G4 on the tab screens, G34/G53 on the detail screens): the top bar's small
+   title appears once the page's h1 has scrolled away, and goes when it comes back (HIG Toolbars, large titles). */
+(function () {
+  var bar = document.querySelector('.top-bar[data-collapse]');
+  var screen = document.querySelector('.phone-screen');
+  if (!bar || !screen || !('IntersectionObserver' in window)) return;
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  if (!h1) return;
+  var title = bar.querySelector('.bar-title');
+  if (title && !title.textContent.trim()) title.textContent = h1.textContent;
+  var inFlow = !bar.classList.contains('top-bar--large');   // a drill-down's bar takes space: the h1 hides under it sooner
+  new IntersectionObserver(function (entries) {
+    bar.classList.toggle('is-collapsed', entries[0].intersectionRatio < 0.5);   // mostly gone under the bar, as iOS
+  }, { root: screen, rootMargin: (inFlow ? -bar.offsetHeight : 0) + 'px 0px 0px 0px', threshold: [0, 0.5, 1] }).observe(h1);
 })();
 </script>
 

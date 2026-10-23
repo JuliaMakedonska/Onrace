@@ -131,7 +131,7 @@ One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1�
 | Concept | Use | Not | Why | Resolves |
 |---|---|---|---|---|
 | The collection of someone's results | **results archive** | ~~archive~~ (alone), ~~logged results~~, ~~your official race results~~ (as a name) | The product is "a personal archive of official race results" (`CLAUDE.md` → What it is), and the job is "Results archiving" (`jtbd.md` → Main Job 2). "Results archive" says both what's kept and why. "Logged results" names the act, not the place. Counts read "4 results", not "4 logged results". | T1 |
-| …the tab and screen that show it | **My Results** | — | The nav label, fixed in `sitemap.md` → Navigation § 1. It names the place in the tab bar. Running copy says "results archive" ("Sign in to see your results archive"). The two don't compete: one is a label, the other a description. | T1 |
+| …the tab and screen that show it | **Results** | ~~My Results~~ | The nav label (renamed from "My Results" on 2026-10-23, designer: one word on the tab, HIG Tab bars; G3). It names the place in the tab bar. Running copy says "results archive" ("Sign in to see your results archive"). The two don't compete: one is a label, the other a description. | T1 |
 | One logged race | **result** | ~~entry~~, ~~submission~~, ~~record~~, ~~time~~ (for the whole thing), ~~activity~~ | `CLAUDE.md` → `results` table, and Boston's own wording: "an official race result" (`research.md` → Proof-of-result findings). "Proof of a past time" becomes "proof of a past result". | T3 |
 | The number on it | **finish time** | ~~time~~ (alone), ~~PR~~ | The field (`finish_time`, `CLAUDE.md`). **qualifying time** is allowed only when naming what an elite race asks for. It's the Archivist's own phrase ("proof of a qualifying time", `personas.md`). | T3 |
 | The link a person pastes as proof | **official result link** | ~~source link~~, ~~result link~~, ~~timing page~~, ~~your proof~~ (as a name) | `CLAUDE.md` → trust model: "a link to the official timing site as proof"; the field is `official_result_url`. "Official result" is what Boston accepts, so this is the word an elite race will recognise. "Proof" stays as the *reason* ("it's the proof elite races ask for"), not as the object's name. | T2 |
@@ -140,7 +140,7 @@ One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1�
 | The set of races Onrace curates | **race catalog** | ~~Onrace catalog~~, ~~catalog race~~, ~~the catalog~~ (alone), ~~listing~~ | `CLAUDE.md` → Data model: "`races` (public catalog)". "Race" in front says what's in it, and saying "Onrace" in Onrace's own UI adds nothing. One item is still "a race" ("Find a race", "No race in the race catalog matches…"). "Listing" is IA-doc language (`sitemap.md` → Race listing), not interface language. | T4 |
 | A race | **race** | ~~event~~, ~~competition~~, ~~listing~~ | Already consistent (`microcopy.md` → Searched for and not found). It's the audience's word ("find hybrid races to enter", `jtbd.md` → Main Job 1). Competitors' "event" (ocrbase) and "activity" (Strava) are what principle 4 rules out. | — |
 | What someone signs in to | **account** | ~~profile~~ (in running copy) | `CLAUDE.md` / `sitemap.md` → Entities 5, "Athlete account": the thing that exists because of auth. "Create an account to set up your profile" becomes "Create an account to start your results archive", or "…to see your account". | T5 |
-| …the tab and screen that show it | **Profile** | — | The nav label (`sitemap.md` → Navigation § 1), same pattern as My Results: a label, not a synonym. | T5 |
+| …the tab and screen that show it | **Profile** | — | The nav label (`sitemap.md` → Navigation § 1), same pattern as Results: a label, not a synonym. | T5 |
 | What someone types to sign in | **email** | ~~address~~, ~~email address~~ | `CLAUDE.md` → Auth method: "email + password". One word everywhere: "We'll send a link to confirm your email", not "…your address". | T6 |
 | What the email contains | **confirmation link** (sign-up) / **reset link** (password) | ~~email~~ as the thing you resend, ~~the link we sent~~ when the type matters | `flows.md` Flows 4 and 6 name the objects this way. The link is the thing the person acts on, and the email is only how it travels. So "Resend email" becomes "Send a new link" (see A1). | T6 |
 | When a race happens | **race date** | ~~date~~ (alone, as a field label) | The race's `event_date`, and the person's own phrase on Log result ("Add the date you raced"). On Race detail and Result detail, the label becomes "Race date" as well. The Filters range keeps its structure as "Race date: From / To". | C1 |
@@ -157,7 +157,7 @@ One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1�
 | Record a new result | **Log result** / "Log your first result" | ~~Add result~~, ~~Submit~~ | `jtbd.md` → Related Job 3: "log the result along with where it came from". | — |
 | Leave a task or modal without changing anything | **Cancel** | ~~Close~~ | iOS convention (not research): Cancel means "nothing I started here is kept". It covers the Sign in modal, Race picker, Filters sheet and sign-out alert. "Close" goes. | A3 |
 | Hide a message you've read | **Dismiss** | ~~Close~~, ~~OK~~ | The inline alerts (registration link, official result link) aren't tasks, so Cancel would be wrong. One word for "I've seen this". | A3 |
-| Go back one screen | **‹ \<parent screen's title\>** — "‹ Discover", "‹ My Results", "‹ Sign in" | ~~Back to races~~, ~~Back to My Results~~ | iOS convention: the back button names where it goes, using the same word as that screen's title or tab, so the label always matches where you land. Replaces the two-rule compromise in `wireframes/_conventions.md` § 1 (the rule changes in the rewrite pass). | A4 |
+| Go back one screen | **‹ \<parent screen's title\>** — "‹ Discover", "‹ Results", "‹ Sign in" | ~~Back to races~~, ~~Back to Results~~ | iOS convention: the back button names where it goes, using the same word as that screen's title or tab, so the label always matches where you land. Replaces the two-rule compromise in `wireframes/_conventions.md` § 1 (the rule changes in the rewrite pass). | A4 |
 | Remove every active filter | **Clear all filters** | ~~Clear all~~ | The longer label is unambiguous wherever it appears (chips bar, empty state). "Clear all" next to chips could read as clearing the search or the list. Since the search is a chip in that row (2026-09-30), "Clear all filters" clears it too, and the no-match message says so ("…or clear your search and filters"). | A5 |
 | Find a race by typing | a search field with the placeholder **"Race name or city"**; the label (screen-reader) is **"Search races by name or city"**; its chip reads **“berlin”**, announced as **"Clear search: “berlin”"** | ~~Find~~, ~~Look up~~, ~~Search events~~ | The same words as Race picker, which searches the same race catalog, so one search reads the same everywhere. "Events" is ocrbase's word, and principle 4 keeps "race". | — |
 | Retry a failed load | **Try again** | ~~Retry~~, ~~Reload~~ | Already consistent across every error. | — |
@@ -172,7 +172,7 @@ One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1�
 
 ### Allowed and not allowed at a glance
 
-- **Allowed:** race · race catalog · race date · sport type · result · finish time · qualifying time (elite-race context only) · results archive · official result link · official result · official timing site / \<domain\> · log (a result) · register / registration (races only) · account · email · confirmation link · reset link · Create account · Sign in · Sign out · Send a new link · Cancel · Dismiss · Try again · Clear all filters · My Results / Profile / Discover (as labels).
+- **Allowed:** race · race catalog · race date · sport type · result · finish time · qualifying time (elite-race context only) · results archive · official result link · official result · official timing site / \<domain\> · log (a result) · register / registration (races only) · account · email · confirmation link · reset link · Create account · Sign in · Sign out · Send a new link · Cancel · Dismiss · Try again · Clear all filters · Results / Profile / Discover (as labels).
 - **Not allowed:** event · competition · listing · entry · submission · record · activity · workout · effort · archive (alone) · logged results · source link · result link · timing page · timing site (without "official") · proof (as the link's name) · address · email address · the catalog / Onrace catalog / catalog race · profile (in running copy) · sign up / signup / sign-up (anywhere in the UI) · log in / login · Close · Back to … · Resend … · Request a new link · Clear all (alone) · Required (as a tag) · verified · PR / personal best.
 
 ## Forbidden
@@ -210,7 +210,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 | **Register on hyrox.com** · **Log result** · **Send a new link** · **Save new password** · **Find in race catalog** · **Clear all filters** | ~~OK~~ · ~~Next~~ · ~~Submit~~ · ~~Continue~~ · ~~Yes~~ · ~~Click here~~ · ~~Register now~~ |
 
 - **Short visible label, full accessible name:** "Try again" inside "Couldn’t load races" is announced as "Try loading races again". The nav-bar "Save" beside "Log result" is announced as "Save result". "Dismiss" is announced as "Dismiss this message".
-- **Known gap (2026-09-30):** none of the wireframe pages carries these accessible names yet: "Try again" (six screens), the nav-bar "Save" on Log result, and "Dismiss". Adding them means adding `aria-label` attributes, which the text-only copy passes didn't allow. They're left for one dedicated markup pass across all screens (`wireframes/_critique.md` #10).
+- **Closed (markup pass, 2026-10-23):** every short button carries its full accessible name (`aria-label`): "Try again" on the six screens (and Result detail's link retry), the nav-bar "Save" ("Save result"), "Dismiss" ("Dismiss this message"). Rows 535–545 in `microcopy.md`. Kept from the voice: the name says the action in full; the visible label stays short. (Known 2026-09-30 gap, now closed.)
 - **Check:**
   - Principle 2: a button that leaves Onrace names its destination ("Register on hyrox.com", "Open official result on berlin.r.mikatiming.com").
   - Dictionary: verbs are the chosen ones (Log, Register, Send a new link, Cancel, Dismiss, Try again).
@@ -222,10 +222,10 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 
 | Onrace example | Not |
 |---|---|
-| **Discover** · **My Results** · **Log result** · **Find a race** · **Reset password** · on a detail screen, the item itself: **HYROX London**, **Berlin Marathon** | ~~Welcome back!~~ · ~~Your dashboard~~ · ~~Let’s log a race~~ · ~~Your next race starts here~~ |
+| **Discover** · **Results** · **Log result** · **Find a race** · **Reset password** · on a detail screen, the item itself: **HYROX London**, **Berlin Marathon** | ~~Welcome back!~~ · ~~Your dashboard~~ · ~~Let’s log a race~~ · ~~Your next race starts here~~ |
 
 - **Check:**
-  - The heading is also the back label on the next screen down (`_conventions.md` § 1, Dictionary A4), so it has to be the place's stable name ("‹ My Results" only works if the screen is called My Results).
+  - The heading is also the back label on the next screen down (`_conventions.md` § 1, Dictionary A4), so it has to be the place's stable name ("‹ Results" only works if the screen is called Results).
   - Principle 3 and Forbidden rule out greetings and motivational lines (ocrbase's "Your next race starts here").
 
 ### Form field
@@ -295,7 +295,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 
 | Onrace example | Not |
 |---|---|
-| "**Saved: Berlin Marathon**" (on My Results, the result now in the list) · "**Password changed.** Sign in with your new password." · "**We sent a link to maya.rossi@example.com.** Open it on this device to finish creating your account." | ~~Result saved successfully!~~ · ~~Congratulations! 🎉~~ · ~~You’re all set!~~ · ~~Great job, champion~~ |
+| "**Saved: Berlin Marathon**" (on Results, the result now in the list) · "**Password changed.** Sign in with your new password." · "**We sent a link to maya.rossi@example.com.** Open it on this device to finish creating your account." | ~~Result saved successfully!~~ · ~~Congratulations! 🎉~~ · ~~You’re all set!~~ · ~~Great job, champion~~ |
 
 - **Check:**
   - Forbidden: "successfully", exclamation marks, emoji.

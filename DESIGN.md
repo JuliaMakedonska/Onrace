@@ -209,7 +209,22 @@ components:
   filters-sheet:
     backgroundColor: "{colors.glass-sheet}"
     rounded: "{rounded.radius-sheet}"
-    padding: "8px 16px 0"
+    padding: "0"
+  sheet-row:
+    backgroundColor: "{colors.bg-3}"
+    textColor: "{colors.text-1}"
+    typography: "{typography.body}"
+    rounded: "{rounded.radius-2}"
+    padding: "0 16px"
+    height: "44px"
+  sort-button:
+    textColor: "{colors.text-1}"
+    typography: "{typography.meta}"
+    height: "44px"
+  bar-action:
+    textColor: "{colors.accent}"
+    typography: "{typography.button}"
+    height: "44px"
   map-pin-label:
     backgroundColor: "{colors.bg-2}"
     textColor: "{colors.text-1}"
@@ -231,7 +246,7 @@ Every value comes from `ui/kit.css` and `ui/map.css` (until Lesson 7 step 3a, `c
 
 All ten screens use this system since Lesson 7 step 5 (2026-10-22).
 
-**Updated 2026-10-22 (Lesson 7 step 5, Discovery, and its review).** Race detail is on the kit, with the race’s photo on top (a designer decision). Two kit fixes reach every screen: active filter chips are tonal capsules (C7), and empty and error states are never framed.
+**Updated 2026-10-23 (markup pass):** Sort is one button, the Filters sheet has a top bar and grouped rows, the large title collapses into the bar, Log result is a bar action, the tab is "Results", Race detail's link error is an alert. **Updated 2026-10-22 (Lesson 7 step 5, Discovery, and its review).** Race detail is on the kit, with the race’s photo on top (a designer decision). Two kit fixes reach every screen: active filter chips are tonal capsules (C7), and empty and error states are never framed.
 
 **Updated 2026-10-19 (Lesson 7, step 3b), the native iOS pass.** The kit changed on purpose: glass bars and sheet (C1), the HIG type mapping (C3), a neutral control tint (C4), a skeleton pulse (C6), concentric controls in bars (C7), and the Kit (CSS) gaps (G1, G2, G6, G7, G10, G11, G13, G16, G22, G23, G25–G29). The sections below describe the screens after that pass. Values marked **[?]** (glass opacity margins, blur, rim, sheet radius, the sheet's top gap) are provisional: Apple's iOS 26 design kit wasn't read; the one Apple number used is HIG Materials' 35% dimming layer, as a floor.
 
@@ -307,9 +322,9 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 **Character:** A bold, tight display grotesque for the three things worth shouting (the screen title, the finish time, the date day) against a clean, technical text grotesque for everything else. Each page loads the fonts from its `<head>` (preconnect plus the Google Fonts stylesheet), not from CSS.
 
 ### Hierarchy
-- **Title** (Schibsted 800, 34px = HIG Large Title, line-height 1, -0.03em): the screen's `h1` ("Discover", "My Results").
+- **Title** (Schibsted 800, 34px = HIG Large Title, line-height 1, -0.03em): the screen's `h1` ("Discover", "Results").
 - **Finish time** (Schibsted 800, 32px, line-height 1, -0.03em): the finish time on a result row. Proportional figures, `--text-1`, never the accent.
-- **Date day** (Schibsted 800, 30px, line-height 1, -0.03em): the day on a race card's date tile (the tile's `::first-line`).
+- **Date day** (Schibsted 800, 30px, line-height 1, -0.03em): the day on a race card's date tile, its own `span.day` since the markup pass (2026-10-23; it was the tile's `::first-line`).
 - **Item** (Hanken 600, 17px, line-height 1.2): race names on cards and rows, empty and error headings, the sheet's heading.
 - **Body** (Hanken 400, 15px, line-height 1.45): base text, the search field, sheet checkbox labels and fields.
 - **Button** (Hanken 600, 15px, line-height 1): primary and secondary buttons, sheet buttons.
@@ -331,7 +346,7 @@ The sizes above are the HIG mapping (C3, approved 2026-10-18, applied in step 3b
 
 - **Screen:** 390px wide (`--screen-w`), one column, scrolling inside `.phone-screen`. Content runs under the floating tab bar; 72px of bottom padding (bar + gap + safe area) lets the last item scroll clear of it.
 - **Gutter:** 16px (`--space-4`) on every side of the content.
-- **Header:** `8px 16px 4px` below the top safe area, gap 12px. On Results list the title and the Log result button share a row (`1fr auto`).
+- **Header:** `8px 16px 4px` below the top safe area, gap 12px. A top bar floats over it on every tab screen (44px, transparent and empty at rest, see Navigation); on Results list it carries Log result at its trailing edge, level with the title.
 - **Controls (Race browse):** sticky below the top safe area on ground glass, padding `12px 16px`, the glass rim under it. The Filters button fills the row; the List/Map track (a capsule, equal segments) sits at its end. Active filter chips scroll in one row, 12px apart, which fades out over its last 24px; "Clear all filters" sits 12px after it.
 - **Count row:** padding `12px 16px`, count on the left, sort control (Race browse) or nothing (Results list) on the right.
 - **Lists:** cards and rows stacked with a 12px gap.
@@ -376,7 +391,7 @@ Exactly one filled button per screen.
 - **Primary:** `--accent` fill, `--on-accent` text. Hover `--accent-hover`. Pressed moves down 1px. Background and transform ease over 160ms (`--ease-out`, `cubic-bezier(0.2, 0.8, 0.2, 1)`); 0ms under reduced motion.
 - **Secondary:** `--bg-2` fill, `--text-1` text, hover `--bg-3`. Filters on Race browse (with the Solar filters icon, `--bg-3` while its sheet is open), Clear all filters in an empty state. On the Filters sheet (itself `--bg-2`), Cancel is outlined instead: transparent with a 1px `--field-line-sheet` boundary.
 - **Tertiary:** a text link, 14px / 400, `--text-1`, 1px underline 4px below, hover `--text-2`. "Clear all filters" in the chips row.
-- **Stepping down:** when a state block brings its own primary (Log your first result, Try again), the Results list header's Log result becomes secondary, so the screen keeps one filled button.
+- **Stepping down:** when a state block brings its own primary (Try again on Results list `-error`), the bar's Log result turns Text 1, so the screen keeps two lights; on `-empty` it's hidden and "Log your first result" is the one way in (markup pass, 2026-10-23).
 - **Disabled:** `--bg-2` fill, `--text-disabled` text. **Busy** (`aria-busy="true"`): same fill, a 15px CSS spinner (a 2px ring in the label's color, one turn per 800ms, still turning under reduced motion, as HIG asks) before the present-tense verb ("Saving…") (G26).
 - **Pressed cards and rows:** a race card or a result row takes `--bg-3` while pressed (G23).
 
@@ -396,18 +411,20 @@ Exactly one filled button per screen.
 - **Text fields (grayscale screens):** invalid is a 2px `--invalid` (coral) ring inside the field; focus is the 2px white ring outside. An invalid field with focus shows both, so invalid and focus never look alike.
 - **Sheet select and date fields:** `--bg-0`, 6px radius, 44px tall, 1px `--field-line-sheet`, 15px text. The select has a 15px Solar chevron; the date field has an 18px Solar calendar instead of the browser's glyph.
 - **Checkbox:** 18px, 4px radius, `--bg-0` with a 1px `--field-line-sheet` boundary; checked fills `--control-tint` (Text 1) with a `--bg-0` tick. Never the accent. Every system-drawn control takes the same tint (`accent-color`, C4).
-- **Sort control:** borderless, `--text-1` 15px / 600 with a `--text-1` chevron; the label "Sort:" in `--text-2`.
+- **Sort button:** one button that flips the order, showing the current one: "Soonest first" in `--text-1` 15px / 600, then the 15px Solar sort icon (G21; markup pass, 2026-10-23). Its name reads "Sort: Soonest first". Disabled in `--text-disabled` while loading; a 44pt target inside the row's text height.
 - **Focus (everything):** a 2px `--text-1` outline, 2px offset. Never the accent.
 
 ### Navigation
-- **Tab bar:** a floating 64px capsule of tab-bar glass with a faint rim and the float shadow, three tabs (Discover, My Results, Profile). Each has a 26px Solar icon (compass, stopwatch, user) over an 11px / 600 label. Inactive: `--text-2`. Current: `--accent`, icon and label.
+- **Tab bar:** a floating 64px capsule of tab-bar glass with a faint rim and the float shadow, three tabs (Discover, Results, Profile). Each has a 26px Solar icon (compass, stopwatch, user) over an 11px / 600 label. Inactive: `--text-2`. Current: `--accent`, icon and label.
 - **List / Map segmented control:** a `--bg-2` track with 4px padding; in the controls bar a 22px capsule with 18px segments (C7), in content (Sign in) 6px with 4px segments. Segments are of equal width (G11), 36px (44px tap area), 15px / 600, `--text-2`.
 - **Action bar (Race detail, Result detail):** tab-bar glass with a rim instead of the hairline, above the bottom safe area (C1, designer 2026-10-19). Its caption passes AA over the worst case behind it. Its one button (Register on \<domain\>, Open official result) is the screen's amber primary and a 22px capsule, as every control inside a bar (C7, step 5). On Race detail, "Couldn't open the link" shows as an inline error inside the bar for now; the markup pass makes it a native alert (designer, 2026-10-22).
 - **Top bar (grayscale screens):** ground glass with a rim, below the top safe area. Back and Cancel in `--text-1`; Save on Log result in `--accent` (that screen's one primary); "Saving…" in `--text-2` with the spinner.
-- **Confirm alert:** the sheet's glass over the scrim, with its blur and rim, 34px corners [?] (G67, designer 2026-10-23: as iOS 26 alerts). Sign out, the destructive action, is `--destructive` (coral) text, in the alert and in its Profile row (G68); Cancel stays `--text-1` (HIG Alerts). The pressed segment is `--bg-3`, `--text-1`, with a 1px `--field-line` outline.
+- **Collapsing title (G4, G34, G53; markup pass, 2026-10-23):** on Race browse, Results and Profile a top bar floats over the large title, transparent and empty at rest; once the h1 has mostly scrolled away it turns to ground glass with its rim and shows the small title (17px / 600), fading over 160ms. Race browse's controls stick under it. Race detail and Result detail show the race name in their bar the same way, truncated between the back button and the edge.
+- **Bar action:** the screen's one primary in a bar, amber text 15px / 600 like a native bar button: Save on Log result, Log result on Results (G5), Apply filters on the Filters sheet (G12). "Saving…" is the Save button with `aria-busy`: Text 2 and the spinner.
+- **Confirm alert:** the sheet's glass over the scrim, with its blur and rim, 34px corners [?] (G67, designer 2026-10-23: as iOS 26 alerts). Sign out, the destructive action, is `--destructive` (coral) text, in the alert and in its Profile row (G68); Cancel stays `--text-1` (HIG Alerts). The pressed segment is `--bg-3`, `--text-1`, with a 1px `--field-line` outline. Race detail uses the same alert for "Couldn’t open the link", with one action, Dismiss, bold as the default (markup pass, 2026-10-23).
 
 ### The other screens (step 5, 2026-10-22)
-- **Log result:** a drill-down form under the ground-glass top bar ("‹ My Results", the centered title, **Save in amber text**, the screen's one primary; "Saving…" in `--text-2` with the spinner). Fields on `--bg-1` with a 1px `--field-line` boundary; invalid fields take the 2px coral ring inside plus an 18px coral icon on the error line, so color is never the only signal; the form alert under the bar on `--error-bg`. The catalog row and the linked race on `--bg-1`; Unlink race tonal.
+- **Log result:** a drill-down form under the ground-glass top bar ("‹ Results", the centered title, **Save in amber text**, the screen's one primary; "Saving…" in `--text-2` with the spinner). Fields on `--bg-1` with a 1px `--field-line` boundary; invalid fields take the 2px coral ring inside plus an 18px coral icon on the error line, so color is never the only signal; the form alert under the bar on `--error-bg`. The catalog row and the linked race on `--bg-1`; Unlink race tonal.
 - **Race picker:** a sheet screen. It rests at the large detent (38px [?] corners, sheet glass, the float shadow) over Log result under the scrim. Inside: a plain top bar (Cancel, "Find a race"; no second glass), the search capsule with the Solar magnifier and the `--field-line-sheet` boundary (C4, C7), the list intro, race cards without photos, one level above the sheet (`--bg-3`) with a 1px `--line` hairline (designer 2026-10-23), so they separate from it; pressed, they keep the level and take a 1px `--text-2` ring. Its secondary "Type it in instead" is outlined on the sheet, as the Filters sheet's Cancel.
 - **Result detail:** as Race detail, without a photo: the race name, the finish time (Schibsted 32px) under its label, the facts, the proof section (the full link, the proof line, the note "Onrace doesn't verify results."), and the action bar's capsule "Open official result on \<domain\>".
 - **Sign in / Sign up, Reset password, New password (the gates):** modals with a ground-glass top bar (Cancel or "‹ Sign in", the centered title) that floats over the page, which scrolls under it. A gate intro in `--text-2`, the Sign in / Create account segmented control (6px in content), fields, one full-width amber submit; busy: the spinner and the present-tense label, the form locked. Small text links (Forgot password?, Reset password again) have 44pt targets. Check your inbox: the address in 600, Send a new link (secondary, a spinner while sending). Full-screen errors (an expired reset or confirmation link) are the empty/error component on the page, not a box.
@@ -421,7 +438,7 @@ One component, the iOS ContentUnavailableView pattern (designer, 2026-10-19). Ce
 - **On the page, never framed** (designer, 2026-10-22): no outline, frame or surface around the state, on any screen. In Race browse's Map view, while the map holds an empty or error state, the map frame drops its outline, water and land, and the state has no panel: it looks as it does in List view. On a drill-down (Race detail) it is centered in the area under the top bar, with the 16px gutter.
 
 ### Filters sheet (signature)
-Sheet glass (`--bg-2` at 90%, blurred), 38px top corners [?] with a rim along the top edge, the float shadow, over the scrim. It rests at the large detent only, and slides up over 250ms (`--dur-sheet`, `--ease-out`; 0ms under reduced motion). A 32×4px handle in `--field-line-sheet`; a 17px / 600 heading; 15px `--text-2` labels; fields and checkboxes as above; a sticky footer at the sheet's bottom edge, solid `--bg-2`, with Cancel (outlined) and Apply filters (the sheet's one primary), each half the width. The markup pass moves these to a top toolbar and makes the grabber a real control (G12, G14); swipe-to-dismiss stays out of scope (G15).
+Sheet glass (`--bg-2` at 90%, blurred), 38px top corners [?] with a rim along the top edge, the float shadow, over the scrim. It rests at the large detent only, and slides up over 250ms (`--dur-sheet`, `--ease-out`; 0ms under reduced motion). Markup pass (2026-10-23): no grabber (one detent, not resizable); a top bar with Cancel (Text 1) on the leading edge, "Filters" (17px / 600) centered, Apply filters (amber text, the sheet's one primary) on the trailing edge (G12). The options are grouped rows on `--bg-3`, the level above the sheet, 44px each with `--line` dividers (G20): Region shows its value in `--text-2` with a chevron and opens the native menu (G17); the race dates are compact pickers, the value in `--text-1` on a `--bg-2` pill with a small Solar calendar (G18); under the "SPORT TYPE" group heading, seven rows with a neutral `--control-tint` checkmark at the trailing edge when chosen (G19, C4). Focus moves into the sheet when it opens, Escape closes it and focus returns to Filters.
 
 ### Static map (signature)
 A frame in `--bg-bar` (water) with a 1px `--field-line` boundary and a 6px radius. Natural Earth land is masked in `--bg-1`, coastlines and borders in `--bg-3`. Pins: a 10px `--text-1` dot ringed in water color on the real coordinate, and a 22px `--bg-2` label (11px / 600, `--text-1`, 4px radius) joined by a 1px `--text-2` leader line. Hover lifts the label to `--bg-3`. No accent anywhere on the map. The map has no caption: the wireframe note in its place ("[ static map … ]") is hidden on the working pages (2026-10-23), as are the bracketed notes in its empty, error and loading states. While the map holds an empty or error state, the frame gives way (see Empty and error states). While it loads (`aria-busy`), the whole map surface pulses with the skeletons (C6: to 0.55 and back over 1.6s; still under reduced motion; designer 2026-10-23).
@@ -461,8 +478,8 @@ HIG read on 2026-10-18; every link returned HTTP 200. "System" means HIG publish
 
 | Component on the screens | HIG page | What native means for it | What Podium keeps |
 |---|---|---|---|
-| Tab bar (Discover, My Results, Profile) | [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars) | For navigation, not actions. Visible in every section; only a modal may cover it. Labels under icons, single words where possible. Prefer filled icons. On iOS it floats above content at the bottom on a Liquid Glass background, and content shows through beneath it. It may include a search tab at the trailing end. | Solar bold icons (filled, as HIG prefers), Hanken labels, amber on the current tab. Material: translucent graphite with blur in Podium tones (**C1**). Icons: Solar (**C2**). |
-| Screen title ("Discover", "My Results") and top bar | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars), [Typography](https://developer.apple.com/design/human-interface-guidelines/typography) | A large title that turns into a standard inline title in the top bar as people scroll, and back to large at the top. Titles under 15 characters. Actions sit in the toolbar; the key action uses the `.prominent` style, only one, on the trailing side. Prefer symbols to text for toolbar items. Fewer custom toolbar backgrounds: a scroll edge effect separates bar and content. | The title's text in Schibsted Grotesk 800 at Large Title size, 34 (**C3**). Top bar: translucent graphite with blur (**C1**). The amber on the one primary action. |
+| Tab bar (Discover, Results, Profile) | [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars) | For navigation, not actions. Visible in every section; only a modal may cover it. Labels under icons, single words where possible. Prefer filled icons. On iOS it floats above content at the bottom on a Liquid Glass background, and content shows through beneath it. It may include a search tab at the trailing end. | Solar bold icons (filled, as HIG prefers), Hanken labels, amber on the current tab. Material: translucent graphite with blur in Podium tones (**C1**). Icons: Solar (**C2**). |
+| Screen title ("Discover", "Results") and top bar | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars), [Typography](https://developer.apple.com/design/human-interface-guidelines/typography) | A large title that turns into a standard inline title in the top bar as people scroll, and back to large at the top. Titles under 15 characters. Actions sit in the toolbar; the key action uses the `.prominent` style, only one, on the trailing side. Prefer symbols to text for toolbar items. Fewer custom toolbar backgrounds: a scroll edge effect separates bar and content. | The title's text in Schibsted Grotesk 800 at Large Title size, 34 (**C3**). Top bar: translucent graphite with blur (**C1**). The amber on the one primary action. |
 | Search field (Race browse) | [Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields), [Text fields](https://developer.apple.com/design/human-interface-guidelines/text-fields) | A search icon, placeholder text, and a Clear button at the trailing end. Search starts as people type. An inline field sits above the list it filters and can pin to the top toolbar on scroll. Bottom-toolbar search or a search tab are the other native placements. | `--bg-1` field, `--field-line` boundary, Solar magnifier (**C2**), the placeholder "Race name or city". Inside a bar, its corners are concentric with the bar (**C7**). |
 | List / Map segmented control | [Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls) | For closely related subviews (List and Map qualify). Segments of equal width, text only, nouns, at most about five on iPhone. | `--bg-2` track, `--bg-3` selected segment, Hanken 15/600. Inside the controls bar, corners concentric with the bar (**C7**). |
 | Buttons (Filters, Log result, state actions, sheet actions) | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Hit region at least 44×44pt. A press state on every custom button. One or two prominent buttons per view. Style, not size, separates the preferred choice. The primary role takes the accent. A delayed action shows an activity indicator inside the button, with an alternative label ("Checking out…"). | Amber primary, tonal secondary, underlined tertiary, Hanken 15/600, the 1px press. Buttons in content keep 6px (**C7**); a button inside a bar is concentric with it. |

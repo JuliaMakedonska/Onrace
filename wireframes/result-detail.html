@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=35aa0f0a">
+<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Result detail (wireframe)">
 
@@ -21,8 +21,9 @@
            and LinkError's Try again → no (DeadEnd5) — flows.md → Related
            Job 4. It isn't gated: you're already
            inside the owner-only archive (_conventions.md § 2). -->
-      <nav class="top-bar" aria-label="Back">
-        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>My Results</span></a>
+      <nav class="top-bar" aria-label="Back" data-collapse>
+        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></a>
+        <span class="bar-title" aria-hidden="true"></span>
       </nav>
 
     <main>
@@ -107,7 +108,6 @@
 
     </main>
 
-  </div><!-- /.phone-screen -->
 
   <!-- ZONE: sticky action bar — Open official result, the screen's one
        primary action and flows.md's "Official result opens in a new tab?" check. Yes →
@@ -132,6 +132,8 @@
     <a class="open-btn" href="https://berlin.r.mikatiming.com/2025/" target="_blank" rel="noopener">Open official result on berlin.r.mikatiming.com</a>
     <p class="action-caption">Opens in a new tab.</p>
   </div>
+
+  </div><!-- /.phone-screen -->
 
 <script>
 (function () {
@@ -162,6 +164,24 @@
 })();
 </script>
 
+
+<script>
+/* The collapsing title (markup pass; G4 on the tab screens, G34/G53 on the detail screens): the top bar's small
+   title appears once the page's h1 has scrolled away, and goes when it comes back (HIG Toolbars, large titles). */
+(function () {
+  var bar = document.querySelector('.top-bar[data-collapse]');
+  var screen = document.querySelector('.phone-screen');
+  if (!bar || !screen || !('IntersectionObserver' in window)) return;
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  if (!h1) return;
+  var title = bar.querySelector('.bar-title');
+  if (title && !title.textContent.trim()) title.textContent = h1.textContent;
+  var inFlow = !bar.classList.contains('top-bar--large');   // a drill-down's bar takes space: the h1 hides under it sooner
+  new IntersectionObserver(function (entries) {
+    bar.classList.toggle('is-collapsed', entries[0].intersectionRatio < 0.5);   // mostly gone under the bar, as iOS
+  }, { root: screen, rootMargin: (inFlow ? -bar.offsetHeight : 0) + 'px 0px 0px 0px', threshold: [0, 0.5, 1] }).observe(h1);
+})();
+</script>
 
 </body>
 </html>

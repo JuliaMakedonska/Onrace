@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=35aa0f0a">
+<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Log result, loading state (wireframe)">
 
@@ -27,9 +27,9 @@
            to tap until the save returns). Back stays usable — leaving
            mid-save is the same give-up as any other (DeadEnd3). -->
       <header class="top-bar">
-        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>My Results</span></a>
+        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></a>
         <h1 class="bar-title">Log result</h1>
-        <span class="save-progress" aria-hidden="true">Saving…</span>
+        <button type="button" class="save-btn" aria-busy="true" aria-disabled="true">Saving…</button>
       </header>
 
     <main>

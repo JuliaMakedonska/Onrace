@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=35aa0f0a">
+<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Result detail, error state (wireframe)">
 
@@ -21,8 +21,9 @@
            and LinkError's Try again → no (DeadEnd5) — flows.md → Related
            Job 4. It isn't gated: you're already
            inside the owner-only archive (_conventions.md § 2). -->
-      <nav class="top-bar" aria-label="Back">
-        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>My Results</span></a>
+      <nav class="top-bar" aria-label="Back" data-collapse>
+        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></a>
+        <span class="bar-title" aria-hidden="true"></span>
       </nav>
 
     <main>
@@ -42,9 +43,9 @@
            no (DeadEnd4) is the top bar's "‹ My Results", so it isn't
            repeated here. -->
       <div class="state-message" data-cause="detail" role="alert">
-        <h2>Couldn’t load this result</h2>
+        <h1>Couldn’t load this result</h1>
         <p>The connection may have dropped. Check it, then try again.</p>
-        <a class="state-action" href="result-detail-loading.html?result=berlin-marathon-2025" data-retry>Try again</a>
+        <a class="state-action" href="result-detail-loading.html?result=berlin-marathon-2025" data-retry aria-label="Try loading this result again">Try again</a>
       </div>
 
       <!-- LinkError's result: same record markup as result-detail.html
@@ -118,7 +119,6 @@
 
     </main>
 
-  </div><!-- /.phone-screen -->
 
   <!-- ZONE: sticky action bar — present only for LinkError (the result
        loaded). Hidden for DetailError2: an Open button for a result that
@@ -137,8 +137,8 @@
       <h2>Couldn’t open the link</h2>
       <p>The official result on athlinks.com didn’t open in a new tab. Your browser may have blocked it. Try again, or copy the official result link above and paste it into a new tab.</p>
       <div class="alert-actions">
-        <button type="button" class="alert-btn" data-try-again>Try again</button>
-        <button type="button" class="alert-btn dismiss">Dismiss</button>
+        <button type="button" class="alert-btn" data-try-again aria-label="Try opening the official result again">Try again</button>
+        <button type="button" class="alert-btn dismiss" aria-label="Dismiss this message">Dismiss</button>
       </div>
     </div>
     <a class="open-btn" href="https://www.athlinks.com/event/deka-strong-chicago-2026/results" target="_blank" rel="noopener">Open official result on athlinks.com</a>
@@ -158,8 +158,8 @@
       <h2>Couldn’t open the link</h2>
       <p>The official result on results.hyrox.com didn’t open in a new tab. Your browser may have blocked it. Try again, or copy the official result link above and paste it into a new tab.</p>
       <div class="alert-actions">
-        <button type="button" class="alert-btn" data-try-again>Try again</button>
-        <button type="button" class="alert-btn dismiss">Dismiss</button>
+        <button type="button" class="alert-btn" data-try-again aria-label="Try opening the official result again">Try again</button>
+        <button type="button" class="alert-btn dismiss" aria-label="Dismiss this message">Dismiss</button>
       </div>
     </div>
     <a class="open-btn" href="https://results.hyrox.com/season-8/london" target="_blank" rel="noopener">Open official result on results.hyrox.com</a>
@@ -179,8 +179,8 @@
       <h2>Couldn’t open the link</h2>
       <p>The official result on valenciaciudaddelrunning.com didn’t open in a new tab. Your browser may have blocked it. Try again, or copy the official result link above and paste it into a new tab.</p>
       <div class="alert-actions">
-        <button type="button" class="alert-btn" data-try-again>Try again</button>
-        <button type="button" class="alert-btn dismiss">Dismiss</button>
+        <button type="button" class="alert-btn" data-try-again aria-label="Try opening the official result again">Try again</button>
+        <button type="button" class="alert-btn dismiss" aria-label="Dismiss this message">Dismiss</button>
       </div>
     </div>
     <a class="open-btn" href="https://www.valenciaciudaddelrunning.com/en/half/results-2025/" target="_blank" rel="noopener">Open official result on valenciaciudaddelrunning.com</a>
@@ -200,13 +200,15 @@
       <h2>Couldn’t open the link</h2>
       <p>The official result on berlin.r.mikatiming.com didn’t open in a new tab. Your browser may have blocked it. Try again, or copy the official result link above and paste it into a new tab.</p>
       <div class="alert-actions">
-        <button type="button" class="alert-btn" data-try-again>Try again</button>
-        <button type="button" class="alert-btn dismiss">Dismiss</button>
+        <button type="button" class="alert-btn" data-try-again aria-label="Try opening the official result again">Try again</button>
+        <button type="button" class="alert-btn dismiss" aria-label="Dismiss this message">Dismiss</button>
       </div>
     </div>
     <a class="open-btn" href="https://berlin.r.mikatiming.com/2025/" target="_blank" rel="noopener">Open official result on berlin.r.mikatiming.com</a>
     <p class="action-caption">Opens in a new tab.</p>
   </div>
+
+  </div><!-- /.phone-screen -->
 
 <script>
 (function () {
@@ -257,6 +259,24 @@
 })();
 </script>
 
+
+<script>
+/* The collapsing title (markup pass; G4 on the tab screens, G34/G53 on the detail screens): the top bar's small
+   title appears once the page's h1 has scrolled away, and goes when it comes back (HIG Toolbars, large titles). */
+(function () {
+  var bar = document.querySelector('.top-bar[data-collapse]');
+  var screen = document.querySelector('.phone-screen');
+  if (!bar || !screen || !('IntersectionObserver' in window)) return;
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  if (!h1) return;
+  var title = bar.querySelector('.bar-title');
+  if (title && !title.textContent.trim()) title.textContent = h1.textContent;
+  var inFlow = !bar.classList.contains('top-bar--large');   // a drill-down's bar takes space: the h1 hides under it sooner
+  new IntersectionObserver(function (entries) {
+    bar.classList.toggle('is-collapsed', entries[0].intersectionRatio < 0.5);   // mostly gone under the bar, as iOS
+  }, { root: screen, rootMargin: (inFlow ? -bar.offsetHeight : 0) + 'px 0px 0px 0px', threshold: [0, 0.5, 1] }).observe(h1);
+})();
+</script>
 
 </body>
 </html>
