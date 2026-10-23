@@ -152,7 +152,7 @@ The visual concept, Lesson 6 (2026-10-13 to 2026-10-15). Direction A, **Podium**
 Lesson 7 (2026-10-18). `DESIGN.md` (repo root) is the design system documented from the two painted screens; `concept/concept.md` follows the screens. `concept.md` → Native iOS holds the HIG rule, the decided HIG-vs-Podium conflicts (C1–C7), and the 33 gaps triaged into kit, markup pass and out of scope.
 
 - **`ui/inventory.md`:** every component of all 10 screens, with its screens, states, photo, HIG link and gaps.
-- **`ui/kit.css`:** the one source of truth. Every variable in `:root` (flat; two-level tokens are Lesson 8) and every component class, with no values in the classes. Every screen links it (step 5, 2026-10-22); the step 5 additions are in its `step 5 · Archive` and `step 5 · Infrastructure` blocks.
+- **`ui/kit.css`:** the one source of truth. Every variable in `:root` (flat; two-level tokens are Lesson 8) and every component class, with no values in the classes. Every screen links it (step 5, 2026-10-22). Consolidated 2026-10-23: each component is defined in one place, and nothing in it goes unused by the screens (checked with no visual change on all 35 pages; `concept.md` → Consolidation). The specimens only the stand and `first-screen.html` use (the `.btn` family, status messages) are in `concept/specimens.css`.
 - **`ui/map.css`:** the static map's data (tokens and Natural Earth masks), linked by the Race browse pages and the kit showcase only.
 - **`ui/shell.html`:** the shell (large-title header and tab bar), no status bar.
 - **`ui/kit.html`:** the showcase, every inventory component in its states, live at https://juliamakedonska.github.io/Onrace/ui/kit.html.

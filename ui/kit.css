@@ -93,6 +93,7 @@
   --radius-bar-control: calc(var(--target) / 2);   /* C7: a control inside a bar is a capsule, concentric with the bar */
   --radius-bar-inner: calc(var(--radius-bar-control) - var(--space-1));  /* C7: a segment inside it: outer radius minus the track's padding */
   --radius-filter-chip: calc(var(--filter-chip-height) / 2);   /* C7: an active filter chip in the controls bar is a capsule (designer, 2026-10-22) */
+  --radius-alert: 34px;    /* G67: the confirm alert's corners, as an iOS 26 alert (designer, 2026-10-23) [?] not from Apple's kit */
   --radius-avatar: 50%;    /* Profile initials: a circle, as iOS avatars are (DESIGN.md → Shapes, the one circle) */
   --border: 1px;
   --focus-ring: 2px;
@@ -123,7 +124,6 @@
   --photo-focus-mid: 50% 60%;
   --photo-focus-lower: 50% 74%;   /* lower band: keeps a banner above the subject out of frame (DEKA photo) */
   --photo-focus-center: 50% 44%;  /* subject in the middle of a tall photo */
-  --photo-focus-high: 50% 0%;     /* subject at the top edge (race bibs) */
   --photo-focus-upper: 50% 18%;   /* subject high in the frame: DEKA and OCR photos (step 4, round 3) */
   --icon-s: 15px;
   --icon-m: 18px;
@@ -240,7 +240,7 @@
 .onrace .visually-hidden {
   position: absolute; width: var(--hidden-size); height: var(--hidden-size); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
 }
-.onrace h1, .screen-title {
+.onrace h1 {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--size-title);
@@ -251,7 +251,7 @@
 }
 
 /* ---------- buttons: one primary per screen ---------- */
-.btn, .header-action, .filters-trigger, .state-action {
+.header-action, .filters-trigger, .state-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -268,19 +268,20 @@
   cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
-.btn:active, .header-action:active, .filters-trigger:active, .state-action:active { transform: translateY(var(--border)); }
-.btn .icon { width: var(--icon-m); height: var(--icon-m); flex: none; }
+.header-action:active, .filters-trigger:active, .state-action:active { transform: translateY(var(--border)); }
 
 /* primary: filled accent (Log result, Register on <domain>) */
-.btn--primary, .header-action, .state-action:not(.secondary) { background: var(--accent); color: var(--on-accent); }
-.btn--primary:hover, .header-action:hover, .state-action:not(.secondary):hover { background: var(--accent-hover); }
+.header-action, .state-action:not(.secondary) { background: var(--accent); color: var(--on-accent); }
+.header-action:hover, .state-action:not(.secondary):hover { background: var(--accent-hover); }
 
 /* secondary: tonal (Filters, Clear all filters on an empty state) */
-.btn--secondary, .filters-trigger, .state-action.secondary { background: var(--bg-2); color: var(--text-1); }
-.btn--secondary:hover, .filters-trigger:hover, .state-action.secondary:hover { background: var(--bg-3); }
+.filters-trigger, .state-action.secondary { background: var(--bg-2); color: var(--text-1); }
+.filters-trigger:hover, .state-action.secondary:hover { background: var(--bg-3); }
+.sheet .state-action.secondary { background: transparent; box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet); }   /* on the bg-2 sheet (Race picker) a tonal button would vanish: outlined, as the Filters sheet's Cancel (C4) */
+.sheet .state-action.secondary:hover { background: var(--bg-3); }
 
 /* tertiary: text link (Clear all filters in the chips row, Cancel) */
-.btn--tertiary, .clear-all {
+.clear-all {
   position: relative;
   min-height: var(--target);
   padding: 0 var(--space-1);
@@ -295,14 +296,12 @@
   text-underline-offset: var(--space-1);
   cursor: pointer;
 }
-.btn--tertiary:hover, .clear-all:hover { color: var(--text-2); }
+.clear-all:hover { color: var(--text-2); }
 
-/* states */
-.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
-.btn--tertiary:disabled { background: none; }
-.btn[aria-busy="true"] { cursor: progress; pointer-events: none; }  /* busy: same fill, verb in the present tense ("Saving…"), aria-disabled blocks keys */
-/* G26: an activity indicator inside a busy button, before its present-tense label */
-:is(.btn, button, .submit-btn)[aria-busy="true"]::before, .top-bar .save-progress::before {
+/* G26: an activity indicator inside a busy button, before its present-tense label; also before the labels the
+   wireframes swap in by script ("Sending…" on Send a new link, "Saving…" in a Profile row note) */
+:is(button, .submit-btn)[aria-busy="true"]::before, .top-bar .save-progress::before,
+[data-resend="sending"]:not([hidden])::before, .row-note [data-saving]:not([hidden])::before {
   content: "";
   flex: none;
   width: var(--spinner-size);
@@ -313,6 +312,7 @@
   animation: onrace-spin var(--dur-spin) linear infinite;
 }
 @keyframes onrace-spin { to { transform: rotate(1turn); } }
+[data-resend="sending"]:not([hidden]), .row-note [data-saving]:not([hidden]) { display: inline-flex; align-items: center; gap: var(--space-2); }
 
 /* ---------- format chip: metadata, neutral ---------- */
 .sport-tag {
@@ -366,8 +366,10 @@
 .chip::after, .clear-all::after { content: ""; position: absolute; inset: var(--tap-pad) 0; } /* 44px tap area */
 
 /* ---------- search field ---------- */
-.race-search { position: relative; }
-.race-search::before {
+.race-search, .sheet > form.search { position: relative; }
+.sheet > form.search { flex: none; padding: var(--space-3) 0; }
+body > .sheet > form.search { padding-inline: var(--space-4); }   /* Race picker: the screen's sheet has no padding of its own, so the search takes the gutter */
+.race-search::before, .sheet > form.search::before {
   content: "";
   position: absolute;
   left: var(--space-4);
@@ -380,7 +382,8 @@
   mask: var(--icon-search) center / contain no-repeat;
   pointer-events: none;
 }
-.race-search input {
+body > .sheet > form.search::before { left: calc(var(--space-4) * 2); }
+.race-search input, .sheet > form.search input[type="search"] {
   width: 100%;
   min-height: var(--target);
   padding: 0 var(--space-4) 0 calc(var(--space-4) + var(--icon-m) + var(--space-2));
@@ -394,10 +397,11 @@
   -webkit-appearance: none;
   appearance: none;
 }
-.race-search input::placeholder { color: var(--text-2); opacity: 1; }
-.race-search input:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
-.race-search input:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
-.race-search input::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
+.sheet > form.search input[type="search"] { display: block; box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet); }   /* on the sheet: its boundary token (C4) */
+.race-search input::placeholder, .sheet > form.search input[type="search"]::placeholder { color: var(--text-2); opacity: 1; }
+.race-search input:hover, .sheet > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
+.race-search input:focus-visible, .sheet > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+.race-search input::-webkit-search-cancel-button, .sheet > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
 
 /* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
 .race-card {
@@ -538,6 +542,7 @@
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
+.view-toggle[hidden] { display: none; }
 .view-btn[aria-pressed="true"] { background: var(--bg-3); color: var(--text-1); box-shadow: inset 0 0 0 var(--border) var(--field-line); }  /* pressed: calm outline, like the active chip */
 .view-btn { position: relative; }
 .view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
@@ -563,31 +568,11 @@
 .bottom-nav a[aria-current="page"] { color: var(--accent); }
 .bottom-nav .tab-icon { width: var(--icon-l); height: var(--icon-l); }
 
-/* ---------- status messages: icon + text, color second ---------- */
-.status {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-2);
-  font-size: var(--size-meta);
-  color: var(--text-1);
-}
-.status .icon { width: var(--icon-m); height: var(--icon-m); flex: none; margin-top: calc(var(--space-1) / 2); }
-.status--error { background: var(--error-bg); }
-.status--error .icon, .status--error strong { color: var(--error); }
-.status--success { background: var(--success-bg); }
-.status--success .icon, .status--success strong { color: var(--success); }
-.status--warning { background: var(--warning-bg); box-shadow: inset 0 0 0 var(--border) var(--warning-line); }
-.status--warning .icon, .status--warning strong { color: var(--warning); }
-.status p { margin: 0; }
-
 /* ---------- skeleton (loading): no spinner, no invented progress ---------- */
-.skeleton { border-radius: var(--radius-1); background: var(--bg-2); }
 /* C6/G25: skeletons breathe, subtly; still under reduced motion */
-.skeleton, .bar, .initials.skel { animation: onrace-pulse var(--dur-pulse) var(--ease-in-out) infinite; }
+.bar, .initials.skel { animation: onrace-pulse var(--dur-pulse) var(--ease-in-out) infinite; }
 @keyframes onrace-pulse { 50% { opacity: var(--skel-pulse-dim); } }
-@media (prefers-reduced-motion: reduce) { .skeleton, .bar, .initials.skel { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .bar, .initials.skel { animation: none; } }
 
 /* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
 .controls { display: grid; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
@@ -668,7 +653,7 @@
 .skeleton-card .bar.location { grid-area: loc; width: var(--skel-loc-w); height: var(--skel-line); margin-bottom: var(--space-1); }
 
 /* ---------- empty and error states: message + actions in the button hierarchy ---------- */
-.state-message {   /* empty and error: the iOS ContentUnavailableView pattern (designer, 2026-10-19): icon on top, title, body, action, all centered */
+.state-message, .state-msg {   /* empty and error: the iOS ContentUnavailableView pattern (designer, 2026-10-19): icon on top, title, body, action, all centered */
   display: grid;
   gap: var(--space-2);
   justify-items: center;
@@ -677,7 +662,7 @@
   --state-icon: var(--icon-search);    /* empty, by default: nothing matches a search or filter (Race browse) */
   --state-icon-color: var(--text-2);   /* muted */
 }
-.state-message::before {
+.state-message::before, .state-msg::before {
   content: "";
   width: var(--icon-state);
   height: var(--icon-state);
@@ -687,8 +672,15 @@
   mask: var(--state-icon) center / contain no-repeat;
 }
 section:is(#list-view, [aria-label="Results archive"]) > .state-message:not([role="alert"], .is-error, :has([data-retry])) { --state-icon: var(--icon-archive); }   /* Results list empty: the results archive */
-#list-view:has(> .state-message) { flex: 1; display: flex; flex-direction: column; justify-content: center; }   /* centered in the free area below the header, above the floating tab bar */
-.state-message h2 {
+.state-message[hidden], .state-msg[hidden] { display: none; }
+/* where a state sits: centered in the free area, directly on the page (designer, 2026-10-22: no frame, surface or outline) */
+#list-view:has(> .state-message) { flex: 1; display: flex; flex-direction: column; justify-content: center; }   /* below the header, above the floating tab bar */
+.phone-screen main > section:not([hidden]):has(> .state-message:only-child) { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-inline: var(--space-4); }   /* Profile -error: the state inside its section */
+.phone-screen main > .state-message { flex: 1; align-content: center; padding-inline: var(--space-4); }   /* a drill-down: under the top bar */
+.sheet > .phone-screen > main > .state-message { padding-inline: 0; }   /* on the Race picker sheet: main already has the gutter */
+.gate > .state-msg { flex: 1; align-content: center; }   /* a gate with no form (New password -error?cause=expired) */
+.state-msg .submit-btn { width: auto; margin-top: var(--space-2); }   /* a state's action is sized to its label, like .state-action */
+.state-message h2, .state-msg h2 {
   margin: 0;
   font-family: var(--font-text);   /* text face: not a screen title, not a key number (rule 4) */
   font-size: var(--size-item);
@@ -696,9 +688,9 @@ section:is(#list-view, [aria-label="Results archive"]) > .state-message:not([rol
   line-height: var(--leading-item);
   color: var(--text-1);
 }
-.state-message p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
+.state-message p, .state-msg p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
 .state-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); margin-top: var(--space-2); }
-.state-message[role="alert"], .state-message.is-error, .state-message:has([data-retry]) {   /* error: the error icon, the screen's only coral; the stand uses .is-error so a static specimen isn't announced */
+.state-message[role="alert"], .state-message.is-error, .state-message:has([data-retry]), .state-msg {   /* error: the error icon, the screen's only coral; the stand uses .is-error so a static specimen isn't announced */
   --state-icon: var(--icon-error);
   --state-icon-color: var(--error);
 }
@@ -712,7 +704,16 @@ html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
 body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
 .phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
 .phone-screen main { display: flex; flex-direction: column; min-height: 100%; }
-.phone-screen header { display: grid; gap: var(--space-3); padding: calc(var(--space-2) + var(--safe-top)) var(--space-4) var(--space-1); }  /* G6: below the top safe area (0 in the viewer, which draws the status bar above the page) */
+/* drill-downs and modals (every screen without a tab bar) */
+body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
+.phone-screen:has(> .top-bar) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
+.phone-screen:has(> .top-bar) > main { flex: 1 0 auto; min-height: 0; }
+/* with an action bar (Race detail, Result detail): the page scrolls above the bar, which stays put. The bar's height
+   changes (the inline error), so content stops at its top edge instead of running under the glass (markup pass, G35) */
+body:has(> .action-bar) { display: flex; flex-direction: column; }
+body:has(> .action-bar) > .phone-screen { flex: 1; min-height: 0; height: auto; }
+body:has(> .action-bar) > .action-bar { flex: none; position: relative; z-index: 3; }
+.phone-screen header:not(.top-bar) { display: grid; gap: var(--space-3); padding: calc(var(--space-2) + var(--safe-top)) var(--space-4) var(--space-1); }  /* G6: below the top safe area (0 in the viewer, which draws the status bar above the page) */
 .phone-screen .controls {   /* C1/G7: glass, with a rim instead of a hairline; content scrolls under it */
   position: sticky;
   top: var(--safe-top);
@@ -746,10 +747,13 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 .photo--mid { object-position: var(--photo-focus-mid); }
 .photo--lower { object-position: var(--photo-focus-lower); }
 .photo--center { object-position: var(--photo-focus-center); }
-.photo--high { object-position: var(--photo-focus-high); }
 .photo--upper { object-position: var(--photo-focus-upper); }
 .race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
 .race-card:has(.card-link:active), .race-card.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
+.race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
+.sheet .race-card, .sheet .skeleton-card { background: var(--bg-3); }   /* designer, 2026-10-23: one level above the sheet (bg-2 glass), so the cards separate */
+.sheet .race-card:has(.card-link:active), .sheet .race-card.is-pressed { background: var(--bg-3); }   /* pressed can't go a level higher: it keeps the level and takes the ring */
+.sheet .race-card:has(.card-link:active) .card-link::after, .sheet .race-card.is-pressed .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
 
 /* tab bar on a screen: fixed to the frame's bottom; Solar icons from tokens (the markup's own glyphs are hidden) */
 body > .bottom-nav:not(.fs-tabbar) {   /* G1/G2: floats above content, in from the edges, above the bottom safe area */
@@ -943,6 +947,13 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   transition: transform var(--dur-sheet) var(--ease-out);
 }
 .sheet.open { transform: translateY(0); }
+/* Race picker: the sheet is the whole screen, resting at the large detent (G13) over Log result, which has receded
+   under the scrim; its top bar spans it, and only the list scrolls */
+html:has(body > .sheet > .top-bar) { height: 100%; }
+body:has(> .sheet > .top-bar) { height: 100%; margin: 0 auto; max-width: var(--screen-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--bg-0); }
+body > .sheet:has(> .top-bar) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
+.sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; }
+.sheet > .phone-screen > main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
 .sheet-handle { flex: none; width: var(--space-7); height: var(--space-1); margin: 0 auto var(--space-3); border-radius: var(--radius-1); background: var(--field-line-sheet); }
 .sheet h2 { margin: 0 0 var(--space-4); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); color: var(--text-1); }
 .sheet form { display: flex; flex-direction: column; flex: 1 0 auto; }   /* the large detent: the footer sits at the sheet's bottom edge */
@@ -1035,7 +1046,8 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
    Sign in / Sign up, Reset password, New password, Profile): structure from
    their wireframes (the wireframes' own class names), look from DESIGN.md.
    None of these selectors match an element on the two Podium screens.
-   Extracted 2026-10-18 (Lesson 7, step 3a); not yet linked by those screens.
+   Extracted 2026-10-18 (Lesson 7, step 3a); linked by every screen since step 5 (2026-10-22).
+   Consolidated 2026-10-23: each component is defined in one place.
    ================================================================= */
 
 /* ---------- top bar: back link, centered title, text actions ---------- */
@@ -1102,6 +1114,13 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .top-bar .save-btn:hover { color: var(--accent-hover); }
 .top-bar .save-progress { margin-left: auto; color: var(--text-2); font-weight: var(--weight-strong); }
 .top-bar a:hover { color: var(--text-2); }
+/* on a gate (Sign in, Reset password, New password) the bar is the body's own child: it floats over the page's top
+   edge and the page, which starts below it, scrolls under its glass (C1) */
+body > .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
+body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--safe-top) + var(--border)); }   /* 44pt, the top safe area, the rim */
+/* on a sheet (Race picker) the bar spans the sheet: no safe area above it and nothing scrolls under it, so it is the
+   sheet's own glass, not a second layer */
+.sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 
 /* ---------- detail screens (Race detail, Result detail) ---------- */
 .race, .result { padding: var(--space-5) var(--space-4) var(--space-7); }
@@ -1127,7 +1146,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   letter-spacing: var(--tracking-display);
   color: var(--text-1);
 }
-.race h2, .result h2, .state-msg h2 {
+.race h2, .result h2 {
   margin: 0 0 var(--space-2);
   font-family: var(--font-text);
   font-size: var(--size-item);
@@ -1135,13 +1154,18 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   line-height: var(--leading-item);
   color: var(--text-1);
 }
-.about p, .official p { margin: 0 0 var(--space-6); font-size: var(--size-body); }
+.about p { margin: 0 0 var(--space-6); font-size: var(--size-body); }
+.official p { margin: calc((var(--target) - var(--size-body) * var(--leading-body)) / -2) 0 var(--space-6); font-size: var(--size-body); }   /* the 44pt link keeps the line where it was */
 .official a, .row-note a, .alert-link, .forgot a {
   color: var(--text-1);
   text-decoration: underline;
   text-decoration-thickness: var(--border);
   text-underline-offset: var(--space-1);
 }
+/* 44pt targets on the inline links (HIG Accessibility; G36, G62), the text lines unmoved */
+.official a { display: inline-flex; align-items: center; min-height: var(--target); }
+.forgot a { padding-block: calc((var(--target) - var(--size-meta)) / 2); }   /* inline: vertical padding never moves the line */
+.row-note a { padding-block: calc((var(--target) - var(--size-proof)) / 2); }
 .race > .photo {   /* Race detail: the race's photo, the card's band at full content width. Same 3:1 ratio and focus class as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
   display: block;
   width: 100%;
@@ -1153,8 +1177,6 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   filter: var(--photo-filter);
 }
 .race .bar.photo { aspect-ratio: var(--photo-ratio); margin-bottom: var(--space-4); border-radius: var(--radius-2); }   /* loading: the photo band's place, so nothing shifts */
-.official a { display: inline-flex; align-items: center; min-height: var(--target); }   /* 44pt target on the one inline link (HIG Accessibility) */
-.official p { margin-block-start: calc((var(--target) - var(--size-body) * var(--leading-body)) / -2); }   /* the taller link keeps the line where it was */
 .result .proof p { margin: 0 0 var(--space-2); }
 .proof-url { font-size: var(--size-body); color: var(--text-1); overflow-wrap: anywhere; }
 .proof-note { font-size: var(--size-proof); color: var(--text-2); }
@@ -1168,16 +1190,6 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   border-top: var(--border) solid var(--glass-edge);
 }
 .action-bar[hidden] { display: none; }
-/* drill-down screen with an action bar (Race detail, Result detail): no tab bar; the page scrolls above the bar, which stays put.
-   The bar's height changes (the inline error), so content stops at its top edge instead of running under the glass (markup pass, G35) */
-body:has(> .action-bar) { display: flex; flex-direction: column; }
-body:has(> .action-bar) > .phone-screen { flex: 1; min-height: 0; height: auto; }
-body:has(> .action-bar) > .action-bar { flex: none; position: relative; z-index: 3; }
-body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
-.phone-screen:has(> .top-bar) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
-.phone-screen:has(> .top-bar) > main { flex: 1 0 auto; min-height: 0; }
-.phone-screen main > .state-message { flex: 1; align-content: center; padding-inline: var(--space-4); }   /* a full-screen state: centered in the area under the top bar */
-.state-message[hidden] { display: none; }
 .action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-bar-control); }   /* C7: a control inside a bar is a capsule */
 .register-btn, .open-btn, .submit-btn {   /* the screen's one primary */
   display: flex;
@@ -1226,6 +1238,7 @@ body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab
 .secondary-btn { display: flex; width: 100%; font-size: var(--size-body); }
 .secondary-btn:hover:not(:disabled), .dismiss:hover, .alert-btn:hover, .unlink-btn:hover:not(:disabled) { background: var(--bg-3); }
 .secondary-btn:disabled, .unlink-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.secondary-btn:disabled:has([data-resend="sending"]:not([hidden])) { color: var(--text-1); cursor: progress; }   /* busy, not disabled: the label keeps its color, as a busy primary keeps its fill */
 .text-link {
   display: flex;
   align-items: center;
@@ -1257,7 +1270,7 @@ body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab
   line-height: var(--leading-item);
   color: var(--text-1);
 }
-.inline-error h2::before, .form-alert h2::before, .state-msg h2::before, .field-error::before, .row-note.is-error::before {   /* one error icon, in the error color */
+.inline-error h2::before, .form-alert h2::before, .field-error::before, .row-note.is-error::before {   /* one error icon, in the error color */
   content: "";
   display: inline-block;
   width: var(--icon-m);
@@ -1271,7 +1284,22 @@ body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab
 .inline-error p, .form-alert p { margin: var(--space-1) 0 0; font-size: var(--size-meta); color: var(--text-1); }
 .inline-error .alert-actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
 .inline-error > .dismiss { margin-top: var(--space-3); }
-.form-alert .alert-link { display: inline-block; margin-top: var(--space-2); font-size: var(--size-meta); font-weight: var(--weight-strong); }
+.form-alert .alert-link {   /* 44pt target (G62): padding extends the hit area, equal negative margins keep the line */
+  display: inline-block;
+  padding-block: calc((var(--target) - var(--size-meta) * var(--leading-body)) / 2);
+  margin-block: calc(var(--space-2) - (var(--target) - var(--size-meta) * var(--leading-body)) / 2) calc((var(--target) - var(--size-meta) * var(--leading-body)) / -2);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+}
+/* an inline error that is the whole screen (Sign in -error?cause=confirm, no form left): the empty/error state's form,
+   the 48px icon on top, no surface (designer, 2026-10-23) */
+.gate > section:not([hidden]):has(> .inline-error + .submit-btn) { flex: 1; display: grid; gap: var(--space-2); justify-items: center; align-content: center; text-align: center; padding: var(--space-6) 0; }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error { display: grid; gap: var(--space-2); justify-items: center; margin: 0; padding: 0; border-radius: 0; background: none; }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error::before { content: ""; justify-self: center; width: var(--icon-state); height: var(--icon-state); margin-bottom: var(--space-2); background: var(--error); -webkit-mask: var(--icon-error) center / contain no-repeat; mask: var(--icon-error) center / contain no-repeat; }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error h2 { font-size: var(--size-item); }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error h2::before { content: none; }   /* the icon is on top */
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error p { margin: 0; max-width: var(--measure); color: var(--text-2); }
+.gate > section:has(> .inline-error + .submit-btn) > .submit-btn { width: auto; margin-top: var(--space-2); }
 
 /* ---------- forms: fields, hints, errors ---------- */
 #log-form { padding: var(--space-4) var(--space-4) var(--space-7); }
@@ -1296,7 +1324,7 @@ body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab
 .field input::placeholder { color: var(--text-2); opacity: 1; }
 .field input:hover, .field select:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
 .field input:focus-visible, .field select:focus-visible, .field input.is-focus { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }   /* .is-focus: the showcase's still stand-in */
-.field input:disabled, .field select:disabled { color: var(--text-2); cursor: not-allowed; }
+.field input:disabled, .field select:disabled { color: var(--text-2); -webkit-text-fill-color: currentColor; cursor: not-allowed; }   /* Safari paints disabled values with its own fill color: keep Text 2 */
 .field input[aria-invalid="true"], .field select[aria-invalid="true"],
 .field input[aria-invalid="true"]:focus-visible, .field select[aria-invalid="true"]:focus-visible { box-shadow: inset 0 0 0 var(--focus-ring) var(--invalid); }   /* invalid: coral ring inside; focus adds the white ring outside, so the two never look alike */
 .field select { -webkit-appearance: none; appearance: none; padding-right: calc(var(--space-3) * 2 + var(--icon-s)); }
@@ -1352,17 +1380,14 @@ a.catalog-row[href]:hover { box-shadow: inset 0 0 0 var(--border) var(--field-li
 .linked-fact.place { color: var(--text-2); }
 .linked-race .unlink-btn { margin-top: var(--space-2); }
 
-/* ---------- Race picker: a sheet with a top bar and a search field ---------- */
-.sheet .top-bar { background: var(--glass-sheet); }
-.sheet form.search { padding: var(--space-3) 0; }
+/* ---------- Race picker: the list intro (the sheet, its top bar, search and cards are with their components) ---------- */
 .list-intro { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
-.race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
 
 /* ---------- gates: Sign in / Sign up, Reset password, New password ---------- */
 .gate { padding: var(--space-5) var(--space-4) var(--space-7); }
 .context { margin: 0 0 var(--space-5); font-size: var(--size-body); color: var(--text-2); }
 .context[hidden] { display: none; }
-.gate .view-toggle { display: flex; margin: 0 0 var(--space-6); }
+.gate .view-toggle:not([hidden]) { display: flex; margin: 0 0 var(--space-6); }
 .gate .view-btn { flex: 1; }
 .view-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
 .submit-btn { margin: var(--space-2) 0 0; }
@@ -1382,9 +1407,6 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
 .inbox-line { margin: 0 0 var(--space-6); font-size: var(--size-body); color: var(--text-1); }
 .addr { font-weight: var(--weight-strong); overflow-wrap: anywhere; }
 .expiry-note { margin: var(--space-7) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-2); }
-.state-msg { display: grid; gap: var(--space-2); justify-items: stretch; padding: var(--space-6) 0; }
-.state-msg[hidden] { display: none; }
-.state-msg p { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
 
 /* ---------- Profile: identity, grouped rows, Sign out, the confirm alert ---------- */
 .identity { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-4) 0 var(--space-6); }
@@ -1434,6 +1456,18 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
   -webkit-appearance: none;
   appearance: none;
 }
+.row select { min-height: var(--target); }   /* the row's 44pt, so the whole row opens the menu */
+.row:has(> select)::after {   /* G65: a pop-up button shows its value and an indicator; a Solar chevron after the value, in Text 2 like it (C2) */
+  content: "";
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  margin-left: calc(var(--space-3) * -1 + var(--space-1));
+  background: var(--text-2);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}
 .row input:focus-visible, .row select:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-1); }
 .row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-2); }
 .row-note[hidden] { display: none; }
@@ -1448,7 +1482,7 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
   border: 0;
   border-radius: var(--radius-2);
   background: var(--bg-1);
-  color: var(--text-1);
+  color: var(--destructive);   /* G68 (designer, 2026-10-23): a destructive action, coral in the row too, as in Settings */
   font-family: var(--font-text);
   font-size: var(--size-body);
   font-weight: var(--weight-strong);
@@ -1456,14 +1490,16 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 .signout:hover { background: var(--bg-2); }
-dialog.alert {   /* the confirm alert floats like a sheet, so it takes the sheet's shadow */
+dialog.alert {   /* the confirm alert floats like a sheet: the sheet's glass over the scrim, its rim and shadow (G67, designer 2026-10-23: as iOS 26 alerts) */
   width: var(--alert-width);
   max-width: calc(100% - var(--space-8));
   padding: 0;
   border: 0;
-  border-radius: var(--radius-2);
-  background: var(--bg-1);
-  box-shadow: var(--shadow-sheet);
+  border-radius: var(--radius-alert);
+  background: var(--glass-sheet);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: inset 0 0 0 var(--border) var(--glass-edge), var(--shadow-sheet);
   color: var(--text-1);
   text-align: center;
   overflow: hidden;
@@ -1485,7 +1521,8 @@ dialog.alert .alert-actions button {
 }
 dialog.alert .alert-actions button + button { border-left: var(--border) solid var(--line); font-weight: var(--weight-strong); }
 dialog.alert #signout-confirm { color: var(--destructive); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1 */
-dialog.alert .alert-actions button:hover { background: var(--bg-2); }
+dialog.alert .alert-actions button:hover { background: var(--bg-3); }   /* one level above the alert's raised glass */
+dialog.alert .alert-actions button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }   /* the alert clips its edges: the ring sits inside the button, whole */
 
 /* ---------- skeletons on the grayscale screens: the content's shape, no shimmer ---------- */
 .bar.h1 { width: var(--skel-title-w); height: var(--size-title); margin-bottom: var(--space-4); }
@@ -1508,175 +1545,6 @@ dialog.alert .alert-actions button:hover { background: var(--bg-2); }
 .row .bar.label { margin: 0; }
 .row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
 .skel-signout .bar { height: var(--target); border-radius: var(--radius-2); }
-
-/* ---------- step 5 · Archive (2026-10-22) ---------- */
-/* Log result: its top bar is a <header>, which the large-title header rule above (.phone-screen header: a grid with the
-   header's padding) also matches. The top bar is a bar, not a large-title header: back it out to the .top-bar layout. */
-.phone-screen > header.top-bar { display: flex; gap: 0; padding: var(--safe-top) var(--space-2) 0; }
-
-/* Race picker: a whole screen in a page sheet over Log result (the wireframe's own .sheet, never .open). The Filters
-   sheet's off-screen slide-in doesn't apply: here the sheet is the screen's surface, resting at the large detent (G13),
-   with the form it came from receded under the scrim above its top edge. Its top bar spans the sheet; search and list
-   sit inside it with the 16px gutter; only the list scrolls (the search stays reachable, as in the wireframe). */
-html:has(body > .sheet > .top-bar) { height: 100%; }
-body:has(> .sheet > .top-bar) {
-  height: 100%;
-  margin: 0 auto;
-  max-width: var(--screen-w);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(var(--scrim), var(--scrim)) var(--bg-0);   /* the presenting screen, receded under the scrim */
-}
-body > .sheet:has(> .top-bar) {
-  position: relative;
-  inset: auto;
-  z-index: auto;
-  flex: 1;
-  min-height: 0;
-  height: auto;
-  margin-top: calc(var(--safe-top) + var(--sheet-gap-top));
-  padding: 0;
-  overflow: hidden;
-  transform: none;
-  transition: none;
-}
-.sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }   /* the safe area is above the sheet; nothing scrolls under this bar, so it is the sheet's own glass, not a second layer */
-.sheet > form.search { position: relative; flex: none; }
-body > .sheet > form.search { padding-inline: var(--space-4); }   /* the screen's sheet has no padding of its own (its top bar spans it), so the search takes the gutter */
-.sheet > form.search::before {   /* the search field of Race browse (.race-search), on the sheet */
-  content: "";
-  position: absolute;
-  left: var(--space-4);
-  top: 50%;
-  width: var(--icon-m);
-  height: var(--icon-m);
-  margin-top: calc(var(--icon-m) / -2);
-  background: var(--text-2);
-  -webkit-mask: var(--icon-search) center / contain no-repeat;
-  mask: var(--icon-search) center / contain no-repeat;
-  pointer-events: none;
-}
-.sheet > form.search input[type="search"] {
-  display: block;
-  width: 100%;
-  min-height: var(--target);
-  padding: 0 var(--space-4) 0 calc(var(--space-4) + var(--icon-m) + var(--space-2));
-  border: 0;
-  border-radius: var(--radius-bar-control);   /* C7: a search field is a bar control, a capsule */
-  background: var(--bg-1);
-  box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet);   /* C4: boundaries on the sheet take Field line on the sheet */
-  color: var(--text-1);
-  font-family: var(--font-text);
-  font-size: var(--size-body);
-  -webkit-appearance: none;
-  appearance: none;
-}
-body > .sheet > form.search::before { left: calc(var(--space-4) * 2); }
-.sheet > form.search input[type="search"]::placeholder { color: var(--text-2); opacity: 1; }
-.sheet > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
-.sheet > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
-.sheet > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10 */
-.sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; }
-.sheet > .phone-screen > main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
-.sheet > .phone-screen > main > .state-message { padding-inline: 0; }   /* the main's gutter is enough; on the sheet itself, no panel around it */
-.sheet .state-action.secondary { background: transparent; box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet); }   /* C4, as the Filters sheet's Cancel: a tonal bg-2 button would vanish on the bg-2 sheet, so it is outlined */
-.sheet .state-action.secondary:hover { background: var(--bg-3); }
-
-/* ---------- step 5 · Infrastructure (2026-10-22) ---------- */
-/* Gates (Sign in / Sign up, Reset password, New password): the top bar is the body's own child, before the scrolling
-   .phone-screen (not inside it, as on Race detail). It floats over the page's top edge and the page scrolls under its
-   glass (C1, HIG Toolbars: a scroll edge effect, not a solid bar); the page starts below the bar, so nothing is covered
-   at rest and nothing overflows the screen. */
-body > .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
-body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--safe-top) + var(--border)); }   /* the bar's height: 44pt, the top safe area, its rim */
-.view-toggle[hidden] { display: none; }   /* .gate .view-toggle's display beat the hidden attribute (Sign in -error?cause=confirm hides the toggle) */
-
-/* Full-screen error states on the gates sit directly on the page, as .state-message does (ContentUnavailableView,
-   3b review 5): the 48px coral error icon on top, title, body, then the one action, centered in the area under the top
-   bar. No frame, surface or outline around them.
-   - New password -error?cause=expired: section.state-msg (no form).
-   - Sign in -error?cause=confirm (ConfirmError, no form): the expired confirmation link, an .inline-error followed by
-     its Send a new link. Inside a form an .inline-error stays an alert on its --error-bg surface; here it is the
-     screen's whole state, so it loses the surface. */
-.gate > .state-msg:not([hidden]),
-.gate > section:not([hidden]):has(> .inline-error + .submit-btn) {
-  flex: 1;
-  display: grid;
-  gap: var(--space-2);
-  justify-items: center;
-  align-content: center;
-  text-align: center;
-  padding: var(--space-6) 0;
-}
-.gate > .state-msg::before,
-.gate > section:has(> .inline-error + .submit-btn) > .inline-error::before {
-  content: "";
-  justify-self: center;
-  width: var(--icon-state);
-  height: var(--icon-state);
-  margin-bottom: var(--space-2);
-  background: var(--error);
-  -webkit-mask: var(--icon-error) center / contain no-repeat;
-  mask: var(--icon-error) center / contain no-repeat;
-}
-.gate > section:has(> .inline-error + .submit-btn) > .inline-error {
-  display: grid;
-  gap: var(--space-2);
-  justify-items: center;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  background: none;
-}
-.gate > .state-msg h2, .gate > section:has(> .inline-error + .submit-btn) > .inline-error h2 { margin: 0; font-size: var(--size-item); }
-.gate > .state-msg h2::before, .gate > section:has(> .inline-error + .submit-btn) > .inline-error h2::before { content: none; }   /* the icon is on top now */
-.gate > .state-msg p, .gate > section:has(> .inline-error + .submit-btn) > .inline-error p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
-.gate > .state-msg .submit-btn, .gate > section:has(> .inline-error + .submit-btn) > .submit-btn { width: auto; margin-top: var(--space-2); }   /* a state's action is sized to its label, like .state-action */
-
-/* Profile -error (cause=load): the state is inside section#cause-load, not a direct child of main; the section fills
-   the free area between the large title and the floating tab bar, the state centered in it, with the 16px gutter. */
-.phone-screen main > section:not([hidden]):has(> .state-message:only-child) { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-inline: var(--space-4); }
-
-/* G26 on script-driven busy labels: an activity indicator before "Sending…" (Check inbox, Send a new link) and
-   before "Saving…" (Profile row note). The wireframe swaps the label's spans; the spinner keys on the visible one. */
-[data-resend="sending"]:not([hidden]), .row-note [data-saving]:not([hidden]) { display: inline-flex; align-items: center; gap: var(--space-2); }
-[data-resend="sending"]:not([hidden])::before, .row-note [data-saving]:not([hidden])::before {
-  content: "";
-  flex: none;
-  width: var(--spinner-size);
-  height: var(--spinner-size);
-  border-radius: var(--radius-avatar);
-  border: var(--focus-ring) solid currentColor;
-  border-right-color: transparent;
-  animation: onrace-spin var(--dur-spin) linear infinite;
-}
-.secondary-btn:disabled:has([data-resend="sending"]:not([hidden])) { color: var(--text-1); cursor: progress; }   /* busy, not disabled: same fill and label color, as a busy primary keeps its fill */
-
-/* 44pt targets on the gates' and Profile's inline links (HIG Accessibility), the text lines unmoved: padding extends
-   the hit area, an equal negative margin gives the space back. */
-.forgot a { padding-block: calc((var(--target) - var(--size-meta)) / 2); }   /* inline: vertical padding never moves the line; measured from the font size, as an inline box is the glyphs' height, not the line's */
-.row-note a { padding-block: calc((var(--target) - var(--size-proof)) / 2); }
-.form-alert .alert-link {
-  padding-block: calc((var(--target) - var(--size-meta) * var(--leading-body)) / 2);
-  margin-block: calc(var(--space-2) - (var(--target) - var(--size-meta) * var(--leading-body)) / 2) calc((var(--target) - var(--size-meta) * var(--leading-body)) / -2);
-}
-.row select { min-height: var(--target); }   /* the row's own 44pt height, so the whole row opens the menu */
-dialog.alert .alert-actions button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }   /* the alert clips its edges (overflow: hidden): the ring sits inside the button, whole, instead of a clipped half (Cancel takes focus on open) */
-
-/* Profile's Country and Language rows are pop-up buttons (HIG Pull-down buttons: a pop-up button shows its value and
-   an indicator). The value stays where it is; a Solar chevron after it, in Text 2 like the value (C2). */
-.row:has(> select)::after {
-  content: "";
-  flex: none;
-  width: var(--icon-s);
-  height: var(--icon-s);
-  margin-left: calc(var(--space-3) * -1 + var(--space-1));
-  background: var(--text-2);
-  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
-  mask: var(--icon-chevron) center / contain no-repeat;
-  pointer-events: none;
-}
 
 /* =================================================================
    Showcase layout (ui/kit.html only, never in the product). Tokens only.

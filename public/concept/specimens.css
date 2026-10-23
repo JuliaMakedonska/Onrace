@@ -1,0 +1,76 @@
+/* Specimens: classes the stand (concept/concept.html) and the first-screen study (concept/first-screen.html) show, which
+   no product screen uses. Moved out of ui/kit.css on 2026-10-23 (consolidation), unchanged. Values only from the kit's
+   tokens; load this file after ui/kit.css. */
+
+/* ---------- buttons, as stand specimens (the screens use .header-action, .state-action, .filters-trigger, .clear-all) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-2);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: translateY(var(--border)); }
+.btn .icon { width: var(--icon-m); height: var(--icon-m); flex: none; }
+.btn--primary { background: var(--accent); color: var(--on-accent); }
+.btn--primary:hover { background: var(--accent-hover); }
+.btn--secondary { background: var(--bg-2); color: var(--text-1); }
+.btn--secondary:hover { background: var(--bg-3); }
+.btn--tertiary {
+  position: relative;
+  min-height: var(--target);
+  padding: 0 var(--space-1);
+  background: none;
+  border: 0;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-regular);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.btn--tertiary:hover { color: var(--text-2); }
+.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
+.btn--tertiary:disabled { background: none; }
+.btn[aria-busy="true"] { cursor: progress; pointer-events: none; }  /* busy: same fill, verb in the present tense ("Saving…"), aria-disabled blocks keys */
+.btn[aria-busy="true"]::before {   /* G26: the kit's spinner, for a specimen that isn't a <button> */
+  content: "";
+  flex: none;
+  width: var(--spinner-size);
+  height: var(--spinner-size);
+  border-radius: var(--radius-avatar);
+  border: var(--focus-ring) solid currentColor;
+  border-right-color: transparent;
+  animation: onrace-spin var(--dur-spin) linear infinite;
+}
+
+/* ---------- status messages: icon + text, color second ---------- */
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  font-size: var(--size-meta);
+  color: var(--text-1);
+}
+.status .icon { width: var(--icon-m); height: var(--icon-m); flex: none; margin-top: calc(var(--space-1) / 2); }
+.status--error { background: var(--error-bg); }
+.status--error .icon, .status--error strong { color: var(--error); }
+.status--success { background: var(--success-bg); }
+.status--success .icon, .status--success strong { color: var(--success); }
+.status--warning { background: var(--warning-bg); box-shadow: inset 0 0 0 var(--border) var(--warning-line); }
+.status--warning .icon, .status--warning strong { color: var(--warning); }
+.status p { margin: 0; }

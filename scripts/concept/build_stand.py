@@ -126,7 +126,9 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Empty state icon, muted, on the page (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
     ('Error state icon, coral, on the page (non-text, 3:1)', 'error', 'bg-0', 'ui'),
     ('Empty or error state icon inside the map panel (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
-    ('Kit · Sign out in the confirm alert (destructive, coral)', 'destructive', 'bg-1', 'text'),
+    ('Profile · Sign out in its row (destructive, coral; G68, designer 2026-10-23)', 'destructive', 'bg-1', 'text'),
+    ('Profile · Sign out row, hover', 'destructive', 'bg-2', 'text'),
+    ('Race picker · race card meta and chip on the raised card (designer, 2026-10-23)', 'text-2', 'bg-3', 'text'),
     ('Kit · invalid field ring against the field (non-text, 3:1)', 'invalid', 'bg-1', 'ui'),
     ('Kit · invalid field ring against the page (non-text, 3:1)', 'invalid', 'bg-0', 'ui'),
     ('Kit · Filters sheet field boundary against a field (non-text, 3:1)', 'field-line-sheet', 'bg-0', 'ui'),
@@ -165,6 +167,9 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Filters sheet · checked box, neutral tint (non-text, 3:1)', 'control-tint', 'sheet', 'ui'),
     ('Race picker sheet · error state icon (non-text, 3:1)', 'error', 'sheet', 'ui'),
     ('Race picker sheet · race name, state heading, Cancel, title', 'text-1', 'sheet', 'text'),
+    ('Confirm alert (glass, G67) · title, Cancel', 'text-1', 'sheet', 'text'),
+    ('Confirm alert (glass, G67) · body', 'text-2', 'sheet', 'text'),
+    ('Confirm alert (glass, G67) · Sign out, destructive', 'destructive', 'sheet', 'text'),
 ]
 def min_alpha(where):   # the lowest fill opacity at which every pair on this glass still passes
     for pct in range(0, 101):
@@ -208,9 +213,9 @@ CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contr
 
 # cache-busting: stylesheet links carry a short hash of ui/kit.css + ui/map.css + concept/stand.css
 import hashlib
-CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/map.css', 'concept/stand.css')).encode()).hexdigest()[:8]
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css')).encode()).hexdigest()[:8]
 def _stamp(path):
-    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|map|stand))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
+    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|map|stand|specimens))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
     open(path, 'w').write(html)
 STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
 STAMPED += [f'wireframes/race-detail{x}.html' for x in ('', '-error', '-loading')]   # step 5, Discovery group (2026-10-22)
@@ -226,7 +231,7 @@ for _p in STAMPED:
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
 import math
 from colorlib import lab, de2000, hue as lab_hue
-CSS = KIT + open(os.path.join(ROOT, 'concept/stand.css')).read()   # every component rule the color rules check
+CSS = KIT + open(os.path.join(ROOT, 'concept/stand.css')).read() + open(os.path.join(ROOT, 'concept/specimens.css')).read()   # every component rule the color rules check
 CSS_RULES = [(sel.strip(), body) for sel, body in re.findall(r'([^{}]+)\{([^{}]*)\}', re.sub(r'/\*.*?\*/', '', CSS, flags=re.S))]
 
 def selectors_using(*tokens):
@@ -505,7 +510,6 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('hidden-size', 'Visually hidden text for screen readers', '1px box, clipped', 'voice.md → Loading: “Loading races…” is read, not shown'),
            ('photo-focus-lower', 'Crop focus, Berlin Marathon (generated photo)', 'Lower band: the runners fill it; the city sits above it', 'Attribute b · step 4, round 3'),
            ('photo-focus-center', 'Crop focus, HYROX Dallas (generated photo)', 'Subject in the middle of the frame', 'Attribute b: the band shows the race, not the ceiling'),
-           ('photo-focus-high', 'Crop focus at the top edge', 'Unused since step 4 (the generated Boston photo is photo--low); kept for photos whose subject is at the top', 'Attribute b'),
            ('photo-focus-upper', 'Crop focus, DEKA STRONG Chicago and Spartan Killington (generated photos)', 'Subject high in the frame: the band keeps heads and the action, no empty floor', 'Attribute b · step 4, round 3 (designer OK, 2026-10-21)'),
            ('screen-w', 'Screen pages: the page width inside the viewer', 'iPhone logical width', 'Wireframe conventions: iOS-structured, 390pt'),
            ('tabbar-h', 'Tab bar capsule height on the screen pages', '44px targets + 26px icon + label', 'Wireframe conventions: iOS chrome · Critique fix: 44px targets'),
@@ -570,6 +574,7 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-bar-control</code></td><td>{tok("radius-bar-control")} = 22px</td><td>A control inside a bar: the Filters button and the segmented track in the controls bar (Filters added by the designer, 2026-10-19); the search field once it pins to a bar (G8).</td><td>C7: concentric only inside bars; content keeps 4/6</td></tr>
 <tr><td><code>--radius-bar-inner</code></td><td>{tok("radius-bar-inner")} = 18px</td><td>A segment inside that track: the outer radius minus the track's 4px padding.</td><td>C7: concentric corners</td></tr>
 <tr><td><code>--radius-filter-chip</code></td><td>{tok("radius-filter-chip")} = 16px</td><td>Active filter chips in the controls bar: a capsule, half the 32px chip height.</td><td>C7: a control inside a bar is a capsule (designer, 2026-10-22). Format chips on cards keep 4px</td></tr>
+<tr><td><code>--radius-alert</code></td><td>{tok("radius-alert")}</td><td>The confirm alert (Profile, Sign out). {P}.</td><td>G67 (designer, 2026-10-23): the alert as iOS 26 alerts, glass and a larger radius, provisional like the sheet's</td></tr>
 <tr><td><code>--radius-avatar</code></td><td>{tok("radius-avatar")}</td><td>Profile initials (a circle); also the busy spinner's ring.</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
 <tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus, in Text 1, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
@@ -624,6 +629,7 @@ page = f'''<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
 <link rel="stylesheet" href="../ui/kit.css?v={CSS_V}">
+<link rel="stylesheet" href="specimens.css?v={CSS_V}">
 <link rel="stylesheet" href="stand.css?v={CSS_V}">
 </head>
 <body class="onrace">
@@ -631,7 +637,7 @@ page = f'''<!doctype html>
 
   <header class="stand-head">
     <h1>Onrace concept · Podium</h1>
-    <p>Direction A, chosen 2026-10-13 (<code>concept.md</code> → Directions). Every value and every component on this page comes from <code>ui/kit.css</code>; the stand's own layout from <code>stand.css</code>. The page itself holds no style values. Each decision below is signed with its reason: an attribute (a–e), the designer's taste, or a hierarchy rule. The full comparison is in <a class="stand-link" href="directions.html">directions.html</a>.</p>
+    <p>Direction A, chosen 2026-10-13 (<code>concept.md</code> → Directions). Every value and every product component on this page comes from <code>ui/kit.css</code>; the specimens no screen uses (the <code>.btn</code> family, status messages) from <code>specimens.css</code>; the stand's own layout from <code>stand.css</code>. The page itself holds no style values. Each decision below is signed with its reason: an attribute (a–e), the designer's taste, or a hierarchy rule. The full comparison is in <a class="stand-link" href="directions.html">directions.html</a>.</p>
   </header>
 
   <section class="stand-section" id="language" aria-labelledby="language-h">
@@ -861,7 +867,7 @@ open(os.path.join(ROOT, 'concept/concept.html'), 'w').write(page)
 print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b, k in PAIRS if k == 'text'))
 # mirror to public/ (GitHub Pages serves public/)
 import shutil
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))

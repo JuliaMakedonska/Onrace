@@ -119,9 +119,9 @@ Single-screen blocks, by screen.
 **Profile**
 - **Identity block** (`.identity`: initials `MR`, name, email). Photo: no (deferred; initials instead).
 - **Grouped settings rows** (`.group`, `.group-heading` "Account", `.rows` with Name, Country, Language, Email read-only; `.group-footer`). Native: [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables).
-- **Sign out button** (`.signout`, its own group).
-- **Confirm alert** (`dialog.alert`: "Sign out of Onrace?", Cancel, Sign out). Native: [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts). Step 5: Cancel's focus ring drawn inside the button (the alert clips its edge). Gaps: G67 K-pending (system alert corner radius and material, no value from Apple's kit).
-- **On the kit (step 5, 2026-10-22, Infrastructure):** all three pages link `ui/kit.css`; the shell (large title + floating tab bar, Profile current) already matched `results-list.html`, so no markup change; the old drawn `svg.tab-icon`s stay, hidden (Deferred to Lesson 7). Country and Language rows show a Solar chevron after the value (G65 K); rows are 44pt to the edge; "Saving…" takes the spinner (G66 K); `-error` cause=load is centered between the title and the tab bar. Amber: the current tab only; plus Try again on `-error` cause=load. Gaps: G4 M applies (large title doesn't collapse), G68 O (Sign out button in Text 1, not destructive: kit decision 2026-10-19 puts coral only in the alert; for the designer).
+- **Sign out button** (`.signout`, its own group). Coral text, a destructive action (G68, designer 2026-10-23).
+- **Confirm alert** (`dialog.alert`: "Sign out of Onrace?", Cancel, Sign out). Native: [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts). Step 5: Cancel's focus ring drawn inside the button (the alert clips its edge). Gaps: G67 K, closed 2026-10-23 (designer): the sheet glass over the scrim, the rim, `--radius-alert` 34px [?], as iOS 26 alerts.
+- **On the kit (step 5, 2026-10-22, Infrastructure):** all three pages link `ui/kit.css`; the shell (large title + floating tab bar, Profile current) already matched `results-list.html`, so no markup change; the old drawn `svg.tab-icon`s stay, hidden (Deferred to Lesson 7). Country and Language rows show a Solar chevron after the value (G65 K); rows are 44pt to the edge; "Saving…" takes the spinner (G66 K); `-error` cause=load is centered between the title and the tab bar. Amber: the current tab only; plus Try again on `-error` cause=load. Gaps: G4 M applies (large title doesn't collapse), G68 K, closed 2026-10-23 (designer): the Sign out row is coral too.
 
 ---
 
@@ -131,3 +131,11 @@ Single-screen blocks, by screen.
 - **"Filtered, with results":** kept as it is: `race-browse.html` plus URL parameters (`region`, `from`, `to`, `sport`, `q`), no page of its own. It's now a state in the wireframes viewer tree, **Race browse · Filtered** → `race-browse.html?sport=hyrox&sport=marathon` (`scripts/build_wireframes_viewer.py` → `URL_STATES`).
 - **G21 (Sort with two options):** the control is decided in the markup pass.
 - **HIG gaps on the eight grayscale screens:** checked per group in step 5. Until then, the Gaps column lists only gaps that share markup with the two Podium screens. **Discovery done 2026-10-22** (Race detail: G34–G39, `concept/concept.md` → Step 5, Discovery). **Archive done 2026-10-22** (G40–G57) and **Infrastructure done 2026-10-22** (G60–G68): `concept/concept.md` → Step 5, Archive and Infrastructure. Every screen is on the kit.
+
+## Consolidated (2026-10-23)
+
+- **Kit decisions applied:** G67 (the alert as iOS 26: glass, `--radius-alert` [?]), G68 (Sign out coral in its row), Race picker's cards one background level above the sheet (`--bg-3`; pressed keeps the level and takes a `--text-2` ring), Log result's locked values kept in Text 2 in Safari too (`-webkit-text-fill-color`).
+- **`ui/kit.css` consolidated:** the step 5 override blocks are merged into the components they override (top bar, sheet, search field, race card, state message, buttons, rows, the alert, text links). Checked with no visual change (`concept/concept.md` → Consolidation).
+- **Removed, no screen uses them:** `.photo--high` (and its token), `.screen-title`, the plain `.skeleton`. **Moved to `concept/specimens.css`** (the stand and the first-screen study use them, no screen does): the `.btn` family, `.icon` in a button, `.status` messages.
+- **`ui/kit.html` against this inventory:** every specimen is an inventory component; it uses no class the screens don't (beyond its own showcase layout and the `.is-pressed` / `.is-focus` stand-ins).
+

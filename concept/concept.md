@@ -450,9 +450,10 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G62 44pt on small text links | Forgot password?, Reset password again, a row's Try again: tap padding, the lines unmoved |
 | G63, G66 Busy indicators | The spinner on "Sending…" (Send a new link) and on Profile's "Saving…" row note |
 | G65 Profile pop-up rows | A Solar chevron after Country and Language; rows 44px |
-| G67 Confirm alert material and radius | **Open:** needs the system alert's radius and material from Apple's kit (like `--radius-sheet` [?]); not applied |
+| G67 Confirm alert material and radius | **Closed 2026-10-23 (designer):** the sheet glass over the scrim, the glass rim, `--radius-alert` 34px **[?]** (provisional like `--radius-sheet`, to be replaced from Apple's kit), as iOS 26 alerts. Contrast floors as the sheet's glass: title 12.13:1, body 5.59:1, Sign out 5.46:1 over the worst case |
+| G68 Sign out in its row | **Closed 2026-10-23 (designer):** a destructive action, coral (`--destructive`) in the Profile row too, not only in the alert. 6.74:1 on `--bg-1`, 5.87:1 on hover |
 
-**Markup pass: changes structure, controls or text, between steps 5 and 6 (33; G34, G35, G37 added in step 5, Discovery; two rows from the Discovery review, designer 2026-10-22; G40–G64 from step 5, Archive and Infrastructure).**
+**Markup pass: changes structure, controls or text, between steps 5 and 6 (34; the wireframe annotations row from the step 5 review, designer 2026-10-23; G34, G35, G37 added in step 5, Discovery; two rows from the Discovery review, designer 2026-10-22; G40–G64 from step 5, Archive and Infrastructure).**
 
 | Gap | Why it needs markup |
 |---|---|
@@ -488,6 +489,7 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G56 Result detail: Open button label | "Open official result on valenciaciudaddelrunning.com" wraps the capsule to two lines; a text change (`voice.md`) |
 | G60 Gates: confirming action in the bar | Sign in, Reset password, New password: Cancel leading, the confirm action trailing in the bar, instead of a full-width button at the form's end. Designer decides (Log result already uses a bar Save) |
 | G61 Gates: forms as grouped lists | As G42 |
+| Wireframe annotations on the working pages (designer, 2026-10-23) | Remove the bracketed wireframe notes from `wireframes/*.html` ("[ map placeholder — no pins: races failed to load ]" and the like): on a painted screen they read as product text. The frozen snapshot `wireframes/_wireframe/` keeps them |
 | G64 Gates' full-screen errors: heading levels | New password `-error?cause=expired`, Sign in `-error?cause=confirm`: only the bar title is an `h1`, the state heading an `h2` (as G37) |
 
 **Out of scope: prototype behavior, or not our standard (10).**
@@ -646,5 +648,33 @@ The rest of step 5, in parallel, one subagent per group, with the Discovery rule
 
 **Checked by the lead:** `build_stand.py` passes (rules 1, 2, 3a; 94 solid pairs + 13 over glass; 176 of 176 tokens; four new pairs: the picker's search boundary, Profile's row chevron, and the error icon and Text 1 on the picker's sheet glass). Every empty and error state on every screen audited in the browser: none has an outline, border, shadow or surface around it except Race picker's own sheet (the screen itself). Amber per state: at most the one primary and the current tab (Profile `-error`: Try again + the tab). Shots of every state: `ui/review-step5.html`.
 
-**HIG, the two groups:** Archive G40–G57, Infrastructure G60–G68, in the triage above. Two need the designer: **G67** (the confirm alert's system radius and material, a value from Apple's kit) and **G68** (HIG shows Sign Out in red in Settings; the kit keeps coral only in the alert, decision 2026-10-19), out of scope until decided.
+**HIG, the two groups:** Archive G40–G57, Infrastructure G60–G68, in the triage above. Two needed the designer, both decided 2026-10-23 (Step 5 review below): **G67** (the confirm alert's system radius and material, a value from Apple's kit) and **G68** (HIG shows Sign Out in red in Settings; the kit keeps coral only in the alert, decision 2026-10-19), out of scope until decided.
+
+### Step 5 review (designer, 2026-10-23)
+
+1. **G67, the confirm alert:** as iOS 26 alerts. The sheet's glass (`--glass-sheet`) over the scrim, with its blur and rim, and `--radius-alert` 34px **[?]** (provisional, like the sheet radius). The same contrast floor as the sheet glass, checked by the build over the worst case behind it: title and Cancel 12.13:1, body 5.59:1, Sign out (coral) 5.46:1. The buttons' hover takes `--bg-3`, one level above the raised glass.
+2. **G68, Sign out:** coral (`--destructive`) in its Profile row too, as a destructive action. 6.74:1 on `--bg-1`, 5.87:1 on hover. Coral now means error *and* destructive: on Profile `-error?cause=save` the row's error icon and Sign out are both coral.
+3. **Sign in, expired confirmation link, as a full-screen state:** agreed (kept as the subagent made it).
+4. **Wireframe annotations:** to the markup pass (Gap triage → Markup pass): removed from the working pages, kept in `_wireframe/`.
+5. **Race picker cards one level above the sheet:** `--bg-3` (the skeleton cards too). Pressed can't go a level higher, so it keeps the level and takes a 1px `--text-2` ring. The separation stays subtle: the card against the sheet is 1.12:1 (it was 1.10:1, darker than the sheet), because `--bg-3` is the top of the scale and only 2.3 L* above `--bg-2`. The meta on the card: `--text-2` on `--bg-3`, 5.60:1.
+6. **Log result while saving:** measured in Chromium at 390×844, with the locked fields filled in: every value renders in `--text-2` (`#A3A9B0`), not near-white; with nothing typed, what shows is the placeholder, also `--text-2`. Nothing to fix there. Safari paints disabled values with its own fill color, so the kit adds `-webkit-text-fill-color: currentColor` (no change in Chromium; Safari untested here).
+
+### Consolidation (2026-10-23)
+
+`ui/kit.css` after step 5 had two override blocks from the subagents and a few Discovery overrides beside the action bar. Each rule now lives with the component it overrides, so each component is defined in one place:
+- **Top bar:** its placements on a gate (the body's own child, floating) and on a sheet (plain); Log result's `header.top-bar` no longer needs an override (the large-title rule is `header:not(.top-bar)`).
+- **Modal sheet:** the sheet as a whole screen (Race picker), its scroll area and gutter.
+- **Search field:** one component on the page and on a sheet (`.race-search`, `.sheet > form.search`), the sheet's boundary token as its only variant.
+- **Race card:** the photo-less card and the picker's raised cards, with the card's states.
+- **State message:** `.state-msg` (New password's expired link) is now the same component as `.state-message`; every placement (list, drill-down, Profile's section, the sheet, a gate) sits together; the expired confirmation link on Sign in, an inline error that is the whole screen, sits beside it.
+- **Buttons:** the outlined secondary on a sheet; the busy secondary; the spinner rule covers the script-swapped labels ("Sending…", "Saving…").
+- **Rows, the alert, text links:** the pop-up chevron and the 44pt select; the alert's focus ring; the 44pt targets on the inline links next to their shared look; the form alert's link in one rule.
+- **Screen layouts:** drill-down, action bar and gate layouts next to `.phone-screen`.
+
+**Removed** (no screen uses them): `.photo--high` and `--photo-focus-high`, `.screen-title`, the plain `.skeleton`. **Moved** to a new `concept/specimens.css`, linked by the stand and `first-screen.html` (no screen uses them, those two pages do): the `.btn` family, `.icon` in a button, the `.status` messages. The build checks the color rules over the kit, the stand and the specimens. No token is left unused.
+
+**No visual change, checked by script** (Chromium, 390×844, animations frozen at frame 0, reduced motion, fresh URLs):
+- **Screenshots:** 64 states of the 35 pages (every URL cause, Map view, the Filters sheet, the Sign out alert), plus `ui/kit.html` (1280 and 390 wide, full page), `ui/shell.html` and `first-screen.html`, before and after, diffed pixel by pixel. Two runs of the same build differ by at most 1/255 in a channel, only under the blur of glass bars, so "changed" means a channel delta over 1. Result: **no change** on any of them. The stand's own content changed (its row for the removed token, one sentence), so it was checked with the same content under both stylesheets: identical.
+- **Computed styles:** every element and `::before`/`::after` on all 35 pages (2,491 boxes), old kit against merged kit. The only differences are on boxes that don't render: a hidden segmented control's margin, an `h2::before` that was `content: none` and is now not generated at all, and `gap: 0px` vs `normal` on Log result's flex top bar (both 0).
+- **Interaction states:** all 60 `:hover`, `:active` and `:focus` rules compared declaration by declaration: identical.
 

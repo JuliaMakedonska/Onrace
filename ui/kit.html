@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=9aafa41b">
-<link rel="stylesheet" href="map.css?v=9aafa41b">
+<link rel="stylesheet" href="kit.css?v=84a1000f">
+<link rel="stylesheet" href="map.css?v=84a1000f">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -528,6 +528,7 @@
 
     <div class="kit-item" id="archive-step5">
       <h3>Log result and Race picker on the kit (step 5)</h3>
+      <p>Since the consolidation (2026-10-23) these rules live with their components in <code>ui/kit.css</code>: the top bar, the sheet (as a whole screen), the search field, the race card (the picker’s cards one level above the sheet, <code>--bg-3</code>, designer 2026-10-23), the state message and the secondary button.</p>
       <p>Log result’s top bar is a <code>header.top-bar</code> inside <code>.phone-screen</code>: it keeps the bar’s layout (back, centered title, amber Save), not the large-title header’s. Race picker is a whole screen in a page sheet over Log result: on the screen the sheet rests at the large detent below the top safe area, with Log result receded under the scrim above its edge; its top bar spans the sheet, the search field keeps the gutter and only the list scrolls. On the sheet, a secondary state action is outlined in Field line on the sheet, as the Filters sheet’s Cancel (a tonal button would vanish on the raised level). The empty and error states sit on the sheet itself, no panel.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Log result: the top bar inside the screen</p>
@@ -676,7 +677,7 @@
 
     <div class="kit-item" id="profile-parts">
       <h3>Profile · identity, grouped rows, Sign out, confirm alert</h3>
-      <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code>, <code>dialog.alert</code> (Sign out in the destructive style, coral text, per HIG Alerts; the focus ring on Cancel, which takes focus on open, is drawn inside the button so the alert's edge never clips it). Step 5, Infrastructure: Country and Language are pop-up rows, a Solar chevron after the value in Text 2; every row is 44pt to its edges; the row's "Try again" link has a 44pt tap area. Profile <code>-error</code> (cause=load) is a <code>.state-message</code> centered between the large title and the tab bar.</p>
+      <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code> (a destructive action: coral text in its row too, G68, designer 2026-10-23), <code>dialog.alert</code> (glass as an iOS 26 alert: the sheet glass over the scrim, the rim, <code>--radius-alert</code> 34px [?], G67, designer 2026-10-23; Sign out in the destructive style, coral text, per HIG Alerts; the focus ring on Cancel, which takes focus on open, is drawn inside the button so the alert's edge never clips it). Step 5, Infrastructure: Country and Language are pop-up rows, a Solar chevron after the value in Text 2; every row is 44pt to its edges; the row's "Try again" link has a 44pt tap area. Profile <code>-error</code> (cause=load) is a <code>.state-message</code> centered between the large title and the tab bar.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Profile</p>
           <div class="kit-frame kit-frame--flush">
