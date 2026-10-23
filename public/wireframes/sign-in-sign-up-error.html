@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
+<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Sign in / Sign up, error state (wireframe)">
 
@@ -26,6 +26,7 @@
   <header class="top-bar">
     <a class="close" href="race-browse.html">Cancel</a>
     <h1 class="bar-title"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span><span data-cause="confirm" hidden>Check your inbox</span></h1>
+    <button type="submit" form="auth-form" class="bar-action" data-form-zone><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create<span class="visually-hidden"> account</span></span></button>
   </header>
 
   <div class="phone-screen">
@@ -86,7 +87,7 @@
            sign-in-sign-up-loading.html?run=1, carrying ?next, ?mode and
            ?email). The email is kept (?email=, else a sample), the password
            cleared. Not shown for ?cause=confirm. -->
-      <form id="auth-form" data-form-zone>
+      <form id="auth-form" class="form-rows" data-form-zone>
         <!-- ZONE: inline alert — one per form cause, at the top of the form,
              directly above the fields it's about (same placement rule as a
              failed save, _conventions.md § 1, Forms). Retry? → no is Cancel
@@ -110,13 +111,6 @@
           <p>This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you’re connected, then try again.</p>
         </div>
         <fieldset>
-          <div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required value="maya.rossi@example.com">
-          </div>
-          <div class="field">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" autocomplete="current-password" required>
             <!-- ZONE: under the password field — two lines, one per mode, both
                  real markup (setMode shows one).
                  Sign in mode: "Forgot password?", flows.md Flows 2 & 3's
@@ -133,10 +127,14 @@
                  client-side length check here: Flow 4 draws none, and its
                  "Account created?" rejects a shorter password server-side
                  either way (→ sign-in-sign-up-error.html?cause=signup). -->
-            <p class="field-hint" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
+          <div class="group">
+            <ul class="rows">
+              <li><div class="row"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required value="maya.rossi@example.com"></div></li>
+              <li><div class="row"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required></div></li>
+            </ul>
+            <p class="group-footer" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
             <p class="forgot" data-mode="signin"><a id="forgot" href="reset-password.html">Forgot password?</a></p>
           </div>
-          <button type="submit" class="submit-btn"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></button>
           <p class="form-note" data-mode="signup" hidden>We’ll send a link to confirm your email.</p>
         </fieldset>
       </form>

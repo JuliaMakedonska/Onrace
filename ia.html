@@ -245,6 +245,7 @@
 
 
 
+
   /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
   .lessonbar{border-bottom:1px solid var(--border)}
   .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
@@ -319,9 +320,9 @@
     <h2>Screens, grouped by entity cluster</h2>
     <p class="lede">Grouped by the two entity clusters in <code>sitemap.md</code> — Discovery (Race listing + Search/filter criteria) and Archive (Logged result + Source-link proof) — not by generic "site sections." Every screen carries the job(s) it closes; a plain outline means the close is framing-level, not a dedicated interaction.</p>
 
-    <p class="entry-note"><strong style="color:var(--text-dim)">App entry:</strong> Race browse is the landing screen at 0 taps — see Navigation in <code>sitemap.md</code>. An earlier draft modeled a separate "Onrace — entry" screen for Main Job 2; it never existed as real UI and was removed. The reasoning wasn't wrong, just misplaced — it describes this global nav structure (Discover + My Results as co-equal items), not a screen.</p>
+    <p class="entry-note"><strong style="color:var(--text-dim)">App entry:</strong> Race browse is the landing screen at 0 taps — see Navigation in <code>sitemap.md</code>. An earlier draft modeled a separate "Onrace — entry" screen for Main Job 2; it never existed as real UI and was removed. The reasoning wasn't wrong, just misplaced — it describes this global nav structure (Discover + Results as co-equal items), not a screen.</p>
 
-    <p class="entry-note"><strong style="color:var(--text-dim)">Global navigation — 3 tabs (revised 2026-09-25):</strong> <strong style="color:var(--text)">Discover</strong> → Race browse, <strong style="color:var(--text)">My Results</strong> → Results list, and <strong style="color:var(--text)">Profile</strong> → Profile. <strong style="color:var(--text)">Log result</strong> is no longer a tab: it's the primary action button inside My Results (header, plus the empty state's call to action), because tabs are destinations and actions are buttons. Cost: logging a result goes from 1 tap to 2 from anywhere outside My Results, with no extra sign-in step. Replaces the earlier 3-tab bar (Discover / Log Result / My Results); that reasoning is kept, marked superseded, in <code>sitemap.md</code> → Navigation § 1–2. <strong style="color:var(--text)">Profile</strong> became a tab on 2026-09-25 for 1-tap consistency and the familiar Account-tab convention. That accepts an auth entry point on every top-level screen, Discover included, though Discover itself gates nothing. It replaces a same-day account button inside My Results. Profile is 1 tap from any top-level screen (2 from Race detail, which has no tab bar), and Sign out is 3 (Profile → Sign out → confirm; the confirm alert is a deliberate extra tap).</p>
+    <p class="entry-note"><strong style="color:var(--text-dim)">Global navigation — 3 tabs (revised 2026-09-25):</strong> <em>(The Results tab was called “My Results” until 2026-10-23.)</em> <strong style="color:var(--text)">Discover</strong> → Race browse, <strong style="color:var(--text)">Results</strong> → Results list, and <strong style="color:var(--text)">Profile</strong> → Profile. <strong style="color:var(--text)">Log result</strong> is no longer a tab: it's the primary action button inside Results (header, plus the empty state's call to action), because tabs are destinations and actions are buttons. Cost: logging a result goes from 1 tap to 2 from anywhere outside Results, with no extra sign-in step. Replaces the earlier 3-tab bar (Discover / Log Result / Results); that reasoning is kept, marked superseded, in <code>sitemap.md</code> → Navigation § 1–2. <strong style="color:var(--text)">Profile</strong> became a tab on 2026-09-25 for 1-tap consistency and the familiar Account-tab convention. That accepts an auth entry point on every top-level screen, Discover included, though Discover itself gates nothing. It replaces a same-day account button inside Results. Profile is 1 tap from any top-level screen (2 from Race detail, which has no tab bar), and Sign out is 3 (Profile → Sign out → confirm; the confirm alert is a deliberate extra tap).</p>
 
     <div class="legend">
       <span class="lg-label">Jobs:</span>
@@ -362,7 +363,7 @@
     </div>
 
     <div class="iagroup archive">
-      <div class="group-title">My Results (Archive)</div>
+      <div class="group-title">Results (Archive)</div>
       <span class="group-object">Object: Logged result + Source-link proof</span>
 
       <div class="screen-card">
@@ -383,7 +384,7 @@
           <span class="jobtag jr3">Related 3 · Log</span>
           <span class="jobtag jframing">Social</span>
         </div>
-        <p class="states">Entry: the <strong style="color:var(--text)">Log result</strong> action inside My Results (header or empty state), not a nav tab — since 2026-09-24.</p>
+        <p class="states">Entry: the <strong style="color:var(--text)">Log result</strong> action inside Results (header or empty state), not a nav tab — since 2026-09-24.</p>
         <p class="states">States: empty form · source-link-required error (<code>official_result_url</code> — the one field <code>CLAUDE.md</code> marks required) · other-required-field error (<code>race_name</code>/<code>date</code>/<code>sport_type</code>/<code>finish_time</code> <code>[?]</code>) · submit error: couldn't save (reworded 2026-09-25 from "unreachable source link", which a client-side app can't detect)</p>
         <p class="states">Catalog link (2026-09-25): optional <strong style="color:var(--text)">Find in race catalog</strong> opens Race picker; a picked race fills and locks <code>race_name</code>/<code>date</code>/<code>sport_type</code>. Typing the race in by hand still works — the link is a shortcut, never a requirement.</p>
       </div>
@@ -411,7 +412,7 @@
 
     <div class="orphan-card">
       <h4 class="screen-name">Sign in / Sign up <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
-      <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Exists because Logged result is owner-only via RLS, so accounts exist. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps My Results or Profile (the Log result action lives inside My Results, so that gate covers both archive jobs) — not promoted to a global nav item, not deleted.</p>
+      <p>No job in <code>jtbd.md</code> calls for account creation or login on its own. Exists because Logged result is owner-only via RLS, so accounts exist. Resolved as a <strong style="color:var(--text)">contextual gate</strong> — surfaces only when an unauthenticated person taps Results or Profile (the Log result action lives inside Results, so that gate covers both archive jobs) — not promoted to a global nav item, not deleted.</p>
       <p style="margin-top:8px"><strong style="color:var(--text)">Method, decided 2026-09-25:</strong> email + password through Supabase Auth, with <strong style="color:var(--text)">Confirm email</strong> on. Create account doesn't sign anyone in: it leads to a "check your inbox" step, and the emailed link signs them in (<a href="#flow-signup">Flow 4</a>). Not in MVP: magic links, social sign-in. <strong style="color:var(--text)">Password reset, closed 2026-09-25:</strong> "Forgot password?" on Sign in opens Reset password (<a href="#flow-reset">Flow 6</a>) — by the same "does auth require it?" test, email + password needs a way back in. Passwords are at least 8 characters <code>[?]</code>, at sign-up and on reset alike.</p>
     </div>
 
@@ -429,7 +430,7 @@
 
     <div class="orphan-card">
       <h4 class="screen-name">Profile <span class="jobtag orphan" style="margin-left:8px">Infrastructure</span></h4>
-      <p>Added 2026-09-25. Shows whose account this is and lets the person leave it: initials (photo deferred until Supabase Storage is decided), name, country, language <code>[?]</code> (stored preference only, no localization yet), and <strong style="color:var(--text)">Sign out</strong>. No bio, stats, or public view. Entry: the Profile tab, one of 3 global tabs. Signed out, it opens the same Sign in / Sign up gate as My Results. Reverses the 2026-09-24 "no job supports Profile" verdict: that asked whether a job needs it, the wrong test for infrastructure. The right test is whether accounts require it. See <code>sitemap.md</code> → Entities → 5.</p>
+      <p>Added 2026-09-25. Shows whose account this is and lets the person leave it: initials (photo deferred until Supabase Storage is decided), name, country, language <code>[?]</code> (stored preference only, no localization yet), and <strong style="color:var(--text)">Sign out</strong>. No bio, stats, or public view. Entry: the Profile tab, one of 3 global tabs. Signed out, it opens the same Sign in / Sign up gate as Results. Reverses the 2026-09-24 "no job supports Profile" verdict: that asked whether a job needs it, the wrong test for infrastructure. The right test is whether accounts require it. See <code>sitemap.md</code> → Entities → 5.</p>
       <p style="margin-top:8px"><strong style="color:var(--text)">States (2026-09-25, <a href="#flow-profile">Flow 5</a>):</strong> loading · couldn't load · a field's change didn't save (fields save as they change; a failed save reverts inline). Sign out asks first (confirm alert), then signs out <em>this device only</em> — a local session clear, no network call — and lands on Race browse.</p>
     </div>
   </section>
@@ -546,7 +547,7 @@ flowchart LR
     <div class="mermaid-wrap">
 <pre class="mermaid">
 flowchart TD
-    Start2(("Global nav: taps My Results")) --> AuthCheck{"Signed in?"}
+    Start2(("Global nav: taps Results")) --> AuthCheck{"Signed in?"}
     AuthCheck -->|"no"| SignIn["Sign in / Sign up"]
     SignIn -->|"submits credentials"| SigningIn("Loading: signing in")
     SignIn -->|"closes without attempting"| DeadEnd2
@@ -564,7 +565,7 @@ flowchart TD
     AuthCheck -->|"yes"| ResultsList
     ResultsList --> FindsAction{"Finds and taps Log result? (header button, or empty state's call to action) [?]"}
     FindsAction -->|"yes"| LogForm["Log result"]
-    FindsAction -->|"no"| DeadEnd7(("Dead end: reached My Results, never found Log result [?]"))
+    FindsAction -->|"no"| DeadEnd7(("Dead end: reached Results, never found Log result [?]"))
     LogForm -->|"taps Find in race catalog (optional)"| PickerLoading("Loading: fetching past catalog races")
     PickerLoading -->|"connection fails"| PickerError("Error: could not load the race catalog")
     PickerError --> PickerRetry{"Retry?"}
@@ -621,11 +622,11 @@ flowchart TD
       <div class="flow-col">
         <h4>Decisions</h4>
         <ul>
-          <li><span class="fl">Gate</span>Signed in? — logged results are owner-only via RLS, so the My Results tab gates into Sign in / Sign up, a contextual gate. A successful sign-in lands on Results list. (The same gate is also reached from the Profile tab; that path lands on Profile and is Flow 5, not this one.)</li>
+          <li><span class="fl">Gate</span>Signed in? — logged results are owner-only via RLS, so the Results tab gates into Sign in / Sign up, a contextual gate. A successful sign-in lands on Results list. (The same gate is also reached from the Profile tab; that path lands on Profile and is Flow 5, not this one.)</li>
           <li><span class="fl">Reference</span>Creates an account instead → <a href="#flow-signup">Flow 4</a>, drawn once and referenced (<code>[[...]]</code>), not redrawn here. A confirmed sign-up lands on Results list.</li>
           <li><span class="fl">Reference</span>Forgot password → <a href="#flow-reset">Flow 6</a> (added 2026-09-25), also referenced, not redrawn. A changed password returns to Sign in, where the person signs in with it; the reset itself never lands on Results list.</li>
           <li><span class="fl">Branch</span>Sign-in succeeded? — a third edge since 2026-09-25: "email not confirmed yet" (Supabase's distinct error) routes into Flow 4's check-your-inbox step, not the generic sign-in error. Retrying can't fix it; confirming the email can.</li>
-          <li><span class="fl">[?] Flagged</span>Finds and taps Log result? — the form is one in-page action away from Results list (header button or empty-state call to action), not a tab. Rests on the unvalidated hypothesis that people look for logging inside My Results. The action must stay usable while the list is loading or has failed to load.</li>
+          <li><span class="fl">[?] Flagged</span>Finds and taps Log result? — the form is one in-page action away from Results list (header button or empty-state call to action), not a tab. Rests on the unvalidated hypothesis that people look for logging inside Results. The action must stay usable while the list is loading or has failed to load.</li>
           <li><span class="fl">Catalog</span>Any past races match the search? (Race picker, added 2026-09-25) — optional "Find in race catalog" searches only races whose <code>event_date</code> has passed. No match isn't an error: change the search or type the race in. Picking a race fills and locks <code>race_name</code>/<code>date</code>/<code>sport_type</code>; cancelling leaves the form unchanged.</li>
           <li><span class="fl">Retry</span>Catalog failed to load — "no" isn't a dead end: the form works without a catalog link, so giving up on the picker means typing the race in.</li>
           <li><span class="fl">Required</span><code>official_result_url</code> filled in? — the one field <code>CLAUDE.md</code> explicitly marks "(required)"; enforces the source-link trust model before submission.</li>
@@ -651,7 +652,7 @@ flowchart TD
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd7 <code>[?]</code></span>
-          Reached My Results, never found Log result. Signed in, right screen, but never took the in-page action. Root cause: the action wasn't findable enough; fix: its placement/prominence. Added 2026-09-24 with the 2-tab nav, flagged as untested.
+          Reached Results, never found Log result. Signed in, right screen, but never took the in-page action. Root cause: the action wasn't findable enough; fix: its placement/prominence. Added 2026-09-24 with the 2-tab nav, flagged as untested.
         </div>
         <div class="endpoint-box deadend">
           <span class="eb-label">Dead end — DeadEnd3</span>
@@ -670,7 +671,7 @@ flowchart TD
     <div class="mermaid-wrap">
 <pre class="mermaid">
 flowchart TD
-    Start3(("Global nav: taps My Results")) --> AuthCheck2{"Signed in?"}
+    Start3(("Global nav: taps Results")) --> AuthCheck2{"Signed in?"}
     AuthCheck2 -->|"no"| SignIn2["Sign in / Sign up"]
     SignIn2 -->|"submits credentials"| SigningIn2("Loading: signing in")
     SignIn2 -->|"closes without attempting"| DeadEnd4
@@ -890,7 +891,7 @@ flowchart TD
       <div class="flow-col">
         <h4>Decisions</h4>
         <ul>
-          <li><span class="fl">Gate</span>Signed in? — the same owner-only gate as My Results. A successful sign-in, or a confirmed sign-up (<a href="#flow-signup">Flow 4</a>), lands here, on Profile.</li>
+          <li><span class="fl">Gate</span>Signed in? — the same owner-only gate as Results. A successful sign-in, or a confirmed sign-up (<a href="#flow-signup">Flow 4</a>), lands here, on Profile.</li>
           <li><span class="fl">Retry</span>Profile failed to load — retry or give up.</li>
           <li><span class="fl">Branch</span>Saved? — fields save as they change (iOS Settings convention). A failed save puts the field back to its last saved value and says so inline; the person is never left looking at a value that isn't stored.</li>
           <li><span class="fl">Confirm</span>Sign out of Onrace on this device? — sign-out is the one destructive action here (it ends access to the archive until the next sign-in), so it asks first, with Cancel as the safe default.</li>
@@ -1088,7 +1089,7 @@ flowchart TD
     <p class="lede" style="margin-bottom:12px">Emotional and Social don't have a screen built specifically for them — they're closed by <em>how</em> an existing screen reads (Race browse's cross-format framing; the self-reported-source-linked labeling convention on Log result / Results list / Result detail), not by a dedicated interaction. Legitimate closes, but framing-level, unlike every other check in the matrix.</p>
 
     <div class="callout">
-      <strong>Columns with no check — Sign in / Sign up, Reset password, New password and Profile (infrastructure).</strong> Zero checks, by design. Not dead weight (Logged result is owner-only via RLS, so accounts exist) and not job-closers either. Sign in / Sign up is a <strong style="color:var(--text)">contextual gate</strong> on My Results and Profile, never a standalone destination. Reset password and New password (added 2026-09-25) are attached to Sign in as its recovery path — reached from it, returning to it — because email + password sign-in exists. Profile is the account's home and its only sign-out point, reached from its own tab. An earlier draft's <code>Onrace (entry)</code> column made the same mistake in reverse — crediting a nonexistent screen with closing Main Job 2 — and was removed; that job's coverage already stood on Race browse + Results list alone.
+      <strong>Columns with no check — Sign in / Sign up, Reset password, New password and Profile (infrastructure).</strong> Zero checks, by design. Not dead weight (Logged result is owner-only via RLS, so accounts exist) and not job-closers either. Sign in / Sign up is a <strong style="color:var(--text)">contextual gate</strong> on Results and Profile, never a standalone destination. Reset password and New password (added 2026-09-25) are attached to Sign in as its recovery path — reached from it, returning to it — because email + password sign-in exists. Profile is the account's home and its only sign-out point, reached from its own tab. An earlier draft's <code>Onrace (entry)</code> column made the same mistake in reverse — crediting a nonexistent screen with closing Main Job 2 — and was removed; that job's coverage already stood on Race browse + Results list alone.
     </div>
     <div class="callout" style="border-left-color:var(--ok)">
       <strong>Orphan jobs — none.</strong> Every job in <code>jtbd.md</code> traces to at least one screen once Emotional and Social's framing-level closes are counted honestly. Not a forced result: those two were only checked because the Sitemap and Entities sections had already documented exactly where each one lives.

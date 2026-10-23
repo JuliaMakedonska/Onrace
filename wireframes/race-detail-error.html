@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
+<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race detail, error state (wireframe)">
 
@@ -40,7 +40,7 @@
       <div class="state-message" data-cause="detail" role="alert">
         <h1>Couldn’t load race details</h1>
         <p>The connection may have dropped. Check it, then try again.</p>
-        <a class="state-action" href="race-detail-loading.html?race=hyrox-london" data-retry aria-label="Try loading the race again">Try again</a>
+        <a class="state-action" href="race-detail-loading.html?race=hyrox-london" data-retry aria-label="Try again, loading the race">Try again</a>
       </div>
 
       <div data-cause="registration" hidden>
@@ -206,8 +206,8 @@
        tab); "Dismiss" closes it and leaves the race and Register in place (flows.md: tries again later). -->
   <dialog class="alert" id="reg-alert" aria-labelledby="reg-alert-title" aria-describedby="reg-alert-desc">
     <div class="alert-body">
-      <h2 id="reg-alert-title">Couldn’t open the link</h2>
-      <p id="reg-alert-desc">The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <h2 id="reg-alert-title">Couldn’t open the race website</h2>
+      <p id="reg-alert-desc">The race website didn’t open. Your browser may have blocked it. Try again, or come back to this race later.</p>
     </div>
     <div class="alert-actions">
       <button type="button" id="reg-alert-dismiss" aria-label="Dismiss this message" autofocus>Dismiss</button>

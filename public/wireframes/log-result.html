@@ -7,11 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
+<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Log result (wireframe)">
 
-  <div class="phone-screen">
+  <!-- Log result is a modal sheet over Results (round 2, G40; HIG Sheets): Cancel and Save in its top bar. -->
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="log-title">
 
       <!-- ZONE: top bar — iOS navigation bar (_conventions.md § 1 → Back
            navigation, Forms; _screens.md → Log result → Chrome). "‹ My
@@ -28,11 +29,12 @@
            count as filled when a catalog race is linked) — and only then
            goes to "Loading: saving result" (the script at the end). -->
       <header class="top-bar">
-        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></a>
-        <h1 class="bar-title">Log result</h1>
+        <a class="close" href="results-list.html" data-cancel>Cancel</a>
+        <h1 class="bar-title" id="log-title">Log result</h1>
         <button type="submit" form="log-form" class="save-btn" aria-label="Save result">Save</button>
       </header>
 
+  <div class="phone-screen">
     <main>
 
       <!-- Base state: the blank form (_screens.md → Log result: Empty is
@@ -43,7 +45,7 @@
            own required-field bubbles are off so flows.md's two checks (and
            their order) are what run, via the script below; the required
            attributes still describe the fields. -->
-      <form id="log-form" action="log-result-loading.html" method="get" novalidate aria-labelledby="log-form-title">
+      <form id="log-form" class="form-rows" action="log-result-loading.html" method="get" novalidate aria-labelledby="log-form-title">
         <h2 id="log-form-title" class="visually-hidden">Result details</h2>
 
         <!-- ZONE: intro — one line saying every field is needed, since
@@ -69,10 +71,12 @@
              along (race-picker-loading.html?run=1&<values>, plus catalog=
              if one is already linked), so nothing typed is lost on the
              round trip (_conventions.md § 2: state travels in the URL). -->
-        <a class="catalog-row" href="race-picker-loading.html?run=1" data-open-picker>
-          <span class="catalog-row-label">Find in race catalog</span>
-          <span class="catalog-row-hint">Optional. Fills in the race name, date and sport type for you.</span>
-        </a>
+        <div class="group">
+          <ul class="rows">
+            <li><a class="row row--nav" href="race-picker-loading.html?run=1" data-open-picker aria-describedby="catalog-hint">Find in race catalog</a></li>
+          </ul>
+          <p class="group-footer" id="catalog-hint">Optional. Fills in the race name, date and sport type for you.</p>
+        </div>
 
         <!-- ZONE: linked race — shown only when the URL carries
              catalog=<slug> (a slug from _screens.md → Race picker → Sample
@@ -102,20 +106,11 @@
              browse's option list and slugs. Hidden (and disabled, so they
              aren't sent) while a catalog race is linked: the linked card
              above stands in for them. -->
-        <div class="race-facts" data-facts>
-        <div class="field">
-          <label for="race_name">Race name</label>
-          <input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required>
-        </div>
-
-        <div class="field">
-          <label for="date">Race date</label>
-          <input type="date" id="date" name="date" required>
-        </div>
-
-        <div class="field">
-          <label for="sport_type">Sport type</label>
-          <select id="sport_type" name="sport_type" required>
+        <div class="group" data-facts>
+          <ul class="rows">
+            <li><div class="row"><label for="race_name">Race name</label><input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required></div></li>
+            <li><div class="row"><label for="date">Race date</label><input type="date" id="date" name="date" required></div></li>
+            <li><div class="row"><label for="sport_type">Sport type</label><select id="sport_type" name="sport_type" required>
             <option value="" selected>Choose a sport type</option>
             <option value="hyrox">HYROX</option>
             <option value="deka">DEKA / functional fitness</option>
@@ -124,17 +119,18 @@
             <option value="triathlon">Triathlon</option>
             <option value="ultra">Ultra</option>
             <option value="ocr">OCR</option>
-          </select>
-        </div>
+          </select></div></li>
+          </ul>
         </div>
 
         <!-- ZONE: finish time — always typed, linked race or not: the
              catalog knows the race, not your time (_screens.md → Log result
              → Catalog link). -->
-        <div class="field">
-          <label for="finish_time">Finish time</label>
-          <input type="text" id="finish_time" name="finish_time" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="finish_time-hint" required>
-          <p class="hint" id="finish_time-hint">Hours:minutes:seconds, exactly as the official results show it.</p>
+        <div class="group">
+          <ul class="rows">
+            <li><div class="row"><label for="finish_time">Finish time</label><input type="text" id="finish_time" name="finish_time" inputmode="numeric" pattern="[0-9:]*" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="finish_time-hint" required></div></li>
+          </ul>
+          <p class="group-footer" id="finish_time-hint">Hours:minutes:seconds, exactly as the official results show it.</p>
         </div>
 
         <!-- ZONE: proof — official_result_url, the one field CLAUDE.md
@@ -144,16 +140,27 @@
              does with it: nothing — the link itself is the evidence
              (sitemap.md → Entities → 4. Source-link proof: self-reported,
              never "verified"; CLAUDE.md → Result trust model). -->
-        <div class="field proof">
-          <label for="official_result_url">Official result link <span class="tag" hidden></span></label>
-          <input type="url" id="official_result_url" name="official_result_url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off" aria-describedby="official_result_url-hint" required>
-          <p class="hint" id="official_result_url-hint">Paste the link to this result from the official timing site. It’s the proof elite races like Boston ask for. Onrace doesn’t check it: the result is marked self-reported and keeps this link.</p>
+        <div class="group">
+          <ul class="rows">
+            <li><div class="row row--stacked"><label for="official_result_url">Official result link </label><input type="url" id="official_result_url" name="official_result_url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off" aria-describedby="official_result_url-hint" required></div></li>
+          </ul>
+          <p class="group-footer" id="official_result_url-hint">Paste the link to this result from the official timing site. It’s the proof elite races like Boston ask for. Onrace doesn’t check it: the result is marked self-reported and keeps this link.</p>
         </div>
       </form>
 
     </main>
 
-  </div><!-- /.phone-screen -->
+  </div>
+  </div><!-- /.sheet --><!-- /.phone-screen -->
+
+  <!-- ZONE: discard confirm (round 2, G41; HIG Sheets, Action sheets): Cancel with something entered asks first. -->
+  <dialog class="action-sheet" id="discard-sheet" aria-labelledby="discard-msg">
+    <div class="action-group">
+      <p class="action-message" id="discard-msg">This result isn’t saved yet.</p>
+      <button type="button" class="is-destructive" id="discard-confirm">Discard result</button>
+    </div>
+    <button type="button" class="action-cancel" id="discard-keep" autofocus>Keep editing</button>
+  </dialog>
 
 <script>
 /* The Race picker's sample catalog (_screens.md → Race picker → Sample
@@ -268,6 +275,36 @@ var CATALOG = [
 (function () {
   var d = document.getElementById('date'), t = new Date();
   if (d) d.max = new Date(t.getTime() - t.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+})();
+</script>
+
+<script>
+/* Leaving the sheet (round 2, G41): Cancel goes back to Results; with anything entered or a race linked, an action
+   sheet asks first. The finish time takes the numeric keypad (G45), so its colons are put in as people type. */
+(function () {
+  var form = document.getElementById('log-form');
+  var cancel = document.querySelector('[data-cancel]');
+  var sheet = document.getElementById('discard-sheet');
+  function entered() {
+    if (new URLSearchParams(location.search).has('catalog')) return true;
+    return Array.prototype.some.call(form.elements, function (el) {
+      return !el.disabled && /^(text|url|date|select-one)$/.test(el.type) && el.value;
+    });
+  }
+  if (cancel && sheet) {
+    cancel.addEventListener('click', function (e) {
+      if (!entered()) return;
+      e.preventDefault();
+      sheet.showModal();
+    });
+    document.getElementById('discard-confirm').addEventListener('click', function () { location.href = cancel.getAttribute('href'); });
+    document.getElementById('discard-keep').addEventListener('click', function () { sheet.close(); });
+  }
+  var ft = document.getElementById('finish_time');
+  if (ft && !ft.disabled) ft.addEventListener('input', function () {
+    var d = ft.value.replace(/\D/g, '').slice(0, 6);
+    ft.value = d.length <= 2 ? d : d.length <= 4 ? d.slice(0, -2) + ':' + d.slice(-2) : d.slice(0, -4) + ':' + d.slice(-4, -2) + ':' + d.slice(-2);
+  });
 })();
 </script>
 

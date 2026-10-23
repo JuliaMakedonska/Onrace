@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
-<link rel="stylesheet" href="../ui/map.css?v=ce3b09c2">
+<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
+<link rel="stylesheet" href="../ui/map.css?v=7b80f7ea">
 </head>
 <body class="onrace" data-state="loading" role="application" aria-label="Onrace — Race browse, loading state (wireframe)">
 
@@ -74,7 +74,7 @@
            there's something to order. -->
       <div class="results-row">
         <p class="results-count" aria-live="polite"><span class="bar count" aria-hidden="true"></span><span class="visually-hidden">Loading races…</span></p>
-        <button type="button" class="sort-toggle" id="sort" data-list-only data-order="soonest" disabled><span class="visually-hidden">Sort: </span><span data-order-label>Soonest first</span></button>
+        <button type="button" class="sort-toggle" id="sort" data-list-only data-order="soonest" aria-label="Soonest first, sort order" disabled><span data-order-label>Soonest first</span></button>
       </div>
 
       <section class="view-area" aria-label="Map or list view">
@@ -301,7 +301,7 @@
     btn.className = 'chip';
     btn.setAttribute('data-filter', facet);
     if (value) btn.setAttribute('data-value', value);
-    btn.setAttribute('aria-label', aria || 'Remove filter: ' + label);
+    btn.setAttribute('aria-label', aria || label + ', remove filter');   // the name starts with the visible label (WCAG 2.5.3)
     btn.appendChild(document.createTextNode(label + ' '));
     var x = document.createElement('span');
     x.setAttribute('aria-hidden', 'true');
@@ -312,7 +312,7 @@
   }
   function renderChips(f) {
     chipsRow.innerHTML = '';
-    if (f.q) addChip('“' + f.q + '”', 'q', null, 'Clear search: “' + f.q + '”');
+    if (f.q) addChip('“' + f.q + '”', 'q', null, '“' + f.q + '”, clear search');
     if (f.region) addChip(f.region, 'region');
     f.sports.forEach(function (s) {
       var box = form.querySelector('input[name="sport"][value="' + s + '"]');
@@ -472,6 +472,7 @@
     var next = sortBtn.getAttribute('data-order') === 'soonest' ? 'latest' : 'soonest';
     sortBtn.setAttribute('data-order', next);
     sortBtn.querySelector('[data-order-label]').textContent = next === 'soonest' ? 'Soonest first' : 'Latest first';
+    sortBtn.setAttribute('aria-label', sortBtn.querySelector('[data-order-label]').textContent + ', sort order');   // starts with the visible label (WCAG 2.5.3)
     var list = document.querySelector('.race-list');
     if (list) Array.prototype.slice.call(list.children).reverse().forEach(function (li) { list.appendChild(li); });
   });

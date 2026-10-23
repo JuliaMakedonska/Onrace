@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=ce3b09c2">
-<link rel="stylesheet" href="map.css?v=ce3b09c2">
+<link rel="stylesheet" href="kit.css?v=7b80f7ea">
+<link rel="stylesheet" href="map.css?v=7b80f7ea">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -65,7 +65,7 @@
         <div class="kit-state"><p class="kit-label">Results -error: Log result steps down to Text 1</p>
           <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></div><main>
             <header><h1>Results</h1></header>
-            <div class="state-message is-error"><h2>Couldn’t load your results</h2><p>The connection may have dropped. Check it, then try again. Nothing in your results archive has changed.</p><div class="state-actions"><a class="state-action" href="#" aria-label="Try loading your results again">Try again</a></div></div>
+            <div class="state-message is-error"><h2>Couldn’t load your results</h2><p>The connection may have dropped. Check it, then try again. Nothing in your results archive has changed.</p><div class="state-actions"><a class="state-action" href="#" aria-label="Try again, loading your results">Try again</a></div></div>
           </main></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Profile</p>
@@ -139,7 +139,7 @@
 
     <div class="kit-item" id="race-card">
       <h3>Race card</h3>
-      <p><code>article.race-card</code> · Race browse (with a black-and-white photo at 3:1), Race picker (no photo). One link: the whole card opens the race. Pressed, it takes the pressed level (G23; shown here with <code>.is-pressed</code>, the showcase's still stand-in for <code>:active</code>). A collection, so no disclosure indicator.</p>
+      <p><code>article.race-card</code> · Race browse (with a black-and-white photo at 3:1), Race picker (no photo; the linked race carries the filter rows' neutral checkmark and <code>aria-current</code>, G47, round 2). One link: the whole card opens the race. Pressed, it takes the pressed level (G23; shown here with <code>.is-pressed</code>, the showcase's still stand-in for <code>:active</code>). A collection, so no disclosure indicator.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse, with photo</p>
           <div class="kit-frame"><ul class="race-list"><li>
@@ -166,7 +166,7 @@
           <div class="kit-frame"><ul class="race-list"><li>
             <article class="race-card"><a class="card-link" href="#"><h4>Berlin Marathon</h4><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2025-09-21"><span class="day">21</span> Sep 2025</time></p><p class="card-location">Berlin, Germany</p></a></article>
           </li><li>
-            <article class="race-card"><a class="card-link" href="#"><h4>DEKA STRONG Chicago</h4><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14"><span class="day">14</span> Mar 2026</time></p><p class="card-location">Chicago, USA</p></a></article>
+            <article class="race-card"><a class="card-link" href="#" aria-current="true"><h4>DEKA STRONG Chicago</h4><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14"><span class="day">14</span> Mar 2026</time></p><p class="card-location">Chicago, USA</p></a></article>
           </li></ul></div>
         </div>
       </div>
@@ -183,13 +183,13 @@
       <p><code>.results-row</code> · Race browse (count + Sort), Results list (count + order). Sort is one button, <code>.sort-toggle</code>: two orders, so no menu; it shows the current one with the Solar sort icon and flips it when tapped (G21, markup pass). Its name reads "Sort: Soonest first".</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse, unfiltered</p>
-          <div class="kit-frame"><div class="results-row"><p class="results-count"><strong>7</strong> upcoming races</p><button type="button" class="sort-toggle"><span class="visually-hidden">Sort: </span><span>Soonest first</span></button></div></div>
+          <div class="kit-frame"><div class="results-row"><p class="results-count"><strong>7</strong> upcoming races</p><button type="button" class="sort-toggle" aria-label="Soonest first, sort order"><span>Soonest first</span></button></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Race browse, filtered</p>
-          <div class="kit-frame"><div class="results-row"><p class="results-count"><strong>4</strong> races match your filters</p><button type="button" class="sort-toggle"><span class="visually-hidden">Sort: </span><span>Soonest first</span></button></div></div>
+          <div class="kit-frame"><div class="results-row"><p class="results-count"><strong>4</strong> races match your filters</p><button type="button" class="sort-toggle" aria-label="Soonest first, sort order"><span>Soonest first</span></button></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Race browse, loading (count bar, Sort disabled)</p>
-          <div class="kit-frame"><div class="results-row"><p class="results-count"><span class="bar count" aria-hidden="true"></span><span class="visually-hidden">Loading races…</span></p><button type="button" class="sort-toggle" disabled><span class="visually-hidden">Sort: </span><span>Soonest first</span></button></div></div>
+          <div class="kit-frame"><div class="results-row"><p class="results-count"><span class="bar count" aria-hidden="true"></span><span class="visually-hidden">Loading races…</span></p><button type="button" class="sort-toggle" aria-label="Soonest first, sort order" disabled><span>Soonest first</span></button></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Results list</p>
           <div class="kit-frame"><div class="results-row"><p class="results-count"><strong>4</strong> results <span class="results-order">Newest first</span></p></div></div>
@@ -215,7 +215,7 @@
 
     <div class="kit-item" id="secondary">
       <h3>Secondary button</h3>
-      <p>Tonal: <code>.filters-trigger</code>, <code>.state-action.secondary</code>, <code>.secondary-btn</code>, the sheet's Cancel, and the small <code>.dismiss</code>, <code>.alert-btn</code>, <code>.unlink-btn</code>.</p>
+      <p>Tonal: <code>.filters-trigger</code>, <code>.state-action.secondary</code>, <code>.secondary-btn</code>, and the small <code>.unlink-btn</code>. (The inline errors' Dismiss and Try again went with them, round 2: the detail screens use alerts.)</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Filters: rest, with a count, open</p>
           <div class="kit-frame kit-stack"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="true">Filters</button></div></div>
@@ -223,8 +223,8 @@
         <div class="kit-state"><p class="kit-label">State actions and Check inbox</p>
           <div class="kit-frame kit-stack"><div class="kit-row"><button type="button" class="state-action secondary">Clear all filters</button><a class="state-action secondary" href="#">Type it in instead</a></div><button type="button" class="secondary-btn">Send a new link</button><button type="button" class="secondary-btn" disabled>Sending…</button></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Small: Dismiss, Try again, Unlink race</p>
-          <div class="kit-frame kit-row"><button type="button" class="dismiss">Dismiss</button><button type="button" class="alert-btn">Try again</button><button type="button" class="unlink-btn">Unlink race</button><button type="button" class="unlink-btn" disabled>Unlink race</button></div>
+        <div class="kit-state"><p class="kit-label">Small: Unlink race</p>
+          <div class="kit-frame kit-row"><button type="button" class="unlink-btn">Unlink race</button><button type="button" class="unlink-btn" disabled>Unlink race</button></div>
         </div>
       </div>
     </div>
@@ -292,68 +292,52 @@
 
     <div class="kit-item" id="select">
       <h3>Pop-up select</h3>
-      <p><code>select</code> · Race browse (Sort, Region), Log result (Sport type), Profile (Country, Language).</p>
+      <p><code>select</code> in a row: Region (Filters sheet), Sport type (Log result), Country and Language (Profile). The value at the row's trailing edge with a chevron; the native menu opens on tap (G17, G43). Sort is a button since round 1 (G21).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Log result: Sport type, empty</p>
-          <div class="kit-frame"><div class="field"><label for="k-st1">Sport type</label><select id="k-st1"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></div>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-st1">Sport type</label><select id="k-st1"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></form></div>
         </div>
         <div class="kit-state"><p class="kit-label">Log result -error: missing</p>
-          <div class="kit-frame"><div class="field"><label for="k-st2">Sport type</label><select id="k-st2" aria-invalid="true" aria-describedby="k-st2-e"><option value="" selected>Choose a sport type</option><option>HYROX</option></select><p class="field-error" id="k-st2-e">Choose a sport type.</p></div></div>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-st2">Sport type</label><select id="k-st2" aria-invalid="true" aria-describedby="k-st2-e"><option value="" selected>Choose a sport type</option><option>HYROX</option></select></div><p class="field-error" id="k-st2-e">Choose a sport type.</p></li></ul></form></div>
         </div>
         <div class="kit-state"><p class="kit-label">Profile row (Country)</p>
           <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-country">Country</label><select id="k-country"><option>France</option><option>Germany</option><option selected>Italy</option><option>Spain</option></select></div></li></ul></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Region and Sort: in the Filters sheet and the Results row above</p></div>
       </div>
     </div>
 
     <div class="kit-item" id="date">
       <h3>Date field</h3>
-      <p><code>input type="date"</code> · Race browse (in the Filters sheet, above), Log result (Race date).</p>
+      <p><code>input type="date"</code> in a row, a native compact picker: the value on a <code>--bg-2</code> pill with a small Solar calendar; the system's calendar when tapped (G18, G44). Filters sheet (above), Log result (Race date).</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Log result: Race date</p>
-          <div class="kit-frame"><div class="field"><label for="k-d1">Race date</label><input type="date" id="k-d1"></div></div>
+        <div class="kit-state"><p class="kit-label">Log result: Race date, empty</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d1">Race date</label><input type="date" id="k-d1"></div></li></ul></form></div>
         </div>
         <div class="kit-state"><p class="kit-label">Log result -error: missing</p>
-          <div class="kit-frame"><div class="field"><label for="k-d2">Race date</label><input type="date" id="k-d2" aria-invalid="true" aria-describedby="k-d2-e"><p class="field-error" id="k-d2-e">Add the date you raced.</p></div></div>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d2">Race date</label><input type="date" id="k-d2" aria-invalid="true" aria-describedby="k-d2-e"></div><p class="field-error" id="k-d2-e">Add the date you raced.</p></li></ul></form></div>
         </div>
       </div>
     </div>
 
     <div class="kit-item" id="text-field">
-      <h3>Text field, field hint, field error</h3>
-      <p><code>.field</code> (label, input, hint) · Log result, Sign in / Sign up, Reset password, New password. <code>.hint</code> / <code>.field-hint</code>, <code>.field-error</code>. Invalid is a coral ring inside the field; focus is the white ring outside it. An invalid field with focus shows both, so the two states never look alike.</p>
+      <h3>Form rows: text fields, hints, errors</h3>
+      <p><code>form.form-rows</code> with <code>.group</code> / <code>.rows</code> / <code>.row</code> (round 2: Log result G42, the sign-in screens G61): a label and its field in a row, the value in Text 1, left-aligned; a long value (the official result link) stacks, <code>.row--stacked</code>. Hints are the group's footer (<code>.group-footer</code>, still the field's <code>aria-describedby</code>); an error sits under its row (<code>.field-error</code>) and the invalid row takes the coral ring. The finish time takes the numeric keypad (<code>inputmode="numeric"</code>; the colons are put in as people type, G45). A navigation row (<code>.row--nav</code>, Find in race catalog) ends in a disclosure chevron.</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Empty, placeholder · with a hint</p>
-          <div class="kit-frame">
-            <div class="field"><label for="k-rn">Race name</label><input type="text" id="k-rn" placeholder="e.g. Berlin Marathon" autocomplete="off"></div>
-            <div class="field"><label for="k-ft">Finish time</label><input type="text" id="k-ft" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="k-ft-h"><p class="hint" id="k-ft-h">Hours:minutes:seconds, exactly as the official results show it.</p></div>
-            <div class="field proof"><label for="k-url">Official result link</label><input type="url" id="k-url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off" aria-describedby="k-url-h"><p class="hint" id="k-url-h">Paste the link to this result from the official timing site. It’s the proof elite races like Boston ask for. Onrace doesn’t check it: the result is marked self-reported and keeps this link.</p></div>
-          </div>
+        <div class="kit-state"><p class="kit-label">Log result: grouped, with hints</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
+            <div class="group"><ul class="rows"><li><a class="row row--nav" href="#" aria-describedby="k-cat-h">Find in race catalog</a></li></ul><p class="group-footer" id="k-cat-h">Optional. Fills in the race name, date and sport type for you.</p></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn">Race name</label><input type="text" id="k-rn" placeholder="e.g. Berlin Marathon" autocomplete="off"></div></li><li><div class="row"><label for="k-rd">Race date</label><input type="date" id="k-rd"></div></li><li><div class="row"><label for="k-rs">Sport type</label><select id="k-rs"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-ft">Finish time</label><input type="text" id="k-ft" inputmode="numeric" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="k-ft-h"></div></li></ul><p class="group-footer" id="k-ft-h">Hours:minutes:seconds, exactly as the official results show it.</p></div>
+            <div class="group"><ul class="rows"><li><div class="row row--stacked"><label for="k-url">Official result link</label><input type="url" id="k-url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off"></div></li></ul></div>
+          </form></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Filled · password with its hint (Create account)</p>
-          <div class="kit-frame gate">
-            <div class="field"><label for="k-em">Email</label><input type="email" id="k-em" value="maya.rossi@example.com" autocomplete="off"></div>
-            <div class="field"><label for="k-pw">Password</label><input type="password" id="k-pw" value="correcthorse" autocomplete="off" aria-describedby="k-pw-h"><p class="field-hint" id="k-pw-h">At least 8 characters.</p></div>
-          </div>
+        <div class="kit-state"><p class="kit-label">Errors under their rows (Log result -error, New password -error)</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn2">Race name</label><input type="text" id="k-rn2" placeholder="e.g. Berlin Marathon" aria-invalid="true" aria-describedby="k-rn2-e"></div><p class="field-error" id="k-rn2-e">Add the race name.</p></li><li><div class="row"><label for="k-np">New password</label><input type="password" id="k-np" value="short" aria-invalid="true" aria-describedby="k-np-e"></div><p class="field-error" id="k-np-e">Use at least 8 characters.</p></li></ul></div>
+          </form></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Locked while saving (every -loading)</p>
-          <div class="kit-frame"><fieldset class="locked" disabled>
-            <div class="field"><label for="k-l1">Email</label><input type="email" id="k-l1" value="maya.rossi@example.com"></div>
-            <div class="field"><label for="k-l2">Password</label><input type="password" id="k-l2" placeholder="••••••••" aria-label="Password, hidden while signing in"></div>
-          </fieldset></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Errors (Log result, New password)</p>
-          <div class="kit-frame">
-            <div class="field"><label for="k-e1">Official result link</label><input type="url" id="k-e1" aria-invalid="true" aria-describedby="k-e1-e"><p class="field-error" id="k-e1-e">Add the official result link. It’s the proof this result is yours.</p></div>
-            <div class="field"><label for="k-e2">Confirm new password</label><input type="password" id="k-e2" value="correcthors" aria-invalid="true" aria-describedby="k-e2-e"><p class="field-error" id="k-e2-e">The passwords don’t match. Enter the same password in both fields.</p></div>
-          </div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Focus (white, outside) beside invalid (coral, inside). Tab into either field to compare.</p>
-          <div class="kit-frame">
-            <div class="field"><label for="k-f1">Race name</label><input type="text" id="k-f1" value="Berlin Marathon" autocomplete="off" class="is-focus"></div>
-            <div class="field"><label for="k-f2">Finish time</label><input type="text" id="k-f2" value="3h12" autocomplete="off" aria-invalid="true" aria-describedby="k-f2-e"><p class="field-error" id="k-f2-e">Enter the finish time as hours:minutes:seconds, e.g. 3:12:48.</p></div>
-          </div>
+        <div class="kit-state"><p class="kit-label">Sign in: email and password, Forgot password? under the group</p>
+          <div class="kit-frame gate"><form class="form-rows" onsubmit="return false;"><div class="group"><ul class="rows"><li><div class="row"><label for="k-em">Email</label><input type="email" id="k-em" placeholder="e.g. you@example.com" autocomplete="off"></div></li><li><div class="row"><label for="k-pw">Password</label><input type="password" id="k-pw" autocomplete="off"></div></li></ul><p class="forgot"><a href="#">Forgot password?</a></p></div></form></div>
         </div>
       </div>
     </div>
@@ -373,14 +357,8 @@
 
     <div class="kit-item" id="inline-error">
       <h3>Inline error</h3>
-      <p><code>.inline-error</code> · Race detail and Result detail (in the action bar), Sign in / Sign up, Reset password.</p>
+      <p><code>.inline-error</code> · Sign in / Sign up, Reset password: a request that failed, at the top of the form. Race detail and Result detail show a link that won't open as a native alert (round 2).</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Race detail -error?cause=registration, Dismiss</p>
-          <div class="kit-frame kit-frame--flush"><div class="action-bar"><div class="inline-error" role="alert"><h2>Couldn’t open the link</h2><p>The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p><button type="button" class="dismiss">Dismiss</button></div><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens in a new tab — registration and payment happen there.</p></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Result detail -error?cause=link, Try again and Dismiss</p>
-          <div class="kit-frame kit-frame--flush"><div class="action-bar"><div class="inline-error" role="alert"><h2>Couldn’t open the link</h2><p>The official result on results.hyrox.com didn’t open in a new tab. Your browser may have blocked it. Try again, or copy the official result link above and paste it into a new tab.</p><div class="alert-actions"><button type="button" class="alert-btn">Try again</button><button type="button" class="alert-btn dismiss">Dismiss</button></div></div><a class="open-btn" href="#">Open official result on results.hyrox.com</a><p class="action-caption">Opens in a new tab.</p></div></div>
-        </div>
         <div class="kit-state"><p class="kit-label">Sign in -error · Reset password -error?cause=rate</p>
           <div class="kit-frame">
             <div class="inline-error" role="alert"><h2>Couldn’t sign you in</h2><p>The email or password didn’t match, or the connection dropped. Check your email and password, then try again.</p></div>
@@ -452,13 +430,13 @@
 
     <div class="kit-item" id="action-bar">
       <h3>Sticky action bar</h3>
-      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and what happens next. Glass like every bar (tab-bar glass, a rim, the bottom safe area; designer 2026-10-19); its caption passes AA over the worst case behind it. Its button is a capsule, as every control inside a bar (C7, step 5). On a drill-down screen the page scrolls above the bar and stops at its top edge (the bar’s height changes with the inline error; G35, markup pass).</p>
+      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and where it goes. Glass like every bar; its caption passes AA over the worst case behind it. Its button is a capsule, as every control inside a bar (C7). It's the scroll area's last child, sticky at its bottom: content runs under its glass (G35, G54). Its height never changes: a link that won't open is a native alert now, on both screens (round 2). The Open button's visible label is short, "Open official result", and its name carries the domain (G56; WCAG 2.5.3, the name starts with the label).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race detail</p>
-          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens in a new tab — registration and payment happen there.</p></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens the race website — registration and payment happen there.</p></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Result detail</p>
-          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="open-btn" href="#">Open official result on berlin.r.mikatiming.com</a><p class="action-caption">Opens in a new tab.</p></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="open-btn" href="#" aria-label="Open official result on berlin.r.mikatiming.com">Open official result</a><p class="action-caption">Opens the official timing site.</p></div></div>
         </div>
       </div>
     </div>
@@ -522,21 +500,19 @@
     </div>
 
     <div class="kit-item" id="archive-step5">
-      <h3>Log result and Race picker on the kit (step 5)</h3>
-      <p>Since the consolidation (2026-10-23) these rules live with their components in <code>ui/kit.css</code>: the top bar, the sheet (as a whole screen), the search field, the race card (the picker’s cards one level above the sheet, <code>--bg-3</code>, designer 2026-10-23), the state message and the secondary button.</p>
-      <p>Log result’s top bar is a <code>header.top-bar</code> inside <code>.phone-screen</code>: it keeps the bar’s layout (back, centered title, amber Save), not the large-title header’s. Race picker is a whole screen in a page sheet over Log result: on the screen the sheet rests at the large detent below the top safe area, with Log result receded under the scrim above its edge; its top bar spans the sheet, the search field keeps the gutter and only the list scrolls. On the sheet, a secondary state action is outlined in Field line on the sheet, as the Filters sheet’s Cancel (a tonal button would vanish on the raised level). The empty and error states sit on the sheet itself, no panel.</p>
+      <h3>Log result as a modal sheet · the discard confirm</h3>
+      <p>Round 2 (G40, G41): Log result is a modal sheet over Results, the sheet-as-a-screen pattern Race picker uses; Cancel on the leading edge of its bar, the title, Save on the trailing edge. Saving shows the spinner alone in the bar (the words stay for screen readers). Cancel with anything entered or a race linked opens an action sheet (<code>dialog.action-sheet</code>; HIG Sheets, Action sheets): a message, the destructive choice in coral, and Keep editing apart at the bottom, bold. The alert's glass and radius.</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Log result: the top bar inside the screen</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div></div>
+        <div class="kit-state"><p class="kit-label">The sheet's bar: Cancel, title, Save</p>
+          <div class="kit-frame kit-frame--flush"><div class="sheet open"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Race picker -error, on the sheet: two actions, the secondary outlined</p>
+        <div class="kit-state"><p class="kit-label">Saving: the spinner alone</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" aria-disabled="true">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-busy="true" aria-disabled="true"><span class="visually-hidden">Saving…</span></button></header></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Cancel with a result entered: the action sheet</p>
           <div class="kit-frame kit-stage">
             <div class="sheet-backdrop open"></div>
-            <div class="sheet open" role="dialog" aria-modal="false" aria-labelledby="k-picker-err-h">
-              <header class="top-bar"><a class="cancel" href="#">Cancel</a><h1 class="bar-title" id="k-picker-err-h">Find a race</h1></header>
-              <form class="search" role="search" onsubmit="return false;"><label for="k-pq2" class="visually-hidden">Search races by name or city</label><input type="search" id="k-pq2" value="kona" placeholder="Race name or city" enterkeyhint="search" autocomplete="off"></form>
-              <div class="state-message is-error"><h2>Couldn’t load the race catalog</h2><p>The connection may have dropped. Check it, then try again, or type the race in yourself. What you’ve entered on the form stays as it is.</p><div class="state-actions"><a class="state-action" href="#">Try again</a><a class="state-action secondary" href="#">Type it in instead</a></div></div>
-            </div>
+            <dialog class="action-sheet" open aria-labelledby="k-discard"><div class="action-group"><p class="action-message" id="k-discard">This result isn’t saved yet.</p><button type="button" class="is-destructive">Discard result</button></div><button type="button" class="action-cancel">Keep editing</button></dialog>
           </div>
         </div>
       </div>
@@ -601,10 +577,10 @@
           <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></main></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Two filters (?sport=hyrox&amp;sport=marathon)</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Remove filter: HYROX">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Remove filter: Marathon">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="HYROX, remove filter">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Marathon, remove filter">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></main></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Three filters, the row fades (-empty)</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 3</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Remove filter: Middle East">Middle East <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Remove filter: Triathlon">Triathlon <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Remove filter: 1 Oct – 30 Nov 2026">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 3</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Middle East, remove filter">Middle East <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Triathlon, remove filter">Triathlon <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="1 Oct – 30 Nov 2026, remove filter">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></main></div></div>
         </div>
       </div>
     </div>
@@ -616,13 +592,13 @@
         <div class="kit-state"><p class="kit-label">Seven races</p>
           <div class="kit-frame kit-stage"><div class="view-panel kit-map">
             <div class="map-placeholder has-pins" role="group" aria-label="Map of the races">
-              <a class="map-pin" href="#race=berlin-marathon" aria-label="Berlin Marathon, Berlin, 27 Sep 2026">Berlin</a>
-              <a class="map-pin" href="#race=hyrox-london" aria-label="HYROX London, London, 6 Dec 2026">London</a>
-              <a class="map-pin" href="#race=utmb" aria-label="UTMB — Ultra-Trail du Mont-Blanc, Chamonix, 24 Aug 2027">Chamonix</a>
-              <a class="map-pin" href="#race=hyrox-dallas" aria-label="HYROX Dallas, Dallas, 17 Jan 2027">Dallas</a>
-              <a class="map-pin" href="#race=deka-strong-chicago" aria-label="DEKA STRONG Chicago, Chicago, 14 Mar 2027">Chicago</a>
-              <a class="map-pin" href="#race=spartan-beast-killington" aria-label="Spartan Race Beast — Killington, Killington, 11 Jul 2027">Killington</a>
-              <a class="map-pin" href="#race=boston-marathon" aria-label="Boston Marathon, Boston, 20 Apr 2027">Boston</a>
+              <a class="map-pin" href="#race=berlin-marathon" aria-label="Berlin, Berlin Marathon, 27 Sep 2026">Berlin</a>
+              <a class="map-pin" href="#race=hyrox-london" aria-label="London, HYROX London, 6 Dec 2026">London</a>
+              <a class="map-pin" href="#race=utmb" aria-label="Chamonix, UTMB — Ultra-Trail du Mont-Blanc, 24 Aug 2027">Chamonix</a>
+              <a class="map-pin" href="#race=hyrox-dallas" aria-label="Dallas, HYROX Dallas, 17 Jan 2027">Dallas</a>
+              <a class="map-pin" href="#race=deka-strong-chicago" aria-label="Chicago, DEKA STRONG Chicago, 14 Mar 2027">Chicago</a>
+              <a class="map-pin" href="#race=spartan-beast-killington" aria-label="Killington, Spartan Race Beast — Killington, 11 Jul 2027">Killington</a>
+              <a class="map-pin" href="#race=boston-marathon" aria-label="Boston, Boston Marathon, 20 Apr 2027">Boston</a>
             </div>
           </div></div>
         </div>
@@ -636,26 +612,26 @@
 
     <div class="kit-item" id="log-result-parts">
       <h3>Log result · form intro, catalog row, linked race</h3>
-      <p><code>.form-intro</code>, <code>a.catalog-row</code> (disabled while saving), <code>section.linked-race</code> with Unlink race (with <code>?catalog=</code>).</p>
+      <p><code>.form-intro</code>, the catalog row (<code>.row--nav</code>, disabled while saving), <code>section.linked-race</code> with Unlink race (with <code>?catalog=</code>).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Base</p>
-          <div class="kit-frame"><p class="form-intro">Every field is needed to save a result.</p><a class="catalog-row" href="#"><span class="catalog-row-label">Find in race catalog</span><span class="catalog-row-hint">Optional. Fills in the race name, date and sport type for you.</span></a></div>
+          <div class="kit-frame"><p class="form-intro">Every field is needed to save a result.</p><div class="group"><ul class="rows"><li><a class="row row--nav" href="#">Find in race catalog</a></li></ul><p class="group-footer">Optional. Fills in the race name, date and sport type for you.</p></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Saving: the catalog row is disabled</p>
-          <div class="kit-frame"><a class="catalog-row" aria-disabled="true"><span class="catalog-row-label">Find in race catalog</span><span class="catalog-row-hint">Optional. Fills in the race name, date and sport type for you.</span></a></div>
+          <div class="kit-frame"><div class="group"><ul class="rows"><li><a class="row row--nav" aria-disabled="true">Find in race catalog</a></li></ul></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">A race linked from the catalog</p>
-          <div class="kit-frame"><section class="linked-race" aria-labelledby="k-linked"><p class="linked-source">From the race catalog</p><h3 id="k-linked">Berlin Marathon</h3><p class="linked-fact"><time datetime="2025-09-21">21 Sep 2025</time></p><p class="linked-fact">Marathon</p><p class="linked-fact place">Berlin, Germany</p><button type="button" class="unlink-btn">Unlink race</button></section></div>
+          <div class="kit-frame"><section class="linked-race" aria-labelledby="k-linked"><p class="linked-source">From the race catalog</p><h4 id="k-linked">Berlin Marathon</h4><p class="linked-fact"><time datetime="2025-09-21">21 Sep 2025</time></p><p class="linked-fact">Marathon</p><p class="linked-fact place">Berlin, Germany</p><button type="button" class="unlink-btn">Unlink race</button></section></div>
         </div>
       </div>
     </div>
 
     <div class="kit-item" id="gate-parts">
-      <h3>Sign in / Sign up · New password: form note, expired links</h3>
-      <p><code>.form-note</code> (Create account). The two expired-link errors have no form, so they are the screen's whole state and sit on the page like <code>.state-message</code> (step 5, Infrastructure): the 48px coral error icon on top, title, body, the one action sized to its label, centered under the top bar, no frame or surface. New password <code>-error?cause=expired</code>: <code>section.state-msg</code>. Sign in <code>-error?cause=confirm</code>: the section holding an <code>.inline-error</code> and Send a new link (inside a form, an <code>.inline-error</code> keeps its surface).</p>
+      <h3>Sign in / Sign up · New password: the confirm in the bar, form note, expired links</h3>
+      <p>The confirm action is the top bar's trailing button (round 2, G60; HIG Toolbars): "Sign in", "Create", "Send", "Save", short so it never meets the title; the accessible name starts with it ("Create account", "Send reset link", "Save new password"). While it works, the spinner alone. <code>.form-note</code> (Create account). The two expired-link errors have no form, so they are the screen's whole state and sit on the page like <code>.state-message</code> (step 5, Infrastructure): the 48px coral error icon on top, title, body, the one action sized to its label, centered under the top bar, no frame or surface. New password <code>-error?cause=expired</code>: <code>section.state-msg</code>. Sign in <code>-error?cause=confirm</code>: the section holding an <code>.inline-error</code> and Send a new link (inside a form, an <code>.inline-error</code> keeps its surface).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Create account</p>
-          <div class="kit-frame gate"><button type="button" class="submit-btn">Create account</button><p class="form-note">We’ll send a link to confirm your email.</p></div>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Create account</h1><button type="button" class="bar-action">Create<span class="visually-hidden"> account</span></button></header></div><div class="kit-frame gate"><p class="form-note">We’ll send a link to confirm your email.</p></div>
         </div>
         <div class="kit-state"><p class="kit-label">Expired reset link</p>
           <div class="kit-frame gate"><section class="state-msg" aria-labelledby="k-expired"><h2 id="k-expired">This reset link has expired</h2><p>Each link works once and expires after a while. This one has expired or was already used. Reset your password again to get a new one.</p><a class="submit-btn" href="#">Reset password again</a></section></div>
@@ -664,7 +640,7 @@
           <div class="kit-frame gate"><section><div class="inline-error"><h2>This confirmation link has expired</h2><p>It may also have been used already. Each link works once and expires after a while. Your account is still there. It isn’t confirmed yet.</p><p>We’ll send a new link to <span class="addr">maya.rossi@example.com</span>.</p></div><a class="submit-btn" href="#">Send a new link</a></section></div>
         </div>
         <div class="kit-state"><p class="kit-label">Forgot password? (44pt tap area, the line unmoved)</p>
-          <div class="kit-frame gate"><div class="field"><p class="forgot"><a href="#">Forgot password?</a></p></div></div>
+          <div class="kit-frame gate"><p class="forgot"><a href="#">Forgot password?</a></p></div>
         </div>
       </div>
     </div>
@@ -697,10 +673,16 @@
             <dialog class="alert" open aria-labelledby="k-so" aria-describedby="k-sod"><div class="alert-body"><h2 id="k-so">Sign out of Onrace?</h2><p id="k-sod">Your results stay saved. Sign back in anytime to see them.</p></div><div class="alert-actions"><button type="button">Cancel</button><button type="button" id="signout-confirm">Sign out</button></div></dialog>
           </div>
         </div>
-        <div class="kit-state"><p class="kit-label">Race detail: "Couldn’t open the link", one action (markup pass)</p>
+        <div class="kit-state"><p class="kit-label">Race detail: "Couldn’t open the race website", one action</p>
           <div class="kit-frame kit-stage">
             <div class="sheet-backdrop open"></div>
-            <dialog class="alert" open aria-labelledby="k-reg" aria-describedby="k-regd"><div class="alert-body"><h2 id="k-reg">Couldn’t open the link</h2><p id="k-regd">The registration link didn’t open in a new tab. Your browser may have blocked it. Try again, or come back to this race later.</p></div><div class="alert-actions"><button type="button" aria-label="Dismiss this message">Dismiss</button></div></dialog></div>
+            <dialog class="alert" open aria-labelledby="k-reg" aria-describedby="k-regd"><div class="alert-body"><h2 id="k-reg">Couldn’t open the race website</h2><p id="k-regd">The race website didn’t open. Your browser may have blocked it. Try again, or come back to this race later.</p></div><div class="alert-actions"><button type="button" aria-label="Dismiss this message">Dismiss</button></div></dialog>
+          </div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Result detail: "Couldn’t open the official result", Dismiss and Try again (round 2)</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <dialog class="alert" open aria-labelledby="k-lnk" aria-describedby="k-lnkd"><div class="alert-body"><h2 id="k-lnk">Couldn’t open the official result</h2><p id="k-lnkd">The official result on results.hyrox.com didn’t open. Your browser may have blocked it. Try again, or copy the official result link above and paste it into your browser.</p></div><div class="alert-actions"><button type="button" aria-label="Dismiss this message">Dismiss</button><button type="button" aria-label="Try again, opening the official result">Try again</button></div></dialog></div>
         </div>
       </div>
     </div>

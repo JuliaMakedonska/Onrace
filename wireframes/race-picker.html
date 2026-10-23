@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
+<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race picker (wireframe)">
 
@@ -232,5 +232,16 @@ var CATALOG = [
 })();
 </script>
 
+<script>
+/* The linked race (round 2, G47): Log result's catalog=<slug> travels here; its card carries the filter rows'
+   neutral checkmark and is the current one for screen readers. */
+(function () {
+  var linked = new URLSearchParams(location.search).get('catalog');
+  if (!linked) return;
+  document.querySelectorAll('[data-slug]').forEach(function (li) {
+    if (li.getAttribute('data-slug') === linked) li.querySelector('.card-link').setAttribute('aria-current', 'true');
+  });
+})();
+</script>
 </body>
 </html>

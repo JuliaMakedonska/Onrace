@@ -890,6 +890,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'publi
 shutil.copyfile(os.path.join(ROOT, 'ui/review-step5.html'), os.path.join(ROOT, 'public/ui/review-step5.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-markup'), os.path.join(ROOT, 'public/ui/review-markup'), dirs_exist_ok=True)   # markup pass before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-markup.html'), os.path.join(ROOT, 'public/ui/review-markup.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-markup-2'), os.path.join(ROOT, 'public/ui/review-markup-2'), dirs_exist_ok=True)   # markup pass round 2
+shutil.copyfile(os.path.join(ROOT, 'ui/review-markup-2.html'), os.path.join(ROOT, 'public/ui/review-markup-2.html'))
 import glob   # our own photos (visuals/*.jpg), linked by the screens as ../visuals/<file>
 os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
 for _v in glob.glob(os.path.join(ROOT, 'visuals/*.jpg')):

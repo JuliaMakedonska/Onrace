@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
-<link rel="stylesheet" href="../ui/map.css?v=ce3b09c2">
+<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
+<link rel="stylesheet" href="../ui/map.css?v=7b80f7ea">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race browse, error state (wireframe)">
 
@@ -88,7 +88,7 @@
             <h2>Couldn’t load races</h2>
             <p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p>
             <div class="state-actions">
-              <a class="state-action" href="race-browse-loading.html?run=1" data-retry aria-label="Try loading races again">Try again</a>
+              <a class="state-action" href="race-browse-loading.html?run=1" data-retry aria-label="Try again, loading races">Try again</a>
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@
               <h2>Couldn’t load races</h2>
               <p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p>
               <div class="state-actions">
-                <a class="state-action" href="race-browse-loading.html?run=1" data-retry aria-label="Try loading races again">Try again</a>
+                <a class="state-action" href="race-browse-loading.html?run=1" data-retry aria-label="Try again, loading races">Try again</a>
               </div>
             </div>
           </div>
@@ -272,7 +272,7 @@
     btn.className = 'chip';
     btn.setAttribute('data-filter', facet);
     if (value) btn.setAttribute('data-value', value);
-    btn.setAttribute('aria-label', aria || 'Remove filter: ' + label);
+    btn.setAttribute('aria-label', aria || label + ', remove filter');   // the name starts with the visible label (WCAG 2.5.3)
     btn.appendChild(document.createTextNode(label + ' '));
     var x = document.createElement('span');
     x.setAttribute('aria-hidden', 'true');
@@ -283,7 +283,7 @@
   }
   function renderChips(f) {
     chipsRow.innerHTML = '';
-    if (f.q) addChip('“' + f.q + '”', 'q', null, 'Clear search: “' + f.q + '”');
+    if (f.q) addChip('“' + f.q + '”', 'q', null, '“' + f.q + '”, clear search');
     if (f.region) addChip(f.region, 'region');
     f.sports.forEach(function (s) {
       var box = form.querySelector('input[name="sport"][value="' + s + '"]');

@@ -460,7 +460,7 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G3 "My Results" tab label | A text change, governed by `voice.md` (the Dictionary's "label: My Results"); the voice decides, not the kit **Done (markup pass, 2026-10-23).** |
 | G4 Large title collapses into the bar | An inline title element in the top bar and a scroll trigger **Done (markup pass, 2026-10-23).** |
 | G5 Log result in the top bar | Moves the action out of the large-title row into a toolbar **Done (markup pass, 2026-10-23).** |
-| G8 Search pinned on scroll | Moves the search field into the pinned block; also reverses `_conventions.md` § 1 ("outside the sticky block") **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
+| G8 Search pinned on scroll | Moves the search field into the pinned block; also reverses `_conventions.md` § 1 ("outside the sticky block") **Closed (round 2, designer, 2026-10-23): no change.** The search field scrolls away with the large title, as it does in iOS: it belongs to the header, and the controls bar pins what filters the list. |
 | G12 Sheet buttons in a top toolbar | Moves Cancel and Apply filters from the footer to the top **Done (markup pass, 2026-10-23).** |
 | G14 Interactive grabber | A real control (a button with a label) instead of a decorative `div` **Closed (markup pass, 2026-10-23):** the grabber is removed, not made interactive: the Filters sheet rests at one detent, and HIG shows a grabber only on a resizable sheet. |
 | G17 Region as a menu button | Replaces the `<select>` field with a pop-up button **Done (markup pass, 2026-10-23).** |
@@ -475,20 +475,20 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G37 Race detail `-error`: no `h1` | DetailError’s heading is an `h2` and the page has no `h1`; it needs a heading level change (or a visually hidden `h1`) **Done (markup pass, 2026-10-23).** |
 | Race detail: "Couldn’t open the link" as a native alert (designer, 2026-10-22) | RegLinkError becomes a native alert ([Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts)) instead of an inline error that grows the bottom action bar: a `dialog.alert` like Profile’s Sign out confirm, opened by the Register script. The action bar keeps one fixed height, which also makes G35 simpler **Done (markup pass, 2026-10-23).** |
 | Race detail: action caption "Opens in a new tab" → "Opens the race website" (designer, 2026-10-22) | A text change: on iOS the link opens Safari or an in-app browser, not a tab. When the pass runs, update `microcopy.md` (the Race detail action-bar caption rows) and re-run `scripts/build_voice_html.py` for `voice.html` **Done (markup pass, 2026-10-23).** |
-| G40 Log result as a modal | A self-contained create task is a sheet with Cancel and the confirming action ([Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets)); today a pushed drill-down with "‹ My Results" + Save. Changes navigation (`flows.md`) **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G41 Log result: confirm before discarding | Back drops typed data silently; HIG asks to confirm. Script and an alert **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G42 Log result form as a grouped list | Stacked label-over-field, as G20 **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G43 Log result: Sport type as a pop-up button | A `<select>` drawn as a field, as G17 **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G44 Log result: compact date picker | `input type=date` shows the browser's locale format, as G18 **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G45 Log result: Finish time keyboard | `type=text` without `inputmode`: the full keyboard opens **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G47 Race picker: mark the linked race | With `?catalog=` the chosen race isn't checkmarked **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
+| G40 Log result as a modal | A self-contained create task is a sheet with Cancel and the confirming action ([Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets)); today a pushed drill-down with "‹ My Results" + Save. Changes navigation (`flows.md`) **Done (markup pass, round 2, 2026-10-23).** |
+| G41 Log result: confirm before discarding | Back drops typed data silently; HIG asks to confirm. Script and an alert **Done (markup pass, round 2, 2026-10-23).** |
+| G42 Log result form as a grouped list | Stacked label-over-field, as G20 **Done (markup pass, round 2, 2026-10-23).** |
+| G43 Log result: Sport type as a pop-up button | A `<select>` drawn as a field, as G17 **Done (markup pass, round 2, 2026-10-23).** |
+| G44 Log result: compact date picker | `input type=date` shows the browser's locale format, as G18 **Done (markup pass, round 2, 2026-10-23).** |
+| G45 Log result: Finish time keyboard | `type=text` without `inputmode`: the full keyboard opens **Done (markup pass, round 2, 2026-10-23).** |
+| G47 Race picker: mark the linked race | With `?catalog=` the chosen race isn't checkmarked **Done (markup pass, round 2, 2026-10-23).** |
 | G48 Race picker: heading levels | `h1` then row `h3`s, as G33 **Done (markup pass, 2026-10-23).** |
 | G53 Result detail: inline title on scroll | As G34 **Done (markup pass, 2026-10-23).** |
 | G54 Result detail: content under the action bar | As G35 **Done (markup pass, 2026-10-23).** |
 | G55 Result detail `-error`: no `h1` | As G37 **Done (markup pass, 2026-10-23).** |
-| G56 Result detail: Open button label | "Open official result on valenciaciudaddelrunning.com" wraps the capsule to two lines; a text change (`voice.md`) **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G60 Gates: confirming action in the bar | Sign in, Reset password, New password: Cancel leading, the confirm action trailing in the bar, instead of a full-width button at the form's end. Designer decides (Log result already uses a bar Save) **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
-| G61 Gates: forms as grouped lists | As G42 **Open after the markup pass (2026-10-23):** not among the pass’s decisions; needs the designer. |
+| G56 Result detail: Open button label | "Open official result on valenciaciudaddelrunning.com" wraps the capsule to two lines; a text change (`voice.md`) **Done (markup pass, round 2, 2026-10-23).** |
+| G60 Gates: confirming action in the bar | Sign in, Reset password, New password: Cancel leading, the confirm action trailing in the bar, instead of a full-width button at the form's end. Designer decides (Log result already uses a bar Save) **Done (markup pass, round 2, 2026-10-23).** |
+| G61 Gates: forms as grouped lists | As G42 **Done (markup pass, round 2, 2026-10-23).** |
 | Wireframe annotations on the working pages (designer, 2026-10-23) | Remove the bracketed wireframe notes from `wireframes/*.html` ("[ map placeholder — no pins: races failed to load ]" and the like): on a painted screen they read as product text. The frozen snapshot `wireframes/_wireframe/` keeps them. **Hidden through the kit meanwhile (2026-10-23):** `.map-caption` and the `p` before a map state's heading are `display: none` (out of the layout and the accessibility tree); the loading map's note is a bare text node, so CSS can only collapse it (`font-size: 0`): it stays as static text inside the map's `img` in Chromium's accessibility tree until this pass removes it **Done (markup pass, 2026-10-23).** |
 | G64 Gates' full-screen errors: heading levels | New password `-error?cause=expired`, Sign in `-error?cause=confirm`: only the bar title is an `h1`, the state heading an `h2` (as G37) **Closed (markup pass, 2026-10-23):** checked: the bar title is the page’s `h1` and the state heading an `h2` under it, which is the right order; no change. |
 
@@ -715,4 +715,33 @@ Race browse gains 22px: the Sort button keeps its 44pt target inside the row's t
 **Checked:** the build (color rules 1, 2, 3a; 106 solid contrast pairs plus the glass pairs, among them Apply filters and Log result in amber over glass; 177 of 177 tokens signed). Every page and state at 390×844 before and after, plus scrolled states and the open sheet (72 shots): 45 changed, all intended; 27 unchanged, among them Race picker's cards (the day element renders exactly as the old `::first-line`) and Race detail's error page (`h2` → `h1` is invisible). Race picker's empty and error states changed because an old `.sheet h2` rule had leaked a 16px margin into their headings; with the sheet's rules rewritten, they match every other state. In the browser: the title collapses after scrolling and returns at the top on all five screens; focus moves into the sheet, Escape closes it and focus returns; the checkmark follows the sport filter; at most two amber elements per state. Before and after: `ui/review-markup.html`.
 
 **Still open after the pass** (not among its decisions): G8 search pinned, G40–G45 Log result (modal, discard confirm, grouped form, pop-up Sport type, compact date, finish-time keyboard), G47 the linked race's checkmark in Race picker, G56 the long Open button label, G60–G61 the gates' confirm action and grouped forms. Result detail's "Couldn’t open the link" stays inline in its bar (the alert decision was for Race detail).
+
+### Markup pass, round 2 (2026-10-23)
+
+Same rules as round 1. Every change on every state page of its screen in `wireframes/` (never `_wireframe/`); the kit first; text through `microcopy.md` (38 rows changed, 5 added: 552–556) and `voice.md`, then `voice.html` regenerated.
+
+1. **G8, search on scroll: no change** (designer). The search field scrolls away with the large title, as in iOS. Recorded in the triage.
+2. **Log result, native (G40–G45):**
+   - **G40:** a modal sheet over Results (the sheet-as-a-screen pattern Race picker uses; Race picker now stacks over it), with Cancel on the leading edge of its bar and Save on the trailing edge.
+   - **G41:** Cancel with anything entered or a race linked opens an **action sheet** (new component: "This result isn’t saved yet.", **Discard result** in coral, **Keep editing** apart at the bottom, bold).
+   - **G42:** a grouped form, `form.form-rows`. The catalog row is a navigation row, the race facts are one group, finish time and the official result link one group each (the link stacked). Hints are the groups' footers, errors sit under their rows, and an invalid row is ringed coral.
+   - **G43, G44:** native pickers for Sport type (a menu row) and the race date (a compact picker on a pill).
+   - **G45:** the numeric keypad for the finish time. The colons are put in as people type ("31248" → "3:12:48").
+3. **G47:** Race picker marks the linked race with the filter rows' neutral checkmark and `aria-current`.
+4. **G56:** Result detail's Open button reads "Open official result"; its accessible name carries the domain.
+5. **G60–G61, the sign-in screens:** grouped forms, and the confirm action at the top bar's trailing edge (HIG Toolbars, Sheets). The label is short so it never meets the title: "Sign in", "Create", "Send", "Save". The accessible name starts with it ("Create account", "Send reset link", "Save new password"). While it works, the spinner alone. New password's save error now says "tap Save".
+6. **Result detail's "Couldn’t open the link"** is a native alert, as on Race detail, with Dismiss and Try again (Try again re-runs the same check). Its action bar keeps one height.
+7. **Alert copy:** "Couldn’t open the race website" / "The race website didn’t open. …" (Race detail); "Couldn’t open the official result" / "The official result on \<domain\> didn’t open. … paste it into your browser." (Result detail). To match, Result detail's caption is now "Opens the official timing site." (it still said "Opens in a new tab.").
+8. **WCAG 2.5.3:** every accessible name starts with its control's visible label: "Try again, loading races" (and the other Try agains), "Soonest first, sort order" (set by script when it flips), "HYROX, remove filter", "London, HYROX London, 6 Dec 2026" (the map pins), the Open button, the bar actions.
+9. **"My Results" → "Results"** in `sitemap.md`, `flows.md` and `ia.html` (each notes the rename, dated), and in CLAUDE.md's IA summary.
+
+**Kit:** new: the action sheet, form rows (`.form-rows`, `.row--stacked`, `.row--nav`, errors under rows, the invalid row), the linked race's checkmark, the busy bar action as the spinner alone. Retired: `.field`, `.hint`, `.field-hint`, `.catalog-row`, `.dismiss`, `.alert-btn`, the inline error's action row.
+
+**Checked:**
+- **Build:** passes (color rules 1, 2, 3a; 106 solid pairs plus the glass pairs; 177 of 177 tokens). Every new color use is an existing pair: coral on the sheet's glass, Text 1 and Text 2 on the raised rows, Text 2 on the sheet.
+- **Screenshots:** 75 states at 390×844 before and after. 31 changed, all in scope: Log result, the sign-in screens, Race detail's alert, Result detail, Race picker's linked race. The other 44 are unchanged.
+- **First screen:** unchanged from round 1. Nothing above either list moved: list top 217 (Race browse), 93 (Results).
+- **In the browser:** Cancel with nothing entered leaves; with data it asks, Keep editing returns, Discard result leaves; "31248" becomes "3:12:48"; Result detail's alert opens, describes its domain and dismisses; at most two amber elements in every state.
+- **Names (WCAG 2.5.3):** 189 controls on 43 page states start with their visible labels, confirmed against Chromium's computed names for the short bar actions and the Open button.
+- **Review page:** before and after at `ui/review-markup-2.html`.
 

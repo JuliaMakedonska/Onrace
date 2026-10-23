@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ce3b09c2">
+<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Sign in / Sign up, loading state (wireframe)">
 
@@ -22,6 +22,7 @@
   <header class="top-bar">
     <a class="close" href="race-browse.html">Cancel</a>
     <h1 class="bar-title"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></h1>
+    <button type="button" class="bar-action" aria-busy="true" aria-disabled="true"><span class="visually-hidden"><span data-mode="signin">Signing in…</span><span data-mode="signup" hidden>Creating account…</span></span></button>
   </header>
 
   <div class="phone-screen">
@@ -66,15 +67,8 @@
            no flow has it: social sign-in. Submitting
            is flows.md's "submits credentials" edge → SigningIn
            (sign-in-sign-up-loading.html?run=1, carrying ?next and ?mode). -->
-      <form id="auth-form" aria-busy="true">
+      <form id="auth-form" class="form-rows" aria-busy="true">
         <fieldset disabled>
-          <div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required value="maya.rossi@example.com">
-          </div>
-          <div class="field">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••" aria-label="Password, hidden while signing in">
             <!-- ZONE: under the password field — two lines, one per mode, both
                  real markup (setMode shows one). Locked here like the rest
                  of the form: "Forgot password?" is shown but inactive
@@ -82,10 +76,14 @@
                  on sign-in-sign-up.html and -error.html. The hint is the
                  same as there: "At least 8 characters." [?] in Create
                  account mode. -->
-            <p class="field-hint" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
+          <div class="group">
+            <ul class="rows">
+              <li><div class="row"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required value="maya.rossi@example.com"></div></li>
+              <li><div class="row"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••" aria-label="Password, hidden while signing in"></div></li>
+            </ul>
+            <p class="group-footer" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
             <p class="forgot" data-mode="signin"><a id="forgot" aria-disabled="true">Forgot password?</a></p>
           </div>
-          <button type="submit" class="submit-btn" aria-busy="true"><span data-mode="signin">Signing in…</span><span data-mode="signup" hidden>Creating account…</span></button>
           <p class="form-note" data-mode="signup" hidden>We’ll send a link to confirm your email.</p>
         </fieldset>
         <!-- ZONE: status — SigningIn: "Loading: signing in" (flows.md,
