@@ -870,7 +870,11 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 .map-pin[href$="race=utmb"]::after, .map-pin[href$="race=boston-marathon"]::after, .map-pin[href$="race=hyrox-dallas"]::after { bottom: 100%; }
 .map-pin:hover { background: var(--bg-3); }
 .map-pin[hidden] { display: none; }
-.map-caption { margin: 0; color: var(--text-2); font-size: var(--size-label); }
+/* Wireframe annotations ("[ … ]"), hidden on the working pages until the markup pass removes them (designer, 2026-10-23;
+   the frozen _wireframe/ snapshot keeps them). display: none takes them out of the layout and the accessibility tree. */
+.map-caption { display: none; }   /* "[ static map — pan/zoom … ]" */
+.map-placeholder .state-message > p:first-child { display: none; }   /* "[ map placeholder — no pins: … ]", before an empty or error state's heading */
+.map-placeholder[aria-busy="true"] { font-size: 0; }   /* "[ map placeholder — loading race pins… ]", a bare text node: no box of its own to hide, so it collapses. The map is role="img" with its own label, so readers never reach the text */
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
 .map-placeholder:has(> .state-message) { background: none; box-shadow: none; }

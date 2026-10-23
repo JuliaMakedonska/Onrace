@@ -489,7 +489,7 @@ The 33 gaps above, sorted by how they get fixed. The designer's decisions C1–C
 | G56 Result detail: Open button label | "Open official result on valenciaciudaddelrunning.com" wraps the capsule to two lines; a text change (`voice.md`) |
 | G60 Gates: confirming action in the bar | Sign in, Reset password, New password: Cancel leading, the confirm action trailing in the bar, instead of a full-width button at the form's end. Designer decides (Log result already uses a bar Save) |
 | G61 Gates: forms as grouped lists | As G42 |
-| Wireframe annotations on the working pages (designer, 2026-10-23) | Remove the bracketed wireframe notes from `wireframes/*.html` ("[ map placeholder — no pins: races failed to load ]" and the like): on a painted screen they read as product text. The frozen snapshot `wireframes/_wireframe/` keeps them |
+| Wireframe annotations on the working pages (designer, 2026-10-23) | Remove the bracketed wireframe notes from `wireframes/*.html` ("[ map placeholder — no pins: races failed to load ]" and the like): on a painted screen they read as product text. The frozen snapshot `wireframes/_wireframe/` keeps them. **Hidden through the kit meanwhile (2026-10-23):** `.map-caption` and the `p` before a map state's heading are `display: none` (out of the layout and the accessibility tree); the loading map's note is a bare text node, so CSS can only collapse it (`font-size: 0`): it stays as static text inside the map's `img` in Chromium's accessibility tree until this pass removes it |
 | G64 Gates' full-screen errors: heading levels | New password `-error?cause=expired`, Sign in `-error?cause=confirm`: only the bar title is an `h1`, the state heading an `h2` (as G37) |
 
 **Out of scope: prototype behavior, or not our standard (10).**
