@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Sign in / Sign up, error state (wireframe)">
 
@@ -25,7 +25,7 @@
        this error belongs to. -->
   <header class="top-bar">
     <a class="close" href="race-browse.html">Cancel</a>
-    <h1 class="bar-title"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span><span data-cause="confirm" hidden>Check your inbox</span></h1>
+    <h1 class="bar-title"><span data-mode="signin">Account</span><span data-mode="signup" hidden>Account</span><span data-cause="confirm" hidden>Check your inbox</span></h1>
     <button type="submit" form="auth-form" class="bar-action" data-form-zone><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create<span class="visually-hidden"> account</span></span></button>
   </header>
 
@@ -108,7 +108,7 @@
         </div>
         <div class="inline-error" data-mode="signup" data-cause="signup" role="alert" hidden>
           <h2>Couldn’t create your account</h2>
-          <p>This email may already have an account. If so, switch to Sign in. Otherwise, check that your password is at least 8 characters and that you’re connected, then try again.</p>
+          <p>This email may already have an account. Switch to Sign in, or check your connection and tap Create again.</p>
         </div>
         <fieldset>
             <!-- ZONE: under the password field — two lines, one per mode, both
@@ -130,7 +130,7 @@
           <div class="group">
             <ul class="rows">
               <li><div class="row"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required value="maya.rossi@example.com"></div></li>
-              <li><div class="row"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required></div></li>
+              <li><div class="row"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required placeholder="Required"></div></li>
             </ul>
             <p class="group-footer" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
             <p class="forgot" data-mode="signin"><a id="forgot" href="reset-password.html">Forgot password?</a></p>
@@ -252,5 +252,27 @@
 })();
 </script>
 
+<script>
+/* The bar action waits for the required fields (step 6, #3; HIG Sheets: the confirm is disabled until the task can be
+   completed): aria-disabled, in Text disabled, while a visible required field is empty, so an empty submit never
+   reaches the browser's own validation bubble. Enter in a field is held the same way. */
+(function () {
+  var btn = document.querySelector('.top-bar .bar-action[form]');
+  var form = btn && document.getElementById(btn.getAttribute('form'));
+  if (!form) return;
+  function waiting() {
+    return Array.prototype.some.call(form.querySelectorAll('[required]'), function (i) { return i.getClientRects().length && !i.value.trim(); });
+  }
+  function sync() {
+    if (btn.getAttribute('aria-busy') === 'true') return;
+    if (waiting()) btn.setAttribute('aria-disabled', 'true'); else btn.removeAttribute('aria-disabled');
+  }
+  form.addEventListener('input', sync);
+  document.addEventListener('click', function () { setTimeout(sync, 0); });   // a mode switch shows other fields
+  btn.addEventListener('click', function (e) { if (btn.getAttribute('aria-disabled') === 'true') e.preventDefault(); });
+  form.addEventListener('keydown', function (e) { if (e.key === 'Enter' && waiting()) e.preventDefault(); }, true);
+  sync();
+})();
+</script>
 </body>
 </html>

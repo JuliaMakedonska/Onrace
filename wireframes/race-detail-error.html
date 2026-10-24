@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race detail, error state (wireframe)">
 
@@ -207,13 +207,26 @@
   <dialog class="alert" id="reg-alert" aria-labelledby="reg-alert-title" aria-describedby="reg-alert-desc">
     <div class="alert-body">
       <h2 id="reg-alert-title">Couldn’t open the race website</h2>
-      <p id="reg-alert-desc">The race website didn’t open. Your browser may have blocked it. Try again, or come back to this race later.</p>
+      <p id="reg-alert-desc">The race website didn’t open. Your browser may have blocked it. Tap Register again, or come back to this race later.</p>
     </div>
     <div class="alert-actions">
       <button type="button" id="reg-alert-dismiss" aria-label="Dismiss this message" autofocus>Dismiss</button>
     </div>
   </dialog>
 
+<script>
+/* Back keeps Race browse as it was (step 6, #2): its filters, search and view ride along as ?back=…, and every link
+   inside this drill-down passes them on. */
+(function () {
+  var back = new URLSearchParams(window.location.search).get('back');
+  if (!back) return;
+  var a = document.querySelector('.top-bar a[href="race-browse.html"]');
+  if (a) a.href = 'race-browse.html?' + back;
+  document.querySelectorAll('a[href^="race-detail"]').forEach(function (l) {
+    var u = new URLSearchParams(l.search); u.set('back', back); l.setAttribute('href', l.getAttribute('href').split('?')[0] + '?' + u.toString());
+  });
+})();
+</script>
 <script>
 (function () {
   var params = new URLSearchParams(window.location.search);
@@ -255,6 +268,17 @@
   var bar = document.querySelector('.top-bar[data-collapse]');
   var screen = document.querySelector('.phone-screen');
   if (!bar || !screen || !('IntersectionObserver' in window)) return;
+  if (!bar.classList.contains('top-bar--large')) {   // a drill-down's bars at the scroll edge (step 6, #27): glass only once content runs under them
+    var actionBars = screen.querySelectorAll('.action-bar');   // one per race or result; the shown one counts
+    var edges = function () {
+      bar.classList.toggle('is-scrolled', screen.scrollTop > 0);
+      var atEnd = screen.scrollTop + screen.clientHeight >= screen.scrollHeight - 1;
+      actionBars.forEach(function (ab) { ab.classList.toggle('is-at-end', atEnd); });
+    };
+    screen.addEventListener('scroll', edges, { passive: true });
+    window.addEventListener('resize', edges);
+    edges();
+  }
   var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
   if (!h1) return;
   var title = bar.querySelector('.bar-title');

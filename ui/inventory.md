@@ -150,3 +150,27 @@ Single-screen blocks, by screen.
 - Race picker is a screen pushed inside Log result's navigation, as picking a value in iOS Settings: full-screen, square corners, "‹ Log result" + "Find a race" in its top bar, no Cancel. Tapping a race goes back to Log result with it filled in (unchanged). All four state pages.
 - **Removed from the kit** (no other screen used them): the picker's raised cards on the sheet (`.sheet .race-card`, `.sheet .skeleton-card`, their pressed ring), the outlined secondary on a sheet (`.sheet .state-action.secondary`), the search field's sheet variant (`.sheet > form.search`, its padding and `--field-line-sheet` boundary). The search field's second placement is now `.phone-screen > form.search`.
 
+## Step 6: the critique fixes (2026-10-25)
+
+Every component the step 6 critique touched, as it is now (record: `concept/concept.md` → Step 6). Each change is in `ui/kit.css` and `ui/kit.html` and on every screen that shows the component.
+- **Top bar:** text buttons 17px (HIG Body); the back chevron is Solar Linear; on a drill-down (Race detail, Result detail) the bar is transparent with no rim until content scrolls under it (`.is-scrolled`); "‹ Discover" returns to Race browse as it was (filters, search, List/Map; `?back=`). The sign-in screens' title is "Account". The bar action waits in Text disabled while a required field is empty (Sign in, Reset password and their `-error` pages). While Log result saves, Cancel is locked with the form.
+- **Sticky action bar:** transparent with no rim while nothing runs under it (`.is-at-end`).
+- **Static map:** each pin is a 44pt target (`a.map-pin[data-pin]` around a `span` label); the dot and leader take no taps; each pin's place is in `ui/map.css`, keyed on `data-pin` (no longer on the link's URL).
+- **Search field:** the magnifier is Solar Linear (`--icon-search-field`); the empty state's 48px magnifier stays Bold.
+- **Pop-up select and Catalog row:** the chevron and the disclosure are Solar Linear.
+- **Date field → Date pill** (`.date-pill` with `.date-value` over the transparent `input type="date"`): the date as "23 Sep 2026", empty "Choose a date"; no glyph, no locale mask. Race browse (Filters sheet, all 4 files), Log result (all 3).
+- **Sport-type rows and Race picker's linked race:** the checkmark is 26px (the glyph about 17px wide).
+- **Field error and Profile's row error:** one look, 15px / 600 Text 1 after the coral icon. Invalid rows: one ring around each run of adjacent invalid rows; the hairlines that touch it are hidden.
+- **Grouped settings rows (Profile):** the editable Name in Text 1; Email (read-only) and the menu values in Text 2.
+- **Text field (password rows):** placeholder "Required" (Sign in, New password).
+- **Linked race card:** on the sheet's `--bg-3`; Unlink is a tertiary text action. The Catalog row goes while a race is linked.
+- **Locked form:** one treatment, every control in Text disabled, Cancel included; the help text stays Text 2.
+- **Proof URL:** breaks only after / . - (`<wbr>`); **Copy link** (`button.copy-link`, new) under it, "Link copied" for 2 seconds.
+- **Finish time (Result detail):** 56px (`--size-time-hero`), the screen's largest element; the race name above it is Item (17px / 600).
+- **State message (Race browse `-empty`):** one action, Change filters; "Clear all filters" is the pinned link in the chips row only.
+- **Confirm alert:** buttons 17px; the last row follows the corners, so the focus ring is whole. Race detail's body says "Tap Register again".
+- **Form note, check-inbox links and expiry note:** left-aligned with their form and text.
+- **Modal sheet (Log result):** Results' top edge shows receded and dimmed above it.
+- **Removed:** `--field-line-sheet` and `--icon-calendar` (unused); the busy `.submit-btn` rule; the stand-only tokens (`--success*`, `--warning*`, `--phone-width`) moved to `concept/specimens.css` and `concept/stand.css`; the first-screen harness's tab bar rules moved to `concept/first-screen.css`. `--stand-col-min` stays in the kit: the published review pages link only the kit and use it.
+- **New tokens:** `--size-time-hero`, `--icon-search-field`, the stacking scale `--z-under` … `--z-sheet`.
+

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race detail, loading state (wireframe)">
 
@@ -60,6 +60,19 @@
   </div><!-- /.phone-screen -->
 
 <script>
+/* Back keeps Race browse as it was (step 6, #2): its filters, search and view ride along as ?back=…, and every link
+   inside this drill-down passes them on. */
+(function () {
+  var back = new URLSearchParams(window.location.search).get('back');
+  if (!back) return;
+  var a = document.querySelector('.top-bar a[href="race-browse.html"]');
+  if (a) a.href = 'race-browse.html?' + back;
+  document.querySelectorAll('a[href^="race-detail"]').forEach(function (l) {
+    var u = new URLSearchParams(l.search); u.set('back', back); l.setAttribute('href', l.getAttribute('href').split('?')[0] + '?' + u.toString());
+  });
+})();
+</script>
+<script>
 (function () {
   // Only when reached through the flow (a race card on Race browse, or
   // DetailError's "Try again" — both pass ?race=): after a short fetch delay,
@@ -72,7 +85,7 @@
   if (['berlin-marathon', 'hyrox-london', 'hyrox-dallas', 'deka-strong-chicago', 'boston-marathon', 'spartan-beast-killington', 'utmb'].indexOf(slug) === -1) return;
   window.setTimeout(function () {
     var failed = !navigator.onLine || params.get('fail') === '1';
-    window.location.replace((failed ? 'race-detail-error.html' : 'race-detail.html') + '?race=' + slug);
+    window.location.replace((failed ? 'race-detail-error.html' : 'race-detail.html') + '?race=' + slug + (params.get('back') ? '&back=' + encodeURIComponent(params.get('back')) : ''));
   }, 1000);
 })();
 </script>
@@ -84,6 +97,17 @@
   var bar = document.querySelector('.top-bar[data-collapse]');
   var screen = document.querySelector('.phone-screen');
   if (!bar || !screen || !('IntersectionObserver' in window)) return;
+  if (!bar.classList.contains('top-bar--large')) {   // a drill-down's bars at the scroll edge (step 6, #27): glass only once content runs under them
+    var actionBars = screen.querySelectorAll('.action-bar');   // one per race or result; the shown one counts
+    var edges = function () {
+      bar.classList.toggle('is-scrolled', screen.scrollTop > 0);
+      var atEnd = screen.scrollTop + screen.clientHeight >= screen.scrollHeight - 1;
+      actionBars.forEach(function (ab) { ab.classList.toggle('is-at-end', atEnd); });
+    };
+    screen.addEventListener('scroll', edges, { passive: true });
+    window.addEventListener('resize', edges);
+    edges();
+  }
   var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
   if (!h1) return;
   var title = bar.querySelector('.bar-title');

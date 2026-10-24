@@ -887,20 +887,20 @@
       ['Top bar', 'Save is still there: tapping it is Retry. "‹ Results" is giving up (DeadEnd3).'],
       ['Save error', '"Couldn\'t save your result", framed as a connection problem, at the top of the form under the bar that holds Save. It never claims the link was checked (flows.md SubmitError, reworded 2026-09-25).'],
       ['The form, as you left it', 'Filled in from the URL, catalog link included, with no field errors.'] ] },
-    'race-picker.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Base state.', zones: [
-      ['Top bar', 'A modal sheet: Cancel returns to Log result with every value intact (flows.md: "cancels — form unchanged"). "Find a race" is centred. No Save: tapping a row is the selection.'],
+    'race-picker.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Pushed from Log result (‹ Log result; a modal until 2026-10-24). Base state.', zones: [
+      ['Top bar', 'A modal sheet: "‹ Log result" goes back with every value intact (flows.md: "goes back — form unchanged"). "Find a race" is centred. No Save: tapping a row is the selection.'],
       ['Search', 'Name or city, run with the keyboard\'s Search key through the loading page, like Race browse\'s filters. The form\'s values ride along in the URL.'],
       ['Past races', 'Only past catalog races, newest first: you log a race you\'ve run (sitemap.md → Entities 1). Each row shows name, short sport tag, date and city/country. Tapping one returns to Log result with that race linked.'] ] },
-    'race-picker-loading.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Loading: fetching past catalog races.', zones: [
-      ['Top bar', 'Cancel works while loading too.'],
+    'race-picker-loading.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Pushed from Log result (‹ Log result; a modal until 2026-10-24). Loading: fetching past catalog races.', zones: [
+      ['Top bar', '"‹ Log result" works while loading too.'],
       ['Search', 'Shows the query being fetched.'],
       ['Skeleton rows', 'Gray placeholders where the rows go. Reached through the flow, it moves on to the list, the no-match state (a real check against the eight races), or the error when offline or &fail=1.'] ] },
-    'race-picker-empty.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Empty: no catalog race matches.', zones: [
-      ['Top bar', 'Cancel is a second way back to the form, values kept.'],
+    'race-picker-empty.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Pushed from Log result (‹ Log result; a modal until 2026-10-24). Empty: no catalog race matches.', zones: [
+      ['Top bar', '"‹ Log result" is a second way back to the form, values kept.'],
       ['Search', 'Still holds the query. Changing it and searching again is "changes the search".'],
       ['No match', '"No past races match “…”" says why a race might be missing (only past races, hand-curated catalog). "Type it in instead" returns to the form with every value kept.'] ] },
-    'race-picker-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Modal from Log result. Error: could not load the race catalog.', zones: [
-      ['Top bar', 'Cancel returns to the form, like "Type it in instead".'],
+    'race-picker-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Pushed from Log result (‹ Log result; a modal until 2026-10-24). Error: could not load the race catalog.', zones: [
+      ['Top bar', '"‹ Log result" returns to the form, like "Type it in instead".'],
       ['Search', 'Keeps the query that failed.'],
       ['Couldn\'t load the race catalog', '"Try again" re-runs the same fetch (Retry → yes). "Type it in instead" is Retry → no, which isn\'t a dead end: the form works without a catalog link.'] ] },
     'profile.html': { job: 'Infrastructure — no job; shows whose account this is (sitemap.md → Entities 5). Base state.', zones: [

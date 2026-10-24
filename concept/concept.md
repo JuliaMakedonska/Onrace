@@ -521,6 +521,8 @@ Applied in `ui/kit.css` and `ui/kit.html` before step 3b; the grayscale screens 
 
    **Known false positives.** Each row inside the list is 44px tall with its text centred and 16px side padding (`.row`), the iOS grouped-list anatomy ([Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables)), so the list itself needs no inset. Report them as known, not as defects; any third `cramped-padding` hit is new.
 
+   **Scoped (step 6, #45, 2026-10-25):** since round 2 every grouped form is `ul.rows` (Log result, the sign-in screens, the Filters sheet, Profile), so the count grew past two and "any third hit is new" fired on every run. The rule now: a `cramped-padding` hit whose snippet starts `<ul> "rows":` is this known false positive, on any page; any other `cramped-padding` hit is new. The scope lives in this rule, not in `.impeccable/config.json`: the detector can't scope an ignore to a selector (`ignoreValues` matches a finding's value, `cramped-padding` findings carry none, and the only file-level form, `"*"`, would mute the rule for every element on those pages).
+
 **Also checked:** `public/workspace.html` routes the Filtered state correctly. `#04/race-browse?sport=hyrox&sport=marathon` opens the viewer on that state and the screen shows 2 chips and "4 races match your filters"; clicking Filtered in the viewer's tree writes the same hash to the workspace; with `&mode=wireframe` the frozen snapshot loads with the same filters, and a reload keeps it.
 
 ### Step 3b: native iOS pass in the kit (2026-10-19)
@@ -797,3 +799,54 @@ The search field's second placement is `.phone-screen > form.search`, and the li
 - **One-line controls:** the check also fails if Sort, Filters, a List/Map segment, an active filter chip or Clear all filters wraps.
 - **Sort at 320:** "Soonest first ⇅" wrapped to two lines (8 states at 320; the old check didn't look for wrapping). In the kit, `.sort-toggle` is `flex: none; white-space: nowrap`, and `.results-count` takes the remaining width (`flex: 1 1 auto; min-width: 0`) and wraps there, breaking a long search word only if it can't fit (`overflow-wrap: anywhere`). At 320 the count takes up to three lines with five filters and a search.
 - **`ia.html`:** the build copies it to `public/ia.html`, so the published copy is always the source.
+
+### Step 6: critique fixes (designer priorities, 2026-10-25)
+
+The step 6 critique (four subagents, one per group: Discovery, Archive, Infrastructure, Kit; read-only, 390×844) gave 45 rows. Every **Defect** row is fixed as suggested, in order (High, Medium, Low); the rows that conflicted with a recorded decision went to the designer, whose decisions are below. Every fix went through the kit (CLAUDE.md → "Keep it" rule): values in `ui/kit.css`, the component's markup in `ui/kit.html`, carried to every screen; copy through `microcopy.md` (rows 27, 168, 350, 355, 357, 359, 379, 380, 398, 459 changed; 557–561 new), then `voice.html` regenerated.
+
+**Designer decisions (the conflict rows):**
+- **#11, the finish time leads Result detail** (attribute a): Schibsted 56px (`--size-time-hero`, new, signed), the largest element on the screen; the race name, still the `h1`, steps down to Item (17px / 600). The 0px gap under "Finish time" is 4px now.
+- **#21, editable values in Text 1, read-only in Text 2** (iOS Settings): Profile's Name in Text 1; Email and the menu values (Country, Language) in Text 2. Reverses DESIGN.md → Profile "values in `--text-2`". Read as iOS Settings has it: menu values are secondary there, so they stay Text 2 **[?]**, the designer may want them Text 1 too.
+- **#22, "Account"** is the bar title on the sign-in screens in both modes; the bar action and the segment stay.
+- **#23, Solar Linear for the small UI glyphs** (back, chevrons, disclosure, the search field's magnifier); everything else stays Solar Bold. **A designer exception to "one icon style"**, with the reason: iOS varies symbol weight with size, so a Bold glyph at 15–18px reads as a filled triangle or a blob. The 48px empty-state magnifier keeps Bold (`--icon-search`); the field takes `--icon-search-field` (new). Linear SVGs from Iconify (`scripts/concept/icons/*-linear.svg`), signed on the stand.
+- **#29:** Race detail's alert body says "Tap Register again, or come back to this race later." No new button (Markup pass #10 stands).
+- **#7:** Race browse `-empty` loses the state's secondary "Clear all filters"; the pinned link in the chips row and "Change filters" stay.
+- **#9:** while Log result saves, the whole sheet is disabled in one treatment, Cancel included: every control in Text disabled (labels, values, placeholders, pickers, the catalog row, the linked race, Unlink); the help text stays Text 2 (content, not a control). Applies to every locked form (`fieldset:disabled`), so the gates' loading states take it too.
+- **#34:** Results' top edge shows receded behind the Log result sheet: a `--bg-1` rounded edge (`--radius-sheet`), inset 16px, under the scrim, over a darker void (`--bg-bar` under the scrim). Faint by design, as in iOS dark mode.
+- **#45:** the false-positive rule is scoped to `ul.rows` (above, Kit feedback 5: the config can't do it); `radius-tabbar` is on DESIGN.md's radius scale, and the tab bar component points to it.
+
+**Defects fixed, by row:**
+- **#1 (High):** the Log result sheet specimen in `ui/kit.html` no longer escapes its frame (the bar shown without the `.sheet` wrapper).
+- **#2 (High):** "‹ Discover" returns to Race browse as it was. Race browse writes `view=map` into its URL (`replaceState`) and keeps it through every filter change; every card and pin link carries the browse query as `?back=`, which Race detail loading, detail and error pass on and the back link returns to. Checked: `?sport=deka` → Map → Chicago pin → back lands on `?sport=deka&view=map`, "1 race matches your filters", the map shown.
+- **#3 (High):** on Sign in / Create account and Reset password (and their `-error` pages) the bar action is `aria-disabled` (Text disabled) while a visible required field is empty, and Enter is held the same way, so the browser's validation bubble never shows (HIG Sheets: the confirm waits until the task can be done). It uses the kit's `.bar-action[aria-disabled]` rule, which matched nothing before (#40).
+- **#4:** one coral ring around each run of adjacent invalid rows (four inset edges, the shared edges dropped), and the hairlines that touch an invalid row are hidden: no double lines, no notch, no stacked rings.
+- **#5:** map pins are 44pt targets centred on their labels (the link is the hit box, the label its `span`); the dot and the leader take no taps. 56×44 measured (Chicago).
+- **#6:** filters that match nothing on `race-browse.html` go to `race-browse-empty.html` with the same query, as the loading page does.
+- **#8:** the linked race card sits on `--bg-3`, the sheet's row level; Unlink is the tertiary text action (a tonal fill would vanish on `--bg-3`).
+- **#10:** the official result link breaks only after / . - (`<wbr>` in the markup, `overflow-wrap: break-word`); a **Copy link** button under it copies the link and says "Link copied" for 2 seconds; the link alert's body points to it.
+- **#12:** Race picker `-empty` opened on its own shows a sample search ("kona"), never `“”`.
+- **#13:** Profile's row error takes the field error's size and weight (15px / 600); the icon rule is shared.
+- **#14–#19 (kit.html):** race card specimens carry `span.day`; the Log result top-bar specimens show Cancel / Save and the spinner alone; the Primary button specimens show the short Open label, the expired-link `.submit-btn`s and the busy bar action; the busy secondary carries `aria-busy` (spinner, Text 1); the search specimen in the controls bar is gone; new specimens for the map's error and loading states, the locked form, the gate layout, and the bar action waiting for its fields.
+- **#20:** `--field-line-sheet` is removed with its two contrast pairs and its stand row; DESIGN.md no longer describes the retired outlined sheet controls.
+- **#24:** the alert's last row follows its 34px corners, so the inset focus ring and the hover fill are whole (it had regressed since G67).
+- **#25:** bar text buttons (back, Cancel, Save, the bar action) and alert buttons are 17px, HIG Body.
+- **#26:** the date pill: the date as "23 Sep 2026" over the transparent native input (a tap still opens the system's calendar); empty, "Choose a date" in Text 2; no glyph, no locale mask. `--icon-calendar` is removed (unused).
+- **#27:** on Race detail and Result detail the top bar and the action bar are transparent and rimless until content runs under them (`.is-scrolled`, `.is-at-end`), as the tab screens' bar is at rest.
+- **#28:** the action caption and the state message body are `text-wrap: balance`: no one-word last lines.
+- **#30:** the form note, the check-inbox links and the expiry note are left-aligned with their form and text.
+- **#31:** password rows say "Required" (Sign in; New password, both rows).
+- **#32:** two error messages cut to the cause and one next step (rows 398, 459).
+- **#33:** Log result `-error` opened on its own fills a sample result that fits the cause (submit: everything; fields: only the link; link: everything but the link).
+- **#35:** the checkmark (sport-type rows, Race picker's linked race) is 26px, the glyph about 17px wide, as HIG's list checkmark.
+- **#36:** the Find in race catalog row goes while a race is linked; the card's Unlink changes it.
+- **#37:** a stacking scale, `--z-under` … `--z-sheet` (seven tokens, signed); no class holds a bare `z-index`. The pin's `calc(var(--x) * 1)` is `var(--x)`.
+- **#38:** each pin's coordinates and side are map data in `ui/map.css`, keyed on `data-pin`; the kit no longer keys on race slugs in a URL (the `?back=` links would have broken `href$=`). The tab icons still key on their link (`a[href*="race-browse"]`): those links never change.
+- **#39:** `.chips-row` is one rule; `.secondary-btn` and `.unlink-btn` each set their own display.
+- **#40:** `fieldset:disabled .submit-btn` is removed; the waiting-bar-action rule is in use now (#3).
+- **#41:** `--success*` and `--warning*` moved to `concept/specimens.css`, `--phone-width` to `concept/stand.css`, the first-screen harness's flat tab bar to `concept/first-screen.css` (now stamped too); `build_stand.py` reads tokens from those `:root`s. The first-screen page is pixel-identical before and after. `--stand-col-min` stays in the kit **[?]**: the published review pages link only the kit and use it, and moving it would break their grids.
+- **#42–#44:** the kit and shell intros and labels are current (all 10 screens on the kit, "Results", the floating tab bar, "Soonest first, sort order"); the stray `</div>` is gone and the linked race heading is `h3`; `voice.md` names the search chip "“berlin”, clear search"; DESIGN.md's drift (the Race picker's corners, the secondary's uses) is corrected.
+
+**Checked:**
+- **Build:** passes, including the overflow check (206 states at 390 and 320, fonts loaded); 185 signed tokens; 109 contrast pairs (new: the linked race on `--bg-3`, the date pill, Copy link, Profile's editable value).
+- **Screenshots:** 86 states before and after at 390×844 (every page and state, plus the bare-URL states the critique named, the empty submits, Kit and Shell). Review: `ui/review-step6.html`.
+

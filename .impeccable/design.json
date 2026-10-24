@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-24T21:49:56+00:00",
+  "generatedAt": "2026-10-24T22:50:30+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -105,22 +105,6 @@
         "displayName": "Field Line",
         "canonical": "#686E75",
         "oklch": "oklch(53.5% 0.013 252.2)",
-        "tonalRamp": [
-          "#070C11",
-          "#21262B",
-          "#3D4349",
-          "#5C6269",
-          "#7D838A",
-          "#9FA6AD",
-          "#C3CAD2",
-          "#E8EFF7"
-        ]
-      },
-      "field-line-sheet": {
-        "role": "neutral",
-        "displayName": "Field Line, sheet",
-        "canonical": "#757B82",
-        "oklch": "oklch(58.0% 0.013 252.2)",
         "tonalRamp": [
           "#070C11",
           "#21262B",
@@ -320,7 +304,7 @@
       },
       "button": {
         "displayName": "Button",
-        "purpose": "primary and secondary buttons, sheet buttons."
+        "purpose": "primary and secondary buttons. Bar text buttons (back, Cancel, Save, the bar action) and alert buttons are 17px, HIG Body (step 6, 2026-10-25)."
       },
       "meta": {
         "displayName": "Meta",
@@ -465,7 +449,7 @@
       "refersTo": "filters-sheet",
       "description": "Signature: a native sheet on raised glass (C1, C4), 38px corners [?], the large detent only; Cancel outlined, Apply filters the one primary.",
       "html": "<div class=\"ds-sheet\" role=\"dialog\" aria-label=\"Filters\"><div class=\"ds-sheet-grab\"></div><p class=\"ds-sheet-h\">Filters</p><label class=\"ds-sheet-check\"><input type=\"checkbox\" checked> HYROX</label><div class=\"ds-sheet-actions\"><button type=\"button\">Cancel</button><button type=\"submit\">Apply filters</button></div></div>",
-      "css": ".ds-sheet { display:grid; gap:12px; padding:8px 16px 12px; border-radius:38px 38px 0 0; background:color-mix(in srgb, var(--bg-2, #272B30) 90%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 1px 0 rgba(244, 245, 246, 0.08), 0 12px 32px -12px rgba(0, 0, 0, 0.6); color:var(--text-1, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; } .ds-sheet-grab { width:32px; height:4px; margin:0 auto; border-radius:4px; background:var(--field-line-sheet, #757B82); } .ds-sheet-h { margin:0; font-size:17px; font-weight:600; } .ds-sheet-check { display:flex; align-items:center; gap:12px; min-height:44px; font-size:15px; accent-color:var(--text-1, #F4F5F6); } .ds-sheet-actions { display:flex; gap:12px; } .ds-sheet-actions button { flex:1; min-height:44px; border:0; border-radius:var(--radius-2, 6px); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } .ds-sheet-actions button[type=\"button\"] { background:transparent; color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line-sheet, #757B82); } .ds-sheet-actions button[type=\"submit\"] { background:var(--accent, #F5B649); color:var(--on-accent, #131518); } .ds-sheet-actions button[type=\"submit\"]:hover { background:var(--accent-hover, #FFC46A); } .ds-sheet-actions button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+      "css": ".ds-sheet { display:grid; gap:12px; padding:8px 16px 12px; border-radius:38px 38px 0 0; background:color-mix(in srgb, var(--bg-2, #272B30) 90%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 1px 0 rgba(244, 245, 246, 0.08), 0 12px 32px -12px rgba(0, 0, 0, 0.6); color:var(--text-1, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; } .ds-sheet-grab { width:32px; height:4px; margin:0 auto; border-radius:4px; background:var(--field-line, #686E75); } .ds-sheet-h { margin:0; font-size:17px; font-weight:600; } .ds-sheet-check { display:flex; align-items:center; gap:12px; min-height:44px; font-size:15px; accent-color:var(--text-1, #F4F5F6); } .ds-sheet-actions { display:flex; gap:12px; } .ds-sheet-actions button { flex:1; min-height:44px; border:0; border-radius:var(--radius-2, 6px); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } .ds-sheet-actions button[type=\"button\"] { background:transparent; color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line, #686E75); } .ds-sheet-actions button[type=\"submit\"] { background:var(--accent, #F5B649); color:var(--on-accent, #131518); } .ds-sheet-actions button[type=\"submit\"]:hover { background:var(--accent-hover, #FFC46A); } .ds-sheet-actions button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
     }
   ],
   "narrative": {
@@ -479,7 +463,7 @@
       "Flat content, glass chrome: the tab bar, the controls bar, the top bar, the action bar and the Filters sheet are translucent graphite with blur (C1). Cards never are. Shadows belong to what floats: the sheet and the tab bar.",
       "Neutral metadata: format chips, filter chips (gray capsules), map pins, the saved confirmation and every pressed state stay gray.",
       "Black-and-white photos, 3:1: inset in the race card, and at full content width on top of Race detail (the same band).",
-      "Solar bold icons, drawn as CSS masks in the color of their text."
+      "Solar Bold icons, drawn as CSS masks in the color of their text; the small UI glyphs (back, chevrons, disclosure, the search magnifier) are Solar Linear, a designer exception (step 6, 2026-10-25: iOS thins its symbols at small sizes)."
     ],
     "rules": [
       {
@@ -526,7 +510,7 @@
       "**Do** state proof as its own 13px `--text-2` line with one link icon: \"Self-reported · via \\<domain\\>\".",
       "**Do** step a secondary action up or down so the screen keeps exactly one filled button.",
       "**Do** take every value from `ui/kit.css`. Pages and the kit's classes hold no raw values.",
-      "**Do** draw icons as Solar bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar.",
+      "**Do** draw icons as Solar Bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar. The small UI glyphs (back, chevrons, disclosure, the search magnifier) are Solar Linear (designer exception, step 6).",
       "**Do** keep 44px targets, a 2px `--text-1` focus ring, and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).",
       "**Do** check text on glass against the worst case behind it, not against the glass's own tint."
     ],
@@ -539,7 +523,7 @@
       "**Don't** set race names, chips, buttons or tabs in the display face, or use one heavy condensed face for everything.",
       "**Don't** drop the radius to 0, or round content into pills (pills belong to bar chrome only).",
       "**Don't** give cards a shadow, a border at rest, or glass.",
-      "**Don't** use `--line`, `--field-line` or `--field-line-sheet` as a fill (the sheet's grabber is a drawn 4px line, the one exception).",
+      "**Don't** use `--line` or `--field-line` as a fill.",
       "**Don't** let invalid and focus look alike: coral inside for invalid, white outside for focus.",
       "**Don't** use tabular figures on finish times: Schibsted spaces the colons wide (\"24 : 36\")."
     ]

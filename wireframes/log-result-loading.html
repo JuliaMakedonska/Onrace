@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Log result, loading state (wireframe)">
 
@@ -105,7 +105,7 @@
         <div class="group" data-facts>
           <ul class="rows">
             <li><div class="row"><label for="race_name">Race name</label><input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required></div></li>
-            <li><div class="row"><label for="date">Race date</label><input type="date" id="date" name="date" required></div></li>
+            <li><div class="row"><label for="date">Race date</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="date" name="date" required></span></div></li>
             <li><div class="row"><label for="sport_type">Sport type</label><select id="sport_type" name="sport_type" required>
             <option value="" selected>Choose a sport type</option>
             <option value="hyrox">HYROX</option>
@@ -195,6 +195,7 @@ var CATALOG = [
     card.querySelector('[data-linked-field="sportType"]').textContent = linked.sportType;
     card.querySelector('[data-linked-field="place"]').textContent = linked.city + ', ' + linked.country;
     card.hidden = false;
+    form.querySelector('.row--nav').closest('.group').hidden = true;   // linked: the card's Unlink changes it, so the catalog row goes (step 6, #36)
     form.querySelector('[data-facts]').hidden = true;
     FACTS.forEach(function (f) { form.elements[f].disabled = true; });
   }
@@ -242,5 +243,26 @@ var CATALOG = [
 })();
 </script>
 
+<script>
+/* Date pills (step 6, #26): the value shows as the chips and cards write dates ("23 Sep 2026"), on the pill, over the
+   native input, which stays on top, transparent, so a tap still opens the system's picker. Empty, it says
+   "Choose a date" (no browser locale mask, no glyph). Runs after the page's own scripts have filled the form. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), out = pill.querySelector('.date-value');
+    function show() {
+      var v = input.value;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) { out.textContent = 'Choose a date'; return; }
+      var d = v.split('-');
+      out.textContent = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0];
+    }
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+  });
+})();
+</script>
 </body>
 </html>

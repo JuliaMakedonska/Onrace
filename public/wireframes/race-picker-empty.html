@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race picker, empty state (wireframe)">
 
@@ -88,7 +88,8 @@ var CATALOG = [
 (function () {
   var CARRY = ['race_name', 'date', 'sport_type', 'finish_time', 'official_result_url', 'catalog'];
   var params = new URLSearchParams(window.location.search);
-  var q = (params.get('q') || '').trim();
+  // opened on its own (the viewer's Empty state) it shows a sample search, never an empty quote (step 6, #12)
+  var q = (params.get('q') || '').trim() || 'kona';
 
   // Log result's values as they arrived — only the non-empty ones, minus
   // any keys in skip.

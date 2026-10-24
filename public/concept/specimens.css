@@ -1,3 +1,11 @@
+/* stand-only tokens (moved out of ui/kit.css, step 6, #41): no product screen uses them */
+:root {
+  --success: #7DCB9A;
+  --success-bg: #2A3835;   /* success at 14% on bg-1 */
+  --warning: var(--text-1);/* no hue of its own: any warm hue reads as the accent */
+  --warning-bg: var(--bg-2);
+  --warning-line: var(--text-2);
+}
 /* Specimens: classes the stand (concept/concept.html) and the first-screen study (concept/first-screen.html) show, which
    no product screen uses. Moved out of ui/kit.css on 2026-10-23 (consolidation), unchanged. Values only from the kit's
    tokens; load this file after ui/kit.css. */

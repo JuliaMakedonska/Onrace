@@ -145,10 +145,10 @@ COMPONENTS = {
         'html': '<div class="ds-sheet" role="dialog" aria-label="Filters"><div class="ds-sheet-grab"></div><p class="ds-sheet-h">Filters</p><label class="ds-sheet-check"><input type="checkbox" checked> HYROX</label><div class="ds-sheet-actions"><button type="button">Cancel</button><button type="submit">Apply filters</button></div></div>',
         'css': '.ds-sheet { display:grid; gap:12px; padding:8px 16px 12px; border-radius:38px 38px 0 0; background:color-mix(in srgb, var(--bg-2, #272B30) 90%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); '
                'box-shadow:inset 0 1px 0 rgba(244, 245, 246, 0.08), 0 12px 32px -12px rgba(0, 0, 0, 0.6); color:var(--text-1, #F4F5F6); ' + FONT + ' } '
-               '.ds-sheet-grab { width:32px; height:4px; margin:0 auto; border-radius:4px; background:var(--field-line-sheet, #757B82); } .ds-sheet-h { margin:0; font-size:17px; font-weight:600; } '
+               '.ds-sheet-grab { width:32px; height:4px; margin:0 auto; border-radius:4px; background:var(--field-line, #686E75); } .ds-sheet-h { margin:0; font-size:17px; font-weight:600; } '
                '.ds-sheet-check { display:flex; align-items:center; gap:12px; min-height:44px; font-size:15px; accent-color:var(--text-1, #F4F5F6); } '
                '.ds-sheet-actions { display:flex; gap:12px; } .ds-sheet-actions button { flex:1; min-height:44px; border:0; border-radius:var(--radius-2, 6px); ' + FONT + ' font-size:15px; font-weight:600; cursor:pointer; } '
-               '.ds-sheet-actions button[type="button"] { background:transparent; color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line-sheet, #757B82); } '
+               '.ds-sheet-actions button[type="button"] { background:transparent; color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line, #686E75); } '
                '.ds-sheet-actions button[type="submit"] { background:var(--accent, #F5B649); color:var(--on-accent, #131518); } .ds-sheet-actions button[type="submit"]:hover { background:var(--accent-hover, #FFC46A); } '
                '.ds-sheet-actions button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }'},
 }

@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
-<link rel="stylesheet" href="../ui/map.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
+<link rel="stylesheet" href="../ui/map.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race browse (wireframe)">
 
@@ -192,13 +192,13 @@
              cards, so both views always show one result set. -->
         <div id="map-view" class="view-panel" hidden>
           <div class="map-placeholder has-pins" role="group" aria-label="Map of the filtered races">
-            <a class="map-pin" href="race-detail-loading.html?race=berlin-marathon" aria-label="Berlin, Berlin Marathon, 27 Sep 2026">Berlin</a>
-            <a class="map-pin" href="race-detail-loading.html?race=hyrox-london" aria-label="London, HYROX London, 6 Dec 2026">London</a>
-            <a class="map-pin" href="race-detail-loading.html?race=utmb" aria-label="Chamonix, UTMB — Ultra-Trail du Mont-Blanc, 24 Aug 2027">Chamonix</a>
-            <a class="map-pin" href="race-detail-loading.html?race=hyrox-dallas" aria-label="Dallas, HYROX Dallas, 17 Jan 2027">Dallas</a>
-            <a class="map-pin" href="race-detail-loading.html?race=deka-strong-chicago" aria-label="Chicago, DEKA STRONG Chicago, 14 Mar 2027">Chicago</a>
-            <a class="map-pin" href="race-detail-loading.html?race=spartan-beast-killington" aria-label="Killington, Spartan Race Beast — Killington, 11 Jul 2027">Killington</a>
-            <a class="map-pin" href="race-detail-loading.html?race=boston-marathon" aria-label="Boston, Boston Marathon, 20 Apr 2027">Boston</a>
+            <a class="map-pin" data-pin="berlin-marathon" href="race-detail-loading.html?race=berlin-marathon" aria-label="Berlin, Berlin Marathon, 27 Sep 2026"><span>Berlin</span></a>
+            <a class="map-pin" data-pin="hyrox-london" href="race-detail-loading.html?race=hyrox-london" aria-label="London, HYROX London, 6 Dec 2026"><span>London</span></a>
+            <a class="map-pin" data-pin="utmb" href="race-detail-loading.html?race=utmb" aria-label="Chamonix, UTMB — Ultra-Trail du Mont-Blanc, 24 Aug 2027"><span>Chamonix</span></a>
+            <a class="map-pin" data-pin="hyrox-dallas" href="race-detail-loading.html?race=hyrox-dallas" aria-label="Dallas, HYROX Dallas, 17 Jan 2027"><span>Dallas</span></a>
+            <a class="map-pin" data-pin="deka-strong-chicago" href="race-detail-loading.html?race=deka-strong-chicago" aria-label="Chicago, DEKA STRONG Chicago, 14 Mar 2027"><span>Chicago</span></a>
+            <a class="map-pin" data-pin="spartan-beast-killington" href="race-detail-loading.html?race=spartan-beast-killington" aria-label="Killington, Spartan Race Beast — Killington, 11 Jul 2027"><span>Killington</span></a>
+            <a class="map-pin" data-pin="boston-marathon" href="race-detail-loading.html?race=boston-marathon" aria-label="Boston, Boston Marathon, 20 Apr 2027"><span>Boston</span></a>
           </div>
         </div>
 
@@ -250,8 +250,8 @@
             <option>Asia-Pacific</option>
             <option>Africa</option>
           </select></div></li>
-          <li><div class="row"><label for="date-from">Race date from</label><input type="date" id="date-from" name="date-from" value="2026-09-23" data-unfiltered="2026-09-23"></div></li>
-          <li><div class="row"><label for="date-to">Race date to</label><input type="date" id="date-to" name="date-to" value="2027-09-23" data-unfiltered="2027-09-23"></div></li>
+          <li><div class="row"><label for="date-from">Race date from</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="date-from" name="date-from" value="2026-09-23" data-unfiltered="2026-09-23"></span></div></li>
+          <li><div class="row"><label for="date-to">Race date to</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="date-to" name="date-to" value="2027-09-23" data-unfiltered="2027-09-23"></span></div></li>
         </ul>
       </div>
       <fieldset class="group">
@@ -327,6 +327,7 @@
     if (f.region) p.set('region', f.region);
     if (datesFiltered(f)) { p.set('from', f.from); p.set('to', f.to); }
     f.sports.forEach(function (s) { p.append('sport', s); });
+    if (document.querySelector('.view-btn[data-view="map"][aria-pressed="true"]')) p.set('view', 'map');   // the view is state too (step 6, #2)
     return p;
   }
   function hasFilterParams(p) {
@@ -396,6 +397,18 @@
 
   if (hasFilterParams(params)) writeForm(params);
   renderChips(readForm());
+
+  // --- Back keeps this screen as it was (step 6, #2): every race link carries the current filters, search and view
+  // as ?back=…, which Race detail's "‹ Discover" returns to.
+  function carryBack() {
+    var b = toParams(readForm()).toString();
+    document.querySelectorAll('.card-link, .map-pin').forEach(function (a) {
+      var u = new URLSearchParams(a.search);
+      if (b) u.set('back', b); else u.delete('back');
+      a.setAttribute('href', a.getAttribute('href').split('?')[0] + '?' + u.toString());
+    });
+  }
+  carryBack();
 
   // --- Every filter change is flows.md's "changes region/date/sport
   // filters" → Loading: Apply, a chip's ×, and Clear all all go to the
@@ -487,6 +500,8 @@
       pin.hidden = keep.indexOf(new URLSearchParams(pin.search).get('race')) === -1;
     });
     document.querySelector('.results-count').innerHTML = countText(keep.length, readForm());
+    // nothing matches: the Empty state, the same exit the loading page takes (step 6, #6)
+    if (!keep.length) window.location.replace('race-browse-empty.html?' + toParams(readForm()).toString());
   }
 
   // --- Error page: "Try again" re-runs the same fetch, keeping filters
@@ -533,8 +548,13 @@
       listOnly.forEach(function (el) {
         el.hidden = view !== 'list';
       });
+      var u = new URLSearchParams(window.location.search);   // the view goes in the URL (step 6, #2)
+      if (view === 'map') u.set('view', 'map'); else u.delete('view');
+      history.replaceState(null, '', window.location.pathname + (u.toString() ? '?' + u.toString() : ''));
+      carryBack();
     });
   });
+  if (params.get('view') === 'map') { var mapBtn = document.querySelector('.view-btn[data-view="map"]'); if (mapBtn) mapBtn.click(); }
 
   // --- Sort (G21, markup pass): two orders, so one button that flips them and shows the current one.
   var sortBtn = document.getElementById('sort');
@@ -586,5 +606,26 @@
 })();
 </script>
 
+<script>
+/* Date pills (step 6, #26): the value shows as the chips and cards write dates ("23 Sep 2026"), on the pill, over the
+   native input, which stays on top, transparent, so a tap still opens the system's picker. Empty, it says
+   "Choose a date" (no browser locale mask, no glyph). Runs after the page's own scripts have filled the form. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), out = pill.querySelector('.date-value');
+    function show() {
+      var v = input.value;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) { out.textContent = 'Choose a date'; return; }
+      var d = v.split('-');
+      out.textContent = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0];
+    }
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+  });
+})();
+</script>
 </body>
 </html>

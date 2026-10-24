@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Sign in / Sign up (wireframe)">
 
@@ -17,11 +17,11 @@
        Job 4 → DeadEnd4: leaves without getting signed in), and on the error
        page it is also Retry? → no. It lands on Race browse, the one screen
        that needs no account (sitemap.md → Navigation § 1: Discover never
-       needs an account). The title follows the Sign in | Create account
-       toggle below. -->
+       needs an account). The title is "Account" in both modes (step 6, #22): the Sign in | Create account
+       toggle below carries the mode, and the bar action does it. -->
   <header class="top-bar">
     <a class="close" href="race-browse.html">Cancel</a>
-    <h1 class="bar-title"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create account</span></h1>
+    <h1 class="bar-title"><span data-mode="signin">Account</span><span data-mode="signup" hidden>Account</span></h1>
     <button type="submit" form="auth-form" class="bar-action"><span data-mode="signin">Sign in</span><span data-mode="signup" hidden>Create<span class="visually-hidden"> account</span></span></button>
   </header>
 
@@ -103,7 +103,7 @@
           <div class="group">
             <ul class="rows">
               <li><div class="row"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="e.g. you@example.com" required></div></li>
-              <li><div class="row"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required></div></li>
+              <li><div class="row"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="current-password" required placeholder="Required"></div></li>
             </ul>
             <p class="group-footer" id="pw-hint" data-mode="signup" hidden>At least 8 characters.</p>
             <p class="forgot" data-mode="signin"><a id="forgot" href="reset-password.html">Forgot password?</a></p>
@@ -205,5 +205,27 @@
 })();
 </script>
 
+<script>
+/* The bar action waits for the required fields (step 6, #3; HIG Sheets: the confirm is disabled until the task can be
+   completed): aria-disabled, in Text disabled, while a visible required field is empty, so an empty submit never
+   reaches the browser's own validation bubble. Enter in a field is held the same way. */
+(function () {
+  var btn = document.querySelector('.top-bar .bar-action[form]');
+  var form = btn && document.getElementById(btn.getAttribute('form'));
+  if (!form) return;
+  function waiting() {
+    return Array.prototype.some.call(form.querySelectorAll('[required]'), function (i) { return i.getClientRects().length && !i.value.trim(); });
+  }
+  function sync() {
+    if (btn.getAttribute('aria-busy') === 'true') return;
+    if (waiting()) btn.setAttribute('aria-disabled', 'true'); else btn.removeAttribute('aria-disabled');
+  }
+  form.addEventListener('input', sync);
+  document.addEventListener('click', function () { setTimeout(sync, 0); });   // a mode switch shows other fields
+  btn.addEventListener('click', function (e) { if (btn.getAttribute('aria-disabled') === 'true') e.preventDefault(); });
+  form.addEventListener('keydown', function (e) { if (e.key === 'Enter' && waiting()) e.preventDefault(); }, true);
+  sync();
+})();
+</script>
 </body>
 </html>

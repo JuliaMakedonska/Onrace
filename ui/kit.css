@@ -22,7 +22,6 @@
   --bg-3: #2C3035;         /* pressed / hover / open fills on raised controls (rule 3a: L* 19.67) */
   --line: #31363C;         /* hairline dividers, selected segment (decorative, not a boundary) */
   --field-line: #686E75;   /* boundary of inputs: 3:1 against bg-0 and bg-1 (WCAG 1.4.11) */
-  --field-line-sheet: #757B82; /* boundary of inputs on the glass sheet: 3:1 against its worst-case surface (3b) */
 
   /* ---------- color: text levels ---------- */
   --text-1: #F4F5F6;       /* titles, finish times, body */
@@ -38,11 +37,6 @@
   /* ---------- color: states ---------- */
   --error: #EE8B84;        /* soft coral, not the banned aggressive red */
   --error-bg: #3A2F31;     /* error at 14% on bg-1 */
-  --success: #7DCB9A;
-  --success-bg: #2A3835;   /* success at 14% on bg-1 */
-  --warning: var(--text-1);/* no hue of its own: any warm hue reads as the accent */
-  --warning-bg: var(--bg-2);
-  --warning-line: var(--text-2);
   --focus: var(--text-1);  /* focus ring is neutral, so it never adds an accent use */
   --invalid: var(--error); /* invalid field ring: coral, so it never looks like focus (white) */
   --destructive: var(--error); /* destructive action text in an alert (Sign out), per HIG Alerts */
@@ -69,6 +63,7 @@
   --type-unit: calc(1rem / var(--type-root));
   --size-title: calc(34 * var(--type-unit));  /* display · screen title (h1) · HIG Large Title (C3: was 38) */
   --size-time: calc(32 * var(--type-unit));   /* display · finish time (a display figure, C3) */
+  --size-time-hero: calc(56 * var(--type-unit));   /* display · the finish time leading Result detail, the largest thing on it (step 6, #11; attribute a) */
   --size-day: calc(30 * var(--type-unit));    /* display · date day (a display figure, C3) */
   --size-item: calc(17 * var(--type-unit));   /* text · item title (race name) · HIG Headline */
   --size-body: calc(15 * var(--type-unit));   /* text · body, buttons, search · HIG Subheadline */
@@ -131,21 +126,21 @@
 
   /* ---------- icons: Solar, bold style (masks, so the markup stays the wireframes') ---------- */
   --icon-search: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M11.5%202C16.7467%202%2021%206.25329%2021%2011.5C21%2013.8541%2020.1417%2016.0064%2018.7236%2017.666C18.7315%2017.6732%2018.7404%2017.6799%2018.748%2017.6875L22.5303%2021.4697C22.8228%2021.7626%2022.8228%2022.2384%2022.5303%2022.5312C22.2375%2022.8236%2021.7625%2022.8237%2021.4697%2022.5312L17.6875%2018.748C17.6797%2018.7403%2017.6724%2018.7317%2017.665%2018.7236C16.0055%2020.1414%2013.8538%2021%2011.5%2021C6.25329%2021%202%2016.7467%202%2011.5C2%206.25329%206.25329%202%2011.5%202Z%22/%3E%3C/svg%3E");
+  --icon-search-field: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-linecap%3D%22round%22%20stroke-width%3D%221.5%22%3E%3Ccircle%20cx%3D%2211.5%22%20cy%3D%2211.5%22%20r%3D%229.5%22/%3E%3Cpath%20d%3D%22M18.2173%2018.2178L21.9999%2022.0004%22/%3E%3C/g%3E%3C/svg%3E");   /* Solar magnifer, Linear: the small glyph in the search field (step 6, #23: small UI glyphs Linear, as iOS thins symbols at small sizes); the 48px empty-state icon keeps --icon-search, Bold */
   --icon-pin: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M12%202C7.58172%202%204%206.00258%204%2010.5C4%2014.9622%206.55332%2019.8124%2010.5371%2021.6744C11.4657%2022.1085%2012.5343%2022.1085%2013.4629%2021.6744C17.4467%2019.8124%2020%2014.9622%2020%2010.5C20%206.00258%2016.4183%202%2012%202ZM12%2012C13.1046%2012%2014%2011.1046%2014%2010C14%208.89543%2013.1046%208%2012%208C10.8954%208%2010%208.89543%2010%2010C10%2011.1046%2010.8954%2012%2012%2012Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
   --icon-link: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M1.25%209C1.25%205.27208%204.27208%202.25%208%202.25H12C15.7279%202.25%2018.75%205.27208%2018.75%209C18.75%2012.7279%2015.7279%2015.75%2012%2015.75H10C9.58579%2015.75%209.25%2015.4142%209.25%2015C9.25%2014.5858%209.58579%2014.25%2010%2014.25H12C14.8995%2014.25%2017.25%2011.8995%2017.25%209C17.25%206.10051%2014.8995%203.75%2012%203.75H8C5.10051%203.75%202.75%206.10051%202.75%209C2.75%2010.3451%203.25487%2011.5705%204.08664%2012.4998C4.36288%2012.8085%204.33662%2013.2826%204.02797%2013.5589C3.71933%2013.8351%203.24518%2013.8088%202.96894%2013.5002C1.90054%2012.3065%201.25%2010.7283%201.25%209ZM12%209.75C9.10051%209.75%206.75%2012.1005%206.75%2015C6.75%2017.8995%209.10051%2020.25%2012%2020.25H16C18.8995%2020.25%2021.25%2017.8995%2021.25%2015C21.25%2013.6549%2020.7451%2012.4295%2019.9134%2011.5002C19.6371%2011.1915%2019.6634%2010.7174%2019.972%2010.4411C20.2807%2010.1649%2020.7548%2010.1912%2021.0311%2010.4998C22.0995%2011.6935%2022.75%2013.2717%2022.75%2015C22.75%2018.7279%2019.7279%2021.75%2016%2021.75H12C8.27208%2021.75%205.25%2018.7279%205.25%2015C5.25%2011.2721%208.27208%208.25%2012%208.25H14C14.4142%208.25%2014.75%208.58579%2014.75%209C14.75%209.41421%2014.4142%209.75%2014%209.75H12Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
   --icon-filters: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M9.25%2014C10.9069%2014%2012.25%2015.3431%2012.25%2017C12.25%2018.6569%2010.9069%2020%209.25%2020C7.59315%2020%206.25%2018.6569%206.25%2017C6.25%2015.3431%207.59315%2014%209.25%2014Z%22/%3E%3Cpath%20d%3D%22M14.25%204C12.5931%204%2011.25%205.34315%2011.25%207C11.25%208.65685%2012.5931%2010%2014.25%2010C15.9069%2010%2017.25%208.65685%2017.25%207C17.25%205.34315%2015.9069%204%2014.25%204Z%22/%3E%3Cpath%20d%3D%22M8.75%206.20852C9.16421%206.20852%209.5%206.54431%209.5%206.95852C9.5%207.37273%209.16421%207.70852%208.75%207.70852L1.75%207.70852C1.33579%207.70852%201%207.37273%201%206.95852C1%206.54431%201.33579%206.20852%201.75%206.20852H8.75Z%22/%3E%3Cpath%20d%3D%22M14.75%2016.2085C14.3358%2016.2085%2014%2016.5443%2014%2016.9585C14%2017.3727%2014.3358%2017.7085%2014.75%2017.7085H21.75C22.1642%2017.7085%2022.5%2017.3727%2022.5%2016.9585C22.5%2016.5443%2022.1642%2016.2085%2021.75%2016.2085H14.75Z%22/%3E%3Cpath%20d%3D%22M1%2016.9585C1%2016.5443%201.33579%2016.2085%201.75%2016.2085H3.75C4.16421%2016.2085%204.5%2016.5443%204.5%2016.9585C4.5%2017.3727%204.16421%2017.7085%203.75%2017.7085H1.75C1.33579%2017.7085%201%2017.3727%201%2016.9585Z%22/%3E%3Cpath%20d%3D%22M21.75%206.20852C22.1642%206.20852%2022.5%206.54431%2022.5%206.95852C22.5%207.37273%2022.1642%207.70852%2021.75%207.70852L19.75%207.70852C19.3358%207.70852%2019%207.37273%2019%206.95852C19%206.54431%2019.3358%206.20852%2019.75%206.20852H21.75Z%22/%3E%3C/g%3E%3C/svg%3E");
-  --icon-chevron: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M12.3704%2015.8351L18.8001%209.20467C19.2013%208.79094%2018.9581%208%2018.4297%208H5.5703C5.04189%208%204.79869%208.79094%205.1999%209.20467L11.6296%2015.8351C11.8427%2016.0549%2012.1573%2016.0549%2012.3704%2015.8351Z%22/%3E%3C/svg%3E");
+  --icon-chevron: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22M19%209L12%2015L5%209%22/%3E%3C/svg%3E");   /* Solar alt-arrow-down, Linear (step 6, #23): the pop-up indicator after a row's value (G65) */
   --icon-error: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M22%2012C22%206.47715%2017.5228%202%2012%202C6.47715%202%202%206.47715%202%2012C2%2017.5228%206.47715%2022%2012%2022C17.5228%2022%2022%2017.5228%2022%2012ZM12%206.25C12.4142%206.25%2012.75%206.58579%2012.75%207V13C12.75%2013.4142%2012.4142%2013.75%2012%2013.75C11.5858%2013.75%2011.25%2013.4142%2011.25%2013V7C11.25%206.58579%2011.5858%206.25%2012%206.25ZM12%2017C12.5523%2017%2013%2016.5523%2013%2016C13%2015.4477%2012.5523%2015%2012%2015C11.4477%2015%2011%2015.4477%2011%2016C11%2016.5523%2011.4477%2017%2012%2017Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
   --icon-check: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M18.4697%206.46967C18.7626%206.17678%2019.2373%206.17678%2019.5302%206.46967C19.8231%206.76256%2019.8231%207.23732%2019.5302%207.53022L9.53022%2017.5302C9.23732%2017.8231%208.76256%2017.8231%208.46967%2017.5302L4.46967%2013.5302C4.17678%2013.2373%204.17678%2012.7626%204.46967%2012.4697C4.76256%2012.1768%205.23732%2012.1768%205.53022%2012.4697L8.99994%2015.9394L18.4697%206.46967Z%22/%3E%3C/svg%3E");
   --icon-saved: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M20.5355%2020.5355C22%2019.0711%2022%2016.714%2022%2012C22%2011.6585%2022%2011.4878%2021.9848%2011.3142C21.9142%2010.5049%2021.586%209.71257%2021.0637%209.09034C20.9516%208.95687%2020.828%208.83317%2020.5806%208.58578L15.4142%203.41944C15.1668%203.17206%2015.0431%203.04835%2014.9097%202.93631C14.2874%202.414%2013.4951%202.08581%2012.6858%202.01515C12.5122%202%2012.3415%202%2012%202C7.28595%202%204.92893%202%203.46447%203.46447C2%204.92893%202%207.28595%202%2012C2%2016.714%202%2019.0711%203.46447%2020.5355C4.1485%2021.2196%205.02727%2021.5841%206.25%2021.7784L6.25%2020.948C6.24997%2020.0495%206.24995%2019.3003%206.32991%2018.7055C6.41432%2018.0777%206.59999%2017.5109%207.05546%2017.0555C7.51093%2016.6%208.07773%2016.4143%208.70552%2016.3299C9.3003%2016.2499%2010.0495%2016.25%2010.948%2016.25H13.052C13.9505%2016.25%2014.6997%2016.2499%2015.2945%2016.3299C15.9223%2016.4143%2016.4891%2016.6%2016.9445%2017.0555C17.4%2017.5109%2017.5857%2018.0777%2017.6701%2018.7055C17.7501%2019.3003%2017.75%2020.0495%2017.75%2020.948L17.75%2021.7784C18.9727%2021.5841%2019.8515%2021.2196%2020.5355%2020.5355ZM6.25%208C6.25%207.58579%206.58579%207.25%207%207.25H13C13.4142%207.25%2013.75%207.58579%2013.75%208C13.75%208.41421%2013.4142%208.75%2013%208.75H7C6.58579%208.75%206.25%208.41421%206.25%208Z%22%20clip-rule%3D%22evenodd%22/%3E%3Cpath%20d%3D%22M16.1835%2018.9054C16.2484%2019.3884%2016.25%2020.036%2016.25%2021V21.9313C15.0942%2022%2013.7004%2022%2012%2022C10.2996%2022%208.9058%2022%207.75%2021.9313V21C7.75%2020.036%207.75159%2019.3884%207.81654%2018.9054C7.87858%2018.4439%207.9858%2018.2464%208.11612%2018.1161C8.24643%2017.9858%208.44393%2017.8786%208.90539%2017.8165C9.38843%2017.7516%2010.036%2017.75%2011%2017.75H13C13.964%2017.75%2014.6116%2017.7516%2015.0946%2017.8165C15.5561%2017.8786%2015.7536%2017.9858%2015.8839%2018.1161C16.0142%2018.2464%2016.1214%2018.4439%2016.1835%2018.9054Z%22/%3E%3C/g%3E%3C/svg%3E");   /* neutral "save" glyph, not a checkmark */
   --icon-compass: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M12%2022C17.5228%2022%2022%2017.5228%2022%2012C22%206.47715%2017.5228%202%2012%202C6.47715%202%202%206.47715%202%2012C2%2017.5228%206.47715%2022%2012%2022ZM13.9563%2014.0949C13.763%2014.2644%2013.5167%2014.3629%2013.024%2014.56C10.7142%2015.4839%209.55936%2015.9459%208.89971%2015.4976C8.7433%2015.3913%208.6084%2015.2564%208.50212%2015.1C8.05386%2014.4404%208.51582%2013.2855%209.43973%2010.9757C9.6368%2010.483%209.73533%2010.2367%209.9048%2010.0434C9.94799%209.99419%209.99435%209.94782%2010.0436%209.90464C10.2368%209.73517%2010.4832%209.63663%2010.9759%209.43956C13.2856%208.51565%2014.4405%208.0537%2015.1002%208.50196C15.2566%208.60824%2015.3915%208.74314%2015.4978%208.89954C15.946%209.5592%2015.4841%2010.7141%2014.5602%2013.0239C14.3631%2013.5165%2014.2646%2013.7629%2014.0951%2013.9561C14.0519%2014.0054%2014.0055%2014.0517%2013.9563%2014.0949Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
   --icon-stopwatch: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%3E%3Cpath%20d%3D%22M12%2022C16.9706%2022%2021%2017.9706%2021%2013C21%208.02944%2016.9706%204%2012%204C7.02944%204%203%208.02944%203%2013C3%2017.9706%207.02944%2022%2012%2022ZM12%208.25C12.4142%208.25%2012.75%208.58579%2012.75%209V13C12.75%2013.4142%2012.4142%2013.75%2012%2013.75C11.5858%2013.75%2011.25%2013.4142%2011.25%2013V9C11.25%208.58579%2011.5858%208.25%2012%208.25Z%22/%3E%3Cpath%20d%3D%22M9.25%202C9.25%201.58579%209.58579%201.25%2010%201.25H14C14.4142%201.25%2014.75%201.58579%2014.75%202C14.75%202.41421%2014.4142%202.75%2014%202.75H10C9.58579%202.75%209.25%202.41421%209.25%202Z%22/%3E%3C/g%3E%3C/svg%3E");
   --icon-user: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M12%2013C16.4183%2013%2020%2015.0147%2020%2017.5C20%2019.9853%2020%2022%2012%2022C4%2022%204%2019.9853%204%2017.5C4%2015.0147%207.58172%2013%2012%2013Z%22/%3E%3Cpath%20d%3D%22M12%202C14.2091%202%2016%203.79086%2016%206C16%208.20914%2014.2091%2010%2012%2010C9.79086%2010%208%208.20914%208%206C8%203.79086%209.79086%202%2012%202Z%22/%3E%3C/g%3E%3C/svg%3E");
-  --icon-calendar: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M7.75%202.5C7.75%202.08579%207.41421%201.75%207%201.75C6.58579%201.75%206.25%202.08579%206.25%202.5V4.07926C4.81067%204.19451%203.86577%204.47737%203.17157%205.17157C2.47737%205.86577%202.19451%206.81067%202.07926%208.25H21.9207C21.8055%206.81067%2021.5226%205.86577%2020.8284%205.17157C20.1342%204.47737%2019.1893%204.19451%2017.75%204.07926V2.5C17.75%202.08579%2017.4142%201.75%2017%201.75C16.5858%201.75%2016.25%202.08579%2016.25%202.5V4.0129C15.5847%204%2014.839%204%2014%204H10C9.16097%204%208.41527%204%207.75%204.0129V2.5Z%22/%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M2%2012C2%2011.161%202%2010.4153%202.0129%209.75H21.9871C22%2010.4153%2022%2011.161%2022%2012V14C22%2017.7712%2022%2019.6569%2020.8284%2020.8284C19.6569%2022%2017.7712%2022%2014%2022H10C6.22876%2022%204.34315%2022%203.17157%2020.8284C2%2019.6569%202%2017.7712%202%2014V12ZM17%2014C17.5523%2014%2018%2013.5523%2018%2013C18%2012.4477%2017.5523%2012%2017%2012C16.4477%2012%2016%2012.4477%2016%2013C16%2013.5523%2016.4477%2014%2017%2014ZM17%2018C17.5523%2018%2018%2017.5523%2018%2017C18%2016.4477%2017.5523%2016%2017%2016C16.4477%2016%2016%2016.4477%2016%2017C16%2017.5523%2016.4477%2018%2017%2018ZM13%2013C13%2013.5523%2012.5523%2014%2012%2014C11.4477%2014%2011%2013.5523%2011%2013C11%2012.4477%2011.4477%2012%2012%2012C12.5523%2012%2013%2012.4477%2013%2013ZM13%2017C13%2017.5523%2012.5523%2018%2012%2018C11.4477%2018%2011%2017.5523%2011%2017C11%2016.4477%2011.4477%2016%2012%2016C12.5523%2016%2013%2016.4477%2013%2017ZM7%2014C7.55228%2014%208%2013.5523%208%2013C8%2012.4477%207.55228%2012%207%2012C6.44772%2012%206%2012.4477%206%2013C6%2013.5523%206.44772%2014%207%2014ZM7%2018C7.55228%2018%208%2017.5523%208%2017C8%2016.4477%207.55228%2016%207%2016C6.44772%2016%206%2016.4477%206%2017C6%2017.5523%206.44772%2018%207%2018Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/g%3E%3C/svg%3E");
   --icon-close: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%20d%3D%22M22%2012C22%2017.5228%2017.5228%2022%2012%2022C6.47715%2022%202%2017.5228%202%2012C2%206.47715%206.47715%202%2012%202C17.5228%202%2022%206.47715%2022%2012ZM8.96963%208.96965C9.26252%208.67676%209.73739%208.67676%2010.0303%208.96965L12%2010.9393L13.9696%208.96967C14.2625%208.67678%2014.7374%208.67678%2015.0303%208.96967C15.3232%209.26256%2015.3232%209.73744%2015.0303%2010.0303L13.0606%2012L15.0303%2013.9696C15.3232%2014.2625%2015.3232%2014.7374%2015.0303%2015.0303C14.7374%2015.3232%2014.2625%2015.3232%2013.9696%2015.0303L12%2013.0607L10.0303%2015.0303C9.73742%2015.3232%209.26254%2015.3232%208.96965%2015.0303C8.67676%2014.7374%208.67676%2014.2625%208.96965%2013.9697L10.9393%2012L8.96963%2010.0303C8.67673%209.73742%208.67673%209.26254%208.96963%208.96965Z%22%20clip-rule%3D%22evenodd%22/%3E%3C/svg%3E");
-  --icon-back: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M8.16485%2011.6296L14.7953%205.1999C15.2091%204.79869%2016%205.04189%2016%205.5703L16%2018.4297C16%2018.9581%2015.2091%2019.2013%2014.7953%2018.8001L8.16485%2012.3704C7.94505%2012.1573%207.94505%2011.8427%208.16485%2011.6296Z%22/%3E%3C/svg%3E");   /* Solar alt-arrow-left bold: the back chevron in a top bar */
+  --icon-back: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22M15%205L9%2012L15%2019%22/%3E%3C/svg%3E");   /* Solar alt-arrow-left, Linear (step 6, #23): the back chevron in a top bar */
 
-  --icon-disclosure: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M15.8351%2011.6296L9.20467%205.1999C8.79094%204.79869%208%205.04189%208%205.5703L8%2018.4297C8%2018.9581%208.79094%2019.2013%209.20467%2018.8001L15.8351%2012.3704C16.055%2012.1573%2016.0549%2011.8427%2015.8351%2011.6296Z%22/%3E%3C/svg%3E");   /* Solar alt-arrow-right bold: the disclosure indicator on a row that drills in (G22) */
+  --icon-disclosure: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22M9%205L15%2012L9%2019%22/%3E%3C/svg%3E");   /* Solar alt-arrow-right, Linear (step 6, #23): the disclosure indicator on a row that drills in (G22) */
 
   --icon-archive: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M20.5%2013C20.5%2016.7712%2020.4997%2018.6566%2019.3281%2019.8281C18.1565%2020.9996%2016.2712%2021%2012.5%2021H11.5C7.72882%2021%205.84345%2020.9996%204.67188%2019.8281C3.50031%2018.6566%203.5%2016.7712%203.5%2013V8.49805C3.64472%208.50004%203.78966%208.50006%203.93066%208.5H20.0693C20.2103%208.50006%2020.3553%208.50004%2020.5%208.49805V13ZM10.5%2010.5C10.0341%2010.5%209.80096%2010.5001%209.61719%2010.5762C9.37225%2010.6777%209.17765%2010.8722%209.07617%2011.1172C9.00005%2011.301%209%2011.5341%209%2012C9%2012.4659%209.00006%2012.6991%209.07617%2012.8828C9.17768%2013.1277%209.37228%2013.3224%209.61719%2013.4238C9.80096%2013.4999%2010.0341%2013.5%2010.5%2013.5H13.5C13.9659%2013.5%2014.199%2013.4999%2014.3828%2013.4238C14.6277%2013.3224%2014.8223%2013.1277%2014.9238%2012.8828C14.9999%2012.6991%2015%2012.4659%2015%2012C15%2011.5341%2014.9999%2011.301%2014.9238%2011.1172C14.8224%2010.8722%2014.6278%2010.6777%2014.3828%2010.5762C14.199%2010.5001%2013.9659%2010.5%2013.5%2010.5H10.5Z%22%20clip-rule%3D%22evenodd%22/%3E%3Cpath%20d%3D%22M20%203C20.9428%203%2021.4141%203.00008%2021.707%203.29297C21.9999%203.58586%2022%204.05719%2022%205C22%205.94281%2021.9999%206.41414%2021.707%206.70703C21.4141%206.99992%2020.9428%207%2020%207H4C3.05719%207%202.58586%206.99992%202.29297%206.70703C2.00008%206.41414%202%205.94281%202%205C2%204.05719%202.00008%203.58586%202.29297%203.29297C2.58586%203.00008%203.05719%203%204%203H20Z%22/%3E%3C/g%3E%3C/svg%3E");   /* Solar archive bold: Results list empty (the results archive) */
   --icon-sort: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M12%2013.125C12.3013%2013.125%2012.5733%2013.3052%2012.6907%2013.5827C12.8081%2013.8601%2012.7482%2014.1808%2012.5384%2014.3971L8.53844%2018.5221C8.39719%2018.6678%208.20293%2018.75%208.00002%2018.75C7.79711%2018.75%207.60285%2018.6678%207.46159%2018.5221L3.46159%2014.3971C3.25188%2014.1808%203.19192%2013.8601%203.30934%2013.5827C3.42676%2013.3052%203.69877%2013.125%204.00002%2013.125H7.25002V6C7.25002%205.58579%207.5858%205.25%208.00002%205.25C8.41423%205.25%208.75002%205.58579%208.75002%206V13.125H12Z%22/%3E%3Cpath%20d%3D%22M20%2010.875C20.3013%2010.875%2020.5733%2010.6948%2020.6907%2010.4173C20.8081%2010.1399%2020.7482%209.81916%2020.5384%209.60289L16.5384%205.47789C16.3972%205.33222%2016.2029%205.25%2016%205.25C15.7971%205.25%2015.6029%205.33222%2015.4616%205.47789L11.4616%209.60289C11.2519%209.81916%2011.1919%2010.1399%2011.3093%2010.4173C11.4268%2010.6948%2011.6988%2010.875%2012%2010.875H15.25V18C15.25%2018.4142%2015.5858%2018.75%2016%2018.75C16.4142%2018.75%2016.75%2018.4142%2016.75%2018L16.75%2010.875H20Z%22/%3E%3C/g%3E%3C/svg%3E");   /* Solar sort-vertical bold: the Sort button, which flips the order (G21) */
@@ -175,6 +170,14 @@
   --tabbar-clear: calc(var(--tabbar-h) + var(--tabbar-gap) + var(--safe-bottom));  /* how far the last item must scroll to clear the bar */
   --scrim: rgba(0, 0, 0, 0.6);  /* behind the Filters sheet */
   --sheet-gap-top: var(--space-3); /* G13: the large detent stops this far below the top safe area [?] */
+  /* stacking (step 6, #37): one scale, low to high, so no class holds a bare z-index */
+  --z-under: -1;           /* behind its own box (the map's land and borders under the pins) */
+  --z-lift: 1;             /* above its siblings in the flow (map contents, bar buttons over the bar's title) */
+  --z-float: 2;            /* floats over content: the sticky top bar, map pins */
+  --z-bar: 3;              /* bars over the page: the tab bar, the action bar, a tab screen's top bar, a gate's bar */
+  --z-edge: 4;             /* the status-bar scroll edge, over every bar */
+  --z-scrim: 5;            /* the dimming layer under a sheet */
+  --z-sheet: 6;            /* sheets, alerts and action sheets */
   --sheet-large: calc(100% - var(--safe-top) - var(--sheet-gap-top));  /* G13: the Filters sheet rests at the large detent only */
   --dur-sheet: 250ms;      /* sheet slides up */
   --safe-top: env(safe-area-inset-top, 0px);         /* G6: status bar / Dynamic Island inset on a real device; 0 inside the viewer */
@@ -183,7 +186,6 @@
 
   /* ---------- stand layout (concept.html only, never in the product) ---------- */
   --stand-max: 1152px;
-  --phone-width: 392px;
   --stand-col-min: 320px;
 
   /* ---------- grayscale screens (structure from their wireframes, look from DESIGN.md) ---------- */
@@ -376,8 +378,8 @@
   height: var(--icon-m);
   margin-top: calc(var(--icon-m) / -2);
   background: var(--text-2);
-  -webkit-mask: var(--icon-search) center / contain no-repeat;
-  mask: var(--icon-search) center / contain no-repeat;
+  -webkit-mask: var(--icon-search-field) center / contain no-repeat;
+  mask: var(--icon-search-field) center / contain no-repeat;
   pointer-events: none;
 }
 .phone-screen > form.search::before { left: calc(var(--space-4) * 2); }
@@ -549,7 +551,7 @@
 :is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-bar-control); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
 
 /* ---------- tab bar: current tab is the screen's one accent on Race browse ---------- */
-.bottom-nav { background: var(--glass-bar); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); border-top: var(--border) solid var(--line); padding: var(--space-2) var(--space-2) var(--space-6); }   /* C1: glass */
+.bottom-nav { background: var(--glass-bar); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); }   /* C1: glass. The first-screen harness's flat edge-to-edge bar is in concept/first-screen.css (step 6, #41) */
 .bottom-nav ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .bottom-nav a {
   display: grid;
@@ -587,9 +589,8 @@
 
 /* active filter chips + "Clear all filters" (tertiary) */
 .chips-bar { display: flex; align-items: center; gap: var(--space-3); }   /* G27: about 12pt around bezeled elements */
-.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-3); flex: 1; min-width: 0; overflow-x: auto; }
+.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-3); flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }   /* the row scrolls, with no scrollbar: its end fades */
 .chips-row li { flex: none; }
-.chips-row { -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }  /* the row scrolls: its end fades */
 .chips-bar .clear-all { flex: none; }
 .chips-bar[hidden] { display: none; }
 
@@ -678,7 +679,7 @@
   line-height: var(--leading-item);
   color: var(--text-1);
 }
-.state-message p, .state-msg p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); }
+.state-message p, .state-msg p { margin: 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-2); text-wrap: balance; }   /* centred: even lines, no one-word last line (step 6, #28) */
 .state-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); margin-top: var(--space-2); }
 .state-message[role="alert"], .state-message.is-error, .state-message:has([data-retry]), .state-msg {   /* error: the error icon, the screen's only coral; the stand uses .is-error so a static specimen isn't announced */
   --state-icon: var(--icon-error);
@@ -700,12 +701,12 @@ body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab
 .phone-screen:has(> .top-bar:not(.top-bar--large)) > main { flex: 1 0 auto; min-height: 0; }
 /* with an action bar (Race detail, Result detail): the bar is the scroll area's last child, sticky at its bottom, so
    content runs under its glass and still scrolls clear of it at the end, whatever the bar's height (G35, G54) */
-.phone-screen > .action-bar { position: sticky; bottom: 0; z-index: 3; }
+.phone-screen > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); }
 .phone-screen header:not(.top-bar) { display: grid; gap: var(--space-3); padding: calc(var(--space-2) + var(--safe-top)) var(--space-4) var(--space-1); }  /* G6: below the top safe area (0 in the viewer, which draws the status bar above the page) */
 .phone-screen .controls {   /* C1/G7: glass, with a rim instead of a hairline; content scrolls under it */
   position: sticky;
   top: calc(var(--safe-top) + var(--target));   /* under the collapsed title bar (G4) */
-  z-index: 2;
+  z-index: var(--z-float);
   background: var(--glass-ground);
   -webkit-backdrop-filter: blur(var(--glass-blur));
   backdrop-filter: blur(var(--glass-blur));
@@ -718,7 +719,7 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
   top: 0;
   left: 0;
   right: 0;
-  z-index: 4;
+  z-index: var(--z-edge);
   height: var(--safe-top);
   background: var(--glass-ground);
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -739,15 +740,15 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 .race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
 .race-card:has(.card-link:active), .race-card.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
-.race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-m) + var(--space-3)); }   /* G47: room for the checkmark */
+.race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-l) + var(--space-3)); }   /* G47: room for the checkmark */
 .race-card:has(.card-link[aria-current="true"])::after {   /* G47: the linked race in Race picker, the filter rows' neutral checkmark (C4) */
   content: "";
   position: absolute;
   right: var(--space-4);
   top: 50%;
-  width: var(--icon-m);
-  height: var(--icon-m);
-  margin-top: calc(var(--icon-m) / -2);
+  width: var(--icon-l);   /* the glyph about 17px wide, its stroke heavier with it, as HIG's list checkmark (step 6, #35) */
+  height: var(--icon-l);
+  margin-top: calc(var(--icon-l) / -2);
   background: var(--control-tint);
   -webkit-mask: var(--icon-check) center / contain no-repeat;
   mask: var(--icon-check) center / contain no-repeat;
@@ -755,12 +756,12 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 }
 
 /* tab bar on a screen: fixed to the frame's bottom; Solar icons from tokens (the markup's own glyphs are hidden) */
-body > .bottom-nav:not(.fs-tabbar) {   /* G1/G2: floats above content, in from the edges, above the bottom safe area */
+body > .bottom-nav {   /* G1/G2: floats above content, in from the edges, above the bottom safe area */
   position: absolute;
   left: var(--tabbar-inset);
   right: var(--tabbar-inset);
   bottom: calc(var(--tabbar-gap) + var(--safe-bottom));
-  z-index: 3;
+  z-index: var(--z-bar);
   height: var(--tabbar-h);
   padding: var(--space-1) var(--space-2);
   display: grid;
@@ -769,7 +770,7 @@ body > .bottom-nav:not(.fs-tabbar) {   /* G1/G2: floats above content, in from t
   border-radius: var(--radius-tabbar);
   box-shadow: inset 0 0 0 var(--border) var(--glass-edge), var(--shadow-sheet);
 }
-body > .bottom-nav:not(.fs-tabbar) a::before {
+body > .bottom-nav a::before {
   content: "";
   width: var(--icon-l);
   height: var(--icon-l);
@@ -804,7 +805,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: var(--z-under);
   pointer-events: none;
   -webkit-mask-size: 100% auto; mask-size: 100% auto;
   -webkit-mask-position: center; mask-position: center;
@@ -812,27 +813,37 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 }
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
 .map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
-.map-placeholder > * { position: relative; z-index: 1; }
+.map-placeholder > * { position: relative; z-index: var(--z-lift); }
 .map-placeholder.has-pins { align-items: flex-end; }
 
-/* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line */
+/* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line. The link is
+   a 44pt box centred on the label (step 6, #5: HIG targets); the label is its span; the dot and the leader take no
+   taps, so where two dots nearly touch (Boston, Killington) each label is its own target. Each pin's coordinates
+   and side are map data, in ui/map.css, keyed on data-pin (step 6, #38). */
 .map-placeholder > .map-pin {
   position: absolute;
-  z-index: 2;
-  left: calc(var(--x) * 1);
+  z-index: var(--z-float);
+  left: var(--x);
   top: calc(50% + (var(--yf) - 0.5) * (100cqw + 2 * var(--space-4)) * var(--map-ratio));
   transform: translate(-50%, calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
-  height: var(--pin-h);
+  min-width: var(--target);
+  height: var(--target);
   display: flex;
   align-items: center;
-  padding: 0 var(--space-2);
-  border-radius: var(--radius-1);
-  background: var(--bg-2);
+  justify-content: center;
   color: var(--text-1);
   font-size: var(--size-label);
   font-weight: var(--weight-strong);
   text-decoration: none;
   white-space: nowrap;
+}
+.map-pin > span {
+  display: flex;
+  align-items: center;
+  height: var(--pin-h);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--bg-2);
 }
 .map-pin::before {   /* the dot, back on the coordinate */
   content: "";
@@ -845,6 +856,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   border-radius: 50%;
   background: var(--text-1);
   box-shadow: 0 0 0 calc(var(--border) * 2) var(--map-water);
+  pointer-events: none;
 }
 .map-pin::after {   /* leader line from the label's edge to the dot */
   content: "";
@@ -853,20 +865,9 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   width: var(--border);
   height: calc(var(--dy-abs) - var(--pin-h) / 2 - var(--map-pin-dot) / 2);
   background: var(--text-2);
+  pointer-events: none;
 }
-.map-pin[href$="race=berlin-marathon"] { --x: var(--pin-berlin-marathon-x); --yf: var(--pin-berlin-marathon-yf); --dy: var(--pin-berlin-marathon-dy); }
-.map-pin[href$="race=hyrox-london"] { --x: var(--pin-hyrox-london-x); --yf: var(--pin-hyrox-london-yf); --dy: var(--pin-hyrox-london-dy); }
-.map-pin[href$="race=utmb"] { --x: var(--pin-utmb-x); --yf: var(--pin-utmb-yf); --dy: var(--pin-utmb-dy); }
-.map-pin[href$="race=hyrox-dallas"] { --x: var(--pin-hyrox-dallas-x); --yf: var(--pin-hyrox-dallas-yf); --dy: var(--pin-hyrox-dallas-dy); }
-.map-pin[href$="race=deka-strong-chicago"] { --x: var(--pin-deka-strong-chicago-x); --yf: var(--pin-deka-strong-chicago-yf); --dy: var(--pin-deka-strong-chicago-dy); }
-.map-pin[href$="race=spartan-beast-killington"] { --x: var(--pin-spartan-beast-killington-x); --yf: var(--pin-spartan-beast-killington-yf); --dy: var(--pin-spartan-beast-killington-dy); }
-.map-pin[href$="race=boston-marathon"] { --x: var(--pin-boston-marathon-x); --yf: var(--pin-boston-marathon-yf); --dy: var(--pin-boston-marathon-dy); }
-/* label above the dot: leader runs down from the label; below: up from the label */
-.map-pin[href$="race=berlin-marathon"], .map-pin[href$="race=hyrox-london"], .map-pin[href$="race=deka-strong-chicago"], .map-pin[href$="race=spartan-beast-killington"] { --dy-abs: calc(var(--dy) * -1); }
-.map-pin[href$="race=utmb"], .map-pin[href$="race=boston-marathon"], .map-pin[href$="race=hyrox-dallas"] { --dy-abs: var(--dy); }
-.map-pin[href$="race=berlin-marathon"]::after, .map-pin[href$="race=hyrox-london"]::after, .map-pin[href$="race=deka-strong-chicago"]::after, .map-pin[href$="race=spartan-beast-killington"]::after { top: 100%; }
-.map-pin[href$="race=utmb"]::after, .map-pin[href$="race=boston-marathon"]::after, .map-pin[href$="race=hyrox-dallas"]::after { bottom: 100%; }
-.map-pin:hover { background: var(--bg-3); }
+.map-pin:hover > span { background: var(--bg-3); }
 .map-pin[hidden] { display: none; }
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
@@ -916,7 +917,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 
 /* Filters sheet: a native sheet (concept.md → Native sheet anatomy): glass on the raised level (C1, C4),
    the system sheet radius (G16), resting at the large detent (G13). It floats, so it keeps the shadow. */
-.sheet-backdrop { position: absolute; inset: 0; z-index: 5; background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-out); }
+.sheet-backdrop { position: absolute; inset: 0; z-index: var(--z-scrim); background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-out); }
 .sheet-backdrop.open { opacity: 1; }
 .sheet-backdrop[hidden], .sheet[hidden] { display: none; }
 .sheet {
@@ -924,7 +925,7 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 6;
+  z-index: var(--z-sheet);
   height: var(--sheet-large);
   overflow-y: auto;
   padding: var(--space-2) var(--space-4) 0;          /* the footer carries the bottom padding */
@@ -942,12 +943,23 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
 /* Log result (round 2, G40): the sheet is the whole screen, resting at the large detent (G13) over Results, which has
    receded under the scrim; its top bar spans it, and only its form scrolls */
 html:has(body > .sheet > .phone-screen) { height: 100%; }
-body:has(> .sheet > .phone-screen) { height: 100%; margin: 0 auto; max-width: var(--screen-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--bg-0); }
+body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--screen-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--bg-bar); }
+/* Results receded behind the sheet (step 6, #34; iOS sheets): the presenting screen's top edge, inset and dimmed under
+   the scrim, shows in the gap above the sheet, so the sheet reads as a modal over Results */
+body:has(> .sheet > .phone-screen)::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--safe-top) + var(--sheet-gap-top) - var(--space-2));
+  left: var(--space-4);
+  right: var(--space-4);
+  height: var(--target);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: linear-gradient(var(--scrim), var(--scrim)) var(--bg-1);
+}
 body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
 .sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; }
 .sheet > .phone-screen > main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
-.sheet, .phone-screen, .chips-row { scrollbar-color: var(--field-line) transparent; scrollbar-width: thin; }
-.chips-row { scrollbar-width: none; }
+.sheet, .phone-screen { scrollbar-color: var(--field-line) transparent; scrollbar-width: thin; }
 /* the Filters sheet (markup pass, 2026-10-23): Cancel, the title and Apply filters in a top bar (G12); options as grouped
    rows (G20), as Profile's: Region a native menu (G17), the dates native compact pickers (G18), sport types rows with a
    neutral checkmark (G19, C4). No grabber: the sheet rests at one detent, so it isn't resizable (HIG Sheets) */
@@ -955,27 +967,31 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--space-2) var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
 .sheet .group { margin: 0 0 var(--space-6); padding: 0; border: 0; min-width: 0; }
 .sheet .rows { background: var(--bg-3); }   /* one level above the sheet, as the picker's cards */
-.row input[type="date"] {   /* a compact date picker: the value on a pill, the system's calendar when tapped */
+/* a compact date picker (G18, G44; step 6, #26): the value on a pill, written as the chips and cards write dates
+   ("23 Sep 2026"); the native input lies over the pill, transparent, so a tap opens the system's calendar. No glyph
+   (iOS's compact picker has none) and no browser locale mask: empty, the pill asks "Choose a date" in Text 2 */
+.date-pill {
+  position: relative;
   flex: none;
-  min-width: calc(var(--target) * 3);   /* room for the empty placeholder ("dd/mm/yyyy") as well as a date */
   margin-left: auto;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-2);
   background: var(--bg-2);
   color: var(--text-1);
-  text-align: center;
-  text-align-last: center;
-  color-scheme: dark;
+  font-size: var(--size-body);
+  white-space: nowrap;
 }
-.row input[type="date"]::-webkit-calendar-picker-indicator { width: var(--icon-s); height: var(--icon-s); margin-left: var(--space-1); padding: 0; background: var(--text-2); -webkit-mask: var(--icon-calendar) center / contain no-repeat; mask: var(--icon-calendar) center / contain no-repeat; cursor: pointer; }   /* Solar calendar, small, instead of the browser's glyph */
+.date-pill.is-empty { color: var(--text-2); }
+.row .date-pill input[type="date"] { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 0; margin: 0; padding: 0; opacity: 0; cursor: pointer; color-scheme: dark; }
+.date-pill:has(input:focus-visible) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
 .row--check { cursor: pointer; color: var(--text-1); font-size: var(--size-body); }
 .row--check input[type="checkbox"] {   /* the checkmark sits at the row's trailing edge; nothing shows when it's off. [type] outranks Profile's .row input */
   -webkit-appearance: none;
   appearance: none;
   order: 1;
   flex: none;
-  width: var(--icon-m);
-  height: var(--icon-m);
+  width: var(--icon-l);   /* the same checkmark as Race picker's (step 6, #35) */
+  height: var(--icon-l);
   margin: 0 0 0 auto;
   background: var(--control-tint);   /* C4: neutral, never the accent */
   -webkit-mask: var(--icon-check) center / contain no-repeat;
@@ -992,11 +1008,30 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .form-rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]) { text-align: left; text-align-last: left; color: var(--text-1); }
 .form-rows .row select { color: var(--text-1); }
 .form-rows .row input::placeholder { color: var(--text-2); opacity: 1; }
-.form-rows .row :is(input, select):disabled { color: var(--text-2); -webkit-text-fill-color: currentColor; cursor: not-allowed; }
+/* a locked form (saving, signing in; step 6, #9): one treatment for the whole form, every control in Text disabled
+   (labels, values, placeholders, pickers, the catalog row, the linked race and Unlink), and the bar's Cancel with it.
+   The help text around it (intro, footers) stays Text 2: it is content, not a control. */
+.form-rows .row :is(input, select):disabled { cursor: not-allowed; }
+fieldset:disabled :is(.row label, .row .row-label, .row input, .row select, .row-value, .row--nav, .linked-race, .linked-race *) { color: var(--text-disabled); -webkit-text-fill-color: currentColor; opacity: 1; }
+fieldset:disabled .row input::placeholder { color: var(--text-disabled); }
+fieldset:disabled :is(.row:has(> select)::after, .row--nav::after) { background: var(--text-disabled); }
+fieldset:disabled .date-pill { color: var(--text-disabled); cursor: not-allowed; }
+.top-bar .close[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
 .rows .row--stacked { flex-direction: column; align-items: stretch; gap: 0; padding-block: var(--space-2); }   /* .rows: outranks .row, defined later */   /* a long value (a link): the label above, the field the row's full width */
 .rows .row--stacked input { padding-block: var(--space-1); }
 .rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-3); }
-.rows li:has([aria-invalid="true"]) { box-shadow: inset 0 0 0 var(--focus-ring) var(--invalid); }
+/* the invalid ring (step 6, #4): one ring around each run of invalid rows, drawn from four inset edges, so adjacent
+   invalid rows share one outline instead of stacking rings; the hairlines that touch an invalid row are hidden */
+.rows li:has([aria-invalid="true"]) {
+  --ring-top: inset 0 var(--focus-ring) 0 0 var(--invalid);
+  --ring-bottom: inset 0 calc(var(--focus-ring) * -1) 0 0 var(--invalid);
+  --ring-sides: inset var(--focus-ring) 0 0 0 var(--invalid), inset calc(var(--focus-ring) * -1) 0 0 0 var(--invalid);
+  box-shadow: var(--ring-top), var(--ring-bottom), var(--ring-sides);
+}
+.rows li:has([aria-invalid="true"]) + li:has([aria-invalid="true"]) { box-shadow: var(--ring-bottom), var(--ring-sides); }
+.rows li:has([aria-invalid="true"]):has(+ li [aria-invalid="true"]) { box-shadow: var(--ring-top), var(--ring-sides); }
+.rows li:has([aria-invalid="true"]) + li:has([aria-invalid="true"]):has(+ li [aria-invalid="true"]) { box-shadow: var(--ring-sides); }
+.rows li:has([aria-invalid="true"])::before, .rows li:has([aria-invalid="true"]) + li::before { border-top-color: transparent; }
 .row--nav { justify-content: space-between; color: var(--text-1); font-size: var(--size-body); text-decoration: none; }   /* a row that opens another screen (Find in race catalog) */
 .row--nav::after { content: ""; flex: none; width: var(--icon-s); height: var(--icon-s); background: var(--text-2); -webkit-mask: var(--icon-disclosure) center / contain no-repeat; mask: var(--icon-disclosure) center / contain no-repeat; }
 a.row--nav[href]:hover { background: var(--bg-2); }
@@ -1016,7 +1051,7 @@ a.row--nav[href]:hover { background: var(--bg-2); }
 .top-bar {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: var(--z-float);
   display: flex;
   align-items: center;
   min-height: calc(var(--target) + var(--safe-top));
@@ -1026,11 +1061,11 @@ a.row--nav[href]:hover { background: var(--bg-2); }
   backdrop-filter: blur(var(--glass-blur));
   border-bottom: var(--border) solid var(--glass-edge);
   font-family: var(--font-text);
-  font-size: var(--size-body);
+  font-size: var(--size-item);   /* bar text buttons (back, Cancel, Save, the bar action) at HIG Body/Headline size, 17 (step 6, #25) */
 }
 .top-bar :is(a, button) {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-lift);
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
@@ -1080,12 +1115,12 @@ a.row--nav[href]:hover { background: var(--bg-2); }
 .top-bar[data-collapse] .bar-title { padding-inline: calc(var(--target) * 2 + var(--space-4)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
 /* on a tab screen the bar floats over the large title: transparent and empty at rest, glass once collapsed (C1) */
-.top-bar--large { z-index: 3; margin-bottom: calc((var(--target) + var(--safe-top)) * -1); background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom-color: transparent; pointer-events: none; transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.top-bar--large { z-index: var(--z-bar); margin-bottom: calc((var(--target) + var(--safe-top)) * -1); background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom-color: transparent; pointer-events: none; transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
 .top-bar--large > :not(.bar-title) { pointer-events: auto; }
 .top-bar--large.is-collapsed { background: var(--glass-ground); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); border-bottom-color: var(--glass-edge); }
 /* on a gate (Sign in, Reset password, New password) the bar is the body's own child: it floats over the page's top
    edge and the page, which starts below it, scrolls under its glass (C1) */
-body > .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
+body > .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: var(--z-bar); }
 body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--safe-top) + var(--border)); }   /* 44pt, the top safe area, the rim */
 /* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,
    so it is the sheet's own glass, not a second layer */
@@ -1105,7 +1140,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .facts dt { color: var(--text-2); }
 .facts dd { margin: 0; color: var(--text-1); }
 .finish { margin: 0 0 var(--space-4); }
-.finish dt { font-size: var(--size-meta); color: var(--text-2); }
+.finish dt { margin: 0 0 var(--space-1); font-size: var(--size-meta); color: var(--text-2); }   /* the label sits clear of the figure (step 6, #11) */
 .finish dd {
   margin: 0;
   font-family: var(--font-display);
@@ -1115,6 +1150,12 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   letter-spacing: var(--tracking-display);
   color: var(--text-1);
 }
+/* Result detail: the finish time leads (designer, step 6, #11; attribute a): the largest thing on the screen; the race
+   name, still the h1, steps down to the item title */
+.result h1 { font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); letter-spacing: normal; margin-bottom: var(--space-5); }
+.result .finish dd { font-size: var(--size-time-hero); }
+.result .bar.h1 { height: calc(var(--size-item) * var(--leading-item)); margin-bottom: var(--space-5); }
+.result .bar.finish-bar { height: var(--size-time-hero); }
 .race h2, .result h2 {
   margin: 0 0 var(--space-2);
   font-family: var(--font-text);
@@ -1147,7 +1188,24 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 }
 .race .bar.photo { aspect-ratio: var(--photo-ratio); margin-bottom: var(--space-4); border-radius: var(--radius-2); }   /* loading: the photo band's place, so nothing shifts */
 .result .proof p { margin: 0 0 var(--space-2); }
-.proof-url { font-size: var(--size-body); color: var(--text-1); overflow-wrap: anywhere; }
+.proof-url { font-size: var(--size-body); color: var(--text-1); overflow-wrap: break-word; }   /* breaks at the <wbr> after / . - in the markup, never mid-word (step 6, #10) */
+.copy-link {   /* Copy link (step 6, #10): the tertiary text action under the link, 44pt tall, the line kept */
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  margin: calc((var(--target) - var(--size-meta) * var(--leading-body)) / -2) 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-1);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.copy-link:hover { color: var(--text-2); }
 .proof-note { font-size: var(--size-proof); color: var(--text-2); }
 
 /* ---------- sticky action bar: one primary link + its caption ---------- */
@@ -1159,6 +1217,9 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   border-top: var(--border) solid var(--glass-edge);
 }
 .action-bar[hidden] { display: none; }
+/* a drill-down's bars at the scroll edge (step 6, #27; iOS 26 scroll edge effect): transparent and rimless until content
+   runs under them, as the tab screens' top bar is at rest; the page script sets .is-scrolled and .is-at-end */
+.top-bar[data-collapse]:not(.top-bar--large):not(.is-scrolled), .action-bar.is-at-end { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: transparent; }
 .action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-bar-control); }   /* C7: a control inside a bar is a capsule */
 .register-btn, .open-btn, .submit-btn {   /* the screen's one primary */
   display: flex;
@@ -1184,11 +1245,11 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 }
 .register-btn:hover, .open-btn:hover, .submit-btn:hover { background: var(--accent-hover); }
 .register-btn:active, .open-btn:active, .submit-btn:active { transform: translateY(var(--border)); }
-.action-caption { margin: var(--space-2) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-2); }
+.action-caption { margin: var(--space-2) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-2); text-wrap: balance; }   /* no one-word last line (step 6, #28) */
 
 /* ---------- secondary and small buttons on the grayscale screens ---------- */
+/* one definition each (step 6, #39): the shared base sets no display; the full-width secondary is flex, Unlink inline */
 .secondary-btn, .unlink-btn {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: var(--target);
@@ -1205,13 +1266,14 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 .secondary-btn { display: flex; width: 100%; font-size: var(--size-body); }
+.unlink-btn { display: inline-flex; }
 .secondary-btn:hover:not(:disabled), .unlink-btn:hover:not(:disabled) { background: var(--bg-3); }
 .secondary-btn:disabled, .unlink-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
 .secondary-btn[aria-busy="true"] { color: var(--text-1); }   /* busy, not disabled: the label keeps its color, as a busy primary keeps its fill */
 .text-link {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;   /* left, with the check-inbox heading and body (step 6, #30) */
   min-height: var(--target);
   margin: var(--space-5) 0 0;
   color: var(--text-1);
@@ -1274,16 +1336,25 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .gate fieldset, fieldset.locked { margin: 0; padding: 0; border: 0; min-width: 0; }
 .field-error { margin: var(--space-2) 0 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-1); }
 .field-error[hidden] { display: none; }
-.field-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+.field-error::before, .row-note.is-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
 
 /* ---------- Log result: the linked race (the catalog row is a .row--nav since round 2) ---------- */
-.linked-race { margin: 0 0 var(--space-5); padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); }
+.linked-race { margin: 0 0 var(--space-5); padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-3); }   /* a group on the sheet, at the rows' level (step 6, #8) */
 .linked-race[hidden] { display: none; }
 .linked-source { margin: 0 0 var(--space-2); font-size: var(--size-proof); font-weight: var(--weight-strong); color: var(--text-2); }
 .linked-race h3 { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
 .linked-fact { margin: 0 0 var(--space-1); font-size: var(--size-meta); color: var(--text-1); }
 .linked-fact.place { color: var(--text-2); }
-.linked-race .unlink-btn { margin-top: var(--space-2); }
+.linked-race .unlink-btn {   /* on the --bg-3 card a tonal fill would vanish: the tertiary text action, 44pt tall (step 6, #8) */
+  margin-top: var(--space-1);
+  padding: 0;
+  background: none;
+  font-weight: var(--weight-regular);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+}
+.linked-race .unlink-btn:hover:not(:disabled) { background: none; color: var(--text-2); }
 
 /* ---------- Race picker: the list intro (a pushed screen since 2026-10-24; its top bar, search and cards are with their components) ---------- */
 .list-intro { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
@@ -1296,10 +1367,9 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .gate .view-btn { flex: 1; }
 .view-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
 .submit-btn { margin: var(--space-2) 0 0; }
-fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the label in the present tense ("Signing in…") */
 .forgot { margin: var(--space-2) 0 0; text-align: right; font-size: var(--size-meta); }
 .forgot a[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
-.form-note, .sent-note { margin: var(--space-3) 0 0; text-align: center; font-size: var(--size-meta); color: var(--text-2); }
+.form-note, .sent-note { margin: var(--space-3) 0 0; text-align: left; font-size: var(--size-meta); color: var(--text-2); }   /* left, with the form and the footers (step 6, #30): centred only made sense under the old full-width button */
 .reset-done {
   margin: 0 0 var(--space-5);
   padding: var(--space-3) var(--space-4);
@@ -1311,7 +1381,7 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
 .inbox-heading { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
 .inbox-line { margin: 0 0 var(--space-6); font-size: var(--size-body); color: var(--text-1); }
 .addr { font-weight: var(--weight-strong); overflow-wrap: anywhere; }
-.expiry-note { margin: var(--space-7) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-2); }
+.expiry-note { margin: var(--space-7) 0 0; text-align: left; font-size: var(--size-proof); color: var(--text-2); }   /* left, with the heading and body above it (step 6, #30) */
 
 /* ---------- Profile: identity, grouped rows, Sign out, the confirm alert ---------- */
 .identity { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-4) 0 var(--space-6); }
@@ -1361,6 +1431,7 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
   -webkit-appearance: none;
   appearance: none;
 }
+.rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]):not([readonly]):not(:disabled) { color: var(--text-1); }   /* editable text in Text 1, read-only values (Email) and menu values in Text 2, as iOS Settings (designer, step 6, #21) */
 .row select { min-height: var(--target); }   /* the row's 44pt, so the whole row opens the menu */
 .row:has(> select)::after {   /* G65: a pop-up button shows its value and an indicator; a Solar chevron after the value, in Text 2 like it (C2) */
   content: "";
@@ -1376,8 +1447,7 @@ fieldset:disabled .submit-btn { cursor: progress; }   /* busy: same fill, the la
 .row input:focus-visible, .row select:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-1); }
 .row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-2); }
 .row-note[hidden] { display: none; }
-.row-note.is-error { text-align: left; color: var(--text-1); }
-.row-note.is-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+.row-note.is-error { text-align: left; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-1); }   /* one look for "this row failed": the field error's (step 6, #13) */
 .row-note.is-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }
 .group-footer { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); color: var(--text-2); }
 .signout {
@@ -1421,9 +1491,11 @@ dialog.alert .alert-actions button {
   background: transparent;
   color: var(--text-1);
   font-family: var(--font-text);
-  font-size: var(--size-body);
+  font-size: var(--size-item);   /* 17, as HIG alerts and the action sheet (step 6, #25) */
   cursor: pointer;
 }
+dialog.alert .alert-actions button:first-child { border-bottom-left-radius: var(--radius-alert); }   /* the last row follows the alert's corners, so the inset focus ring and the hover fill do too (step 6, #24) */
+dialog.alert .alert-actions button:last-child { border-bottom-right-radius: var(--radius-alert); }
 dialog.alert .alert-actions button + button { border-left: var(--border) solid var(--line); font-weight: var(--weight-strong); }
 dialog.alert .alert-actions button:only-child { font-weight: var(--weight-strong); }   /* one action (Race detail: Dismiss): the default, bold */
 dialog.alert #signout-confirm { color: var(--destructive); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1 */
@@ -1527,7 +1599,7 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .kit-stack { display: grid; gap: var(--space-3); }
 .kit-shell { display: block; width: 100%; max-width: var(--screen-w); height: var(--kit-stage-h); border: 0; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--line); background: var(--bg-0); }
-.kit-stage dialog.alert { position: absolute; inset: 0; z-index: 6; margin: auto; height: max-content; }
-.kit-stage dialog.action-sheet { position: absolute; z-index: 6; inset: auto var(--space-2) var(--space-2); }
+.kit-stage dialog.alert { position: absolute; inset: 0; z-index: var(--z-sheet); margin: auto; height: max-content; }
+.kit-stage dialog.action-sheet { position: absolute; z-index: var(--z-sheet); inset: auto var(--space-2) var(--space-2); }
 .kit-frame .phone-screen { height: auto; overflow: visible; padding-bottom: 0; }   /* a strip of a screen, not the whole scrolling page */
 .kit-map { flex: 1; display: flex; flex-direction: column; padding: var(--space-4); }   /* the map's own panel, as #map-view on Race browse */

@@ -1,3 +1,5 @@
+/* the stand's own layout token (moved out of ui/kit.css, step 6, #41) */
+:root { --phone-width: 392px; }
 /* Concept stand layout (concept/concept.html only, never in the product).
    Values come from ui/kit.css (the stand-* tokens included); this file holds none of its own. */
 
@@ -49,6 +51,7 @@ h3.stand-label { font-weight: var(--weight-strong); }   /* a heading used as a l
 .type-sample--display { font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .type-sample--title { font-size: var(--size-title); }
 .type-sample--time { font-size: var(--size-time); }
+.type-sample--time-hero { font-size: var(--size-time-hero); }
 .type-sample--day { font-size: var(--size-day); }
 .type-sample--item { font-size: var(--size-item); font-weight: var(--weight-strong); }
 .type-sample--body { font-size: var(--size-body); }

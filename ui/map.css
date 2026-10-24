@@ -27,3 +27,17 @@
   --pin-boston-marathon-x: 28.845%;  --pin-boston-marathon-yf: 0.5036;   /* Boston 42.360, -71.059 */
   /* map:end */
 }
+
+/* each pin's place (step 6, #38: map data, keyed on the pin's data-pin, not on its link) */
+.map-pin[data-pin="berlin-marathon"] { --x: var(--pin-berlin-marathon-x); --yf: var(--pin-berlin-marathon-yf); --dy: var(--pin-berlin-marathon-dy); }
+.map-pin[data-pin="hyrox-london"] { --x: var(--pin-hyrox-london-x); --yf: var(--pin-hyrox-london-yf); --dy: var(--pin-hyrox-london-dy); }
+.map-pin[data-pin="deka-strong-chicago"] { --x: var(--pin-deka-strong-chicago-x); --yf: var(--pin-deka-strong-chicago-yf); --dy: var(--pin-deka-strong-chicago-dy); }
+.map-pin[data-pin="spartan-beast-killington"] { --x: var(--pin-spartan-beast-killington-x); --yf: var(--pin-spartan-beast-killington-yf); --dy: var(--pin-spartan-beast-killington-dy); }
+.map-pin[data-pin="utmb"] { --x: var(--pin-utmb-x); --yf: var(--pin-utmb-yf); --dy: var(--pin-utmb-dy); }
+.map-pin[data-pin="boston-marathon"] { --x: var(--pin-boston-marathon-x); --yf: var(--pin-boston-marathon-yf); --dy: var(--pin-boston-marathon-dy); }
+.map-pin[data-pin="hyrox-dallas"] { --x: var(--pin-hyrox-dallas-x); --yf: var(--pin-hyrox-dallas-yf); --dy: var(--pin-hyrox-dallas-dy); }
+/* label above the dot: the leader runs down from the label's edge; below: up from it */
+.map-pin[data-pin="berlin-marathon"], .map-pin[data-pin="hyrox-london"], .map-pin[data-pin="deka-strong-chicago"], .map-pin[data-pin="spartan-beast-killington"] { --dy-abs: calc(var(--dy) * -1); }
+.map-pin[data-pin="utmb"], .map-pin[data-pin="boston-marathon"], .map-pin[data-pin="hyrox-dallas"] { --dy-abs: var(--dy); }
+.map-pin[data-pin="berlin-marathon"]::after, .map-pin[data-pin="hyrox-london"]::after, .map-pin[data-pin="deka-strong-chicago"]::after, .map-pin[data-pin="spartan-beast-killington"]::after { top: calc(50% + var(--pin-h) / 2); }
+.map-pin[data-pin="utmb"]::after, .map-pin[data-pin="boston-marathon"]::after, .map-pin[data-pin="hyrox-dallas"]::after { bottom: calc(50% + var(--pin-h) / 2); }

@@ -15,8 +15,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ICONS = os.path.join(HERE, 'icons')
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 KIT = open(os.path.join(ROOT, 'ui/kit.css')).read()
-# the tokens: every :root block of ui/kit.css (the reduced-motion one included) plus ui/map.css
-TOK = ''.join(re.findall(r':root\s*\{(.*?)\n\}', KIT, flags=re.S)) + open(os.path.join(ROOT, 'ui/map.css')).read()
+# the tokens: every :root block of ui/kit.css (the reduced-motion one included) and of ui/map.css
+TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', KIT + ''.join(open(os.path.join(ROOT, f)).read() for f in ('ui/map.css', 'concept/specimens.css', 'concept/stand.css')), flags=re.S))   # stand-only tokens live in specimens.css and stand.css since step 6, #41   # tokens only: map.css's per-pin rules (step 6) set local variables, not tokens
 
 def tok(name):
     m = re.search(r'--' + re.escape(name) + r':\s*([^;]+);', TOK)
@@ -30,7 +30,7 @@ def px(name):
     return f'{m.group(1)}px' if m else v
 
 def svg(name, cls='icon'):
-    s = open(f'{ICONS}/{name}-bold.svg').read().strip()
+    s = open(f'{ICONS}/{name}.svg' if name.endswith('-linear') else f'{ICONS}/{name}-bold.svg').read().strip()   # small UI glyphs are Solar Linear (step 6, #23)
     return s.replace('<svg ', f'<svg class="{cls}" aria-hidden="true" focusable="false" ', 1).replace(' width="1em" height="1em"', '')
 
 def sw(t): return f'<span class="swatch swatch--{t}"></span>'
@@ -136,11 +136,16 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Filters sheet · calendar glyph on the date pill (non-text, 3:1)', 'text-2', 'bg-2', 'ui'),
     ('Race browse · Sort button: the current order and its icon (G21)', 'text-1', 'bg-0', 'text'),
     ('Race picker · the linked race’s checkmark on its card (non-text, 3:1; G47)', 'control-tint', 'bg-1', 'ui'),
+    ('Log result · the linked race on the sheet: name, facts and Unlink (step 6, #8)', 'text-1', 'bg-3', 'text'),
+    ('Date pill · "Choose a date" when empty (step 6, #26)', 'text-2', 'bg-2', 'text'),
+    ('Date pill · the date (step 6, #26)', 'text-1', 'bg-2', 'text'),
+    ('Log result · the linked race on the sheet: "From the race catalog", the place (step 6, #8)', 'text-2', 'bg-3', 'text'),
+    ('Profile · an editable value in its row (step 6, #21)', 'text-1', 'bg-1', 'text'),
+    ('Result detail · Copy link under the official result link (step 6, #10)', 'text-1', 'bg-0', 'text'),
     ('Race browse · Sort button disabled while loading', 'text-disabled', 'bg-0', 'exempt'),
     ('Results list · Log result stepped down to Text 1 when a state brings its own primary (-error)', 'text-1', 'bg-0', 'text'),
     ('Kit · invalid field ring against the field (non-text, 3:1)', 'invalid', 'bg-1', 'ui'),
     ('Kit · invalid field ring against the page (non-text, 3:1)', 'invalid', 'bg-0', 'ui'),
-    ('Kit · Filters sheet field boundary against a field (non-text, 3:1)', 'field-line-sheet', 'bg-0', 'ui'),
     ('Results list · disclosure indicator on a row (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
     ('Pressed card or row: meta on the pressed level', 'text-2', 'bg-3', 'text'),
     ('Pressed race card: format chip label (the chip keeps bg-2)', 'chip-text', 'bg-2', 'text'),
@@ -171,7 +176,6 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Top bar · “Saving…” with its spinner', 'text-2', 'ground', 'text'),
     ('Filters sheet · heading, checkbox labels', 'text-1', 'sheet', 'text'),
     ('Filters sheet · field labels and legend', 'text-2', 'sheet', 'text'),
-    ('Filters sheet · field and checkbox boundary, outlined Cancel (non-text, 3:1)', 'field-line-sheet', 'sheet', 'ui'),
     ('Filters sheet · checked box, neutral tint (non-text, 3:1)', 'control-tint', 'sheet', 'ui'),
     ('Filters sheet · Apply filters, the sheet’s one primary, in its top bar (accent text; G12)', 'accent', 'sheet', 'text'),
     ('Collapsed title bar · Log result, Results list’s one primary (accent text; G5)', 'accent', 'ground', 'text'),
@@ -222,9 +226,9 @@ CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contr
 
 # cache-busting: stylesheet links carry a short hash of ui/kit.css + ui/map.css + concept/stand.css
 import hashlib
-CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css')).encode()).hexdigest()[:8]
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css')).encode()).hexdigest()[:8]
 def _stamp(path):
-    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|map|stand|specimens))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
+    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|map|stand|specimens|first-screen))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
     open(path, 'w').write(html)
 STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
 STAMPED += [f'wireframes/race-detail{x}.html' for x in ('', '-error', '-loading')]   # step 5, Discovery group (2026-10-22)
@@ -439,7 +443,6 @@ COLOR_ROWS = [
     ('bg-2', 'Raised', 'Secondary button, format chip, the date tile, segmented track, skeletons, disabled buttons.', 'Never for the primary action.', 'Hierarchy rule 3: secondary is tonal'),
     ('line', 'Line', 'Hairline dividers.', 'Not as a boundary someone must see (fields use Field line), not as a frame around every card.', 'Attribute a: the frame stays quiet'),
     ('field-line', 'Field line', 'The boundary of the search field and other inputs.', 'Not on cards or chips.', 'WCAG 1.4.11: an input boundary needs 3:1 (critique fix)'),
-    ('field-line-sheet', 'Field line on the sheet', 'Boundaries on the Filters sheet: its fields, checkboxes, the outlined Cancel, the grabber.', 'Off the sheet (Field line serves there).', 'WCAG 1.4.11 on the glass sheet: Field line is 2.6:1 there, this is 3:1 against the sheet’s worst case (step 3b)'),
     ('control-tint', 'Control tint', 'Checked boxes and checkmarks, switches, and the tint of system-drawn controls (<code>accent-color</code>).', 'Never amber, never green.', 'C4 (designer, 2026-10-18): control tint is neutral · Color rule 1'),
     ('invalid', 'Invalid', 'The 2px ring inside a field that failed (= Error).', 'Never on a focused-only field: focus is the white ring outside.', 'Kit feedback (designer, 2026-10-19): invalid and focus never look alike'),
     ('destructive', 'Destructive', 'The text of a destructive action in an alert: Sign out (= Error).', 'Not on Cancel, not as a fill.', 'Kit feedback (designer, 2026-10-19), HIG Alerts: a destructive button uses the destructive style'),
@@ -465,6 +468,7 @@ COLOR_TABLE = wrap('Color tokens', f'<table class="spec"><thead><tr><th>Token</t
 TYPE_ROWS = [
     ('size-title', 'display', 'Discover', 'Screen title (level 1) · HIG Large Title', 'Hierarchy rule 4 · Taste: Nike Run Club, bold but refined · C3: 38 → 34 (designer, 2026-10-18)'),
     ('size-time', 'display', '1:18:42', 'Finish time, the loudest thing on the row', 'Attribute a · Hierarchy rule 5'),
+    ('size-time-hero', 'display', '1:18:42', 'The finish time leading Result detail, the largest thing on the screen', 'Attribute a: the time is what the screen proves (designer, step 6, #11)'),
     ('size-day', 'display', '27', 'Date day, the first thing read on a race card', 'Attribute b: a calendar, not a poster'),
     ('size-item', 'text-strong', 'HYROX London', 'Item title (level 2): race name', 'Hierarchy rule 4'),
     ('size-body', 'text', 'Registration and payment happen on hyrox.com.', 'Body text, primary and secondary buttons, search', 'Voice principle 3: plain words'),
@@ -472,7 +476,7 @@ TYPE_ROWS = [
     ('size-proof', 'text-2', 'Self-reported · via results.hyrox.com', 'Proof line, month and year under the day', 'Attribute d: proof stated, not stamped'),
     ('size-label', 'label', 'Half marathon', 'Format chip (uppercase by CSS), tab label', 'Decision A: markup keeps the name, CSS uppercases'),
 ]
-TYPE_CLASS = {'size-title': 'type-sample--display type-sample--title', 'size-time': 'type-sample--display type-sample--time',
+TYPE_CLASS = {'size-title': 'type-sample--display type-sample--title', 'size-time': 'type-sample--display type-sample--time', 'size-time-hero': 'type-sample--display type-sample--time-hero',
               'size-day': 'type-sample--display type-sample--day', 'size-item': 'type-sample--item', 'size-body': 'type-sample--body',
               'size-meta': 'type-sample--meta', 'size-proof': 'type-sample--proof'}
 def type_sample(kind, text, t):
@@ -529,6 +533,13 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('safe-top', 'Top safe area (status bar, Dynamic Island)', 'env(safe-area-inset-top), 0 inside the viewer', 'G6: respect the top safe area'),
            ('safe-bottom', 'Home-indicator inset under the tab bar and the sheet’s buttons', 'env(safe-area-inset-bottom), 0 inside the viewer', 'G2: buttons stay above the home indicator'),
            ('sheet-gap-top', 'Filters sheet: space left above the large detent', f'12px below the top safe area · {P}', 'G13: the sheet rests at its detent'),
+           ('z-under', 'Stacking: behind its own box (the map\'s land and borders)', 'Lowest of the stacking scale', 'Step 6, #37: one scale, no bare z-index in a class'),
+           ('z-lift', 'Stacking: above its siblings (map contents, bar buttons over the title)', 'One step up', 'Step 6, #37'),
+           ('z-float', 'Stacking: the sticky top bar, map pins', 'Floats over content', 'Step 6, #37'),
+           ('z-bar', 'Stacking: tab bar, action bar, a tab screen\'s top bar, a gate\'s bar', 'Bars over the page', 'Step 6, #37'),
+           ('z-edge', 'Stacking: the status-bar scroll edge', 'Over every bar', 'Step 6, #37'),
+           ('z-scrim', 'Stacking: the dimming layer under a sheet', 'Under the sheet, over the bars', 'Step 6, #37'),
+           ('z-sheet', 'Stacking: sheets, alerts, action sheets', 'Highest', 'Step 6, #37'),
            ('sheet-large', 'Filters sheet height: the large detent only', 'Full height less the top safe area and the gap', 'G13 · designer, 2026-10-19: large detent only'),
            ('glass-opacity', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge)', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
            ('glass-opacity-sheet', 'Glass fill on the Filters sheet', f'Lowest that passes AA over the scrim and the worst case: {GLASS_MIN["sheet"]}%; set with margin · {P}', 'C1, C4: the sheet on the raised level'),
@@ -598,18 +609,18 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 
 # ---------------------------------------------------------------- icons
 ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not built yet), use, status
-    ('Top bar · back', 'alt-arrow-left', 'icon-back', 'Before the parent screen’s name in a grayscale screen’s top bar (‹ Discover, ‹ Results, ‹ Sign in); replaces the wireframe’s drawn chevron (kit, 2026-10-18).', 'in kit'),
-    ('Result row · disclosure', 'alt-arrow-right', 'icon-disclosure', 'At the trailing edge of a result row, which drills into Result detail (G22, step 3b). Race cards are a collection, so none there.', 'in use'),
+    ('Top bar · back', 'alt-arrow-left-linear', 'icon-back', 'Before the parent screen’s name in a top bar (‹ Discover, ‹ Results, ‹ Log result). Linear, a designer exception for small UI glyphs (step 6, #23).', 'in use'),
+    ('Result row · disclosure', 'alt-arrow-right-linear', 'icon-disclosure', 'At the trailing edge of a result row and a navigation row, which drill in (G22, step 3b). Race cards are a collection, so none there. Linear (step 6, #23).', 'in use'),
     ('Tab bar', 'compass', 'icon-compass', 'Discover', 'in use'), ('Tab bar', 'stopwatch', 'icon-stopwatch', 'Results', 'in use'), ('Tab bar', 'user', 'icon-user', 'Profile', 'in use'),
-    ('Filters sheet · date fields', 'calendar', 'icon-calendar', 'Replaces the browser’s calendar glyph in the From and To date fields (step 7). In the race card the date column itself is the cue, so no icon there.', 'in use'),
+    ('Date pills', None, None, 'No glyph: the formatted value on the pill is the cue, as iOS’s compact date picker (step 6, #26; the Solar calendar it used is gone).', 'none'),
     ('Card meta · location', 'map-point', 'icon-pin', 'Before the city on every race card (CSS mask, no markup change).', 'in use'),
     ('Format chip', None, None, 'No icon and no dot: the same neutral chip for every format (dot option dropped 2026-10-13).', 'none'),
     ('Proof line', 'link-round', 'icon-link', 'One link icon before "Self-reported · via …" (Hierarchy rule 6).', 'in use'),
-    ('Search field', 'magnifer', 'icon-search', 'Inside the field, Text 2.', 'in use'),
+    ('Search field', 'magnifer-linear', 'icon-search-field', 'Inside the field, Text 2. Linear (step 6, #23).', 'in use'),
     ('Button · primary', 'add-circle', None, 'Log result.', 'in use'),
     ('Button · external', 'arrow-right-up', None, 'Register on &lt;domain&gt;, Open official result: the arrow says it leaves Onrace (voice principle 2).', 'in use'),
     ('Button · secondary', 'tuning-2', 'icon-filters', 'Filters, before the label (CSS mask, no markup change).', 'in use'),
-    ('Sort, sheet selects', 'alt-arrow-down', 'icon-chevron', 'After the sort value and in the sheet’s Region select (CSS mask).', 'in use'),
+    ('Pop-up rows', 'alt-arrow-down-linear', 'icon-chevron', 'After the value of a row that opens a menu (Region, Sport type, Country, Language; G65). Linear (step 6, #23).', 'in use'),
     ('Filters sheet · checkbox', 'check', 'icon-check', 'The tick in a checked sport type, on Text 1 (neutral, never the accent).', 'in use'),
     ('Filter chip · remove', 'close-circle', 'icon-close', 'Drawn by CSS over the chip’s text "×" (step 7); the text stays in the markup, aria-hidden, until Lesson 7.', 'in use'),
     ('State · empty, Race browse', 'magnifer', 'icon-search', 'On top of the empty state (“No races match…”), 48px, Text 2: iOS’s own search-unavailable pattern (designer, 2026-10-19: ContentUnavailableView).', 'in use'),
@@ -903,6 +914,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-markup-2'), os.path.join(ROOT, 'pu
 shutil.copyfile(os.path.join(ROOT, 'ui/review-markup-2.html'), os.path.join(ROOT, 'public/ui/review-markup-2.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-overflow'), os.path.join(ROOT, 'public/ui/review-overflow'), dirs_exist_ok=True)   # overflow fix before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-overflow.html'), os.path.join(ROOT, 'public/ui/review-overflow.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-step6'), os.path.join(ROOT, 'public/ui/review-step6'), dirs_exist_ok=True)   # step 6 critique fixes before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-step6.html'), os.path.join(ROOT, 'public/ui/review-step6.html'))
 import glob
 # the wireframes' published docs: the rulebooks and notes (wireframes/*.md: _conventions.md, _screens.md, _critique.md,
 # README.md) and the viewer's index.html, so an edit needs no manual copy. The frozen _wireframe/ snapshot is never

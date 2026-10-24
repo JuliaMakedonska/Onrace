@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=1b2fadee">
+<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Result detail (wireframe)">
 
@@ -52,7 +52,8 @@
         </dl>
         <section class="proof" aria-labelledby="proof-deka-strong-chicago-2026">
           <h2 id="proof-deka-strong-chicago-2026">Official result link</h2>
-          <p class="proof-url">https://www.athlinks.com/event/deka-strong-chicago-2026/results</p>
+          <p class="proof-url">https:/<wbr>/<wbr>www.<wbr>athlinks.<wbr>com/<wbr>event/<wbr>deka-<wbr>strong-<wbr>chicago-<wbr>2026/<wbr>results</p>
+          <button type="button" class="copy-link" data-copy aria-live="polite">Copy link</button>
           <p class="proof-label">Self-reported · via athlinks.com</p>
           <p class="proof-note">Onrace doesn’t verify results. The official result is the evidence.</p>
         </section>
@@ -68,7 +69,8 @@
         </dl>
         <section class="proof" aria-labelledby="proof-hyrox-london-2025">
           <h2 id="proof-hyrox-london-2025">Official result link</h2>
-          <p class="proof-url">https://results.hyrox.com/season-8/london</p>
+          <p class="proof-url">https:/<wbr>/<wbr>results.<wbr>hyrox.<wbr>com/<wbr>season-<wbr>8/<wbr>london</p>
+          <button type="button" class="copy-link" data-copy aria-live="polite">Copy link</button>
           <p class="proof-label">Self-reported · via results.hyrox.com</p>
           <p class="proof-note">Onrace doesn’t verify results. The official result is the evidence.</p>
         </section>
@@ -84,7 +86,8 @@
         </dl>
         <section class="proof" aria-labelledby="proof-valencia-half-2025">
           <h2 id="proof-valencia-half-2025">Official result link</h2>
-          <p class="proof-url">https://www.valenciaciudaddelrunning.com/en/half/results-2025/</p>
+          <p class="proof-url">https:/<wbr>/<wbr>www.<wbr>valenciaciudaddelrunning.<wbr>com/<wbr>en/<wbr>half/<wbr>results-<wbr>2025/</p>
+          <button type="button" class="copy-link" data-copy aria-live="polite">Copy link</button>
           <p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p>
           <p class="proof-note">Onrace doesn’t verify results. The official result is the evidence.</p>
         </section>
@@ -100,7 +103,8 @@
         </dl>
         <section class="proof" aria-labelledby="proof-berlin-marathon-2025">
           <h2 id="proof-berlin-marathon-2025">Official result link</h2>
-          <p class="proof-url">https://berlin.r.mikatiming.com/2025/</p>
+          <p class="proof-url">https:/<wbr>/<wbr>berlin.<wbr>r.<wbr>mikatiming.<wbr>com/<wbr>2025/</p>
+          <button type="button" class="copy-link" data-copy aria-live="polite">Copy link</button>
           <p class="proof-label">Self-reported · via berlin.r.mikatiming.com</p>
           <p class="proof-note">Onrace doesn’t verify results. The official result is the evidence.</p>
         </section>
@@ -172,6 +176,17 @@
   var bar = document.querySelector('.top-bar[data-collapse]');
   var screen = document.querySelector('.phone-screen');
   if (!bar || !screen || !('IntersectionObserver' in window)) return;
+  if (!bar.classList.contains('top-bar--large')) {   // a drill-down's bars at the scroll edge (step 6, #27): glass only once content runs under them
+    var actionBars = screen.querySelectorAll('.action-bar');   // one per race or result; the shown one counts
+    var edges = function () {
+      bar.classList.toggle('is-scrolled', screen.scrollTop > 0);
+      var atEnd = screen.scrollTop + screen.clientHeight >= screen.scrollHeight - 1;
+      actionBars.forEach(function (ab) { ab.classList.toggle('is-at-end', atEnd); });
+    };
+    screen.addEventListener('scroll', edges, { passive: true });
+    window.addEventListener('resize', edges);
+    edges();
+  }
   var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
   if (!h1) return;
   var title = bar.querySelector('.bar-title');
@@ -183,5 +198,21 @@
 })();
 </script>
 
+<script>
+/* Copy link (step 6, #10): the official result link to the clipboard, so it can be pasted into a browser when it
+   won't open; the button says "Link copied" for a moment (voice.md → Success: the fact, no celebration). */
+(function () {
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var url = btn.closest('.proof').querySelector('.proof-url').textContent.trim();
+      var done = function () {
+        btn.textContent = 'Link copied';
+        setTimeout(function () { btn.textContent = 'Copy link'; }, 2000);
+      };
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
+    });
+  });
+})();
+</script>
 </body>
 </html>
