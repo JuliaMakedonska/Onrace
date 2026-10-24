@@ -339,8 +339,8 @@ Apostrophes (**C3**): 13 lines use curly ’, 32 use straight '. Only the curly 
 | 262 |Log result|top bar|Saving your result…| unchanged | Checked against voice.md; already follows it |status (a11y / live)|loading|UI copy||
 | 263 |Log result|(page)|Onrace — Log result (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|base|wireframe annotation|P1|
 | 264 |Race picker|(page)|Onrace — Race picker, empty state (wireframe)| unchanged | Wireframe scaffolding (P1), not product copy |a11y label|empty|wireframe annotation|P1|
-| 265 |Race picker|modal top bar|Cancel| unchanged | Checked against voice.md; already follows it |button (nav)|empty; error; loading; base|UI copy|A3|
-| 266 |Race picker|modal top bar|Find a race| unchanged | Checked against voice.md; already follows it |heading|empty; error; loading; base|UI copy||
+| 265 |Race picker|top bar|Cancel| **Log result** (back button, "‹ Log result") | Race picker is a pushed screen inside Log result's navigation (designer, 2026-10-24): the back button names the screen it returns to (A4); no Cancel |button (nav)|empty; error; loading; base|UI copy|A3|
+| 266 |Race picker|top bar|Find a race| unchanged | Checked against voice.md; already follows it |heading|empty; error; loading; base|UI copy||
 | 267 |Race picker|search|Search past races by name or city| **Search races by name or city** | Dictionary (search): the same label as Race browse, same search over the same catalog |field label|empty; error; loading; base|UI copy||
 | 268 |Race picker|search|Race name or city| unchanged | Checked against voice.md; already follows it |field placeholder|empty; error; loading; base|UI copy||
 | 269 |Race picker|empty state|No catalog race matches “<search text>”| **No past races match “<search text>”** | T4 ("catalog race" isn't used); same sentence shape as Race browse's "No races match “…”" (mismatch #3); "past" because the picker lists only past races |heading|empty|UI copy|T4|

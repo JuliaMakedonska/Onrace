@@ -7,20 +7,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=7b80f7ea">
+<link rel="stylesheet" href="../ui/kit.css?v=bf5413b4">
 </head>
 <body class="onrace" role="application" aria-label="Onrace — Race picker, error state (wireframe)">
 
-  <div class="sheet">
+  <div class="phone-screen">
 
-    <!-- ZONE: modal top bar — Cancel + title (_conventions.md § 1,
-         "Pickers are modal sheets"; _screens.md → Race picker → Chrome).
-         Cancel is flows.md's Picker → "cancels — form unchanged" → LogForm:
-         it returns to log-result.html with every carried value, catalog=
-         included if a race was already linked, so the form is exactly as it
-         was. Here it is also Retry → no, like "Type it in instead". No Save: selecting a row is the action. No tab bar. -->
+    <!-- ZONE: top bar — a pushed screen inside Log result's navigation, as picking a value in iOS Settings
+         (designer, 2026-10-24; it was a modal sheet with Cancel): "‹ Log result" on the left goes back with
+         every carried value, catalog= included if a race was already linked, so the form is exactly as it was
+         (flows.md: Picker → "goes back — form unchanged" → LogForm). The title in the middle. No Save:
+         selecting a row is the action, and it goes back to Log result with the race filled in. No tab bar. -->
     <header class="top-bar">
-      <a class="cancel" href="log-result.html" data-back-to-form>Cancel</a>
+      <a href="log-result.html" data-back-to-form><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log result</span></a>
       <h1 class="bar-title">Find a race</h1>
     </header>
 
@@ -43,8 +42,7 @@
       <input type="hidden" name="catalog">
     </form>
 
-    <div class="phone-screen">
-
+    
       <!-- ZONE: error state — replaces the race rows (_screens.md → Race
            picker → Error; flows.md: PickerLoading → "connection fails" →
            PickerError, "could not load the race catalog" → PickerRetry).
@@ -52,7 +50,7 @@
            the same q and carried values. "Type it in instead" is Retry →
            no — not a dead end, because the form works without a catalog
            link (flows.md decisions): back to log-result.html with every
-           carried value. Cancel in the bar does the same. -->
+           carried value. "‹ Log result" in the bar does the same. -->
       <main>
         <div class="state-message" role="alert">
           <h2>Couldn’t load the race catalog</h2>
@@ -64,9 +62,8 @@
         </div>
       </main>
 
-    </div><!-- /.phone-screen -->
 
-  </div><!-- /.sheet -->
+  </div><!-- /.phone-screen -->
 
 <script>
 /* The Race picker's sample catalog (_screens.md → Race picker → Sample
@@ -121,7 +118,7 @@ var CATALOG = [
     return r.name.toLowerCase().indexOf(needle) > -1 || r.city.toLowerCase().indexOf(needle) > -1;
   }
 
-  // Cancel, and "Type it in instead": back to the form, values intact.
+  // "‹ Log result", and "Type it in instead": back to the form, values intact.
   document.querySelectorAll('[data-back-to-form]').forEach(function (a) {
     a.href = url('log-result.html', carried());
   });

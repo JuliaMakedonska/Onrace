@@ -278,8 +278,6 @@
 /* secondary: tonal (Filters, Clear all filters on an empty state) */
 .filters-trigger, .state-action.secondary { background: var(--bg-2); color: var(--text-1); }
 .filters-trigger:hover, .state-action.secondary:hover { background: var(--bg-3); }
-.sheet .state-action.secondary { background: transparent; box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet); }   /* on the bg-2 sheet (Race picker) a tonal button would vanish: outlined, as the Filters sheet's Cancel (C4) */
-.sheet .state-action.secondary:hover { background: var(--bg-3); }
 
 /* tertiary: text link (Clear all filters in the chips row, Cancel) */
 .clear-all {
@@ -367,10 +365,9 @@
 .chip::after, .clear-all::after { content: ""; position: absolute; inset: var(--tap-pad) 0; } /* 44px tap area */
 
 /* ---------- search field ---------- */
-.race-search, .sheet > form.search { position: relative; }
-.sheet > form.search { flex: none; padding: var(--space-3) 0; }
-body > .sheet:has(> .phone-screen) > form.search { padding-inline: var(--space-4); }   /* Race picker: the screen's sheet has no padding of its own, so the search takes the gutter */
-.race-search::before, .sheet > form.search::before {
+.race-search, .phone-screen > form.search { position: relative; }
+.phone-screen > form.search { padding: var(--space-3) var(--space-4); }   /* Race picker: under its top bar, the gutter its own */
+.race-search::before, .phone-screen > form.search::before {
   content: "";
   position: absolute;
   left: var(--space-4);
@@ -383,8 +380,8 @@ body > .sheet:has(> .phone-screen) > form.search { padding-inline: var(--space-4
   mask: var(--icon-search) center / contain no-repeat;
   pointer-events: none;
 }
-body > .sheet:has(> .phone-screen) > form.search::before { left: calc(var(--space-4) * 2); }
-.race-search input, .sheet > form.search input[type="search"] {
+.phone-screen > form.search::before { left: calc(var(--space-4) * 2); }
+.race-search input, .phone-screen > form.search input[type="search"] {
   width: 100%;
   min-height: var(--target);
   padding: 0 var(--space-4) 0 calc(var(--space-4) + var(--icon-m) + var(--space-2));
@@ -398,11 +395,10 @@ body > .sheet:has(> .phone-screen) > form.search::before { left: calc(var(--spac
   -webkit-appearance: none;
   appearance: none;
 }
-.sheet > form.search input[type="search"] { display: block; box-shadow: inset 0 0 0 var(--border) var(--field-line-sheet); }   /* on the sheet: its boundary token (C4) */
-.race-search input::placeholder, .sheet > form.search input[type="search"]::placeholder { color: var(--text-2); opacity: 1; }
-.race-search input:hover, .sheet > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
-.race-search input:focus-visible, .sheet > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
-.race-search input::-webkit-search-cancel-button, .sheet > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
+.race-search input::placeholder, .phone-screen > form.search input[type="search"]::placeholder { color: var(--text-2); opacity: 1; }
+.race-search input:hover, .phone-screen > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
+.race-search input:focus-visible, .phone-screen > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+.race-search input::-webkit-search-cancel-button, .phone-screen > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
 
 /* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
 .race-card {
@@ -666,7 +662,8 @@ body > .sheet:has(> .phone-screen) > form.search::before { left: calc(var(--spac
 #list-view:has(> .state-message) { flex: 1; display: flex; flex-direction: column; justify-content: center; }   /* below the header, above the floating tab bar */
 .phone-screen main > section:not([hidden]):has(> .state-message:only-child) { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-inline: var(--space-4); }   /* Profile -error: the state inside its section */
 .phone-screen main > .state-message { flex: 1; align-content: center; padding-inline: var(--space-4); }   /* a drill-down: under the top bar */
-.sheet > .phone-screen > main > .state-message { padding-inline: 0; }   /* on the Race picker sheet: main already has the gutter */
+.phone-screen > form.search ~ main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }   /* Race picker: the list under the search takes the gutter */
+.phone-screen > form.search ~ main > .state-message { padding-inline: 0; }   /* main already has it */
 .gate > .state-msg { flex: 1; align-content: center; }   /* a gate with no form (New password -error?cause=expired) */
 .state-msg .submit-btn { width: auto; margin-top: var(--space-2); }   /* a state's action is sized to its label, like .state-action */
 .state-message :is(h1, h2), .state-msg h2 {
@@ -739,9 +736,6 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 .race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
 .race-card:has(.card-link:active), .race-card.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
-.sheet .race-card, .sheet .skeleton-card { background: var(--bg-3); box-shadow: inset 0 0 0 var(--border) var(--line); }   /* designer, 2026-10-23: one level above the sheet (bg-2 glass) and a hairline in Line, so the cards separate; decorative, not a boundary */
-.sheet .race-card:has(.card-link:active), .sheet .race-card.is-pressed { background: var(--bg-3); }   /* pressed can't go a level higher: it keeps the level and takes the ring */
-.sheet .race-card:has(.card-link:active) .card-link::after, .sheet .race-card.is-pressed .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--text-2); }
 .race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-m) + var(--space-3)); }   /* G47: room for the checkmark */
 .race-card:has(.card-link[aria-current="true"])::after {   /* G47: the linked race in Race picker, the filter rows' neutral checkmark (C4) */
   content: "";
@@ -942,8 +936,8 @@ body > .bottom-nav:not(.fs-tabbar) a::before {
   transition: transform var(--dur-sheet) var(--ease-out);
 }
 .sheet.open { transform: translateY(0); }
-/* Race picker: the sheet is the whole screen, resting at the large detent (G13) over Log result, which has receded
-   under the scrim; its top bar spans it, and only the list scrolls */
+/* Log result (round 2, G40): the sheet is the whole screen, resting at the large detent (G13) over Results, which has
+   receded under the scrim; its top bar spans it, and only its form scrolls */
 html:has(body > .sheet > .phone-screen) { height: 100%; }
 body:has(> .sheet > .phone-screen) { height: 100%; margin: 0 auto; max-width: var(--screen-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--bg-0); }
 body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
@@ -1090,8 +1084,8 @@ a.row--nav[href]:hover { background: var(--bg-2); }
    edge and the page, which starts below it, scrolls under its glass (C1) */
 body > .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
 body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--safe-top) + var(--border)); }   /* 44pt, the top safe area, the rim */
-/* on a sheet (Race picker) the bar spans the sheet: no safe area above it and nothing scrolls under it, so it is the
-   sheet's own glass, not a second layer */
+/* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,
+   so it is the sheet's own glass, not a second layer */
 .sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 
 /* ---------- detail screens (Race detail, Result detail) ---------- */
@@ -1288,7 +1282,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .linked-fact.place { color: var(--text-2); }
 .linked-race .unlink-btn { margin-top: var(--space-2); }
 
-/* ---------- Race picker: the list intro (the sheet, its top bar, search and cards are with their components) ---------- */
+/* ---------- Race picker: the list intro (a pushed screen since 2026-10-24; its top bar, search and cards are with their components) ---------- */
 .list-intro { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-2); }
 
 /* ---------- gates: Sign in / Sign up, Reset password, New password ---------- */

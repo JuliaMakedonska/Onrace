@@ -357,7 +357,7 @@ So the real cost is exactly **one extra tap from anywhere outside Results** — 
 - **Contextual (appears in-flow, reached by drilling into something, not from the nav bar):**
   - **Race detail** — opened from within Race browse (tap a card/pin); no independent entry point.
   - **Log result** — opened from within Results via the Log result action above; no longer a global destination of its own.
-  - **Race picker** — opened from within Log result ("Find in race catalog"), as a modal sheet; no independent entry point. Added 2026-09-25.
+  - **Race picker** — opened from within Log result ("Find in race catalog"), pushed inside Log result's navigation ("‹ Log result" back; a modal sheet until 2026-10-24, designer); no independent entry point. Added 2026-09-25.
   - **Result detail (proof view)** — opened from within Results (tap a logged entry); Secondary–Archivist only, per Step 2's persona note.
   - *(Profile was briefly contextual, via an account button in Results; since 2026-09-25 it's a global tab. See § 1.)*
   - **Reset password** — opened from Sign in's "Forgot password?" link only; a drill-down inside the Sign in modal. Added 2026-09-25.

@@ -1,5 +1,7 @@
 # User flows
 
+**Revised 2026-10-24 (designer):** Race picker is a screen pushed inside Log result's navigation, not a modal sheet: its way out is "‹ Log result" (the flow edge "cancels — form unchanged" now reads "goes back — form unchanged"); picking a race still returns to the form with it filled in.
+
 **Renamed 2026-10-23 (markup pass, designer):** the tab and screen called "My Results" are now "Results" (one word on the tab, HIG Tab bars). This file says "Results" throughout, history notes included.
 
 Built from `sitemap.md` (Screens + Navigation sections) and `research/jtbd.md`. Every screen node below exists in `sitemap.md`. Screens added back to the sitemap while drawing: **Race picker** (2026-09-25, Flow 2's catalog branch), and **Reset password** and **New password** (2026-09-25, Flow 6). That follows the working method's rule that a flow may only use screens the sitemap names.
@@ -79,7 +81,7 @@ Building `wireframes/race-detail-error.html` showed that Flow 1's registration-l
 ---
 ## Revision note (catalog link, email confirmation, sign-out, honest link checks; 2026-09-25)
 
-1. **Flow 2 gets the catalog branch.** Log result can now optionally link a race from Onrace's catalog (`sitemap.md` → Entities → 3, "optional link to a Race listing", which was never wired up). A new screen, **Race picker**, searches the catalog's *past* races. It has its own loading, empty (no match) and error states. Picking a race fills race name, date and sport type from the listing and locks them; cancelling or giving up returns to the form with nothing changed, where the race can still be typed in by hand. So the catalog is a shortcut, never a requirement.
+1. **Flow 2 gets the catalog branch.** Log result can now optionally link a race from Onrace's catalog (`sitemap.md` → Entities → 3, "optional link to a Race listing", which was never wired up). A new screen, **Race picker**, searches the catalog's *past* races. It has its own loading, empty (no match) and error states. Picking a race fills race name, date and sport type from the listing and locks them; going back or giving up returns to the form with nothing changed, where the race can still be typed in by hand. So the catalog is a shortcut, never a requirement.
 2. **Sign-up is its own flow (Flow 4), with email confirmation.** Onrace uses Supabase Auth's email + password with **Confirm email** left on (its default): after "Create account" nobody is signed in yet. They get a "check your inbox" step, and only opening the emailed link signs them in. Flows 2 and 3 reference Flow 4 (`[[...]]`) from their Sign in / Sign up node instead of redrawing it. Signing in with an unconfirmed email also routes to "check your inbox" (Supabase's "Email not confirmed" error).
 3. **Profile and sign-out get a flow (Flow 5).** It covers fetching the profile (loading and error), saving a changed field (it saves as it changes, and can fail), and sign-out behind a confirm dialog. Sign-out has no loading or error branch on purpose: it signs out *this device* (Supabase `signOut({ scope: 'local' })`), which clears the local session without a network call and so can't fail.
 4. **Link checks say only what a browser can know.** Flow 3's "Source link still opens?" is now "Official result opens in a new tab?" (well-formed URL, new tab not blocked), the same rewording Flow 1 got on 2026-09-24. `LinkError` is now "couldn't open the source link". Flow 2's `SubmitError` was "link unreachable": Onrace's stack is client-side only (no custom server, `../CLAUDE.md`), so it can't fetch arbitrary timing sites to check them. It's now "couldn't save the result".
@@ -192,7 +194,7 @@ flowchart TD
     PickerEmpty -->|"types the race in instead"| LogForm
     PickerMatches -->|"yes"| Picker
     Picker -->|"selects a race — race name, date, sport type filled and locked"| LogForm
-    Picker -->|"cancels — form unchanged"| LogForm
+    Picker -->|"goes back — form unchanged"| LogForm
     LogForm -->|"taps Save"| HasLink{"official_result_url filled in?"}
     HasLink -->|"no"| ValidationError("Error: source link is required")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}

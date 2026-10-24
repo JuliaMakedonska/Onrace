@@ -246,6 +246,7 @@
 
 
 
+
   /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
   .lessonbar{border-bottom:1px solid var(--border)}
   .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
@@ -396,7 +397,7 @@
           <span class="jobtag jr3">Related 3 · Log</span>
         </div>
         <p class="states">A shortcut within logging: link the result to the catalog edition actually run, so its facts aren't retyped from memory. Object: Race listing (read-only, <strong style="color:var(--text)">past editions only</strong> — past listings stay in the catalog, one row per edition).</p>
-        <p class="states">Entry: contextual, a modal sheet opened from Log result only (3 taps + search from launch; typing the race in stays 2).</p>
+        <p class="states">Entry: contextual, a screen pushed inside Log result's navigation ("‹ Log result"; a modal sheet until 2026-10-24), opened from Log result only (3 taps + search from launch; typing the race in stays 2).</p>
         <p class="states">States: loading · no catalog race matches · catalog failed to load. Every exit that isn't a pick returns to the form.</p>
       </div>
 
@@ -579,7 +580,7 @@ flowchart TD
     PickerEmpty -->|"types the race in instead"| LogForm
     PickerMatches -->|"yes"| Picker
     Picker -->|"selects a race — race name, date, sport type filled and locked"| LogForm
-    Picker -->|"cancels — form unchanged"| LogForm
+    Picker -->|"goes back — form unchanged"| LogForm
     LogForm -->|"taps Save"| HasLink{"official_result_url filled in?"}
     HasLink -->|"no"| ValidationError("Error: source link is required")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}

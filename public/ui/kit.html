@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=7b80f7ea">
-<link rel="stylesheet" href="map.css?v=7b80f7ea">
+<link rel="stylesheet" href="kit.css?v=bf5413b4">
+<link rel="stylesheet" href="map.css?v=bf5413b4">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -90,8 +90,14 @@
         <div class="kit-state"><p class="kit-label">Saving, with the spinner (log-result-loading)</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-busy="true" aria-disabled="true">Saving…</button></header></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Cancel and title (Sign in / Sign up; Race picker: Find a race)</p>
+        <div class="kit-state"><p class="kit-label">Cancel and title (Sign in / Sign up)</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Sign in</h1></header></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Back and title on a pushed screen: Race picker inside Log result (2026-10-24)</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log result</span></a><h1 class="bar-title">Find a race</h1></header><form class="search" role="search" onsubmit="return false;"><label for="k-pq" class="visually-hidden">Search races by name or city</label><input type="search" id="k-pq" placeholder="Race name or city" enterkeyhint="search" autocomplete="off"></form><main><p class="list-intro">Past races in the race catalog</p><ul class="race-list" aria-label="Past races in the race catalog">
+                <li><article class="race-card"><a class="card-link" href="#"><h4>UTMB — Ultra-Trail du Mont-Blanc</h4><p class="card-meta"><span class="sport-tag">Ultra</span> <time datetime="2026-08-28"><span class="day">28</span> Aug 2026</time></p><p class="card-location">Chamonix, France</p></a></article></li>
+                <li><article class="race-card"><a class="card-link" href="#"><h4>Boston Marathon</h4><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-04-20"><span class="day">20</span> Apr 2026</time></p><p class="card-location">Boston, USA</p></a></article></li>
+              </ul></main></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Back and title (Reset password, New password)</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sign in</span></a><h1 class="bar-title">Reset password</h1></header></div>
@@ -104,7 +110,7 @@
 
     <div class="kit-item" id="search">
       <h3>Search field</h3>
-      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>), Race picker (<code>form.search</code>). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). A bar control, so a full capsule (C7, designer 2026-10-19).</p>
+      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>, in the header), Race picker (<code>form.search</code>, under its top bar, with the page gutter). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). A bar control, so a full capsule (C7, designer 2026-10-19).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Empty, placeholder</p>
           <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q1">Search races by name or city</label><input type="search" id="k-q1" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div>
@@ -247,7 +253,7 @@
 
     <div class="kit-item" id="sheet">
       <h3>Modal sheet</h3>
-      <p><code>.sheet</code> · the Filters sheet on Race browse, and Race picker, a whole screen in a sheet over Log result. Markup pass (2026-10-23): the Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge (G12); its options are grouped rows on the level above the sheet (G20): Region a native menu showing its value (G17), the race dates native compact pickers on a pill (G18), sport types rows with a neutral checkmark at the trailing edge (G19, C4). No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters (G32). A native sheet: glass on the raised level (C1, C4), the system sheet radius (G16, provisional [?]), resting at the large detent only (G13). Boundaries on it use Field line on the sheet.</p>
+      <p><code>.sheet</code> · the Filters sheet on Race browse, and Log result, a whole screen in a sheet over Results (round 2). Race picker is not a sheet since 2026-10-24: it's pushed inside Log result's navigation (see Top bar). Markup pass (2026-10-23): the Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge (G12); its options are grouped rows on the level above the sheet (G20): Region a native menu showing its value (G17), the race dates native compact pickers on a pill (G18), sport types rows with a neutral checkmark at the trailing edge (G19, C4). No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters (G32). A native sheet: glass on the raised level (C1, C4), the system sheet radius (G16, provisional [?]), resting at the large detent only (G13). Boundaries on it use Field line on the sheet.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Filters sheet, open</p>
           <div class="kit-frame kit-stage">
@@ -273,19 +279,6 @@
             </div>
           </div>
         </div>
-        <div class="kit-state"><p class="kit-label">Race picker, a sheet over Log result</p>
-          <div class="kit-frame kit-stage">
-            <div class="sheet-backdrop open"></div>
-            <div class="sheet open" role="dialog" aria-modal="false" aria-labelledby="k-picker-h">
-              <header class="top-bar"><a class="cancel" href="#">Cancel</a><h1 class="bar-title" id="k-picker-h">Find a race</h1></header>
-              <form class="search race-search" role="search" onsubmit="return false;"><label for="k-pq" class="visually-hidden">Search races by name or city</label><input type="search" id="k-pq" placeholder="Race name or city" enterkeyhint="search" autocomplete="off"></form>
-              <p class="list-intro">Past races in the race catalog</p>
-              <ul class="race-list" aria-label="Past races in the race catalog">
-                <li><article class="race-card"><a class="card-link" href="#"><h4>UTMB — Ultra-Trail du Mont-Blanc</h4><p class="card-meta"><span class="sport-tag">Ultra</span> <time datetime="2026-08-28"><span class="day">28</span> Aug 2026</time></p><p class="card-location">Chamonix, France</p></a></article></li>
-                <li><article class="race-card"><a class="card-link" href="#"><h4>Boston Marathon</h4><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-04-20"><span class="day">20</span> Apr 2026</time></p><p class="card-location">Boston, USA</p></a></article></li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -501,7 +494,7 @@
 
     <div class="kit-item" id="archive-step5">
       <h3>Log result as a modal sheet · the discard confirm</h3>
-      <p>Round 2 (G40, G41): Log result is a modal sheet over Results, the sheet-as-a-screen pattern Race picker uses; Cancel on the leading edge of its bar, the title, Save on the trailing edge. Saving shows the spinner alone in the bar (the words stay for screen readers). Cancel with anything entered or a race linked opens an action sheet (<code>dialog.action-sheet</code>; HIG Sheets, Action sheets): a message, the destructive choice in coral, and Keep editing apart at the bottom, bold. The alert's glass and radius.</p>
+      <p>Round 2 (G40, G41): Log result is a modal sheet over Results, a whole screen in a sheet; Cancel on the leading edge of its bar, the title, Save on the trailing edge. Saving shows the spinner alone in the bar (the words stay for screen readers). Cancel with anything entered or a race linked opens an action sheet (<code>dialog.action-sheet</code>; HIG Sheets, Action sheets): a message, the destructive choice in coral, and Keep editing apart at the bottom, bold. The alert's glass and radius.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">The sheet's bar: Cancel, title, Save</p>
           <div class="kit-frame kit-frame--flush"><div class="sheet open"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div></div>

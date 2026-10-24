@@ -745,3 +745,23 @@ Same rules as round 1. Every change on every state page of its screen in `wirefr
 - **Names (WCAG 2.5.3):** 189 controls on 43 page states start with their visible labels, confirmed against Chromium's computed names for the short bar actions and the Open button.
 - **Review page:** before and after at `ui/review-markup-2.html`.
 
+### Race picker pushed (designer, 2026-10-24)
+
+Race picker is no longer a modal sheet over Log result. It's a screen pushed inside Log result's navigation, as picking a value in iOS Settings:
+- **The screen:** full-screen with square corners, on the page ground. Its top bar has "‹ Log result" and the title "Find a race", and no Cancel.
+- **Choosing:** tapping a race goes back to Log result with it filled in (unchanged). The back button returns with every typed value.
+
+All four state pages changed. `flows.md` changed its edge from "cancels — form unchanged" to "goes back — form unchanged", and `ia.html` carries the same edge. `sitemap.md`, `_conventions.md` ("Pickers are pushed screens"), `_screens.md`, CLAUDE.md and `microcopy.md` row 265 ("Cancel" → the back button "Log result") are updated too.
+
+**Kit:** the picker-only sheet styles are removed, since nothing else used them:
+- the raised cards and their hairline;
+- the outlined secondary on a sheet;
+- the search field's sheet variant.
+
+The search field's second placement is `.phone-screen > form.search`, and the list takes the page gutter. The sheet-as-a-screen rules stay, because Log result uses them. The build dropped four contrast pairs that described the picker on the sheet and added the checkmark on a page card (control tint on `--bg-1`): 104 pairs.
+
+**Checked:**
+- **Screenshots:** all 75 states against round 2. Only the six Race picker states changed.
+- **In the browser:** "‹ Log result" goes back with the typed values; tapping UTMB returns to Log result with the race linked and the finish time kept; there is no Cancel and no corner radius.
+- **Review:** before and after at `ui/review-markup-2.html` → Race picker pushed.
+

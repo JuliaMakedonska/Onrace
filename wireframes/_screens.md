@@ -136,7 +136,7 @@ Files: `log-result.html`, `-error`, `-loading`.
 
 **Where it sits in the flow** (`../flows.md` → Flow 2, catalog branch): Log result → **Find in race catalog** → `Loading: fetching past catalog races` → Race picker. Selecting a race returns to Log result with it linked. Cancel returns to the form unchanged. An empty result or a failed load offers "type it in instead" (back to the form), because the catalog is optional.
 
-**Chrome:** a modal sheet over Log result, not a drill-down. Choosing is a sub-task of the form, the iOS pattern for pickers. The top bar has **Cancel** on the left and the title "Find a race" centred, with no Save: selecting a row *is* the action. There's a search field under the bar. There's no tab bar.
+**Chrome:** a screen pushed inside Log result's navigation, full-screen, as picking a value in iOS Settings (revised 2026-10-24, designer; it was a modal sheet with Cancel). The top bar has **‹ Log result** on the left and the title "Find a race" centred, with no Save: selecting a row *is* the action, and it goes back to Log result with the race filled in. There's a search field under the bar. There's no tab bar.
 
 **What it lists:** only *past* catalog races (`event_date` before today), newest first. You log a race you've run. The catalog keeps past editions for this reason (`../sitemap.md` → Entities → 1). Search matches name or city, runs on submit (the keyboard's Search key), and goes through the loading page like Race browse's filter changes. Each row shows name, date, a short sport tag and city/country. Tapping a row is the selection.
 
