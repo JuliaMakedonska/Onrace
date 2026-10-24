@@ -876,7 +876,8 @@ print('Signed tokens:', len(_defined), 'of', len(_defined))
 open(os.path.join(ROOT, 'concept/concept.html'), 'w').write(page)
 print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b, k in PAIRS if k == 'text'))
 # Horizontal overflow (2026-10-24): every wireframe page and state at 390 and 320 wide, Race browse with 0-5 active
-# filters (scripts/check_overflow.mjs, headless Chrome). The build stops on any overflow; it is skipped, with a
+# filters (scripts/check_overflow.mjs, headless Chrome, over local HTTP with the real fonts; since 2026-10-25 it also
+# fails on a wrapped one-line control or a font that didn't load). The build stops on any overflow; it is skipped, with a
 # message, only when Node or Chrome is missing.
 import subprocess, shutil
 _node = shutil.which('node')
@@ -886,7 +887,7 @@ else:
     _r = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_overflow.mjs'), '--quiet'], capture_output=True, text=True)
     print(_r.stdout.strip() or _r.stderr.strip())
     if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
-    elif _r.returncode != 0: sys.exit('Horizontal overflow: the build stops (scripts/check_overflow.mjs)')
+    elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
 # mirror to public/ (GitHub Pages serves public/)
 for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
     if os.path.exists(os.path.join(ROOT, _f)):
@@ -909,6 +910,7 @@ import glob
 _docs = sorted(glob.glob(os.path.join(ROOT, 'wireframes', '*.md'))) + [os.path.join(ROOT, 'wireframes', 'index.html')]
 for _d in _docs:
     shutil.copyfile(_d, os.path.join(ROOT, 'public', 'wireframes', os.path.basename(_d)))
+shutil.copyfile(os.path.join(ROOT, 'ia.html'), os.path.join(ROOT, 'public/ia.html'))   # the IA page: the published copy is always the source (2026-10-25)
 print('mirrored wireframes docs:', ', '.join(os.path.basename(d) for d in _docs))
 import glob   # our own photos (visuals/*.jpg), linked by the screens as ../visuals/<file>
 os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)

@@ -1,24 +1,30 @@
 #!/usr/bin/env node
 /* Horizontal overflow check (2026-10-24): every wireframe page and state, at 390×844 and 320×568 (iPhone SE), fails
    on any horizontal overflow. Dependency-free: it starts the installed Google Chrome headless and drives it over the
-   DevTools protocol (Node 18+: fetch and WebSocket built in).
+   DevTools protocol (Node 18+: fetch and WebSocket built in). The pages are served over a local HTTP server, as on
+   GitHub Pages, and measured only after document.fonts.ready: the real fonts, not fallbacks (2026-10-25).
 
    Fails when, in any state:
    - a rendered element reaches past the screen's left or right edge (outside a container built to scroll sideways);
    - any element scrolls sideways (scrollWidth > clientWidth) that isn't built to: the one sideways scroller by design
-     is the active filter chips row (.chips-row), and its own box must still fit the screen.
+     is the active filter chips row (.chips-row), and its own box must still fit the screen;
+   - a one-line control wraps (ONE_LINE: Sort, Filters, List/Map, the chips, Clear all filters);
+   - a font the page uses didn't load (a family and weight from the kit with no loaded face: the measure would be a
+     fallback's).
 
    Race browse is also checked with 0, 1, 2, 3 and 5 active filters, using the longest chip texts in microcopy.md
    (the region "North America", the sport type "DEKA / functional fitness", a date range across two years) and a
    search chip, in List view, Map view and with the Filters sheet open.
 
-   Usage: node scripts/check_overflow.mjs [--quiet]      exit code 1 on any overflow, 2 if Chrome can't start.
+   Usage: node scripts/check_overflow.mjs [--quiet] [--block-fonts]   exit code 1 on any failure, 2 if Chrome can't start.
+   --block-fonts blocks the font files, to prove the font check fails without them.
    build_stand.py runs it on every build. */
 import { spawn } from 'node:child_process';
+import { createServer } from 'node:http';
 import { mkdtempSync, readFileSync, existsSync, rmSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { join, dirname, normalize, extname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const W = join(ROOT, 'wireframes');
@@ -64,10 +70,34 @@ states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile ·
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
 
 // ---------------------------------------------------------------- the check, in the page
-const CHECK = `(() => {
+const ONE_LINE = '.sort-toggle, .filters-trigger, .view-btn, .chips-row .chip, .clear-all';
+const FONTS = ['Schibsted Grotesk', 'Hanken Grotesk'];   // the kit's two families (fonts load from each page's <head>)
+const CHECK = `(async () => {
+  await document.fonts.ready;
   const W = innerWidth, bad = [];
-  const scrollerX = el => el.matches('.chips-row');   // the one sideways scroller by design
   const name = el => el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (el.classList.length ? '.' + [...el.classList].join('.') : '');
+  // fonts: every (family, weight) the page renders text in needs a loaded face
+  const used = new Map();
+  for (const el of document.querySelectorAll('body *')) {
+    if (!el.getClientRects().length || el.closest('.visually-hidden') || ![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) continue;
+    const cs = getComputedStyle(el), fam = cs.fontFamily.split(',')[0].replace(/["']/g, '').trim();
+    if (${JSON.stringify(FONTS)}.includes(fam) && !used.has(fam + ' ' + cs.fontWeight)) used.set(fam + ' ' + cs.fontWeight, el);
+  }
+  const loaded = new Set([...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/["']/g, '') + ' ' + f.weight));
+  for (const [u, el] of used) if (!loaded.has(u)) bad.push('font not loaded: ' + u + ' (first on ' + name(el) + ')');
+  // one-line controls: their text sits on a single line
+  for (const el of document.querySelectorAll(${JSON.stringify(ONE_LINE)})) {
+    if (!el.getClientRects().length || el.closest('.sheet:not(.open)') || el.closest('[hidden]')) continue;
+    const rects = [];   // the line boxes of its visible text (a font-size 0 mark, like the chips' "×", isn't text on screen)
+    const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    for (let t; (t = walk.nextNode());) {
+      if (!t.textContent.trim() || parseFloat(getComputedStyle(t.parentElement).fontSize) === 0 || t.parentElement.closest('.visually-hidden')) continue;
+      const r = document.createRange(); r.selectNodeContents(t); rects.push(...[...r.getClientRects()].filter(x => x.width > 0));
+    }
+    const firstBottom = Math.min(...rects.map(x => x.bottom));
+    if (rects.some(x => x.top >= firstBottom - 1)) bad.push(name(el) + ' wraps ("' + el.textContent.trim().replace(/\\s+/g, ' ') + '")');
+  }
+  const scrollerX = el => el.matches('.chips-row');   // the one sideways scroller by design
   for (const el of document.querySelectorAll('body, body *')) {
     if (!el.getClientRects().length) continue;
     const cs = getComputedStyle(el);
@@ -84,10 +114,21 @@ const CHECK = `(() => {
   return [...new Set(bad)].slice(0, 6);
 })()`;
 
+// ---------------------------------------------------------------- the pages, over HTTP (as GitHub Pages serves them)
+const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2' };
+const server = createServer((req, res) => {
+  const path = normalize(join(ROOT, decodeURIComponent(new URL(req.url, 'http://x').pathname)));
+  if (!path.startsWith(ROOT)) { res.writeHead(403).end(); return; }
+  try { const body = readFileSync(path); res.writeHead(200, { 'content-type': TYPES[extname(path)] || 'application/octet-stream' }).end(body); }
+  catch { res.writeHead(404).end(); }
+});
+await new Promise(r => server.listen(0, '127.0.0.1', r));
+const BASE = `http://127.0.0.1:${server.address().port}/wireframes/`;
+
 // ---------------------------------------------------------------- Chrome over the DevTools protocol
 const profile = mkdtempSync(join(tmpdir(), 'onrace-overflow-'));
 const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', '--no-default-browser-check', '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank'], { stdio: 'ignore' });
-const cleanup = () => { try { chrome.kill(); } catch {} try { rmSync(profile, { recursive: true, force: true }); } catch {} };
+const cleanup = () => { server.close(); try { chrome.kill(); } catch {} try { rmSync(profile, { recursive: true, force: true }); } catch {} };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let port = null;
 for (let i = 0; i < 100 && !port; i++) {
@@ -108,6 +149,9 @@ const send = (method, params = {}) => new Promise(r => { const id = ++seq; pendi
 const once = method => new Promise(resolve => waiters.push({ method, resolve }));
 const evaluate = async expr => (await send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true })).result?.result?.value;
 await send('Page.enable'); await send('Runtime.enable');
+if (process.argv.includes('--block-fonts')) {   // self-test: with the font files blocked, the check must fail
+  await send('Network.enable'); await send('Network.setBlockedURLs', { urls: ['*fonts.gstatic.com*'] });
+}
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
 
 const failures = [];
@@ -115,7 +159,7 @@ let checked = 0;
 for (const [w, h] of [[390, 844], [320, 568]]) {
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   for (const s of states) {
-    const url = pathToFileURL(join(W, s.name + '.html')).href + (s.q ? '?' + s.q : '');
+    const url = BASE + s.name + '.html' + (s.q ? '?' + s.q : '');
     const loaded = once('Page.loadEventFired');
     await send('Page.navigate', { url });
     await Promise.race([loaded, sleep(5000)]);
@@ -130,9 +174,11 @@ for (const [w, h] of [[390, 844], [320, 568]]) {
   }
 }
 ws.close(); cleanup();
+const fontFails = failures.filter(f => f.includes('font not loaded')).length;
+if (fontFails) console.log(`check_overflow: ${fontFails} states measured without their real fonts (offline, or Google Fonts unreachable)`);
 if (failures.length) {
-  console.log(`check_overflow: FAIL, horizontal overflow in ${failures.length} of ${checked} states\n` + failures.join('\n'));
+  console.log(`check_overflow: FAIL in ${failures.length} of ${checked} states (overflow, a wrapped one-line control, or a font not loaded)\n` + failures.join('\n'));
   process.exit(1);
 }
-if (!QUIET) console.log(`check_overflow: pass, no horizontal overflow in ${checked} states (${states.length} per width, 390 and 320)`);
+if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (${states.length} per width, 390 and 320)`);
 else console.log(`check_overflow: pass (${checked} states)`);
