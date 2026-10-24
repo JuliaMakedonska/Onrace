@@ -889,6 +889,14 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-markup'), os.path.join(ROOT, 'publ
 shutil.copyfile(os.path.join(ROOT, 'ui/review-markup.html'), os.path.join(ROOT, 'public/ui/review-markup.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-markup-2'), os.path.join(ROOT, 'public/ui/review-markup-2'), dirs_exist_ok=True)   # markup pass round 2
 shutil.copyfile(os.path.join(ROOT, 'ui/review-markup-2.html'), os.path.join(ROOT, 'public/ui/review-markup-2.html'))
+import glob
+# the wireframes' published docs: the rulebooks and notes (wireframes/*.md: _conventions.md, _screens.md, _critique.md,
+# README.md) and the viewer's index.html, so an edit needs no manual copy. The frozen _wireframe/ snapshot is never
+# touched by the build (_conventions.md § 6).
+_docs = sorted(glob.glob(os.path.join(ROOT, 'wireframes', '*.md'))) + [os.path.join(ROOT, 'wireframes', 'index.html')]
+for _d in _docs:
+    shutil.copyfile(_d, os.path.join(ROOT, 'public', 'wireframes', os.path.basename(_d)))
+print('mirrored wireframes docs:', ', '.join(os.path.basename(d) for d in _docs))
 import glob   # our own photos (visuals/*.jpg), linked by the screens as ../visuals/<file>
 os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
 for _v in glob.glob(os.path.join(ROOT, 'visuals/*.jpg')):
