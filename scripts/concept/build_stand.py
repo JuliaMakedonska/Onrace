@@ -875,8 +875,19 @@ assert not _unsigned, ('Unsigned tokens (add a row with its reason)', _unsigned)
 print('Signed tokens:', len(_defined), 'of', len(_defined))
 open(os.path.join(ROOT, 'concept/concept.html'), 'w').write(page)
 print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b, k in PAIRS if k == 'text'))
+# Horizontal overflow (2026-10-24): every wireframe page and state at 390 and 320 wide, Race browse with 0-5 active
+# filters (scripts/check_overflow.mjs, headless Chrome). The build stops on any overflow; it is skipped, with a
+# message, only when Node or Chrome is missing.
+import subprocess, shutil
+_node = shutil.which('node')
+if not _node:
+    print('check_overflow: SKIPPED, node not found')
+else:
+    _r = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_overflow.mjs'), '--quiet'], capture_output=True, text=True)
+    print(_r.stdout.strip() or _r.stderr.strip())
+    if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
+    elif _r.returncode != 0: sys.exit('Horizontal overflow: the build stops (scripts/check_overflow.mjs)')
 # mirror to public/ (GitHub Pages serves public/)
-import shutil
 for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
@@ -889,6 +900,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-markup'), os.path.join(ROOT, 'publ
 shutil.copyfile(os.path.join(ROOT, 'ui/review-markup.html'), os.path.join(ROOT, 'public/ui/review-markup.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-markup-2'), os.path.join(ROOT, 'public/ui/review-markup-2'), dirs_exist_ok=True)   # markup pass round 2
 shutil.copyfile(os.path.join(ROOT, 'ui/review-markup-2.html'), os.path.join(ROOT, 'public/ui/review-markup-2.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-overflow'), os.path.join(ROOT, 'public/ui/review-overflow'), dirs_exist_ok=True)   # overflow fix before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-overflow.html'), os.path.join(ROOT, 'public/ui/review-overflow.html'))
 import glob
 # the wireframes' published docs: the rulebooks and notes (wireframes/*.md: _conventions.md, _screens.md, _critique.md,
 # README.md) and the viewer's index.html, so an edit needs no manual copy. The frozen _wireframe/ snapshot is never

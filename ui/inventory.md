@@ -73,8 +73,8 @@ None. Every component that repeats on Race browse and Race detail also appears i
 Single-screen blocks, by screen.
 
 **Race browse**
-- **Controls bar** (`.controls`, sticky: Filters + List/Map, then the chips row). Gaps: G7 K.
-- **Active filter chips row** (`.chips-bar`, `.chips-row`, `button.chip` with "×", "Clear all filters"). Seen on `race-browse` with `?sport=` and on `-empty`. Gaps: G27 K. **Kit fix 2026-10-22 (designer):** the chips are iOS capsules in a tonal `--bg-2` fill, no outline, sentence case, the × inside (C7: they sit in a bar).
+- **Controls bar** (`.controls`, sticky: Filters + List/Map, then the chips row). Gaps: G7 K. **Overflow fix (2026-10-24):** the grid column is `minmax(0, 1fr)`, so the chips' width can't widen the bar; List/Map never shrinks, Filters takes the rest down to its label. Checked at 390 and 320 with 0–5 filters (`scripts/check_overflow.mjs`).
+- **Active filter chips row** (`.chips-bar`, `.chips-row`, `button.chip` with "×", "Clear all filters"). Seen on `race-browse` with `?sport=` and on `-empty`. Gaps: G27 K. One sideways-scrolling row with the end fade; chips never clip mid-text; "Clear all filters" pinned at the row's end, always whole (2026-10-24). **Kit fix 2026-10-22 (designer):** the chips are iOS capsules in a tonal `--bg-2` fill, no outline, sentence case, the × inside (C7: they sit in a bar).
 - **Filters trigger with count** ("Filters · N").
 - **Sort button** (`.sort-toggle`, "Soonest first" with the Solar sort icon; flips to "Latest first"; its name "Sort: …"; hidden in Map view; disabled on `-loading`). Markup pass (2026-10-23), G21 done: two options need no menu (HIG Pull-down buttons asks for three). The old `.sort-control` lives on in `concept/specimens.css` for the stand.
 - **Sport-type rows** (seven `label.row.row--check` in the Filters sheet: a neutral checkmark at the trailing edge when chosen, nothing when not; C4). Markup pass (2026-10-23), G19 done. Native: [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables).

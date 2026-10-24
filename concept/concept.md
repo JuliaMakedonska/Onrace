@@ -765,3 +765,28 @@ The search field's second placement is `.phone-screen > form.search`, and the li
 - **In the browser:** "‹ Log result" goes back with the typed values; tapping UTMB returns to Log result with the race linked and the finish time kept; there is no Cancel and no corner radius.
 - **Review:** before and after at `ui/review-markup-2.html` → Race picker pushed.
 
+
+### Overflow fix: the controls bar (designer report, 2026-10-24)
+
+**The defect:** Race browse `-empty` at 390 wide, with its three active filters, overflowed. The List/Map control was pushed off-screen (only "List" showed), the third chip was clipped mid-text ("1 Oct – 30 No…"), "Clear all filters" was cut to "Clear", and the screen scrolled sideways.
+
+**The cause:** `.controls` is a grid whose single column was `auto`. An auto column grows to its content's min-content width, and the chips row's min-content width is every chip side by side: 437px with three chips, 953px with five. The column widened, and it carried `.control-row` (Filters + List/Map) and `.chips-bar` past the screen with it. The chips row's own `overflow-x: auto` never got the chance to scroll, because its box was never narrower than its content.
+
+**The fix, in the kit (`ui/kit.css`), no page changed:**
+- `.controls`: `grid-template-columns: minmax(0, 1fr)`. The column is the screen's width, never its content's.
+- `.control-row .view-toggle`: `flex: none`. List/Map keeps its full size and never shrinks.
+- `.control-row .filters-trigger`: `flex: 1 1 0; min-width: min-content; white-space: nowrap`. Filters takes the remaining width and can shrink, but never below its label ("Filters · 5" stays whole at 320).
+- The chips row (unchanged): one row, `flex: 1; min-width: 0; overflow-x: auto`, fading over its last 24px. Chips never shrink or ellipsize; the only cut is at the scroll edge, under the fade, which is the scroll affordance.
+
+**"Clear all filters": pinned at the end of the row, not on its own line.** Two reasons:
+- **iOS pattern:** a horizontally scrolling row of tokens is the iOS filter-bar idiom, and an action that acts on the whole row belongs on that row, at its trailing end, where it stays put while the tokens scroll. **[?]** Not checked against a specific iOS 26 screen or Mobbin reference.
+- **Height:** a line of its own adds 44px to a sticky bar on every filtered state, and attribute b (two full race cards on the first screen) holds with 24px to spare.
+
+**Why no earlier check caught it:**
+- **Where the overflow lived:** it scrolled inside `.phone-screen`, while the document stayed at 390. The document-level checks saw nothing.
+- **What was shot:** the screenshot runs used `race-browse-empty.html?sport=hyrox` (one chip), never the page's own three filters, and only ever at 390.
+- **No width check:** nothing failed on overflow; it was left to eyes on screenshots.
+
+**The new check:** `scripts/check_overflow.mjs`, run by `build_stand.py` on every build (the build stops on a failure; it is skipped with a message only when Node or Chrome is missing). It opens every `wireframes/*.html` state in headless Chrome at 390×844 and 320×568 (iPhone SE), Race browse with 0, 1, 2, 3 and 5 active filters using the longest chip texts in `microcopy.md` (North America, DEKA / functional fitness, a date range across two years, a search chip), in List, Map and with the Filters sheet open, plus the sign-out alert and the discard confirm: 206 states. It fails when any element reaches past either screen edge, or any element other than the chips row scrolls sideways. Before the fix: 64 of 206 states failed. After: none.
+
+**Checked:** Race browse in every state, 98 shots before and after (390 and 320, 0–5 filters, List / Map / sheet). The states with 2 or more filters (and `-empty`'s own three) changed; 0 and 1 filter, error and scrolled are identical or differ by glass-blur noise (channel delta 1). Review: `ui/review-overflow.html`.

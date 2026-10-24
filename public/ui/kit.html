@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=bf5413b4">
-<link rel="stylesheet" href="map.css?v=bf5413b4">
+<link rel="stylesheet" href="kit.css?v=1002db41">
+<link rel="stylesheet" href="map.css?v=1002db41">
 </head>
 <!-- The kit showcase (Lesson 7, step 3a). Every component in ui/inventory.md,
      in its states, styled only by kit.css (map.css for the static map).
@@ -564,7 +564,7 @@
 
     <div class="kit-item" id="controls">
       <h3>Race browse · controls bar, active filter chips</h3>
-      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. The chips row scrolls and fades at its end. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p>
+      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. List/Map keeps its full size; Filters takes the rest and shrinks no further than its label; the bar never outgrows the screen (2026-10-24). The chips row scrolls and fades at its end; Clear all filters stays pinned after it, whole. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">No filters</p>
           <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></main></div></div>

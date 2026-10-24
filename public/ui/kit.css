@@ -571,9 +571,10 @@
 @media (prefers-reduced-motion: reduce) { .bar, .initials.skel, .map-placeholder[aria-busy="true"] { animation: none; } }
 
 /* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
-.controls { display: grid; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
+.controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
 .control-row { display: flex; align-items: center; gap: var(--space-3); }
-.control-row .filters-trigger { flex: 1; }
+.control-row .filters-trigger { flex: 1 1 0; min-width: min-content; white-space: nowrap; }   /* takes what List/Map leaves, shrinks, but never below its own label */
+.control-row .view-toggle { flex: none; }   /* List/Map keeps its full size */
 .filters-trigger::before {
   content: "";
   width: var(--icon-m);
