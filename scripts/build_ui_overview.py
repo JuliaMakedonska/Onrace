@@ -51,19 +51,18 @@ FLOW = [('A value', 'ui/kit.css', ':root, one token', 'Look'), ('A look', 'ui/ki
 assert {r[0].split('**')[1] for r in SRC_ROWS} >= {'Look', 'Words', 'Structure', 'Decisions'}
 flow_body = '<div class="flow">' + ''.join(
     f'<div class="flow-row"><span class="flow-from">{a}</span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-to"><code>{f}</code><span class="flow-how">{h}</span></span></div>'
-    for a, f, h, _ in FLOW) + '</div>' + md(CL['Sources of truth'])
+    for a, f, h, _ in FLOW) + '</div>' + LP.fold('The sources of truth', md(CL['Sources of truth']), 'the table at the top of CLAUDE.md and README.md')
 checks_body = f'''<h3>Where each change goes in</h3>
 {flow_body}
-<h3>The checks that stop the build</h3>
-<ol class="checks">{"".join(f"<li>{inline(c)}</li>" for c in ST["checks"])}</ol>
-<p class="note">Listed in <code>CLAUDE.md</code> → UI assembly; run by <code>scripts/concept/build_stand.py</code>, which calls <code>scripts/check_overflow.mjs</code> and <code>scripts/check_kit.py</code>.</p>'''
+{LP.fold(f"{len(ST['checks'])} checks that stop the build", '<ol class="checks">' + "".join(f"<li>{inline(c)}</li>" for c in ST["checks"]) + '</ol><p class="note">Listed in <code>CLAUDE.md</code> → UI assembly; run by <code>scripts/concept/build_stand.py</code>, which calls <code>scripts/check_overflow.mjs</code> and <code>scripts/check_kit.py</code>.</p>', 'color rules, contrast, signed tokens, overflow, one line, fonts, scripts, the showcase')}'''
 
 # ---------------------------------------------------------------- the Wireframe / Design switch (the viewer's two folders)
 PAGES = sorted(os.path.basename(p)[:-5] for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html'))
 FROZEN = {os.path.basename(p)[:-5] for p in glob.glob(os.path.join(ROOT, 'wireframes/_wireframe/*.html'))}
 assert set(PAGES) <= FROZEN
 options = ''.join(f'<option value="{p}"{" selected" if p == "race-browse" else ""}>{p}</option>' for p in PAGES)
-look_body = f'''{md(para(CLAUDE.split("## Wireframes", 1)[1], "- **Wireframe / Design toggle (2026-10-18):**").lstrip("- "))}
+look_body = f'''<p>The same screen as the frozen Lesson 5 wireframe or as it is now. Pick a screen and switch.</p>
+{LP.fold('About the toggle', md(para(CLAUDE.split("## Wireframes", 1)[1], "- **Wireframe / Design toggle (2026-10-18):**").lstrip("- ")), 'from CLAUDE.md → Wireframes')}
 <div class="look">
   <div class="look-controls">
     <label for="look-page">Screen and state</label>
@@ -91,39 +90,37 @@ LOOK_JS = '''(function () {
 })();'''
 
 # ---------------------------------------------------------------- the stage sections (as before, from the same files)
-design_body = f'{md(DS["Overview"])}\n<p><a class="btn" href="{GH}DESIGN.md">Open DESIGN.md →</a></p>'
+design_body = LP.fold('DESIGN.md → Overview', md(DS["Overview"]), 'the system in a page') + f'<p><a class="btn" href="{GH}DESIGN.md">Open DESIGN.md →</a></p>'
 inv_intro = INV.split('\n## ', 1)[0].split('\n', 1)[1]
 role_counts = {}
 for l in IS['Showcase map (2026-10-26)'].split('\n'):
     if l.startswith('| ') and not l.startswith(('| Role', '|---')):
         role_counts[l.split(' | ')[0].strip('| ')] = role_counts.get(l.split(' | ')[0].strip('| '), 0) + 1
-inventory_body = f'''{md(inv_intro)}
+inventory_body = f'''{LP.fold('How the inventory reads', md(inv_intro))}
 <div class="tbl-wrap"><table><thead><tr><th>Role</th><th>Components</th></tr></thead><tbody>{"".join(f"<tr><td>{r}</td><td>{n}</td></tr>" for r, n in role_counts.items())}</tbody></table></div>
 <p class="note">Roles as <code>ui/inventory.md</code> → Showcase map groups them; the kit showcase's nav follows it.</p>
 <p><a class="btn" href="{GH}ui/inventory.md">Open the inventory →</a> <a class="btn" href="ui/kit.html">The showcase →</a></p>'''
-kit_body = f'''{md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0])}
-<div class="card-grid">
-  <a class="card-link" href="ui/kit.html"><span class="si-tag" style="color:var(--accent)">Showcase</span><span class="si-title">ui/kit.html</span><span class="si-desc">Every component in its states, by role →</span></a>
-  <a class="card-link" href="ui/shell.html"><span class="si-tag" style="color:var(--patterns)">Shell</span><span class="si-title">ui/shell.html</span><span class="si-desc">Large title and floating tab bar →</span></a>
-  <a class="card-link" href="concept/concept.html"><span class="si-tag" style="color:var(--benchmark)">Stand</span><span class="si-title">concept.html</span><span class="si-desc">Every token and contrast pair, signed →</span></a>
-  <a class="card-link" href="wireframes/index.html"><span class="si-tag" style="color:var(--job-loc)">Viewer</span><span class="si-title">All 10 screens</span><span class="si-desc">In an iPhone frame, with zone notes →</span></a>
+kit_body = f'''<p>The showcase, live: every component in its states, with its role nav working inside the panel. Beside it, the shell every top-level screen shares.</p>
+<div class="embeds">
+  {LP.embed('ui/kit.html', 'The kit · <code>ui/kit.html</code>')}
+  {LP.embed('ui/shell.html', 'The shell · <code>ui/shell.html</code>', 'phone')}
 </div>
-<h3>The rules</h3>
-{md('**The rules:**' + ASSEMBLY.split('**The rules:**', 1)[1].split('**Checks that stop the build', 1)[0].split(chr(10), 1)[1])}'''
-ios_body = md(DS['Native iOS'])
+{LP.fold('Where the kit lives', md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0]), 'ui/kit.css, ui/map.css, ui/shell.html, ui/kit.html, ui/inventory.md')}
+{LP.fold('The rules', md('**The rules:**' + ASSEMBLY.split('**The rules:**', 1)[1].split('**Checks that stop the build', 1)[0].split(chr(10), 1)[1]), 'every screen links the kit, "keep it", native iOS')}'''
+ios_body = LP.fold('The HIG rule, the component table and C1–C7', md(DS['Native iOS']), '7 decided conflicts')
 PHOTOS = [m.group(1) for m in re.finditer(r'^\| ([a-z0-9-]+) \| [^|]+ \| \d+% \|', VS['Export (step 7, 2026-10-25)'], flags=re.M)]
 thumbs = ''.join(f'<figure class="thumb"><picture><source type="image/avif" srcset="visuals/{p}-684.avif"><source type="image/webp" srcset="visuals/{p}-684.webp"><img src="visuals/{p}-684.jpg" alt="" width="684" height="228" loading="lazy"></picture><figcaption>{p}</figcaption></figure>' for p in PHOTOS)
 visuals_body = f'''<div class="thumbs">{thumbs}</div>
-{md(VIS.split(chr(10) + '## ', 1)[0].split(chr(10), 1)[1])}
-<h3>Tool</h3>{md(VS['Tool'])}<h3>Workflow</h3>{md(VS['Workflow'])}<h3>Export</h3>{md(VS['Export (step 7, 2026-10-25)'])}
+{LP.fold('How they were made', md(VIS.split(chr(10) + '## ', 1)[0].split(chr(10), 1)[1]) + '<h3>Tool</h3>' + md(VS['Tool']) + '<h3>Workflow</h3>' + md(VS['Workflow']), 'the tool, the workflow, the check')}
+{LP.fold('How they were exported', md(VS['Export (step 7, 2026-10-25)']), '3:1 crops, AVIF / WebP / JPEG, srcset')}
 <p><a class="btn" href="{GH}visuals/README.md">Open visuals/README.md →</a> <a class="btn" href="visuals/review-round3.html">Round 3 retouching review →</a></p>'''
-native = lambda t: f'<h3>{inline(t)}</h3>\n{md(NATIVE[t])}'
+native = lambda t: LP.fold(inline(t), md(NATIVE[t]))
 assembly_body = '\n'.join(native(t) for t in ['Step 3b: native iOS pass in the kit (2026-10-19)', 'Step 5, Discovery: Race detail on the kit (2026-10-22)',
                                                'Step 5, Archive and Infrastructure on the kit (2026-10-22)', 'Consolidation (2026-10-23)'])
 markup_body = '\n'.join(native(t) for t in ['Markup pass (2026-10-23)', 'Markup pass, round 2 (2026-10-23)', 'Race picker pushed (designer, 2026-10-24)',
                                              'Overflow fix: the controls bar (designer report, 2026-10-24)', 'Overflow check, round 2 (designer, 2026-10-25)'])
-critique_body = dispo_body + '\n' + native('Step 6: critique fixes (designer priorities, 2026-10-25)') + \
-    f'<h3>{inline("Step 7: the final check (designer priorities, 2026-10-25)")}</h3>\n' + md(S7.split('**Still deferred', 1)[0])
+critique_body = LP.fold(f'{N6 + N7} findings', dispo_body, f'step 6: {N6} · step 7: {N7} · by disposition') + native('Step 6: critique fixes (designer priorities, 2026-10-25)') + \
+    LP.fold(inline('Step 7: the final check (designer priorities, 2026-10-25)'), md(S7.split('**Still deferred', 1)[0]))
 REVIEWS = sorted(glob.glob(os.path.join(ROOT, 'ui/review-*.html'))) + [os.path.join(ROOT, 'visuals/review-round3.html')]
 title_of = lambda p: re.search(r'<title>([^<]+)</title>', open(p).read()).group(1).strip()
 reviews_body = '<div class="card-grid">' + ''.join(
@@ -204,16 +201,21 @@ EXTRA_CSS = CO.DEVICE_CSS + '''
   .dr{display:block; color:var(--text-faint); font-size:12.5px; margin:2px 0 6px 28px}
   .prose .dispo-l{margin:8px 0 0; font-size:13px}
 '''
-STAGES = [('look', 'Look', 'Wireframe and Design'), ('design', 'Stage 1', 'DESIGN.md'), ('inventory', 'Stage 2', 'Inventory'), ('kit', 'Stage 3', 'The kit'),
+STAGES = [('kit', 'The kit', 'Live'), ('look', 'Look', 'Wireframe and Design'), ('checks', 'Guards', 'Where changes go'),
+          ('critique', 'Stages 6–7', 'Critique and check'), ('design', 'Stage 1', 'DESIGN.md'), ('inventory', 'Stage 2', 'Inventory'),
           ('ios', 'Native iOS', 'C1–C7'), ('visuals', 'Visuals', 'The photos'), ('assembly', 'Stages 4–5', 'Assembly'), ('markup', 'Markup', 'The passes'),
-          ('checks', 'Guards', 'What stops the build'), ('critique', 'Stages 6–7', 'Critique and check'), ('reviews', 'Reviews', 'Before / after'),
-          ('register', 'Register', f'{len(REG)} decisions'), ('open', 'Close', "What's open")]
-SECTIONS = ''.join([LP.section('look', 'Look', 'tag-p', 'Wireframe and Design', look_body), LP.section('design', 'Stage 1', 'tag-d', 'DESIGN.md, from the code', design_body),
-                    LP.section('inventory', 'Stage 2', 'tag-f', 'Every component of the 10 screens', inventory_body), LP.section('kit', 'Stage 3', 'tag-m', 'Where the kit lives, and its rules', kit_body),
-                    LP.section('ios', 'Native iOS', 'tag-t', 'The HIG rule and the decided conflicts', ios_body), LP.section('visuals', 'Visuals', 'tag-o', 'The race photos, and how they were made', visuals_body),
-                    LP.section('assembly', 'Stages 4–5', 'tag-p', 'Assembly, group by group', assembly_body), LP.section('markup', 'Markup', 'tag-d', 'The markup passes and the overflow fix', markup_body),
+          ('reviews', 'Reviews', 'Before / after'), ('register', 'Register', f'{len(REG)} decisions'), ('open', 'Close', "What's open")]
+FIRST = LP.section('kit', 'The kit', 'tag-m', 'The kit, live', kit_body)
+SECTIONS = ''.join([LP.section('look', 'Look', 'tag-p', 'Wireframe and Design', look_body),
                     LP.section('checks', 'Guards', 'tag-m', 'Where each change goes in, and what stops the build', checks_body),
-                    LP.section('critique', 'Stages 6–7', 'tag-t', 'The critique and the final check', critique_body), LP.section('reviews', 'Reviews', 'tag-o', 'Every review page', reviews_body)])
+                    LP.section('critique', 'Stages 6–7', 'tag-t', 'The critique and the final check', critique_body),
+                    LP.section('design', 'Stage 1', 'tag-d', 'DESIGN.md, from the code', design_body),
+                    LP.section('inventory', 'Stage 2', 'tag-f', 'Every component of the 10 screens', inventory_body),
+                    LP.section('ios', 'Native iOS', 'tag-t', 'The HIG rule and the decided conflicts', ios_body),
+                    LP.section('visuals', 'Visuals', 'tag-o', 'The race photos, and how they were made', visuals_body),
+                    LP.section('assembly', 'Stages 4–5', 'tag-p', 'Assembly, group by group', assembly_body),
+                    LP.section('markup', 'Markup', 'tag-d', 'The markup passes and the overflow fix', markup_body),
+                    LP.section('reviews', 'Reviews', 'tag-o', 'Every review page', reviews_body)])
 STATS = [(ST['screens'], 'screens', f"{ST['pages']} pages with their states"), (ST['variables'], 'kit variables', f"{ST['classes']} classes in ui/kit.css"),
          (ST['components'], 'inventory components', f"{sum(role_counts.values())} rows in the Showcase map"), (N6 + N7, 'findings', f'step 6: {N6} · step 7: {N7}'),
          (CO.N_PAIRS, 'contrast pairs', f'{CO.N_CHECKED} held to AA'), (len(ST['checks']), 'build checks', 'each stops the build')]
@@ -227,6 +229,6 @@ PAGE = LP.render(7, 'UI assembly', 'ui-overview.html', '18–26 Oct 2026', 'One 
     'Rendered from <code>CLAUDE.md</code> (Sources of truth, UI assembly), <code>DESIGN.md</code>, <code>ui/inventory.md</code>, <code>visuals/README.md</code> and <code>concept/concept.md</code> → Native iOS. The counts are read from <code>ui/kit.css</code>, <code>ui/map.css</code>, the build and the inventory.',
     STATS, STAGES, SAW, DECIDED, SECTIONS, LP.register(REG), LP.open_table(OPEN_ROWS, inline),
     ['scripts/build_ui_overview.py', 'scripts/lesson_page.py'], extra_css=EXTRA_CSS,
-    scripts='<script>\n' + CO.DEVICE_JS + '\n' + LOOK_JS + '\n</script>', cards=CARDS)
+    scripts='<script>\n' + CO.DEVICE_JS + '\n' + LOOK_JS + '\n</script>', cards=CARDS, reg_count=len(REG), open_count=len(OPEN_ROWS), first_sections=FIRST)
 open(os.path.join(ROOT, 'public/ui-overview.html'), 'w').write(PAGE)
 print('ui overview: register', len(REG), 'open', len(OPEN_ROWS), 'findings', N6, N7, 'pages', len(PAGES), 'bytes', len(PAGE))

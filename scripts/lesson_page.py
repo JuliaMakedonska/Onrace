@@ -140,10 +140,41 @@ TEMPLATE_CSS = r'''  /* Hero (same as ia.html and voice.html) */
   .navlinks::-webkit-scrollbar{display:none}
   .navlinks a{white-space:nowrap; flex:none}
   @media (max-width:560px){ .nav-inner{flex-direction:column; align-items:stretch; gap:6px; padding:10px 16px} .navlinks{margin-left:0} }
+  .embed{border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--bg-elev); margin:14px 0 18px}
+  .embed-bar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 16px; padding:10px 14px; border-bottom:1px solid var(--border)}
+  .embed-t{font-weight:700; color:var(--text); font-size:14px}
+  .embed-t code{font-weight:400}
+  .embed-bar a{display:inline-flex; align-items:center; min-height:44px; color:var(--text); font-weight:700; font-size:13.5px; text-decoration:none}
+  .embed-bar a:hover{color:var(--accent)}
+  .embed iframe{display:block; width:100%; border:0; background:#131518}
+  .embed--tall iframe{height:min(82vh, 980px); min-height:560px}
+  .embed--phone{max-width:392px}
+  .embed--phone iframe{height:760px}
+  .embeds{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,392px); gap:18px; align-items:start}
+  @media (max-width:900px){ .embeds{grid-template-columns:minmax(0,1fr)} }
+  details.fold{border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-elev); margin:12px 0 16px}
+  details.fold > summary{cursor:pointer; list-style:none; display:flex; align-items:center; gap:10px; min-height:48px; padding:6px 16px; font-weight:700; color:var(--text); font-size:15px}
+  details.fold > summary::-webkit-details-marker{display:none}
+  details.fold > summary::before{content:"▸"; color:var(--accent); transition:transform .15s}
+  details.fold[open] > summary::before{transform:rotate(90deg)}
+  details.fold > summary:focus-visible{outline:2px solid var(--text); outline-offset:2px}
+  .fold-sub{font-weight:400; color:var(--text-faint); font-size:13px}
+  details.fold > .fold-body{padding:4px 16px 12px}
+  @media (prefers-reduced-motion: reduce){ details.fold > summary::before{transition:none} }
   footer p{margin:0 0 6px}
   footer a{color:var(--text-dim)}
   @media (max-width:480px){ header.hero{padding:40px 16px 28px} main{padding:0 16px 64px} .nav-inner{padding:0 16px} }
 '''
+
+def embed(src, title, kind='tall', note=''):
+    """A live page in a framed, scrollable panel, with a link to open it on its own."""
+    return (f'<div class="embed embed--{kind}"><div class="embed-bar"><span class="embed-t">{title}</span>'
+            f'<a href="{src}" target="_blank" rel="noopener">Open full screen ↗</a></div>'
+            f'<iframe src="{src}" title="{esc(re.sub("<[^>]+>", "", title))}, live" loading="lazy"></iframe></div>{note}')
+
+def fold(summary, body, sub=''):
+    """A long block, closed by default: the summary carries the count."""
+    return f'<details class="fold"><summary>{summary}{f" <span class=fold-sub>{sub}</span>" if sub else ""}</summary><div class="fold-body">{body}</div></details>'
 
 def stat(n, label, sub=''):
     return f'<div class="stat"><span class="stat-n">{n}</span><span class="stat-l">{label}</span>{f"<span class=stat-sub>{sub}</span>" if sub else ""}</div>'
@@ -164,7 +195,7 @@ def open_table(rows, inline):
     return f'<div class="tbl-wrap"><table><thead><tr><th>Open</th><th>Taken by</th><th>Where it stands</th></tr></thead><tbody>{body}</tbody></table></div>'
 
 def render(n, name, current, dates, h1, desc, stats, stages, saw, decided, sections_html, register_html, open_html,
-           footer_scripts, extra_css='', scripts='', cards=''):
+           footer_scripts, extra_css='', scripts='', cards='', reg_count=0, open_count=0, first_sections=''):
     total = len(LESSONS)
     stage_nav = '<ol class="stages">' + ''.join(f'<li><a href="#{i}"><span class="st-k">{k}</span><span><span class="st-l">{l}</span></span></a></li>' for i, k, l in stages) + '</ol>'
     lis = lambda xs: ''.join(f'<li>{x}</li>' for x in xs)
@@ -205,9 +236,10 @@ def render(n, name, current, dates, h1, desc, stats, stages, saw, decided, secti
 </header>
 <main>
 {section('overview', 'Start', 'tag-p', 'What we saw, what we decided', overview)}
+{first_sections}
 {sections_html}
-{section('register', 'Register', 'tag-m', 'Decision register', register_html)}
-{section('open', 'Close', 'tag-f', "What's open", open_html)}
+{section('register', 'Register', 'tag-m', 'Decision register', fold(f'{reg_count} decisions', register_html, 'each with its date and its entry in concept.md'))}
+{section('open', 'Close', 'tag-f', "What's open", fold(f'{open_count} open items', open_html, 'and the lesson that takes each'))}
 </main>
 <footer>
   <p>Lesson {n} of {total}. This page is built by {foot}, from the repo files it names; it is never edited by hand.</p>
