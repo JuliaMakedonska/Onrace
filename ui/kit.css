@@ -64,6 +64,7 @@
   --size-title: calc(34 * var(--type-unit));  /* display · screen title (h1) · HIG Large Title (C3: was 38) */
   --size-time: calc(32 * var(--type-unit));   /* display · finish time (a display figure, C3) */
   --size-time-hero: calc(56 * var(--type-unit));   /* display · the finish time leading Result detail, the largest thing on it (step 6, #11; attribute a) */
+  --size-time-hero-cap: 22vw;   /* the leading finish time never outgrows the screen: "10:28:05" is about 3.9 em wide, so 22vw keeps it inside the 16px gutters at large text sizes (step 7, #2) */
   --size-day: calc(30 * var(--type-unit));    /* display · date day (a display figure, C3) */
   --size-item: calc(17 * var(--type-unit));   /* text · item title (race name) · HIG Headline */
   --size-body: calc(15 * var(--type-unit));   /* text · body, buttons, search · HIG Subheadline */
@@ -113,13 +114,9 @@
 
   /* ---------- race card ---------- */
   --date-col: calc(68 * var(--type-unit));  /* fits "May 2027", the widest month and year at 13px, plus the tile padding; grows with the text (G28) */
+  /* each photo is pre-cropped to 3:1 at its focus (step 7, #5: visuals/README.md → Export), so no focus tokens */
   --photo-ratio: 3 / 1;     /* decided 2026-10-14: 109px band at 390 wide, two full cards on the first screen (attribute b) */
   --photo-filter: grayscale(1) contrast(1.12) brightness(0.85); /* every photo: black and white */
-  --photo-focus-low: 50% 72%;  /* crop focus for photos whose subject sits low */
-  --photo-focus-mid: 50% 60%;
-  --photo-focus-lower: 50% 74%;   /* lower band: keeps a banner above the subject out of frame (DEKA photo) */
-  --photo-focus-center: 50% 44%;  /* subject in the middle of a tall photo */
-  --photo-focus-upper: 50% 18%;   /* subject high in the frame: DEKA and OCR photos (step 4, round 3) */
   --icon-s: 15px;
   --icon-m: 18px;
   --icon-l: 26px;
@@ -412,6 +409,7 @@
 .race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
 .race-card .card-link:focus-visible { outline: none; }
 .race-card .card-link:focus-visible::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper takes no box: the img stays the card's and the page's item (step 7, #5) */
 .race-card .photo {
   display: block;
   width: 100%;
@@ -432,7 +430,7 @@
   text-decoration: none;
   border-radius: var(--radius-1);
 }
-.race-card :is(h2, h3, h4) {   /* h2 on the screens; the showcase nests it deeper */
+.race-card h2 {   /* h2 on the screens and in the showcase (step 7, #13) */
   grid-area: name;
   margin: 0 0 var(--space-1);
   font-family: var(--font-text);
@@ -495,10 +493,11 @@
   color: inherit;
   text-decoration: none;
 }
-.card-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.card-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-3); }   /* at large text sizes the finish time wraps under the name (step 7, #2: 200% Dynamic Type) */
 .card-top h2 {
+  flex: 1 1 0;   /* takes what the time leaves; the row wraps only when its longest word and the time can't share a line */
   margin: 0;
-  min-width: 0;
+  min-width: min-content;
   font-family: var(--font-text);
   font-size: var(--size-item);
   font-weight: var(--weight-strong);
@@ -574,7 +573,7 @@
 
 /* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
 .controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--line); }
-.control-row { display: flex; align-items: center; gap: var(--space-3); }
+.control-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }   /* List/Map drops under Filters only when both can't fit (step 7, #2: 200% text) */
 .control-row .filters-trigger { flex: 1 1 0; min-width: min-content; white-space: nowrap; }   /* takes what List/Map leaves, shrinks, but never below its own label */
 .control-row .view-toggle { flex: none; }   /* List/Map keeps its full size */
 .filters-trigger::before {
@@ -664,10 +663,10 @@
 .state-message[hidden], .state-msg[hidden] { display: none; }
 /* where a state sits: centered in the free area, directly on the page (designer, 2026-10-22: no frame, surface or outline) */
 #list-view:has(> .state-message) { flex: 1; display: flex; flex-direction: column; justify-content: center; }   /* below the header, above the floating tab bar */
-.phone-screen main > section:not([hidden]):has(> .state-message:only-child) { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-inline: var(--space-4); }   /* Profile -error: the state inside its section */
-.phone-screen main > .state-message { flex: 1; align-content: center; padding-inline: var(--space-4); }   /* a drill-down: under the top bar */
-.phone-screen > form.search ~ main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }   /* Race picker: the list under the search takes the gutter */
-.phone-screen > form.search ~ main > .state-message { padding-inline: 0; }   /* main already has it */
+.phone-screen :is(main, .screen-main) > section:not([hidden]):has(> .state-message:only-child) { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-inline: var(--space-4); }   /* Profile -error: the state inside its section */
+.phone-screen :is(main, .screen-main) > .state-message { flex: 1; align-content: center; padding-inline: var(--space-4); }   /* a drill-down: under the top bar */
+.phone-screen > form.search ~ :is(main, .screen-main) { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }   /* Race picker: the list under the search takes the gutter */
+.phone-screen > form.search ~ :is(main, .screen-main) > .state-message { padding-inline: 0; }   /* main already has it */
 .gate > .state-msg { flex: 1; align-content: center; }   /* a gate with no form (New password -error?cause=expired) */
 .state-msg .submit-btn { width: auto; margin-top: var(--space-2); }   /* a state's action is sized to its label, like .state-action */
 .state-message :is(h1, h2), .state-msg h2 {
@@ -694,11 +693,12 @@
 html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
 body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
 .phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
-.phone-screen main { display: flex; flex-direction: column; min-height: 100%; }
+/* .screen-main: a specimen screen's main in the showcase, which has one page main of its own (step 7) */
+.phone-screen :is(main, .screen-main) { display: flex; flex-direction: column; min-height: 100%; }
 /* drill-downs and modals (every screen without a tab bar) */
 body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
-.phone-screen:has(> .top-bar:not(.top-bar--large)) > main { flex: 1 0 auto; min-height: 0; }
+.phone-screen:has(> .top-bar:not(.top-bar--large)) > :is(main, .screen-main) { flex: 1 0 auto; min-height: 0; }
 /* with an action bar (Race detail, Result detail): the bar is the scroll area's last child, sticky at its bottom, so
    content runs under its glass and still scrolls clear of it at the end, whatever the bar's height (G35, G54) */
 .phone-screen > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); }
@@ -732,11 +732,6 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 .view-panel { flex: 1; min-height: 0; }
 #list-view[hidden], #map-view[hidden] { display: none; }
 #list-view { padding: 0 var(--space-4) var(--space-4); }
-.photo--low { object-position: var(--photo-focus-low); }
-.photo--mid { object-position: var(--photo-focus-mid); }
-.photo--lower { object-position: var(--photo-focus-lower); }
-.photo--center { object-position: var(--photo-focus-center); }
-.photo--upper { object-position: var(--photo-focus-upper); }
 .race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--field-line); }
 .race-card:has(.card-link:active), .race-card.is-pressed { background: var(--bg-3); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
@@ -970,9 +965,11 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 /* a compact date picker (G18, G44; step 6, #26): the value on a pill, written as the chips and cards write dates
    ("23 Sep 2026"); the native input lies over the pill, transparent, so a tap opens the system's calendar. No glyph
    (iOS's compact picker has none) and no browser locale mask: empty, the pill asks "Choose a date" in Text 2 */
+.row:has(> .date-pill) { flex-wrap: wrap; }   /* at large text sizes the pill goes under its label (step 7, #2) */
 .date-pill {
   position: relative;
   flex: none;
+  max-width: 100%;
   margin-left: auto;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-2);
@@ -982,8 +979,11 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
   white-space: nowrap;
 }
 .date-pill.is-empty { color: var(--text-2); }
-.row .date-pill input[type="date"] { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 0; margin: 0; padding: 0; opacity: 0; cursor: pointer; color-scheme: dark; }
-.date-pill:has(input:focus-visible) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.row .date-pill input[type="date"] { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 0; margin: 0; padding: 0; opacity: 0; pointer-events: none; color-scheme: dark; }   /* the value for the form; the button opens its picker (step 7, #3) */
+.date-value { margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.date-value::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }   /* the whole pill is the button's target */
+.date-value:focus-visible { outline: none; }
+.date-pill:has(.date-value:focus-visible) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* one Tab stop, one ring (WCAG 2.4.7) */
 .row--check { cursor: pointer; color: var(--text-1); font-size: var(--size-body); }
 .row--check input[type="checkbox"] {   /* the checkmark sits at the row's trailing edge; nothing shows when it's off. [type] outranks Profile's .row input */
   -webkit-appearance: none;
@@ -1015,7 +1015,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 fieldset:disabled :is(.row label, .row .row-label, .row input, .row select, .row-value, .row--nav, .linked-race, .linked-race *) { color: var(--text-disabled); -webkit-text-fill-color: currentColor; opacity: 1; }
 fieldset:disabled .row input::placeholder { color: var(--text-disabled); }
 fieldset:disabled :is(.row:has(> select)::after, .row--nav::after) { background: var(--text-disabled); }
-fieldset:disabled .date-pill { color: var(--text-disabled); cursor: not-allowed; }
+fieldset:disabled .date-pill, fieldset:disabled .date-value { color: var(--text-disabled); cursor: not-allowed; }
 .top-bar .close[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
 .rows .row--stacked { flex-direction: column; align-items: stretch; gap: 0; padding-block: var(--space-2); }   /* .rows: outranks .row, defined later */   /* a long value (a link): the label above, the field the row's full width */
 .rows .row--stacked input { padding-block: var(--space-1); }
@@ -1078,7 +1078,7 @@ a.row--nav[href]:hover { background: var(--bg-2); }
   text-decoration: none;
   cursor: pointer;
 }
-.top-bar a:has(> .back-chevron)::before {   /* Solar back chevron; the wireframe's drawn chevron is hidden */
+.top-bar a.back::before {   /* the Solar back chevron (Linear), drawn by the kit; the link is marked .back (step 7, #12: no glyph in the markup) */
   content: "";
   flex: none;
   width: var(--icon-m);
@@ -1087,7 +1087,6 @@ a.row--nav[href]:hover { background: var(--bg-2); }
   -webkit-mask: var(--icon-back) center / contain no-repeat;
   mask: var(--icon-back) center / contain no-repeat;
 }
-.top-bar .back-chevron { display: none; }
 .top-bar .bar-title {
   position: absolute;
   left: 0;
@@ -1153,7 +1152,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* Result detail: the finish time leads (designer, step 6, #11; attribute a): the largest thing on the screen; the race
    name, still the h1, steps down to the item title */
 .result h1 { font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); letter-spacing: normal; margin-bottom: var(--space-5); }
-.result .finish dd { font-size: var(--size-time-hero); }
+.result .finish dd { font-size: min(var(--size-time-hero), var(--size-time-hero-cap)); }
 .result .bar.h1 { height: calc(var(--size-item) * var(--leading-item)); margin-bottom: var(--space-5); }
 .result .bar.finish-bar { height: var(--size-time-hero); }
 .race h2, .result h2 {
@@ -1176,7 +1175,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .official a { display: inline-flex; align-items: center; min-height: var(--target); }
 .forgot a { padding-block: calc((var(--target) - var(--size-meta)) / 2); }   /* inline: vertical padding never moves the line */
 .row-note a { padding-block: calc((var(--target) - var(--size-proof)) / 2); }
-.race > .photo {   /* Race detail: the race's photo, the card's band at full content width. Same 3:1 ratio and focus class as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
+.race > picture > .photo {   /* Race detail: the race's photo, the card's band at full content width: the same pre-cropped 3:1 file as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
   display: block;
   width: 100%;
   height: auto;
@@ -1561,7 +1560,7 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .kit-head { display: grid; gap: var(--space-3); }
 .kit-head p, .kit-section > p { margin: 0; max-width: var(--measure); color: var(--text-2); }
 .kit-toc { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; font-size: var(--size-meta); }
-.kit-toc a { color: var(--text-1); text-underline-offset: var(--space-1); }
+.kit-toc a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--text-1); text-underline-offset: var(--space-1); }   /* 44pt targets (step 7, #16) */
 .kit-section { display: grid; gap: var(--space-7); }
 .kit-section > h2 {
   margin: 0;

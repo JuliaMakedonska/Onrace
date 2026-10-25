@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
+<link rel="stylesheet" href="../ui/kit.css?v=428bee74">
 </head>
-<body class="onrace" role="application" aria-label="Onrace — Log result (wireframe)">
+<body class="onrace">
 
   <!-- Log result is a modal sheet over Results (round 2, G40; HIG Sheets): Cancel and Save in its top bar. -->
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="log-title">
@@ -109,7 +109,7 @@
         <div class="group" data-facts>
           <ul class="rows">
             <li><div class="row"><label for="race_name">Race name</label><input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required></div></li>
-            <li><div class="row"><label for="date">Race date</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="date" name="date" required></span></div></li>
+            <li><div class="row"><label for="date">Race date</label><span class="date-pill"><button type="button" class="date-value" id="date-pick"></button><input type="date" id="date" tabindex="-1" aria-hidden="true" name="date" required></span></div></li>
             <li><div class="row"><label for="sport_type">Sport type</label><select id="sport_type" name="sport_type" required>
             <option value="" selected>Choose a sport type</option>
             <option value="hyrox">HYROX</option>
@@ -310,23 +310,33 @@ var CATALOG = [
 </script>
 
 <script>
-/* Date pills (step 6, #26): the value shows as the chips and cards write dates ("23 Sep 2026"), on the pill, over the
-   native input, which stays on top, transparent, so a tap still opens the system's picker. Empty, it says
-   "Choose a date" (no browser locale mask, no glyph). Runs after the page's own scripts have filled the form. */
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
 (function () {
   var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   document.querySelectorAll('.date-pill').forEach(function (pill) {
-    var input = pill.querySelector('input[type="date"]'), out = pill.querySelector('.date-value');
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
     function show() {
-      var v = input.value;
+      var v = input.value, text;
       pill.classList.toggle('is-empty', !v);
-      if (!v) { out.textContent = 'Choose a date'; return; }
-      var d = v.split('-');
-      out.textContent = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0];
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
     }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
     input.addEventListener('input', show);
     input.addEventListener('change', show);
     show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
   });
 })();
 </script>

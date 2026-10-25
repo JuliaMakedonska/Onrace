@@ -389,19 +389,19 @@ FS_REAL = {'viewer': {'h': 757, 'tab': 693, 'base': (243, 2, 0, 8.6), 'filtered'
 # ---------------------------------------------------------------- shared markup (wireframe text and structure)
 def race_card(name, tag, iso, date, loc, src, pos, alt):
     return f'''<article class="race-card">
-          <img class="photo {pos}" src="{src}" alt="{alt}" width="1200" height="800">
+          <picture><source type="image/avif" srcset="{src}-684.avif 684w, {src}-1026.avif 1026w" sizes="342px"><source type="image/webp" srcset="{src}-684.webp 684w, {src}-1026.webp 1026w" sizes="342px"><img class="photo" src="{src}-1026.jpg" srcset="{src}-684.jpg 684w, {src}-1026.jpg 1026w" sizes="342px" alt="{alt}" width="1026" height="342"></picture>
           <a class="card-link" href="#components">
-            <h3>{name}</h3>
+            <h2>{name}</h2>
             <p class="card-meta"><span class="sport-tag">{tag}</span> <time datetime="{iso}"><span class="day">{date.split(' ', 1)[0]}</span> {date.split(' ', 1)[1]}</time></p>
             <p class="card-location">{loc}</p>
           </a>
         </article>'''
 
 CARD_LONDON = race_card('HYROX London', 'HYROX', '2026-12-06', '6 Dec 2026', 'London, UK',
-                        '../visuals/hyrox-sled-hall-1.jpg', 'photo--mid',
+                        '../visuals/hyrox-sled-hall-1', None,
                         'Athletes pushing weighted sleds down parallel lanes in a large indoor hall, spectators behind the barriers')
 CARD_BERLIN = race_card('Berlin Marathon', 'Marathon', '2026-09-27', '27 Sep 2026', 'Berlin, Germany',
-                        '../visuals/marathon-city-1.jpg', 'photo--lower',
+                        '../visuals/marathon-city-1', None,
                         'A dense field of runners mid-race on a wide sunlit city avenue, seen from slightly above')
 
 RESULT_ROW = '''<article class="result-card">
@@ -510,8 +510,6 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('leading-item', 'Item titles, the date column', 'Line height 1.2', 'Hierarchy rule 4: level 2 stays compact'),
            ('weight-regular', 'Body and meta', 'Regular 400', 'Hierarchy rule 4: meta steps back by weight too'),
            ('tap-pad', 'Invisible tap area around filter chips', 'Extends the 32px chip to 44px', 'Critique fix: touch targets'),
-           ('photo-focus-low', 'Crop focus for photos whose subject sits low', 'Keeps the athletes in the 3:1 band', 'Attribute b: the band shows the race, not the sky'),
-           ('photo-focus-mid', 'Crop focus for photos with a centered subject', 'Keeps the athletes in the 3:1 band', 'Attribute b'),
            ('ease-out', 'Easing for hover and press', 'Fast start, soft stop', 'Attribute e: intense, not jittery'),
            ('stand-max', 'Stand page width (stand only)', 'Never used in the product', 'Stand layout'),
            ('phone-width', 'Phone frame on the stand (stand only)', '390px screen + border', 'Stand layout'),
@@ -521,9 +519,6 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('font-text', 'Text face: everything else', 'Hanken Grotesk 400 and 600 (the only weights loaded)', 'Taste: no single heavy condensed face for everything'),
            ('font-mono', 'Code samples on this stand only', 'System monospace, nothing to load', 'Stand layout: never in the product'),
            ('hidden-size', 'Visually hidden text for screen readers', '1px box, clipped', 'voice.md → Loading: “Loading races…” is read, not shown'),
-           ('photo-focus-lower', 'Crop focus, Berlin Marathon (generated photo)', 'Lower band: the runners fill it; the city sits above it', 'Attribute b · step 4, round 3'),
-           ('photo-focus-center', 'Crop focus, HYROX Dallas (generated photo)', 'Subject in the middle of the frame', 'Attribute b: the band shows the race, not the ceiling'),
-           ('photo-focus-upper', 'Crop focus, DEKA STRONG Chicago and Spartan Killington (generated photos)', 'Subject high in the frame: the band keeps heads and the action, no empty floor', 'Attribute b · step 4, round 3 (designer OK, 2026-10-21)'),
            ('screen-w', 'Screen pages: the page width inside the viewer', 'iPhone logical width', 'Wireframe conventions: iOS-structured, 390pt'),
            ('tabbar-h', 'Tab bar capsule height on the screen pages', '44px targets + 26px icon + label', 'Wireframe conventions: iOS chrome · Critique fix: 44px targets'),
            ('tabbar-inset', 'Floating tab bar: in from the screen edges', 'The 16px gutter (HIG gives no number)', 'G1: on iOS the tab bar floats above content'),
@@ -532,6 +527,7 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('tabbar-clear', 'Scroll padding under the content', 'Bar + gap + safe area: content runs under the glass, the last item still scrolls clear', 'G1: content shows through beneath the tab bar'),
            ('safe-top', 'Top safe area (status bar, Dynamic Island)', 'env(safe-area-inset-top), 0 inside the viewer', 'G6: respect the top safe area'),
            ('safe-bottom', 'Home-indicator inset under the tab bar and the sheet’s buttons', 'env(safe-area-inset-bottom), 0 inside the viewer', 'G2: buttons stay above the home indicator'),
+           ('size-time-hero-cap', 'Result detail: the most the leading finish time may grow to', '22% of the screen width', 'Step 7, #2: at 200% text the 56px time would outgrow the screen'),
            ('sheet-gap-top', 'Filters sheet: space left above the large detent', f'12px below the top safe area · {P}', 'G13: the sheet rests at its detent'),
            ('z-under', 'Stacking: behind its own box (the map\'s land and borders)', 'Lowest of the stacking scale', 'Step 6, #37: one scale, no bare z-index in a class'),
            ('z-lift', 'Stacking: above its siblings (map contents, bar buttons over the title)', 'One step up', 'Step 6, #37'),
@@ -916,6 +912,10 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-overflow'), os.path.join(ROOT, 'pu
 shutil.copyfile(os.path.join(ROOT, 'ui/review-overflow.html'), os.path.join(ROOT, 'public/ui/review-overflow.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step6'), os.path.join(ROOT, 'public/ui/review-step6'), dirs_exist_ok=True)   # step 6 critique fixes before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-step6.html'), os.path.join(ROOT, 'public/ui/review-step6.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-step7'), os.path.join(ROOT, 'public/ui/review-step7'), dirs_exist_ok=True)   # step 7 final check before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-step7.html'), os.path.join(ROOT, 'public/ui/review-step7.html'))
+for _f in ['visuals/review-round3.html']:   # the photos' round 3 review, linked from the Lesson 7 overview
+    shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
 import glob
 # the wireframes' published docs: the rulebooks and notes (wireframes/*.md: _conventions.md, _screens.md, _critique.md,
 # README.md) and the viewer's index.html, so an edit needs no manual copy. The frozen _wireframe/ snapshot is never
@@ -927,6 +927,6 @@ shutil.copyfile(os.path.join(ROOT, 'ia.html'), os.path.join(ROOT, 'public/ia.htm
 print('mirrored wireframes docs:', ', '.join(os.path.basename(d) for d in _docs))
 import glob   # our own photos (visuals/*.jpg), linked by the screens as ../visuals/<file>
 os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
-for _v in glob.glob(os.path.join(ROOT, 'visuals/*.jpg')):
+for _v in [f for e in ('jpg', 'webp', 'avif') for f in glob.glob(os.path.join(ROOT, f'visuals/*.{e}'))]:   # the pre-cropped responsive sets too (step 7, #5)
     shutil.copyfile(_v, os.path.join(ROOT, 'public/visuals', os.path.basename(_v)))
 print('mirrored to public/')

@@ -1,6 +1,6 @@
 # UI inventory
 
-Lesson 7, step 2, 2026-10-18. Every component in the product, read from all 35 wireframe pages (`wireframes/*.html`: 10 screens, each with its state pages) and `sitemap.md`. It covers the two Podium screens and the eight that are still grayscale.
+Lesson 7, step 2, 2026-10-18. Every component in the product, read from all 35 wireframe pages (`wireframes/*.html`: 10 screens, each with its state pages) and `sitemap.md`. Written when two screens were in Podium and eight still grayscale; since step 5 (2026-10-22) all 10 are on the kit, and each later step is recorded in its own section below (the last: Step 7).
 
 **How to read it**
 - **Screens:** the screen, then its files. A component counts as repeating when it appears on two or more of the 10 screens; state pages of one screen count once. Single-screen components are under [One-off](#one-off).
@@ -79,7 +79,7 @@ Single-screen blocks, by screen.
 - **Sort button** (`.sort-toggle`, "Soonest first" with the Solar sort icon; flips to "Latest first"; its name "Sort: …"; hidden in Map view; disabled on `-loading`). Markup pass (2026-10-23), G21 done: two options need no menu (HIG Pull-down buttons asks for three). The old `.sort-control` lives on in `concept/specimens.css` for the stand.
 - **Sport-type rows** (seven `label.row.row--check` in the Filters sheet: a neutral checkmark at the trailing edge when chosen, nothing when not; C4). Markup pass (2026-10-23), G19 done. Native: [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables).
 - **Static map** (`.map-placeholder.has-pins`, `a.map-pin` ×7). Markup pass (2026-10-23): the pins have no inline positions (the kit places them, no `!important`), and the bracketed wireframe notes are gone from the markup (`.map-caption` too). States: pins filtered with the list; empty, error and loading messages inside the map. The bracketed wireframe notes (`.map-caption`, the `p` before a map state's heading, the loading map's text) are hidden by the kit since 2026-10-23; removing them from the markup is in the markup pass. Loading: the map surface pulses with the skeletons (C6), still under reduced motion.
-- **Race photo** (`img.photo` with `.photo--low/mid/lower/center/high` crops). Photo: yes.
+- **Race photo** (`picture > img.photo`, pre-cropped 3:1 files at 684 and 1026 px, AVIF / WebP / JPEG with `srcset`, since step 7; the `.photo--*` focus classes are gone). Photo: yes.
 
 **Race detail**
 - **Official race website link** (an external text link in its section). Gaps: G36 K (44pt target, step 5).
@@ -161,7 +161,7 @@ Every component the step 6 critique touched, as it is now (record: `concept/conc
 - **Date field → Date pill** (`.date-pill` with `.date-value` over the transparent `input type="date"`): the date as "23 Sep 2026", empty "Choose a date"; no glyph, no locale mask. Race browse (Filters sheet, all 4 files), Log result (all 3).
 - **Sport-type rows and Race picker's linked race:** the checkmark is 26px (the glyph about 17px wide).
 - **Field error and Profile's row error:** one look, 15px / 600 Text 1 after the coral icon. Invalid rows: one ring around each run of adjacent invalid rows; the hairlines that touch it are hidden.
-- **Grouped settings rows (Profile):** the editable Name in Text 1; Email (read-only) and the menu values in Text 2.
+- **Grouped settings rows (Profile):** the editable Name in Text 1; Email (read-only) and the menu values in Text 2 (designer decision, step 7).
 - **Text field (password rows):** placeholder "Required" (Sign in, New password).
 - **Linked race card:** on the sheet's `--bg-3`; Unlink is a tertiary text action. The Catalog row goes while a race is linked.
 - **Locked form:** one treatment, every control in Text disabled, Cancel included; the help text stays Text 2.
@@ -173,4 +173,17 @@ Every component the step 6 critique touched, as it is now (record: `concept/conc
 - **Modal sheet (Log result):** Results' top edge shows receded and dimmed above it.
 - **Removed:** `--field-line-sheet` and `--icon-calendar` (unused); the busy `.submit-btn` rule; the stand-only tokens (`--success*`, `--warning*`, `--phone-width`) moved to `concept/specimens.css` and `concept/stand.css`; the first-screen harness's tab bar rules moved to `concept/first-screen.css`. `--stand-col-min` stays in the kit: the published review pages link only the kit and use it.
 - **New tokens:** `--size-time-hero`, `--icon-search-field`, the stacking scale `--z-under` … `--z-sheet`.
+
+## Step 7: the final check (2026-10-25)
+
+The final check found 22 defects; all are fixed (record: `concept/concept.md` → Step 7).
+- **Every screen:** `<body>` carries no `role="application"`; every top bar is `header.top-bar`; the back link is `a.back` (no hand-drawn glyph in the markup).
+- **Date pill:** one `button.date-value` over the native input (which is `tabindex="-1"`, `aria-hidden`); one Tab stop and one ring.
+- **Race photo:** `picture` with pre-cropped AVIF / WebP / JPEG at 684 and 1026 px; Race browse loads the first three eagerly, Race detail only the shown race's.
+- **State message (detail errors):** the action inside `.state-actions`, as everywhere else.
+- **Detail loading states:** a visually hidden `h1` ("Race details", "Result details").
+- **Race card heading:** `h2` on the screens, in the showcase and on the stand.
+- **`ui/map.css`:** loaded without blocking first paint on Race browse (List is the default view).
+- **Showcase:** current texts and names (rows 99, 203, 370, 459), `aria-haspopup` on Sign out, unique ids, 44pt TOC links.
+- **Large text:** the result card, the controls row and the date pill wrap at 200%; `check_overflow.mjs` runs every state at 200% too.
 

@@ -14,7 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LESSONS = [('research.html', '01', 'Research'), ('personas.html', '02', 'Personas &amp; JTBD'), ('ia.html', '03', 'IA'),
            ('wireframes/index.html', '04', 'Wireframes'), ('voice.html', '05', 'Voice'), ('concept-overview.html', '06', 'Concept'),
-           (None, '07', 'UI assembly'), (None, '08', 'Design tokens'), (None, '09', 'Design system'), (None, '10', 'Responsive'),
+           ('ui-overview.html', '07', 'UI assembly'), (None, '08', 'Design tokens'), (None, '09', 'Design system'), (None, '10', 'Responsive'),
            (None, '11', 'Animation &amp; micro-interactions'), (None, '12', 'Handoff')]
 DONE = [l for l in LESSONS if l[0]]
 

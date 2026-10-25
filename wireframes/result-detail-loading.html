@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
+<link rel="stylesheet" href="../ui/kit.css?v=428bee74">
 </head>
-<body class="onrace" role="application" aria-label="Onrace — Result detail, loading state (wireframe)">
+<body class="onrace">
 
   <div class="phone-screen">
 
@@ -21,10 +21,10 @@
            and LinkError's Try again → no (DeadEnd5) — flows.md → Related
            Job 4. It isn't gated: you're already
            inside the owner-only archive (_conventions.md § 2). -->
-      <nav class="top-bar" aria-label="Back" data-collapse>
-        <a href="results-list.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></a>
+      <header class="top-bar" aria-label="Back" data-collapse>
+        <a class="back" href="results-list.html"><span>Results</span></a>
         <span class="bar-title" aria-hidden="true"></span>
-      </nav>
+      </header>
 
     <main>
 
@@ -36,6 +36,7 @@
            visually-hidden status carrying the meaning. My Results (back)
            stays usable — it doesn't depend on the fetch. -->
       <article class="result" aria-busy="true">
+        <h1 class="visually-hidden">Result details</h1>   <!-- heading navigation finds the screen while it loads (step 7, #9) -->
         <p class="visually-hidden" role="status">Loading result details…</p>
         <div aria-hidden="true">
           <div class="bar h1"></div>
@@ -103,7 +104,7 @@
     window.addEventListener('resize', edges);
     edges();
   }
-  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length && !h.classList.contains('visually-hidden'); })[0];   // a hidden heading (a loading state's) has no title to collapse into the bar
   if (!h1) return;
   var title = bar.querySelector('.bar-title');
   if (title && !title.textContent.trim()) title.textContent = h1.textContent;

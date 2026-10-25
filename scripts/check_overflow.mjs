@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/* Horizontal overflow check (2026-10-24): every wireframe page and state, at 390×844 and 320×568 (iPhone SE), fails
+/* Horizontal overflow check (2026-10-24): every wireframe page and state, at 390×844 and 320×568 (iPhone SE), and at
+   390×844 with 200% text (Dynamic Type's top of the range, step 7), fails
    on any horizontal overflow. Dependency-free: it starts the installed Google Chrome headless and drives it over the
    DevTools protocol (Node 18+: fetch and WebSocket built in). The pages are served over a local HTTP server, as on
    GitHub Pages, and measured only after document.fonts.ready: the real fonts, not fallbacks (2026-10-25).
@@ -8,7 +9,8 @@
    - a rendered element reaches past the screen's left or right edge (outside a container built to scroll sideways);
    - any element scrolls sideways (scrollWidth > clientWidth) that isn't built to: the one sideways scroller by design
      is the active filter chips row (.chips-row), and its own box must still fit the screen;
-   - a one-line control wraps (ONE_LINE: Sort, Filters, List/Map, the chips, Clear all filters);
+   - a one-line control wraps (ONE_LINE: Sort, Filters, List/Map, the chips, Clear all filters: the controls bar);
+   - a page script throws, or a deferred stylesheet never applies (step 7);
    - a font the page uses didn't load (a family and weight from the kit with no loaded face: the measure would be a
      fallback's).
 
@@ -70,7 +72,7 @@ states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile ·
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
 
 // ---------------------------------------------------------------- the check, in the page
-const ONE_LINE = '.sort-toggle, .filters-trigger, .view-btn, .chips-row .chip, .clear-all';
+const ONE_LINE = '.sort-toggle, .filters-trigger, .controls .view-btn, .chips-row .chip, .clear-all';   // the controls bar's; a segment in content (Sign in | Create account) may wrap at 200% text rather than truncate (step 7)
 const FONTS = ['Schibsted Grotesk', 'Hanken Grotesk'];   // the kit's two families (fonts load from each page's <head>)
 const CHECK = `(async () => {
   await document.fonts.ready;
@@ -110,6 +112,7 @@ const CHECK = `(async () => {
     if (!inScroller && (r.right > W + 0.5 || r.left < -0.5)) bad.push(name(el) + ' spans ' + Math.round(r.left) + '–' + Math.round(r.right) + ' on a ' + W + 'px screen');
     if (el.scrollWidth > el.clientWidth + 1 && /(auto|scroll)/.test(cs.overflowX) && !scrollerX(el)) bad.push(name(el) + ' scrolls sideways (' + el.scrollWidth + ' > ' + el.clientWidth + ')');
   }
+  document.querySelectorAll('link[rel="preload"][as="style"]').forEach(l => bad.push('stylesheet never applied: ' + l.getAttribute('href')));   // a deferred sheet must switch to rel=stylesheet on load
   if (document.documentElement.scrollWidth > W + 1) bad.push('the page scrolls sideways (' + document.documentElement.scrollWidth + ' > ' + W + ')');
   return [...new Set(bad)].slice(0, 6);
 })()`;
@@ -139,9 +142,10 @@ if (!port) { console.error('check_overflow: Chrome did not start'); cleanup(); p
 const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
 const ws = new WebSocket(targets.find(t => t.type === 'page').webSocketDebuggerUrl);
 await new Promise(r => ws.addEventListener('open', r, { once: true }));
-let seq = 0; const pending = new Map(); const waiters = [];
+let seq = 0; const pending = new Map(); const waiters = []; const pageErrors = [];
 ws.addEventListener('message', ev => {
   const m = JSON.parse(ev.data);
+  if (m.method === 'Runtime.exceptionThrown' && (m.params.exceptionDetails.url || '').startsWith('http://127.0.0.1')) pageErrors.push((m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text || '').split('\n')[0]);
   if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); }
   else if (m.method) waiters.filter(w => w.method === m.method).forEach(w => { w.resolve(m); waiters.splice(waiters.indexOf(w), 1); });
 });
@@ -156,10 +160,12 @@ await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-m
 
 const failures = [];
 let checked = 0;
-for (const [w, h] of [[390, 844], [320, 568]]) {
+for (const [w, h, text] of [[390, 844, 16], [320, 568, 16], [390, 844, 32]]) {   // the third pass: 200% text (step 7, #2)
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
+  await send('Page.setFontSizes', { fontSizes: { standard: text, fixed: Math.round(text * 13 / 16) } });   // the root size: the kit's type unit is 1rem ÷ 16, so every size doubles
   for (const s of states) {
     const url = BASE + s.name + '.html' + (s.q ? '?' + s.q : '');
+    pageErrors.length = 0;
     const loaded = once('Page.loadEventFired');
     await send('Page.navigate', { url });
     await Promise.race([loaded, sleep(5000)]);
@@ -168,9 +174,10 @@ for (const [w, h] of [[390, 844], [320, 568]]) {
     if (s.act === 'sheet') await evaluate(`document.querySelector('.filters-trigger')?.click()`);
     if (s.act.startsWith('click:')) await evaluate(`document.querySelector(${JSON.stringify(s.act.slice(6))})?.click()`);
     if (s.act) await sleep(350);
-    const bad = await evaluate(CHECK);
+    const bad = (await evaluate(CHECK)) || [];
+    pageErrors.forEach(e => bad.push('script error: ' + e));   // a page whose script breaks isn't measured as designed (step 7)
     checked++;
-    if (bad && bad.length) failures.push(`${w}px · ${s.label}\n    ${bad.join('\n    ')}`);
+    if (bad && bad.length) failures.push(`${w}px${text !== 16 ? ' · ' + text / 16 * 100 + '% text' : ''} · ${s.label}\n    ${bad.join('\n    ')}`);
   }
 }
 ws.close(); cleanup();
@@ -180,5 +187,5 @@ if (failures.length) {
   console.log(`check_overflow: FAIL in ${failures.length} of ${checked} states (overflow, a wrapped one-line control, or a font not loaded)\n` + failures.join('\n'));
   process.exit(1);
 }
-if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (${states.length} per width, 390 and 320)`);
+if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (${states.length} per pass: 390, 320, and 390 at 200% text)`);
 else console.log(`check_overflow: pass (${checked} states)`);

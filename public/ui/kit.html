@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=ddc5fd32">
-<link rel="stylesheet" href="map.css?v=ddc5fd32">
+<link rel="stylesheet" href="kit.css?v=428bee74">
+<link rel="preload" as="style" href="map.css?v=428bee74" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="map.css?v=428bee74"></noscript>
 </head>
 <!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
      states, styled only by kit.css (map.css for the static map). Texts are the
@@ -56,19 +57,19 @@
       <p><code>h1</code> in the page header, with <code>.top-bar.top-bar--large[data-collapse]</code> floating over it · Race browse, Results list, Profile (markup pass, 2026-10-23). At rest the bar is transparent and empty; once the h1 has mostly scrolled away it turns to glass and shows the small title (<code>.is-collapsed</code>, G4, HIG Toolbars). On Results list it carries Log result, a text button at its trailing edge, amber as the screen's one primary (<code>.bar-action</code>, G5). When a state brings its own primary (<code>-error</code>) Log result steps down to Text 1; on <code>-empty</code> it's hidden, and "Log your first result" is the one way in.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Results, at rest: Log result in the bar</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></div><main><header><h1>Results</h1></header></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></header><div class="screen-main"><header><h1>Results</h1></header></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Scrolled: the bar collapsed, glass, the small title</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="top-bar top-bar--large is-collapsed" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></div><main><section id="list-view" aria-label="Results archive (specimen)"><ul class="result-list"><li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li><li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li></ul></section></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar top-bar--large is-collapsed" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></header><div class="screen-main"><section id="list-view" aria-label="Results archive"><ul class="result-list"><li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li><li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li></ul></section></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Results -error: Log result steps down to Text 1</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></div><main>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></header><div class="screen-main">
             <header><h1>Results</h1></header>
             <div class="state-message is-error"><h2>Couldn’t load your results</h2><p>The connection may have dropped. Check it, then try again. Nothing in your results archive has changed.</p><div class="state-actions"><a class="state-action" href="#" aria-label="Try again, loading your results">Try again</a></div></div>
-          </main></div></div>
+          </div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Profile</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Profile</span></div><main><header><h1>Profile</h1></header></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Profile</span></header><div class="screen-main"><header><h1>Profile</h1></header></div></div></div>
         </div>
       </div>
     </div>
@@ -78,10 +79,10 @@
       <p><code>.top-bar</code> · every screen below the top level. Glass on the ground level with a rim, below the top safe area (C1, G6). Back to the parent screen by name, a centered title, text actions (Cancel, Save, Apply filters). The bar action (Save on Log result, Log result on Results, Apply filters on the Filters sheet) is the screen's one primary, so it takes amber text, like a native bar button. On Race detail and Result detail the race name appears in the bar once its h1 has scrolled away (G34, G53), truncated between the back button and the edge.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Back only (Race detail; Result detail: ‹ Results)</p>
-          <div class="kit-frame kit-frame--flush"><nav class="top-bar" aria-label="Back"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Discover</span></a></nav></div>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar" aria-label="Back"><a class="back" href="#"><span>Discover</span></a></header></div>
         </div>
         <div class="kit-state"><p class="kit-label">Scrolled on a detail screen: the race name in the bar (G34)</p>
-          <div class="kit-frame kit-frame--flush"><nav class="top-bar is-collapsed" aria-label="Back" data-collapse><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Discover</span></a><span class="bar-title" aria-hidden="true">UTMB — Ultra-Trail du Mont-Blanc</span></nav></div>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar is-collapsed" aria-label="Back" data-collapse><a class="back" href="#"><span>Discover</span></a><span class="bar-title" aria-hidden="true">UTMB — Ultra-Trail du Mont-Blanc</span></header></div>
         </div>
         <div class="kit-state"><p class="kit-label">Cancel, title and Save, amber: the screen's one primary (Log result, G40)</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div>
@@ -96,13 +97,13 @@
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action" aria-disabled="true">Sign in</button></header></div>
         </div>
         <div class="kit-state"><p class="kit-label">Back and title on a pushed screen: Race picker inside Log result (2026-10-24)</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log result</span></a><h1 class="bar-title">Find a race</h1></header><form class="search" role="search" onsubmit="return false;"><label for="k-pq" class="visually-hidden">Search races by name or city</label><input type="search" id="k-pq" placeholder="Race name or city" enterkeyhint="search" autocomplete="off"></form><main><p class="list-intro">Past races in the race catalog</p><ul class="race-list" aria-label="Past races in the race catalog">
-                <li><article class="race-card"><a class="card-link" href="#"><h4>UTMB — Ultra-Trail du Mont-Blanc</h4><p class="card-meta"><span class="sport-tag">Ultra</span> <time datetime="2026-08-28"><span class="day">28</span> Aug 2026</time></p><p class="card-location">Chamonix, France</p></a></article></li>
-                <li><article class="race-card"><a class="card-link" href="#"><h4>Boston Marathon</h4><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-04-20"><span class="day">20</span> Apr 2026</time></p><p class="card-location">Boston, USA</p></a></article></li>
-              </ul></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar"><a class="back" href="#"><span>Log result</span></a><h1 class="bar-title">Find a race</h1></header><form class="search" role="search" onsubmit="return false;"><label for="k-pq" class="visually-hidden">Search races by name or city</label><input type="search" id="k-pq" placeholder="Race name or city" enterkeyhint="search" autocomplete="off"></form><div class="screen-main"><p class="list-intro">Past races in the race catalog</p><ul class="race-list" aria-label="Past races in the race catalog">
+                <li><article class="race-card"><a class="card-link" href="#"><h2>UTMB — Ultra-Trail du Mont-Blanc</h2><p class="card-meta"><span class="sport-tag">Ultra</span> <time datetime="2026-08-28"><span class="day">28</span> Aug 2026</time></p><p class="card-location">Chamonix, France</p></a></article></li>
+                <li><article class="race-card"><a class="card-link" href="#"><h2>Boston Marathon</h2><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-04-20"><span class="day">20</span> Apr 2026</time></p><p class="card-location">Boston, USA</p></a></article></li>
+              </ul></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Back and title (Reset password, New password)</p>
-          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a href="#"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sign in</span></a><h1 class="bar-title">Reset password</h1></header></div>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="back" href="#"><span>Sign in</span></a><h1 class="bar-title">Reset password</h1></header></div>
         </div>
         <div class="kit-state"><p class="kit-label">Title switches: Check your inbox</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Check your inbox</h1></header></div>
@@ -149,29 +150,29 @@
         <div class="kit-state"><p class="kit-label">Race browse, with photo</p>
           <div class="kit-frame"><ul class="race-list"><li>
             <article class="race-card">
-              <img class="photo photo--mid" src="../visuals/hyrox-sled-hall-1.jpg" alt="" width="1200" height="400">
-              <a class="card-link" href="#"><h4>HYROX London</h4><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+              <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-684.avif 684w, ../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-684.webp 684w, ../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../visuals/hyrox-sled-hall-1-684.jpg 684w, ../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
             </article>
           </li><li>
             <article class="race-card">
-              <img class="photo photo--upper" src="../visuals/ocr-wall-1.jpg" alt="" width="1200" height="400" loading="lazy">
-              <a class="card-link" href="#"><h4>Spartan Race Beast — Killington</h4><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+              <picture><source type="image/avif" srcset="../visuals/ocr-wall-1-684.avif 684w, ../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/ocr-wall-1-684.webp 684w, ../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/ocr-wall-1-1026.jpg" srcset="../visuals/ocr-wall-1-684.jpg 684w, ../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
             </article>
           </li></ul></div>
         </div>
         <div class="kit-state"><p class="kit-label">Pressed (G23)</p>
           <div class="kit-frame"><ul class="race-list"><li>
             <article class="race-card is-pressed">
-              <img class="photo photo--mid" src="../visuals/hyrox-sled-hall-1.jpg" alt="" width="1200" height="400">
-              <a class="card-link" href="#"><h4>HYROX London</h4><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+              <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-684.avif 684w, ../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-684.webp 684w, ../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../visuals/hyrox-sled-hall-1-684.jpg 684w, ../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
             </article>
           </li></ul></div>
         </div>
         <div class="kit-state"><p class="kit-label">Race picker, no photo</p>
           <div class="kit-frame"><ul class="race-list"><li>
-            <article class="race-card"><a class="card-link" href="#"><h4>Berlin Marathon</h4><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2025-09-21"><span class="day">21</span> Sep 2025</time></p><p class="card-location">Berlin, Germany</p></a></article>
+            <article class="race-card"><a class="card-link" href="#"><h2>Berlin Marathon</h2><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2025-09-21"><span class="day">21</span> Sep 2025</time></p><p class="card-location">Berlin, Germany</p></a></article>
           </li><li>
-            <article class="race-card"><a class="card-link" href="#" aria-current="true"><h4>DEKA STRONG Chicago</h4><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14"><span class="day">14</span> Mar 2026</time></p><p class="card-location">Chicago, USA</p></a></article>
+            <article class="race-card"><a class="card-link" href="#" aria-current="true"><h2>DEKA STRONG Chicago</h2><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14"><span class="day">14</span> Mar 2026</time></p><p class="card-location">Chicago, USA</p></a></article>
           </li></ul></div>
         </div>
       </div>
@@ -260,12 +261,12 @@
           <div class="kit-frame kit-stage">
             <div class="sheet-backdrop open"></div>
             <div class="sheet open" role="dialog" aria-modal="false" aria-labelledby="k-sheet-h">
-              <div class="top-bar"><button type="button">Cancel</button><h2 id="k-sheet-h" class="bar-title">Filters</h2><button type="submit" class="bar-action" form="k-filters">Apply filters</button></div>
+              <header class="top-bar"><button type="button">Cancel</button><h2 id="k-sheet-h" class="bar-title">Filters</h2><button type="submit" class="bar-action" form="k-filters">Apply filters</button></header>
               <form id="k-filters" onsubmit="return false;">
                 <div class="group"><ul class="rows">
                   <li><div class="row"><label for="k-region">Region</label><select id="k-region"><option value="">All regions</option><option selected>Europe</option><option>North America</option><option>Middle East</option><option>Asia-Pacific</option><option>Africa</option></select></div></li>
-                  <li><div class="row"><label for="k-from">Race date from</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="k-from" value="2026-09-23"></span></div></li>
-                  <li><div class="row"><label for="k-to">Race date to</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="k-to" value="2027-09-23"></span></div></li>
+                  <li><div class="row"><label for="k-from">Race date from</label><span class="date-pill"><button type="button" class="date-value" id="k-from-pick"></button><input type="date" id="k-from" tabindex="-1" aria-hidden="true" value="2026-09-23"></span></div></li>
+                  <li><div class="row"><label for="k-to">Race date to</label><span class="date-pill"><button type="button" class="date-value" id="k-to-pick"></button><input type="date" id="k-to" tabindex="-1" aria-hidden="true" value="2027-09-23"></span></div></li>
                 </ul></div>
                 <fieldset class="group"><legend class="group-heading">Sport type</legend><ul class="rows">
                   <li><label class="row row--check"><input type="checkbox" checked> HYROX</label></li>
@@ -301,13 +302,13 @@
 
     <div class="kit-item" id="date">
       <h3>Date field</h3>
-      <p><code>.date-pill</code> in a row, a native compact picker (G18, G44; step 6, #26): the date written as the chips and cards write it ("23 Sep 2026") on a <code>--bg-2</code> pill, the native <code>input type="date"</code> over it, transparent, so a tap opens the system's calendar. No glyph, no browser locale mask: empty, "Choose a date" in Text 2. Filters sheet (above), Log result (Race date).</p>
+      <p><code>.date-pill</code> in a row, a native compact picker (G18, G44; step 6, #26): the date written as the chips and cards write it ("23 Sep 2026") on a <code>--bg-2</code> pill, the pill is one <code>button.date-value</code> (one Tab stop, one ring) that opens the system's calendar (<code>showPicker()</code>); the native <code>input type="date"</code> beside it holds the value, out of the tab order (step 7, #3). No glyph, no browser locale mask: empty, "Choose a date" in Text 2. Filters sheet (above), Log result (Race date).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Log result: Race date, empty</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d1">Race date</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="k-d1"></span></div></li></ul></form></div>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d1">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-d1-pick"></button><input type="date" id="k-d1" tabindex="-1" aria-hidden="true"></span></div></li></ul></form></div>
         </div>
         <div class="kit-state"><p class="kit-label">Log result -error: missing</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d2">Race date</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="k-d2" aria-invalid="true" aria-describedby="k-d2-e"></span></div><p class="field-error" id="k-d2-e">Add the date you raced.</p></li></ul></form></div>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d2">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-d2-pick"></button><input type="date" id="k-d2" tabindex="-1" aria-hidden="true" aria-invalid="true" aria-describedby="k-d2-e"></span></div><p class="field-error" id="k-d2-e">Add the date you raced.</p></li></ul></form></div>
         </div>
       </div>
     </div>
@@ -319,7 +320,7 @@
         <div class="kit-state"><p class="kit-label">Log result: grouped, with hints</p>
           <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
             <div class="group"><ul class="rows"><li><a class="row row--nav" href="#" aria-describedby="k-cat-h">Find in race catalog</a></li></ul><p class="group-footer" id="k-cat-h">Optional. Fills in the race name, date and sport type for you.</p></div>
-            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn">Race name</label><input type="text" id="k-rn" placeholder="e.g. Berlin Marathon" autocomplete="off"></div></li><li><div class="row"><label for="k-rd">Race date</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="k-rd"></span></div></li><li><div class="row"><label for="k-rs">Sport type</label><select id="k-rs"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn">Race name</label><input type="text" id="k-rn" placeholder="e.g. Berlin Marathon" autocomplete="off"></div></li><li><div class="row"><label for="k-rd">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-rd-pick"></button><input type="date" id="k-rd" tabindex="-1" aria-hidden="true"></span></div></li><li><div class="row"><label for="k-rs">Sport type</label><select id="k-rs"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></div>
             <div class="group"><ul class="rows"><li><div class="row"><label for="k-ft">Finish time</label><input type="text" id="k-ft" inputmode="numeric" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="k-ft-h"></div></li></ul><p class="group-footer" id="k-ft-h">Hours:minutes:seconds, exactly as the official results show it.</p></div>
             <div class="group"><ul class="rows"><li><div class="row row--stacked"><label for="k-url">Official result link</label><input type="url" id="k-url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off"></div></li></ul></div>
           </form></div>
@@ -349,7 +350,7 @@
           <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your result</h2><p>The connection may have dropped. Check it, then tap Save to try again. Everything you entered is still here.</p></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">New password -error?cause=submit</p>
-          <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your new password</h2><p>Your password wasn’t changed. The connection may have dropped, or this reset link may have expired. Check your connection, enter your new password again and tap Save new password. If it still won’t save, reset your password again.</p><a class="alert-link" href="#">Reset password again</a></div></div>
+          <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your new password</h2><p>Your password wasn’t changed. Check your connection, then tap Save.</p><a class="alert-link" href="#">Reset password again</a></div></div>
         </div>
       </div>
     </div>
@@ -381,7 +382,7 @@
           <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load races</h2><p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Results list -empty</p>
-          <div class="kit-frame"><section id="list-view" aria-label="Results archive"><div class="state-message state-message--archive" role="status"><h2>No results logged yet</h2><p>Keep your official race results here.</p><div class="state-actions"><a class="state-action" href="#">Log your first result</a></div></div></section></div>
+          <div class="kit-frame"><section id="list-view-empty" aria-label="Results archive"><div class="state-message state-message--archive" role="status"><h2>No results logged yet</h2><p>Keep your official race results here.</p><div class="state-actions"><a class="state-action" href="#">Log your first result</a></div></div></section></div>
         </div>
         <div class="kit-state"><p class="kit-label">Results list -error</p>
           <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load your results</h2><p>The connection may have dropped. Check it, then try again. Nothing in your results archive has changed.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
@@ -394,8 +395,8 @@
         </div>
         <div class="kit-state"><p class="kit-label">Race detail -error · Result detail -error · Profile -error</p>
           <div class="kit-frame">
-            <div class="state-message is-error"><h2>Couldn’t load race details</h2><p>The connection may have dropped. Check it, then try again.</p><a class="state-action" href="#">Try again</a></div>
-            <div class="state-message is-error"><h2>Couldn’t load this result</h2><p>The connection may have dropped. Check it, then try again.</p><a class="state-action" href="#">Try again</a></div>
+            <div class="state-message is-error"><h2>Couldn’t load race details</h2><p>The connection may have dropped. Check it, then try again.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
+            <div class="state-message is-error"><h2>Couldn’t load this result</h2><p>The connection may have dropped. Check it, then try again.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
             <div class="state-message is-error"><h2>Couldn’t load your account</h2><p>The connection may have dropped. Check it, then try again. Your account and results haven’t changed.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
           </div>
         </div>
@@ -446,7 +447,7 @@
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race detail</p>
           <div class="kit-frame kit-frame--flush"><article class="race" aria-labelledby="k-race-h">
-            <img class="photo photo--mid" src="../visuals/hyrox-sled-hall-1.jpg" alt="" width="1200" height="400" loading="lazy">
+            <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-684.avif 684w, ../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-684.webp 684w, ../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../visuals/hyrox-sled-hall-1-684.jpg 684w, ../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
             <h1 id="k-race-h">HYROX London</h1>
             <dl class="facts"><dt>Sport type</dt><dd>HYROX</dd><dt>Race date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd><dt>Location</dt><dd>London, England, United Kingdom</dd></dl>
             <section class="about" aria-labelledby="k-about"><h2 id="k-about">About this race</h2><p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p></section>
@@ -469,7 +470,7 @@
       <p>A one-line confirmation · Results list (<code>.saved-status</code>, <code>?saved=</code>), Sign in / Sign up (<code>.reset-done</code>, <code>.sent-note</code>), Profile (<code>.row-note</code>). Neutral: never green, never a check.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Results list ?saved=</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><p class="saved-status" role="status">Saved: <strong>Valencia Half Marathon</strong></p></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><p class="saved-status" role="status">Saved: <strong>Valencia Half Marathon</strong></p></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Sign in ?reset=done · Check inbox: Sent</p>
           <div class="kit-frame gate"><p class="reset-done" role="status">Password changed. Sign in with your new password.</p><p class="sent-note">Sent. Check your inbox again.</p></div>
@@ -553,7 +554,7 @@
         <div class="kit-state"><p class="kit-label">Sign up: sending a new link (busy: the spinner before "Sending…", G26; label stays Text 1), then "Sent"</p>
           <div class="kit-frame gate">
             <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn" disabled aria-busy="true"><span data-resend="idle" hidden>Send a new link</span><span data-resend="sending">Sending…</span></button></section>
-            <section aria-label="Send a new confirmation link, sent"><button type="button" class="secondary-btn"><span data-resend="idle">Send a new link</span><span data-resend="sending" hidden>Sending…</span></button><p class="sent-note">Sent. Check your inbox again.</p></section>
+            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn"><span data-resend="idle">Send a new link</span><span data-resend="sending" hidden>Sending…</span></button><p class="sent-note">Sent. Check your inbox again.</p></section>
           </div>
         </div>
       </div>
@@ -580,13 +581,13 @@
       <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. List/Map keeps its full size; Filters takes the rest and shrinks no further than its label; the bar never outgrows the screen (2026-10-24). The chips row scrolls and fades at its end; Clear all filters stays pinned after it, whole. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">No filters</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Two filters (?sport=hyrox&amp;sport=marathon)</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="HYROX, remove filter">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Marathon, remove filter">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="HYROX, remove filter">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Marathon, remove filter">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
         </div>
         <div class="kit-state"><p class="kit-label">Three filters, the row fades (-empty)</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><main><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 3</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Middle East, remove filter">Middle East <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Triathlon, remove filter">Triathlon <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="1 Oct – 30 Nov 2026, remove filter">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></main></div></div>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 3</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Middle East, remove filter">Middle East <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Triathlon, remove filter">Triathlon <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="1 Oct – 30 Nov 2026, remove filter">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
         </div>
       </div>
     </div>
@@ -597,7 +598,7 @@
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Seven races</p>
           <div class="kit-frame kit-stage"><div class="view-panel kit-map">
-            <div class="map-placeholder has-pins" role="group" aria-label="Map of the races">
+            <div class="map-placeholder has-pins" role="group" aria-label="Map of the filtered races">
               <a class="map-pin" data-pin="berlin-marathon" href="#race=berlin-marathon" aria-label="Berlin, Berlin Marathon, 27 Sep 2026"><span>Berlin</span></a>
               <a class="map-pin" data-pin="hyrox-london" href="#race=hyrox-london" aria-label="London, HYROX London, 6 Dec 2026"><span>London</span></a>
               <a class="map-pin" data-pin="utmb" href="#race=utmb" aria-label="Chamonix, UTMB — Ultra-Trail du Mont-Blanc, 24 Aug 2027"><span>Chamonix</span></a>
@@ -677,7 +678,7 @@
               </ul>
               <p class="group-footer">Changes save as you make them. Your email is the one you sign in with, so it can’t be changed here.</p>
             </section>
-            <section class="group" aria-label="Sign out"><button type="button" class="signout">Sign out</button></section>
+            <section class="group" aria-label="Sign out"><button type="button" class="signout" aria-haspopup="dialog">Sign out</button></section>
           </div>
         </div>
         <div class="kit-state"><p class="kit-label">-error?cause=save: a row didn't save</p>
@@ -721,23 +722,33 @@
   });
 </script>
 <script>
-/* Date pills (step 6, #26): the value shows as the chips and cards write dates ("23 Sep 2026"), on the pill, over the
-   native input, which stays on top, transparent, so a tap still opens the system's picker. Empty, it says
-   "Choose a date" (no browser locale mask, no glyph). Runs after the page's own scripts have filled the form. */
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
 (function () {
   var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   document.querySelectorAll('.date-pill').forEach(function (pill) {
-    var input = pill.querySelector('input[type="date"]'), out = pill.querySelector('.date-value');
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
     function show() {
-      var v = input.value;
+      var v = input.value, text;
       pill.classList.toggle('is-empty', !v);
-      if (!v) { out.textContent = 'Choose a date'; return; }
-      var d = v.split('-');
-      out.textContent = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0];
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
     }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
     input.addEventListener('input', show);
     input.addEventListener('change', show);
     show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
   });
 })();
 </script>

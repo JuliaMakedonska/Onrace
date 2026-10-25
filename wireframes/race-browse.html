@@ -4,21 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Race browse — Onrace (wireframe)</title>
+<script>
+/* The sample catalog (also read by the page script below), and the no-match check (step 7, #8): filters that match
+   nothing go straight to the Empty state, before the list and its photos load. The unfiltered date range is the
+   Filters sheet's (data-unfiltered on its date fields). */
+window.RACE_CATALOG = [
+  { slug: 'berlin-marathon', name: 'Berlin Marathon', city: 'Berlin', sport: 'marathon', date: '2026-09-27', region: 'Europe' },
+  { slug: 'hyrox-london', name: 'HYROX London', city: 'London', sport: 'hyrox', date: '2026-12-06', region: 'Europe' },
+  { slug: 'hyrox-dallas', name: 'HYROX Dallas', city: 'Dallas', sport: 'hyrox', date: '2027-01-17', region: 'North America' },
+  { slug: 'deka-strong-chicago', name: 'DEKA STRONG Chicago', city: 'Chicago', sport: 'deka', date: '2027-03-14', region: 'North America' },
+  { slug: 'boston-marathon', name: 'Boston Marathon', city: 'Boston', sport: 'marathon', date: '2027-04-20', region: 'North America' },
+  { slug: 'spartan-beast-killington', name: 'Spartan Race Beast — Killington', city: 'Killington', sport: 'ocr', date: '2027-07-11', region: 'North America' },
+  { slug: 'utmb', name: 'UTMB — Ultra-Trail du Mont-Blanc', city: 'Chamonix', sport: 'ultra', date: '2027-08-24', region: 'Europe' }
+];
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  if (!['q', 'region', 'from', 'to', 'sport'].some(function (k) { return p.has(k); })) return;
+  var q = (p.get('q') || '').trim().toLowerCase(), region = p.get('region') || '', sports = p.getAll('sport');
+  var from = p.get('from') || '2026-09-23', to = p.get('to') || '2027-09-23';
+  var any = window.RACE_CATALOG.some(function (r) {
+    return (!q || (r.name + ' ' + r.city).toLowerCase().indexOf(q) > -1) && (!region || r.region === region) &&
+      r.date >= from && r.date <= to && (!sports.length || sports.indexOf(r.sport) > -1);
+  });
+  if (!any) window.location.replace('race-browse-empty.html' + window.location.search);
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
-<link rel="stylesheet" href="../ui/map.css?v=ddc5fd32">
+<link rel="stylesheet" href="../ui/kit.css?v=428bee74">
+<link rel="preload" as="style" href="../ui/map.css?v=428bee74" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../ui/map.css?v=428bee74"></noscript>
 </head>
-<body class="onrace" role="application" aria-label="Onrace — Race browse (wireframe)">
+<body class="onrace">
 
   <div class="phone-screen">
 
     <!-- ZONE: top bar (markup pass, G4): floats over the large title, empty at rest; once the h1 has scrolled away
          it turns to glass and shows the small title. -->
-    <div class="top-bar top-bar--large" data-collapse>
+    <header class="top-bar top-bar--large" data-collapse>
       <span class="bar-title" aria-hidden="true">Discover</span>
-    </div>
+    </header>
 
     <main>
 
@@ -100,7 +126,7 @@
 
             <li>
               <article class="race-card">
-                <img class="photo photo--lower" src="../visuals/marathon-city-1.jpg" alt="" width="1200" height="400">
+                <picture><source type="image/avif" srcset="../visuals/marathon-city-1-684.avif 684w, ../visuals/marathon-city-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/marathon-city-1-684.webp 684w, ../visuals/marathon-city-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/marathon-city-1-1026.jpg" srcset="../visuals/marathon-city-1-684.jpg 684w, ../visuals/marathon-city-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342"></picture>
                 <a class="card-link" href="race-detail-loading.html?race=berlin-marathon">
                   <h2>Berlin Marathon</h2>
                   <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-09-27"><span class="day">27</span> Sep 2026</time></p>
@@ -111,7 +137,7 @@
 
             <li>
               <article class="race-card">
-                <img class="photo photo--mid" src="../visuals/hyrox-sled-hall-1.jpg" alt="" width="1200" height="400">
+                <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-684.avif 684w, ../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-684.webp 684w, ../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../visuals/hyrox-sled-hall-1-684.jpg 684w, ../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342"></picture>
                 <a class="card-link" href="race-detail-loading.html?race=hyrox-london">
                   <h2>HYROX London</h2>
                   <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p>
@@ -122,7 +148,7 @@
 
             <li>
               <article class="race-card">
-                <img class="photo photo--center" src="../visuals/hyrox-wallball-hall-1.jpg" alt="" width="1200" height="400" loading="lazy">
+                <picture><source type="image/avif" srcset="../visuals/hyrox-wallball-hall-1-684.avif 684w, ../visuals/hyrox-wallball-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/hyrox-wallball-hall-1-684.webp 684w, ../visuals/hyrox-wallball-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/hyrox-wallball-hall-1-1026.jpg" srcset="../visuals/hyrox-wallball-hall-1-684.jpg 684w, ../visuals/hyrox-wallball-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
                 <a class="card-link" href="race-detail-loading.html?race=hyrox-dallas">
                   <h2>HYROX Dallas</h2>
                   <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2027-01-17"><span class="day">17</span> Jan 2027</time></p>
@@ -133,7 +159,7 @@
 
             <li>
               <article class="race-card">
-                <img class="photo photo--upper" src="../visuals/deka-airbike-1.jpg" alt="" width="1200" height="400" loading="lazy">
+                <picture><source type="image/avif" srcset="../visuals/deka-airbike-1-684.avif 684w, ../visuals/deka-airbike-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/deka-airbike-1-684.webp 684w, ../visuals/deka-airbike-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/deka-airbike-1-1026.jpg" srcset="../visuals/deka-airbike-1-684.jpg 684w, ../visuals/deka-airbike-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
                 <a class="card-link" href="race-detail-loading.html?race=deka-strong-chicago">
                   <h2>DEKA STRONG Chicago</h2>
                   <p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2027-03-14"><span class="day">14</span> Mar 2027</time></p>
@@ -144,7 +170,7 @@
 
             <li>
               <article class="race-card">
-                <img class="photo photo--low" src="../visuals/marathon-city-2.jpg" alt="" width="1200" height="400" loading="lazy">
+                <picture><source type="image/avif" srcset="../visuals/marathon-city-2-684.avif 684w, ../visuals/marathon-city-2-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/marathon-city-2-684.webp 684w, ../visuals/marathon-city-2-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/marathon-city-2-1026.jpg" srcset="../visuals/marathon-city-2-684.jpg 684w, ../visuals/marathon-city-2-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
                 <a class="card-link" href="race-detail-loading.html?race=boston-marathon">
                   <h2>Boston Marathon</h2>
                   <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2027-04-20"><span class="day">20</span> Apr 2027</time></p>
@@ -155,7 +181,7 @@
 
             <li>
               <article class="race-card">
-                <img class="photo photo--upper" src="../visuals/ocr-wall-1.jpg" alt="" width="1200" height="400" loading="lazy">
+                <picture><source type="image/avif" srcset="../visuals/ocr-wall-1-684.avif 684w, ../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/ocr-wall-1-684.webp 684w, ../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/ocr-wall-1-1026.jpg" srcset="../visuals/ocr-wall-1-684.jpg 684w, ../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
                 <a class="card-link" href="race-detail-loading.html?race=spartan-beast-killington">
                   <h2>Spartan Race Beast — Killington</h2>
                   <p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p>
@@ -166,7 +192,7 @@
 
             <li>
               <article class="race-card">
-                <img class="photo photo--low" src="../visuals/trail-ultra-ridge-1.jpg" alt="" width="1200" height="400" loading="lazy">
+                <picture><source type="image/avif" srcset="../visuals/trail-ultra-ridge-1-684.avif 684w, ../visuals/trail-ultra-ridge-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/trail-ultra-ridge-1-684.webp 684w, ../visuals/trail-ultra-ridge-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/trail-ultra-ridge-1-1026.jpg" srcset="../visuals/trail-ultra-ridge-1-684.jpg 684w, ../visuals/trail-ultra-ridge-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
                 <a class="card-link" href="race-detail-loading.html?race=utmb">
                   <h2>UTMB — Ultra-Trail du Mont-Blanc</h2>
                   <p class="card-meta"><span class="sport-tag">Ultra</span> <time datetime="2027-08-24"><span class="day">24</span> Aug 2027</time></p>
@@ -232,11 +258,11 @@
   <div id="filters-sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="filters-sheet-heading" hidden>
     <!-- ZONE: sheet bar (markup pass, G12; HIG Sheets): Cancel on the leading edge, the title, Apply filters (the
          sheet's one primary) on the trailing edge. No grabber: the sheet rests at one detent, so it isn't resizable. -->
-    <div class="top-bar">
+    <header class="top-bar">
       <button type="button" id="filters-close">Cancel</button>
       <h2 id="filters-sheet-heading" class="bar-title">Filters</h2>
       <button type="submit" id="filters-apply" class="bar-action" form="filters-form">Apply filters</button>
-    </div>
+    </header>
     <!-- Options as grouped rows (G20): Region a native menu (G17), the dates native compact pickers (G18), sport
          types rows with a neutral checkmark (G19). -->
     <form id="filters-form">
@@ -250,8 +276,8 @@
             <option>Asia-Pacific</option>
             <option>Africa</option>
           </select></div></li>
-          <li><div class="row"><label for="date-from">Race date from</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="date-from" name="date-from" value="2026-09-23" data-unfiltered="2026-09-23"></span></div></li>
-          <li><div class="row"><label for="date-to">Race date to</label><span class="date-pill"><span class="date-value" aria-hidden="true"></span><input type="date" id="date-to" name="date-to" value="2027-09-23" data-unfiltered="2027-09-23"></span></div></li>
+          <li><div class="row"><label for="date-from">Race date from</label><span class="date-pill"><button type="button" class="date-value" id="date-from-pick"></button><input type="date" id="date-from" tabindex="-1" aria-hidden="true" name="date-from" value="2026-09-23" data-unfiltered="2026-09-23"></span></div></li>
+          <li><div class="row"><label for="date-to">Race date to</label><span class="date-pill"><button type="button" class="date-value" id="date-to-pick"></button><input type="date" id="date-to" tabindex="-1" aria-hidden="true" name="date-to" value="2027-09-23" data-unfiltered="2027-09-23"></span></div></li>
         </ul>
       </div>
       <fieldset class="group">
@@ -280,15 +306,7 @@
   // Filter state travels in the URL (region, from, to, sport) so every page
   // in the loop shows the same filters. The "fetch" is the seven sample races
   // below — the same ones as the cards and race-detail.html.
-  var RACES = [
-    { slug: 'berlin-marathon', name: 'Berlin Marathon', city: 'Berlin', sport: 'marathon', date: '2026-09-27', region: 'Europe' },
-    { slug: 'hyrox-london', name: 'HYROX London', city: 'London', sport: 'hyrox', date: '2026-12-06', region: 'Europe' },
-    { slug: 'hyrox-dallas', name: 'HYROX Dallas', city: 'Dallas', sport: 'hyrox', date: '2027-01-17', region: 'North America' },
-    { slug: 'deka-strong-chicago', name: 'DEKA STRONG Chicago', city: 'Chicago', sport: 'deka', date: '2027-03-14', region: 'North America' },
-    { slug: 'boston-marathon', name: 'Boston Marathon', city: 'Boston', sport: 'marathon', date: '2027-04-20', region: 'North America' },
-    { slug: 'spartan-beast-killington', name: 'Spartan Race Beast — Killington', city: 'Killington', sport: 'ocr', date: '2027-07-11', region: 'North America' },
-    { slug: 'utmb', name: 'UTMB — Ultra-Trail du Mont-Blanc', city: 'Chamonix', sport: 'ultra', date: '2027-08-24', region: 'Europe' }
-  ];
+  var RACES = window.RACE_CATALOG;   // the sample catalog, defined in <head> so the no-match check runs before the list (step 7, #8)
   var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   var params = new URLSearchParams(window.location.search);
@@ -500,8 +518,7 @@
       pin.hidden = keep.indexOf(new URLSearchParams(pin.search).get('race')) === -1;
     });
     document.querySelector('.results-count').innerHTML = countText(keep.length, readForm());
-    // nothing matches: the Empty state, the same exit the loading page takes (step 6, #6)
-    if (!keep.length) window.location.replace('race-browse-empty.html?' + toParams(readForm()).toString());
+    // nothing matches: the <head> check has already gone to the Empty state (step 6, #6; step 7, #8)
   }
 
   // --- Error page: "Try again" re-runs the same fetch, keeping filters
@@ -595,7 +612,7 @@
   var bar = document.querySelector('.top-bar[data-collapse]');
   var screen = document.querySelector('.phone-screen');
   if (!bar || !screen || !('IntersectionObserver' in window)) return;
-  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length && !h.classList.contains('visually-hidden'); })[0];   // a hidden heading (a loading state's) has no title to collapse into the bar
   if (!h1) return;
   var title = bar.querySelector('.bar-title');
   if (title && !title.textContent.trim()) title.textContent = h1.textContent;
@@ -607,23 +624,33 @@
 </script>
 
 <script>
-/* Date pills (step 6, #26): the value shows as the chips and cards write dates ("23 Sep 2026"), on the pill, over the
-   native input, which stays on top, transparent, so a tap still opens the system's picker. Empty, it says
-   "Choose a date" (no browser locale mask, no glyph). Runs after the page's own scripts have filled the form. */
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
 (function () {
   var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   document.querySelectorAll('.date-pill').forEach(function (pill) {
-    var input = pill.querySelector('input[type="date"]'), out = pill.querySelector('.date-value');
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
     function show() {
-      var v = input.value;
+      var v = input.value, text;
       pill.classList.toggle('is-empty', !v);
-      if (!v) { out.textContent = 'Choose a date'; return; }
-      var d = v.split('-');
-      out.textContent = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0];
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
     }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
     input.addEventListener('input', show);
     input.addEventListener('change', show);
     show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
   });
 })();
 </script>

@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
+<link rel="stylesheet" href="../ui/kit.css?v=428bee74">
 </head>
-<body class="onrace" role="application" aria-label="Onrace — Race detail, loading state (wireframe)">
+<body class="onrace">
 
   <div class="phone-screen">
 
@@ -17,10 +17,10 @@
            drill-down screen (no global tab bar, _conventions.md § 1). This
            is flows.md's "back / compares another race" edge, and the "no"
            edge of WantsToEnter: not worth entering → back to browsing. -->
-      <nav class="top-bar" aria-label="Back" data-collapse>
-        <a href="race-browse.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Discover</span></a>
+      <header class="top-bar" aria-label="Back" data-collapse>
+        <a class="back" href="race-browse.html"><span>Discover</span></a>
         <span class="bar-title" aria-hidden="true"></span>
-      </nav>
+      </header>
 
     <main>
 
@@ -30,6 +30,7 @@
            aria-busy plus the visually-hidden status carrying the meaning.
            The "Discover" back link stays usable — it doesn't depend on the fetch. -->
       <article class="race" aria-busy="true">
+        <h1 class="visually-hidden">Race details</h1>   <!-- heading navigation finds the screen while it loads (step 7, #9) -->
         <p class="visually-hidden" role="status">Loading race details…</p>
         <div aria-hidden="true">
           <div class="bar photo"></div>
@@ -108,7 +109,7 @@
     window.addEventListener('resize', edges);
     edges();
   }
-  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length && !h.classList.contains('visually-hidden'); })[0];   // a hidden heading (a loading state's) has no title to collapse into the bar
   if (!h1) return;
   var title = bar.querySelector('.bar-title');
   if (title && !title.textContent.trim()) title.textContent = h1.textContent;

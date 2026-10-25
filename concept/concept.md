@@ -806,7 +806,7 @@ The step 6 critique (four subagents, one per group: Discovery, Archive, Infrastr
 
 **Designer decisions (the conflict rows):**
 - **#11, the finish time leads Result detail** (attribute a): Schibsted 56px (`--size-time-hero`, new, signed), the largest element on the screen; the race name, still the `h1`, steps down to Item (17px / 600). The 0px gap under "Finish time" is 4px now.
-- **#21, editable values in Text 1, read-only in Text 2** (iOS Settings): Profile's Name in Text 1; Email and the menu values (Country, Language) in Text 2. Reverses DESIGN.md → Profile "values in `--text-2`". Read as iOS Settings has it: menu values are secondary there, so they stay Text 2 **[?]**, the designer may want them Text 1 too.
+- **#21, editable values in Text 1, read-only in Text 2** (iOS Settings): Profile's Name in Text 1; Email and the menu values (Country, Language) in Text 2. Reverses DESIGN.md → Profile "values in `--text-2`". Read as iOS Settings has it: menu values are secondary there, so they stay Text 2: **a designer decision since step 7** (2026-10-25), no longer [?].
 - **#22, "Account"** is the bar title on the sign-in screens in both modes; the bar action and the segment stay.
 - **#23, Solar Linear for the small UI glyphs** (back, chevrons, disclosure, the search field's magnifier); everything else stays Solar Bold. **A designer exception to "one icon style"**, with the reason: iOS varies symbol weight with size, so a Bold glyph at 15–18px reads as a filled triangle or a blob. The 48px empty-state magnifier keeps Bold (`--icon-search`); the field takes `--icon-search-field` (new). Linear SVGs from Iconify (`scripts/concept/icons/*-linear.svg`), signed on the stand.
 - **#29:** Race detail's alert body says "Tap Register again, or come back to this race later." No new button (Markup pass #10 stands).
@@ -849,4 +849,36 @@ The step 6 critique (four subagents, one per group: Discovery, Archive, Infrastr
 **Checked:**
 - **Build:** passes, including the overflow check (206 states at 390 and 320, fonts loaded); 185 signed tokens; 109 contrast pairs (new: the linked race on `--bg-3`, the date pill, Copy link, Profile's editable value).
 - **Screenshots:** 86 states before and after at 390×844 (every page and state, plus the bare-URL states the critique named, the empty submits, Kit and Shell). Review: `ui/review-step6.html`.
+
+### Step 7: the final check (designer priorities, 2026-10-25)
+
+Every working screen (35 pages, every state) checked against the kit and DESIGN.md for six things: a screen that doesn't link the kit or has its own styles; a style outside the kit's classes; one component with different markup; contrast under AA; a photo or icon from outside the system; text drifted from `microcopy.md`. Then `/impeccable audit` (accessibility, contrast, performance). **22 defects, all fixed** through the kit ("Keep it" rule), in the table's order:
+- **#1** `role="application"` (and its label) off `<body>` on all 35 pages: it put screen readers into focus mode and turned off heading and landmark navigation. The 35 `(page)` rows in `microcopy.md` are removed.
+- **#2** 200% text (the top of Dynamic Type): the result card's finish time wraps under its name, List/Map drops under Filters, a date pill under its label, and Result detail's leading time stops at `--size-time-hero-cap` (22vw, new, signed). `scripts/check_overflow.mjs` runs every state a third time, at 390 with 200% text (309 states in all); its one-line rule covers the controls bar's controls, so a segment in content (Sign in | Create account) may wrap at 200% rather than truncate.
+- **#3** the date pill is one `button.date-value`: one Tab stop, one ring, `showPicker()` on tap; the native input beside it holds the value, `tabindex="-1"` and `aria-hidden`. Its name starts with its visible text ("23 Sep 2026, race date", row 564).
+- **#4, #5, #7, #8** photos: pre-cropped 3:1 files at 684 and 1026 px in AVIF, WebP and JPEG with `srcset`/`sizes` and matching `width`/`height` (`visuals/README.md` → Export); the `.photo--*` focus classes and their five tokens are gone, since the crop is in the file. Race browse loads its first three cards eagerly (the third, the first screen's largest image, at high priority); Race detail loads only the shown race's photo (its sources wait in `data-*`), and nothing on the bare error page. A filter set that matches nothing goes to the Empty state from a check in `<head>`, before the list.
+- **#6** `ui/map.css` (110 KB of masks) no longer blocks first paint on Race browse: it is preloaded and applied on load (List is the default view).
+- **#9** a visually hidden `h1` on the detail loading states ("Race details", "Result details"; rows 562, 563).
+- **#10** the detail error states' action sits in `.state-actions`, as on every other state message.
+- **#11** one top bar element, `header.top-bar`, on every screen (it was `div`, `nav` or `header`).
+- **#12** the back link is `a.back`; the hand-drawn SVG chevron is out of the markup and the kit draws the Solar Linear one.
+- **#13** race card names are `h2` on the screens, in the showcase and on the stand (`.race-card h2`).
+- **#14–#20** the showcase: Sign out's `aria-haspopup`, a unique id, 44pt TOC links, and the screens' own text (rows 99, 203, 370, 459).
+- **#21–#22** `microcopy.md`: row 66 ("Sort:") removed, superseded by row 546; row 8's states corrected to `empty`.
+
+**The re-check (same day): no defect left.**
+- **Step 7 checks again:** every screen links the kit once, with no style block, inline style or unknown class; the shared components have one markup each (`header.top-bar` everywhere, `.state-actions` in every state message, the race card's `h2`, Sign out's `aria-haspopup`); contrast under AA only on disabled controls (exempt); every photo from `visuals/`, every icon Solar.
+- **`/impeccable audit` again:** the nine fixes hold (no `role="application"`, nothing overflows at 200%, one Tab stop and a ring on the date pill, one photo per Race detail, 3:1 files with `srcset`, `map.css` not blocking, eager first cards, the early no-match redirect, the loading `h1`s). It found two more, both fixed: the showcase had ten `main` landmarks (its specimen screens' `main` is now `div.screen-main`, and the kit's `.phone-screen main` rules read `:is(main, .screen-main)`), and the no-match check waited for the blocking stylesheets (it now runs first in `<head>`). What still loads before that redirect is the three eager card photos (about 129 KB of AVIF, against 337 KB of JPEG before), fetched by the browser's preload scanner, which a static page can't stop without making the first cards lazy.
+- **Microcopy again:** every fix holds; one older drift found and fixed: row 555 recorded a ", linked" label the page never had; the row now records what the page does (the card's name plus `aria-current`, read as "current").
+- **Caught by the screenshots, and now by the build:** the deferred `map.css` didn't apply (an escaped quote in its `onload`), so Map view lost its land and pins. `check_overflow.mjs` now also fails when a page script throws or a deferred stylesheet never applies; it was checked by putting the bug back, which failed the build, then removed.
+- **The collapsing title** ignores a visually hidden `h1`, so the loading states' bar stays empty, as before.
+
+**Designer decision:** Profile's menu values (Country, Language) stay Text 2, as iOS Settings has them; no longer [?].
+
+**Still deferred or provisional [?] after Lesson 7:**
+- The glass values (opacity margins, blur, rim) and the radii of the sheet (38px) and the alert (34px): Apple's iOS 26 kit wasn't read.
+- `--stand-col-min` stays in `ui/kit.css`: the published review pages link only the kit.
+- The static map: the interactive Map (Leaflet) is deferred to implementation.
+- Real devices: every check ran in Chrome; Safari and iPhone (the date pill's `showPicker()`, glass, scroll-edge bars, the clipboard) are untested.
+- Two-level tokens are Lesson 8.
 

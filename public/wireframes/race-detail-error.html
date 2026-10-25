@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
+<link rel="stylesheet" href="../ui/kit.css?v=428bee74">
 </head>
-<body class="onrace" role="application" aria-label="Onrace — Race detail, error state (wireframe)">
+<body class="onrace">
 
   <div class="phone-screen">
 
@@ -17,10 +17,10 @@
            drill-down screen (no global tab bar, _conventions.md § 1). This
            is flows.md's "back / compares another race" edge, and the "no"
            edge of WantsToEnter: not worth entering → back to browsing. -->
-      <nav class="top-bar" aria-label="Back" data-collapse>
-        <a href="race-browse.html"><svg class="back-chevron" aria-hidden="true" width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Discover</span></a>
+      <header class="top-bar" aria-label="Back" data-collapse>
+        <a class="back" href="race-browse.html"><span>Discover</span></a>
         <span class="bar-title" aria-hidden="true"></span>
-      </nav>
+      </header>
 
     <main>
 
@@ -40,12 +40,12 @@
       <div class="state-message" data-cause="detail" role="alert">
         <h1>Couldn’t load race details</h1>
         <p>The connection may have dropped. Check it, then try again.</p>
-        <a class="state-action" href="race-detail-loading.html?race=hyrox-london" data-retry aria-label="Try again, loading the race">Try again</a>
+        <div class="state-actions"><a class="state-action" href="race-detail-loading.html?race=hyrox-london" data-retry aria-label="Try again, loading the race">Try again</a></div>
       </div>
 
       <div data-cause="registration" hidden>
         <article class="race" data-race="berlin-marathon" aria-labelledby="race-berlin-marathon" hidden>
-          <img class="photo photo--lower" src="../visuals/marathon-city-1.jpg" alt="" width="1200" height="400" loading="lazy">
+          <picture><source type="image/avif" data-srcset="../visuals/marathon-city-1-684.avif 684w, ../visuals/marathon-city-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" data-srcset="../visuals/marathon-city-1-684.webp 684w, ../visuals/marathon-city-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" data-src="../visuals/marathon-city-1-1026.jpg" data-srcset="../visuals/marathon-city-1-684.jpg 684w, ../visuals/marathon-city-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
           <h1 id="race-berlin-marathon">Berlin Marathon</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>Marathon</dd>
@@ -62,7 +62,7 @@
           </section>
         </article>
         <article class="race" data-race="hyrox-london" aria-labelledby="race-hyrox-london">
-          <img class="photo photo--mid" src="../visuals/hyrox-sled-hall-1.jpg" alt="" width="1200" height="400">
+          <picture><source type="image/avif" data-srcset="../visuals/hyrox-sled-hall-1-684.avif 684w, ../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" data-srcset="../visuals/hyrox-sled-hall-1-684.webp 684w, ../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" data-src="../visuals/hyrox-sled-hall-1-1026.jpg" data-srcset="../visuals/hyrox-sled-hall-1-684.jpg 684w, ../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
           <h1 id="race-hyrox-london">HYROX London</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>HYROX</dd>
@@ -79,7 +79,7 @@
           </section>
         </article>
         <article class="race" data-race="hyrox-dallas" aria-labelledby="race-hyrox-dallas" hidden>
-          <img class="photo photo--center" src="../visuals/hyrox-wallball-hall-1.jpg" alt="" width="1200" height="400" loading="lazy">
+          <picture><source type="image/avif" data-srcset="../visuals/hyrox-wallball-hall-1-684.avif 684w, ../visuals/hyrox-wallball-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" data-srcset="../visuals/hyrox-wallball-hall-1-684.webp 684w, ../visuals/hyrox-wallball-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" data-src="../visuals/hyrox-wallball-hall-1-1026.jpg" data-srcset="../visuals/hyrox-wallball-hall-1-684.jpg 684w, ../visuals/hyrox-wallball-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
           <h1 id="race-hyrox-dallas">HYROX Dallas</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>HYROX</dd>
@@ -96,7 +96,7 @@
           </section>
         </article>
         <article class="race" data-race="deka-strong-chicago" aria-labelledby="race-deka-strong-chicago" hidden>
-          <img class="photo photo--upper" src="../visuals/deka-airbike-1.jpg" alt="" width="1200" height="400" loading="lazy">
+          <picture><source type="image/avif" data-srcset="../visuals/deka-airbike-1-684.avif 684w, ../visuals/deka-airbike-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" data-srcset="../visuals/deka-airbike-1-684.webp 684w, ../visuals/deka-airbike-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" data-src="../visuals/deka-airbike-1-1026.jpg" data-srcset="../visuals/deka-airbike-1-684.jpg 684w, ../visuals/deka-airbike-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
           <h1 id="race-deka-strong-chicago">DEKA STRONG Chicago</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>DEKA / functional fitness</dd>
@@ -113,7 +113,7 @@
           </section>
         </article>
         <article class="race" data-race="boston-marathon" aria-labelledby="race-boston-marathon" hidden>
-          <img class="photo photo--low" src="../visuals/marathon-city-2.jpg" alt="" width="1200" height="400" loading="lazy">
+          <picture><source type="image/avif" data-srcset="../visuals/marathon-city-2-684.avif 684w, ../visuals/marathon-city-2-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" data-srcset="../visuals/marathon-city-2-684.webp 684w, ../visuals/marathon-city-2-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" data-src="../visuals/marathon-city-2-1026.jpg" data-srcset="../visuals/marathon-city-2-684.jpg 684w, ../visuals/marathon-city-2-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
           <h1 id="race-boston-marathon">Boston Marathon</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>Marathon</dd>
@@ -130,7 +130,7 @@
           </section>
         </article>
         <article class="race" data-race="spartan-beast-killington" aria-labelledby="race-spartan-beast-killington" hidden>
-          <img class="photo photo--upper" src="../visuals/ocr-wall-1.jpg" alt="" width="1200" height="400" loading="lazy">
+          <picture><source type="image/avif" data-srcset="../visuals/ocr-wall-1-684.avif 684w, ../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" data-srcset="../visuals/ocr-wall-1-684.webp 684w, ../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" data-src="../visuals/ocr-wall-1-1026.jpg" data-srcset="../visuals/ocr-wall-1-684.jpg 684w, ../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
           <h1 id="race-spartan-beast-killington">Spartan Race Beast — Killington</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>OCR</dd>
@@ -147,7 +147,7 @@
           </section>
         </article>
         <article class="race" data-race="utmb" aria-labelledby="race-utmb" hidden>
-          <img class="photo photo--low" src="../visuals/trail-ultra-ridge-1.jpg" alt="" width="1200" height="400" loading="lazy">
+          <picture><source type="image/avif" data-srcset="../visuals/trail-ultra-ridge-1-684.avif 684w, ../visuals/trail-ultra-ridge-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" data-srcset="../visuals/trail-ultra-ridge-1-684.webp 684w, ../visuals/trail-ultra-ridge-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" data-src="../visuals/trail-ultra-ridge-1-1026.jpg" data-srcset="../visuals/trail-ultra-ridge-1-684.jpg 684w, ../visuals/trail-ultra-ridge-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" fetchpriority="high"></picture>
           <h1 id="race-utmb">UTMB — Ultra-Trail du Mont-Blanc</h1>
           <dl class="facts">
             <dt>Sport type</dt><dd>Ultra</dd>
@@ -238,6 +238,12 @@
     var r = el.getAttribute('data-race'), c = el.getAttribute('data-cause');
     el.hidden = (r !== null && r !== slug) || (c !== null && c !== cause);
   });
+  // only the shown race's photo loads (step 7, #4): its sources wait in data-* until the race is chosen
+  document.querySelectorAll('[data-race] picture').forEach(function (pic) {
+    if (pic.closest('[hidden]')) return;   // a race, or a whole state, that isn't shown
+    pic.querySelectorAll('[data-srcset]').forEach(function (el) { el.srcset = el.getAttribute('data-srcset'); el.removeAttribute('data-srcset'); });
+    pic.querySelectorAll('img[data-src]').forEach(function (img) { img.src = img.getAttribute('data-src'); img.removeAttribute('data-src'); });
+  });
   document.querySelectorAll('.register-btn').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
       e.preventDefault();
@@ -279,7 +285,7 @@
     window.addEventListener('resize', edges);
     edges();
   }
-  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length && !h.classList.contains('visually-hidden'); })[0];   // a hidden heading (a loading state's) has no title to collapse into the bar
   if (!h1) return;
   var title = bar.querySelector('.bar-title');
   if (title && !title.textContent.trim()) title.textContent = h1.textContent;

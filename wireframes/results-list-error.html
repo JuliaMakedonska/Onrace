@@ -7,20 +7,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=ddc5fd32">
+<link rel="stylesheet" href="../ui/kit.css?v=428bee74">
 </head>
-<body class="onrace" role="application" aria-label="Onrace — Results list, error state (wireframe)">
+<body class="onrace">
 
   <div class="phone-screen">
 
     <!-- ZONE: top bar (markup pass, G4): floats over the large title, empty at rest; once the h1 has scrolled away
          it turns to glass and shows the small title. -->
-    <div class="top-bar top-bar--large" data-collapse>
+    <header class="top-bar top-bar--large" data-collapse>
       <span class="bar-title" aria-hidden="true">Results</span>
       <!-- Log result: the screen's primary action, a text button at the bar's trailing edge (G5). Hidden in the
            empty state, where "Log your first result" is the one way in (designer, 2026-10-23). -->
       <a class="bar-action" href="log-result.html">Log result</a>
-    </div>
+    </header>
 
     <main>
 
@@ -151,7 +151,7 @@
   var bar = document.querySelector('.top-bar[data-collapse]');
   var screen = document.querySelector('.phone-screen');
   if (!bar || !screen || !('IntersectionObserver' in window)) return;
-  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length; })[0];
+  var h1 = Array.prototype.filter.call(screen.querySelectorAll('main h1'), function (h) { return h.getClientRects().length && !h.classList.contains('visually-hidden'); })[0];   // a hidden heading (a loading state's) has no title to collapse into the bar
   if (!h1) return;
   var title = bar.querySelector('.bar-title');
   if (title && !title.textContent.trim()) title.textContent = h1.textContent;

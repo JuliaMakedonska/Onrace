@@ -2,7 +2,7 @@
 
 Onrace's own race photos, replacing the Unsplash photos on the race cards (Lesson 7, step 4, 2026-10-20). They're generated illustrations of each format, not photos taken at the named race (`concept/references.md` → § 7).
 
-- `visuals/`: images that passed the check, compressed for the web (JPEG, 1200 × 800, quality 74). The screens link them as `../visuals/<file>`; `scripts/concept/build_stand.py` mirrors every `visuals/*.jpg` to `public/visuals/`.
+- `visuals/`: images that passed the check. The screens link the **pre-cropped 3:1 sets** (`<scene>-684` and `<scene>-1026`, each as AVIF, WebP and JPEG; see Export below). The full 1200 × 800 JPEGs (quality 74) stay as the sources and for the history pages. `scripts/concept/build_stand.py` mirrors every `visuals/*.jpg`, `*.webp` and `*.avif` to `public/visuals/`.
 - `visuals/incoming/`: new images waiting for the check, and the ones that failed it (kept here, never linked). Git-ignored. `visuals/incoming/work/` holds the retouch work files (sources, runs, masks, zooms) and the tools in `work/tool/`.
 
 ## Tool
@@ -100,4 +100,28 @@ The six round-2 images, retouched locally (the workflow's step 5). For each card
 | ocr-wall-1 | Spartan Race Beast — Killington | new `photo--upper`, 18% (y 92–604) | 1: the mark on the man's T-shirt chest | none |
 
 **Status: approved by the designer (2026-10-21) and on their cards** (Race browse, `first-screen.html`, `ui/kit.html`, the stand). The full files still carry the marks outside their bands, so a different crop would need another pass.
+
+## Export (step 7, 2026-10-25)
+
+Each card photo is pre-cropped to its 3:1 band, so the screens download only what they show, and the marks outside the band that round 3 left unretouched are no longer in any file a screen loads.
+
+- **Crop:** the full width of the 1200 × 800 source, a band 400 px tall at its focus (the band's top at `(800 − 400) × focus`):
+
+| Scene | Card | Focus | Band (y) |
+|---|---|---|---|
+| marathon-city-1 | Berlin Marathon | 74% | 296–696 |
+| hyrox-sled-hall-1 | HYROX London | 60% | 240–640 |
+| hyrox-wallball-hall-1 | HYROX Dallas | 44% | 176–576 |
+| deka-airbike-1 | DEKA STRONG Chicago | 18% | 72–472 |
+| marathon-city-2 | Boston Marathon | 72% | 288–688 |
+| ocr-wall-1 | Spartan Race Beast — Killington | 18% | 72–472 |
+| trail-ultra-ridge-1 | UTMB | 72% | 288–688 |
+
+These are the focus values the cards used before as `object-position` (`--photo-focus-*`); with the crop in the file, those tokens and the `.photo--*` classes are gone.
+
+- **Sizes:** 1026 × 342 (3× the 342 px card band) and 684 × 228 (2×).
+- **Formats:** AVIF (macOS `sips`, `formatOptions 60`, from a lossless PNG), WebP (quality 0.74) and JPEG (quality 0.78), the last two encoded by Chrome's canvas (`toDataURL`), drawn with `imageSmoothingQuality: high`. The script that made them: a headless Chrome run over the DevTools protocol, the same pattern as `scripts/check_overflow.mjs`.
+- **Weight at 1026:** 24–67 KB AVIF, 24–64 KB WebP, 45–87 KB JPEG, against 116–236 KB for the full JPEGs.
+- **Markup:** `<picture>` with an AVIF and a WebP `<source>`, then `<img class="photo" src="<scene>-1026.jpg" srcset="<scene>-684.jpg 684w, <scene>-1026.jpg 1026w" sizes="calc(100vw - 32px)" width="1026" height="342">`. The `picture` takes no box (`display: contents`). The black-and-white treatment stays in CSS (`--photo-filter`).
+- **Loading:** on Race browse the first three cards load eagerly (the third is the first screen's largest image, `fetchpriority="high"`), the rest lazily. On Race detail only the shown race's photo loads: its sources wait in `data-*` until the page script picks the race.
 
