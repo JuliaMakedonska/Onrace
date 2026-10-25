@@ -238,8 +238,15 @@ STAMPED += [f'wireframes/{p}.html' for p in (   # step 5, Archive and Infrastruc
     'sign-in-sign-up', 'sign-in-sign-up-check-inbox', 'sign-in-sign-up-error', 'sign-in-sign-up-loading',
     'reset-password', 'reset-password-check-inbox', 'reset-password-error', 'reset-password-loading',
     'new-password', 'new-password-error', 'new-password-loading', 'profile', 'profile-error', 'profile-loading')]
+import subprocess
+# the showcase: arranged by role, each specimen's facts from ui/inventory.md → Showcase map (2026-10-26), before stamping
+subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_kit_showcase.py')], check=True)
 for _p in STAMPED:
     _stamp(os.path.join(ROOT, _p))
+# the showcase against the inventory and microcopy.md (2026-10-26): every component mapped, every state labelled, every word recorded
+_k = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_kit.py')], capture_output=True, text=True)
+print(_k.stdout.strip())
+if _k.returncode: sys.exit('check_kit failed: the build stops')
 
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
 import math
@@ -914,6 +921,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-step6'), os.path.join(ROOT, 'publi
 shutil.copyfile(os.path.join(ROOT, 'ui/review-step6.html'), os.path.join(ROOT, 'public/ui/review-step6.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step7'), os.path.join(ROOT, 'public/ui/review-step7'), dirs_exist_ok=True)   # step 7 final check before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-step7.html'), os.path.join(ROOT, 'public/ui/review-step7.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-lessons'), os.path.join(ROOT, 'public/ui/review-lessons'), dirs_exist_ok=True)   # lesson pages and kit showcase before/after (2026-10-26)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-lessons.html'), os.path.join(ROOT, 'public/ui/review-lessons.html'))
 for _f in ['visuals/review-round3.html']:   # the photos' round 3 review, linked from the Lesson 7 overview
     shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
 import glob
@@ -930,3 +939,5 @@ os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
 for _v in [f for e in ('jpg', 'webp', 'avif') for f in glob.glob(os.path.join(ROOT, f'visuals/*.{e}'))]:   # the pre-cropped responsive sets too (step 7, #5)
     shutil.copyfile(_v, os.path.join(ROOT, 'public/visuals', os.path.basename(_v)))
 print('mirrored to public/')
+# the lesson overviews (06 and 07, scripts/lesson_page.py) carry the kit's counts: rebuilt with it
+subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_ui_overview.py')], check=True)

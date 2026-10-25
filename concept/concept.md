@@ -846,6 +846,15 @@ The step 6 critique (four subagents, one per group: Discovery, Archive, Infrastr
 - **#41:** `--success*` and `--warning*` moved to `concept/specimens.css`, `--phone-width` to `concept/stand.css`, the first-screen harness's flat tab bar to `concept/first-screen.css` (now stamped too); `build_stand.py` reads tokens from those `:root`s. The first-screen page is pixel-identical before and after. `--stand-col-min` stays in the kit **[?]**: the published review pages link only the kit and use it, and moving it would break their grids.
 - **#42–#44:** the kit and shell intros and labels are current (all 10 screens on the kit, "Results", the floating tab bar, "Soonest first, sort order"); the stray `</div>` is gone and the linked race heading is `h3`; `voice.md` names the search chip "“berlin”, clear search"; DESIGN.md's drift (the Race picker's corners, the secondary's uses) is corrected.
 
+**Dispositions** (the critique's 45 rows):
+
+| Disposition | Count | Rows |
+|---|---|---|
+| Fixed as suggested | 38 | #1–#10, #12–#20, #24–#28, #30–#40, #42–#44 |
+| Fixed in part | 2 | #41: `--stand-col-min` stays in the kit (the review pages link only the kit); #45: the detector can't scope an ignore to a selector, so the `ul.rows` exception is a written rule |
+| Declined, with a reason | 0 | |
+| Conflicts with a decision | 5 | #11, #21, #22, #23: the designer changed the decision (the finish time leads; editable values in Text 1; "Account"; Solar Linear for small glyphs). #29: the decision stands (one action, Dismiss); the body is reworded instead |
+
 **Checked:**
 - **Build:** passes, including the overflow check (206 states at 390 and 320, fonts loaded); 185 signed tokens; 109 contrast pairs (new: the linked race on `--bg-3`, the date pill, Copy link, Profile's editable value).
 - **Screenshots:** 86 states before and after at 390×844 (every page and state, plus the bare-URL states the critique named, the empty submits, Kit and Shell). Review: `ui/review-step6.html`.
@@ -866,6 +875,15 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 - **#14–#20** the showcase: Sign out's `aria-haspopup`, a unique id, 44pt TOC links, and the screens' own text (rows 99, 203, 370, 459).
 - **#21–#22** `microcopy.md`: row 66 ("Sort:") removed, superseded by row 546; row 8's states corrected to `empty`.
 
+**Dispositions** (the final check's 22 rows, then the re-check's 4):
+
+| Disposition | Count | Rows |
+|---|---|---|
+| Fixed as suggested | 25 | #1–#7, #9–#22; the re-check's showcase landmarks, early redirect, row 555, `map.css` |
+| Fixed in part | 1 | #8: the early redirect works, but the browser's preload scanner still fetches the first three photos (about 129 KB) |
+| Declined, with a reason | 0 | |
+| Conflicts with a decision | 0 | |
+
 **The re-check (same day): no defect left.**
 - **Step 7 checks again:** every screen links the kit once, with no style block, inline style or unknown class; the shared components have one markup each (`header.top-bar` everywhere, `.state-actions` in every state message, the race card's `h2`, Sign out's `aria-haspopup`); contrast under AA only on disabled controls (exempt); every photo from `visuals/`, every icon Solar.
 - **`/impeccable audit` again:** the nine fixes hold (no `role="application"`, nothing overflows at 200%, one Tab stop and a ring on the date pill, one photo per Race detail, 3:1 files with `srcset`, `map.css` not blocking, eager first cards, the early no-match redirect, the loading `h1`s). It found two more, both fixed: the showcase had ten `main` landmarks (its specimen screens' `main` is now `div.screen-main`, and the kit's `.phone-screen main` rules read `:is(main, .screen-main)`), and the no-match check waited for the blocking stylesheets (it now runs first in `<head>`). What still loads before that redirect is the three eager card photos (about 129 KB of AVIF, against 337 KB of JPEG before), fetched by the browser's preload scanner, which a static page can't stop without making the first cards lazy.
@@ -875,10 +893,12 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 
 **Designer decision:** Profile's menu values (Country, Language) stay Text 2, as iOS Settings has them; no longer [?].
 
-**Still deferred or provisional [?] after Lesson 7:**
-- The glass values (opacity margins, blur, rim) and the radii of the sheet (38px) and the alert (34px): Apple's iOS 26 kit wasn't read.
-- `--stand-col-min` stays in `ui/kit.css`: the published review pages link only the kit.
-- The static map: the interactive Map (Leaflet) is deferred to implementation.
-- Real devices: every check ran in Chrome; Safari and iPhone (the date pill's `showPicker()`, glass, scroll-edge bars, the clipboard) are untested.
-- Two-level tokens are Lesson 8.
+**Still deferred or provisional [?] after Lesson 7** (each with the lesson proposed to take it; the designer confirms when that lesson starts):
+- The glass values (opacity margins, blur, rim) and the radii of the sheet (38px) and the alert (34px): Apple's iOS 26 kit wasn't read. → Lesson 08 (Design tokens), where provisional values get confirmed or replaced.
+- `--stand-col-min` stays in `ui/kit.css`: the published review pages link only the kit. → Lesson 08 (Design tokens), when the tokens split into product and tooling levels.
+- Two-level tokens (primitives, then semantic names). → Lesson 08 (Design tokens).
+- Component specs and the documented system (`components/`, `design-system/`). → Lesson 09 (Design system).
+- Real devices: every check ran in Chrome; Safari and iPhone (the date pill's `showPicker()`, glass, scroll-edge bars, the clipboard) are untested. → Lesson 10 (Responsive).
+- The motion values (the sheet's slide, the title's fade, the skeleton pulse) are set but never reviewed as motion. → Lesson 11 (Animation & micro-interactions).
+- The static map: the interactive Map (Leaflet) is deferred to implementation. → Lesson 12 (Handoff).
 

@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=428bee74">
-<link rel="preload" as="style" href="map.css?v=428bee74" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="map.css?v=428bee74"></noscript>
+<link rel="stylesheet" href="kit.css?v=694b17fc">
+<link rel="preload" as="style" href="map.css?v=694b17fc" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="map.css?v=694b17fc"></noscript>
 </head>
 <!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
      states, styled only by kit.css (map.css for the static map). Texts are the
@@ -23,14 +23,9 @@
   <header class="kit-head">
     <h1>Onrace kit</h1>
     <p>Every component in <code>ui/inventory.md</code>, in its states, from <code>ui/kit.css</code> alone. All 10 screens link the kit (since step 5), so each specimen looks exactly as the component does on its screens. Native iOS since step 3b; the markup pass (two rounds) and the step 6 critique fixes are in. A change to a component goes here and to every screen that shows it.</p>
-    <ul class="kit-toc">
-      <li><a href="#shell">Shell</a></li>
-      <li><a href="#shared">Shared</a></li>
-      <li><a href="#archive">Archive</a></li>
-      <li><a href="#infrastructure">Infrastructure</a></li>
-      <li><a href="#one-off">One-off</a></li>
-    </ul>
   </header>
+
+  <nav class="kit-nav" aria-label="Components by role"><a href="#role-navigation">Navigation <span>8</span></a><a href="#role-cards-and-lists">Cards and lists <span>8</span></a><a href="#role-forms">Forms <span>8</span></a><a href="#role-feedback">Feedback <span>6</span></a><a href="#role-one-off">One-off <span>3</span></a><a href="#shell">Shell</a></nav>
 
   <!-- ================================================================ Shell -->
   <section class="kit-section" id="shell" aria-labelledby="shell-h">
@@ -43,17 +38,31 @@
     </div>
   </section>
 
-  <!-- ================================================================ Shared -->
-  <section class="kit-section" id="shared" aria-labelledby="shared-h">
-    <h2 id="shared-h">Shared</h2>
+  <!-- ================================================================ Navigation -->
+  <section class="kit-section" id="role-navigation" aria-labelledby="role-navigation-h">
+    <h2 id="role-navigation-h">Navigation</h2>
+    <p>8 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
 
     <div class="kit-item" id="tab-bar">
       <h3>Tab bar</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Tab bar</dd><dt>Classes</dt><dd><code>.bottom-nav</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/tab-bars">Tab bars</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p><code>nav.bottom-nav</code> · Race browse, Results list, Profile. Floats above content as a glass capsule, in from the edges and above the bottom safe area; content runs under it (C1, G1, G2). States: the current tab (amber, the screen's place); the same in every loading and error state. Shown in the Shell above.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Discover current</p>
+          <div class="kit-frame kit-frame--flush kit-tabbar"><nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#tab-bar" data-tab="discover" aria-current="page"><span>Discover</span></a></li><li><a href="#tab-bar" data-tab="results"><span>Results</span></a></li><li><a href="#tab-bar" data-tab="profile"><span>Profile</span></a></li></ul></nav></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Results current</p>
+          <div class="kit-frame kit-frame--flush kit-tabbar"><nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#tab-bar" data-tab="discover"><span>Discover</span></a></li><li><a href="#tab-bar" data-tab="results" aria-current="page"><span>Results</span></a></li><li><a href="#tab-bar" data-tab="profile"><span>Profile</span></a></li></ul></nav></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Profile current</p>
+          <div class="kit-frame kit-frame--flush kit-tabbar"><nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#tab-bar" data-tab="discover"><span>Discover</span></a></li><li><a href="#tab-bar" data-tab="results"><span>Results</span></a></li><li><a href="#tab-bar" data-tab="profile" aria-current="page"><span>Profile</span></a></li></ul></nav></div>
+        </div>
+      </div>
     </div>
 
     <div class="kit-item" id="large-title">
       <h3>Large title header · the top bar over it</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Large title header</dd><dt>Classes</dt><dd><code>.top-bar--large</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd></dl><!-- /kit:meta -->
       <p><code>h1</code> in the page header, with <code>.top-bar.top-bar--large[data-collapse]</code> floating over it · Race browse, Results list, Profile (markup pass, 2026-10-23). At rest the bar is transparent and empty; once the h1 has mostly scrolled away it turns to glass and shows the small title (<code>.is-collapsed</code>, G4, HIG Toolbars). On Results list it carries Log result, a text button at its trailing edge, amber as the screen's one primary (<code>.bar-action</code>, G5). When a state brings its own primary (<code>-error</code>) Log result steps down to Text 1; on <code>-empty</code> it's hidden, and "Log your first result" is the one way in.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Results, at rest: Log result in the bar</p>
@@ -76,6 +85,7 @@
 
     <div class="kit-item" id="top-bar">
       <h3>Top bar</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Top bar</dd><dt>Classes</dt><dd><code>.top-bar</code></dd><dt>Used on</dt><dd>10 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p><code>.top-bar</code> · every screen below the top level. Glass on the ground level with a rim, below the top safe area (C1, G6). Back to the parent screen by name, a centered title, text actions (Cancel, Save, Apply filters). The bar action (Save on Log result, Log result on Results, Apply filters on the Filters sheet) is the screen's one primary, so it takes amber text, like a native bar button. On Race detail and Result detail the race name appears in the bar once its h1 has scrolled away (G34, G53), truncated between the back button and the edge.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Back only (Race detail; Result detail: ‹ Results)</p>
@@ -111,21 +121,22 @@
       </div>
     </div>
 
-    <div class="kit-item" id="search">
-      <h3>Search field</h3>
-      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>, in the header), Race picker (<code>form.search</code>, under its top bar, with the page gutter). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). A bar control, so a full capsule (C7, designer 2026-10-19).</p>
+    <div class="kit-item" id="gate-layout">
+      <h3>Gate layout · top bar over the page</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Gate layout</dd><dt>Classes</dt><dd><code>.gate</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>body &gt; .top-bar</code> before <code>.phone-screen</code> (step 5, Infrastructure): on the gates the bar is the body's own child, not inside the scrolling page. It floats over the page's top edge in ground glass (C1); the page starts below it and scrolls under it, and nothing overflows the screen. Sign in / Sign up, Reset password, New password, every state. The bars themselves (Cancel + title on the modal gate, "‹ Sign in" on a step inside it) are under <a href="#top-bar">Top bar</a>.</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Empty, placeholder</p>
-          <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q1">Search races by name or city</label><input type="search" id="k-q1" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Filled (?q=), with Clear</p>
-          <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q2">Search races by name or city</label><input type="search" id="k-q2" value="Berlin" autocomplete="off" enterkeyhint="search"></form></div>
+        <div class="kit-state"><p class="kit-label">Sign in: the bar (Cancel, "Account", Sign in), the mode switch, the grouped rows</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action">Sign in</button></header>
+            <form class="gate form-rows" onsubmit="return false;"><div class="view-toggle" role="group" aria-label="Sign in or create an account"><button type="button" class="view-btn" aria-pressed="true">Sign in</button><button type="button" class="view-btn" aria-pressed="false">Create account</button></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-g1">Email</label><input type="email" id="k-g1" value="maya.rossi@example.com"></div></li><li><div class="row"><label for="k-g2">Password</label><input type="password" id="k-g2" placeholder="Required"></div></li></ul></div></form></div>
         </div>
       </div>
     </div>
 
     <div class="kit-item" id="segmented">
       <h3>Segmented control</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Segmented control</dd><dt>Classes</dt><dd><code>.view-toggle</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/segmented-controls">Segmented controls</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p><code>.view-toggle</code> / <code>.view-btn</code> · Race browse (List / Map), Sign in / Sign up (Sign in / Create account). Segments of equal width (G11). In the controls bar the track is a full capsule and each segment is concentric with it, and Filters beside it is a capsule too (C7, designer 2026-10-19); in content (Sign in) it keeps 6/4.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">List selected, in the controls bar (C7)</p>
@@ -143,8 +154,75 @@
       </div>
     </div>
 
+    <div class="kit-item" id="search">
+      <h3>Search field</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Search field</dd><dt>Classes</dt><dd><code>.race-search</code> <code>.search</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/search-fields">Search fields</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>, in the header), Race picker (<code>form.search</code>, under its top bar, with the page gutter). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). A bar control, so a full capsule (C7, designer 2026-10-19).</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Empty, placeholder</p>
+          <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q1">Search races by name or city</label><input type="search" id="k-q1" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Filled (?q=), with Clear</p>
+          <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q2">Search races by name or city</label><input type="search" id="k-q2" value="Berlin" autocomplete="off" enterkeyhint="search"></form></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="action-bar">
+      <h3>Sticky action bar</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Sticky action bar</dd><dt>Classes</dt><dd><code>.action-bar</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd></dl><!-- /kit:meta -->
+      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and where it goes. Glass like every bar; its caption passes AA over the worst case behind it. Its button is a capsule, as every control inside a bar (C7). It's the scroll area's last child, sticky at its bottom: content runs under its glass (G35, G54). Its height never changes: a link that won't open is a native alert now, on both screens (round 2). The Open button's visible label is short, "Open official result", and its name carries the domain (G56; WCAG 2.5.3, the name starts with the label).</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Race detail</p>
+          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens the race website — registration and payment happen there.</p></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Result detail</p>
+          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="open-btn" href="#" aria-label="Open official result on berlin.r.mikatiming.com">Open official result</a><p class="action-caption">Opens the official timing site.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="sheet">
+      <h3>Modal sheet</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Modal sheet, Sport-type rows</dd><dt>Classes</dt><dd><code>.sheet</code> <code>.row--check</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/sheets">Sheets</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>.sheet</code> · the Filters sheet on Race browse, and Log result, a whole screen in a sheet over Results (round 2). Race picker is not a sheet since 2026-10-24: it's pushed inside Log result's navigation (see Top bar). Markup pass (2026-10-23): the Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge (G12); its options are grouped rows on the level above the sheet (G20): Region a native menu showing its value (G17), the race dates native compact pickers on a pill (G18), sport types rows with a neutral checkmark at the trailing edge (G19, C4). No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters (G32). A native sheet: glass on the raised level (C1, C4), the system sheet radius (G16, provisional [?]), resting at the large detent only (G13). Boundaries on it use Field line on the sheet.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Filters sheet, open</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <div class="sheet open" role="dialog" aria-modal="false" aria-labelledby="k-sheet-h">
+              <header class="top-bar"><button type="button">Cancel</button><h2 id="k-sheet-h" class="bar-title">Filters</h2><button type="submit" class="bar-action" form="k-filters">Apply filters</button></header>
+              <form id="k-filters" onsubmit="return false;">
+                <div class="group"><ul class="rows">
+                  <li><div class="row"><label for="k-region">Region</label><select id="k-region"><option value="">All regions</option><option selected>Europe</option><option>North America</option><option>Middle East</option><option>Asia-Pacific</option><option>Africa</option></select></div></li>
+                  <li><div class="row"><label for="k-from">Race date from</label><span class="date-pill"><button type="button" class="date-value" id="k-from-pick"></button><input type="date" id="k-from" tabindex="-1" aria-hidden="true" value="2026-09-23"></span></div></li>
+                  <li><div class="row"><label for="k-to">Race date to</label><span class="date-pill"><button type="button" class="date-value" id="k-to-pick"></button><input type="date" id="k-to" tabindex="-1" aria-hidden="true" value="2027-09-23"></span></div></li>
+                </ul></div>
+                <fieldset class="group"><legend class="group-heading">Sport type</legend><ul class="rows">
+                  <li><label class="row row--check"><input type="checkbox" checked> HYROX</label></li>
+                  <li><label class="row row--check"><input type="checkbox"> DEKA / functional fitness</label></li>
+                  <li><label class="row row--check"><input type="checkbox" checked> Marathon</label></li>
+                  <li><label class="row row--check"><input type="checkbox"> Half marathon</label></li>
+                  <li><label class="row row--check"><input type="checkbox"> Triathlon</label></li>
+                  <li><label class="row row--check"><input type="checkbox"> Ultra</label></li>
+                  <li><label class="row row--check"><input type="checkbox"> OCR</label></li>
+                </ul></fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ Cards and lists -->
+  <section class="kit-section" id="role-cards-and-lists" aria-labelledby="role-cards-and-lists-h">
+    <h2 id="role-cards-and-lists-h">Cards and lists</h2>
+    <p>8 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+
     <div class="kit-item" id="race-card">
       <h3>Race card</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Race card, Race photo</dd><dt>Classes</dt><dd><code>.race-card</code> <code>.photo</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse-loading">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#race-picker">Race picker</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd></dl><!-- /kit:meta -->
       <p><code>article.race-card</code> · Race browse (with a black-and-white photo at 3:1), Race picker (no photo; the linked race carries the filter rows' neutral checkmark and <code>aria-current</code>, G47, round 2). One link: the whole card opens the race. Pressed, it takes the pressed level (G23; shown here with <code>.is-pressed</code>, the showcase's still stand-in for <code>:active</code>). A collection, so no disclosure indicator.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse, with photo</p>
@@ -180,12 +258,18 @@
 
     <div class="kit-item" id="format-chip">
       <h3>Format chip</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Format chip</dd><dt>Classes</dt><dd><code>.sport-tag</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse">Race browse</a>, <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#race-picker">Race picker</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
       <p><code>.sport-tag</code> · Race browse, Race picker, Results list. One look for every format; uppercase by CSS, the name in the markup unchanged.</p>
-      <div class="kit-frame"><div class="kit-row"><span class="sport-tag">HYROX</span><span class="sport-tag">DEKA</span><span class="sport-tag">Marathon</span><span class="sport-tag">Half marathon</span><span class="sport-tag">Triathlon</span><span class="sport-tag">Ultra</span><span class="sport-tag">OCR</span></div></div>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Every format, one look</p>
+          <div class="kit-frame"><div class="kit-row"><span class="sport-tag">HYROX</span><span class="sport-tag">DEKA</span><span class="sport-tag">Marathon</span><span class="sport-tag">Half marathon</span><span class="sport-tag">Triathlon</span><span class="sport-tag">Ultra</span><span class="sport-tag">OCR</span></div></div>
+        </div>
+      </div>
     </div>
 
     <div class="kit-item" id="results-row">
       <h3>Results row</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Results row, Sort button, Order label</dd><dt>Classes</dt><dd><code>.results-row</code> <code>.sort-toggle</code> <code>.results-order</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons">Pull-down buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p><code>.results-row</code> · Race browse (count + Sort), Results list (count + order). Sort is one button, <code>.sort-toggle</code>: two orders, so no menu; it shows the current one with the Solar sort icon and flips it when tapped (G21, markup pass). Its name starts with its label: "Soonest first, sort order" (WCAG 2.5.3).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse, unfiltered</p>
@@ -203,208 +287,49 @@
       </div>
     </div>
 
-    <div class="kit-item" id="primary">
-      <h3>Primary button</h3>
-      <p>The screen's one filled action: <code>.state-action</code>, <code>.submit-btn</code>, <code>.register-btn</code>, <code>.open-btn</code>. Hover lightens it; a press moves it down 1px. In a bar the primary is amber text instead (<code>.bar-action</code>, <code>.save-btn</code>; see Top bar), and busy it is the spinner alone there (round 2).</p>
+    <div class="kit-item" id="finish-time">
+      <h3>Finish time · Proof line</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Result row, Finish time, Proof line</dd><dt>Classes</dt><dd><code>.result-card</code> <code>.finish-time</code> <code>.finish</code> <code>.proof-label</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd></dl><!-- /kit:meta -->
+      <p><code>.finish-time</code>, <code>dl.finish</code>; <code>.proof-label</code> · Results list, Result detail. The finish time is the loudest thing on the row; the proof is stated, not stamped. The row drills into Result detail, so it shows a disclosure indicator (G22); pressed, it takes the pressed level (G23).</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">In a state message</p>
-          <div class="kit-frame"><div class="kit-row"><button type="button" class="state-action">Change filters</button><a class="state-action" href="#">Try again</a><a class="state-action" href="#">Log your first result</a></div></div>
+        <div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
         </div>
-        <div class="kit-state"><p class="kit-label">Full width: the action bar (Register, Open, G56) and the expired-link actions (<code>.submit-btn</code>, G60)</p>
-          <div class="kit-frame kit-stack"><a class="register-btn" href="#">Register on hyrox.com</a><a class="open-btn" href="#">Open official result</a><div class="gate"><a class="submit-btn" href="#">Reset password again</a></div><div class="gate"><a class="submit-btn" href="#">Send a new link</a></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Busy in a bar: the spinner alone, the words for screen readers (Sign in, Send, Save)</p>
-          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" aria-disabled="true">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action" aria-busy="true" aria-disabled="true"><span class="visually-hidden">Signing in…</span></button></header></div>
-        </div>
-      </div>
-    </div>
+        <div class="kit-state"><p class="kit-label">Result detail: the finish time and the proof section are under Detail above</p></div>
       </div>
     </div>
 
-    <div class="kit-item" id="secondary">
-      <h3>Secondary button</h3>
-      <p>Tonal: <code>.filters-trigger</code>, <code>.state-action.secondary</code>, <code>.secondary-btn</code>, and the small <code>.unlink-btn</code>. (The inline errors' Dismiss and Try again went with them, round 2: the detail screens use alerts.)</p>
+    <div class="kit-item" id="detail">
+      <h3>Detail header and facts · Detail section</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Detail header and facts, Detail section, Race photo, detail, Official race website link, Proof URL and note</dd><dt>Classes</dt><dd><code>.facts</code> <code>.race</code> <code>.result</code> <code>.official</code> <code>.proof-url</code> <code>.proof-note</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>h1</code> + <code>dl.facts</code>; <code>section</code> with an <code>h2</code> · Race detail, Result detail. Race detail opens with the race’s photo (<code>.race &gt; .photo</code>, step 5): the race card’s 3:1 band and focus class at full content width, so it shows exactly the band retouched in round 3, with the outer 6px radius. The official site link has a 44pt target.</p>
       <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Filters: rest, with a count, open</p>
-          <div class="kit-frame kit-stack"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="true">Filters</button></div></div>
+        <div class="kit-state"><p class="kit-label">Race detail</p>
+          <div class="kit-frame kit-frame--flush"><article class="race" aria-labelledby="k-race-h">
+            <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-684.avif 684w, ../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-684.webp 684w, ../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../visuals/hyrox-sled-hall-1-684.jpg 684w, ../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+            <h1 id="k-race-h">HYROX London</h1>
+            <dl class="facts"><dt>Sport type</dt><dd>HYROX</dd><dt>Race date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd><dt>Location</dt><dd>London, England, United Kingdom</dd></dl>
+            <section class="about" aria-labelledby="k-about"><h2 id="k-about">About this race</h2><p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p></section>
+            <section class="official" aria-labelledby="k-official"><h2 id="k-official">Official race website</h2><p><a href="#">hyrox.com</a></p></section>
+          </article></div>
         </div>
-        <div class="kit-state"><p class="kit-label">State actions and Check inbox</p>
-          <div class="kit-frame kit-stack"><div class="kit-row"><a class="state-action secondary" href="#">Type it in instead</a></div><button type="button" class="secondary-btn">Send a new link</button><button type="button" class="secondary-btn" disabled aria-busy="true">Sending…</button></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Small: Unlink race</p>
-          <div class="kit-frame kit-row"><button type="button" class="unlink-btn">Unlink race</button><button type="button" class="unlink-btn" disabled>Unlink race</button></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="text-link">
-      <h3>Text link</h3>
-      <p>Tertiary: <code>.clear-all</code>, <code>.text-link</code>, <code>.forgot</code>, <code>.alert-link</code>, a row's Try again.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Clear all filters (chips row)</p>
-          <div class="kit-frame"><button type="button" class="clear-all">Clear all filters</button></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Use a different email (Check inbox)</p>
-          <div class="kit-frame"><a class="text-link" href="#">Use a different email</a></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Forgot password? · disabled while signing in</p>
-          <div class="kit-frame kit-stack"><p class="forgot"><a href="#">Forgot password?</a></p><p class="forgot"><a aria-disabled="true">Forgot password?</a></p></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="sheet">
-      <h3>Modal sheet</h3>
-      <p><code>.sheet</code> · the Filters sheet on Race browse, and Log result, a whole screen in a sheet over Results (round 2). Race picker is not a sheet since 2026-10-24: it's pushed inside Log result's navigation (see Top bar). Markup pass (2026-10-23): the Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge (G12); its options are grouped rows on the level above the sheet (G20): Region a native menu showing its value (G17), the race dates native compact pickers on a pill (G18), sport types rows with a neutral checkmark at the trailing edge (G19, C4). No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters (G32). A native sheet: glass on the raised level (C1, C4), the system sheet radius (G16, provisional [?]), resting at the large detent only (G13). Boundaries on it use Field line on the sheet.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Filters sheet, open</p>
-          <div class="kit-frame kit-stage">
-            <div class="sheet-backdrop open"></div>
-            <div class="sheet open" role="dialog" aria-modal="false" aria-labelledby="k-sheet-h">
-              <header class="top-bar"><button type="button">Cancel</button><h2 id="k-sheet-h" class="bar-title">Filters</h2><button type="submit" class="bar-action" form="k-filters">Apply filters</button></header>
-              <form id="k-filters" onsubmit="return false;">
-                <div class="group"><ul class="rows">
-                  <li><div class="row"><label for="k-region">Region</label><select id="k-region"><option value="">All regions</option><option selected>Europe</option><option>North America</option><option>Middle East</option><option>Asia-Pacific</option><option>Africa</option></select></div></li>
-                  <li><div class="row"><label for="k-from">Race date from</label><span class="date-pill"><button type="button" class="date-value" id="k-from-pick"></button><input type="date" id="k-from" tabindex="-1" aria-hidden="true" value="2026-09-23"></span></div></li>
-                  <li><div class="row"><label for="k-to">Race date to</label><span class="date-pill"><button type="button" class="date-value" id="k-to-pick"></button><input type="date" id="k-to" tabindex="-1" aria-hidden="true" value="2027-09-23"></span></div></li>
-                </ul></div>
-                <fieldset class="group"><legend class="group-heading">Sport type</legend><ul class="rows">
-                  <li><label class="row row--check"><input type="checkbox" checked> HYROX</label></li>
-                  <li><label class="row row--check"><input type="checkbox"> DEKA / functional fitness</label></li>
-                  <li><label class="row row--check"><input type="checkbox" checked> Marathon</label></li>
-                  <li><label class="row row--check"><input type="checkbox"> Half marathon</label></li>
-                  <li><label class="row row--check"><input type="checkbox"> Triathlon</label></li>
-                  <li><label class="row row--check"><input type="checkbox"> Ultra</label></li>
-                  <li><label class="row row--check"><input type="checkbox"> OCR</label></li>
-                </ul></fieldset>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="select">
-      <h3>Pop-up select</h3>
-      <p><code>select</code> in a row: Region (Filters sheet), Sport type (Log result), Country and Language (Profile). The value at the row's trailing edge with a chevron; the native menu opens on tap (G17, G43). Sort is a button since round 1 (G21).</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Log result: Sport type, empty</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-st1">Sport type</label><select id="k-st1"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></form></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Log result -error: missing</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-st2">Sport type</label><select id="k-st2" aria-invalid="true" aria-describedby="k-st2-e"><option value="" selected>Choose a sport type</option><option>HYROX</option></select></div><p class="field-error" id="k-st2-e">Choose a sport type.</p></li></ul></form></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Profile row (Country)</p>
-          <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-country">Country</label><select id="k-country"><option>France</option><option>Germany</option><option selected>Italy</option><option>Spain</option></select></div></li></ul></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="date">
-      <h3>Date field</h3>
-      <p><code>.date-pill</code> in a row, a native compact picker (G18, G44; step 6, #26): the date written as the chips and cards write it ("23 Sep 2026") on a <code>--bg-2</code> pill, the pill is one <code>button.date-value</code> (one Tab stop, one ring) that opens the system's calendar (<code>showPicker()</code>); the native <code>input type="date"</code> beside it holds the value, out of the tab order (step 7, #3). No glyph, no browser locale mask: empty, "Choose a date" in Text 2. Filters sheet (above), Log result (Race date).</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Log result: Race date, empty</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d1">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-d1-pick"></button><input type="date" id="k-d1" tabindex="-1" aria-hidden="true"></span></div></li></ul></form></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Log result -error: missing</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d2">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-d2-pick"></button><input type="date" id="k-d2" tabindex="-1" aria-hidden="true" aria-invalid="true" aria-describedby="k-d2-e"></span></div><p class="field-error" id="k-d2-e">Add the date you raced.</p></li></ul></form></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="text-field">
-      <h3>Form rows: text fields, hints, errors</h3>
-      <p><code>form.form-rows</code> with <code>.group</code> / <code>.rows</code> / <code>.row</code> (round 2: Log result G42, the sign-in screens G61): a label and its field in a row, the value in Text 1, left-aligned; a long value (the official result link) stacks, <code>.row--stacked</code>. Hints are the group's footer (<code>.group-footer</code>, still the field's <code>aria-describedby</code>); an error sits under its row (<code>.field-error</code>) and the invalid row takes the coral ring. The finish time takes the numeric keypad (<code>inputmode="numeric"</code>; the colons are put in as people type, G45). A navigation row (<code>.row--nav</code>, Find in race catalog) ends in a disclosure chevron.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Log result: grouped, with hints</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
-            <div class="group"><ul class="rows"><li><a class="row row--nav" href="#" aria-describedby="k-cat-h">Find in race catalog</a></li></ul><p class="group-footer" id="k-cat-h">Optional. Fills in the race name, date and sport type for you.</p></div>
-            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn">Race name</label><input type="text" id="k-rn" placeholder="e.g. Berlin Marathon" autocomplete="off"></div></li><li><div class="row"><label for="k-rd">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-rd-pick"></button><input type="date" id="k-rd" tabindex="-1" aria-hidden="true"></span></div></li><li><div class="row"><label for="k-rs">Sport type</label><select id="k-rs"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></div>
-            <div class="group"><ul class="rows"><li><div class="row"><label for="k-ft">Finish time</label><input type="text" id="k-ft" inputmode="numeric" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="k-ft-h"></div></li></ul><p class="group-footer" id="k-ft-h">Hours:minutes:seconds, exactly as the official results show it.</p></div>
-            <div class="group"><ul class="rows"><li><div class="row row--stacked"><label for="k-url">Official result link</label><input type="url" id="k-url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off"></div></li></ul></div>
-          </form></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Errors under their rows (Log result -error, New password -error)</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
-            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn2">Race name</label><input type="text" id="k-rn2" placeholder="e.g. Berlin Marathon" aria-invalid="true" aria-describedby="k-rn2-e"></div><p class="field-error" id="k-rn2-e">Add the race name.</p></li><li><div class="row"><label for="k-np">New password</label><input type="password" id="k-np" value="short" aria-invalid="true" aria-describedby="k-np-e"></div><p class="field-error" id="k-np-e">Use at least 8 characters.</p></li></ul></div>
-          </form></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Locked while saving: one treatment, every control in Text disabled, the help text in Text 2 (Log result -loading; step 6, #9)</p>
-          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;" aria-busy="true"><fieldset class="locked" disabled>
-            <div class="group"><ul class="rows"><li><a class="row row--nav" aria-disabled="true">Find in race catalog</a></li></ul><p class="group-footer">Optional. Fills in the race name, date and sport type for you.</p></div>
-            <div class="group"><ul class="rows"><li><div class="row"><label for="k-l1">Race name</label><input type="text" id="k-l1" value="Berlin Marathon"></div></li><li><div class="row"><label for="k-l2">Finish time</label><input type="text" id="k-l2" value="3:12:48"></div></li></ul></div>
-          </fieldset></form></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Sign in: email and password, Forgot password? under the group</p>
-          <div class="kit-frame gate"><form class="form-rows" onsubmit="return false;"><div class="group"><ul class="rows"><li><div class="row"><label for="k-em">Email</label><input type="email" id="k-em" placeholder="e.g. you@example.com" autocomplete="off"></div></li><li><div class="row"><label for="k-pw">Password</label><input type="password" id="k-pw" autocomplete="off"></div></li></ul><p class="forgot"><a href="#">Forgot password?</a></p></div></form></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="form-alert">
-      <h3>Form alert</h3>
-      <p><code>.form-alert</code>, at the top of the form · Log result, New password (with Reset password again).</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Log result -error?cause=submit</p>
-          <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your result</h2><p>The connection may have dropped. Check it, then tap Save to try again. Everything you entered is still here.</p></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">New password -error?cause=submit</p>
-          <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your new password</h2><p>Your password wasn’t changed. Check your connection, then tap Save.</p><a class="alert-link" href="#">Reset password again</a></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="inline-error">
-      <h3>Inline error</h3>
-      <p><code>.inline-error</code> · Sign in / Sign up, Reset password: a request that failed, at the top of the form. Race detail and Result detail show a link that won't open as a native alert (round 2).</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Sign in -error · Reset password -error?cause=rate</p>
-          <div class="kit-frame">
-            <div class="inline-error" role="alert"><h2>Couldn’t sign you in</h2><p>The email or password didn’t match, or the connection dropped. Check your email and password, then try again.</p></div>
-            <div class="inline-error" role="alert"><h2>Too many requests</h2><p>Onrace limits how often a reset link can be sent. Wait a minute, then send the reset link again.</p></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="state-message">
-      <h3>State message</h3>
-      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. One component, the iOS ContentUnavailableView pattern: on a screen it is centered in the free area below the header; a 48px icon on top (muted for empty: magnifier, or archive on Results list; the coral error icon for errors), then the title, the body and the actions, centered. Icons are CSS masks; the markup is the wireframes'. Empty (status) or error (alert); one or two actions in the button hierarchy. <b>It sits directly on the page (designer, 2026-10-22):</b> no outline, frame or surface around it, on any screen. In Race browse's Map view the map frame drops its outline, water and land while it holds a state, and the state has no panel. (The white frames on this page are the showcase's specimen frames, not part of the component.)</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Race browse -empty</p>
-          <div class="kit-frame"><div class="state-message" role="status"><h2>No races match your current filters</h2><p>Remove a filter above, or try a wider date range, another region, or more sport types.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Race browse -empty, with a search</p>
-          <div class="kit-frame"><div class="state-message" role="status"><h2>No races match “kona”</h2><p>Only races in the race catalog appear here. Check the spelling, try the city instead of the race name, or clear your search and filters.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Race browse -error</p>
-          <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load races</h2><p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Results list -empty</p>
-          <div class="kit-frame"><section id="list-view-empty" aria-label="Results archive"><div class="state-message state-message--archive" role="status"><h2>No results logged yet</h2><p>Keep your official race results here.</p><div class="state-actions"><a class="state-action" href="#">Log your first result</a></div></div></section></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Results list -error</p>
-          <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load your results</h2><p>The connection may have dropped. Check it, then try again. Nothing in your results archive has changed.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Race picker -empty</p>
-          <div class="kit-frame"><div class="state-message" role="status"><h2>No past races match “kona”</h2><p>Only past races in the race catalog appear here, and this one may not be in it yet. Check the spelling, try the city instead of the race name, or type the race in yourself.</p><div class="state-actions"><a class="state-action" href="#">Type it in instead</a></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Race picker -error: two actions</p>
-          <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load the race catalog</h2><p>The connection may have dropped. Check it, then try again, or type the race in yourself. What you’ve entered on the form stays as it is.</p><div class="state-actions"><a class="state-action" href="#">Try again</a><a class="state-action secondary" href="#">Type it in instead</a></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Race detail -error · Result detail -error · Profile -error</p>
-          <div class="kit-frame">
-            <div class="state-message is-error"><h2>Couldn’t load race details</h2><p>The connection may have dropped. Check it, then try again.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
-            <div class="state-message is-error"><h2>Couldn’t load this result</h2><p>The connection may have dropped. Check it, then try again.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
-            <div class="state-message is-error"><h2>Couldn’t load your account</h2><p>The connection may have dropped. Check it, then try again. Your account and results haven’t changed.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
-          </div>
+        <div class="kit-state"><p class="kit-label">Result detail</p>
+          <div class="kit-frame kit-frame--flush"><article class="result" aria-labelledby="k-res-h">
+            <h1 id="k-res-h">Berlin Marathon</h1>
+            <dl class="finish"><dt>Finish time</dt><dd>3:12:48</dd></dl>
+            <dl class="facts"><dt>Race date</dt><dd><time datetime="2025-09-21">21 September 2025</time></dd><dt>Sport type</dt><dd>Marathon</dd></dl>
+            <section class="proof" aria-labelledby="k-proof"><h2 id="k-proof">Official result link</h2><p class="proof-url">https:/<wbr>/<wbr>berlin.<wbr>r.<wbr>mikatiming.<wbr>com/<wbr>2025/</p><button type="button" class="copy-link" data-copy aria-live="polite">Copy link</button><p class="proof-label">Self-reported · via berlin.r.mikatiming.com</p><p class="proof-note">Onrace doesn’t verify results. The official result is the evidence.</p></section>
+          </article></div>
         </div>
       </div>
     </div>
 
     <div class="kit-item" id="skeleton">
       <h3>Skeleton</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Skeleton</dd><dt>Classes</dt><dd><code>.skeleton-card</code> <code>.bar</code></dd><dt>Used on</dt><dd>6 screens: <a href="../wireframes/index.html#race-browse-loading">Race browse</a>, <a href="../wireframes/index.html#race-detail-loading">Race detail</a>, <a href="../wireframes/index.html#results-list-loading">Results list</a>, <a href="../wireframes/index.html#race-picker-loading">Race picker</a>, <a href="../wireframes/index.html#result-detail-loading">Result detail</a>, <a href="../wireframes/index.html#profile-loading">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/progress-indicators">Progress indicators</a></dd></dl><!-- /kit:meta -->
       <p><code>.bar</code>, <code>.skeleton-card</code> · every loading state. The content's shape with a subtle pulse (C6), still under reduced motion; no spinner, no shimmer. Screen readers hear a hidden status line.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse: race card with its photo band</p>
@@ -428,172 +353,9 @@
       </div>
     </div>
 
-    <div class="kit-item" id="action-bar">
-      <h3>Sticky action bar</h3>
-      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and where it goes. Glass like every bar; its caption passes AA over the worst case behind it. Its button is a capsule, as every control inside a bar (C7). It's the scroll area's last child, sticky at its bottom: content runs under its glass (G35, G54). Its height never changes: a link that won't open is a native alert now, on both screens (round 2). The Open button's visible label is short, "Open official result", and its name carries the domain (G56; WCAG 2.5.3, the name starts with the label).</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Race detail</p>
-          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens the race website — registration and payment happen there.</p></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Result detail</p>
-          <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="open-btn" href="#" aria-label="Open official result on berlin.r.mikatiming.com">Open official result</a><p class="action-caption">Opens the official timing site.</p></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="detail">
-      <h3>Detail header and facts · Detail section</h3>
-      <p><code>h1</code> + <code>dl.facts</code>; <code>section</code> with an <code>h2</code> · Race detail, Result detail. Race detail opens with the race’s photo (<code>.race &gt; .photo</code>, step 5): the race card’s 3:1 band and focus class at full content width, so it shows exactly the band retouched in round 3, with the outer 6px radius. The official site link has a 44pt target.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Race detail</p>
-          <div class="kit-frame kit-frame--flush"><article class="race" aria-labelledby="k-race-h">
-            <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-684.avif 684w, ../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-684.webp 684w, ../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../visuals/hyrox-sled-hall-1-684.jpg 684w, ../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
-            <h1 id="k-race-h">HYROX London</h1>
-            <dl class="facts"><dt>Sport type</dt><dd>HYROX</dd><dt>Race date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd><dt>Location</dt><dd>London, England, United Kingdom</dd></dl>
-            <section class="about" aria-labelledby="k-about"><h2 id="k-about">About this race</h2><p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p></section>
-            <section class="official" aria-labelledby="k-official"><h2 id="k-official">Official race website</h2><p><a href="#">hyrox.com</a></p></section>
-          </article></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Result detail</p>
-          <div class="kit-frame kit-frame--flush"><article class="result" aria-labelledby="k-res-h">
-            <h1 id="k-res-h">Berlin Marathon</h1>
-            <dl class="finish"><dt>Finish time</dt><dd>3:12:48</dd></dl>
-            <dl class="facts"><dt>Race date</dt><dd><time datetime="2025-09-21">21 September 2025</time></dd><dt>Sport type</dt><dd>Marathon</dd></dl>
-            <section class="proof" aria-labelledby="k-proof"><h2 id="k-proof">Official result link</h2><p class="proof-url">https:/<wbr>/<wbr>berlin.<wbr>r.<wbr>mikatiming.<wbr>com/<wbr>2025/</p><button type="button" class="copy-link" data-copy aria-live="polite">Copy link</button><p class="proof-label">Self-reported · via berlin.r.mikatiming.com</p><p class="proof-note">Onrace doesn’t verify results. The official result is the evidence.</p></section>
-          </article></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="status-line">
-      <h3>Status line</h3>
-      <p>A one-line confirmation · Results list (<code>.saved-status</code>, <code>?saved=</code>), Sign in / Sign up (<code>.reset-done</code>, <code>.sent-note</code>), Profile (<code>.row-note</code>). Neutral: never green, never a check.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Results list ?saved=</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><p class="saved-status" role="status">Saved: <strong>Valencia Half Marathon</strong></p></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Sign in ?reset=done · Check inbox: Sent</p>
-          <div class="kit-frame gate"><p class="reset-done" role="status">Password changed. Sign in with your new password.</p><p class="sent-note">Sent. Check your inbox again.</p></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Profile: a field saving (the spinner before "Saving…", G26), then saved</p>
-          <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-nm">Name</label><input type="text" id="k-nm" value="Maya Rossi"></div><p class="row-note"><span data-saving>Saving…</span><span data-saved hidden>Saved</span></p></li><li><div class="row"><label for="k-lg">Language</label><select id="k-lg"><option selected>English</option><option>Italiano</option></select></div><p class="row-note"><span data-saving hidden>Saving…</span><span data-saved>Saved</span></p></li></ul></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================ Archive -->
-  <section class="kit-section" id="archive" aria-labelledby="archive-h">
-    <h2 id="archive-h">Archive</h2>
-    <div class="kit-item" id="finish-time">
-      <h3>Finish time · Proof line</h3>
-      <p><code>.finish-time</code>, <code>dl.finish</code>; <code>.proof-label</code> · Results list, Result detail. The finish time is the loudest thing on the row; the proof is stated, not stamped. The row drills into Result detail, so it shows a disclosure indicator (G22); pressed, it takes the pressed level (G23).</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Results list: the result row</p>
-          <div class="kit-frame"><ul class="result-list">
-            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
-            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
-          </ul></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Result detail: the finish time and the proof section are under Detail above</p></div>
-      </div>
-    </div>
-
-    <div class="kit-item" id="archive-step5">
-      <h3>Log result as a modal sheet · the discard confirm</h3>
-      <p>Round 2 (G40, G41): Log result is a modal sheet over Results, a whole screen in a sheet; Cancel on the leading edge of its bar, the title, Save on the trailing edge. Saving shows the spinner alone in the bar (the words stay for screen readers). Cancel with anything entered or a race linked opens an action sheet (<code>dialog.action-sheet</code>; HIG Sheets, Action sheets): a message, the destructive choice in coral, and Keep editing apart at the bottom, bold. The alert's glass and radius.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">The sheet's bar: Cancel, title, Save</p>
-          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Saving: the spinner alone</p>
-          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" aria-disabled="true">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-busy="true" aria-disabled="true"><span class="visually-hidden">Saving…</span></button></header></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Cancel with a result entered: the action sheet</p>
-          <div class="kit-frame kit-stage">
-            <div class="sheet-backdrop open"></div>
-            <dialog class="action-sheet" open aria-labelledby="k-discard"><div class="action-group"><p class="action-message" id="k-discard">This result isn’t saved yet.</p><button type="button" class="is-destructive">Discard result</button></div><button type="button" class="action-cancel">Keep editing</button></dialog>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================ Infrastructure -->
-  <section class="kit-section" id="infrastructure" aria-labelledby="infra-h">
-    <h2 id="infra-h">Infrastructure</h2>
-    <div class="kit-item" id="gate-intro">
-      <h3>Gate intro</h3>
-      <p><code>p.context</code> · Sign in / Sign up (by mode and by where the person was heading), Reset password, New password.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Sign in (from Results)</p><div class="kit-frame gate"><p class="context">Sign in to see your results archive.</p></div></div>
-        <div class="kit-state"><p class="kit-label">Create account (from Results or Profile)</p><div class="kit-frame gate"><p class="context">Create an account to start your results archive.</p></div></div>
-        <div class="kit-state"><p class="kit-label">Reset password · New password</p><div class="kit-frame gate"><p class="context">Enter the email you signed up with, and we’ll send a reset link to it.</p><p class="context">Choose a new password for your Onrace account.</p></div></div>
-      </div>
-    </div>
-    <div class="kit-item" id="check-inbox">
-      <h3>Check-inbox block</h3>
-      <p><code>.inbox-heading</code>, <code>.inbox-line</code>, resend, Use a different email, <code>.expiry-note</code> · Sign in / Sign up, Reset password.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Sign up: confirm your email</p>
-          <div class="kit-frame gate">
-            <section aria-labelledby="k-inbox1"><h2 class="inbox-heading" id="k-inbox1">Confirm your email</h2><p class="inbox-line">We sent a confirmation link to <span class="addr">maya.rossi@example.com</span>. Open it on this device to finish creating your account.</p></section>
-            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn">Send a new link</button></section>
-            <a class="text-link" href="#">Use a different email</a>
-            <p class="expiry-note">Each link works once and expires after a while. If it doesn’t work, send a new link.</p>
-          </div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Reset password: if an account exists</p>
-          <div class="kit-frame gate">
-            <section aria-labelledby="k-inbox2"><h2 class="inbox-heading" id="k-inbox2">Reset your password</h2><p class="inbox-line">If an account exists for <span class="addr">maya.rossi@example.com</span>, we’ve sent a reset link to that email. Open it on this device to set a new password.</p></section>
-            <a class="secondary-btn" href="#">Send a new link</a>
-            <a class="text-link" href="#">Use a different email</a>
-            <p class="expiry-note">Each link works once and expires after a while. If it doesn’t work, send a new link.</p>
-          </div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Sign up: sending a new link (busy: the spinner before "Sending…", G26; label stays Text 1), then "Sent"</p>
-          <div class="kit-frame gate">
-            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn" disabled aria-busy="true"><span data-resend="idle" hidden>Send a new link</span><span data-resend="sending">Sending…</span></button></section>
-            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn"><span data-resend="idle">Send a new link</span><span data-resend="sending" hidden>Sending…</span></button><p class="sent-note">Sent. Check your inbox again.</p></section>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="kit-item" id="gate-layout">
-      <h3>Gate layout · top bar over the page</h3>
-      <p><code>body &gt; .top-bar</code> before <code>.phone-screen</code> (step 5, Infrastructure): on the gates the bar is the body's own child, not inside the scrolling page. It floats over the page's top edge in ground glass (C1); the page starts below it and scrolls under it, and nothing overflows the screen. Sign in / Sign up, Reset password, New password, every state. The bars themselves (Cancel + title on the modal gate, "‹ Sign in" on a step inside it) are under <a href="#top-bar">Top bar</a>.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">Sign in: the bar (Cancel, "Account", Sign in), the mode switch, the grouped rows</p>
-          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action">Sign in</button></header>
-            <form class="gate form-rows" onsubmit="return false;"><div class="view-toggle" role="group" aria-label="Sign in or create an account"><button type="button" class="view-btn" aria-pressed="true">Sign in</button><button type="button" class="view-btn" aria-pressed="false">Create account</button></div>
-            <div class="group"><ul class="rows"><li><div class="row"><label for="k-g1">Email</label><input type="email" id="k-g1" value="maya.rossi@example.com"></div></li><li><div class="row"><label for="k-g2">Password</label><input type="password" id="k-g2" placeholder="Required"></div></li></ul></div></form></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================ One-off -->
-  <section class="kit-section" id="one-off" aria-labelledby="oneoff-h">
-    <h2 id="oneoff-h">One-off</h2>
-
-    <div class="kit-item" id="controls">
-      <h3>Race browse · controls bar, active filter chips</h3>
-      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. List/Map keeps its full size; Filters takes the rest and shrinks no further than its label; the bar never outgrows the screen (2026-10-24). The chips row scrolls and fades at its end; Clear all filters stays pinned after it, whole. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p>
-      <div class="kit-states">
-        <div class="kit-state"><p class="kit-label">No filters</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Two filters (?sport=hyrox&amp;sport=marathon)</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="HYROX, remove filter">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Marathon, remove filter">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
-        </div>
-        <div class="kit-state"><p class="kit-label">Three filters, the row fades (-empty)</p>
-          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 3</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Middle East, remove filter">Middle East <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Triathlon, remove filter">Triathlon <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="1 Oct – 30 Nov 2026, remove filter">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
-        </div>
-      </div>
-    </div>
-
     <div class="kit-item" id="map">
       <h3>Race browse · static map</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Static map</dd><dt>Classes</dt><dd><code>.map-placeholder</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#race-browse-empty">Race browse</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p><code>.map-placeholder.has-pins</code>: Natural Earth land and borders, pins on the races' real coordinates, labels on leader lines. Neutral: no accent on the map.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Seven races</p>
@@ -627,8 +389,141 @@
       </div>
     </div>
 
+    <div class="kit-item" id="picker-intro">
+      <h3>Race picker · list intro</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>List intro</dd><dt>Classes</dt><dd><code>.list-intro</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#race-picker-loading">Race picker</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
+      <p><code>.list-intro</code>, above the list; with a search it names it.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Without a search</p>
+          <div class="kit-frame"><p class="list-intro">Past races in the race catalog</p></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">With a search</p>
+          <div class="kit-frame"><p class="list-intro">Past races in the race catalog matching “Berlin”</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ Forms -->
+  <section class="kit-section" id="role-forms" aria-labelledby="role-forms-h">
+    <h2 id="role-forms-h">Forms</h2>
+    <p>8 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+
+    <div class="kit-item" id="primary">
+      <h3>Primary button</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Primary button</dd><dt>Classes</dt><dd><code>.state-action</code> <code>.submit-btn</code> <code>.register-btn</code> <code>.open-btn</code> <code>.bar-action</code> <code>.save-btn</code></dd><dt>Used on</dt><dd>10 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p>The screen's one filled action: <code>.state-action</code>, <code>.submit-btn</code>, <code>.register-btn</code>, <code>.open-btn</code>. Hover lightens it; a press moves it down 1px. In a bar the primary is amber text instead (<code>.bar-action</code>, <code>.save-btn</code>; see Top bar), and busy it is the spinner alone there (round 2).</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">In a state message</p>
+          <div class="kit-frame"><div class="kit-row"><button type="button" class="state-action">Change filters</button><a class="state-action" href="#">Try again</a><a class="state-action" href="#">Log your first result</a></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Full width: the action bar (Register, Open, G56) and the expired-link actions (<code>.submit-btn</code>, G60)</p>
+          <div class="kit-frame kit-stack"><a class="register-btn" href="#">Register on hyrox.com</a><a class="open-btn" href="#">Open official result</a><div class="gate"><a class="submit-btn" href="#">Reset password again</a></div><div class="gate"><a class="submit-btn" href="#">Send a new link</a></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Busy in a bar: the spinner alone, the words for screen readers (Sign in, Send, Save)</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" aria-disabled="true">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action" aria-busy="true" aria-disabled="true"><span class="visually-hidden">Signing in…</span></button></header></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="secondary">
+      <h3>Secondary button</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Secondary button, Filters trigger with count</dd><dt>Classes</dt><dd><code>.filters-trigger</code> <code>.secondary-btn</code> <code>.unlink-btn</code></dd><dt>Used on</dt><dd>4 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p>Tonal: <code>.filters-trigger</code>, <code>.state-action.secondary</code>, <code>.secondary-btn</code>, and the small <code>.unlink-btn</code>. (The inline errors' Dismiss and Try again went with them, round 2: the detail screens use alerts.)</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Filters: rest, with a count, open</p>
+          <div class="kit-frame kit-stack"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="true">Filters</button></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">State actions and Check inbox</p>
+          <div class="kit-frame kit-stack"><div class="kit-row"><a class="state-action secondary" href="#">Type it in instead</a></div><button type="button" class="secondary-btn">Send a new link</button><button type="button" class="secondary-btn" disabled aria-busy="true">Sending…</button></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Small: Unlink race</p>
+          <div class="kit-frame kit-row"><button type="button" class="unlink-btn">Unlink race</button><button type="button" class="unlink-btn" disabled>Unlink race</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="text-link">
+      <h3>Text link</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Text link</dd><dt>Classes</dt><dd><code>.clear-all</code> <code>.text-link</code> <code>.forgot</code> <code>.alert-link</code> <code>.copy-link</code></dd><dt>Used on</dt><dd>5 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p>Tertiary: <code>.clear-all</code>, <code>.text-link</code>, <code>.forgot</code>, <code>.alert-link</code>, a row's Try again.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Clear all filters (chips row)</p>
+          <div class="kit-frame"><button type="button" class="clear-all">Clear all filters</button></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Use a different email (Check inbox)</p>
+          <div class="kit-frame"><a class="text-link" href="#">Use a different email</a></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Forgot password? · disabled while signing in</p>
+          <div class="kit-frame kit-stack"><p class="forgot"><a href="#">Forgot password?</a></p><p class="forgot"><a aria-disabled="true">Forgot password?</a></p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="text-field">
+      <h3>Form rows: text fields, hints, errors</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Text field, Field hint, Field error, Locked form</dd><dt>Classes</dt><dd><code>.form-rows</code> <code>.group-footer</code> <code>.field-error</code> <code>.locked</code></dd><dt>Used on</dt><dd>5 screens: <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/text-fields">Text fields</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>form.form-rows</code> with <code>.group</code> / <code>.rows</code> / <code>.row</code> (round 2: Log result G42, the sign-in screens G61): a label and its field in a row, the value in Text 1, left-aligned; a long value (the official result link) stacks, <code>.row--stacked</code>. Hints are the group's footer (<code>.group-footer</code>, still the field's <code>aria-describedby</code>); an error sits under its row (<code>.field-error</code>) and the invalid row takes the coral ring. The finish time takes the numeric keypad (<code>inputmode="numeric"</code>; the colons are put in as people type, G45). A navigation row (<code>.row--nav</code>, Find in race catalog) ends in a disclosure chevron.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Log result: grouped, with hints</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
+            <div class="group"><ul class="rows"><li><a class="row row--nav" href="#" aria-describedby="k-cat-h">Find in race catalog</a></li></ul><p class="group-footer" id="k-cat-h">Optional. Fills in the race name, date and sport type for you.</p></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn">Race name</label><input type="text" id="k-rn" placeholder="e.g. Berlin Marathon" autocomplete="off"></div></li><li><div class="row"><label for="k-rd">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-rd-pick"></button><input type="date" id="k-rd" tabindex="-1" aria-hidden="true"></span></div></li><li><div class="row"><label for="k-rs">Sport type</label><select id="k-rs"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-ft">Finish time</label><input type="text" id="k-ft" inputmode="numeric" placeholder="e.g. 3:12:48" autocomplete="off" aria-describedby="k-ft-h"></div></li></ul><p class="group-footer" id="k-ft-h">Hours:minutes:seconds, exactly as the official results show it.</p></div>
+            <div class="group"><ul class="rows"><li><div class="row row--stacked"><label for="k-url">Official result link</label><input type="url" id="k-url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off"></div></li></ul></div>
+          </form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Errors under their rows (Log result -error, New password -error)</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-rn2">Race name</label><input type="text" id="k-rn2" placeholder="e.g. Berlin Marathon" aria-invalid="true" aria-describedby="k-rn2-e"></div><p class="field-error" id="k-rn2-e">Add the race name.</p></li><li><div class="row"><label for="k-np">New password</label><input type="password" id="k-np" value="short" aria-invalid="true" aria-describedby="k-np-e"></div><p class="field-error" id="k-np-e">Use at least 8 characters.</p></li></ul></div>
+          </form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Locked while saving: one treatment, every control in Text disabled, the help text in Text 2 (Log result -loading; step 6, #9)</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;" aria-busy="true"><fieldset class="locked" disabled>
+            <div class="group"><ul class="rows"><li><a class="row row--nav" aria-disabled="true">Find in race catalog</a></li></ul><p class="group-footer">Optional. Fills in the race name, date and sport type for you.</p></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-l1">Race name</label><input type="text" id="k-l1" value="Berlin Marathon"></div></li><li><div class="row"><label for="k-l2">Finish time</label><input type="text" id="k-l2" value="3:12:48"></div></li></ul></div>
+          </fieldset></form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Sign in: email and password, Forgot password? under the group</p>
+          <div class="kit-frame gate"><form class="form-rows" onsubmit="return false;"><div class="group"><ul class="rows"><li><div class="row"><label for="k-em">Email</label><input type="email" id="k-em" placeholder="e.g. you@example.com" autocomplete="off"></div></li><li><div class="row"><label for="k-pw">Password</label><input type="password" id="k-pw" autocomplete="off"></div></li></ul><p class="forgot"><a href="#">Forgot password?</a></p></div></form></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="select">
+      <h3>Pop-up select</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Pop-up select</dd><dt>Classes</dt><dd><code>&lt;select</code></dd><dt>Used on</dt><dd>5 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#sign-in-sign-up-loading">Sign in / Sign up</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons">Pull-down buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>select</code> in a row: Region (Filters sheet), Sport type (Log result), Country and Language (Profile). The value at the row's trailing edge with a chevron; the native menu opens on tap (G17, G43). Sort is a button since round 1 (G21).</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Log result: Sport type, empty</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-st1">Sport type</label><select id="k-st1"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Log result -error: missing</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-st2">Sport type</label><select id="k-st2" aria-invalid="true" aria-describedby="k-st2-e"><option value="" selected>Choose a sport type</option><option>HYROX</option></select></div><p class="field-error" id="k-st2-e">Choose a sport type.</p></li></ul></form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Profile row (Country)</p>
+          <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-country">Country</label><select id="k-country"><option>France</option><option>Germany</option><option selected>Italy</option><option>Spain</option></select></div></li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="date">
+      <h3>Date field</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Date field</dd><dt>Classes</dt><dd><code>.date-pill</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/pickers">Pickers</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>.date-pill</code> in a row, a native compact picker (G18, G44; step 6, #26): the date written as the chips and cards write it ("23 Sep 2026") on a <code>--bg-2</code> pill, the pill is one <code>button.date-value</code> (one Tab stop, one ring) that opens the system's calendar (<code>showPicker()</code>); the native <code>input type="date"</code> beside it holds the value, out of the tab order (step 7, #3). No glyph, no browser locale mask: empty, "Choose a date" in Text 2. Filters sheet (above), Log result (Race date).</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Log result: Race date, empty</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d1">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-d1-pick"></button><input type="date" id="k-d1" tabindex="-1" aria-hidden="true"></span></div></li></ul></form></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Log result -error: missing</p>
+          <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d2">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-d2-pick"></button><input type="date" id="k-d2" tabindex="-1" aria-hidden="true" aria-invalid="true" aria-describedby="k-d2-e"></span></div><p class="field-error" id="k-d2-e">Add the date you raced.</p></li></ul></form></div>
+        </div>
+      </div>
+    </div>
+
     <div class="kit-item" id="log-result-parts">
       <h3>Log result · form intro, catalog row, linked race</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Form intro, Catalog row, Linked race card</dd><dt>Classes</dt><dd><code>.form-intro</code> <code>.row--nav</code> <code>.linked-race</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p><code>.form-intro</code>, the catalog row (<code>.row--nav</code>, disabled while saving), <code>section.linked-race</code> with Unlink race (with <code>?catalog=</code>).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Base</p>
@@ -645,6 +540,7 @@
 
     <div class="kit-item" id="gate-parts">
       <h3>Sign in / Sign up · New password: the confirm in the bar, form note, expired links</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Forgot password? link, Form note, Expired-link message, Full-screen gate error</dd><dt>Classes</dt><dd><code>.forgot</code> <code>.form-note</code> <code>.state-msg</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p>The confirm action is the top bar's trailing button (round 2, G60; HIG Toolbars): "Sign in", "Create", "Send", "Save", short so it never meets the title; the accessible name starts with it ("Create account", "Send reset link", "Save new password"). While it works, the spinner alone. <code>.form-note</code> (Create account). The two expired-link errors have no form, so they are the screen's whole state and sit on the page like <code>.state-message</code> (step 5, Infrastructure): the 48px coral error icon on top, title, body, the one action sized to its label, centered under the top bar, no frame or surface. New password <code>-error?cause=expired</code>: <code>section.state-msg</code>. Sign in <code>-error?cause=confirm</code>: the section holding an <code>.inline-error</code> and Send a new link (inside a form, an <code>.inline-error</code> keeps its surface).</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Create account</p>
@@ -661,9 +557,181 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ================================================================ Feedback -->
+  <section class="kit-section" id="role-feedback" aria-labelledby="role-feedback-h">
+    <h2 id="role-feedback-h">Feedback</h2>
+    <p>6 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+
+    <div class="kit-item" id="state-message">
+      <h3>State message</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>State message</dd><dt>Classes</dt><dd><code>.state-message</code></dd><dt>Used on</dt><dd>6 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. One component, the iOS ContentUnavailableView pattern: on a screen it is centered in the free area below the header; a 48px icon on top (muted for empty: magnifier, or archive on Results list; the coral error icon for errors), then the title, the body and the actions, centered. Icons are CSS masks; the markup is the wireframes'. Empty (status) or error (alert); one or two actions in the button hierarchy. <b>It sits directly on the page (designer, 2026-10-22):</b> no outline, frame or surface around it, on any screen. In Race browse's Map view the map frame drops its outline, water and land while it holds a state, and the state has no panel. (The white frames on this page are the showcase's specimen frames, not part of the component.)</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Race browse -empty</p>
+          <div class="kit-frame"><div class="state-message" role="status"><h2>No races match your current filters</h2><p>Remove a filter above, or try a wider date range, another region, or more sport types.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Race browse -empty, with a search</p>
+          <div class="kit-frame"><div class="state-message" role="status"><h2>No races match “kona”</h2><p>Only races in the race catalog appear here. Check the spelling, try the city instead of the race name, or clear your search and filters.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Race browse -error</p>
+          <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load races</h2><p>The connection may have dropped. Check it, then try again. Your filters stay as they are.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Results list -empty</p>
+          <div class="kit-frame"><section id="list-view-empty" aria-label="Results archive"><div class="state-message state-message--archive" role="status"><h2>No results logged yet</h2><p>Keep your official race results here.</p><div class="state-actions"><a class="state-action" href="#">Log your first result</a></div></div></section></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Results list -error</p>
+          <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load your results</h2><p>The connection may have dropped. Check it, then try again. Nothing in your results archive has changed.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Race picker -empty</p>
+          <div class="kit-frame"><div class="state-message" role="status"><h2>No past races match “kona”</h2><p>Only past races in the race catalog appear here, and this one may not be in it yet. Check the spelling, try the city instead of the race name, or type the race in yourself.</p><div class="state-actions"><a class="state-action" href="#">Type it in instead</a></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Race picker -error: two actions</p>
+          <div class="kit-frame"><div class="state-message is-error"><h2>Couldn’t load the race catalog</h2><p>The connection may have dropped. Check it, then try again, or type the race in yourself. What you’ve entered on the form stays as it is.</p><div class="state-actions"><a class="state-action" href="#">Try again</a><a class="state-action secondary" href="#">Type it in instead</a></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Race detail -error · Result detail -error · Profile -error</p>
+          <div class="kit-frame">
+            <div class="state-message is-error"><h2>Couldn’t load race details</h2><p>The connection may have dropped. Check it, then try again.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
+            <div class="state-message is-error"><h2>Couldn’t load this result</h2><p>The connection may have dropped. Check it, then try again.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
+            <div class="state-message is-error"><h2>Couldn’t load your account</h2><p>The connection may have dropped. Check it, then try again. Your account and results haven’t changed.</p><div class="state-actions"><a class="state-action" href="#">Try again</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="form-alert">
+      <h3>Form alert</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Form alert</dd><dt>Classes</dt><dd><code>.form-alert</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
+      <p><code>.form-alert</code>, at the top of the form · Log result, New password (with Reset password again).</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Log result -error?cause=submit</p>
+          <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your result</h2><p>The connection may have dropped. Check it, then tap Save to try again. Everything you entered is still here.</p></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">New password -error?cause=submit</p>
+          <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your new password</h2><p>Your password wasn’t changed. Check your connection, then tap Save.</p><a class="alert-link" href="#">Reset password again</a></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="inline-error">
+      <h3>Inline error</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Inline error</dd><dt>Classes</dt><dd><code>.inline-error</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
+      <p><code>.inline-error</code> · Sign in / Sign up, Reset password: a request that failed, at the top of the form. Race detail and Result detail show a link that won't open as a native alert (round 2).</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Sign in -error · Reset password -error?cause=rate</p>
+          <div class="kit-frame">
+            <div class="inline-error" role="alert"><h2>Couldn’t sign you in</h2><p>The email or password didn’t match, or the connection dropped. Check your email and password, then try again.</p></div>
+            <div class="inline-error" role="alert"><h2>Too many requests</h2><p>Onrace limits how often a reset link can be sent. Wait a minute, then send the reset link again.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="status-line">
+      <h3>Status line</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Status line</dd><dt>Classes</dt><dd><code>.saved-status</code> <code>.reset-done</code> <code>.sent-note</code> <code>.row-note</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p>A one-line confirmation · Results list (<code>.saved-status</code>, <code>?saved=</code>), Sign in / Sign up (<code>.reset-done</code>, <code>.sent-note</code>), Profile (<code>.row-note</code>). Neutral: never green, never a check.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Results list ?saved=</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><p class="saved-status" role="status">Saved: <strong>Valencia Half Marathon</strong></p></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Sign in ?reset=done · Check inbox: Sent</p>
+          <div class="kit-frame gate"><p class="reset-done" role="status">Password changed. Sign in with your new password.</p><p class="sent-note">Sent. Check your inbox again.</p></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Profile: a field saving (the spinner before "Saving…", G26), then saved</p>
+          <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-nm">Name</label><input type="text" id="k-nm" value="Maya Rossi"></div><p class="row-note"><span data-saving>Saving…</span><span data-saved hidden>Saved</span></p></li><li><div class="row"><label for="k-lg">Language</label><select id="k-lg"><option selected>English</option><option>Italiano</option></select></div><p class="row-note"><span data-saving hidden>Saving…</span><span data-saved>Saved</span></p></li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="check-inbox">
+      <h3>Check-inbox block</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Check-inbox block</dd><dt>Classes</dt><dd><code>.inbox-heading</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>.inbox-heading</code>, <code>.inbox-line</code>, resend, Use a different email, <code>.expiry-note</code> · Sign in / Sign up, Reset password.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Sign up: confirm your email</p>
+          <div class="kit-frame gate">
+            <section aria-labelledby="k-inbox1"><h2 class="inbox-heading" id="k-inbox1">Confirm your email</h2><p class="inbox-line">We sent a confirmation link to <span class="addr">maya.rossi@example.com</span>. Open it on this device to finish creating your account.</p></section>
+            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn">Send a new link</button></section>
+            <a class="text-link" href="#">Use a different email</a>
+            <p class="expiry-note">Each link works once and expires after a while. If it doesn’t work, send a new link.</p>
+          </div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Reset password: if an account exists</p>
+          <div class="kit-frame gate">
+            <section aria-labelledby="k-inbox2"><h2 class="inbox-heading" id="k-inbox2">Reset your password</h2><p class="inbox-line">If an account exists for <span class="addr">maya.rossi@example.com</span>, we’ve sent a reset link to that email. Open it on this device to set a new password.</p></section>
+            <a class="secondary-btn" href="#">Send a new link</a>
+            <a class="text-link" href="#">Use a different email</a>
+            <p class="expiry-note">Each link works once and expires after a while. If it doesn’t work, send a new link.</p>
+          </div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Sign up: sending a new link (busy: the spinner before "Sending…", G26; label stays Text 1), then "Sent"</p>
+          <div class="kit-frame gate">
+            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn" disabled aria-busy="true"><span data-resend="idle" hidden>Send a new link</span><span data-resend="sending">Sending…</span></button></section>
+            <section aria-label="Send a new confirmation link"><button type="button" class="secondary-btn"><span data-resend="idle">Send a new link</span><span data-resend="sending" hidden>Sending…</span></button><p class="sent-note">Sent. Check your inbox again.</p></section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="archive-step5">
+      <h3>Log result as a modal sheet · the discard confirm</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Action sheet</dd><dt>Classes</dt><dd><code>.action-sheet</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/action-sheets">Action sheets</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p>Round 2 (G40, G41): Log result is a modal sheet over Results, a whole screen in a sheet; Cancel on the leading edge of its bar, the title, Save on the trailing edge. Saving shows the spinner alone in the bar (the words stay for screen readers). Cancel with anything entered or a race linked opens an action sheet (<code>dialog.action-sheet</code>; HIG Sheets, Action sheets): a message, the destructive choice in coral, and Keep editing apart at the bottom, bold. The alert's glass and radius.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">The sheet's bar: Cancel, title, Save</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Saving: the spinner alone</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" aria-disabled="true">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-busy="true" aria-disabled="true"><span class="visually-hidden">Saving…</span></button></header></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Cancel with a result entered: the action sheet</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <dialog class="action-sheet" open aria-labelledby="k-discard"><div class="action-group"><p class="action-message" id="k-discard">This result isn’t saved yet.</p><button type="button" class="is-destructive">Discard result</button></div><button type="button" class="action-cancel">Keep editing</button></dialog>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ One-off -->
+  <section class="kit-section" id="role-one-off" aria-labelledby="role-one-off-h">
+    <h2 id="role-one-off-h">One-off</h2>
+    <p>3 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+
+    <div class="kit-item" id="controls">
+      <h3>Race browse · controls bar, active filter chips</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Controls bar, Active filter chips row</dd><dt>Classes</dt><dd><code>.controls</code> <code>.chips-row</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#race-browse-empty">Race browse</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
+      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. List/Map keeps its full size; Filters takes the rest and shrinks no further than its label; the bar never outgrows the screen (2026-10-24). The chips row scrolls and fades at its end; Clear all filters stays pinned after it, whole. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">No filters</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Two filters (?sport=hyrox&amp;sport=marathon)</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="HYROX, remove filter">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Marathon, remove filter">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Three filters, the row fades (-empty)</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 3</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Middle East, remove filter">Middle East <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Triathlon, remove filter">Triathlon <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="1 Oct – 30 Nov 2026, remove filter">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kit-item" id="gate-intro">
+      <h3>Gate intro</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Gate intro</dd><dt>Classes</dt><dd><code>.context</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
+      <p><code>p.context</code> · Sign in / Sign up (by mode and by where the person was heading), Reset password, New password.</p>
+      <div class="kit-states">
+        <div class="kit-state"><p class="kit-label">Sign in (from Results)</p><div class="kit-frame gate"><p class="context">Sign in to see your results archive.</p></div></div>
+        <div class="kit-state"><p class="kit-label">Create account (from Results or Profile)</p><div class="kit-frame gate"><p class="context">Create an account to start your results archive.</p></div></div>
+        <div class="kit-state"><p class="kit-label">Reset password · New password</p><div class="kit-frame gate"><p class="context">Enter the email you signed up with, and we’ll send a reset link to it.</p><p class="context">Choose a new password for your Onrace account.</p></div></div>
+      </div>
+    </div>
 
     <div class="kit-item" id="profile-parts">
       <h3>Profile · identity, grouped rows, Sign out, confirm alert</h3>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Identity block, Grouped settings rows, Sign out button, Confirm alert</dd><dt>Classes</dt><dd><code>.identity</code> <code>.group-heading</code> <code>.signout</code> <code>.alert</code></dd><dt>Used on</dt><dd>4 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
       <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code> (a destructive action: coral text in its row too, G68, designer 2026-10-23), <code>dialog.alert</code> (glass as an iOS 26 alert: the sheet glass over the scrim, the rim, <code>--radius-alert</code> 34px [?], G67, designer 2026-10-23; Sign out in the destructive style, coral text, per HIG Alerts; the focus ring on Cancel, which takes focus on open, is drawn inside the button so the alert's edge never clips it). Step 5, Infrastructure: Country and Language are pop-up rows, a Solar chevron after the value in Text 2; every row is 44pt to its edges; the row's "Try again" link has a 44pt tap area. Profile <code>-error</code> (cause=load) is a <code>.state-message</code> centered between the large title and the tab bar.</p>
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Profile</p>
@@ -702,12 +770,6 @@
             <dialog class="alert" open aria-labelledby="k-lnk" aria-describedby="k-lnkd"><div class="alert-body"><h2 id="k-lnk">Couldn’t open the official result</h2><p id="k-lnkd">The official result on results.hyrox.com didn’t open. Your browser may have blocked it. Try again, or tap Copy link and paste it into your browser.</p></div><div class="alert-actions"><button type="button" aria-label="Dismiss this message">Dismiss</button><button type="button" aria-label="Try again, opening the official result">Try again</button></div></dialog></div>
         </div>
       </div>
-    </div>
-
-    <div class="kit-item" id="picker-intro">
-      <h3>Race picker · list intro</h3>
-      <p><code>.list-intro</code>, above the list; with a search it names it.</p>
-      <div class="kit-frame"><p class="list-intro">Past races in the race catalog</p><p class="list-intro">Past races in the race catalog matching “Berlin”</p></div>
     </div>
   </section>
 

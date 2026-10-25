@@ -89,6 +89,8 @@ assert N_PAIRS > 0 and N_TOKENS > 0
 N_STEP7 = len(re.findall(r'^\d+\. ', CS['Step 7 check (2026-10-14 to 2026-10-15)'], flags=re.M))
 _m = re.search(r'(\w+) defects found, (\w+) fixed', CS['Step 7 check (2026-10-14 to 2026-10-15)'])
 STEP7_FOUND, STEP7_FIXED = _m.group(1).lower(), _m.group(2)
+_NUM = {'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10}
+STEP7_FOUND_N = _NUM.get(STEP7_FOUND, STEP7_FOUND)
 DEFERRED_ROWS = len(re.findall(r'^\| (?!Item|---)', CS['Deferred to Lesson 7 (markup)'], flags=re.M))
 
 # ---------------------------------------------------------------- 2. references: technique cards from the § 4 tables
@@ -307,148 +309,62 @@ DEVICE_JS = """(function () {
   window.addEventListener('resize', fit);
 })();"""
 
-NAV = [('overview', 'Overview'), ('references', 'References'), ('taste', 'Taste'), ('directions', 'Directions'), ('stand', 'Stand'), ('screens', 'Screens'), ('check', 'Check'), ('open', 'Open')]
-CSSSRC = open(ROOT + '/public/ia.html').read()
-root_css = CSSSRC[CSSSRC.index(':root{'):CSSSRC.index('/* Hero */')]
+import lesson_page as LP
 
-def section(id_, tag, tagcls, title, body):
-    return f'<section class="block" id="{id_}"><span class="section-tag {tagcls}">{tag}</span><h2>{esc(title)}</h2><div class="prose">{body}</div></section>\n'
+# ---------------------------------------------------------------- the decision register (the designer's own decisions, from concept.md)
+def date_of(h, default='2026-10-13 to 2026-10-15'):
+    m = re.search(r'(\d{4}-\d\d-\d\d)', h); return m.group(1) if m else default
+def first_sentences(t, limit=280):
+    t = re.sub(r'\s+', ' ', t).strip()
+    if len(t) <= limit: return t
+    cut = t.rfind('. ', 0, limit)
+    return t[:cut + 1] if cut > 80 else t[:limit].rsplit(' ', 1)[0] + ' …'
+def anchor(h):
+    return GH + 'concept/concept.md#' + re.sub(r'[^a-z0-9 -]', '', h.lower()).replace(' ', '-')
+def cards_from(head, body, mode):
+    out, d, src = [], date_of(head), head
+    if mode == 'items':      # numbered or bulleted items that start with a bold lead
+        for m in re.finditer(r'^(?:\d+\. |- )\*\*(.+?)\*\*[:.]? (.*)$', body, flags=re.M):
+            out.append((inline(m.group(1).rstrip('.:')), inline(first_sentences(m.group(2))), d, src))
+    elif mode == 'paras':    # paragraphs that start with a bold lead
+        for m in re.finditer(r'^\*\*(.+?)\*\*[:.]? ?(.*)$', body, flags=re.M):
+            if m.group(1).startswith(('Like', "Don't want", 'Decision')): continue
+            if len(m.group(2).strip()) < 12: continue   # a heading-like lead with no answer after it
+            out.append((inline(m.group(1).rstrip('.:')), inline(first_sentences(m.group(2))), date_of(m.group(1), d), src))
+    elif mode == 'decisions':    # a question in bold, then its "**Decision: …**"
+        for m in re.finditer(r'^\*\*([A-Z]\. .+?)\*\*.*?^\*\*Decision: (.+?)\*\*([^\n]*)$', body, flags=re.M | re.S):
+            out.append((inline(m.group(1).rstrip('.')), '<strong>' + inline(m.group(2)) + '</strong> ' + inline(first_sentences(m.group(3), 200)), d, src))
+    return [(q, a, dd, s, anchor(s)) for q, a, dd, s in out]
+REG = []
+for head, mode in [("Designer's taste", 'paras'), ('Hierarchy rules (designer)', 'items'), ('Color rules (designer, 2026-10-13)', 'items'),
+                   ('Race card anatomy (decided by the designer, 2026-10-13)', 'paras'), ('Results list details (designer, 2026-10-14)', 'items'),
+                   ('Map (designer decision, 2026-10-14)', 'paras'), ('Where data and taste pull apart (decided 2026-10-13)', 'decisions'),
+                   ('Directions (step 3, chosen 2026-10-13)', 'paras')]:
+    REG += cards_from(head, CS[head], mode)
+assert len(REG) > 15
 
-PAGE = f'''<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onrace — Concept</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<style>
-  {root_css}{BAR_CSS}
-  /* Hero (same as ia.html and voice.html) */
-  header.hero{{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px; }}
-  .kicker{{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }}
-  header.hero h1{{ font-size:clamp(36px,6vw,60px); margin:0 0 14px; font-weight:800; letter-spacing:-.02em; }}
-  .hero-desc{{color:var(--text-dim); font-size:18px; max-width:720px; margin:0 0 6px; line-height:1.5}}
-  .meta-row{{display:flex; gap:10px; flex-wrap:wrap; margin:24px 0 0}}
-  .pill{{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim); }}
-  .card-grid{{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:28px 0 0}}
-  a.card-link{{ display:block; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; text-decoration:none; transition:border-color .15s, transform .15s; }}
-  a.card-link:hover{{border-color:var(--accent); transform:translateY(-1px)}}
-  .si-tag{{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px}}
-  .si-title{{color:var(--text); font-weight:700; font-size:15px; display:block; margin-bottom:4px}}
-  .si-desc{{color:var(--text-dim); font-size:13px; display:block}}
-  main{{max-width:var(--maxw); margin:0 auto; padding:0 24px 80px}}
-  section.block{{padding:56px 0; border-top:1px solid var(--border); scroll-margin-top:72px}}
-  .section-tag{{ display:inline-flex; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:5px 12px; border-radius:999px; margin-bottom:16px; }}
-  .tag-p{{background:var(--accent-dim); color:var(--accent)}}
-  .tag-d{{background:var(--patterns-dim); color:var(--patterns)}}
-  .tag-f{{background:var(--unconfirmed-dim); color:var(--unconfirmed)}}
-  .tag-m{{background:var(--benchmark-dim); color:var(--benchmark)}}
-  .tag-t{{background:var(--job-loc-dim); color:var(--job-loc)}}
-  .tag-o{{background:var(--ok-dim); color:var(--ok)}}
-  h2{{font-size:28px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em}}
-  h3{{font-size:19px; margin:34px 0 10px; font-weight:700}}
-  h3[id]{{scroll-margin-top:72px}}
-  .prose p, .prose li{{color:var(--text-dim); font-size:15px; max-width:820px}}
-  .prose strong{{color:var(--text)}}
-  .prose ul, .prose ol{{padding-left:20px; margin:0 0 14px}}
-  .prose li{{margin-bottom:6px}}
-  .prose li ul{{margin-top:6px}}
-  .prose p.rule{{font-size:16.5px; color:var(--text); background:var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:12px 16px}}
-  .prose p.note{{font-size:13.5px; color:var(--text-faint)}}
-  .tbl-wrap{{overflow-x:auto; margin:10px 0 20px; border:1px solid var(--border); border-radius:var(--radius)}}
-  table{{border-collapse:collapse; width:100%; font-size:13.5px}}
-  th{{text-align:left; background:var(--bg-elev-2); color:var(--text-faint); font-size:11px; text-transform:uppercase; letter-spacing:.05em; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap}}
-  td{{padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top; color:var(--text-dim)}}
-  tr:last-child td{{border-bottom:none}}
-  td strong{{color:var(--text)}}
-  .two-col{{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:18px}}
-  .two-col h3{{margin-top:6px}}
-  .panel{{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:6px 20px 8px}}
-  .tech-grid, .attr-grid{{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:14px; margin:14px 0 8px}}
-  .tech, .attr{{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px}}
-  .tech p, .attr p{{margin:0 0 8px}}
-  .tech-from{{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--patterns)}}
-  .prose .tech-name, .prose .attr-title{{color:var(--text); font-weight:700; font-size:15.5px; margin-top:6px}}
-  .prose .tech-meta, .prose .attr-strength{{font-size:13px; color:var(--text-faint)}}
-  .scope{{color:var(--benchmark); font-weight:700}}
-  a.btn{{display:inline-block; background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-weight:700; font-size:14px; text-decoration:none}}
-  a.btn:hover{{border-color:var(--accent)}}
-  .stat-row{{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:6px 0 18px}}
-  .stat{{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px}}
-  .stat-n{{display:block; font-size:36px; font-weight:800; letter-spacing:-.02em; color:var(--text); line-height:1.1}}
-  .stat-l{{display:block; font-size:13px; color:var(--text-dim); margin-top:6px}}
-  .phones{{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:28px; margin:18px 0}}
-  .phone-fig{{margin:0}}
-  /* device frame: copied from wireframes/index.html at build time */
-{DEVICE_CSS}
-  .phone-fig .device-slot{{margin:0 auto}}
-  figcaption{{max-width:412px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}}
-  figcaption strong{{color:var(--text)}}
-  .states{{color:var(--text-faint)}}
-  footer{{max-width:var(--maxw); margin:0 auto; padding:24px; color:var(--text-faint); font-size:12.5px; border-top:1px solid var(--border)}}
-  @media (prefers-reduced-motion: reduce){{ html{{scroll-behavior:auto}} a.card-link{{transition:none}} a.card-link:hover{{transform:none}} }}
-</style>
-</head>
-<body>
-{lessons_bar('concept-overview.html')}
-<nav>
-  <div class="nav-inner">
-    <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Concept</a>
-    <div class="navlinks">
-      {''.join(f'<a href="#{i}">{n}</a>' for i, n in NAV)}
-    </div>
-  </div>
-</nav>
-<a id="top"></a>
-<header class="hero">
-  <p class="kicker">Lesson 6 · Concept</p>
-  <h1>Podium: how Onrace looks</h1>
-  <p class="hero-desc">Rendered from <code>concept/concept.md</code> (taste, attributes, rules, decisions) and <code>concept/references.md</code> (what we borrowed, and from where). The product's own values live in <code>concept/</code>; this page only documents them.</p>
-  <div class="meta-row">
-    <span class="pill">Direction A chosen 2026-10-13</span>
-    <span class="pill">{N_TOKENS} tokens, all signed</span>
-    <span class="pill">{N_PAIRS} contrast pairs</span>
-    <span class="pill">2 screens in Podium</span>
-    <span class="pill">Step 7: {STEP7_FOUND} defects found, {STEP7_FIXED} fixed</span>
-  </div>
-  <div class="card-grid">
-    <a class="card-link" href="concept/concept.html"><span class="si-tag" style="color:var(--accent)">Stand</span><span class="si-title">concept.html</span><span class="si-desc">Every token, component and contrast pair, signed with its reason →</span></a>
-    <a class="card-link" href="concept/directions.html"><span class="si-tag" style="color:var(--patterns)">Directions</span><span class="si-title">Round 2: A, B, C</span><span class="si-desc">Podium chosen; Telemetry and Bib number not picked →</span></a>
-    <a class="card-link" href="wireframes/race-browse.html"><span class="si-tag" style="color:var(--benchmark)">Screen</span><span class="si-title">Race browse</span><span class="si-desc">Live, in Podium →</span></a>
-    <a class="card-link" href="wireframes/results-list.html"><span class="si-tag" style="color:var(--job-loc)">Screen</span><span class="si-title">Results list</span><span class="si-desc">Live, in Podium →</span></a>
-  </div>
-</header>
-<main>
-{section('overview', 'Overview', 'tag-p', 'What we saw, what we decided', overview_body)}
-{section('references', 'Step 1', 'tag-d', 'References', refs_body)}
-{section('taste', 'Step 2', 'tag-f', 'Taste and attributes', taste_body)}
-{section('directions', 'Step 3', 'tag-m', 'Directions', dir_body)}
-{section('stand', 'Step 4', 'tag-p', 'The stand', stand_body)}
-{section('screens', 'Steps 5–6', 'tag-t', 'The two screens', screens_body)}
-{section('check', 'Step 7', 'tag-o', 'The check', check_body)}
-{section('open', 'Open', 'tag-f', "What's open", open_body)}
-</main>
-<footer>Generated by <code>scripts/build_concept_overview.py</code> from <a href="{GH}concept/concept.md">concept/concept.md</a> and <a href="{GH}concept/references.md">concept/references.md</a>. Counts are read from <code>tokens.css</code>, <code>map.css</code> and <code>build_stand.py</code>.</footer>
-<script>
-{DEVICE_JS}
-</script>
-<script>
-(function(){{
-  var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
-  var byId = {{}};
-  links.forEach(function(l){{ byId[l.getAttribute('href').slice(1)] = l; }});
-  var sections = Array.prototype.slice.call(document.querySelectorAll('section.block[id]'));
-  if(!('IntersectionObserver' in window) || !sections.length) return;
-  var io = new IntersectionObserver(function(entries){{
-    entries.forEach(function(e){{
-      if(e.isIntersecting){{ links.forEach(function(l){{ l.classList.remove('active'); }}); var l = byId[e.target.id]; if(l) l.classList.add('active'); }}
-    }});
-  }}, {{rootMargin:'-45% 0px -50% 0px'}});
-  sections.forEach(function(s){{ io.observe(s); }});
-}})();
-</script>
-</body>
-</html>
-'''
+# ---------------------------------------------------------------- what's open: Lesson 6's deferrals, all taken by Lesson 7
+OPEN_ROWS = []
+for l in CS['Deferred to Lesson 7 (markup)'].split('\n'):
+    if l.startswith('| ') and not l.startswith(('| Item', '|---')):
+        item = re.split(r'(?<!\\)\|', l.strip().strip('|'))[0].strip()
+        OPEN_ROWS.append((item, '07', 'Taken into Lesson 7: `concept.md` → Gap triage → Markup pass'))
+
+# ---------------------------------------------------------------- the page, on the lessons' template
+ST = LP.repo_stats()
+bold_led = lambda x: re.sub(r'^(.+?[.:])( |$)', r'<strong>\1</strong>\2', x, count=1)
+STAGES = [('references', 'Step 1', 'References'), ('taste', 'Step 2', 'Taste'), ('directions', 'Step 3', 'Directions'), ('stand', 'Step 4', 'The stand'),
+          ('screens', 'Steps 5–6', 'Two screens'), ('check', 'Step 7', 'The check'), ('register', 'Register', f'{len(REG)} decisions'), ('open', 'Close', "What's open")]
+SECTIONS = ''.join([LP.section('references', 'Step 1', 'tag-d', 'References', refs_body), LP.section('taste', 'Step 2', 'tag-f', 'Taste and attributes', taste_body),
+                    LP.section('directions', 'Step 3', 'tag-m', 'Directions', dir_body), LP.section('stand', 'Step 4', 'tag-p', 'The stand', stand_body),
+                    LP.section('screens', 'Steps 5–6', 'tag-t', 'The two screens', screens_body), LP.section('check', 'Step 7', 'tag-o', 'The check', check_body)])
+STATS = [(ST['screens'], 'screens', f"{ST['pages']} pages with their states"), (ST['variables'], 'kit variables', f"{ST['classes']} classes in ui/kit.css"),
+         (ST['components'], 'inventory components', 'ui/inventory.md'), (STEP7_FOUND_N, 'findings in the step 7 check', f'{STEP7_FIXED} fixed'),
+         (N_PAIRS, 'contrast pairs', f'{N_CHECKED} held to AA'), (len(ST['checks']), 'build checks', 'each stops the build')]
+PAGE = LP.render(6, 'Concept', 'concept-overview.html', '13–15 Oct 2026', 'Podium: how Onrace looks',
+    'Rendered from <code>concept/concept.md</code> (taste, attributes, rules, decisions) and <code>concept/references.md</code> (what we borrowed, and from where). The numbers are read from the repo today, so the kit counts include what Lesson 7 added.',
+    STATS, STAGES, [bold_led(inline(cap(x))) for x in SAW], [bold_led(inline(cap(x))) for x in DECIDED], SECTIONS, LP.register(REG),
+    open_body + LP.open_table(OPEN_ROWS, inline), ['scripts/build_concept_overview.py', 'scripts/lesson_page.py'],
+    extra_css=DEVICE_CSS, scripts='<script>\n' + DEVICE_JS + '\n</script>')
 open(ROOT + '/public/concept-overview.html', 'w').write(PAGE)
-print('tokens', N_TOKENS, 'pairs', N_PAIRS, 'checked', N_CHECKED, 'step7', N_STEP7, 'deferred', DEFERRED_ROWS, 'bytes', len(PAGE))
+print('concept overview: tokens', N_TOKENS, 'pairs', N_PAIRS, 'register', len(REG), 'open', len(OPEN_ROWS), 'bytes', len(PAGE))

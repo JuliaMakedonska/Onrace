@@ -1,5 +1,14 @@
 # Onrace — Product Brief
 
+## Sources of truth
+
+| What | Where | Changed by |
+|---|---|---|
+| **Look** (values and components) | `ui/kit.css` (`:root` for values, kit classes for components), shown in `ui/kit.html` | the "keep it" rule (UI assembly below) |
+| **Words** (every product line) | `microcopy.md`, rendered in `voice.html` | `microcopy.md` first, then `scripts/build_voice_html.py` |
+| **Structure** (screens and states) | `wireframes/*.html` | the page itself, carried to every screen that shares the component |
+| **Decisions** (and why) | `concept/concept.md` | a dated entry per decision |
+
 ## What it is
 
 Onrace is an interactive map of races for hybrid athletes, plus a personal archive of official race results with links to source. It brings together official hybrid competitions and marathons in one place so athletes can find upcoming races, and centrally store their official results — because registering for elite races (e.g. Boston Marathon) often requires proof of previous official results, which are typically scattered across different timing websites.
@@ -155,7 +164,7 @@ Lesson 7 (2026-10-18 to 2026-10-25): every screen assembled from one kit, in nat
 - **`ui/kit.css`:** the one source of truth. Every token in `:root` (flat; two-level tokens are Lesson 8) and every component class, with no raw values in the classes. Each component is defined once and nothing in it goes unused by the screens.
 - **`ui/map.css`:** the static map's data: its tokens, the Natural Earth masks, and each pin's place keyed on `data-pin`. Linked by the Race browse pages (not render-blocking) and the showcase.
 - **`ui/shell.html`:** the shell, the large-title header and the floating tab bar.
-- **`ui/kit.html`:** the showcase, every inventory component in its states, with the screens' own text (live: https://juliamakedonska.github.io/Onrace/ui/kit.html).
+- **`ui/kit.html`:** the showcase, every inventory component in its states, with the screens' own text (live: https://juliamakedonska.github.io/Onrace/ui/kit.html). The specimens are hand-written; `scripts/build_kit_showcase.py` (run by the build) arranges them by role under a sticky nav and writes each one's facts (classes, the screens that use it, its native iOS counterpart) from `ui/inventory.md` → Showcase map.
 - **`ui/inventory.md`:** every component of the 10 screens, with its screens, states, photo, HIG link and gaps.
 - **Stand-only values** live outside the kit: `concept/specimens.css` (the `.btn` family, status messages, the success and warning tokens), `concept/stand.css`, `concept/first-screen.css`.
 
@@ -165,9 +174,25 @@ Lesson 7 (2026-10-18 to 2026-10-25): every screen assembled from one kit, in nat
 - **Every screen links the kit** (`ui/kit.css`, plus `ui/map.css` on Race browse) and has no style block, no inline style and no class the kit doesn't define. **Nothing new on a screen:** a new component or variant goes into the kit and the showcase first.
 - **"Keep it" rule (2026-10-25):** when I say "keep it" (залишаємо) about a visual change, update the kit (`ui/kit.css` and the showcase `ui/kit.html`), sign the reason in `DESIGN.md`, and carry any markup change to every screen where the component appears.
 - **Native iOS rule (designer, 2026-10-18):** every element with a native iOS counterpart follows Apple's [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) for anatomy, metrics and behavior; Podium supplies only the look. The component-to-HIG table (e.g. [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars), [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets), [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts), [Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls), [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables)) and the decided conflicts C1–C7 are in `DESIGN.md` → Native iOS. Glass, sheet and alert radii are **provisional [?]** (Apple's iOS 26 kit wasn't read).
-- **The build checks** (`python3 scripts/concept/build_stand.py`): color rules 1, 2 and 3a, every contrast pair at AA, every token signed on the stand, and `scripts/check_overflow.mjs`: every wireframe state in headless Chrome at 390, at 320 and at 390 with 200% text, Race browse with 0–5 filters; it fails on horizontal overflow, a wrapped one-line control in the controls bar, a font that didn't load, a page script that throws, or a deferred stylesheet that never applies. Any failure stops the build.
+- **The build checks** (`python3 scripts/concept/build_stand.py`), listed below; any failure stops the build.
+
+**Checks that stop the build** (`build_stand.py`, `check_overflow.mjs`, `check_kit.py`):
+
+1. Color rule 1: the accent only where you act or where you are (`ACCENT_OK`).
+2. Color rule 2: no success color on results; on the stand's markup, no result carries a success mark and the proof line states its source.
+3. Color rule 3a: the depth of dark, background levels in even steps.
+4. Contrast: every text pair at WCAG AA, glass against its worst case behind it.
+5. Signed tokens: every token in `ui/kit.css`, `ui/map.css` and the stand's files has a row on the stand with its reason.
+6. Overflow: every wireframe state at 390, at 320 and at 390 with 200% text (Race browse with 0–5 filters, the sheet, the map, the alerts): nothing past the screen edge, nothing scrolling sideways but the chips row.
+7. One line: Sort, Filters, List/Map, the filter chips and Clear all filters never wrap.
+8. Fonts: every family and weight a page renders text in has loaded, so the real fonts are measured.
+9. Scripts and styles: no page script throws, and every deferred stylesheet applies.
+10. The showcase against the inventory: every inventory component has a Showcase map row, a specimen and every state it lists (`scripts/check_kit.py`).
+11. The showcase's words: every word in a specimen is in `microcopy.md` (`scripts/check_kit.py`).
+
 - **Accessible names start with the visible label** (WCAG 2.5.3); text changes go through `microcopy.md` first, then `scripts/build_voice_html.py`.
-- **The record:** `concept.md` → Native iOS, step by step (3a, 3b, 5, Consolidation, the markup passes, Overflow fix, Step 6, Step 7). Before/after of each step: `ui/review-3b.html`, `ui/review-step5.html`, `ui/review-markup.html`, `ui/review-markup-2.html`, `ui/review-overflow.html`, `ui/review-step6.html`, `ui/review-step7.html`; the photos' round 3: `visuals/review-round3.html`.
+- **The record:** `concept.md` → Native iOS, step by step (3a, 3b, 5, Consolidation, the markup passes, Overflow fix, Step 6, Step 7). Before/after of each step: `ui/review-3b.html`, `ui/review-step5.html`, `ui/review-markup.html`, `ui/review-markup-2.html`, `ui/review-overflow.html`, `ui/review-step6.html`, `ui/review-step7.html`, and the lesson pages and showcase restructure (2026-10-26): `ui/review-lessons.html`; the photos' round 3: `visuals/review-round3.html`.
+- **Lesson pages:** the 06 and 07 overviews share one template, `scripts/lesson_page.py` ("Lesson N of 12", the dates, the sources of truth, a stats strip read from the repo, the stage nav, what we saw and decided, a decision register from `concept.md`, and what's open mapped to the lesson that takes it); `build_stand.py` rebuilds both after the kit.
 
 **Wireframe / Design toggle:** the viewer (`wireframes/index.html`) shows each screen as it is now (**Design**, `wireframes/`) or as the frozen Lesson 5 snapshot (**Wireframe**, `wireframes/_wireframe/`, `#race-browse?mode=wireframe`). The snapshot is history: never edit it, never link it to the kit, and keep it out of the build checks (see Wireframes above).
 

@@ -1,193 +1,232 @@
-"""Build public/ui-overview.html, the Lesson 7 overview (UI assembly), from the repo's own files.
+"""Build public/ui-overview.html, the Lesson 7 overview (UI assembly), on the lessons' template (scripts/lesson_page.py).
 
 Run from anywhere:  python3 scripts/build_ui_overview.py
-Re-run after editing DESIGN.md, concept/concept.md (→ Native iOS), ui/inventory.md, visuals/README.md, CLAUDE.md
-(→ UI assembly), ui/kit.css, ui/map.css or build_stand.py; the page is generated, never hand-edited.
-Every line on the page is rendered from those files; every count is read from the files it describes. The page
-shares the Lesson 6 overview's look and helpers (scripts/build_concept_overview.py, imported, which also rebuilds that
-page with the current lessons bar).
+Re-run after editing CLAUDE.md (Sources of truth, UI assembly), DESIGN.md, concept/concept.md (→ Native iOS),
+ui/inventory.md, visuals/README.md, ui/kit.css, ui/map.css or build_stand.py; the page is generated, never hand-edited.
+Every line on the page is rendered from those files and every count is read from the files it describes. It shares the
+Lesson 6 overview's helpers (scripts/build_concept_overview.py, imported, which also rebuilds that page).
 """
-import os, re, glob, html
+import os, re, glob, json
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_concept_overview as CO
-from lessons_nav import bar as lessons_bar
-ROOT = CO.ROOT
-GH = CO.GH
+import lesson_page as LP
+ROOT, GH = CO.ROOT, CO.GH
 md, inline, sections, para, esc = CO.md, CO.inline, CO.sections, CO.para, CO.esc
 read = lambda p: open(os.path.join(ROOT, p)).read()
 
 DESIGN = read('DESIGN.md')
 DS = sections(DESIGN.split('\n---\n', 1)[1] if DESIGN.startswith('---') else DESIGN)
-CONCEPT = read('concept/concept.md')
-NATIVE = sections(CO.CS['Native iOS (designer rule, 2026-10-18)'], '### ')
+NATIVE_HEAD = 'Native iOS (designer rule, 2026-10-18)'
+NATIVE = sections(CO.CS[NATIVE_HEAD], '### ')
 INV = read('ui/inventory.md')
 IS = sections(INV)
 VIS = read('visuals/README.md')
 VS = sections(VIS)
 CLAUDE = read('CLAUDE.md')
-ASSEMBLY = sections(CLAUDE)['UI assembly']
-
-# ---------------------------------------------------------------- counts, read from the files they describe
-TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', read('ui/kit.css') + read('ui/map.css'), flags=re.S))
-N_TOKENS = len(set(re.findall(r'(?:^|;)\s*--([a-z0-9-]+):', TOK, flags=re.M)))
-BS = read('scripts/concept/build_stand.py')
-PAIRS = re.findall(r"^\s+\('[^\n]*', '[a-z0-9-]+', '[a-z0-9-]+', '(text|large|ui|exempt|info)'\),$", BS[BS.index('PAIRS = ['):BS.index('rows, failures')], flags=re.M)
-PAGES = [p for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html')]
-N_COMPONENTS = len(re.findall(r'^\| \*\*', INV, flags=re.M)) + len(re.findall(r'^- \*\*[A-Z][^*]*\*\* \(`', INV, flags=re.M))
-REVIEWS = sorted(glob.glob(os.path.join(ROOT, 'ui/review-*.html'))) + [os.path.join(ROOT, 'visuals/review-round3.html')]
-OVF = read('scripts/check_overflow.mjs')
-N_PASSES = len(re.findall(r'\[\d+, \d+, \d+\]', OVF[OVF.index('for (const [w, h, text] of'):OVF.index('for (const [w, h, text] of') + 120]))
-C_ROWS = re.findall(r'^- \*\*(C\d) ([^:*]+):\*\*', DS['Native iOS'], flags=re.M)
+CL = sections(CLAUDE)
+ASSEMBLY = CL['UI assembly']
 S6 = NATIVE['Step 6: critique fixes (designer priorities, 2026-10-25)']
 S7 = NATIVE['Step 7: the final check (designer priorities, 2026-10-25)']
-N_S6 = len(re.findall(r'^- \*\*#', S6, flags=re.M))
-N_S7 = int(re.search(r'\*\*(\d+) defects, all fixed\*\*', S7).group(1))
-assert N_TOKENS and PAIRS and PAGES and N_COMPONENTS and len(C_ROWS) == 7 and N_PASSES == 3
+ST = LP.repo_stats()
+first = lambda t: re.split(r'(?<=[.!?])\s', re.sub(r'\s+', ' ', t.strip()), 1)[0]
+bold_led = lambda lead, rest: f'<strong>{inline(lead)}</strong> {inline(rest)}'
 
-# ---------------------------------------------------------------- sections
-def title_of(p):
-    h = open(p).read()
-    return re.search(r'<title>([^<]+)</title>', h).group(1).strip()
-def rel(p):
-    return os.path.relpath(p, ROOT)
+# ---------------------------------------------------------------- dispositions (the step 6 and 7 tables in concept.md)
+def dispositions(body):
+    t = re.search(r'\*\*Dispositions\*\*[^\n]*\n\n((?:\|[^\n]*\n)+)', body).group(1)
+    rows = [[c.strip() for c in l.strip().strip('|').split(' | ')] for l in t.strip().split('\n')[2:]]
+    return [(r[0], int(r[1]), r[2] if len(r) > 2 else '') for r in rows]
+D6, D7 = dispositions(S6), dispositions(S7)
+N6, N7 = sum(n for _, n, _ in D6), sum(n for _, n, _ in D7)
+def dispo_card(title, rows, total, link):
+    lis = ''.join(f'<li><span class="dn">{n}</span> {esc(k)}{(" <span class=dr>" + inline(r) + "</span>") if r and n else ""}</li>' for k, n, r in rows)
+    return f'<div class="dispo"><p class="dispo-t">{title}</p><p class="dispo-n">{total}</p><ul>{lis}</ul><p class="dispo-l"><a href="{link}">The record →</a></p></div>'
+dispo_body = '<div class="dispos">' + dispo_card('Step 6 · the critique (four subagents)', D6, N6, CO.anchor('Step 6: critique fixes (designer priorities, 2026-10-25)')) + \
+    dispo_card('Step 7 · the final check and its re-check', D7, N7, CO.anchor('Step 7: the final check (designer priorities, 2026-10-25)')) + '</div>'
 
-overview_body = f'''
-<div class="stat-row">
-  <div class="stat"><span class="stat-n">{len(PAGES)}</span><span class="stat-l">pages, 10 screens and their states, every one on <code>ui/kit.css</code></span></div>
-  <div class="stat"><span class="stat-n">{N_TOKENS}</span><span class="stat-l">tokens in <code>ui/kit.css</code> and <code>ui/map.css</code>, each signed on the stand</span></div>
-  <div class="stat"><span class="stat-n">{len(PAIRS)}</span><span class="stat-l">contrast pairs checked by the build</span></div>
-  <div class="stat"><span class="stat-n">{N_PASSES}</span><span class="stat-l">overflow passes on every state: 390, 320, and 390 at 200% text</span></div>
-</div>
-{md(ASSEMBLY.split(chr(10) + chr(10), 1)[0])}
-'''
+# ---------------------------------------------------------------- where each change goes in (CLAUDE.md → Sources of truth)
+SRC_ROWS = [[c.strip() for c in l.strip().strip('|').split(' | ')] for l in CL['Sources of truth'].strip().split('\n')[2:] if l.startswith('|')]
+FLOW = [('A value', 'ui/kit.css', ':root, one token', 'Look'), ('A look', 'ui/kit.css', 'a kit class, shown in ui/kit.html', 'Look'),
+        ('A word', 'microcopy.md', 'one row, then voice.html', 'Words'), ('Structure', 'wireframes/*.html', 'the page, and every screen that shares it', 'Structure')]
+assert {r[0].split('**')[1] for r in SRC_ROWS} >= {'Look', 'Words', 'Structure', 'Decisions'}
+flow_body = '<div class="flow">' + ''.join(
+    f'<div class="flow-row"><span class="flow-from">{a}</span><span class="flow-arrow" aria-hidden="true">→</span><span class="flow-to"><code>{f}</code><span class="flow-how">{h}</span></span></div>'
+    for a, f, h, _ in FLOW) + '</div>' + md(CL['Sources of truth'])
+checks_body = f'''<h3>Where each change goes in</h3>
+{flow_body}
+<h3>The checks that stop the build</h3>
+<ol class="checks">{"".join(f"<li>{inline(c)}</li>" for c in ST["checks"])}</ol>
+<p class="note">Listed in <code>CLAUDE.md</code> → UI assembly; run by <code>scripts/concept/build_stand.py</code>, which calls <code>scripts/check_overflow.mjs</code> and <code>scripts/check_kit.py</code>.</p>'''
 
-design_body = f'''
-{md(DS['Overview'])}
-<p><a class="btn" href="{GH}DESIGN.md">Open DESIGN.md →</a></p>
-'''
+# ---------------------------------------------------------------- the Wireframe / Design switch (the viewer's two folders)
+PAGES = sorted(os.path.basename(p)[:-5] for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html'))
+FROZEN = {os.path.basename(p)[:-5] for p in glob.glob(os.path.join(ROOT, 'wireframes/_wireframe/*.html'))}
+assert set(PAGES) <= FROZEN
+options = ''.join(f'<option value="{p}"{" selected" if p == "race-browse" else ""}>{p}</option>' for p in PAGES)
+look_body = f'''{md(para(CLAUDE.split("## Wireframes", 1)[1], "- **Wireframe / Design toggle (2026-10-18):**").lstrip("- "))}
+<div class="look">
+  <div class="look-controls">
+    <label for="look-page">Screen and state</label>
+    <select id="look-page">{options}</select>
+    <div class="look-switch" role="group" aria-label="Wireframe or Design">
+      <button type="button" data-mode="wireframe" aria-pressed="false">Wireframe</button>
+      <button type="button" data-mode="design" aria-pressed="true">Design</button>
+    </div>
+    <a class="btn" id="look-open" href="wireframes/index.html#race-browse">Open it in the viewer →</a>
+  </div>
+  {CO.phone('race-browse.html', 'Race browse', [('race-browse.html', 'Design'), ('_wireframe/race-browse.html', 'Wireframe')], 'The frozen Lesson 5 wireframe or the screen as it is now: the same file name in <code>wireframes/_wireframe/</code> or <code>wireframes/</code>.').replace('<figure class="phone-fig">', '<figure class="phone-fig" id="look-fig">')}
+</div>'''
+LOOK_JS = '''(function () {
+  var sel = document.getElementById('look-page'), fig = document.getElementById('look-fig');
+  var frame = fig.querySelector('iframe'), open = document.getElementById('look-open'), mode = 'design';
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.look-switch button'));
+  function show() {
+    frame.src = 'wireframes/' + (mode === 'wireframe' ? '_wireframe/' : '') + sel.value + '.html';
+    frame.title = sel.value + ', ' + mode;
+    open.href = 'wireframes/index.html#' + sel.value + (mode === 'wireframe' ? '?mode=wireframe' : '');
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === mode)); });
+  }
+  sel.addEventListener('change', show);
+  btns.forEach(function (b) { b.addEventListener('click', function () { mode = b.getAttribute('data-mode'); show(); }); });
+})();'''
 
-inventory_body = f'''
-{md(INV.split(chr(10) + '## ', 1)[0].split(chr(10), 1)[1])}
-<h3>Shared components</h3>
-{md(IS['Shared'])}
-<p><a class="btn" href="{GH}ui/inventory.md">Open the inventory →</a></p>
-'''
-
-kit_body = f'''
-{md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0])}
+# ---------------------------------------------------------------- the stage sections (as before, from the same files)
+design_body = f'{md(DS["Overview"])}\n<p><a class="btn" href="{GH}DESIGN.md">Open DESIGN.md →</a></p>'
+inv_intro = INV.split('\n## ', 1)[0].split('\n', 1)[1]
+role_counts = {}
+for l in IS['Showcase map (2026-10-26)'].split('\n'):
+    if l.startswith('| ') and not l.startswith(('| Role', '|---')):
+        role_counts[l.split(' | ')[0].strip('| ')] = role_counts.get(l.split(' | ')[0].strip('| '), 0) + 1
+inventory_body = f'''{md(inv_intro)}
+<div class="tbl-wrap"><table><thead><tr><th>Role</th><th>Components</th></tr></thead><tbody>{"".join(f"<tr><td>{r}</td><td>{n}</td></tr>" for r, n in role_counts.items())}</tbody></table></div>
+<p class="note">Roles as <code>ui/inventory.md</code> → Showcase map groups them; the kit showcase's nav follows it.</p>
+<p><a class="btn" href="{GH}ui/inventory.md">Open the inventory →</a> <a class="btn" href="ui/kit.html">The showcase →</a></p>'''
+kit_body = f'''{md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0])}
 <div class="card-grid">
-  <a class="card-link" href="ui/kit.html"><span class="si-tag" style="color:var(--accent)">Showcase</span><span class="si-title">ui/kit.html</span><span class="si-desc">Every component in its states →</span></a>
+  <a class="card-link" href="ui/kit.html"><span class="si-tag" style="color:var(--accent)">Showcase</span><span class="si-title">ui/kit.html</span><span class="si-desc">Every component in its states, by role →</span></a>
   <a class="card-link" href="ui/shell.html"><span class="si-tag" style="color:var(--patterns)">Shell</span><span class="si-title">ui/shell.html</span><span class="si-desc">Large title and floating tab bar →</span></a>
   <a class="card-link" href="concept/concept.html"><span class="si-tag" style="color:var(--benchmark)">Stand</span><span class="si-title">concept.html</span><span class="si-desc">Every token and contrast pair, signed →</span></a>
   <a class="card-link" href="wireframes/index.html"><span class="si-tag" style="color:var(--job-loc)">Viewer</span><span class="si-title">All 10 screens</span><span class="si-desc">In an iPhone frame, with zone notes →</span></a>
 </div>
 <h3>The rules</h3>
-{md('**The rules:**' + ASSEMBLY.split('**The rules:**', 1)[1].split('**Wireframe / Design toggle', 1)[0].split(chr(10), 1)[1])}
-<h3>Wireframe and Design</h3>
-{md('**Wireframe / Design toggle' + ASSEMBLY.split('**Wireframe / Design toggle', 1)[1])}
-'''
-
+{md('**The rules:**' + ASSEMBLY.split('**The rules:**', 1)[1].split('**Checks that stop the build', 1)[0].split(chr(10), 1)[1])}'''
 ios_body = md(DS['Native iOS'])
-
 PHOTOS = [m.group(1) for m in re.finditer(r'^\| ([a-z0-9-]+) \| [^|]+ \| \d+% \|', VS['Export (step 7, 2026-10-25)'], flags=re.M)]
 thumbs = ''.join(f'<figure class="thumb"><picture><source type="image/avif" srcset="visuals/{p}-684.avif"><source type="image/webp" srcset="visuals/{p}-684.webp"><img src="visuals/{p}-684.jpg" alt="" width="684" height="228" loading="lazy"></picture><figcaption>{p}</figcaption></figure>' for p in PHOTOS)
-visuals_body = f'''
-<div class="thumbs">{thumbs}</div>
+visuals_body = f'''<div class="thumbs">{thumbs}</div>
 {md(VIS.split(chr(10) + '## ', 1)[0].split(chr(10), 1)[1])}
-<h3>Tool</h3>
-{md(VS['Tool'])}
-<h3>Workflow</h3>
-{md(VS['Workflow'])}
-<h3>Export</h3>
-{md(VS['Export (step 7, 2026-10-25)'])}
-<p><a class="btn" href="{GH}visuals/README.md">Open visuals/README.md →</a> <a class="btn" href="visuals/review-round3.html">Round 3 retouching review →</a></p>
-'''
-
-def native(title):
-    return f'<h3>{inline(title)}</h3>\n{md(NATIVE[title])}'
+<h3>Tool</h3>{md(VS['Tool'])}<h3>Workflow</h3>{md(VS['Workflow'])}<h3>Export</h3>{md(VS['Export (step 7, 2026-10-25)'])}
+<p><a class="btn" href="{GH}visuals/README.md">Open visuals/README.md →</a> <a class="btn" href="visuals/review-round3.html">Round 3 retouching review →</a></p>'''
+native = lambda t: f'<h3>{inline(t)}</h3>\n{md(NATIVE[t])}'
 assembly_body = '\n'.join(native(t) for t in ['Step 3b: native iOS pass in the kit (2026-10-19)', 'Step 5, Discovery: Race detail on the kit (2026-10-22)',
                                                'Step 5, Archive and Infrastructure on the kit (2026-10-22)', 'Consolidation (2026-10-23)'])
-markup_body = '\n'.join(native(t) for t in ['Markup pass (2026-10-23)', 'Markup pass, round 2 (2026-10-23)', 'Race picker pushed (designer, 2026-10-24)'])
-checks_body = '\n'.join(native(t) for t in ['Overflow fix: the controls bar (designer report, 2026-10-24)', 'Overflow check, round 2 (designer, 2026-10-25)',
-                                             'Step 6: critique fixes (designer priorities, 2026-10-25)']) + '\n' + \
+markup_body = '\n'.join(native(t) for t in ['Markup pass (2026-10-23)', 'Markup pass, round 2 (2026-10-23)', 'Race picker pushed (designer, 2026-10-24)',
+                                             'Overflow fix: the controls bar (designer report, 2026-10-24)', 'Overflow check, round 2 (designer, 2026-10-25)'])
+critique_body = dispo_body + '\n' + native('Step 6: critique fixes (designer priorities, 2026-10-25)') + \
     f'<h3>{inline("Step 7: the final check (designer priorities, 2026-10-25)")}</h3>\n' + md(S7.split('**Still deferred', 1)[0])
-
+REVIEWS = sorted(glob.glob(os.path.join(ROOT, 'ui/review-*.html'))) + [os.path.join(ROOT, 'visuals/review-round3.html')]
+title_of = lambda p: re.search(r'<title>([^<]+)</title>', open(p).read()).group(1).strip()
 reviews_body = '<div class="card-grid">' + ''.join(
-    f'<a class="card-link" href="{rel(p)}"><span class="si-tag" style="color:var(--accent)">Before / after</span><span class="si-title">{esc(title_of(p))}</span><span class="si-desc">{rel(p)} →</span></a>'
+    f'<a class="card-link" href="{os.path.relpath(p, ROOT)}"><span class="si-tag" style="color:var(--accent)">Before / after</span><span class="si-title">{esc(title_of(p))}</span><span class="si-desc">{os.path.relpath(p, ROOT)} →</span></a>'
     for p in REVIEWS) + '</div>'
 
-open_body = md('**Still deferred' + S7.split('**Still deferred', 1)[1])
+# ---------------------------------------------------------------- the decision register (concept.md → Native iOS; DESIGN.md → C1–C7)
+REG = CO.cards_from(NATIVE_HEAD, CO.CS[NATIVE_HEAD].split('\n### ', 1)[0], 'paras')
+for head, mode in [('Native sheet anatomy (the Filters sheet, designer decision 2026-10-18)', 'items'), ('Kit feedback (designer, 2026-10-19)', 'items'),
+                   ('Step 3b review (designer, 2026-10-19)', 'items'), ('Step 5 review (designer, 2026-10-23)', 'items')]:
+    REG += CO.cards_from(head, NATIVE[head], mode)
+for m in re.finditer(r'^- \*\*(C\d [^:*]+):\*\* (.*)$', DS['Native iOS'], flags=re.M):
+    REG.append((inline(m.group(1)), inline(CO.first_sentences(m.group(2))), '2026-10-18', 'DESIGN.md → Native iOS', GH + 'DESIGN.md#native-ios'))
+h = 'Race picker pushed (designer, 2026-10-24)'
+REG.append(('Race picker: a sheet or a pushed screen?', inline(first(NATIVE[h])), '2026-10-24', h, CO.anchor(h)))
+h = 'Overflow fix: the controls bar (designer report, 2026-10-24)'
+m = re.search(r'^\*\*"Clear all filters": (.+?)\*\* (.*)$', NATIVE[h], flags=re.M)
+REG.append(('"Clear all filters": its own line, or pinned?', f'<strong>{inline(m.group(1))}</strong>', '2026-10-24', h, CO.anchor(h)))
+dec6 = S6.split('**Designer decisions (the conflict rows):**', 1)[1].split('\n\n', 1)[0]
+for m in re.finditer(r'^- \*\*(#\d+)(?:, (.+?))?:?\*\*:? ?(.*)$', dec6, flags=re.M):
+    lead = f'<strong>{inline(m.group(2))}</strong> ' if m.group(2) else ''
+    REG.append((f'Critique {m.group(1)}', lead + inline(CO.first_sentences(m.group(3), 200)), '2026-10-25',
+                'Step 6: critique fixes', CO.anchor('Step 6: critique fixes (designer priorities, 2026-10-25)')))
+m = re.search(r"^\*\*Designer decision:\*\* (.*)$", S7, flags=re.M)
+REG.append(('Profile: the menu values in Text 1 or Text 2?', inline(m.group(1)), '2026-10-25', 'Step 7: the final check', CO.anchor('Step 7: the final check (designer priorities, 2026-10-25)')))
 
-# ---------------------------------------------------------------- page (the Lesson 6 overview's look)
-STYLE = re.search(r'<style>(.*?)</style>', CO.PAGE, re.S).group(1)
-STYLE += '''
+# ---------------------------------------------------------------- what's open (concept.md → Step 7, each with its lesson)
+OPEN_ROWS = []
+for m in re.finditer(r'^- (.+?) → Lesson (\d\d) \(([^)]+)\)(.*)$', S7.split('**Still deferred', 1)[1], flags=re.M):
+    OPEN_ROWS.append((m.group(1), m.group(2), 'Proposed in `concept.md` → Step 7; the designer confirms when that lesson starts'))
+assert len(OPEN_ROWS) >= 5
+
+# ---------------------------------------------------------------- what we saw, what we decided (sentences from the record)
+OVF = NATIVE['Overflow fix: the controls bar (designer report, 2026-10-24)']
+SAW = [bold_led('HIG gaps.', first(NATIVE['Gap triage (2026-10-18)']) if 'Gap triage (2026-10-18)' in NATIVE else ''),
+       bold_led('Overflow at 390.', first(re.search(r'\*\*The defect:\*\* (.*)', OVF).group(1))),
+       bold_led('The critique.', first(S6.split('\n\n', 1)[0])),
+       bold_led('The final check.', first(S7.split('\n\n', 1)[0]))]
+DECIDED = [bold_led('Native iOS.', first(re.search(r'\*\*The rule\.\*\* (.*)', CO.CS[NATIVE_HEAD]).group(1))),
+           bold_led('"Keep it".', re.search(r'\*\*"Keep it" rule \(2026-10-25\):\*\* (.*)', ASSEMBLY).group(1)),
+           bold_led('One kit.', re.search(r'- \*\*`ui/kit.css`:\*\* (.*?\.)', ASSEMBLY).group(1)),
+           bold_led('Race picker.', first(NATIVE['Race picker pushed (designer, 2026-10-24)'])),
+           bold_led('Result detail.', re.search(r'\*\*#11, (.+?)\*\*', S6).group(1) + '.'),
+           bold_led('Icons.', re.search(r'\*\*#23, (.+?)\*\*', S6).group(1) + '.')]
+
+# ---------------------------------------------------------------- the page
+EXTRA_CSS = CO.DEVICE_CSS + '''
   .thumbs{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:12px; margin:8px 0 18px}
   .thumb{margin:0}
   .thumb img{display:block; width:100%; height:auto; border-radius:6px; filter:grayscale(1) contrast(1.12) brightness(.85)}
   .thumb figcaption{margin:6px 0 0; font-size:12.5px; color:var(--text-faint)}
+  .look{display:grid; grid-template-columns:minmax(0,280px) minmax(0,1fr); gap:24px; align-items:start; margin:16px 0}
+  .look-controls{display:grid; gap:10px; align-content:start}
+  .look .device-slot{overflow:hidden}   /* the frame is scaled to fit; its unscaled box mustn't widen the page */
+  .look-controls label{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint)}
+  .look-controls select{min-height:44px; background:var(--bg-elev); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:0 10px; font:inherit}
+  .look-switch{display:grid; grid-template-columns:1fr 1fr; background:var(--bg-elev); border:1px solid var(--border); border-radius:999px; padding:3px}
+  .look-switch button{min-height:40px; border:0; border-radius:999px; background:transparent; color:var(--text-dim); font:inherit; font-weight:700; cursor:pointer}
+  .look-switch button[aria-pressed="true"]{background:var(--accent-dim); color:var(--accent)}
+  .look-switch button:focus-visible, .look-controls select:focus-visible{outline:2px solid var(--text); outline-offset:2px}
+  @media (max-width:760px){ .look{grid-template-columns:minmax(0,1fr)} }
+  .flow{display:grid; gap:10px; margin:12px 0 18px}
+  .flow-row{display:grid; grid-template-columns:minmax(0,160px) 32px minmax(0,1fr); align-items:center; gap:8px}
+  .flow-from{background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-weight:700; color:var(--text)}
+  .flow-arrow{text-align:center; color:var(--accent); font-weight:800; font-size:18px}
+  .flow-to{background:var(--bg-elev-2); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:10px 12px; display:grid; gap:2px}
+  .flow-how{font-size:12.5px; color:var(--text-faint)}
+  @media (max-width:560px){ .flow-row{grid-template-columns:minmax(0,1fr)} .flow-arrow{text-align:left; transform:rotate(90deg); width:20px} }
+  .checks{padding-left:22px}
+  .checks li{margin-bottom:8px}
+  .dispos{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:14px; margin:6px 0 18px}
+  .dispo{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px}
+  .prose .dispo-t{margin:0; color:var(--text); font-weight:700}
+  .prose .dispo-n{margin:4px 0 8px; font-size:36px; font-weight:800; color:var(--text); line-height:1.1}
+  .dispo ul{list-style:none; padding:0; margin:0}
+  .dispo li{font-size:13.5px}
+  .dn{display:inline-block; min-width:28px; font-weight:800; color:var(--text)}
+  .dr{display:block; color:var(--text-faint); font-size:12.5px; margin:2px 0 6px 28px}
+  .prose .dispo-l{margin:8px 0 0; font-size:13px}
 '''
-NAV = [('overview', 'Overview'), ('design', 'DESIGN.md'), ('inventory', 'Inventory'), ('kit', 'Kit'), ('ios', 'Native iOS'), ('visuals', 'Visuals'),
-       ('assembly', 'Assembly'), ('markup', 'Markup'), ('checks', 'Checks'), ('reviews', 'Reviews'), ('open', 'Open')]
-section = CO.section
-NAVJS = re.findall(r'<script>\n(\(function\(\)\{.*?)</script>', CO.PAGE, re.S)[-1]
-
-PAGE = f'''<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onrace — UI assembly</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<style>{STYLE}</style>
-</head>
-<body>
-{lessons_bar('ui-overview.html')}
-<nav>
-  <div class="nav-inner">
-    <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · UI assembly</a>
-    <div class="navlinks">
-      {''.join(f'<a href="#{i}">{n}</a>' for i, n in NAV)}
-    </div>
-  </div>
-</nav>
-<a id="top"></a>
-<header class="hero">
-  <p class="kicker">Lesson 7 · UI assembly</p>
-  <h1>One kit, every screen, native iOS</h1>
-  <p class="hero-desc">Rendered from <code>CLAUDE.md</code> (UI assembly), <code>DESIGN.md</code>, <code>ui/inventory.md</code>, <code>visuals/README.md</code> and <code>concept/concept.md</code> → Native iOS. The counts are read from <code>ui/kit.css</code>, <code>ui/map.css</code>, the build and the overflow check.</p>
-  <div class="meta-row">
-    <span class="pill">{len(PAGES)} pages on the kit</span>
-    <span class="pill">{N_TOKENS} tokens, all signed</span>
-    <span class="pill">{len(PAIRS)} contrast pairs</span>
-    <span class="pill">C1–C7 decided</span>
-    <span class="pill">Step 6: {N_S6} rows closed</span>
-    <span class="pill">Step 7: {N_S7} defects, all fixed</span>
-  </div>
-  <div class="card-grid">
+STAGES = [('look', 'Look', 'Wireframe and Design'), ('design', 'Stage 1', 'DESIGN.md'), ('inventory', 'Stage 2', 'Inventory'), ('kit', 'Stage 3', 'The kit'),
+          ('ios', 'Native iOS', 'C1–C7'), ('visuals', 'Visuals', 'The photos'), ('assembly', 'Stages 4–5', 'Assembly'), ('markup', 'Markup', 'The passes'),
+          ('checks', 'Guards', 'What stops the build'), ('critique', 'Stages 6–7', 'Critique and check'), ('reviews', 'Reviews', 'Before / after'),
+          ('register', 'Register', f'{len(REG)} decisions'), ('open', 'Close', "What's open")]
+SECTIONS = ''.join([LP.section('look', 'Look', 'tag-p', 'Wireframe and Design', look_body), LP.section('design', 'Stage 1', 'tag-d', 'DESIGN.md, from the code', design_body),
+                    LP.section('inventory', 'Stage 2', 'tag-f', 'Every component of the 10 screens', inventory_body), LP.section('kit', 'Stage 3', 'tag-m', 'Where the kit lives, and its rules', kit_body),
+                    LP.section('ios', 'Native iOS', 'tag-t', 'The HIG rule and the decided conflicts', ios_body), LP.section('visuals', 'Visuals', 'tag-o', 'The race photos, and how they were made', visuals_body),
+                    LP.section('assembly', 'Stages 4–5', 'tag-p', 'Assembly, group by group', assembly_body), LP.section('markup', 'Markup', 'tag-d', 'The markup passes and the overflow fix', markup_body),
+                    LP.section('checks', 'Guards', 'tag-m', 'Where each change goes in, and what stops the build', checks_body),
+                    LP.section('critique', 'Stages 6–7', 'tag-t', 'The critique and the final check', critique_body), LP.section('reviews', 'Reviews', 'tag-o', 'Every review page', reviews_body)])
+STATS = [(ST['screens'], 'screens', f"{ST['pages']} pages with their states"), (ST['variables'], 'kit variables', f"{ST['classes']} classes in ui/kit.css"),
+         (ST['components'], 'inventory components', f"{sum(role_counts.values())} rows in the Showcase map"), (N6 + N7, 'findings', f'step 6: {N6} · step 7: {N7}'),
+         (CO.N_PAIRS, 'contrast pairs', f'{CO.N_CHECKED} held to AA'), (len(ST['checks']), 'build checks', 'each stops the build')]
+CARDS = '''<div class="card-grid">
     <a class="card-link" href="ui/kit.html"><span class="si-tag" style="color:var(--accent)">Kit</span><span class="si-title">The showcase</span><span class="si-desc">Every component in its states →</span></a>
-    <a class="card-link" href="wireframes/index.html"><span class="si-tag" style="color:var(--patterns)">Screens</span><span class="si-title">The viewer</span><span class="si-desc">10 screens, {len(PAGES)} states →</span></a>
-    <a class="card-link" href="{GH}DESIGN.md"><span class="si-tag" style="color:var(--benchmark)">System</span><span class="si-title">DESIGN.md</span><span class="si-desc">Documented from the code →</span></a>
+    <a class="card-link" href="wireframes/index.html"><span class="si-tag" style="color:var(--patterns)">Screens</span><span class="si-title">The viewer</span><span class="si-desc">10 screens and their states →</span></a>
+    <a class="card-link" href="''' + GH + '''DESIGN.md"><span class="si-tag" style="color:var(--benchmark)">System</span><span class="si-title">DESIGN.md</span><span class="si-desc">Documented from the code →</span></a>
     <a class="card-link" href="ui/review-step7.html"><span class="si-tag" style="color:var(--job-loc)">Check</span><span class="si-title">The final check</span><span class="si-desc">Before and after →</span></a>
-  </div>
-</header>
-<main>
-{section('overview', 'Overview', 'tag-p', 'What Lesson 7 built', overview_body)}
-{section('design', 'System', 'tag-d', 'DESIGN.md, from the code', design_body)}
-{section('inventory', 'Inventory', 'tag-f', 'Every component of the 10 screens', inventory_body)}
-{section('kit', 'Kit', 'tag-m', 'Where the kit lives, and its rules', kit_body)}
-{section('ios', 'Native iOS', 'tag-t', 'The HIG rule and the decided conflicts', ios_body)}
-{section('visuals', 'Visuals', 'tag-o', 'The race photos, and how they were made', visuals_body)}
-{section('assembly', 'Steps 3b–5', 'tag-p', 'Assembly, group by group', assembly_body)}
-{section('markup', 'Markup', 'tag-d', 'The markup passes', markup_body)}
-{section('checks', 'Steps 6–7', 'tag-m', 'The critique and the final check', checks_body)}
-{section('reviews', 'Reviews', 'tag-t', 'Every review page', reviews_body)}
-{section('open', 'Open', 'tag-f', "What's still deferred or provisional", open_body)}
-</main>
-<footer>Generated by <code>scripts/build_ui_overview.py</code> from <a href="{GH}CLAUDE.md">CLAUDE.md</a>, <a href="{GH}DESIGN.md">DESIGN.md</a>, <a href="{GH}ui/inventory.md">ui/inventory.md</a>, <a href="{GH}visuals/README.md">visuals/README.md</a> and <a href="{GH}concept/concept.md">concept/concept.md</a>.</footer>
-<script>
-{NAVJS}</script>
-</body>
-</html>
-'''
+  </div>'''
+PAGE = LP.render(7, 'UI assembly', 'ui-overview.html', '18–26 Oct 2026', 'One kit, every screen, native iOS',
+    'Rendered from <code>CLAUDE.md</code> (Sources of truth, UI assembly), <code>DESIGN.md</code>, <code>ui/inventory.md</code>, <code>visuals/README.md</code> and <code>concept/concept.md</code> → Native iOS. The counts are read from <code>ui/kit.css</code>, <code>ui/map.css</code>, the build and the inventory.',
+    STATS, STAGES, SAW, DECIDED, SECTIONS, LP.register(REG), LP.open_table(OPEN_ROWS, inline),
+    ['scripts/build_ui_overview.py', 'scripts/lesson_page.py'], extra_css=EXTRA_CSS,
+    scripts='<script>\n' + CO.DEVICE_JS + '\n' + LOOK_JS + '\n</script>', cards=CARDS)
 open(os.path.join(ROOT, 'public/ui-overview.html'), 'w').write(PAGE)
-print('pages', len(PAGES), 'tokens', N_TOKENS, 'pairs', len(PAIRS), 'components', N_COMPONENTS, 'reviews', len(REVIEWS), 'photos', len(PHOTOS), 'bytes', len(PAGE))
+print('ui overview: register', len(REG), 'open', len(OPEN_ROWS), 'findings', N6, N7, 'pages', len(PAGES), 'bytes', len(PAGE))

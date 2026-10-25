@@ -70,6 +70,9 @@ for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.h
 }
 states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
+// the pages about the kit (2026-10-26): the showcase and the lesson overviews, also at 1440 (desk); not phone screens
+const DOCS = ['../ui/kit', '../public/concept-overview', '../public/ui-overview'];
+DOCS.forEach(d => states.push({ name: d, q: '', act: '', label: d.split('/').pop(), doc: true }));
 
 // ---------------------------------------------------------------- the check, in the page
 const ONE_LINE = '.sort-toggle, .filters-trigger, .controls .view-btn, .chips-row .chip, .clear-all';   // the controls bar's; a segment in content (Sign in | Create account) may wrap at 200% text rather than truncate (step 7)
@@ -99,7 +102,7 @@ const CHECK = `(async () => {
     const firstBottom = Math.min(...rects.map(x => x.bottom));
     if (rects.some(x => x.top >= firstBottom - 1)) bad.push(name(el) + ' wraps ("' + el.textContent.trim().replace(/\\s+/g, ' ') + '")');
   }
-  const scrollerX = el => el.matches('.chips-row');   // the one sideways scroller by design
+  const scrollerX = el => el.matches('.chips-row, .tbl-wrap, .spec-wrap, .lessonbar-inner, .navlinks');   // sideways scrollers by design: the chips row; on the docs pages, wide tables and the nav rows
   for (const el of document.querySelectorAll('body, body *')) {
     if (!el.getClientRects().length) continue;
     const cs = getComputedStyle(el);
@@ -108,7 +111,7 @@ const CHECK = `(async () => {
     if (r.width <= 1 && r.height <= 1) continue;                     // visually hidden text
     if (el.closest('.visually-hidden')) continue;                     // clipped to 1px with it (a busy button's hidden label)
     if (el.closest('.sheet:not(.open)') || el.closest('dialog:not([open])')) continue;   // off-screen until opened
-    const inScroller = el.parentElement && el.parentElement.closest('.chips-row');
+    const inScroller = el.parentElement && el.parentElement.closest('.chips-row, .tbl-wrap, .spec-wrap, .lessonbar-inner, .navlinks');
     if (!inScroller && (r.right > W + 0.5 || r.left < -0.5)) bad.push(name(el) + ' spans ' + Math.round(r.left) + '–' + Math.round(r.right) + ' on a ' + W + 'px screen');
     if (el.scrollWidth > el.clientWidth + 1 && /(auto|scroll)/.test(cs.overflowX) && !scrollerX(el)) bad.push(name(el) + ' scrolls sideways (' + el.scrollWidth + ' > ' + el.clientWidth + ')');
   }
@@ -160,10 +163,11 @@ await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-m
 
 const failures = [];
 let checked = 0;
-for (const [w, h, text] of [[390, 844, 16], [320, 568, 16], [390, 844, 32]]) {   // the third pass: 200% text (step 7, #2)
+for (const [w, h, text, docsOnly] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [1440, 900, 16, true]]) {   // the third pass: 200% text (step 7, #2); the fourth: the docs pages at desk width
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   await send('Page.setFontSizes', { fontSizes: { standard: text, fixed: Math.round(text * 13 / 16) } });   // the root size: the kit's type unit is 1rem ÷ 16, so every size doubles
   for (const s of states) {
+    if (docsOnly && !s.doc) continue;
     const url = BASE + s.name + '.html' + (s.q ? '?' + s.q : '');
     pageErrors.length = 0;
     const loaded = once('Page.loadEventFired');
@@ -187,5 +191,5 @@ if (failures.length) {
   console.log(`check_overflow: FAIL in ${failures.length} of ${checked} states (overflow, a wrapped one-line control, or a font not loaded)\n` + failures.join('\n'));
   process.exit(1);
 }
-if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (${states.length} per pass: 390, 320, and 390 at 200% text)`);
+if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320 and 390 at 200% text; the kit and lesson pages also at 1440)`);
 else console.log(`check_overflow: pass (${checked} states)`);

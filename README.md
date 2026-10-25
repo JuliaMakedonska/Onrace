@@ -4,6 +4,15 @@ An interactive map of races for hybrid athletes, plus a personal archive of offi
 
 Full product brief: [`CLAUDE.md`](./CLAUDE.md). Live app: https://juliamakedonska.github.io/Onrace/
 
+## Sources of truth
+
+| What | Where | Changed by |
+|---|---|---|
+| **Look** (values and components) | [`ui/kit.css`](./ui/kit.css) (`:root` for values, kit classes for components), shown in [`ui/kit.html`](https://juliamakedonska.github.io/Onrace/ui/kit.html) | the "keep it" rule ([`CLAUDE.md`](./CLAUDE.md) → UI assembly) |
+| **Words** (every product line) | [`microcopy.md`](./microcopy.md), rendered in [`voice.html`](https://juliamakedonska.github.io/Onrace/voice.html) | `microcopy.md` first, then `scripts/build_voice_html.py` |
+| **Structure** (screens and states) | [`wireframes/*.html`](./wireframes/) | the page itself, carried to every screen that shares the component |
+| **Decisions** (and why) | [`concept/concept.md`](./concept/concept.md) | a dated entry per decision |
+
 ## Start here: the workspace
 
 **[`workspace.html`](https://onrace-five.vercel.app/workspace.html)** is the project's entry point: one page with a rail of every lesson, showing each lesson's own page beside it. Each lesson and section has its own link:

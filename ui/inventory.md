@@ -187,3 +187,67 @@ The final check found 22 defects; all are fixed (record: `concept/concept.md` â†
 - **Showcase:** current texts and names (rows 99, 203, 370, 459), `aria-haspopup` on Sign out, unique ids, 44pt TOC links.
 - **Large text:** the result card, the controls row and the date pill wrap at 200%; `check_overflow.mjs` runs every state at 200% too.
 
+## Showcase map (2026-10-26)
+
+How `ui/kit.html` shows the inventory, read by `scripts/build_kit_showcase.py` (the showcase's nav, each component's classes, "used on" screens and native counterpart) and checked by `scripts/check_kit.py` on every build. **Role** groups the showcase's nav (a specimen sits under the role of its first row). **Specimen** is the `kit-item` id. **Classes** are what "used on" looks for in `wireframes/*.html` (`<select` is a tag). **States** are the labels the specimen must show: each must appear in one of its state labels, or the build stops. A component no screen uses any more is marked retired.
+
+| Role | Component | Specimen | Classes | Native iOS | States |
+|---|---|---|---|---|---|
+| Navigation | **Tab bar** | `#tab-bar` | `bottom-nav` | [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars) | Discover current; Results current; Profile current |
+| Navigation | **Large title header** | `#large-title` | `top-bar--large` | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars) | at rest; Scrolled; steps down; Profile |
+| Navigation | **Top bar** | `#top-bar` | `top-bar` | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars) | Back only; Scrolled; Cancel, title and Save; Saving; "Account"; waits for the required fields; pushed screen; Back and title; Title switches |
+| Navigation | **Gate layout** | `#gate-layout` | `gate` | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars) | Sign in |
+| Navigation | **Segmented control** | `#segmented` | `view-toggle` | [Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls) | List selected; Map selected; Sign in / Sign up; Disabled |
+| Navigation | **Search field** | `#search` | `race-search`, `search` | [Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields) | Empty; Filled |
+| Navigation | **Sticky action bar** | `#action-bar` | `action-bar` | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars) | Race detail; Result detail |
+| Navigation | **Modal sheet** | `#sheet` | `sheet` | [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets) | Filters sheet, open |
+| Navigation | **Sport-type rows** | `#sheet` | `row--check` | [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables) | Filters sheet, open |
+| Navigation | **Sheet screen** | â€” | `sheet` | [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets) | retired: Race picker is a pushed screen since 2026-10-24 |
+| Cards and lists | **Race card** | `#race-card` | `race-card` | [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables) | with photo; Pressed; no photo |
+| Cards and lists | **Race photo** | `#race-card` | `photo` | none | with photo |
+| Cards and lists | **Format chip** | `#format-chip` | `sport-tag` | none | Every format |
+| Cards and lists | **Results row** | `#results-row` | `results-row` | [Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons) | unfiltered; filtered; loading; Results list |
+| Cards and lists | **Sort button** | `#results-row` | `sort-toggle` | [Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons) | unfiltered; loading |
+| Cards and lists | **Order label** | `#results-row` | `results-order` | none | Results list |
+| Cards and lists | **Result row** | `#finish-time` | `result-card` | [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables) | result row |
+| Cards and lists | **Finish time** | `#finish-time` | `finish-time`, `finish` | none | result row; Result detail |
+| Cards and lists | **Proof line** | `#finish-time` | `proof-label` | none | result row |
+| Cards and lists | **Detail header and facts** | `#detail` | `facts` | none | Race detail; Result detail |
+| Cards and lists | **Detail section** | `#detail` | `race`, `result` | none | Race detail; Result detail |
+| Cards and lists | **Race photo, detail** | `#detail` | `race` | none | Race detail |
+| Cards and lists | **Official race website link** | `#detail` | `official` | none | Race detail |
+| Cards and lists | **Proof URL and note** | `#detail` | `proof-url`, `proof-note` | none | Result detail |
+| Cards and lists | **Skeleton** | `#skeleton` | `skeleton-card`, `bar` | [Progress indicators](https://developer.apple.com/design/human-interface-guidelines/progress-indicators) | Race browse; Race picker; Results list; Race detail; Result detail; Profile |
+| Cards and lists | **Static map** | `#map` | `map-placeholder` | none | Seven races; No races match; Couldn't load; Loading |
+| Cards and lists | **List intro** | `#picker-intro` | `list-intro` | none | Without a search; With a search |
+| Forms | **Primary button** | `#primary` | `state-action`, `submit-btn`, `register-btn`, `open-btn`, `bar-action`, `save-btn` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | In a state message; Full width; Busy |
+| Forms | **Secondary button** | `#secondary` | `filters-trigger`, `secondary-btn`, `unlink-btn` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Filters; State actions; Unlink |
+| Forms | **Filters trigger with count** | `#secondary` | `filters-trigger` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | with a count |
+| Forms | **Text link** | `#text-link` | `clear-all`, `text-link`, `forgot`, `alert-link`, `copy-link` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Clear all filters; Use a different email; Forgot password |
+| Forms | **Text field** | `#text-field` | `form-rows` | [Text fields](https://developer.apple.com/design/human-interface-guidelines/text-fields) | with hints; Errors under their rows; Locked; Sign in |
+| Forms | **Field hint** | `#text-field` | `group-footer` | none | with hints |
+| Forms | **Field error** | `#text-field` | `field-error` | none | Errors under their rows |
+| Forms | **Locked form** | `#text-field` | `locked` | none | Locked |
+| Forms | **Pop-up select** | `#select` | `<select` | [Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons) | Sport type, empty; missing; Profile row |
+| Forms | **Date field** | `#date` | `date-pill` | [Pickers](https://developer.apple.com/design/human-interface-guidelines/pickers) | Race date, empty; missing |
+| Forms | **Form intro** | `#log-result-parts` | `form-intro` | none | Base |
+| Forms | **Catalog row** | `#log-result-parts` | `row--nav` | [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables) | Base; Saving |
+| Forms | **Linked race card** | `#log-result-parts` | `linked-race` | none | A race linked |
+| Forms | **Forgot password? link** | `#gate-parts` | `forgot` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Forgot password? |
+| Forms | **Form note** | `#gate-parts` | `form-note` | none | Create account |
+| Forms | **Expired-link message** | `#gate-parts` | `state-msg` | none | Expired reset link; Expired confirmation link |
+| Forms | **Full-screen gate error** | `#gate-parts` | `state-msg` | [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts) | Expired reset link; Expired confirmation link |
+| Feedback | **State message** | `#state-message` | `state-message` | [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts) | Race browse -empty; with a search; Race browse -error; Results list -empty; Results list -error; Race picker -empty; Race picker -error; Race detail -error |
+| Feedback | **Form alert** | `#form-alert` | `form-alert` | none | Log result; New password |
+| Feedback | **Inline error** | `#inline-error` | `inline-error` | none | Sign in -error |
+| Feedback | **Status line** | `#status-line` | `saved-status`, `reset-done`, `sent-note`, `row-note` | none | ?saved=; reset=done; a field saving |
+| Feedback | **Check-inbox block** | `#check-inbox` | `inbox-heading` | none | confirm your email; if an account exists; sending a new link |
+| Feedback | **Action sheet** | `#archive-step5` | `action-sheet` | [Action sheets](https://developer.apple.com/design/human-interface-guidelines/action-sheets) | The sheet's bar; Saving; Cancel with a result entered |
+| One-off | **Controls bar** | `#controls` | `controls` | none | No filters; Two filters; Three filters |
+| One-off | **Active filter chips row** | `#controls` | `chips-row` | none | Two filters; Three filters |
+| One-off | **Gate intro** | `#gate-intro` | `context` | none | Sign in; Create account; Reset password |
+| One-off | **Identity block** | `#profile-parts` | `identity` | none | Profile |
+| One-off | **Grouped settings rows** | `#profile-parts` | `group-heading` | [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables) | Profile; a row didn't save |
+| One-off | **Sign out button** | `#profile-parts` | `signout` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Profile; Sign out |
+| One-off | **Confirm alert** | `#profile-parts` | `alert` | [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts) | Sign out; Race detail; Result detail |
+
