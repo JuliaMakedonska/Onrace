@@ -161,6 +161,11 @@ TEMPLATE_CSS = r'''  /* Hero (same as ia.html and voice.html) */
   .fold-sub{font-weight:400; color:var(--text-faint); font-size:13px}
   details.fold > .fold-body{padding:4px 16px 12px}
   @media (prefers-reduced-motion: reduce){ details.fold > summary::before{transition:none} }
+  .strip{list-style:none; padding:0; margin:8px 0; display:grid; gap:2px}
+  .strip li{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; min-height:40px; border-bottom:1px solid var(--border); padding:8px 0}
+  .strip a{color:var(--text); font-weight:700; text-decoration:none}
+  .strip a:hover{color:var(--accent)}
+  .lede{font-size:16px; color:var(--text-dim); max-width:820px; margin:0 0 14px}
   footer p{margin:0 0 6px}
   footer a{color:var(--text-dim)}
   @media (max-width:480px){ header.hero{padding:40px 16px 28px} main{padding:0 16px 64px} .nav-inner{padding:0 16px} }
@@ -188,6 +193,10 @@ def register(cards):
         f'<div class="reg-card"><p class="reg-q">{q}</p><p class="reg-a">{a}</p><p class="reg-meta">{d} · <a href="{h}">{s}</a></p></div>'
         for q, a, d, s, h in cards) + '</div>'
 
+def strip(items):
+    """A row of short links (the "More" area): (label, href, sub)."""
+    return '<ul class="strip">' + ''.join(f'<li><a href="{h}">{l}</a>{f" <span class=fold-sub>{s}</span>" if s else ""}</li>' for l, h, s in items) + '</ul>'
+
 def open_table(rows, inline):
     """rows: (item_md, lesson_number or None, note_md)"""
     names = {n: name for _, n, name in LESSONS}
@@ -198,7 +207,7 @@ def render(n, name, current, dates, h1, desc, stats, stages, saw, decided, secti
            footer_scripts, extra_css='', scripts='', cards='', reg_count=0, open_count=0, first_sections=''):
     total = len(LESSONS)
     stage_nav = '<ol class="stages">' + ''.join(f'<li><a href="#{i}"><span class="st-k">{k}</span><span><span class="st-l">{l}</span></span></a></li>' for i, k, l in stages) + '</ol>'
-    lis = lambda xs: ''.join(f'<li>{x}</li>' for x in xs)
+    lis = lambda xs: ''.join(f'<li>{x}</li>' for x in (xs or []))
     overview = f'''<div class="two-col">
   <div class="panel"><h3>What we saw</h3><ul class="led">{lis(saw)}</ul></div>
   <div class="panel"><h3>What we decided</h3><ul class="led">{lis(decided)}</ul></div>
@@ -235,11 +244,11 @@ def render(n, name, current, dates, h1, desc, stats, stages, saw, decided, secti
   {stage_nav}
 </header>
 <main>
-{section('overview', 'Start', 'tag-p', 'What we saw, what we decided', overview)}
+{section('overview', 'Start', 'tag-p', 'What we saw, what we decided', overview) if saw else ''}
 {first_sections}
 {sections_html}
-{section('register', 'Register', 'tag-m', 'Decision register', fold(f'{reg_count} decisions', register_html, 'each with its date and its entry in concept.md'))}
-{section('open', 'Close', 'tag-f', "What's open", fold(f'{open_count} open items', open_html, 'and the lesson that takes each'))}
+{section('register', 'Register', 'tag-m', 'Decision register', fold(f'{reg_count} decisions', register_html, 'each with its date and its entry in concept.md')) if register_html else ''}
+{section('open', 'Close', 'tag-f', "What's open", fold(f'{open_count} open items', open_html, 'and the lesson that takes each')) if open_html else ''}
 </main>
 <footer>
   <p>Lesson {n} of {total}. This page is built by {foot}, from the repo files it names; it is never edited by hand.</p>

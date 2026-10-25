@@ -352,21 +352,35 @@ for l in CS['Deferred to Lesson 7 (markup)'].split('\n'):
 # ---------------------------------------------------------------- the page, on the lessons' template
 ST = LP.repo_stats()
 bold_led = lambda x: re.sub(r'^(.+?[.:])( |$)', r'<strong>\1</strong>\2', x, count=1)
-STAGES = [('stand-live', 'The stand', 'Live'), ('references', 'Step 1', 'References'), ('taste', 'Step 2', 'Taste'), ('directions', 'Step 3', 'Directions'),
-          ('stand', 'Step 4', 'The stand'), ('screens', 'Steps 5–6', 'Two screens'), ('check', 'Step 7', 'The check'), ('register', 'Register', f'{len(REG)} decisions'), ('open', 'Close', "What's open")]
-FIRST = LP.section('stand-live', 'The stand', 'tag-m', 'The stand, live', '<p>The concept stand, live: every token, component and contrast pair, each signed with its reason.</p>' + LP.embed('concept/concept.html', 'The stand · <code>concept/concept.html</code>'))
-SECTIONS = ''.join([LP.section('references', 'Step 1', 'tag-d', 'References', LP.fold('What we borrowed, and from where', refs_body, 'Strava as the base, LinkedIn as a donor, the hybrid-racing products')),
-                    LP.section('taste', 'Step 2', 'tag-f', 'Taste and attributes', LP.fold('Taste, the five attributes, the hierarchy rules', taste_body, "the designer's own words")),
-                    LP.section('directions', 'Step 3', 'tag-m', 'Directions', LP.fold('Round 1 rejected, round 2: Podium chosen', dir_body, 'with links to both rounds')),
-                    LP.section('stand', 'Step 4', 'tag-p', 'The stand', stand_body), LP.section('screens', 'Steps 5–6', 'tag-t', 'The two screens', screens_body),
-                    LP.section('check', 'Step 7', 'tag-o', 'The check', LP.fold(f'{STEP7_FOUND_N} findings in the step 7 check', check_body, f'{STEP7_FIXED} fixed'))])
-STATS = [(ST['screens'], 'screens', f"{ST['pages']} pages with their states"), (ST['variables'], 'kit variables', f"{ST['classes']} classes in ui/kit.css"),
-         (ST['components'], 'inventory components', 'ui/inventory.md'), (STEP7_FOUND_N, 'findings in the step 7 check', f'{STEP7_FIXED} fixed'),
-         (N_PAIRS, 'contrast pairs', f'{N_CHECKED} held to AA'), (len(ST['checks']), 'build checks', 'each stops the build')]
-PAGE = LP.render(6, 'Concept', 'concept-overview.html', '13–15 Oct 2026', 'Podium: how Onrace looks',
-    'Rendered from <code>concept/concept.md</code> (taste, attributes, rules, decisions) and <code>concept/references.md</code> (what we borrowed, and from where). The numbers are read from the repo today, so the kit counts include what Lesson 7 added.',
-    STATS, STAGES, [bold_led(inline(cap(x))) for x in SAW], [bold_led(inline(cap(x))) for x in DECIDED], SECTIONS, LP.register(REG),
-    LP.open_table(OPEN_ROWS, inline) + open_body, ['scripts/build_concept_overview.py', 'scripts/lesson_page.py'],
-    extra_css=DEVICE_CSS, scripts='<script>\n' + DEVICE_JS + '\n</script>', reg_count=len(REG), open_count=len(OPEN_ROWS), first_sections=FIRST)
+STAGES = [('stand-live', 'Made', 'The stand, live'), ('direction', 'Chosen', 'Podium'), ('decisions', 'Decided', 'Key decisions'), ('more', 'More', 'The record')]
+CLAUDE_MD = open(ROOT + '/CLAUDE.md').read()
+CONCEPT_INTRO = re.search(r'^## Concept\n\n(.*?)\n\n', CLAUDE_MD, flags=re.M | re.S).group(1)
+summary = ' '.join(re.split(r'(?<=[.!?])\s', re.sub(r'\s+', ' ', CONCEPT_INTRO))[:2])
+PHONES = screens_body.split('<p class="note">', 1)[0]
+chosen = re.search(r'^\*\*Chosen: Direction A, "Podium"\.\*\* (.*)$', R2, flags=re.M).group(1)
+direction_body = (f'<p class="lede"><strong>Direction A, "Podium", chosen 2026-10-13.</strong> {inline(chosen)}</p>' + PHONES
+                  + '<p><a class="btn" href="concept/directions.html">The three directions, side by side →</a></p>')
+KEY_Q = ['Chosen: Direction A, "Podium"', 'Theme: dark', 'Accent is scarce', 'Accent placement', 'No success color on results', 'Photo band: 3:1 (decided 2026-10-14)', 'A. Uppercase format chip vs.']
+KEY = [c for q in KEY_Q for c in REG if re.sub(r'<[^>]+>', '', c[0]).startswith(q)]
+assert len(KEY) == len(KEY_Q), [c[0] for c in KEY]
+FIRST = LP.section('stand-live', 'Made', 'tag-m', 'The stand, live', '<p class="lede">Every token, component and contrast pair of the concept, each signed with its reason.</p>' + LP.embed('concept/concept.html', 'The stand · <code>concept/concept.html</code>'))
+MORE = (LP.fold(f'The full register: {len(REG)} decisions', LP.register(REG), 'each with its date and its entry in concept.md')
+        + LP.fold('References', refs_body, 'Strava as the base, LinkedIn as a donor, the hybrid-racing products')
+        + LP.fold('Taste, the five attributes, the hierarchy rules', taste_body, "the designer's own words")
+        + LP.fold('Directions, round 1 and round 2', dir_body, 'round 1 rejected, Podium chosen in round 2')
+        + LP.fold('The stand, in numbers, and the color rules', stand_body, f'{N_TOKENS} tokens, {N_PAIRS} contrast pairs today')
+        + LP.fold('The two screens in detail', '<p class="note">' + screens_body.split('<p class="note">', 1)[1], 'the first screen, the Results list details')
+        + LP.fold(f'{STEP7_FOUND_N} findings in the step 7 check', check_body, f'{STEP7_FIXED} fixed')
+        + LP.fold(f"{len(OPEN_ROWS)} open items, all taken by Lesson 7", LP.open_table(OPEN_ROWS, inline) + open_body, 'the markup the concept left for the next lesson'))
+SECTIONS = ''.join([LP.section('direction', 'Chosen', 'tag-p', 'The chosen direction', direction_body),
+                    LP.section('decisions', 'Decided', 'tag-t', 'Key decisions', LP.register(KEY)),
+                    LP.section('more', 'More', 'tag-m', 'The rest of the record', MORE + f'<p class="note">Everything here is in <a href="{GH}concept/concept.md">concept/concept.md</a> and <a href="{GH}concept/references.md">concept/references.md</a>.</p>')])
+N_RULES = len(re.findall(r'^\d+\. \*\*', RULES, flags=re.M))
+STATS = [(PHONES.count('class="phone-fig"'), 'screens painted in Podium', 'Race browse and Results list'),
+         (N_PAIRS, 'contrast pairs', f'{N_CHECKED} held to AA (today)'), (N_RULES, 'color rules', 'checked on every build'),
+         (STEP7_FOUND_N, 'findings in the step 7 check', f'{STEP7_FIXED} fixed')]
+PAGE = LP.render(6, 'Concept', 'concept-overview.html', '13–15 Oct 2026', 'Podium: how Onrace looks', inline(summary),
+    STATS, STAGES, None, None, SECTIONS, None, None, ['scripts/build_concept_overview.py', 'scripts/lesson_page.py'],
+    extra_css=DEVICE_CSS, scripts='<script>\n' + DEVICE_JS + '\n</script>', first_sections=FIRST)
 open(ROOT + '/public/concept-overview.html', 'w').write(PAGE)
-print('concept overview: tokens', N_TOKENS, 'pairs', N_PAIRS, 'register', len(REG), 'open', len(OPEN_ROWS), 'bytes', len(PAGE))
+print('concept overview: key', len(KEY), 'register', len(REG), 'open', len(OPEN_ROWS), 'bytes', len(PAGE))

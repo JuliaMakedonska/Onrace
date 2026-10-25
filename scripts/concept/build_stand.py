@@ -923,6 +923,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-step7'), os.path.join(ROOT, 'publi
 shutil.copyfile(os.path.join(ROOT, 'ui/review-step7.html'), os.path.join(ROOT, 'public/ui/review-step7.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-lessons'), os.path.join(ROOT, 'public/ui/review-lessons'), dirs_exist_ok=True)   # lesson pages and kit showcase before/after (2026-10-26)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-lessons.html'), os.path.join(ROOT, 'public/ui/review-lessons.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-overviews'), os.path.join(ROOT, 'public/ui/review-overviews'), dirs_exist_ok=True)   # the overviews restructured (2026-10-26)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-overviews.html'), os.path.join(ROOT, 'public/ui/review-overviews.html'))
 for _f in ['visuals/review-round3.html']:   # the photos' round 3 review, linked from the Lesson 7 overview
     shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
 import glob
