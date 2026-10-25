@@ -9,7 +9,7 @@
   --d-border: #2a2c31;
   --d-text: #eef0f2;
   --d-dim: #9aa0a8;
-  --d-faint: #686e77;
+  --d-faint: #878d96;   /* the artifact pages' faint gray (#686e77) lifted to AA on every doc surface: 5.05:1 on --d-elev-2 */
   --d-accent: #ff4d2e;
   --d-accent-dim: #ff4d2e33;
   --d-radius: 10px;
@@ -22,9 +22,10 @@
   font-size: 15px;
   line-height: 1.5;
 }
-.kit-doc code { font-family: var(--d-mono); font-size: 12.5px; color: var(--d-text); background: var(--d-elev-2); border: 1px solid var(--d-border); border-radius: 5px; padding: 1px 5px; }
-.kit-doc a { color: var(--d-text); }
-.kit-doc :focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
+:is(.kd-intro, .kd-meta, .kd-notes, .kd-shell > .kit-section > p) code { font-family: var(--d-mono); font-size: 12.5px; color: var(--d-text); background: var(--d-elev-2); border: 1px solid var(--d-border); border-radius: 5px; padding: 1px 5px; }
+/* doc links and focus only: the specimens keep the product's own (an amber button's text is --on-accent, not doc white) */
+:is(.kd-side, .kd-intro, .kd-meta, .kd-notes) a { color: var(--d-text); }
+:is(.kd-side, .kd-intro, .kd-meta, .kd-notes) :focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
 .kd { display: grid; grid-template-columns: var(--d-side) minmax(0, 1fr); min-height: 100vh; }
 
 /* the sidebar */
@@ -79,7 +80,6 @@
 .kit-doc .kit-state:has(> .kit-frame > .kit-row:only-child) > .kit-frame { width: auto; }
 .kit-doc .kit-label { order: 2; margin: 0; max-width: 390px; font-family: var(--d-font); font-size: 12.5px; line-height: 1.4; color: var(--d-dim); }
 .kit-doc .kit-frame, .kit-doc .kit-shell { font-family: var(--font-text); font-size: var(--size-body); line-height: var(--leading-body); color: var(--text-1); }
-.kit-doc .kit-frame code { font-family: var(--font-mono); background: none; border: 0; padding: 0; }
 
 /* a phone: the sidebar becomes a menu */
 @media (max-width: 860px) {

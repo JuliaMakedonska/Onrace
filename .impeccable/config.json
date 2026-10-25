@@ -32,6 +32,60 @@
         ],
         "createdAt": "2026-10-18T16:39:57.891Z",
         "reason": "Claude: showcase specimens carry their screens' own h1 (bar titles, large titles) inside the showcase's h2/h3 outline"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "roboto",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-25T22:58:06.058Z",
+        "reason": "Claude: ui/kit.html's documentation layer (ui/kit-doc.css) is in the artifact pages' style on purpose, so docs never read as product; the product stages use DESIGN.md values"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "sfmono-regular",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-25T22:58:06.081Z",
+        "reason": "Claude: ui/kit.html's documentation layer (ui/kit-doc.css) is in the artifact pages' style on purpose, so docs never read as product; the product stages use DESIGN.md values"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "8px",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-25T22:58:06.103Z",
+        "reason": "Claude: ui/kit.html's documentation layer (ui/kit-doc.css) is in the artifact pages' style on purpose, so docs never read as product; the product stages use DESIGN.md values"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "5px",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-25T22:58:06.122Z",
+        "reason": "Claude: ui/kit.html's documentation layer (ui/kit-doc.css) is in the artifact pages' style on purpose, so docs never read as product; the product stages use DESIGN.md values"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ff4d2e",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-25T22:58:06.143Z",
+        "reason": "Claude: ui/kit.html's documentation layer (ui/kit-doc.css) is in the artifact pages' style on purpose, so docs never read as product; the product stages use DESIGN.md values"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#878d96",
+        "files": [
+          "ui/kit.html"
+        ],
+        "createdAt": "2026-10-25T22:58:06.164Z",
+        "reason": "Claude: ui/kit.html's documentation layer (ui/kit-doc.css) is in the artifact pages' style on purpose, so docs never read as product; the product stages use DESIGN.md values"
       }
     ]
   }
