@@ -226,9 +226,9 @@ CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contr
 
 # cache-busting: stylesheet links carry a short hash of ui/kit.css + ui/map.css + concept/stand.css
 import hashlib
-CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css')).encode()).hexdigest()[:8]
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css')).encode()).hexdigest()[:8]
 def _stamp(path):
-    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|map|stand|specimens|first-screen))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
+    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|kit-doc|map|stand|specimens|first-screen))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
     open(path, 'w').write(html)
 STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
 STAMPED += [f'wireframes/race-detail{x}.html' for x in ('', '-error', '-loading')]   # step 5, Discovery group (2026-10-22)
@@ -903,7 +903,7 @@ else:
     if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
     elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
 # mirror to public/ (GitHub Pages serves public/)
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
@@ -925,6 +925,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-lessons'), os.path.join(ROOT, 'pub
 shutil.copyfile(os.path.join(ROOT, 'ui/review-lessons.html'), os.path.join(ROOT, 'public/ui/review-lessons.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-overviews'), os.path.join(ROOT, 'public/ui/review-overviews'), dirs_exist_ok=True)   # the overviews restructured (2026-10-26)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-overviews.html'), os.path.join(ROOT, 'public/ui/review-overviews.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-kit-sheet'), os.path.join(ROOT, 'public/ui/review-kit-sheet'), dirs_exist_ok=True)   # the kit as a component sheet (2026-10-26)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-kit-sheet.html'), os.path.join(ROOT, 'public/ui/review-kit-sheet.html'))
 for _f in ['visuals/review-round3.html']:   # the photos' round 3 review, linked from the Lesson 7 overview
     shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
 import glob

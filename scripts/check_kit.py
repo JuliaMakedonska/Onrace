@@ -40,7 +40,7 @@ for n in names:
         fails.append(f'inventory component without a Showcase map row: {n}')
 
 # ---------------------------------------------------------------- every mapped component has its specimen and states
-items = {m.group(1): m.start() for m in re.finditer(r'<div class="kit-item" id="([^"]+)">', KIT)}
+items = {m.group(1): m.start() for m in re.finditer(r'<div class="kit-item" id="([^"]+)"[^>]*>', KIT)}
 order = sorted(items.values()) + [len(KIT)]
 def block(id_):
     i = items[id_]

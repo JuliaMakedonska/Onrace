@@ -1556,50 +1556,7 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 /* =================================================================
    Showcase layout (ui/kit.html only, never in the product). Tokens only.
    ================================================================= */
-.kit { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-9); }
-.kit-head { display: grid; gap: var(--space-3); }
-.kit-head p, .kit-section > p { margin: 0; max-width: var(--measure); color: var(--text-2); }
-.kit-toc { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; font-size: var(--size-meta); }
-.kit-toc a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--text-1); text-underline-offset: var(--space-1); }   /* 44pt targets (step 7, #16) */
-.kit-section { display: grid; gap: var(--space-7); }
-.kit-nav {   /* the showcase's sticky nav by role, with counts (2026-10-26) */
-  position: sticky;
-  top: 0;
-  z-index: var(--z-bar);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 var(--space-5);
-  margin: 0 calc(var(--space-4) * -1);
-  padding: 0 var(--space-4);
-  background: var(--glass-ground);
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  backdrop-filter: blur(var(--glass-blur));
-  border-bottom: var(--border) solid var(--glass-edge);
-}
-.kit-nav a { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--target); color: var(--text-1); font-size: var(--size-meta); font-weight: var(--weight-strong); text-decoration: none; }
-.kit-nav a:hover { color: var(--text-2); }
-.kit-nav a span { color: var(--text-2); font-weight: var(--weight-regular); }
-.kit-section { scroll-margin-top: calc(var(--target) + var(--space-4)); }
-.kit-meta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--space-1) var(--space-4); margin: 0; max-width: var(--measure); font-size: var(--size-proof); }   /* a specimen's facts, from the inventory (scripts/build_kit_showcase.py) */
-.kit-meta dt { color: var(--text-2); }
-.kit-meta dd { margin: 0; color: var(--text-1); }
-.kit-meta a { color: var(--text-1); text-underline-offset: var(--space-1); }
-.kit-meta a:hover { color: var(--text-2); }
-.kit-section > h2 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--size-time);
-  font-weight: var(--weight-display);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-display);
-}
-.kit-item { display: grid; gap: var(--space-3); padding-top: var(--space-6); border-top: var(--border) solid var(--line); }
-.kit-item > h3 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
-.kit-item > p { margin: 0; max-width: var(--measure); font-size: var(--size-proof); color: var(--text-2); }
-.kit-item code { font-family: var(--font-mono); font-size: var(--size-proof); color: var(--text-1); }
-.kit-states { display: grid; gap: var(--space-5); grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--screen-w)), 1fr)); align-items: start; }
-.kit-state { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
-.kit-label { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
+/* the showcase's own layout (sidebar, cards, labels) is documentation, not product: ui/kit-doc.css (2026-10-26). The stages below are product. */
 .kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
   width: 100%;
   max-width: var(--screen-w);

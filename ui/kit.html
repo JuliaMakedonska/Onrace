@@ -7,9 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="kit.css?v=694b17fc">
-<link rel="preload" as="style" href="map.css?v=694b17fc" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="map.css?v=694b17fc"></noscript>
+<link rel="stylesheet" href="kit.css?v=5d66c104">
+<link rel="stylesheet" href="kit-doc.css?v=5d66c104">
+<link rel="preload" as="style" href="map.css?v=5d66c104" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="map.css?v=5d66c104"></noscript>
 </head>
 <!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
      states, styled only by kit.css (map.css for the static map). Texts are the
@@ -17,19 +18,30 @@
      specimen is the component as it is on its screens; a change goes here and
      to every screen that shows it (CLAUDE.md → "Keep it" rule). Hover, press
      and keyboard focus are live: point at or tab to any control. -->
-<body class="onrace">
-<main class="kit">
+<body class="onrace kit-doc">
+<div class="kd">
+<aside class="kd-side" aria-label="Components">
+  <div class="kd-side-head"><a class="kd-brand" href="#kd-top">Onrace kit</a><button type="button" class="kd-menu" aria-expanded="false" aria-controls="kd-nav">Components</button></div>
+  <div class="kd-nav" id="kd-nav">
+    <label class="kd-filter-l" for="kd-filter">Filter components</label>
+    <input type="search" id="kd-filter" class="kd-filter" placeholder="Filter by name" autocomplete="off">
+    <nav aria-label="Components by role">
+      <p class="kd-role">Shell</p><ul><li><a href="#shell" data-names="shell tab bar large title">Shell</a></li></ul>
+      <p class="kd-role"><a href="#role-navigation">Navigation</a> <span>8</span></p><ul><li><a href="#tab-bar" data-names="tab bar tab bar">Tab bar</a></li><li><a href="#large-title" data-names="large title header · the top bar over it large title header">Large title header · the top bar over it</a></li><li><a href="#top-bar" data-names="top bar top bar">Top bar</a></li><li><a href="#gate-layout" data-names="gate layout · top bar over the page gate layout">Gate layout · top bar over the page</a></li><li><a href="#segmented" data-names="segmented control segmented control">Segmented control</a></li><li><a href="#search" data-names="search field search field">Search field</a></li><li><a href="#action-bar" data-names="sticky action bar sticky action bar">Sticky action bar</a></li><li><a href="#sheet" data-names="modal sheet modal sheet sport-type rows">Modal sheet</a></li></ul>
+      <p class="kd-role"><a href="#role-cards-and-lists">Cards and lists</a> <span>8</span></p><ul><li><a href="#race-card" data-names="race card race card race photo">Race card</a></li><li><a href="#format-chip" data-names="format chip format chip">Format chip</a></li><li><a href="#results-row" data-names="results row results row sort button order label">Results row</a></li><li><a href="#finish-time" data-names="finish time · proof line result row finish time proof line">Finish time · Proof line</a></li><li><a href="#detail" data-names="detail header and facts · detail section detail header and facts detail section race photo, detail official race website link proof url and note">Detail header and facts · Detail section</a></li><li><a href="#skeleton" data-names="skeleton skeleton">Skeleton</a></li><li><a href="#map" data-names="race browse · static map static map">Race browse · static map</a></li><li><a href="#picker-intro" data-names="race picker · list intro list intro">Race picker · list intro</a></li></ul>
+      <p class="kd-role"><a href="#role-forms">Forms</a> <span>8</span></p><ul><li><a href="#primary" data-names="primary button primary button">Primary button</a></li><li><a href="#secondary" data-names="secondary button secondary button filters trigger with count">Secondary button</a></li><li><a href="#text-link" data-names="text link text link">Text link</a></li><li><a href="#text-field" data-names="form rows: text fields, hints, errors text field field hint field error locked form">Form rows: text fields, hints, errors</a></li><li><a href="#select" data-names="pop-up select pop-up select">Pop-up select</a></li><li><a href="#date" data-names="date field date field">Date field</a></li><li><a href="#log-result-parts" data-names="log result · form intro, catalog row, linked race form intro catalog row linked race card">Log result · form intro, catalog row, linked race</a></li><li><a href="#gate-parts" data-names="sign in / sign up · new password: the confirm in the bar, form note, expired links forgot password? link form note expired-link message full-screen gate error">Sign in / Sign up · New password: the confirm in the bar, form note, expired links</a></li></ul>
+      <p class="kd-role"><a href="#role-feedback">Feedback</a> <span>6</span></p><ul><li><a href="#state-message" data-names="state message state message">State message</a></li><li><a href="#form-alert" data-names="form alert form alert">Form alert</a></li><li><a href="#inline-error" data-names="inline error inline error">Inline error</a></li><li><a href="#status-line" data-names="status line status line">Status line</a></li><li><a href="#check-inbox" data-names="check-inbox block check-inbox block">Check-inbox block</a></li><li><a href="#archive-step5" data-names="log result as a modal sheet · the discard confirm action sheet">Log result as a modal sheet · the discard confirm</a></li></ul>
+      <p class="kd-role"><a href="#role-one-off">One-off</a> <span>3</span></p><ul><li><a href="#controls" data-names="race browse · controls bar, active filter chips controls bar active filter chips row">Race browse · controls bar, active filter chips</a></li><li><a href="#gate-intro" data-names="gate intro gate intro">Gate intro</a></li><li><a href="#profile-parts" data-names="profile · identity, grouped rows, sign out, confirm alert identity block grouped settings rows sign out button confirm alert">Profile · identity, grouped rows, Sign out, confirm alert</a></li></ul>
+    </nav>
+    <p class="kd-empty" hidden>No component matches.</p>
+  </div>
+</aside>
+<main class="kd-main">
+  <p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: 33 specimens covering 56 inventory components, every state on its own stage, styled by <a href="kit.css?v=5d66c104"><code>ui/kit.css</code></a> alone. <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/inventory.md">The inventory</a> · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/kit.css">kit.css on GitHub</a></p>
 
-  <header class="kit-head">
-    <h1>Onrace kit</h1>
-    <p>Every component in <code>ui/inventory.md</code>, in its states, from <code>ui/kit.css</code> alone. All 10 screens link the kit (since step 5), so each specimen looks exactly as the component does on its screens. Native iOS since step 3b; the markup pass (two rounds) and the step 6 critique fixes are in. A change to a component goes here and to every screen that shows it.</p>
-  </header>
-
-  <nav class="kit-nav" aria-label="Components by role"><a href="#role-navigation">Navigation <span>8</span></a><a href="#role-cards-and-lists">Cards and lists <span>8</span></a><a href="#role-forms">Forms <span>8</span></a><a href="#role-feedback">Feedback <span>6</span></a><a href="#role-one-off">One-off <span>3</span></a><a href="#shell">Shell</a></nav>
-
-  <!-- ================================================================ Shell -->
+  <div class="kit-item kd-shell" id="shell-card" data-names="shell tab bar large title">
   <section class="kit-section" id="shell" aria-labelledby="shell-h">
-    <h2 id="shell-h">Shell</h2>
+    <h3 id="shell-h">Shell</h3>
     <p><code>ui/shell.html</code>: the top bar over the large title (G4), the large-title header and the tab bar, as every top-level screen has them. No status bar: the wireframes viewer draws it.</p>
     <div class="kit-states">
       <div class="kit-state"><p class="kit-label">Discover current</p><iframe class="kit-shell" src="shell.html" title="Shell, Discover tab"></iframe></div>
@@ -38,15 +50,17 @@
     </div>
   </section>
 
+  </div>
+
   <!-- ================================================================ Navigation -->
   <section class="kit-section" id="role-navigation" aria-labelledby="role-navigation-h">
-    <h2 id="role-navigation-h">Navigation</h2>
-    <p>8 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+    <h2 id="role-navigation-h">Navigation <span>8</span></h2>
 
-    <div class="kit-item" id="tab-bar">
+    <div class="kit-item" id="tab-bar" data-names="tab bar tab bar">
       <h3>Tab bar</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Tab bar</dd><dt>Classes</dt><dd><code>.bottom-nav</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/tab-bars">Tab bars</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>nav.bottom-nav</code> · Race browse, Results list, Profile. Floats above content as a glass capsule, in from the edges and above the bottom safe area; content runs under it (C1, G1, G2). States: the current tab (amber, the screen's place); the same in every loading and error state. Shown in the Shell above.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.bottom-nav</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/tab-bars">Tab bars ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>nav.bottom-nav</code> · Race browse, Results list, Profile. Floats above content as a glass capsule, in from the edges and above the bottom safe area; content runs under it (C1, G1, G2). States: the current tab (amber, the screen's place); the same in every loading and error state. Shown in the Shell above.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Discover current</p>
           <div class="kit-frame kit-frame--flush kit-tabbar"><nav class="bottom-nav" aria-label="Global navigation"><ul><li><a href="#tab-bar" data-tab="discover" aria-current="page"><span>Discover</span></a></li><li><a href="#tab-bar" data-tab="results"><span>Results</span></a></li><li><a href="#tab-bar" data-tab="profile"><span>Profile</span></a></li></ul></nav></div>
@@ -60,10 +74,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="large-title">
+    <div class="kit-item" id="large-title" data-names="large title header · the top bar over it large title header">
       <h3>Large title header · the top bar over it</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Large title header</dd><dt>Classes</dt><dd><code>.top-bar--large</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd></dl><!-- /kit:meta -->
-      <p><code>h1</code> in the page header, with <code>.top-bar.top-bar--large[data-collapse]</code> floating over it · Race browse, Results list, Profile (markup pass, 2026-10-23). At rest the bar is transparent and empty; once the h1 has mostly scrolled away it turns to glass and shows the small title (<code>.is-collapsed</code>, G4, HIG Toolbars). On Results list it carries Log result, a text button at its trailing edge, amber as the screen's one primary (<code>.bar-action</code>, G5). When a state brings its own primary (<code>-error</code>) Log result steps down to Text 1; on <code>-empty</code> it's hidden, and "Log your first result" is the one way in.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Large title header</p><p class="kd-line"><code>.top-bar--large</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars ↗</a></p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>h1</code> in the page header, with <code>.top-bar.top-bar--large[data-collapse]</code> floating over it · Race browse, Results list, Profile (markup pass, 2026-10-23). At rest the bar is transparent and empty; once the h1 has mostly scrolled away it turns to glass and shows the small title (<code>.is-collapsed</code>, G4, HIG Toolbars). On Results list it carries Log result, a text button at its trailing edge, amber as the screen's one primary (<code>.bar-action</code>, G5). When a state brings its own primary (<code>-error</code>) Log result steps down to Text 1; on <code>-empty</code> it's hidden, and "Log your first result" is the one way in.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Results, at rest: Log result in the bar</p>
           <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></header><div class="screen-main"><header><h1>Results</h1></header></div></div></div>
@@ -83,10 +98,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="top-bar">
+    <div class="kit-item" id="top-bar" data-names="top bar top bar">
       <h3>Top bar</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Top bar</dd><dt>Classes</dt><dd><code>.top-bar</code></dd><dt>Used on</dt><dd>10 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.top-bar</code> · every screen below the top level. Glass on the ground level with a rim, below the top safe area (C1, G6). Back to the parent screen by name, a centered title, text actions (Cancel, Save, Apply filters). The bar action (Save on Log result, Log result on Results, Apply filters on the Filters sheet) is the screen's one primary, so it takes amber text, like a native bar button. On Race detail and Result detail the race name appears in the bar once its h1 has scrolled away (G34, G53), truncated between the back button and the edge.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.top-bar</code></p><p class="kd-line"><span class="kd-k">Used on 10 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.top-bar</code> · every screen below the top level. Glass on the ground level with a rim, below the top safe area (C1, G6). Back to the parent screen by name, a centered title, text actions (Cancel, Save, Apply filters). The bar action (Save on Log result, Log result on Results, Apply filters on the Filters sheet) is the screen's one primary, so it takes amber text, like a native bar button. On Race detail and Result detail the race name appears in the bar once its h1 has scrolled away (G34, G53), truncated between the back button and the edge.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Back only (Race detail; Result detail: ‹ Results)</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar" aria-label="Back"><a class="back" href="#"><span>Discover</span></a></header></div>
@@ -121,10 +137,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="gate-layout">
+    <div class="kit-item" id="gate-layout" data-names="gate layout · top bar over the page gate layout">
       <h3>Gate layout · top bar over the page</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Gate layout</dd><dt>Classes</dt><dd><code>.gate</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>body &gt; .top-bar</code> before <code>.phone-screen</code> (step 5, Infrastructure): on the gates the bar is the body's own child, not inside the scrolling page. It floats over the page's top edge in ground glass (C1); the page starts below it and scrolls under it, and nothing overflows the screen. Sign in / Sign up, Reset password, New password, every state. The bars themselves (Cancel + title on the modal gate, "‹ Sign in" on a step inside it) are under <a href="#top-bar">Top bar</a>.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Gate layout</p><p class="kd-line"><code>.gate</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>body &gt; .top-bar</code> before <code>.phone-screen</code> (step 5, Infrastructure): on the gates the bar is the body's own child, not inside the scrolling page. It floats over the page's top edge in ground glass (C1); the page starts below it and scrolls under it, and nothing overflows the screen. Sign in / Sign up, Reset password, New password, every state. The bars themselves (Cancel + title on the modal gate, "‹ Sign in" on a step inside it) are under <a href="#top-bar">Top bar</a>.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Sign in: the bar (Cancel, "Account", Sign in), the mode switch, the grouped rows</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action">Sign in</button></header>
@@ -134,10 +151,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="segmented">
+    <div class="kit-item" id="segmented" data-names="segmented control segmented control">
       <h3>Segmented control</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Segmented control</dd><dt>Classes</dt><dd><code>.view-toggle</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/segmented-controls">Segmented controls</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.view-toggle</code> / <code>.view-btn</code> · Race browse (List / Map), Sign in / Sign up (Sign in / Create account). Segments of equal width (G11). In the controls bar the track is a full capsule and each segment is concentric with it, and Filters beside it is a capsule too (C7, designer 2026-10-19); in content (Sign in) it keeps 6/4.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.view-toggle</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/segmented-controls">Segmented controls ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.view-toggle</code> / <code>.view-btn</code> · Race browse (List / Map), Sign in / Sign up (Sign in / Create account). Segments of equal width (G11). In the controls bar the track is a full capsule and each segment is concentric with it, and Filters beside it is a capsule too (C7, designer 2026-10-19); in content (Sign in) it keeps 6/4.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">List selected, in the controls bar (C7)</p>
           <div class="kit-frame"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div>
@@ -154,10 +172,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="search">
+    <div class="kit-item" id="search" data-names="search field search field">
       <h3>Search field</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Search field</dd><dt>Classes</dt><dd><code>.race-search</code> <code>.search</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/search-fields">Search fields</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>, in the header), Race picker (<code>form.search</code>, under its top bar, with the page gutter). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). A bar control, so a full capsule (C7, designer 2026-10-19).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.race-search</code> <code>.search</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/search-fields">Search fields ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>input type="search"</code> · Race browse (<code>.race-search</code>, in the header), Race picker (<code>form.search</code>, under its top bar, with the page gutter). Submits on the keyboard's Search key. Filled, it shows the browser's own Clear button (system-drawn, G10). A bar control, so a full capsule (C7, designer 2026-10-19).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Empty, placeholder</p>
           <div class="kit-frame"><form class="race-search" role="search"><label class="visually-hidden" for="k-q1">Search races by name or city</label><input type="search" id="k-q1" placeholder="Race name or city" autocomplete="off" enterkeyhint="search"></form></div>
@@ -168,10 +187,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="action-bar">
+    <div class="kit-item" id="action-bar" data-names="sticky action bar sticky action bar">
       <h3>Sticky action bar</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Sticky action bar</dd><dt>Classes</dt><dd><code>.action-bar</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars</a></dd></dl><!-- /kit:meta -->
-      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and where it goes. Glass like every bar; its caption passes AA over the worst case behind it. Its button is a capsule, as every control inside a bar (C7). It's the scroll area's last child, sticky at its bottom: content runs under its glass (G35, G54). Its height never changes: a link that won't open is a native alert now, on both screens (round 2). The Open button's visible label is short, "Open official result", and its name carries the domain (G56; WCAG 2.5.3, the name starts with the label).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.action-bar</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars ↗</a></p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.action-bar</code> · Race detail, Result detail. The screen's one primary, which leaves Onrace, and where it goes. Glass like every bar; its caption passes AA over the worst case behind it. Its button is a capsule, as every control inside a bar (C7). It's the scroll area's last child, sticky at its bottom: content runs under its glass (G35, G54). Its height never changes: a link that won't open is a native alert now, on both screens (round 2). The Open button's visible label is short, "Open official result", and its name carries the domain (G56; WCAG 2.5.3, the name starts with the label).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race detail</p>
           <div class="kit-frame kit-frame--flush"><div class="action-bar"><a class="register-btn" href="#">Register on hyrox.com</a><p class="action-caption">Opens the race website — registration and payment happen there.</p></div></div>
@@ -182,10 +202,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="sheet">
+    <div class="kit-item" id="sheet" data-names="modal sheet modal sheet sport-type rows">
       <h3>Modal sheet</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Modal sheet, Sport-type rows</dd><dt>Classes</dt><dd><code>.sheet</code> <code>.row--check</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/sheets">Sheets</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.sheet</code> · the Filters sheet on Race browse, and Log result, a whole screen in a sheet over Results (round 2). Race picker is not a sheet since 2026-10-24: it's pushed inside Log result's navigation (see Top bar). Markup pass (2026-10-23): the Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge (G12); its options are grouped rows on the level above the sheet (G20): Region a native menu showing its value (G17), the race dates native compact pickers on a pill (G18), sport types rows with a neutral checkmark at the trailing edge (G19, C4). No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters (G32). A native sheet: glass on the raised level (C1, C4), the system sheet radius (G16, provisional [?]), resting at the large detent only (G13). Boundaries on it use Field line on the sheet.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Modal sheet, Sport-type rows</p><p class="kd-line"><code>.sheet</code> <code>.row--check</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/sheets">Sheets ↗</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.sheet</code> · the Filters sheet on Race browse, and Log result, a whole screen in a sheet over Results (round 2). Race picker is not a sheet since 2026-10-24: it's pushed inside Log result's navigation (see Top bar). Markup pass (2026-10-23): the Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge (G12); its options are grouped rows on the level above the sheet (G20): Region a native menu showing its value (G17), the race dates native compact pickers on a pill (G18), sport types rows with a neutral checkmark at the trailing edge (G19, C4). No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters (G32). A native sheet: glass on the raised level (C1, C4), the system sheet radius (G16, provisional [?]), resting at the large detent only (G13). Boundaries on it use Field line on the sheet.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Filters sheet, open</p>
           <div class="kit-frame kit-stage">
@@ -217,13 +238,13 @@
 
   <!-- ================================================================ Cards and lists -->
   <section class="kit-section" id="role-cards-and-lists" aria-labelledby="role-cards-and-lists-h">
-    <h2 id="role-cards-and-lists-h">Cards and lists</h2>
-    <p>8 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+    <h2 id="role-cards-and-lists-h">Cards and lists <span>8</span></h2>
 
-    <div class="kit-item" id="race-card">
+    <div class="kit-item" id="race-card" data-names="race card race card race photo">
       <h3>Race card</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Race card, Race photo</dd><dt>Classes</dt><dd><code>.race-card</code> <code>.photo</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse-loading">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#race-picker">Race picker</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd></dl><!-- /kit:meta -->
-      <p><code>article.race-card</code> · Race browse (with a black-and-white photo at 3:1), Race picker (no photo; the linked race carries the filter rows' neutral checkmark and <code>aria-current</code>, G47, round 2). One link: the whole card opens the race. Pressed, it takes the pressed level (G23; shown here with <code>.is-pressed</code>, the showcase's still stand-in for <code>:active</code>). A collection, so no disclosure indicator.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Race card, Race photo</p><p class="kd-line"><code>.race-card</code> <code>.photo</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../wireframes/index.html#race-browse-loading">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#race-picker">Race picker</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a></p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>article.race-card</code> · Race browse (with a black-and-white photo at 3:1), Race picker (no photo; the linked race carries the filter rows' neutral checkmark and <code>aria-current</code>, G47, round 2). One link: the whole card opens the race. Pressed, it takes the pressed level (G23; shown here with <code>.is-pressed</code>, the showcase's still stand-in for <code>:active</code>). A collection, so no disclosure indicator.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse, with photo</p>
           <div class="kit-frame"><ul class="race-list"><li>
@@ -256,10 +277,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="format-chip">
+    <div class="kit-item" id="format-chip" data-names="format chip format chip">
       <h3>Format chip</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Format chip</dd><dt>Classes</dt><dd><code>.sport-tag</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#race-browse">Race browse</a>, <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#race-picker">Race picker</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
-      <p><code>.sport-tag</code> · Race browse, Race picker, Results list. One look for every format; uppercase by CSS, the name in the markup unchanged.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.sport-tag</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../wireframes/index.html#race-browse">Race browse</a>, <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#race-picker">Race picker</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.sport-tag</code> · Race browse, Race picker, Results list. One look for every format; uppercase by CSS, the name in the markup unchanged.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Every format, one look</p>
           <div class="kit-frame"><div class="kit-row"><span class="sport-tag">HYROX</span><span class="sport-tag">DEKA</span><span class="sport-tag">Marathon</span><span class="sport-tag">Half marathon</span><span class="sport-tag">Triathlon</span><span class="sport-tag">Ultra</span><span class="sport-tag">OCR</span></div></div>
@@ -267,10 +289,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="results-row">
+    <div class="kit-item" id="results-row" data-names="results row results row sort button order label">
       <h3>Results row</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Results row, Sort button, Order label</dd><dt>Classes</dt><dd><code>.results-row</code> <code>.sort-toggle</code> <code>.results-order</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons">Pull-down buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.results-row</code> · Race browse (count + Sort), Results list (count + order). Sort is one button, <code>.sort-toggle</code>: two orders, so no menu; it shows the current one with the Solar sort icon and flips it when tapped (G21, markup pass). Its name starts with its label: "Soonest first, sort order" (WCAG 2.5.3).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Results row, Sort button, Order label</p><p class="kd-line"><code>.results-row</code> <code>.sort-toggle</code> <code>.results-order</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons">Pull-down buttons ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.results-row</code> · Race browse (count + Sort), Results list (count + order). Sort is one button, <code>.sort-toggle</code>: two orders, so no menu; it shows the current one with the Solar sort icon and flips it when tapped (G21, markup pass). Its name starts with its label: "Soonest first, sort order" (WCAG 2.5.3).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse, unfiltered</p>
           <div class="kit-frame"><div class="results-row"><p class="results-count"><strong>7</strong> upcoming races</p><button type="button" class="sort-toggle" aria-label="Soonest first, sort order"><span>Soonest first</span></button></div></div>
@@ -287,10 +310,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="finish-time">
+    <div class="kit-item" id="finish-time" data-names="finish time · proof line result row finish time proof line">
       <h3>Finish time · Proof line</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Result row, Finish time, Proof line</dd><dt>Classes</dt><dd><code>.result-card</code> <code>.finish-time</code> <code>.finish</code> <code>.proof-label</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd></dl><!-- /kit:meta -->
-      <p><code>.finish-time</code>, <code>dl.finish</code>; <code>.proof-label</code> · Results list, Result detail. The finish time is the loudest thing on the row; the proof is stated, not stamped. The row drills into Result detail, so it shows a disclosure indicator (G22); pressed, it takes the pressed level (G23).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Result row, Finish time, Proof line</p><p class="kd-line"><code>.result-card</code> <code>.finish-time</code> <code>.finish</code> <code>.proof-label</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a></p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.finish-time</code>, <code>dl.finish</code>; <code>.proof-label</code> · Results list, Result detail. The finish time is the loudest thing on the row; the proof is stated, not stamped. The row drills into Result detail, so it shows a disclosure indicator (G22); pressed, it takes the pressed level (G23).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Results list: the result row</p>
           <div class="kit-frame"><ul class="result-list">
@@ -302,10 +326,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="detail">
+    <div class="kit-item" id="detail" data-names="detail header and facts · detail section detail header and facts detail section race photo, detail official race website link proof url and note">
       <h3>Detail header and facts · Detail section</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Detail header and facts, Detail section, Race photo, detail, Official race website link, Proof URL and note</dd><dt>Classes</dt><dd><code>.facts</code> <code>.race</code> <code>.result</code> <code>.official</code> <code>.proof-url</code> <code>.proof-note</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>h1</code> + <code>dl.facts</code>; <code>section</code> with an <code>h2</code> · Race detail, Result detail. Race detail opens with the race’s photo (<code>.race &gt; .photo</code>, step 5): the race card’s 3:1 band and focus class at full content width, so it shows exactly the band retouched in round 3, with the outer 6px radius. The official site link has a 44pt target.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Detail header and facts, Detail section, Race photo, detail, Official race website link, Proof URL and note</p><p class="kd-line"><code>.facts</code> <code>.race</code> <code>.result</code> <code>.official</code> <code>.proof-url</code> <code>.proof-note</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>h1</code> + <code>dl.facts</code>; <code>section</code> with an <code>h2</code> · Race detail, Result detail. Race detail opens with the race’s photo (<code>.race &gt; .photo</code>, step 5): the race card’s 3:1 band and focus class at full content width, so it shows exactly the band retouched in round 3, with the outer 6px radius. The official site link has a 44pt target.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race detail</p>
           <div class="kit-frame kit-frame--flush"><article class="race" aria-labelledby="k-race-h">
@@ -327,10 +352,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="skeleton">
+    <div class="kit-item" id="skeleton" data-names="skeleton skeleton">
       <h3>Skeleton</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Skeleton</dd><dt>Classes</dt><dd><code>.skeleton-card</code> <code>.bar</code></dd><dt>Used on</dt><dd>6 screens: <a href="../wireframes/index.html#race-browse-loading">Race browse</a>, <a href="../wireframes/index.html#race-detail-loading">Race detail</a>, <a href="../wireframes/index.html#results-list-loading">Results list</a>, <a href="../wireframes/index.html#race-picker-loading">Race picker</a>, <a href="../wireframes/index.html#result-detail-loading">Result detail</a>, <a href="../wireframes/index.html#profile-loading">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/progress-indicators">Progress indicators</a></dd></dl><!-- /kit:meta -->
-      <p><code>.bar</code>, <code>.skeleton-card</code> · every loading state. The content's shape with a subtle pulse (C6), still under reduced motion; no spinner, no shimmer. Screen readers hear a hidden status line.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.skeleton-card</code> <code>.bar</code></p><p class="kd-line"><span class="kd-k">Used on 6 screens</span> <a href="../wireframes/index.html#race-browse-loading">Race browse</a>, <a href="../wireframes/index.html#race-detail-loading">Race detail</a>, <a href="../wireframes/index.html#results-list-loading">Results list</a>, <a href="../wireframes/index.html#race-picker-loading">Race picker</a>, <a href="../wireframes/index.html#result-detail-loading">Result detail</a>, <a href="../wireframes/index.html#profile-loading">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/progress-indicators">Progress indicators ↗</a></p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.bar</code>, <code>.skeleton-card</code> · every loading state. The content's shape with a subtle pulse (C6), still under reduced motion; no spinner, no shimmer. Screen readers hear a hidden status line.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse: race card with its photo band</p>
           <div class="kit-frame"><ul class="race-list" aria-hidden="true"><li><div class="skeleton-card"><div class="bar photo"></div><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li></ul></div>
@@ -353,10 +379,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="map">
+    <div class="kit-item" id="map" data-names="race browse · static map static map">
       <h3>Race browse · static map</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Static map</dd><dt>Classes</dt><dd><code>.map-placeholder</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#race-browse-empty">Race browse</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.map-placeholder.has-pins</code>: Natural Earth land and borders, pins on the races' real coordinates, labels on leader lines. Neutral: no accent on the map.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Static map</p><p class="kd-line"><code>.map-placeholder</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.map-placeholder.has-pins</code>: Natural Earth land and borders, pins on the races' real coordinates, labels on leader lines. Neutral: no accent on the map.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Seven races</p>
           <div class="kit-frame kit-stage"><div class="view-panel kit-map">
@@ -389,10 +416,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="picker-intro">
+    <div class="kit-item" id="picker-intro" data-names="race picker · list intro list intro">
       <h3>Race picker · list intro</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>List intro</dd><dt>Classes</dt><dd><code>.list-intro</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#race-picker-loading">Race picker</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
-      <p><code>.list-intro</code>, above the list; with a search it names it.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">List intro</p><p class="kd-line"><code>.list-intro</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../wireframes/index.html#race-picker-loading">Race picker</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.list-intro</code>, above the list; with a search it names it.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Without a search</p>
           <div class="kit-frame"><p class="list-intro">Past races in the race catalog</p></div>
@@ -406,13 +434,13 @@
 
   <!-- ================================================================ Forms -->
   <section class="kit-section" id="role-forms" aria-labelledby="role-forms-h">
-    <h2 id="role-forms-h">Forms</h2>
-    <p>8 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+    <h2 id="role-forms-h">Forms <span>8</span></h2>
 
-    <div class="kit-item" id="primary">
+    <div class="kit-item" id="primary" data-names="primary button primary button">
       <h3>Primary button</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Primary button</dd><dt>Classes</dt><dd><code>.state-action</code> <code>.submit-btn</code> <code>.register-btn</code> <code>.open-btn</code> <code>.bar-action</code> <code>.save-btn</code></dd><dt>Used on</dt><dd>10 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p>The screen's one filled action: <code>.state-action</code>, <code>.submit-btn</code>, <code>.register-btn</code>, <code>.open-btn</code>. Hover lightens it; a press moves it down 1px. In a bar the primary is amber text instead (<code>.bar-action</code>, <code>.save-btn</code>; see Top bar), and busy it is the spinner alone there (round 2).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.state-action</code> <code>.submit-btn</code> <code>.register-btn</code> <code>.open-btn</code> <code>.bar-action</code> <code>.save-btn</code></p><p class="kd-line"><span class="kd-k">Used on 10 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p>The screen's one filled action: <code>.state-action</code>, <code>.submit-btn</code>, <code>.register-btn</code>, <code>.open-btn</code>. Hover lightens it; a press moves it down 1px. In a bar the primary is amber text instead (<code>.bar-action</code>, <code>.save-btn</code>; see Top bar), and busy it is the spinner alone there (round 2).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">In a state message</p>
           <div class="kit-frame"><div class="kit-row"><button type="button" class="state-action">Change filters</button><a class="state-action" href="#">Try again</a><a class="state-action" href="#">Log your first result</a></div></div>
@@ -426,10 +454,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="secondary">
+    <div class="kit-item" id="secondary" data-names="secondary button secondary button filters trigger with count">
       <h3>Secondary button</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Secondary button, Filters trigger with count</dd><dt>Classes</dt><dd><code>.filters-trigger</code> <code>.secondary-btn</code> <code>.unlink-btn</code></dd><dt>Used on</dt><dd>4 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p>Tonal: <code>.filters-trigger</code>, <code>.state-action.secondary</code>, <code>.secondary-btn</code>, and the small <code>.unlink-btn</code>. (The inline errors' Dismiss and Try again went with them, round 2: the detail screens use alerts.)</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Secondary button, Filters trigger with count</p><p class="kd-line"><code>.filters-trigger</code> <code>.secondary-btn</code> <code>.unlink-btn</code></p><p class="kd-line"><span class="kd-k">Used on 4 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p>Tonal: <code>.filters-trigger</code>, <code>.state-action.secondary</code>, <code>.secondary-btn</code>, and the small <code>.unlink-btn</code>. (The inline errors' Dismiss and Try again went with them, round 2: the detail screens use alerts.)</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Filters: rest, with a count, open</p>
           <div class="kit-frame kit-stack"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button></div><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="true">Filters</button></div></div>
@@ -443,10 +472,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="text-link">
+    <div class="kit-item" id="text-link" data-names="text link text link">
       <h3>Text link</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Text link</dd><dt>Classes</dt><dd><code>.clear-all</code> <code>.text-link</code> <code>.forgot</code> <code>.alert-link</code> <code>.copy-link</code></dd><dt>Used on</dt><dd>5 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p>Tertiary: <code>.clear-all</code>, <code>.text-link</code>, <code>.forgot</code>, <code>.alert-link</code>, a row's Try again.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.clear-all</code> <code>.text-link</code> <code>.forgot</code> <code>.alert-link</code> <code>.copy-link</code></p><p class="kd-line"><span class="kd-k">Used on 5 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p>Tertiary: <code>.clear-all</code>, <code>.text-link</code>, <code>.forgot</code>, <code>.alert-link</code>, a row's Try again.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Clear all filters (chips row)</p>
           <div class="kit-frame"><button type="button" class="clear-all">Clear all filters</button></div>
@@ -460,10 +490,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="text-field">
+    <div class="kit-item" id="text-field" data-names="form rows: text fields, hints, errors text field field hint field error locked form">
       <h3>Form rows: text fields, hints, errors</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Text field, Field hint, Field error, Locked form</dd><dt>Classes</dt><dd><code>.form-rows</code> <code>.group-footer</code> <code>.field-error</code> <code>.locked</code></dd><dt>Used on</dt><dd>5 screens: <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/text-fields">Text fields</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>form.form-rows</code> with <code>.group</code> / <code>.rows</code> / <code>.row</code> (round 2: Log result G42, the sign-in screens G61): a label and its field in a row, the value in Text 1, left-aligned; a long value (the official result link) stacks, <code>.row--stacked</code>. Hints are the group's footer (<code>.group-footer</code>, still the field's <code>aria-describedby</code>); an error sits under its row (<code>.field-error</code>) and the invalid row takes the coral ring. The finish time takes the numeric keypad (<code>inputmode="numeric"</code>; the colons are put in as people type, G45). A navigation row (<code>.row--nav</code>, Find in race catalog) ends in a disclosure chevron.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Text field, Field hint, Field error, Locked form</p><p class="kd-line"><code>.form-rows</code> <code>.group-footer</code> <code>.field-error</code> <code>.locked</code></p><p class="kd-line"><span class="kd-k">Used on 5 screens</span> <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/text-fields">Text fields ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>form.form-rows</code> with <code>.group</code> / <code>.rows</code> / <code>.row</code> (round 2: Log result G42, the sign-in screens G61): a label and its field in a row, the value in Text 1, left-aligned; a long value (the official result link) stacks, <code>.row--stacked</code>. Hints are the group's footer (<code>.group-footer</code>, still the field's <code>aria-describedby</code>); an error sits under its row (<code>.field-error</code>) and the invalid row takes the coral ring. The finish time takes the numeric keypad (<code>inputmode="numeric"</code>; the colons are put in as people type, G45). A navigation row (<code>.row--nav</code>, Find in race catalog) ends in a disclosure chevron.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Log result: grouped, with hints</p>
           <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;">
@@ -490,10 +521,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="select">
+    <div class="kit-item" id="select" data-names="pop-up select pop-up select">
       <h3>Pop-up select</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Pop-up select</dd><dt>Classes</dt><dd><code>&lt;select</code></dd><dt>Used on</dt><dd>5 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#sign-in-sign-up-loading">Sign in / Sign up</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons">Pull-down buttons</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>select</code> in a row: Region (Filters sheet), Sport type (Log result), Country and Language (Profile). The value at the row's trailing edge with a chevron; the native menu opens on tap (G17, G43). Sort is a button since round 1 (G21).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>&lt;select</code></p><p class="kd-line"><span class="kd-k">Used on 5 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#sign-in-sign-up-loading">Sign in / Sign up</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons">Pull-down buttons ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>select</code> in a row: Region (Filters sheet), Sport type (Log result), Country and Language (Profile). The value at the row's trailing edge with a chevron; the native menu opens on tap (G17, G43). Sort is a button since round 1 (G21).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Log result: Sport type, empty</p>
           <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-st1">Sport type</label><select id="k-st1"><option value="" selected>Choose a sport type</option><option>HYROX</option><option>DEKA / functional fitness</option><option>Marathon</option><option>Half marathon</option><option>Triathlon</option><option>Ultra</option><option>OCR</option></select></div></li></ul></form></div>
@@ -507,10 +539,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="date">
+    <div class="kit-item" id="date" data-names="date field date field">
       <h3>Date field</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Date field</dd><dt>Classes</dt><dd><code>.date-pill</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/pickers">Pickers</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.date-pill</code> in a row, a native compact picker (G18, G44; step 6, #26): the date written as the chips and cards write it ("23 Sep 2026") on a <code>--bg-2</code> pill, the pill is one <code>button.date-value</code> (one Tab stop, one ring) that opens the system's calendar (<code>showPicker()</code>); the native <code>input type="date"</code> beside it holds the value, out of the tab order (step 7, #3). No glyph, no browser locale mask: empty, "Choose a date" in Text 2. Filters sheet (above), Log result (Race date).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.date-pill</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#log-result-error">Log result</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/pickers">Pickers ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.date-pill</code> in a row, a native compact picker (G18, G44; step 6, #26): the date written as the chips and cards write it ("23 Sep 2026") on a <code>--bg-2</code> pill, the pill is one <code>button.date-value</code> (one Tab stop, one ring) that opens the system's calendar (<code>showPicker()</code>); the native <code>input type="date"</code> beside it holds the value, out of the tab order (step 7, #3). No glyph, no browser locale mask: empty, "Choose a date" in Text 2. Filters sheet (above), Log result (Race date).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Log result: Race date, empty</p>
           <div class="kit-frame kit-frame--flush"><form class="form-rows" onsubmit="return false;"><ul class="rows"><li><div class="row"><label for="k-d1">Race date</label><span class="date-pill"><button type="button" class="date-value" id="k-d1-pick"></button><input type="date" id="k-d1" tabindex="-1" aria-hidden="true"></span></div></li></ul></form></div>
@@ -521,10 +554,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="log-result-parts">
+    <div class="kit-item" id="log-result-parts" data-names="log result · form intro, catalog row, linked race form intro catalog row linked race card">
       <h3>Log result · form intro, catalog row, linked race</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Form intro, Catalog row, Linked race card</dd><dt>Classes</dt><dd><code>.form-intro</code> <code>.row--nav</code> <code>.linked-race</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.form-intro</code>, the catalog row (<code>.row--nav</code>, disabled while saving), <code>section.linked-race</code> with Unlink race (with <code>?catalog=</code>).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Form intro, Catalog row, Linked race card</p><p class="kd-line"><code>.form-intro</code> <code>.row--nav</code> <code>.linked-race</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../wireframes/index.html#log-result-error">Log result</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.form-intro</code>, the catalog row (<code>.row--nav</code>, disabled while saving), <code>section.linked-race</code> with Unlink race (with <code>?catalog=</code>).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Base</p>
           <div class="kit-frame"><p class="form-intro">Every field is needed to save a result.</p><div class="group"><ul class="rows"><li><a class="row row--nav" href="#">Find in race catalog</a></li></ul><p class="group-footer">Optional. Fills in the race name, date and sport type for you.</p></div></div>
@@ -538,10 +572,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="gate-parts">
+    <div class="kit-item" id="gate-parts" data-names="sign in / sign up · new password: the confirm in the bar, form note, expired links forgot password? link form note expired-link message full-screen gate error">
       <h3>Sign in / Sign up · New password: the confirm in the bar, form note, expired links</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Forgot password? link, Form note, Expired-link message, Full-screen gate error</dd><dt>Classes</dt><dd><code>.forgot</code> <code>.form-note</code> <code>.state-msg</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p>The confirm action is the top bar's trailing button (round 2, G60; HIG Toolbars): "Sign in", "Create", "Send", "Save", short so it never meets the title; the accessible name starts with it ("Create account", "Send reset link", "Save new password"). While it works, the spinner alone. <code>.form-note</code> (Create account). The two expired-link errors have no form, so they are the screen's whole state and sit on the page like <code>.state-message</code> (step 5, Infrastructure): the 48px coral error icon on top, title, body, the one action sized to its label, centered under the top bar, no frame or surface. New password <code>-error?cause=expired</code>: <code>section.state-msg</code>. Sign in <code>-error?cause=confirm</code>: the section holding an <code>.inline-error</code> and Send a new link (inside a form, an <code>.inline-error</code> keeps its surface).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Forgot password? link, Form note, Expired-link message, Full-screen gate error</p><p class="kd-line"><code>.forgot</code> <code>.form-note</code> <code>.state-msg</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#new-password-error">New password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons ↗</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p>The confirm action is the top bar's trailing button (round 2, G60; HIG Toolbars): "Sign in", "Create", "Send", "Save", short so it never meets the title; the accessible name starts with it ("Create account", "Send reset link", "Save new password"). While it works, the spinner alone. <code>.form-note</code> (Create account). The two expired-link errors have no form, so they are the screen's whole state and sit on the page like <code>.state-message</code> (step 5, Infrastructure): the 48px coral error icon on top, title, body, the one action sized to its label, centered under the top bar, no frame or surface. New password <code>-error?cause=expired</code>: <code>section.state-msg</code>. Sign in <code>-error?cause=confirm</code>: the section holding an <code>.inline-error</code> and Send a new link (inside a form, an <code>.inline-error</code> keeps its surface).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Create account</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Create account</h1><button type="button" class="bar-action">Create<span class="visually-hidden"> account</span></button></header></div><div class="kit-frame gate"><p class="form-note">We’ll send a link to confirm your email.</p></div>
@@ -561,13 +596,13 @@
 
   <!-- ================================================================ Feedback -->
   <section class="kit-section" id="role-feedback" aria-labelledby="role-feedback-h">
-    <h2 id="role-feedback-h">Feedback</h2>
-    <p>6 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+    <h2 id="role-feedback-h">Feedback <span>6</span></h2>
 
-    <div class="kit-item" id="state-message">
+    <div class="kit-item" id="state-message" data-names="state message state message">
       <h3>State message</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>State message</dd><dt>Classes</dt><dd><code>.state-message</code></dd><dt>Used on</dt><dd>6 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. One component, the iOS ContentUnavailableView pattern: on a screen it is centered in the free area below the header; a 48px icon on top (muted for empty: magnifier, or archive on Results list; the coral error icon for errors), then the title, the body and the actions, centered. Icons are CSS masks; the markup is the wireframes'. Empty (status) or error (alert); one or two actions in the button hierarchy. <b>It sits directly on the page (designer, 2026-10-22):</b> no outline, frame or surface around it, on any screen. In Race browse's Map view the map frame drops its outline, water and land while it holds a state, and the state has no panel. (The white frames on this page are the showcase's specimen frames, not part of the component.)</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.state-message</code></p><p class="kd-line"><span class="kd-k">Used on 6 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#results-list-empty">Results list</a>, <a href="../wireframes/index.html#race-picker-empty">Race picker</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.state-message</code> · Race browse, Race detail, Results list, Race picker, Result detail, Profile. One component, the iOS ContentUnavailableView pattern: on a screen it is centered in the free area below the header; a 48px icon on top (muted for empty: magnifier, or archive on Results list; the coral error icon for errors), then the title, the body and the actions, centered. Icons are CSS masks; the markup is the wireframes'. Empty (status) or error (alert); one or two actions in the button hierarchy. <b>It sits directly on the page (designer, 2026-10-22):</b> no outline, frame or surface around it, on any screen. In Race browse's Map view the map frame drops its outline, water and land while it holds a state, and the state has no panel. (The white frames on this page are the showcase's specimen frames, not part of the component.)</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Race browse -empty</p>
           <div class="kit-frame"><div class="state-message" role="status"><h2>No races match your current filters</h2><p>Remove a filter above, or try a wider date range, another region, or more sport types.</p><div class="state-actions"><button type="button" class="state-action">Change filters</button></div></div></div>
@@ -600,10 +635,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="form-alert">
+    <div class="kit-item" id="form-alert" data-names="form alert form alert">
       <h3>Form alert</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Form alert</dd><dt>Classes</dt><dd><code>.form-alert</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
-      <p><code>.form-alert</code>, at the top of the form · Log result, New password (with Reset password again).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.form-alert</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#log-result-error">Log result</a>, <a href="../wireframes/index.html#new-password-error">New password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.form-alert</code>, at the top of the form · Log result, New password (with Reset password again).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Log result -error?cause=submit</p>
           <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your result</h2><p>The connection may have dropped. Check it, then tap Save to try again. Everything you entered is still here.</p></div></div>
@@ -614,10 +650,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="inline-error">
+    <div class="kit-item" id="inline-error" data-names="inline error inline error">
       <h3>Inline error</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Inline error</dd><dt>Classes</dt><dd><code>.inline-error</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
-      <p><code>.inline-error</code> · Sign in / Sign up, Reset password: a request that failed, at the top of the form. Race detail and Result detail show a link that won't open as a native alert (round 2).</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.inline-error</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.inline-error</code> · Sign in / Sign up, Reset password: a request that failed, at the top of the form. Race detail and Result detail show a link that won't open as a native alert (round 2).</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Sign in -error · Reset password -error?cause=rate</p>
           <div class="kit-frame">
@@ -628,10 +665,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="status-line">
+    <div class="kit-item" id="status-line" data-names="status line status line">
       <h3>Status line</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Status line</dd><dt>Classes</dt><dd><code>.saved-status</code> <code>.reset-done</code> <code>.sent-note</code> <code>.row-note</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p>A one-line confirmation · Results list (<code>.saved-status</code>, <code>?saved=</code>), Sign in / Sign up (<code>.reset-done</code>, <code>.sent-note</code>), Profile (<code>.row-note</code>). Neutral: never green, never a check.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.saved-status</code> <code>.reset-done</code> <code>.sent-note</code> <code>.row-note</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../wireframes/index.html#results-list">Results list</a>, <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p>A one-line confirmation · Results list (<code>.saved-status</code>, <code>?saved=</code>), Sign in / Sign up (<code>.reset-done</code>, <code>.sent-note</code>), Profile (<code>.row-note</code>). Neutral: never green, never a check.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Results list ?saved=</p>
           <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><p class="saved-status" role="status">Saved: <strong>Valencia Half Marathon</strong></p></div></div></div>
@@ -645,10 +683,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="check-inbox">
+    <div class="kit-item" id="check-inbox" data-names="check-inbox block check-inbox block">
       <h3>Check-inbox block</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Check-inbox block</dd><dt>Classes</dt><dd><code>.inbox-heading</code></dd><dt>Used on</dt><dd>2 screens: <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.inbox-heading</code>, <code>.inbox-line</code>, resend, Use a different email, <code>.expiry-note</code> · Sign in / Sign up, Reset password.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.inbox-heading</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-check-inbox">Reset password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.inbox-heading</code>, <code>.inbox-line</code>, resend, Use a different email, <code>.expiry-note</code> · Sign in / Sign up, Reset password.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Sign up: confirm your email</p>
           <div class="kit-frame gate">
@@ -675,10 +714,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="archive-step5">
+    <div class="kit-item" id="archive-step5" data-names="log result as a modal sheet · the discard confirm action sheet">
       <h3>Log result as a modal sheet · the discard confirm</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Action sheet</dd><dt>Classes</dt><dd><code>.action-sheet</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#log-result-error">Log result</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/action-sheets">Action sheets</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p>Round 2 (G40, G41): Log result is a modal sheet over Results, a whole screen in a sheet; Cancel on the leading edge of its bar, the title, Save on the trailing edge. Saving shows the spinner alone in the bar (the words stay for screen readers). Cancel with anything entered or a race linked opens an action sheet (<code>dialog.action-sheet</code>; HIG Sheets, Action sheets): a message, the destructive choice in coral, and Keep editing apart at the bottom, bold. The alert's glass and radius.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Action sheet</p><p class="kd-line"><code>.action-sheet</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../wireframes/index.html#log-result-error">Log result</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/action-sheets">Action sheets ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p>Round 2 (G40, G41): Log result is a modal sheet over Results, a whole screen in a sheet; Cancel on the leading edge of its bar, the title, Save on the trailing edge. Saving shows the spinner alone in the bar (the words stay for screen readers). Cancel with anything entered or a race linked opens an action sheet (<code>dialog.action-sheet</code>; HIG Sheets, Action sheets): a message, the destructive choice in coral, and Keep editing apart at the bottom, bold. The alert's glass and radius.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">The sheet's bar: Cancel, title, Save</p>
           <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div>
@@ -698,13 +738,13 @@
 
   <!-- ================================================================ One-off -->
   <section class="kit-section" id="role-one-off" aria-labelledby="role-one-off-h">
-    <h2 id="role-one-off-h">One-off</h2>
-    <p>3 specimens, as <code>ui/inventory.md</code> → Showcase map groups them.</p>
+    <h2 id="role-one-off-h">One-off <span>3</span></h2>
 
-    <div class="kit-item" id="controls">
+    <div class="kit-item" id="controls" data-names="race browse · controls bar, active filter chips controls bar active filter chips row">
       <h3>Race browse · controls bar, active filter chips</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Controls bar, Active filter chips row</dd><dt>Classes</dt><dd><code>.controls</code> <code>.chips-row</code></dd><dt>Used on</dt><dd>1 screen: <a href="../wireframes/index.html#race-browse-empty">Race browse</a></dd><dt>Native iOS</dt><dd>none</dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. List/Map keeps its full size; Filters takes the rest and shrinks no further than its label; the bar never outgrows the screen (2026-10-24). The chips row scrolls and fades at its end; Clear all filters stays pinned after it, whole. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Controls bar, Active filter chips row</p><p class="kd-line"><code>.controls</code> <code>.chips-row</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.controls</code> (sticky): Filters + List/Map, then the chips row with Clear all filters. List/Map keeps its full size; Filters takes the rest and shrinks no further than its label; the bar never outgrows the screen (2026-10-24). The chips row scrolls and fades at its end; Clear all filters stays pinned after it, whole. <b>Active filter chips (designer, 2026-10-22):</b> iOS capsules (<code>--radius-filter-chip</code>, half the 32px height; C7, they sit in a bar) in a quiet <code>--bg-2</code> fill, no outline, the format's own name in sentence case (13px / 600), the close-circle inside in <code>--text-2</code>; hover <code>--bg-3</code>. Format chips on cards keep 4px and uppercase.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">No filters</p>
           <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div></div></div>
@@ -718,10 +758,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="gate-intro">
+    <div class="kit-item" id="gate-intro" data-names="gate intro gate intro">
       <h3>Gate intro</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Gate intro</dd><dt>Classes</dt><dd><code>.context</code></dd><dt>Used on</dt><dd>3 screens: <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></dd><dt>Native iOS</dt><dd>none</dd></dl><!-- /kit:meta -->
-      <p><code>p.context</code> · Sign in / Sign up (by mode and by where the person was heading), Reset password, New password.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line"><code>.context</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../wireframes/index.html#sign-in-sign-up-error">Sign in / Sign up</a>, <a href="../wireframes/index.html#reset-password-error">Reset password</a>, <a href="../wireframes/index.html#new-password-error">New password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>p.context</code> · Sign in / Sign up (by mode and by where the person was heading), Reset password, New password.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Sign in (from Results)</p><div class="kit-frame gate"><p class="context">Sign in to see your results archive.</p></div></div>
         <div class="kit-state"><p class="kit-label">Create account (from Results or Profile)</p><div class="kit-frame gate"><p class="context">Create an account to start your results archive.</p></div></div>
@@ -729,10 +770,11 @@
       </div>
     </div>
 
-    <div class="kit-item" id="profile-parts">
+    <div class="kit-item" id="profile-parts" data-names="profile · identity, grouped rows, sign out, confirm alert identity block grouped settings rows sign out button confirm alert">
       <h3>Profile · identity, grouped rows, Sign out, confirm alert</h3>
-      <!-- kit:meta (scripts/build_kit_showcase.py) --><dl class="kit-meta"><dt>Components</dt><dd>Identity block, Grouped settings rows, Sign out button, Confirm alert</dd><dt>Classes</dt><dd><code>.identity</code> <code>.group-heading</code> <code>.signout</code> <code>.alert</code></dd><dt>Used on</dt><dd>4 screens: <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#profile-error">Profile</a></dd><dt>Native iOS</dt><dd><a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts</a></dd><dt>Live</dt><dd>hover, Tab focus and press work on the specimens below</dd></dl><!-- /kit:meta -->
-      <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code> (a destructive action: coral text in its row too, G68, designer 2026-10-23), <code>dialog.alert</code> (glass as an iOS 26 alert: the sheet glass over the scrim, the rim, <code>--radius-alert</code> 34px [?], G67, designer 2026-10-23; Sign out in the destructive style, coral text, per HIG Alerts; the focus ring on Cancel, which takes focus on open, is drawn inside the button so the alert's edge never clips it). Step 5, Infrastructure: Country and Language are pop-up rows, a Solar chevron after the value in Text 2; every row is 44pt to its edges; the row's "Try again" link has a 44pt tap area. Profile <code>-error</code> (cause=load) is a <code>.state-message</code> centered between the large title and the tab bar.</p>
+      <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Identity block, Grouped settings rows, Sign out button, Confirm alert</p><p class="kd-line"><code>.identity</code> <code>.group-heading</code> <code>.signout</code> <code>.alert</code></p><p class="kd-line"><span class="kd-k">Used on 4 screens</span> <a href="../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Buttons ↗</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts ↗</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p></div><!-- /kit:meta -->
+      <details class="kd-notes"><summary>Notes</summary>
+      <p><code>.identity</code> (initials in a circle, as iOS avatars are; photo deferred), <code>.group</code> with <code>.rows</code>, <code>.signout</code> (a destructive action: coral text in its row too, G68, designer 2026-10-23), <code>dialog.alert</code> (glass as an iOS 26 alert: the sheet glass over the scrim, the rim, <code>--radius-alert</code> 34px [?], G67, designer 2026-10-23; Sign out in the destructive style, coral text, per HIG Alerts; the focus ring on Cancel, which takes focus on open, is drawn inside the button so the alert's edge never clips it). Step 5, Infrastructure: Country and Language are pop-up rows, a Solar chevron after the value in Text 2; every row is 44pt to its edges; the row's "Try again" link has a 44pt tap area. Profile <code>-error</code> (cause=load) is a <code>.state-message</code> centered between the large title and the tab bar.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Profile</p>
           <div class="kit-frame kit-frame--flush">
@@ -772,8 +814,51 @@
       </div>
     </div>
   </section>
-
 </main>
+</div><!-- /kd -->
+<script>
+/* kd:js (scripts/build_kit_showcase.py): the sidebar highlights the card on screen, filters by name, and folds into a menu on a phone */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.kd-side nav a[href^="#"]'));
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.kd-main .kit-item[id], .kd-main #shell'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.removeAttribute('aria-current'); });
+        var a = byId[e.target.id]; if (a) a.setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    cards.forEach(function (c) { io.observe(c); });
+  }
+  var input = document.getElementById('kd-filter'), empty = document.querySelector('.kd-empty');
+  input.addEventListener('input', function () {
+    var q = input.value.trim().toLowerCase(), shown = 0;
+    links.forEach(function (a) {
+      if (!a.hasAttribute('data-names')) return;
+      var hit = !q || a.getAttribute('data-names').indexOf(q) > -1;
+      a.parentNode.hidden = !hit; if (hit) shown++;
+      var card = document.getElementById(a.getAttribute('href').slice(1));
+      if (card) (card.closest('.kd-shell') || card).hidden = !hit;
+    });
+    document.querySelectorAll('.kd-side nav ul').forEach(function (ul) {
+      var role = ul.previousElementSibling; if (role) role.hidden = !ul.querySelector('li:not([hidden])');
+    });
+    document.querySelectorAll('.kd-main > .kit-section').forEach(function (s) { s.hidden = !s.querySelector('.kit-item:not([hidden])'); });
+    empty.hidden = shown > 0;
+  });
+  var menu = document.querySelector('.kd-menu'), nav = document.getElementById('kd-nav');
+  menu.addEventListener('click', function () {
+    var open = menu.getAttribute('aria-expanded') !== 'true';
+    menu.setAttribute('aria-expanded', String(open)); nav.classList.toggle('is-open', open);
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.closest('a') && window.matchMedia('(max-width: 860px)').matches) { menu.setAttribute('aria-expanded', 'false'); nav.classList.remove('is-open'); }
+  });
+})();
+</script>
 <script>
   // Segmented controls are live: pressing one releases the other (as on the screens)
   document.querySelectorAll('.view-toggle').forEach(function (group) {
