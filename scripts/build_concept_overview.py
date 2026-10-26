@@ -373,7 +373,7 @@ MORE = (LP.fold(f'The full register: {len(REG)} decisions', LP.register(REG), 'e
         + LP.fold(f'{STEP7_FOUND_N} findings in the step 7 check', check_body, f'{STEP7_FIXED} fixed')
         + LP.fold(f"{len(OPEN_ROWS)} open items, all taken by Lesson 7", LP.open_table(OPEN_ROWS, inline) + open_body, 'the markup the concept left for the next lesson'))
 SECTIONS = ''.join([LP.section('direction', 'Chosen', 'tag-p', 'The chosen direction', direction_body),
-                    LP.section('decisions', 'Decided', 'tag-t', 'Key decisions', LP.register(KEY)),
+                    LP.section('decisions', 'Decided', 'tag-t', 'Key decisions', LP.key_decisions(6, inline)[0]),
                     LP.section('more', 'More', 'tag-m', 'The rest of the record', MORE + f'<p class="note">Everything here is in <a href="{GH}concept/concept.md">concept/concept.md</a> and <a href="{GH}concept/references.md">concept/references.md</a>.</p>')])
 N_RULES = len(re.findall(r'^\d+\. \*\*', RULES, flags=re.M))
 STATS = [(PHONES.count('class="phone-fig"'), 'screens painted in Podium', 'Race browse and Results list'),

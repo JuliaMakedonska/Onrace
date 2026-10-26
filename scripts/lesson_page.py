@@ -126,6 +126,7 @@ TEMPLATE_CSS = r'''  /* Hero (same as ia.html and voice.html) */
   .stages .st-l{color:var(--text); font-weight:700}
   .led li strong:first-child{color:var(--text)}
   .reg{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr)); gap:14px; margin:12px 0}
+  .reg--key{grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}   /* the key cards: wide, so a summary reads in one or two lines */
   .reg-card{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; display:grid; gap:6px; align-content:start}
   .reg-q{margin:0; color:var(--text); font-weight:700; font-size:15px}
   .reg-a{margin:0; color:var(--text-dim); font-size:14px}
@@ -192,6 +193,19 @@ def register(cards):
     return '<div class="reg">' + ''.join(
         f'<div class="reg-card"><p class="reg-q">{q}</p><p class="reg-a">{a}</p><p class="reg-meta">{d} · <a href="{h}">{s}</a></p></div>'
         for q, a, d, s, h in cards) + '</div>'
+
+def key_decisions(lesson, inline):
+    """The key-decision cards of a lesson, from concept/key-decisions.md: a plain one- or two-line summary written for the
+    card, its date, and "Full record ↗" to the entry it summarizes."""
+    t = open(os.path.join(ROOT, 'concept/key-decisions.md')).read()
+    cards = []
+    for l in t.split('\n'):
+        c = [x.strip() for x in l.strip().strip('|').split(' | ')] if l.startswith('| ') else None
+        if c and len(c) == 5 and c[0] == f'{lesson:02d}':
+            cards.append(f'<div class="reg-card"><p class="reg-q">{inline(c[1])}</p><p class="reg-a">{inline(c[2])}</p>'
+                         f'<p class="reg-meta">{c[3]} · <a href="{GH}{c[4]}">Full record ↗</a></p></div>')
+    assert cards, f'no key decisions for lesson {lesson}'
+    return '<div class="reg reg--key">' + ''.join(cards) + '</div>', len(cards)
 
 def strip(items):
     """A row of short links (the "More" area): (label, href, sub)."""

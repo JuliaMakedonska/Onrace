@@ -250,7 +250,7 @@ SECTIONS = ''.join([
     LP.section('screens', 'See it', 'tag-p', 'The screens', '<p class="lede">Every screen and state, as the frozen Lesson 5 wireframe or as it is now. Pick one and switch.</p>' + look_switch),
     LP.section('system', 'How it works', 'tag-d', 'Where each change goes in', flow_only
                + LP.fold(f'{len(ST["checks"])} checks stop the build', checks_list, 'color rules, contrast, signed tokens, overflow at 390 / 320 / 200%, fonts, scripts, the showcase')),
-    LP.section('decisions', 'Decided', 'tag-t', 'Key decisions', LP.register(KEY) + LP.fold(f'The full register: {len(REG)} decisions', LP.register(REG), 'each with its date and its entry')),
+    LP.section('decisions', 'Decided', 'tag-t', 'Key decisions', LP.key_decisions(7, inline)[0] + LP.fold(f'The full register: {len(REG)} decisions', LP.register(REG), 'each with its date and its entry')),
     LP.section('photos', 'Made', 'tag-o', 'The race photos', photo_strip
                + LP.fold('How they were made', md(VS['Tool']) + md(VS['Workflow']) + '<h3>Export</h3>' + md(VS['Export (step 7, 2026-10-25)']), 'generated, checked for text and logos, retouched, pre-cropped')),
     LP.section('open', 'Close', 'tag-f', "What's open", LP.open_table(OPEN_ROWS, inline)),
