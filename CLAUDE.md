@@ -4,7 +4,7 @@
 
 | What | Where | Changed by |
 |---|---|---|
-| **Look** (values and components) | `ui/kit.css` (`:root` for values, kit classes for components), shown in `ui/kit.html` | the "keep it" rule (UI assembly below) |
+| **Look** (values and components) | `ui/kit.css` (`:root` for values, kit classes for components), shown in `ui/kit.html`. Moving (Lesson 8): `tokens/tokens.css` + `components/` (bundled into `components/index.css`), which the showcase already uses; the screens switch in step 4, and until then a change goes into both | the "keep it" rule (UI assembly below) |
 | **Words** (every product line) | `microcopy.md`, rendered in `voice.html` | `microcopy.md` first, then `scripts/build_voice_html.py` |
 | **Structure** (screens and states) | `wireframes/*.html` | the page itself, carried to every screen that shares the component |
 | **Decisions** (and why) | `concept/concept.md` | a dated entry per decision |
@@ -198,4 +198,4 @@ Lesson 7 (2026-10-18 to 2026-10-25): every screen assembled from one kit, in nat
 
 ## Status
 
-Pre-implementation. The IA (`sitemap.md`, `flows.md`, `ia.html`), the full wireframe set, the visual concept and the UI assembly (Lesson 7, above: all 10 screens on one kit, native iOS, the critique and the final check closed with no open defect) are done. No product code yet: `src/` is still the Vite scaffold. Lesson 8, design tokens (`tokens/`): step 1, the audit (`tokens/tokens-audit.md`); step 2, `tokens/tokens.css` with two levels (primitives, semantic color roles) and the old → new mapping, not linked by any page yet. Then `components/`, `design-system/`, `handoff/`.
+Pre-implementation. The IA (`sitemap.md`, `flows.md`, `ia.html`), the full wireframe set, the visual concept and the UI assembly (Lesson 7, above: all 10 screens on one kit, native iOS, the critique and the final check closed with no open defect) are done. No product code yet: `src/` is still the Vite scaffold. Lesson 8, design tokens: step 1, the audit (`tokens/tokens-audit.md`); step 2, `tokens/tokens.css` with two levels (primitives, semantic color roles) and the old → new mapping; step 3, the classes in `components/` (one file per component, bundled in cascade order into `components/index.css` by `scripts/build_components.py`, which also checks that no component reads a color primitive or writes a hex, px or font name; `components/README.md`), with `ui/kit.html` switched to them. Step 4 switches the screens. Then `design-system/`, `handoff/`.

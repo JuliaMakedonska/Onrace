@@ -1,0 +1,72 @@
+/* Skeleton (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0190 */
+/* ---------- skeleton (loading): no spinner, no invented progress ---------- */
+/* C6/G25: skeletons breathe, subtly; still under reduced motion */
+.bar, .initials.skel, .map-placeholder[aria-busy="true"] { animation: onrace-pulse var(--dur-pulse) var(--ease-in-out) infinite; }   /* the loading Map view breathes too (designer, 2026-10-23) */
+@keyframes onrace-pulse { 50% { opacity: var(--skel-pulse-dim); } }
+@media (prefers-reduced-motion: reduce) { .bar, .initials.skel, .map-placeholder[aria-busy="true"] { animation: none; } }
+
+/* order 0280 */
+.bar { border-radius: var(--radius-1); background: var(--raised); }
+.results-count .bar.count { display: inline-block; width: var(--skel-count-w); height: var(--skel-line); vertical-align: middle; }
+.skeleton-card {
+  display: grid;
+  grid-template-columns: var(--date-col) minmax(0, 1fr);
+  grid-template-areas: "photo photo" "date name" "date meta" "date loc";
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-2);
+  background: var(--surface);
+}
+.skeleton-card .bar.photo { grid-area: photo; aspect-ratio: var(--photo-ratio); margin-bottom: var(--space-1); }
+.skeleton-card .skel-meta { display: contents; }
+.skeleton-card .bar.title { grid-area: name; width: var(--skel-title-w); height: var(--skel-title); }
+.skeleton-card .bar.tag { grid-area: meta; width: var(--skel-tag-w); height: var(--chip-height); }
+.skeleton-card .bar.date { grid-area: date; align-self: stretch; }   /* the empty date tile */
+.skeleton-card .bar.location { grid-area: loc; width: var(--skel-loc-w); height: var(--skel-line); margin-bottom: var(--space-1); }
+
+/* order 0430 */
+/* loading: a skeleton result row (same shape and padding as .result-card .card-link) */
+.result-list .skeleton-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-4); }
+.result-list .skeleton-card .bar { grid-area: auto; }
+.result-list .skeleton-card .skel-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.result-list .skeleton-card .skel-meta { display: flex; align-items: center; gap: var(--space-3); }
+.result-list .skeleton-card .bar.title { width: var(--skel-row-title-w); height: var(--skel-title); }
+.result-list .skeleton-card .bar.time { width: var(--skel-time-w); height: var(--skel-time-h); }
+.result-list .skeleton-card .bar.tag { width: var(--skel-tag-w); height: var(--chip-height); }
+.result-list .skeleton-card .bar.date { align-self: center; width: var(--skel-date-w); height: var(--skel-line); }
+.result-list .skeleton-card .bar.proof { width: var(--skel-proof-w); height: var(--skel-line); margin-block: calc((var(--size-proof) * var(--leading-box) - var(--skel-line)) / 2); }
+
+/* order 0640 */
+.result .bar.h1 { height: calc(var(--size-item) * var(--leading-item)); margin-bottom: var(--space-5); }
+.result .bar.finish-bar { height: var(--size-time-hero); }
+
+/* order 0720 */
+.race .bar.photo { aspect-ratio: var(--photo-ratio); margin-bottom: var(--space-4); border-radius: var(--radius-2); }   /* loading: the photo band's place, so nothing shifts */
+
+/* order 1070 */
+/* ---------- skeletons on the grayscale screens: the content's shape, no shimmer ---------- */
+.bar.h1 { width: var(--skel-title-w); height: var(--size-title); margin-bottom: var(--space-4); }
+.skel-facts { display: grid; grid-template-columns: var(--skel-tag-w) minmax(0, 1fr); gap: var(--space-2) var(--space-4); margin-bottom: var(--space-6); }
+.skel-facts .bar { height: var(--skel-line); }
+.skel-facts .bar:nth-child(even) { width: var(--skel-loc-w); }
+.bar.h2 { width: var(--skel-count-w); height: var(--skel-title); margin-bottom: var(--space-2); }
+.bar.line { height: var(--skel-line); margin-bottom: var(--space-2); }
+.bar.line.short { width: var(--skel-row-title-w); }
+.bar.line.end { width: var(--skel-loc-w); margin-bottom: var(--space-6); }
+.bar.link { width: var(--skel-proof-w); height: var(--skel-line); }
+.bar.label { width: var(--skel-tag-w); height: var(--skel-line); margin-bottom: var(--space-2); }
+.bar.finish-bar { width: var(--skel-time-w); height: var(--skel-time-h); margin-bottom: var(--space-4); }
+.action-bar .bar.button { height: var(--target); border-radius: var(--radius-bar-control); }   /* C7: the capsule it stands in for */
+.action-bar .bar.caption { width: var(--skel-title-w); height: var(--skel-line); margin: var(--space-2) auto 0; }
+.initials.skel { background: var(--raised); }
+.bar.name { width: var(--skel-row-title-w); height: var(--skel-title); margin-bottom: var(--space-2); }
+.bar.email { width: var(--skel-loc-w); height: var(--skel-line); }
+.bar.heading { width: var(--skel-tag-w); height: var(--skel-line); margin: 0 0 var(--space-2) var(--space-4); }
+.row .bar.label { margin: 0; }
+.row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
+.skel-signout .bar { height: var(--target); border-radius: var(--radius-2); }

@@ -1,0 +1,33 @@
+/* Segmented control (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0160 */
+/* ---------- segmented List / Map ---------- */
+.view-toggle { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: var(--space-1); border-radius: var(--radius-2); background: var(--raised); }   /* G11: segments of equal width */
+.view-btn {
+  min-height: calc(var(--target) - var(--space-2));
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.view-toggle[hidden] { display: none; }
+.view-btn[aria-pressed="true"] { background: var(--pressed); color: var(--text-primary); box-shadow: inset 0 0 0 var(--border) var(--boundary); }  /* pressed: calm outline, like the active chip */
+.view-btn { position: relative; }
+.view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
+:is(.controls, .top-bar) .view-toggle { border-radius: var(--radius-bar-control); }   /* C7: inside a bar, the track is a capsule */
+:is(.controls, .top-bar) .view-btn { border-radius: var(--radius-bar-inner); }        /* and each segment is concentric with it */
+
+/* order 0220 */
+.control-row .view-toggle { flex: none; }   /* List/Map keeps its full size */
+
+/* order 0910 */
+.gate .view-toggle:not([hidden]) { display: flex; margin: 0 0 var(--space-6); }
+.gate .view-btn { flex: 1; }
+.view-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }

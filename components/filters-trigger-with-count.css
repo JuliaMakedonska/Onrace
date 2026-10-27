@@ -1,0 +1,23 @@
+/* Filters trigger with count (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0170 */
+:is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-bar-control); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
+
+/* order 0210 */
+.control-row .filters-trigger { flex: 1 1 0; min-width: min-content; white-space: nowrap; }   /* takes what List/Map leaves, shrinks, but never below its own label */
+
+/* order 0230 */
+.filters-trigger::before {
+  content: "";
+  width: var(--icon-m);
+  height: var(--icon-m);
+  flex: none;
+  background: currentColor;
+  -webkit-mask: var(--icon-filters) center / contain no-repeat;
+  mask: var(--icon-filters) center / contain no-repeat;
+}
+
+/* order 0350 */
+.filters-trigger[aria-expanded="true"] { background: var(--pressed); }

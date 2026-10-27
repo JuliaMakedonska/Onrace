@@ -1,0 +1,20 @@
+/* Controls bar (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0200 */
+/* ---------- Race browse controls: Filters (secondary) + List/Map ---------- */
+.controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--border) solid var(--hairline); }
+.control-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }   /* List/Map drops under Filters only when both can't fit (step 7, #2: 200% text) */
+
+/* order 0320 */
+.phone-screen .controls {   /* C1/G7: glass, with a rim instead of a hairline; content scrolls under it */
+  position: sticky;
+  top: calc(var(--safe-top) + var(--target));   /* under the collapsed title bar (G4) */
+  z-index: var(--z-float);
+  background: var(--glass-ground);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border-bottom-color: var(--glass-rim);
+  padding: var(--space-3) var(--space-4);
+}

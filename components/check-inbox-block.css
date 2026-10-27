@@ -1,0 +1,9 @@
+/* Check-inbox block (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0960 */
+.inbox-heading { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+.inbox-line { margin: 0 0 var(--space-6); font-size: var(--size-body); color: var(--text-primary); }
+.addr { font-weight: var(--weight-strong); overflow-wrap: anywhere; }
+.expiry-note { margin: var(--space-7) 0 0; text-align: left; font-size: var(--size-proof); color: var(--text-secondary); }   /* left, with the heading and body above it (step 6, #30) */

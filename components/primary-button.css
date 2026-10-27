@@ -1,0 +1,73 @@
+/* Primary button (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0020 */
+/* ---------- buttons: one primary per screen ---------- */
+.filters-trigger, .state-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-2);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.filters-trigger:active, .state-action:active { transform: translateY(var(--border)); }
+/* primary: filled accent (Log result, Register on <domain>) */
+.state-action:not(.secondary) { background: var(--accent-fill); color: var(--on-accent-fill); }
+.state-action:not(.secondary):hover { background: var(--accent-hover); }
+
+/* order 0050 */
+/* G26: an activity indicator inside a busy button, before its present-tense label; also before the labels the
+   wireframes swap in by script ("Sending…" on Send a new link, "Saving…" in a Profile row note) */
+:is(button, .submit-btn)[aria-busy="true"]::before, .row-note [data-saving]:not([hidden])::before {
+  content: "";
+  flex: none;
+  width: var(--spinner-size);
+  height: var(--spinner-size);
+  border-radius: var(--radius-avatar);
+  border: var(--spinner-stroke) solid currentColor;
+  border-right-color: transparent;
+  animation: onrace-spin var(--dur-spin) linear infinite;
+}
+@keyframes onrace-spin { to { transform: rotate(1turn); } }
+:is(button, .submit-btn)[aria-busy="true"] { gap: var(--space-2); cursor: progress; }
+.row-note [data-saving]:not([hidden]) { display: inline-flex; align-items: center; gap: var(--space-2); }
+
+/* order 0770 */
+.register-btn, .open-btn, .submit-btn {   /* the screen's one primary */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--accent-fill);
+  color: var(--on-accent-fill);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.register-btn:hover, .open-btn:hover, .submit-btn:hover { background: var(--accent-hover); }
+.register-btn:active, .open-btn:active, .submit-btn:active { transform: translateY(var(--border)); }
+
+/* order 0920 */
+.submit-btn { margin: var(--space-2) 0 0; }

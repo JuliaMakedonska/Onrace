@@ -1,0 +1,35 @@
+/* Grouped settings rows (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0980 */
+.group { margin: 0 var(--space-4) var(--space-7); }
+.group-heading {
+  margin: 0 0 var(--space-2) var(--space-4);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.rows { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-2); background: var(--surface); overflow: hidden; }
+.rows li { position: relative; }
+.rows li + li::before { content: ""; position: absolute; top: 0; left: var(--space-4); right: 0; border-top: var(--border) solid var(--hairline); }
+.row { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); padding: 0 var(--space-4); }
+.row label, .row .row-label { flex: none; font-size: var(--size-body); color: var(--text-primary); }
+.row input, .row select, .row .row-value {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-3) 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  text-align: right;
+  text-align-last: right;
+  -webkit-appearance: none;
+  appearance: none;
+}

@@ -1,0 +1,10 @@
+/* Official race website link (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0660 */
+.official p { margin: calc((var(--target) - var(--size-body) * var(--leading-box)) / -2) 0 var(--space-6); font-size: var(--size-body); }   /* the 44pt link keeps the line where it was */
+
+/* order 0680 */
+/* 44pt targets on the inline links (HIG Accessibility; G36, G62), the text lines unmoved */
+.official a { display: inline-flex; align-items: center; min-height: var(--target); }

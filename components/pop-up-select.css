@@ -1,0 +1,20 @@
+/* Pop-up select (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0480 */
+.form-rows .row select { color: var(--text-primary); }
+
+/* order 1000 */
+.row select { min-height: var(--target); }   /* the row's 44pt, so the whole row opens the menu */
+.row:has(> select)::after {   /* G65: a pop-up button shows its value and an indicator; a Solar chevron after the value, in Text 2 like it (C2) */
+  content: "";
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  margin-left: calc(var(--space-3) * -1 + var(--space-1));
+  background: var(--text-secondary);
+  -webkit-mask: var(--icon-chevron) center / contain no-repeat;
+  mask: var(--icon-chevron) center / contain no-repeat;
+  pointer-events: none;
+}

@@ -1,0 +1,77 @@
+/* Top bar (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0550 */
+/* ---------- top bar: back link, centered title, text actions ---------- */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-float);
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--target) + var(--safe-top));
+  padding: var(--safe-top) var(--space-2) 0;   /* G6 */
+  background: var(--glass-ground);   /* C1: glass, with a rim instead of a hairline */
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border-bottom: var(--border) solid var(--glass-rim);
+  font-family: var(--font-text);
+  font-size: var(--size-item);   /* bar text buttons (back, Cancel, Save, the bar action) at HIG Body/Headline size, 17 (step 6, #25) */
+}
+.top-bar :is(a, button) {
+  position: relative;
+  z-index: var(--z-lift);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--target);
+  padding: 0 var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--text-primary);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.top-bar a.back::before {   /* the Solar back chevron (Linear), drawn by the kit; the link is marked .back (step 7, #12: no glyph in the markup) */
+  content: "";
+  flex: none;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  background: currentColor;
+  -webkit-mask: var(--icon-back) center / contain no-repeat;
+  mask: var(--icon-back) center / contain no-repeat;
+}
+.top-bar .bar-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  letter-spacing: normal;
+  color: var(--text-primary);
+}
+.top-bar :is(a, button):hover { color: var(--text-secondary); }
+/* the bar action: the screen's one primary in its bar, amber text like a native bar button (Color rule 1): Save on
+   Log result, Log result on Results list (G5), Apply filters on the Filters sheet (G12) */
+.top-bar .save-btn, .top-bar .bar-action { margin-left: auto; font-weight: var(--weight-strong); color: var(--accent-ink); }
+.top-bar .save-btn:hover, .top-bar .bar-action:hover { color: var(--accent-hover); }
+.top-bar .bar-action[hidden] { display: none; }
+.top-bar :is(.save-btn, .bar-action)[aria-busy="true"] { color: var(--text-secondary); }   /* busy: the spinner alone, the label ("Saving…", "Signing in…") visually hidden for screen readers (round 2) */
+.top-bar :is(.save-btn, .bar-action)[aria-disabled="true"]:not([aria-busy="true"]) { color: var(--text-disabled); cursor: not-allowed; }
+.phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action { color: var(--text-primary); }   /* a state brings its own primary (Results list -error): the bar action steps down, so the screen keeps two lights */
+/* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
+.top-bar[data-collapse] .bar-title { padding-inline: calc(var(--target) * 3);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
+.top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
+
+/* order 0570 */
+/* on a gate (Sign in, Reset password, New password) the bar is the body's own child: it floats over the page's top
+   edge and the page, which starts below it, scrolls under its glass (C1) */
+body > .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: var(--z-bar); }
+body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--safe-top) + var(--border)); }   /* 44pt, the top safe area, the rim */

@@ -1,0 +1,9 @@
+/* Large title header (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0560 */
+/* on a tab screen the bar floats over the large title: transparent and empty at rest, glass once collapsed (C1) */
+.top-bar--large { z-index: var(--z-bar); margin-bottom: calc((var(--target) + var(--safe-top)) * -1); background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom-color: transparent; pointer-events: none; transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.top-bar--large > :not(.bar-title) { pointer-events: auto; }
+.top-bar--large.is-collapsed { background: var(--glass-ground); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); border-bottom-color: var(--glass-rim); }

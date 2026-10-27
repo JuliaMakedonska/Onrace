@@ -1,0 +1,7 @@
+/* List intro (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0880 */
+/* ---------- Race picker: the list intro (a pushed screen since 2026-10-24; its top bar, search and cards are with their components) ---------- */
+.list-intro { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-secondary); }

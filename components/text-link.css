@@ -1,0 +1,64 @@
+/* Text link (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0040 */
+/* tertiary: text link (Clear all filters in the chips row, Cancel) */
+.clear-all {
+  position: relative;
+  min-height: var(--target);
+  padding: 0 var(--space-1);
+  background: none;
+  border: 0;
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-regular);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.clear-all:hover { color: var(--text-secondary); }
+
+/* order 0670 */
+.official a, .row-note a, .alert-link, .forgot a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+}
+
+/* order 0740 */
+.copy-link {   /* Copy link (step 6, #10): the tertiary text action under the link, 44pt tall, the line kept */
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  margin: calc((var(--target) - var(--size-meta) * var(--leading-box)) / -2) 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.copy-link:hover { color: var(--text-secondary); }
+
+/* order 0800 */
+.text-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;   /* left, with the check-inbox heading and body (step 6, #30) */
+  min-height: var(--target);
+  margin: var(--space-5) 0 0;
+  color: var(--text-primary);
+  font-size: var(--size-meta);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+}
+.text-link:hover, .official a:hover, .row-note a:hover, .alert-link:hover, .forgot a:hover { color: var(--text-secondary); }

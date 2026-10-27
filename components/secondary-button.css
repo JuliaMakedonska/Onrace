@@ -1,0 +1,33 @@
+/* Secondary button (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0030 */
+/* secondary: tonal (Filters, Clear all filters on an empty state) */
+.filters-trigger, .state-action.secondary { background: var(--raised); color: var(--text-primary); }
+.filters-trigger:hover, .state-action.secondary:hover { background: var(--pressed); }
+
+/* order 0790 */
+/* ---------- secondary and small buttons on the grayscale screens ---------- */
+/* one definition each (step 6, #39): the shared base sets no display; the full-width secondary is flex, Unlink inline */
+.secondary-btn, .unlink-btn {
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--raised);
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.secondary-btn { display: flex; width: 100%; font-size: var(--size-body); }
+.unlink-btn { display: inline-flex; }
+.secondary-btn:hover:not(:disabled), .unlink-btn:hover:not(:disabled) { background: var(--pressed); }
+.secondary-btn:disabled, .unlink-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.secondary-btn[aria-busy="true"] { color: var(--text-primary); }   /* busy, not disabled: the label keeps its color, as a busy primary keeps its fill */

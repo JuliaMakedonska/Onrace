@@ -1,0 +1,25 @@
+/* Detail section (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0590 */
+/* ---------- detail screens (Race detail, Result detail) ---------- */
+.race, .result { padding: var(--space-5) var(--space-4) var(--space-7); }
+.race[hidden], .result[hidden] { display: none; }
+.race h1, .result h1 { margin: 0 0 var(--space-4); }
+
+/* order 0620 */
+/* Result detail: the finish time leads (designer, step 6, #11; attribute a): the largest thing on the screen; the race
+   name, still the h1, steps down to the item title */
+.result h1 { font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); letter-spacing: normal; margin-bottom: var(--space-5); }
+
+/* order 0650 */
+.race h2, .result h2 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-primary);
+}
+.about p { margin: 0 0 var(--space-6); font-size: var(--size-body); }

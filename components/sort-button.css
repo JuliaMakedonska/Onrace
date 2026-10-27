@@ -1,0 +1,27 @@
+/* Sort button (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0260 */
+.sort-toggle {   /* G21: two orders, so one button that flips them, showing the current one (designer, 2026-10-23) */
+  position: relative;
+  display: inline-flex;
+  flex: none;   /* "Soonest first ⇅" keeps its size and its one line (2026-10-25) */
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--target);
+  white-space: nowrap;
+  margin-block: calc((var(--target) - var(--size-meta) * var(--leading-box)) / -2);   /* a 44pt target, the row's height kept */
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+}
+.sort-toggle::after { content: ""; flex: none; width: var(--icon-s); height: var(--icon-s); background: currentColor; -webkit-mask: var(--icon-sort) center / contain no-repeat; mask: var(--icon-sort) center / contain no-repeat; }
+.sort-toggle:hover { color: var(--text-secondary); }
+.sort-toggle:disabled { color: var(--text-disabled); cursor: not-allowed; }
+.sort-toggle[hidden] { display: none; }

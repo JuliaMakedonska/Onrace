@@ -1,0 +1,6 @@
+/* Order label (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0410 */
+.results-order { margin-left: var(--space-2); padding-left: var(--space-2); border-left: var(--border) solid var(--hairline); color: var(--text-secondary); }

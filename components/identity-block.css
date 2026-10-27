@@ -1,0 +1,23 @@
+/* Identity block (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0970 */
+/* ---------- Profile: identity, grouped rows, Sign out, the confirm alert ---------- */
+.identity { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-4) 0 var(--space-6); }
+.initials {   /* initials in a circle on the raised level: the one circle in content, as iOS avatars are (DESIGN.md → Shapes) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-avatar);
+  background: var(--raised);
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-initials);
+  font-weight: var(--weight-strong);
+}
+.identity h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+.identity p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); }

@@ -1,0 +1,7 @@
+/* Gate intro (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0900 */
+.context { margin: 0 0 var(--space-5); font-size: var(--size-body); color: var(--text-secondary); }
+.context[hidden] { display: none; }

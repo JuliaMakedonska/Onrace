@@ -1,0 +1,15 @@
+/* Race photo (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0100 */
+picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper takes no box: the img stays the card's and the page's item (step 7, #5) */
+.race-card .photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--photo-ratio);
+  object-fit: cover;
+  border-radius: var(--radius-1);
+  filter: var(--photo-filter);
+}

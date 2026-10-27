@@ -1,0 +1,22 @@
+/* Linked race card (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0870 */
+/* ---------- Log result: the linked race (the catalog row is a .row--nav since round 2) ---------- */
+.linked-race { margin: 0 0 var(--space-5); padding: var(--space-4); border-radius: var(--radius-2); background: var(--group); }   /* a group on the sheet, at the rows' level (step 6, #8) */
+.linked-race[hidden] { display: none; }
+.linked-source { margin: 0 0 var(--space-2); font-size: var(--size-proof); font-weight: var(--weight-strong); color: var(--text-secondary); }
+.linked-race h3 { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+.linked-fact { margin: 0 0 var(--space-1); font-size: var(--size-meta); color: var(--text-primary); }
+.linked-fact.place { color: var(--text-secondary); }
+.linked-race .unlink-btn {   /* on the --bg-3 card a tonal fill would vanish: the tertiary text action, 44pt tall (step 6, #8) */
+  margin-top: var(--space-1);
+  padding: 0;
+  background: none;
+  font-weight: var(--weight-regular);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border);
+  text-underline-offset: var(--space-1);
+}
+.linked-race .unlink-btn:hover:not(:disabled) { background: none; color: var(--text-secondary); }

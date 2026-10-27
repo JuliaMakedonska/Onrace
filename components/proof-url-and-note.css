@@ -1,0 +1,10 @@
+/* Proof URL and note (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0730 */
+.result .proof p { margin: 0 0 var(--space-2); }
+.proof-url { font-size: var(--size-body); color: var(--text-primary); overflow-wrap: break-word; }   /* breaks at the <wbr> after / . - in the markup, never mid-word (step 6, #10) */
+
+/* order 0750 */
+.proof-note { font-size: var(--size-proof); color: var(--text-secondary); }

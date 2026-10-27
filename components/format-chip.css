@@ -1,0 +1,22 @@
+/* Format chip (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0060 */
+/* ---------- format chip: metadata, neutral ---------- */
+.sport-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--chip-height);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--raised);
+  color: var(--chip-text);
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;  /* decision A: CSS only, markup keeps "Half marathon" */
+  white-space: nowrap;
+}

@@ -1,0 +1,6 @@
+/* Form note (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0940 */
+.form-note, .sent-note { margin: var(--space-3) 0 0; text-align: left; font-size: var(--size-meta); color: var(--text-secondary); }   /* left, with the form and the footers (step 6, #30): centred only made sense under the old full-width button */

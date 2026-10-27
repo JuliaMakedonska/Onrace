@@ -1,0 +1,21 @@
+/* Sticky action bar (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0760 */
+/* ---------- sticky action bar: one primary link + its caption ---------- */
+.action-bar {   /* C1 (designer, 2026-10-19): glass like every bar, on the Tab bar level it had; a rim instead of the hairline */
+  padding: var(--space-3) var(--space-4) calc(var(--space-4) + var(--safe-bottom));
+  background: var(--glass-bar);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border-top: var(--border) solid var(--glass-rim);
+}
+.action-bar[hidden] { display: none; }
+/* a drill-down's bars at the scroll edge (step 6, #27; iOS 26 scroll edge effect): transparent and rimless until content
+   runs under them, as the tab screens' top bar is at rest; the page script sets .is-scrolled and .is-at-end */
+.top-bar[data-collapse]:not(.top-bar--large):not(.is-scrolled), .action-bar.is-at-end { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: transparent; }
+.action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-bar-control); }   /* C7: a control inside a bar is a capsule */
+
+/* order 0780 */
+.action-caption { margin: var(--space-2) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-secondary); text-wrap: balance; }   /* no one-word last line (step 6, #28) */

@@ -1,0 +1,27 @@
+/* Date field (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0450 */
+/* a compact date picker (G18, G44; step 6, #26): the value on a pill, written as the chips and cards write dates
+   ("23 Sep 2026"); the native input lies over the pill, transparent, so a tap opens the system's calendar. No glyph
+   (iOS's compact picker has none) and no browser locale mask: empty, the pill asks "Choose a date" in Text 2 */
+.row:has(> .date-pill) { flex-wrap: wrap; }   /* at large text sizes the pill goes under its label (step 7, #2) */
+.date-pill {
+  position: relative;
+  flex: none;
+  max-width: 100%;
+  margin-left: auto;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-2);
+  background: var(--raised);
+  color: var(--text-primary);
+  font-size: var(--size-body);
+  white-space: nowrap;
+}
+.date-pill.is-empty { color: var(--text-secondary); }
+.row .date-pill input[type="date"] { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 0; margin: 0; padding: 0; opacity: 0; pointer-events: none; color-scheme: dark; }   /* the value for the form; the button opens its picker (step 7, #3) */
+.date-value { margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.date-value::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }   /* the whole pill is the button's target */
+.date-value:focus-visible { outline: none; }
+.date-pill:has(.date-value:focus-visible) { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }   /* one Tab stop, one ring (WCAG 2.4.7) */

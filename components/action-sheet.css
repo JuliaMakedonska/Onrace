@@ -1,0 +1,35 @@
+/* Action sheet (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 1060 */
+/* the action sheet (round 2, G41): leaving a sheet with unsaved data asks first (HIG Sheets, Action sheets): a message,
+   the destructive choice, and Keep editing apart at the bottom, bold. The alert's glass and radius */
+dialog.action-sheet {
+  position: fixed;
+  inset: auto max(var(--space-2), calc((100vw - var(--screen-w)) / 2 + var(--space-2))) calc(var(--space-2) + var(--safe-bottom));
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-primary);
+  overflow: visible;
+}
+dialog.action-sheet[open] { display: grid; gap: var(--space-2); }
+dialog.action-sheet::backdrop { background: var(--scrim); }
+.action-sheet .action-group, .action-sheet .action-cancel {
+  border-radius: var(--radius-alert);
+  background: var(--glass-sheet);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: inset 0 0 0 var(--border) var(--glass-rim), var(--float-shadow);
+  overflow: hidden;
+}
+.action-sheet .action-message { margin: 0; padding: var(--space-4); text-align: center; font-size: var(--size-proof); color: var(--text-secondary); border-bottom: var(--border) solid var(--hairline); }
+.action-sheet button { display: block; width: 100%; min-height: calc(var(--target) + var(--space-3)); border: 0; background: transparent; color: var(--text-primary); font-family: var(--font-text); font-size: var(--size-item); cursor: pointer; }
+.action-sheet button:hover { background: var(--pressed); }
+.action-sheet button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }
+.action-sheet .is-destructive { color: var(--error); }
+.action-sheet .action-cancel { font-weight: var(--weight-strong); }   /* the alert clips its edges: the ring sits inside the button, whole */

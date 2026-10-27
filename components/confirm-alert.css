@@ -1,0 +1,41 @@
+/* Confirm alert (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 1050 */
+dialog.alert {   /* the confirm alert floats like a sheet: the sheet's glass over the scrim, its rim and shadow (G67, designer 2026-10-23: as iOS 26 alerts) */
+  width: var(--alert-width);
+  max-width: calc(100% - var(--space-8));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-alert);
+  background: var(--glass-sheet);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: inset 0 0 0 var(--border) var(--glass-rim), var(--float-shadow);
+  color: var(--text-primary);
+  text-align: center;
+  overflow: hidden;
+}
+dialog.alert::backdrop { background: var(--scrim); }
+.alert-body { padding: var(--space-5) var(--space-4) var(--space-4); }
+dialog.alert h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+dialog.alert p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); }
+dialog.alert .alert-actions { display: flex; border-top: var(--border) solid var(--hairline); }
+dialog.alert .alert-actions button {
+  flex: 1;
+  min-height: var(--target);
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-item);   /* 17, as HIG alerts and the action sheet (step 6, #25) */
+  cursor: pointer;
+}
+dialog.alert .alert-actions button:first-child { border-bottom-left-radius: var(--radius-alert); }   /* the last row follows the alert's corners, so the inset focus ring and the hover fill do too (step 6, #24) */
+dialog.alert .alert-actions button:last-child { border-bottom-right-radius: var(--radius-alert); }
+dialog.alert .alert-actions button + button { border-left: var(--border) solid var(--hairline); font-weight: var(--weight-strong); }
+dialog.alert .alert-actions button:only-child { font-weight: var(--weight-strong); }   /* one action (Race detail: Dismiss): the default, bold */
+dialog.alert #signout-confirm { color: var(--error); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1 */
+dialog.alert .alert-actions button:hover { background: var(--pressed); }   /* one level above the alert's raised glass */
+dialog.alert .alert-actions button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }

@@ -1,0 +1,20 @@
+/* Sign out button (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 1040 */
+.signout {
+  display: block;
+  width: 100%;
+  min-height: var(--target);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--surface);
+  color: var(--error);   /* G68 (designer, 2026-10-23): a destructive action, coral in the row too, as in Settings */
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.signout:hover { background: var(--raised); }

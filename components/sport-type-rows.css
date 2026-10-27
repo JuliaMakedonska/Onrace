@@ -1,0 +1,24 @@
+/* Sport-type rows (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0460 */
+.row--check { cursor: pointer; color: var(--text-primary); font-size: var(--size-body); }
+.row--check input[type="checkbox"] {   /* the checkmark sits at the row's trailing edge; nothing shows when it's off. [type] outranks Profile's .row input */
+  -webkit-appearance: none;
+  appearance: none;
+  order: 1;
+  flex: none;
+  width: var(--icon-l);   /* the same checkmark as Race picker's (step 6, #35) */
+  height: var(--icon-l);
+  margin: 0 0 0 auto;
+  background: var(--text-primary);   /* C4: neutral, never the accent */
+  -webkit-mask: var(--icon-check) center / contain no-repeat;
+  mask: var(--icon-check) center / contain no-repeat;
+  opacity: 0;
+  cursor: pointer;
+}
+.row--check input[type="checkbox"]:checked { opacity: 1; }
+.row--check input:focus-visible { outline: none; }
+.row--check:has(input:focus-visible) { outline: var(--focus-ring) solid var(--text-primary); outline-offset: calc(var(--focus-ring) * -1); }
+.row--check:active { background: var(--raised); }   /* G23: a pressed row */

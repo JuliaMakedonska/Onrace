@@ -225,10 +225,17 @@ CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contr
             + ''.join(rows) + '</tbody></table></div>')
 
 # cache-busting: stylesheet links carry a short hash of ui/kit.css + ui/map.css + concept/stand.css
-import hashlib
-CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css')).encode()).hexdigest()[:8]
+import hashlib, subprocess
+# components/ (Lesson 8, step 3): bundle components/*.css into components/index.css in cascade order, check that no component
+# reads a color primitive or writes a hex, px or font name, and write ui/map-data.css; a failure stops the build
+_c = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_components.py')], capture_output=True, text=True)
+print(_c.stdout.strip())
+if _c.returncode: sys.exit('build_components failed: the build stops')
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css')).encode()).hexdigest()[:8]
 def _stamp(path):
-    html = re.sub(r'href="((?:\.\./ui/|)(?:kit|kit-doc|map|stand|specimens|first-screen))\.css(\?v=[0-9a-f]+)?"', lambda m: f'href="{m.group(1)}.css?v={CSS_V}"', open(path).read())
+    # also inside a srcdoc attribute (the showcase's tab bar frames), where the quotes are &quot;
+    html = re.sub(r'href=("|&quot;)((?:\.\./ui/|\.\./tokens/|\.\./components/|)(?:kit|kit-doc|map|map-data|stand|specimens|first-screen|tokens|index))\.css(\?v=[0-9a-f]+)?\1',
+                  lambda m: f'href={m.group(1)}{m.group(2)}.css?v={CSS_V}{m.group(1)}', open(path).read())
     open(path, 'w').write(html)
 STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
 STAMPED += [f'wireframes/race-detail{x}.html' for x in ('', '-error', '-loading')]   # step 5, Discovery group (2026-10-22)
@@ -903,7 +910,7 @@ else:
     if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
     elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
 # mirror to public/ (GitHub Pages serves public/)
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html'] + STAMPED[3:]:
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css'] + STAMPED[3:]:
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))

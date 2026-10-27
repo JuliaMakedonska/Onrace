@@ -1,0 +1,40 @@
+/* Search field (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0080 */
+/* ---------- search field ---------- */
+.race-search, .phone-screen > form.search { position: relative; }
+.phone-screen > form.search { padding: var(--space-3) var(--space-4); }   /* Race picker: under its top bar, the gutter its own */
+.race-search::before, .phone-screen > form.search::before {
+  content: "";
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  width: var(--icon-m);
+  height: var(--icon-m);
+  margin-top: calc(var(--icon-m) / -2);
+  background: var(--text-secondary);
+  -webkit-mask: var(--icon-search-field) center / contain no-repeat;
+  mask: var(--icon-search-field) center / contain no-repeat;
+  pointer-events: none;
+}
+.phone-screen > form.search::before { left: calc(var(--space-4) * 2); }
+.race-search input, .phone-screen > form.search input[type="search"] {
+  width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--space-4) 0 calc(var(--space-4) + var(--icon-m) + var(--space-2));
+  border: 0;
+  border-radius: var(--radius-bar-control);   /* C7 (designer, 2026-10-19): the search field is a bar control, a full capsule (iOS 26) */
+  background: var(--surface);
+  box-shadow: inset 0 0 0 var(--border) var(--boundary);
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.race-search input::placeholder, .phone-screen > form.search input[type="search"]::placeholder { color: var(--text-secondary); opacity: 1; }
+.race-search input:hover, .phone-screen > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-secondary); }
+.race-search input:focus-visible, .phone-screen > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: 0; box-shadow: none; }
+.race-search input::-webkit-search-cancel-button, .phone-screen > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */

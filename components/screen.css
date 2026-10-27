@@ -1,0 +1,38 @@
+/* Screen: not an inventory component: the phone screen's frame and scroll areas (ui/shell.html), the list and map panels.
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0310 */
+html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
+body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
+.phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
+/* .screen-main: a specimen screen's main in the showcase, which has one page main of its own (step 7) */
+.phone-screen :is(main, .screen-main) { display: flex; flex-direction: column; min-height: 100%; }
+/* drill-downs and modals (every screen without a tab bar) */
+body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
+.phone-screen:has(> .top-bar:not(.top-bar--large)) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
+.phone-screen:has(> .top-bar:not(.top-bar--large)) > :is(main, .screen-main) { flex: 1 0 auto; min-height: 0; }
+/* with an action bar (Race detail, Result detail): the bar is the scroll area's last child, sticky at its bottom, so
+   content runs under its glass and still scrolls clear of it at the end, whatever the bar's height (G35, G54) */
+.phone-screen > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); }
+.phone-screen header:not(.top-bar) { display: grid; gap: var(--space-3); padding: calc(var(--space-2) + var(--safe-top)) var(--space-4) var(--space-1); }  /* G6: below the top safe area (0 in the viewer, which draws the status bar above the page) */
+
+/* order 0330 */
+body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status bar, glass; 0px tall inside the viewer */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-edge);
+  height: var(--safe-top);
+  background: var(--glass-ground);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+/* order 0360 */
+.view-area { display: contents; }
+.view-panel { flex: 1; min-height: 0; }
+#list-view[hidden], #map-view[hidden] { display: none; }
+#list-view { padding: 0 var(--space-4) var(--space-4); }

@@ -1,0 +1,8 @@
+/* Form intro (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0840 */
+/* ---------- forms: grouped rows (round 2), errors under their row ---------- */
+#log-form { padding: var(--space-4) 0 var(--space-7); }   /* in its sheet (round 2, G40): the sheet's main has the gutter */
+.form-intro { margin: 0 0 var(--space-4); font-size: var(--size-meta); color: var(--text-secondary); }

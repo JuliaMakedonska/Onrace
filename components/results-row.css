@@ -1,0 +1,13 @@
+/* Results row (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0250 */
+/* ---------- result count + sort ---------- */
+.results-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; font-size: var(--size-meta); color: var(--text-secondary); }
+.results-count { flex: 1 1 auto; min-width: 0; margin: 0; overflow-wrap: anywhere; }   /* takes what Sort leaves and wraps there; a long search word breaks rather than overflow */
+.results-count strong { color: var(--text-primary); font-weight: var(--weight-strong); }
+
+/* order 0340 */
+.phone-screen .results-row { padding-inline: var(--space-4); }
+.results-row[hidden] { display: none; }

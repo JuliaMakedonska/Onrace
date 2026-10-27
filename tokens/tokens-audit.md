@@ -625,13 +625,73 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
 4. **One merge was tried and rejected.** One capsule radius for the three capsules failed the comparison at 200% text: the List/Map track went from 22px to 23.5px. The three tokens stay.
 5. **The real build passes** with the move: every color rule, 109 contrast pairs, the glass pairs, 180 of 180 signed tokens, `check_kit`, and `check_overflow` (321 states).
 
+### Still unknown (at the end of step 2; decided 2026-10-27, see step 3)
+
+- ~~`--leading-box` and `--leading-body` can drift apart~~ → **decided:** `--leading-box: var(--leading-body)`, so they can't. The comment says why: the 44pt target math.
+- ~~Is the List/Map track a full capsule at large text?~~ → **decided:** it stays as today through the refactor. A full capsule is a "keep it" change for after the lesson (below).
+- ~~A semantic level for non-color tokens?~~ → **decided:** no.
+- **Still open:**
+  - The primitives' names are L* numbers, so a changed value renames its primitive.
+  - The light appearance is undesigned.
+  - The glass values are provisional [?].
+  - The build checks still read `ui/kit.css` (step 4).
+
+---
+
+## Step 3 record (2026-10-27): the classes into components/
+
+### What changed in step 3
+
+- **`components/`: 56 component files** named from `ui/inventory.md`, plus `base.css` and `screen.css`.
+  - They hold the 401 rules of `ui/kit.css` in 107 order blocks.
+  - **`components/index.css`** is the generated bundle in today's cascade order. **`components/README.md`** explains the blocks, the rules and what a page links.
+  - Every color goes through a semantic role (the step 2 mapping); geometry comes from primitives; there's no hex, px or font name.
+- **`scripts/build_components.py` (new):**
+  - It bundles the blocks by their order number and writes `ui/map-data.css` (`ui/map.css` without the six map tokens that moved to `tokens.css`).
+  - It **checks** that no component reads a color primitive and that no hex, px or font name appears in a declaration. Any failure stops the build.
+  - Its self-test: a file with one of each violation failed with all four messages.
+- **`scripts/concept/build_stand.py`:**
+  - runs `build_components.py` first;
+  - hashes `tokens.css`, `index.css` and `map-data.css` into `?v=`;
+  - stamps the new links, including inside `srcdoc`;
+  - mirrors the three files to `public/`.
+- **`ui/kit.html`, the showcase, is switched** to `tokens/tokens.css` + `components/index.css` (+ `kit-doc.css`, and `map-data.css` deferred). `scripts/build_kit_showcase.py` follows: the head, the intro line, and its "Live" detection, which now also reads the tab bar frames.
+- **The tab bar specimens are frames** (`<iframe srcdoc>`), so the bar is the body's child, as on a screen. The product's two `.kit-tabbar > .bottom-nav` selectors are gone from `components/tab-bar.css`, and `ui/kit-doc.css` holds the frame's two lines.
+- **`ui/kit-doc.css`:**
+  - the stages read `--page`, `--hairline` and `--text-primary`;
+  - it defines the stages' own `--radius-3` and `--kit-stage-h` (`ui/kit.css` keeps a copy until step 4).
+- **`tokens/tokens.css`:** `--leading-box: var(--leading-body)`, and the capsule decision.
+- **Unchanged:**
+  - `ui/kit.css`, `ui/map.css`, the 35 screens, `ui/shell.html`, the stand and the review pages, which stay on the kit for step 4;
+  - the markup of every specimen apart from the three tab bar stages.
+
+### How it was checked
+
+1. **The bundle against the kit, as text.** With comments and whitespace stripped, `components/index.css` equals the rules of `ui/kit.css` after the step 2 token rewrite, rule for rule and in the same order (55,543 characters). The only edit is the `.kit-tabbar` selectors.
+2. **The showcase against today's showcase, in headless Chrome.**
+   - "Today" is a snapshot of HEAD with `ui/kit.css`; the other side is the working tree on tokens and components.
+   - **What ran:** `ui/kit.html` and `ui/shell.html`, in five passes:
+     - 390 wide;
+     - 1440 wide;
+     - 390 at 200% text;
+     - 390 with Reduce Transparency;
+     - motion on.
+   - **Compared:**
+     - every standard computed property of every element and pseudo-element in the body; the tab bar frames are entered, so their nav is compared with the old nav;
+     - every element's box;
+     - a screenshot of each of the 109 specimen stages.
+   - The intro line is documentation text, changed on purpose, so it was hidden on both sides.
+   - **Result: every stage screenshot is identical in all four screenshot passes.** Every computed style is identical, except the `<select>` rows at 200% text: 59px on a page's first load and 63px on its second. The same difference shows when today's showcase is compared with itself, so it is load timing that predates this step, not the refactor (recorded below).
+3. **The real build passes**, with every check.
+
+### After the lesson ("keep it" changes, not part of the refactor)
+
+- **The List/Map track at large text (designer, 2026-10-27).** At 200% text the track is 47px tall with a 22px radius, so it isn't a full capsule; C7 says capsule. After Lesson 8: decide, then change it in `tokens/tokens.css` and `components/segmented-control.css` (and its showcase stage) under the "keep it" rule.
+
 ### Still unknown
 
-- **`--leading-box` and `--leading-body` can now drift apart.** The 44pt target offsets multiply a line height that equals the text's own `line-height` (`--leading-body`). If one changes alone, the offsets will be wrong. Decide in step 3 whether this split stays.
-- **Is the List/Map track meant to be a full capsule at large text?** Today it isn't (22px radius on a 47px track). C7 says capsule. This is a designer call, outside a refactor.
-- **Whether the non-color tokens need a semantic level** (type roles, component sizes, z-layers). This step's semantic level is color only, as asked. Non-color tokens keep the kit's names, so `--size-body` and `--size-meta` stay two tokens.
-- **Primitive names are L* numbers.** Changing a value renames its primitive. That's intended for a value ramp, but DESIGN.md's names (Chalk, Ash, Sodium Amber) live only in comments.
-- **`calc(infinity * 1px)`** was tried for the capsule and isn't used.
-- **The light appearance itself:** no light values exist. The splits rest on how iOS light behaves, not on a designed light theme, so some may prove unnecessary or missing once one is drawn.
-- **The build checks still read `ui/kit.css`** and name old tokens (see "What steps 3–4 must rename"). `SCRIM_A` will need a new parse for the `color-mix` scrim.
-- **The glass values stay provisional [?]**, as before (Apple's iOS 26 kit wasn't read).
+- **The `<select>` height at 200% text** depends on whether the fonts were already cached at first layout (59 or 63px). It predates this step. Worth a look in Lesson 9, with the states.
+- **Two copies until step 4.** `ui/kit.css` and `components/` hold the same rules. A change before step 4 must go into both, or wait.
+- **The build's color rules, contrast pairs and signed-token check still read `ui/kit.css`.** The components have the same rules, checked as text, but the checks move to tokens and components in step 4.
+- **`ui/map-data.css` is a generated copy** of `ui/map.css`. In step 4, `ui/map.css` itself loses the six tokens, and the copy can go.
+- **Several blocks per file** keep the cascade exact. Whether to merge a component's blocks into one (a cascade change, so it needs a fresh comparison) is open.

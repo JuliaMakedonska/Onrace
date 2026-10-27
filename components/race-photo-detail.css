@@ -1,0 +1,15 @@
+/* Race photo, detail (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0710 */
+.race > picture > .photo {   /* Race detail: the race's photo, the card's band at full content width: the same pre-cropped 3:1 file as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--photo-ratio);
+  object-fit: cover;
+  margin: 0 0 var(--space-4);
+  border-radius: var(--radius-2);   /* outer: it sits on the page, not inside a card */
+  filter: var(--photo-filter);
+}

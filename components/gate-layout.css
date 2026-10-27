@@ -1,0 +1,21 @@
+/* Gate layout (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0540 */
+.gate .group { margin: 0 0 var(--space-5); }
+
+/* order 0830 */
+/* an inline error that is the whole screen (Sign in -error?cause=confirm, no form left): the empty/error state's form,
+   the 48px icon on top, no surface (designer, 2026-10-23) */
+.gate > section:not([hidden]):has(> .inline-error + .submit-btn) { flex: 1; display: grid; gap: var(--space-2); justify-items: center; align-content: center; text-align: center; padding: var(--space-6) 0; }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error { display: grid; gap: var(--space-2); justify-items: center; margin: 0; padding: 0; border-radius: 0; background: none; }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error::before { content: ""; justify-self: center; width: var(--icon-state); height: var(--icon-state); margin-bottom: var(--space-2); background: var(--error); -webkit-mask: var(--icon-error) center / contain no-repeat; mask: var(--icon-error) center / contain no-repeat; }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error h2 { font-size: var(--size-item); }
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error h2::before { content: none; }   /* the icon is on top */
+.gate > section:has(> .inline-error + .submit-btn) > .inline-error p { margin: 0; max-width: var(--measure); color: var(--text-secondary); }
+.gate > section:has(> .inline-error + .submit-btn) > .submit-btn { width: auto; margin-top: var(--space-2); }
+
+/* order 0890 */
+/* ---------- gates: Sign in / Sign up, Reset password, New password ---------- */
+.gate { padding: var(--space-5) var(--space-4) var(--space-7); }

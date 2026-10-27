@@ -1,0 +1,23 @@
+/* Field error (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0520 */
+.rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-3); }
+/* the invalid ring (step 6, #4): one ring around each run of invalid rows, drawn from four inset edges, so adjacent
+   invalid rows share one outline instead of stacking rings; the hairlines that touch an invalid row are hidden */
+.rows li:has([aria-invalid="true"]) {
+  --ring-top: inset 0 var(--invalid-ring) 0 0 var(--error);
+  --ring-bottom: inset 0 calc(var(--invalid-ring) * -1) 0 0 var(--error);
+  --ring-sides: inset var(--invalid-ring) 0 0 0 var(--error), inset calc(var(--invalid-ring) * -1) 0 0 0 var(--error);
+  box-shadow: var(--ring-top), var(--ring-bottom), var(--ring-sides);
+}
+.rows li:has([aria-invalid="true"]) + li:has([aria-invalid="true"]) { box-shadow: var(--ring-bottom), var(--ring-sides); }
+.rows li:has([aria-invalid="true"]):has(+ li [aria-invalid="true"]) { box-shadow: var(--ring-top), var(--ring-sides); }
+.rows li:has([aria-invalid="true"]) + li:has([aria-invalid="true"]):has(+ li [aria-invalid="true"]) { box-shadow: var(--ring-sides); }
+.rows li:has([aria-invalid="true"])::before, .rows li:has([aria-invalid="true"]) + li::before { border-top-color: transparent; }
+
+/* order 0860 */
+.field-error { margin: var(--space-2) 0 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-primary); }
+.field-error[hidden] { display: none; }
+.field-error::before, .row-note.is-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }

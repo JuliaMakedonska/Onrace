@@ -1,0 +1,97 @@
+/* Static map (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0390 */
+/* map view: static Natural Earth background (designer decision); the interactive Map stays deferred */
+#map-view { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
+.map-placeholder {
+  position: relative;
+  container-type: size;            /* pins compute their height from the map's width (cqw) */
+  isolation: isolate;              /* map layers sit under the container's own text, even bare text */
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--map-water);
+  box-shadow: inset 0 0 0 var(--border) var(--boundary);
+  color: var(--text-secondary);
+  font-size: var(--size-proof);
+}
+.map-placeholder::before, .map-placeholder::after {   /* land, then coastlines and borders; the masks carry shape, tokens carry color */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-under);
+  pointer-events: none;
+  -webkit-mask-size: 100% auto; mask-size: 100% auto;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
+.map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
+.map-placeholder > * { position: relative; z-index: var(--z-lift); }
+.map-placeholder.has-pins { align-items: flex-end; }
+/* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line. The link is
+   a 44pt box centred on the label (step 6, #5: HIG targets); the label is its span; the dot and the leader take no
+   taps, so where two dots nearly touch (Boston, Killington) each label is its own target. Each pin's coordinates
+   and side are map data, in ui/map.css, keyed on data-pin (step 6, #38). */
+.map-placeholder > .map-pin {
+  position: absolute;
+  z-index: var(--z-float);
+  left: var(--x);
+  top: calc(50% + (var(--yf) - 0.5) * (100cqw + 2 * var(--space-4)) * var(--map-ratio));
+  transform: translate(-50%, calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
+  min-width: var(--target);
+  height: var(--target);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-size: var(--size-label);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.map-pin > span {
+  display: flex;
+  align-items: center;
+  height: var(--pin-h);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--raised);
+}
+.map-pin::before {   /* the dot, back on the coordinate */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(50% - var(--dy));
+  width: var(--map-pin-dot);
+  height: var(--map-pin-dot);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--text-primary);
+  box-shadow: 0 0 0 calc(var(--border) * 2) var(--map-water);
+  pointer-events: none;
+}
+.map-pin::after {   /* leader line from the label's edge to the dot */
+  content: "";
+  position: absolute;
+  left: calc(50% - var(--border) / 2);
+  width: var(--border);
+  height: calc(var(--dy-abs) - var(--pin-h) / 2 - var(--map-pin-dot) / 2);
+  background: var(--text-secondary);
+  pointer-events: none;
+}
+.map-pin:hover > span { background: var(--pressed); }
+.map-pin[hidden] { display: none; }
+/* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
+   the map frame drops its outline, water and land, and the state has no panel of its own */
+.map-placeholder:has(> .state-message) { background: none; box-shadow: none; }
+.map-placeholder:has(> .state-message)::before, .map-placeholder:has(> .state-message)::after { content: none; }
+.map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
+.map-placeholder .state-actions { justify-content: center; }

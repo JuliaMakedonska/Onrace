@@ -1,0 +1,34 @@
+/* Base: not an inventory component: the page root every screen sets (.onrace): box sizing, type, focus, selection, links.
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0010 */
+/* ---------- base ---------- */
+.onrace, .onrace *, .onrace *::before, .onrace *::after { box-sizing: border-box; }
+.onrace { margin: 0; }
+.onrace {
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+  accent-color: var(--text-primary);   /* C4: system-drawn controls tint neutral */
+}
+.onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
+.onrace ::selection { background: var(--text-primary); color: var(--page); }
+.onrace :focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }
+.onrace .visually-hidden {
+  position: absolute; width: var(--hidden-size); height: var(--hidden-size); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.onrace h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--size-title);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-primary);
+}
+
+/* order 0300 */
+:where(.onrace) a { color: var(--text-primary); }   /* zero specificity: components always win */

@@ -1,0 +1,12 @@
+/* Form alert (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0820 */
+.form-alert .alert-link {   /* 44pt target (G62): padding extends the hit area, equal negative margins keep the line */
+  display: inline-block;
+  padding-block: calc((var(--target) - var(--size-meta) * var(--leading-box)) / 2);
+  margin-block: calc(var(--space-2) - (var(--target) - var(--size-meta) * var(--leading-box)) / 2) calc((var(--target) - var(--size-meta) * var(--leading-box)) / -2);
+  font-size: var(--size-meta);
+  font-weight: var(--weight-strong);
+}

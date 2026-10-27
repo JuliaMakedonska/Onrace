@@ -1,0 +1,45 @@
+/* Active filter chips row (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0070 */
+/* active filter chip: an iOS capsule in a quiet tonal fill, no outline, the remove mark inside (designer, 2026-10-22: it sits in a bar, so C7) */
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--filter-chip-height);
+  padding: 0 var(--space-2) 0 var(--space-3);   /* the remove mark sits closer to the trailing curve */
+  border: 0;
+  border-radius: var(--radius-filter-chip);
+  background: var(--raised);
+  color: var(--text-primary);
+  font-family: var(--font-text);
+  font-size: var(--size-proof);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.chip:hover { background: var(--pressed); }
+.chip span {   /* the remove mark: Solar close-circle drawn in CSS; the text "×" stays in the markup (aria-hidden) until Lesson 7 */
+  display: inline-block;
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  font-size: 0;
+  background: var(--text-secondary);
+  -webkit-mask: var(--icon-close) center / contain no-repeat;
+  mask: var(--icon-close) center / contain no-repeat;
+}
+.chip::after, .clear-all::after { content: ""; position: absolute; inset: var(--tap-pad) 0; } /* 44px tap area */
+
+/* order 0240 */
+/* active filter chips + "Clear all filters" (tertiary) */
+.chips-bar { display: flex; align-items: center; gap: var(--space-3); }   /* G27: about 12pt around bezeled elements */
+.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-3); flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }   /* the row scrolls, with no scrollbar: its end fades */
+.chips-row li { flex: none; }
+.chips-bar .clear-all { flex: none; }
+.chips-bar[hidden] { display: none; }

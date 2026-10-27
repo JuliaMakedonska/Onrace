@@ -1,0 +1,35 @@
+/* Status line (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0420 */
+.saved-status {   /* the saved confirmation: neutral, so it never reads as a "verified" stamp (attribute d, Color rule 2) */
+  display: block;
+  margin: var(--space-2) var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--size-meta);
+}
+.saved-status::before { content: ""; display: inline-block; vertical-align: text-bottom; margin-right: var(--space-2); width: var(--icon-m); height: var(--icon-m); background: var(--text-secondary); -webkit-mask: var(--icon-saved) center / contain no-repeat; mask: var(--icon-saved) center / contain no-repeat; }
+.saved-status[hidden] { display: none; }
+
+/* order 0700 */
+.row-note a { padding-block: calc((var(--target) - var(--size-proof)) / 2); }
+
+/* order 0950 */
+.reset-done {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--size-meta);
+}
+
+/* order 1020 */
+.row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-secondary); }
+.row-note[hidden] { display: none; }
+.row-note.is-error { text-align: left; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-primary); }   /* one look for "this row failed": the field error's (step 6, #13) */
+.row-note.is-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }

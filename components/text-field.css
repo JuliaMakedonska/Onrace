@@ -1,0 +1,22 @@
+/* Text field (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0470 */
+/* forms as grouped rows (round 2: Log result G42, the sign-in screens G61): a label and its control in a row; hints
+   are the group's footer; an error sits under its row; an invalid row takes the coral ring (kit feedback #4) */
+.form-rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]) { text-align: left; text-align-last: left; color: var(--text-primary); }
+
+/* order 0490 */
+.form-rows .row input::placeholder { color: var(--text-secondary); opacity: 1; }
+
+/* order 0510 */
+.rows .row--stacked { flex-direction: column; align-items: stretch; gap: 0; padding-block: var(--space-2); }   /* .rows: outranks .row, defined later */
+/* a long value (a link): the label above, the field the row's full width */
+.rows .row--stacked input { padding-block: var(--space-1); }
+
+/* order 0990 */
+.rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]):not([readonly]):not(:disabled) { color: var(--text-primary); }   /* editable text in Text 1, read-only values (Email) and menu values in Text 2, as iOS Settings (designer, step 6, #21) */
+
+/* order 1010 */
+.row input:focus-visible, .row select:focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: 0; color: var(--text-primary); }

@@ -1,0 +1,17 @@
+/* Locked form (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0500 */
+/* a locked form (saving, signing in; step 6, #9): one treatment for the whole form, every control in Text disabled
+   (labels, values, placeholders, pickers, the catalog row, the linked race and Unlink), and the bar's Cancel with it.
+   The help text around it (intro, footers) stays Text 2: it is content, not a control. */
+.form-rows .row :is(input, select):disabled { cursor: not-allowed; }
+fieldset:disabled :is(.row label, .row .row-label, .row input, .row select, .row-value, .row--nav, .linked-race, .linked-race *) { color: var(--text-disabled); -webkit-text-fill-color: currentColor; opacity: 1; }
+fieldset:disabled .row input::placeholder { color: var(--text-disabled); }
+fieldset:disabled :is(.row:has(> select)::after, .row--nav::after) { background: var(--text-disabled); }
+fieldset:disabled .date-pill, fieldset:disabled .date-value { color: var(--text-disabled); cursor: not-allowed; }
+.top-bar .close[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
+
+/* order 0850 */
+.gate fieldset, fieldset.locked { margin: 0; padding: 0; border: 0; min-width: 0; }

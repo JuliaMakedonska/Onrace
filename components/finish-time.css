@@ -1,0 +1,30 @@
+/* Finish time (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0130 */
+.finish-time {
+  font-family: var(--font-display);
+  font-size: var(--size-time);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-primary);  /* not the accent: rule 5 */
+  white-space: nowrap;
+}
+
+/* order 0610 */
+.finish { margin: 0 0 var(--space-4); }
+.finish dt { margin: 0 0 var(--space-1); font-size: var(--size-meta); color: var(--text-secondary); }   /* the label sits clear of the figure (step 6, #11) */
+.finish dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--size-time);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-primary);
+}
+
+/* order 0630 */
+.result .finish dd { font-size: min(var(--size-time-hero), var(--size-time-hero-cap)); }

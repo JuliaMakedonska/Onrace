@@ -1,0 +1,62 @@
+/* Modal sheet (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0440 */
+/* Filters sheet: a native sheet (concept.md → Native sheet anatomy): glass on the raised level (C1, C4),
+   the system sheet radius (G16), resting at the large detent (G13). It floats, so it keeps the shadow. */
+.sheet-backdrop { position: absolute; inset: 0; z-index: var(--z-scrim); background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-out); }
+.sheet-backdrop.open { opacity: 1; }
+.sheet-backdrop[hidden], .sheet[hidden] { display: none; }
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-sheet);
+  height: var(--sheet-large);
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-4) 0;          /* the footer carries the bottom padding */
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--glass-sheet);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: inset 0 var(--border) 0 var(--glass-rim), var(--float-shadow);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform var(--dur-sheet) var(--ease-out);
+}
+.sheet.open { transform: translateY(0); }
+/* Log result (round 2, G40): the sheet is the whole screen, resting at the large detent (G13) over Results, which has
+   receded under the scrim; its top bar spans it, and only its form scrolls */
+html:has(body > .sheet > .phone-screen) { height: 100%; }
+body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--screen-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
+/* Results receded behind the sheet (step 6, #34; iOS sheets): the presenting screen's top edge, inset and dimmed under
+   the scrim, shows in the gap above the sheet, so the sheet reads as a modal over Results */
+body:has(> .sheet > .phone-screen)::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--safe-top) + var(--sheet-gap-top) - var(--space-2));
+  left: var(--space-4);
+  right: var(--space-4);
+  height: var(--target);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: linear-gradient(var(--scrim), var(--scrim)) var(--surface);
+}
+body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
+.sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; }
+.sheet > .phone-screen > main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
+.sheet, .phone-screen { scrollbar-color: var(--boundary) transparent; scrollbar-width: thin; }
+/* the Filters sheet (markup pass, 2026-10-23): Cancel, the title and Apply filters in a top bar (G12); options as grouped
+   rows (G20), as Profile's: Region a native menu (G17), the dates native compact pickers (G18), sport types rows with a
+   neutral checkmark (G19, C4). No grabber: the sheet rests at one detent, so it isn't resizable (HIG Sheets) */
+.sheet:has(> .top-bar) { padding: 0; overflow: hidden; }
+.sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--space-2) var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
+.sheet .group { margin: 0 0 var(--space-6); padding: 0; border: 0; min-width: 0; }
+.sheet .rows { background: var(--group); }   /* one level above the sheet, as the picker's cards */
+
+/* order 0580 */
+/* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,
+   so it is the sheet's own glass, not a second layer */
+.sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }

@@ -5,11 +5,12 @@ The specimens stay hand-written in ui/kit.html (the "keep it" rule: a change goe
 script only (re)writes, idempotently, everything around them:
 - a sticky left sidebar: a quick filter, then the roles (Navigation, Cards and lists, Forms, Feedback, One-off) with every
   specimen under its role, the current one highlighted on scroll; on a phone it folds into a menu;
-- one short intro line (what the kit is, the counts, links to ui/inventory.md and ui/kit.css);
+- one short intro line (what the kit is, the counts, links to ui/inventory.md, tokens/tokens.css and components/);
 - one card per specimen: a compact header in the documentation's own style (name, classes, "Used on N screens" linked to
   the viewer, the HIG link, where interaction is live), the specimen's notes folded, then its states side by side, each on
   its own stage with its label under it.
-The documentation's look is ui/kit-doc.css (the artifact pages' style); the stages are ui/kit.css (the product).
+The documentation's look is ui/kit-doc.css (the artifact pages' style); the stages are product: tokens/tokens.css + components/index.css
+(Lesson 8, step 3).
 """
 import os, re, glob, html as H
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,7 +69,8 @@ unmapped = [i for i in items if i not in role_of]
 assert not unmapped, ('specimens with no Showcase map row', unmapped)
 head = KIT[:KIT.index('<body')]
 head = re.sub(r'\n<link rel="stylesheet" href="kit-doc\.css[^"]*">', '', head)
-head = re.sub(r'(<link rel="stylesheet" href="kit\.css[^"]*">)', r'\1\n<link rel="stylesheet" href="kit-doc.css">', head, count=1)   # build_stand.py stamps it
+head = re.sub(r'(<link rel="stylesheet" href="\.\./components/index\.css[^"]*">)', r'\1\n<link rel="stylesheet" href="kit-doc.css">', head, count=1)   # after the components (Lesson 8, step 3); build_stand.py stamps it
+assert 'href="kit-doc.css"' in head, 'ui/kit.html: no components/index.css link to put kit-doc.css after'
 shell = re.search(r'  <section class="kit-section" id="shell".*?\n  </section>\n', KIT, re.S).group(0)
 tail_from = KIT.index('<!-- /kd -->') + len('<!-- /kd -->') if '<!-- /kd -->' in KIT else KIT.index('</main>') + len('</main>')
 tail = re.sub(r'\n<script>\n/\* kd:js.*?</script>', '', KIT[tail_from:], flags=re.S)
@@ -87,7 +89,7 @@ def meta(spec):
     ios = list(dict.fromkeys(r['ios'] for r in rows if r['ios'] != 'none'))
     ios_html = ' · '.join(re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1 ↗</a>', x) for x in ios) or 'none'
     comps = ', '.join(dict.fromkeys(r['name'] for r in rows))
-    live = re.search(r'<(button|a href|input|select|textarea)\b', items[spec].split('<div class="kit-states">', 1)[-1]) is not None
+    live = re.search(r'<(button|a href|input|select|textarea)\b', H.unescape(items[spec].split('<div class="kit-states">', 1)[-1])) is not None   # unescaped: the tab bar's stages are srcdoc frames
     parts = ([f'<p class="kd-line kd-comps">{H.escape(comps)}</p>'] if comps != title_of(spec) else []) + [f'<p class="kd-line">{code}</p>', f'<p class="kd-line">{used}</p>',
              f'<p class="kd-line"><span class="kd-k">Native iOS</span> {ios_html}</p>']
     if live: parts.append('<p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the stages below</p>')
@@ -124,9 +126,9 @@ for r in ROLES:
                 + ''.join(f'<li><a href="#{s}" data-names="{H.escape(" ".join([title_of(s)] + [x["name"] for x in rows_of[s]]).lower())}">{H.escape(title_of(s))}</a></li>' for s in specs_by_role[r]) + '</ul>')
 side += ['    </nav>', '    <p class="kd-empty" hidden>No component matches.</p>', '  </div>', '</aside>']
 intro = (f'<p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: {len(items)} specimens covering {N_COMPONENTS} inventory components, '
-         f'every state on its own stage, styled by <a href="kit.css"><code>ui/kit.css</code></a> alone. '
+         f'every state on its own stage, styled by <a href="../tokens/tokens.css"><code>tokens/tokens.css</code></a> and <a href="../components/index.css"><code>components/</code></a> alone. '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/inventory.md">The inventory</a> · '
-         f'<a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/kit.css">kit.css on GitHub</a></p>')
+         f'<a href="https://github.com/JuliaMakedonska/Onrace/tree/main/components">components/ on GitHub</a></p>')
 main = ['<main class="kd-main">', '  ' + intro, '', '  <div class="kit-item kd-shell" id="shell-card" data-names="shell tab bar large title">', shell.replace('  <section', '  <section', 1), '  </div>']
 for r in ROLES:
     main.append(f'\n  <!-- ================================================================ {r} -->\n'

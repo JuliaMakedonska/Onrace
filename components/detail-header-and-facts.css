@@ -1,0 +1,14 @@
+/* Detail header and facts (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0600 */
+.facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin: 0 0 var(--space-6);
+  font-size: var(--size-meta);
+}
+.facts dt { color: var(--text-secondary); }
+.facts dd { margin: 0; color: var(--text-primary); }

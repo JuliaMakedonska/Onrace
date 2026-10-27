@@ -1,0 +1,9 @@
+/* Catalog row (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0530 */
+.row--nav { justify-content: space-between; color: var(--text-primary); font-size: var(--size-body); text-decoration: none; }   /* a row that opens another screen (Find in race catalog) */
+.row--nav::after { content: ""; flex: none; width: var(--icon-s); height: var(--icon-s); background: var(--text-secondary); -webkit-mask: var(--icon-disclosure) center / contain no-repeat; mask: var(--icon-disclosure) center / contain no-repeat; }
+a.row--nav[href]:hover { background: var(--raised); }
+.row--nav[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }

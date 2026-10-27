@@ -79,7 +79,7 @@
   --leading-tight: 1;
   --leading-item: 1.2;
   --leading-body: 1.45;
-  --leading-box: 1.45;      /* split: the line height that layout math multiplies to get one line's box (the 44pt target offsets, the skeleton proof bar's centering), which borrowed --leading-body. Same value */
+  --leading-box: var(--leading-body);   /* the line height that layout math multiplies to get one line's box: the 44pt target offsets (calc((--target - size × leading) / ±2)) and the skeleton proof bar's centering. It points to --leading-body, so the two can't drift: the math must use the line height the text is actually set in, or the 44pt targets would shift the lines around them */
   --tracking-display: -0.03em;
   --tracking-label: 0.07em;
 
@@ -95,7 +95,9 @@
   --radius-tabbar: calc(var(--tabbar-h) / 2);   /* G1: the floating tab bar is a capsule */
   /* Not merged (tried in this step): one capsule radius for the three (calc(infinity * 1px), clamped to half of each box's
      own height) changes pixels. At 200% text the List/Map track (.view-toggle) is 47px tall and keeps 22px today, so it
-     isn't a full capsule there; one formula would round it to 23.5px. The three stay "half the nominal height". */
+     isn't a full capsule there; one formula would round it to 23.5px. The three stay "half the nominal height".
+     Designer, 2026-10-27: it stays as today through the refactor; a full capsule at large text is a "keep it" change for
+     after Lesson 8 (tokens/tokens-audit.md → After the lesson). */
   --border: 1px;
   --focus-ring: 2px;        /* the focus outline's width and offset */
   --invalid-ring: 2px;      /* split: the invalid field ring's width, which borrowed --focus-ring. Same value */

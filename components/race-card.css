@@ -1,0 +1,103 @@
+/* Race card (ui/inventory.md).
+   Each "order" line starts a block; scripts/build_components.py bundles every block of every file into
+   components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
+
+/* order 0090 */
+/* ---------- race card: photo inside, plain date column, title / chip / location ---------- */
+.race-card {
+  position: relative;
+  padding: var(--space-2);
+  border-radius: var(--radius-2);
+  background: var(--surface);
+}
+.race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
+.race-card .card-link:focus-visible { outline: none; }
+.race-card .card-link:focus-visible::after { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }
+
+/* order 0110 */
+.race-card .card-link {
+  display: grid;
+  grid-template-columns: var(--date-col) minmax(0, 1fr);
+  grid-template-areas: "date name" "date meta" "date loc";
+  column-gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3) 0 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-1);
+}
+.race-card h2 {   /* h2 on the screens and in the showcase (step 7, #13) */
+  grid-area: name;
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-text);
+  font-size: var(--size-item);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-item);
+  color: var(--text-primary);
+}
+.race-card .card-meta { display: contents; }
+.race-card .sport-tag { grid-area: meta; justify-self: start; margin-bottom: var(--space-1); }
+.race-card time {
+  grid-area: date;
+  display: block;
+  width: var(--date-col);
+  text-align: center;
+  font-family: var(--font-text);
+  font-size: var(--size-proof);
+  line-height: var(--leading-item);
+  color: var(--text-secondary);
+  align-self: stretch;                         /* the date sits on a tile */
+  padding: var(--space-3) var(--space-1);
+  border-radius: var(--radius-1);
+  background: var(--raised);
+}
+.race-card time .day {   /* the day: its own element (markup pass), so long months, other languages or text zoom never break the split */
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--size-day);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-primary);
+}
+.race-card .card-location {
+  grid-area: loc;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--size-meta);
+  color: var(--text-secondary);
+}
+.race-card .card-location::before, .proof-label::before {
+  content: "";
+  flex: none;
+  width: var(--icon-s);
+  height: var(--icon-s);
+  background: currentColor;
+  -webkit-mask: var(--icon-pin) center / contain no-repeat;
+  mask: var(--icon-pin) center / contain no-repeat;
+}
+
+/* order 0270 */
+/* ---------- loading: skeleton race card (wireframe markup; photo band drawn by CSS) ---------- */
+.race-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+
+/* order 0370 */
+.race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--boundary); }
+.race-card:has(.card-link:active), .race-card.is-pressed { background: var(--pressed); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
+.race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
+.race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-l) + var(--space-3)); }   /* G47: room for the checkmark */
+.race-card:has(.card-link[aria-current="true"])::after {   /* G47: the linked race in Race picker, the filter rows' neutral checkmark (C4) */
+  content: "";
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  width: var(--icon-l);   /* the glyph about 17px wide, its stroke heavier with it, as HIG's list checkmark (step 6, #35) */
+  height: var(--icon-l);
+  margin-top: calc(var(--icon-l) / -2);
+  background: var(--text-primary);
+  -webkit-mask: var(--icon-check) center / contain no-repeat;
+  mask: var(--icon-check) center / contain no-repeat;
+  pointer-events: none;
+}
