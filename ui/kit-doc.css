@@ -1,7 +1,39 @@
 /* The kit showcase's documentation layer (2026-10-26): the sidebar, the intro, each card's header and labels, in the
    artifact pages' own style (public/ia.html's colors and system type), so documentation never looks like product UI.
-   The stages that hold the specimens are product (.kit-frame, .kit-stage in ui/kit.css, on --bg-0, the product's page).
-   Laid out by scripts/build_kit_showcase.py. Not product: it holds the artifact pages' values, not kit tokens. */
+   The stages that hold the specimens (.kit-frame, .kit-stage, .kit-shell, .kit-tabbar, first below) show product on --bg-0,
+   the product's page; they moved here from ui/kit.css on 2026-10-27 (Lesson 8, step 2) because only the showcase uses them.
+   Laid out by scripts/build_kit_showcase.py. Not product: the doc layer holds the artifact pages' values; only the stages use kit tokens. */
+/* =================================================================
+   The stages (moved from the end of ui/kit.css, 2026-10-27, Lesson 8 step 2: showcase-only, never in the product).
+   First in this file, so they keep their place in the cascade, right after ui/kit.css. Kit tokens only.
+   ================================================================= */
+.kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
+  width: 100%;
+  max-width: var(--screen-w);
+  padding: var(--space-4);
+  border-radius: var(--radius-3);
+  background: var(--bg-0);
+  box-shadow: inset 0 0 0 var(--border) var(--line);
+  overflow: hidden;
+}
+.kit-frame--flush { padding: 0; }
+.kit-tabbar { position: relative; height: calc(var(--tabbar-h) + var(--tabbar-gap) * 2); }   /* the floating tab bar, on its own strip in the showcase */
+.kit-stage {   /* a positioned screen-height stage for sheets, the map and the alert */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: var(--kit-stage-h);
+  padding: 0;
+}
+.kit-stage > .phone-screen { flex: 1; min-height: 0; overflow: hidden; padding-bottom: 0; }
+.kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.kit-stack { display: grid; gap: var(--space-3); }
+.kit-shell { display: block; width: 100%; max-width: var(--screen-w); height: var(--kit-stage-h); border: 0; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--line); background: var(--bg-0); }
+.kit-stage dialog.alert { position: absolute; inset: 0; z-index: var(--z-sheet); margin: auto; height: max-content; }
+.kit-stage dialog.action-sheet { position: absolute; z-index: var(--z-sheet); inset: auto var(--space-2) var(--space-2); }
+.kit-frame .phone-screen { height: auto; overflow: visible; padding-bottom: 0; }   /* a strip of a screen, not the whole scrolling page */
+.kit-map { flex: 1; display: flex; flex-direction: column; padding: var(--space-4); }   /* the map's own panel, as #map-view on Race browse */
+
 .kit-doc {
   --d-bg: #0b0c0e;
   --d-elev: #141518;

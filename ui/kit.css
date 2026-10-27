@@ -1552,34 +1552,3 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .row .bar.label { margin: 0; }
 .row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
 .skel-signout .bar { height: var(--target); border-radius: var(--radius-2); }
-
-/* =================================================================
-   Showcase layout (ui/kit.html only, never in the product). Tokens only.
-   ================================================================= */
-/* the showcase's own layout (sidebar, cards, labels) is documentation, not product: ui/kit-doc.css (2026-10-26). The stages below are product. */
-.kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
-  width: 100%;
-  max-width: var(--screen-w);
-  padding: var(--space-4);
-  border-radius: var(--radius-3);
-  background: var(--bg-0);
-  box-shadow: inset 0 0 0 var(--border) var(--line);
-  overflow: hidden;
-}
-.kit-frame--flush { padding: 0; }
-.kit-tabbar { position: relative; height: calc(var(--tabbar-h) + var(--tabbar-gap) * 2); }   /* the floating tab bar, on its own strip in the showcase */
-.kit-stage {   /* a positioned screen-height stage for sheets, the map and the alert */
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: var(--kit-stage-h);
-  padding: 0;
-}
-.kit-stage > .phone-screen { flex: 1; min-height: 0; overflow: hidden; padding-bottom: 0; }
-.kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-.kit-stack { display: grid; gap: var(--space-3); }
-.kit-shell { display: block; width: 100%; max-width: var(--screen-w); height: var(--kit-stage-h); border: 0; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--line); background: var(--bg-0); }
-.kit-stage dialog.alert { position: absolute; inset: 0; z-index: var(--z-sheet); margin: auto; height: max-content; }
-.kit-stage dialog.action-sheet { position: absolute; z-index: var(--z-sheet); inset: auto var(--space-2) var(--space-2); }
-.kit-frame .phone-screen { height: auto; overflow: visible; padding-bottom: 0; }   /* a strip of a screen, not the whole scrolling page */
-.kit-map { flex: 1; display: flex; flex-direction: column; padding: var(--space-4); }   /* the map's own panel, as #map-view on Race browse */

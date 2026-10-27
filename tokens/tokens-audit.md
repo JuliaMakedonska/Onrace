@@ -442,3 +442,196 @@ These are read from the usages above and DESIGN.md's names. They're candidates f
 | **check_kit** | `scripts/check_kit.py` | no variable names |
 
 **A rename breaks each of these by name.** Renaming `--accent`, `--bg-*`, `--text-*`, `--error`, `--line`, `--field-line`, the glass tokens or `--scrim` needs the same rename in `build_stand.py`: in `PAIRS`, `GLASS_PAIRS`, `BG_LEVELS`, the rule 1 and 2 `selectors_using` calls, the rule 3a regex, `RULE_3B_OVERRIDE`, and the `glass_parts` and `SCRIM_A` parsers (both expect today's exact value format). It also needs the rename in DESIGN.md's frontmatter and its sidecar.
+
+
+---
+
+## Mapping: old variable → new token (Lesson 8, step 2, 2026-10-27; for steps 3–4)
+
+`tokens/tokens.css` holds the two levels. Nothing links it yet, and `ui/kit.css`'s tokens are unchanged. Use this table to switch the kit: each `var(--old)` in a kit class becomes the new token named here. Where one old token splits by use, the selectors are in the note.
+
+The counts are uses in `ui/kit.css`'s classes, as the step 2 test rewrote them. That rewrite is a scratch file, not in the repo. It's described below under "How it was checked".
+
+### Changed: 23 tokens
+
+| Old variable | Value today | Change | New token(s): uses in ui/kit.css classes | Note |
+|---|---|---|---|---|
+| `--bg-bar` | `#0F1114` | color → role | `--frame` | split: the void behind the sheet → `--frame`; the tab bar glass and the map water now build from `--graphite-5` themselves |
+| `--bg-0` | `#131518` | color → role | `--page` | and the `::selection` text; `--glass-ground` builds from `--graphite-7` |
+| `--bg-1` | `#1D2024` | color → role | `--surface` | `--map-land` builds from `--graphite-12` |
+| `--bg-2` | `#272B30` | color → role | `--raised` | row hover and press keep it (Lesson 9); `--glass-sheet` builds from `--graphite-17` |
+| `--bg-3` | `#2C3035` | color → role | `--pressed` ×10, `--group` ×2 | split by use: `.sheet .rows`, `.linked-race` → `--group`; `--map-lines` builds from `--graphite-20` |
+| `--line` | `#31363C` | color → role | `--hairline` |  |
+| `--field-line` | `#686E75` | color → role | `--boundary` |  |
+| `--text-1` | `#F4F5F6` | color → role | `--text-primary` |  |
+| `--text-2` | `#A3A9B0` | color → role | `--text-secondary` |  |
+| `--accent` | `#F5B649` | color → role | `--accent-fill` ×2, `--accent-ink` ×2 | split by use: `.top-bar .save-btn`, `.top-bar .bar-action`, `.bottom-nav a[aria-current="page"]` → `--accent-ink` |
+| `--on-accent` | `#131518` | color → role | `--on-accent-fill` | merge: same primitive as the page, `--graphite-7` |
+| `--error-bg` | `#3A2F31` | color → role | `--error-surface` | single use |
+| `--glass-edge` | `rgba(244, 245, 246, 0.08)` | color → role | `--glass-rim` | was raw rgba; now a mix of `--graphite-96` at `--alpha-8` |
+| `--shadow-sheet` | `0 12px 32px -12px rgba(0, 0, 0, 0.6)` | color → role | `--float-shadow` | geometry from `--shadow-y`, `--shadow-blur`, `--shadow-spread`; color its own mix of `--black` at `--alpha-60` |
+| `--focus` | `var(--text-1)` | merged | `--text-primary` | no focus role until Lesson 9 |
+| `--invalid` | `var(--error)` | merged | `--error` |  |
+| `--destructive` | `var(--error)` | merged | `--error` |  |
+| `--control-tint` | `var(--text-1)` | merged | `--text-primary` | C4: neutral; in light it stays the primary text color |
+| `--size-day` | `calc(30 * var(--type-unit))` | split by use | `--size-day` ×1, `--size-initials` ×1 | `.initials` → `--size-initials` |
+| `--leading-body` | `1.45` | split by use | `--leading-box` ×7, `--leading-body` ×1 | inside layout math (the 44pt target offsets, the skeleton proof bar) → `--leading-box` |
+| `--focus-ring` | `2px` | split by use | `--focus-ring` ×12, `--invalid-ring` ×4, `--spinner-stroke` ×1 | the invalid ring (`--ring-*`) → `--invalid-ring`; the busy spinner's border → `--spinner-stroke` |
+| `--glass-opacity` | `85%`; `100%` (reduced transparency) | absorbed | `--alpha-85` (token definitions only) | inside `--glass-bar` and `--glass-ground`; Reduce Transparency now swaps the glass roles to `--alpha-100` |
+| `--glass-opacity-sheet` | `90%`; `100%` (reduced transparency) | absorbed | `--alpha-90` (token definitions only) | inside `--glass-sheet` |
+
+### Same name, value rebuilt from primitives: 12 tokens
+
+| Old variable | Value today | Change | New token(s): uses in ui/kit.css classes | Note |
+|---|---|---|---|---|
+| `--chip-text` | `#BFC4CA` | same name | `--chip-text` | single use |
+| `--glass-bar` | `color-mix(in srgb, var(--bg-bar) var(--glass-opa…` | same name | `--glass-bar` | built from `--graphite-5` and `--alpha-85` |
+| `--glass-ground` | `color-mix(in srgb, var(--bg-0) var(--glass-opaci…` | same name | `--glass-ground` | built from `--graphite-7` and `--alpha-85` |
+| `--glass-sheet` | `color-mix(in srgb, var(--bg-2) var(--glass-opaci…` | same name | `--glass-sheet` | built from `--graphite-17` and `--alpha-90` |
+| `--scrim` | `rgba(0, 0, 0, 0.6)` | same name | `--scrim` | was raw rgba; now a mix of `--black` at `--alpha-60` |
+| `--fade-end` | `linear-gradient(to right, #000 calc(100% - var(-…` | same name | `--fade-end` | `#000` → `var(--black)` |
+| `--map-pin-dot` | `10px` | same name | `--map-pin-dot` | moves from ui/map.css to tokens.css |
+| `--map-water` | `var(--bg-bar)` | same name | `--map-water` | moves from ui/map.css to tokens.css; single use |
+| `--map-land` | `var(--bg-1)` | same name | `--map-land` | moves from ui/map.css to tokens.css; single use |
+| `--map-lines` | `var(--bg-3)` | same name | `--map-lines` | moves from ui/map.css to tokens.css; single use |
+| `--pin-h` | `22px` | same name | `--pin-h` | moves from ui/map.css to tokens.css |
+| `--pin-gap` | `6px` | same name | `--pin-gap` | moves from ui/map.css to tokens.css |
+
+### Same name, same value: 110 tokens
+
+Nothing changes in the classes for these. They move from `ui/kit.css` to `tokens/tokens.css` as they are:
+
+`--text-disabled`, `--accent-hover`, `--error`, `--glass-blur`, `--font-display`, `--font-text`, `--type-root`, `--type-unit`, `--size-title`, `--size-time`, `--size-time-hero`, `--size-time-hero-cap`, `--size-item`, `--size-body`, `--size-meta`, `--size-proof`, `--size-label`, `--weight-display`, `--weight-strong`, `--weight-regular`, `--leading-tight`, `--leading-item`, `--tracking-display`, `--tracking-label`, `--radius-1`, `--radius-2`, `--radius-sheet`, `--radius-bar-control`, `--radius-bar-inner`, `--radius-filter-chip`, `--radius-alert`, `--radius-avatar`, `--border`, `--target`, `--measure`, `--tap-pad`, `--hidden-size`, `--chip-height`, `--filter-chip-height`, `--space-1`, `--space-2`, `--space-3`, `--space-4`, `--space-5`, `--space-6`, `--space-7`, `--space-8`, `--space-9`, `--date-col`, `--photo-ratio`, `--photo-filter`, `--icon-s`, `--icon-m`, `--icon-l`, `--icon-search`, `--icon-search-field`, `--icon-pin`, `--icon-link`, `--icon-filters`, `--icon-chevron`, `--icon-error`, `--icon-check`, `--icon-saved`, `--icon-compass`, `--icon-stopwatch`, `--icon-user`, `--icon-close`, `--icon-back`, `--icon-disclosure`, `--icon-archive`, `--icon-sort`, `--icon-state`, `--skel-pulse-dim`, `--dur-pulse`, `--skel-line`, `--skel-title`, `--skel-title-w`, `--skel-tag-w`, `--skel-loc-w`, `--skel-count-w`, `--skel-row-title-w`, `--skel-time-w`, `--skel-time-h`, `--skel-date-w`, `--skel-proof-w`, `--screen-w`, `--tabbar-h`, `--tabbar-inset`, `--tabbar-gap`, `--radius-tabbar`, `--tabbar-clear`, `--sheet-gap-top`, `--z-under`, `--z-lift`, `--z-float`, `--z-bar`, `--z-edge`, `--z-scrim`, `--z-sheet`, `--sheet-large`, `--dur-sheet`, `--safe-top`, `--safe-bottom`, `--avatar-size`, `--alert-width`, `--ease-out`, `--dur-fast`, `--ease-in-out`, `--dur-spin`, `--spinner-size`.
+
+### Docs layer: 5 tokens (not in tokens.css)
+
+`--font-mono`, `--radius-3`, `--stand-max`, `--stand-col-min`, `--kit-stage-h`.
+
+Only the stand, the showcase stages and the docs CSS use these. When the kit switches, they move to the docs layer (`concept/stand.css` or `ui/kit-doc.css`). Until then, they stay in `ui/kit.css`, so that `build_stand.py`'s signed-token check still finds them.
+
+### Map data: 24 tokens (stay in ui/map.css)
+
+`--map-ratio`, `--map-land-mask`, `--map-lines-mask`, and each pin's `-x`, `-yf` and `-dy`. They're generated by `scripts/concept/build_map.py`, and only Race browse and the showcase load them. In step 3, `ui/map.css` loses its six design tokens (`--map-pin-dot`, `--map-water`, `--map-land`, `--map-lines`, `--pin-h`, `--pin-gap`), which are now in `tokens/tokens.css`.
+
+### New tokens with no old name
+
+- **Primitives:**
+  - the graphite ramp: `--graphite-5`, `-7`, `-12`, `-17`, `-20`, `-22`, `-46`, `-47`, `-69`, `-79` and `-96`;
+  - `--black`, `--amber-78`, `--amber-83`, `--coral-68` and `--coral-21`;
+  - the alphas: `--alpha-8`, `-60`, `-85`, `-90` and `-100`;
+  - the shadow geometry: `--shadow-y`, `--shadow-blur` and `--shadow-spread`.
+- **Splits:** `--size-initials`, `--leading-box`, `--invalid-ring` and `--spinner-stroke`.
+- **Semantic roles:**
+  - grounds and levels: `--frame`, `--page`, `--surface`, `--raised`, `--pressed` and `--group`;
+  - glass and depth: `--glass-rim` and `--float-shadow`;
+  - text and lines: `--text-primary`, `--text-secondary`, `--hairline` and `--boundary`;
+  - accent: `--accent-fill`, `--on-accent-fill` and `--accent-ink`;
+  - error: `--error-surface`.
+
+### The semantic level: 27 color roles
+
+| Role | Primitive | Why it's its own role (the light-appearance test) |
+|---|---|---|
+| `--frame` | `--graphite-5` | behind an open sheet, iOS light stays black; the tab bar doesn't |
+| `--page` | `--graphite-7` | the page |
+| `--surface` | `--graphite-12` | cards and row groups |
+| `--raised` | `--graphite-17` | fills on a surface |
+| `--pressed` | `--graphite-20` | an existing state role, kept for Lesson 9 |
+| `--group` | `--graphite-20` | a group rises lighter in light, while a press goes darker |
+| `--glass-bar`, `--glass-ground`, `--glass-sheet` | mixes | glass is its own material in light; the sheet doesn't follow `--raised` |
+| `--glass-rim`, `--scrim`, `--float-shadow` | mixes of `--graphite-96` / `--black` | light changes the scrim and the shadow differently, so the shadow doesn't reuse `--scrim` |
+| `--text-primary`, `--text-secondary`, `--text-disabled` | graphite | the text levels; also absorb `--focus` and `--control-tint` (no split in light) |
+| `--chip-text` | `--graphite-79` | single use |
+| `--hairline`, `--boundary` | graphite | a decorative line vs a 3:1 boundary |
+| `--accent-fill`, `--on-accent-fill` | amber, `--graphite-7` | the amber fill and the dark text on it stay in light, while the page turns light |
+| `--accent-ink` | `--amber-78` | amber text on a light bar needs a darker amber than the fill; the bar action and the current tab would change together |
+| `--accent-hover` | `--amber-83` | a state, kept whole for Lesson 9 |
+| `--error` | `--coral-68` | the icon, the invalid ring and destructive text take the same red in iOS light |
+| `--error-surface` | `--coral-21` | single use |
+| `--map-water`, `--map-land`, `--map-lines` | graphite | single use |
+
+**Single-use roles, for the step 6 check:** `--chip-text` (`.sport-tag`), `--error-surface` (`.inline-error`, `.form-alert`), `--map-water` (`.map-placeholder`, the ring of `.map-pin::before`), `--map-land` (`.map-placeholder::before`) and `--map-lines` (`.map-placeholder::after`). Each carries the comment "single use, a role because the theme changes it".
+
+**Not merged, recorded:**
+- **The three chip heights** (24, 32, 22): three different components.
+- **The hover and pressed steps:** +1 on rows and controls, +2 on cards. These are states, for Lesson 9.
+- **The three capsule radii:** tried as one formula, rejected because it changes pixels. At 200% text the List/Map track is 47px tall and today keeps a 22px radius; a capsule would make it 23.5px.
+- **The spinner's circle** borrows `--radius-avatar`: recorded, not split.
+
+### What steps 3–4 must rename outside ui/kit.css
+
+| Where | What names an old token |
+|---|---|
+| `build_stand.py`: `PAIRS` | `bg-*`, `line`, `field-line`, `text-1`, `text-2`, `accent`, `on-accent`, `error-bg`, `focus`, `invalid`, `destructive` and `control-tint`. The last four now resolve to `--text-primary` or `--error`, so their pairs become duplicates of existing ones. |
+| `build_stand.py`: `GLASS_PAIRS`, `glass_parts()`, `SCRIM_A` | `glass_parts()` expects `color-mix(in srgb, var(--A) var(--B), transparent)`; the glass roles keep that form (`--B` is now `--alpha-85` or `--alpha-90`). `SCRIM_A` parses `rgba(0, 0, 0, a)`, but `--scrim` is now a `color-mix` with `--black`, so the parse must change. |
+| `build_stand.py`: rule 1 | `selectors_using('accent', 'accent-hover')` → `accent-fill`, `accent-ink`, `accent-hover`; `ACCENT_OK` is unchanged (the same selectors) |
+| `build_stand.py`: rule 3a | `BG_LEVELS` → the graphite primitives or `--frame` … `--pressed`; the line-as-fill regex → `--hairline`, `--boundary` |
+| `build_stand.py`: rule 3b | `tok('accent')` → `tok('amber-78')`; `RULE_3B_OVERRIDE` stays bound to `#F5B649` |
+| `build_stand.py`: signed tokens | the stand must sign every primitive and role in `tokens/tokens.css` (it reads `:root` blocks from the kit and map files today) |
+| `build_stand.py`, `lesson_page.py`, `build_concept_overview.py` | read `ui/kit.css` for `TOK`; they'll need `tokens/tokens.css` |
+| `build_design_sidecar.py` | reads `--dur-*` and `--ease-*` from `ui/kit.css` |
+| `DESIGN.md` frontmatter, `.impeccable/design.json` | the hex values under the old names |
+| `concept/stand.css`, `concept/specimens.css`, `ui/kit-doc.css` (the stages) | the old names (`--bg-0`, `--line`, `--accent`, `--text-*` …); they need the mapping too, or an alias layer while they move |
+| `.kit-tabbar > .bottom-nav` | still in two product selectors in `ui/kit.css` (see "What changed in step 2") |
+
+---
+
+## Step 2 record (2026-10-27)
+
+### What changed in step 2
+
+- **New: `tokens/tokens.css`.**
+  - Primitives:
+    - the graphite ramp named by L*, plus `--black`, two ambers, two corals and five alphas;
+    - every non-color value under the kit's own name;
+    - the 17 icon masks.
+  - Splits, each with its own primitive at the same value: `--size-initials`, `--leading-box`, `--invalid-ring` and `--spinner-stroke`.
+  - One merge: `--on-accent-fill` points to `--graphite-7`, the page's primitive.
+  - 27 semantic color roles.
+  - The Dynamic Type, Reduce Motion and Reduce Transparency overrides.
+  - No page links it yet.
+- **`ui/kit.css`: only the showcase block was removed.** The stages are `.kit-frame`, `.kit-frame--flush`, `.kit-tabbar`, `.kit-stage`, `.kit-row`, `.kit-stack`, `.kit-shell` and `.kit-map`, plus the stage rules for the alert and the action sheet. They moved word for word to the top of `ui/kit-doc.css`, which `ui/kit.html` loads right after the kit, so they keep their place in the cascade.
+  - No token in `ui/kit.css` changed.
+  - Two product selectors still name `.kit-tabbar > .bottom-nav`, next to `body > .bottom-nav`. Moving them would mean copying the tab bar's 13 declarations into the docs layer, where they could drift from the product's. This is left for step 3; one option is to show the tab bar through the `ui/shell.html` frame the showcase already uses.
+- **The build re-stamped** every page's `?v=` (the kit's hash changed) and mirrored to `public/`. No page changed in any other way: every changed line differs only in its `?v=`.
+- **Docs updated:**
+  - `CLAUDE.md`: where the stages live, and the Lesson 8 status;
+  - `tokens/README.md`;
+  - this file: the mapping and this record.
+
+### How it was checked
+
+1. **A scratch "kit on tokens" (not in the repo).**
+   - It is `tokens/tokens.css` plus `ui/kit.css`'s classes, with its `:root` and override blocks removed and every `var(--old)` rewritten through the mapping above, including the per-selector splits.
+   - A static check found no old name left in the rewritten classes.
+   - The docs CSS (stand, specimens, kit-doc stages) still names old tokens, so the test kit carries an alias layer for them only.
+   - The map file was tested without its six moved tokens.
+2. **Today against the token kit, in headless Chrome over local HTTP.**
+   - "Today" is a snapshot of HEAD before step 2; the other side is the working tree with the showcase moved and the kit swapped for the scratch version.
+   - **What ran:** 545 states:
+     - every wireframe state, including Race browse with 0–5 filters, the map and the sheet, plus the two alerts;
+     - the showcase, the shell, the stand, the first screen, and 11 review pages.
+   - **The five passes:**
+     - 390 wide;
+     - 320 wide;
+     - 390 at 200% text;
+     - 390 with Reduce Transparency;
+     - 390 with motion on (computed styles only).
+   - **Compared:** every standard computed property of every element and of every rendered `::before` and `::after`, colors normalized to rgba, plus each element's box and a screenshot. Animations were frozen at t=0, and images were loaded before reading.
+   - **Result: 0 computed-style differences in all 545 states.** Two screenshots differed:
+     - Race detail (UTMB) at 200% text: 8 pixels in one column, each channel off by at most 2. Today's kit against itself shows the same 8 pixels, so this is glyph-edge render noise.
+     - The Race browse map view, once. It was clean on two reruns: the map's stylesheet loads deferred.
+3. **Glass, scrim and shadow compute to today's values.** The glass backgrounds, the rim, the scrim and the float shadow are covered by the computed-style comparison, at rest and under Reduce Transparency, where the glass turns solid.
+4. **One merge was tried and rejected.** One capsule radius for the three capsules failed the comparison at 200% text: the List/Map track went from 22px to 23.5px. The three tokens stay.
+5. **The real build passes** with the move: every color rule, 109 contrast pairs, the glass pairs, 180 of 180 signed tokens, `check_kit`, and `check_overflow` (321 states).
+
+### Still unknown
+
+- **`--leading-box` and `--leading-body` can now drift apart.** The 44pt target offsets multiply a line height that equals the text's own `line-height` (`--leading-body`). If one changes alone, the offsets will be wrong. Decide in step 3 whether this split stays.
+- **Is the List/Map track meant to be a full capsule at large text?** Today it isn't (22px radius on a 47px track). C7 says capsule. This is a designer call, outside a refactor.
+- **Whether the non-color tokens need a semantic level** (type roles, component sizes, z-layers). This step's semantic level is color only, as asked. Non-color tokens keep the kit's names, so `--size-body` and `--size-meta` stay two tokens.
+- **Primitive names are L* numbers.** Changing a value renames its primitive. That's intended for a value ramp, but DESIGN.md's names (Chalk, Ash, Sodium Amber) live only in comments.
+- **`calc(infinity * 1px)`** was tried for the capsule and isn't used.
+- **The light appearance itself:** no light values exist. The splits rest on how iOS light behaves, not on a designed light theme, so some may prove unnecessary or missing once one is drawn.
+- **The build checks still read `ui/kit.css`** and name old tokens (see "What steps 3–4 must rename"). `SCRIM_A` will need a new parse for the `color-mix` scrim.
+- **The glass values stay provisional [?]**, as before (Apple's iOS 26 kit wasn't read).
