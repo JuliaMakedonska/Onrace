@@ -1,7 +1,7 @@
 /* Onrace tokens: two levels (Lesson 8, step 2, 2026-10-27).
    Built from tokens/tokens-audit.md, ui/kit.css, ui/map.css and DESIGN.md. A refactor, not a redesign:
-   every value here is a value the kit already has, and nothing links this file yet (steps 3–4 switch the kit;
-   the old → new mapping is in tokens/tokens-audit.md → Mapping).
+   every value here is a value the kit already has. Linked, with components/index.css, by ui/kit.html since step 3;
+   the screens switch in step 4 (the old → new mapping is in tokens/tokens-audit.md → Mapping).
 
    1. PRIMITIVES: raw values, no roles in the names.
       - Colors are named by hue and lightness (CIE L*, rounded): --graphite-7 is the gray at L* 6.69.
@@ -16,8 +16,9 @@
    Not here:
    - the docs layer's values (--font-mono, --stand-max, --stand-col-min, --radius-3, --kit-stage-h);
      they go to the docs layer when the kit switches;
-   - the map's generated data (Natural Earth masks, --map-ratio, each pin's x, y and label offset): it stays in
-     ui/map.css, linked by Race browse only, so other screens don't download 110 KB of masks. */
+   - the map's generated data (Natural Earth masks, --map-ratio, each pin's x, y and label offset): it stays in a data
+     file linked only where the static map shows (ui/map-data.css; ui/map.css for the screens until step 4), so other
+     screens don't download 110 KB of masks. */
 
 :root {
   color-scheme: dark;
