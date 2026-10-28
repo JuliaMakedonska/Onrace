@@ -1,12 +1,13 @@
 """Generate concept/concept.html (the concept stand).
 
 Usage, from the repo root:  python3 scripts/concept/build_stand.py
-The page holds no style values: it links ui/kit.css (every value and every
-component, since Lesson 7 step 3a) and concept/stand.css (the stand's own layout).
-Every contrast ratio is computed here from the hex values in ui/kit.css, and
+The page holds no style values: it links tokens/tokens.css (every value: primitives
+and semantic color roles), components/index.css (every component) since Lesson 8
+step 4, and concept/specimens.css and concept/stand.css (the docs layer).
+Every contrast ratio is computed here from the hex values in tokens/tokens.css, and
 the build stops if any text pair fails WCAG AA. Re-run after changing a token;
-it stamps the pages that link the kit and mirrors the stand, the kit and the
-map to public/."""
+it stamps the pages that link the kit, checks that no page links a missing file,
+and mirrors the stand, the kit and the map to public/."""
 import sys, os, re
 sys.path.insert(0, os.path.dirname(__file__))
 from colorlib import cr
@@ -14,15 +15,21 @@ from colorlib import cr
 HERE = os.path.dirname(os.path.abspath(__file__))
 ICONS = os.path.join(HERE, 'icons')
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-KIT = open(os.path.join(ROOT, 'ui/kit.css')).read()
-# the tokens: every :root block of ui/kit.css (the reduced-motion one included) and of ui/map.css
-TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', KIT + ''.join(open(os.path.join(ROOT, f)).read() for f in ('ui/map.css', 'concept/specimens.css', 'concept/stand.css')), flags=re.S))   # stand-only tokens live in specimens.css and stand.css since step 6, #41   # tokens only: map.css's per-pin rules (step 6) set local variables, not tokens
+def _read(f): return open(os.path.join(ROOT, f)).read()
+# Lesson 8 step 4: the values are tokens/tokens.css (primitives + semantic roles) and the components components/index.css
+TOKENS = _read('tokens/tokens.css')
+COMPONENTS = _read('components/index.css')
+# the tokens: every :root block of tokens/tokens.css (its first block holds every value; the later ones are the Dynamic
+# Type, reduced-motion and Reduce Transparency overrides), of ui/map-data.css (the generated map data) and of the docs
+# layer (specimens.css, stand.css, kit-doc.css). tok() reads the first definition: the value at rest.
+TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', TOKENS + ''.join(_read(f) for f in ('ui/map-data.css', 'concept/specimens.css', 'concept/stand.css', 'ui/kit-doc.css')), flags=re.S))   # tokens only: map-data.css's per-pin rules set local variables, not tokens
 
 def tok(name):
     m = re.search(r'--' + re.escape(name) + r':\s*([^;]+);', TOK)
     v = m.group(1).strip()
     r = re.match(r'var\(--([a-z0-9-]+)\)', v)
-    return tok(r.group(1)) if r else v
+    if r: return tok(r.group(1))
+    return '#' + ''.join(c * 2 for c in v[1:]) if re.fullmatch(r'#[0-9A-Fa-f]{3}', v) else v   # #000 → #000000
 
 def px(name):
     """A type-scaled size as shown on the stand: 'calc(34 * var(--type-unit))' → '34px'."""
@@ -41,115 +48,115 @@ def wrap(label, table):
 
 # ---------------------------------------------------------------- contrast
 PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' | 'exempt'
-    ('Titles, body, finish time on the page', 'text-1', 'bg-0', 'text'),
-    ('Titles, item titles, finish time on a card', 'text-1', 'bg-1', 'text'),
-    ('Secondary button label', 'text-1', 'bg-2', 'text'),
-    ('Active filter chip label on its tonal capsule (designer, 2026-10-22)', 'text-1', 'bg-2', 'text'),
-    ('Active filter chip label, hover', 'text-1', 'bg-3', 'text'),
-    ('Selected List/Map segment, hover and open fills', 'text-1', 'bg-3', 'text'),
-    ('Unselected List/Map segment on hover', 'text-2', 'bg-3', 'text'),
-    ('Meta on the page (counts, sort)', 'text-2', 'bg-0', 'text'),
-    ('Meta on a card (month and year, location, proof line)', 'text-2', 'bg-1', 'text'),
-    ('Search placeholder', 'text-2', 'bg-1', 'text'),
-    ('Date day on the tile', 'text-1', 'bg-2', 'text'),
-    ('Date month and year on the tile', 'text-2', 'bg-2', 'text'),
-    ('Unselected List/Map segment', 'text-2', 'bg-2', 'text'),
-    ('Inactive tab label', 'text-2', 'bg-bar', 'text'),
-    ('Current tab label (accent)', 'accent', 'bg-bar', 'text'),
-    ('Format chip label', 'chip-text', 'bg-2', 'text'),
-    ('Primary button label', 'on-accent', 'accent', 'text'),
-    ('Primary button label, hover', 'on-accent', 'accent-hover', 'text'),
-    ('Error title and icon', 'error', 'error-bg', 'text'),
-    ('Error body', 'text-1', 'error-bg', 'text'),
-    ('Inline error text on a card', 'error', 'bg-1', 'text'),
+    ('Titles, body, finish time on the page', 'text-primary', 'page', 'text'),
+    ('Titles, item titles, finish time on a card', 'text-primary', 'surface', 'text'),
+    ('Secondary button label', 'text-primary', 'raised', 'text'),
+    ('Active filter chip label on its tonal capsule (designer, 2026-10-22)', 'text-primary', 'raised', 'text'),
+    ('Active filter chip label, hover', 'text-primary', 'pressed', 'text'),
+    ('Selected List/Map segment, hover and open fills', 'text-primary', 'pressed', 'text'),
+    ('Unselected List/Map segment on hover', 'text-secondary', 'pressed', 'text'),
+    ('Meta on the page (counts, sort)', 'text-secondary', 'page', 'text'),
+    ('Meta on a card (month and year, location, proof line)', 'text-secondary', 'surface', 'text'),
+    ('Search placeholder', 'text-secondary', 'surface', 'text'),
+    ('Date day on the tile', 'text-primary', 'raised', 'text'),
+    ('Date month and year on the tile', 'text-secondary', 'raised', 'text'),
+    ('Unselected List/Map segment', 'text-secondary', 'raised', 'text'),
+    ('Inactive tab label', 'text-secondary', 'graphite-5', 'text'),
+    ('Current tab label (accent)', 'accent-ink', 'graphite-5', 'text'),
+    ('Format chip label', 'chip-text', 'raised', 'text'),
+    ('Primary button label', 'on-accent-fill', 'accent-fill', 'text'),
+    ('Primary button label, hover', 'on-accent-fill', 'accent-hover', 'text'),
+    ('Error title and icon', 'error', 'error-surface', 'text'),
+    ('Error body', 'text-primary', 'error-surface', 'text'),
+    ('Inline error text on a card', 'error', 'surface', 'text'),
     ('Success title and icon', 'success', 'success-bg', 'text'),
-    ('Success body', 'text-1', 'success-bg', 'text'),
+    ('Success body', 'text-primary', 'success-bg', 'text'),
     ('Warning title, icon and body', 'warning', 'warning-bg', 'text'),
-    ('Stand panels: secondary text', 'text-2', 'bg-bar', 'text'),
-    ('Focus ring against the page (non-text, 3:1)', 'focus', 'bg-0', 'ui'),
-    ('Focus ring against a card (non-text, 3:1)', 'focus', 'bg-1', 'ui'),
-    ('Search field outline against its own fill (non-text, 3:1)', 'field-line', 'bg-1', 'ui'),
-    ('Search field outline against the page (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
-    ('Disabled button label', 'text-disabled', 'bg-2', 'exempt'),
-    ('Result count number', 'text-1', 'bg-0', 'text'),
-    ('Result count text, Sort: label', 'text-2', 'bg-0', 'text'),
-    ('Sort value (Soonest first)', 'text-1', 'bg-0', 'text'),
-    ('Sort chevron (non-text, 3:1)', 'text-1', 'bg-0', 'ui'),
-    ('Filters label and icon on the secondary button', 'text-1', 'bg-2', 'text'),
-    ('Empty and error state heading', 'text-1', 'bg-0', 'text'),
-    ('Empty and error state body', 'text-2', 'bg-0', 'text'),
-    ('Error icon in the state heading (non-text, 3:1)', 'error', 'bg-0', 'ui'),
-    ('Kit · top bar: back link, title, Cancel, Save', 'text-1', 'bg-0', 'text'),
-    ('Kit · Save while saving ("Saving…")', 'text-2', 'bg-0', 'text'),
-    ('Kit · detail facts label (Sport type, Race date)', 'text-2', 'bg-0', 'text'),
-    ('Kit · inline error and form alert text', 'text-1', 'error-bg', 'text'),
-    ('Kit · error icon in an inline error (non-text, 3:1)', 'error', 'error-bg', 'ui'),
-    ('Kit · action bar caption ("Opens in a new tab.")', 'text-2', 'bg-bar', 'text'),
-    ('Kit · primary button in the action bar', 'on-accent', 'accent', 'text'),
-    ('Kit · text field value and label on a field', 'text-1', 'bg-1', 'text'),
-    ('Kit · field label and hint on the page', 'text-2', 'bg-0', 'text'),
-    ('Kit · field boundary against the page (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
-    ('Kit · field error icon on the page (non-text, 3:1)', 'error', 'bg-0', 'ui'),
-    ('Kit · Profile row value and note', 'text-2', 'bg-1', 'text'),
-    ('Kit · Profile initials on their tile', 'text-1', 'bg-2', 'text'),
-    ('Kit · confirm alert body', 'text-2', 'bg-1', 'text'),
-    ('Kit · small secondary button (Dismiss, Unlink race)', 'text-1', 'bg-2', 'text'),
-    ('Kit · disabled catalog row label', 'text-disabled', 'bg-1', 'exempt'),
-    ('Disabled sort while loading', 'text-disabled', 'bg-0', 'exempt'),
-    ('Skeleton bar on a card', 'bg-2', 'bg-1', 'info'),
-    ('Race browse · Filters sheet heading, checkbox labels', 'text-1', 'bg-1', 'text'),
-    ('Race browse · Filters sheet field labels and legend', 'text-2', 'bg-1', 'text'),
-    ('Race browse · Filters sheet field value (select, dates)', 'text-1', 'bg-0', 'text'),
-    ('Race browse · Filters sheet field outline (non-text, 3:1)', 'field-line', 'bg-1', 'ui'),
-    ('Race browse · checkbox against the sheet (non-text, 3:1)', 'text-1', 'bg-1', 'ui'),
-    ('Race browse · Cancel (secondary) in the sheet', 'text-1', 'bg-2', 'text'),
-    ('Race browse · Map placeholder caption', 'text-2', 'bg-1', 'text'),
-    ('Race browse · Map pin label', 'text-1', 'bg-2', 'text'),
-    ('Race browse · Map pin dot on its label (non-text, 3:1)', 'text-1', 'bg-2', 'ui'),
-    ('Race browse · Map placeholder outline (non-text, 3:1)', 'field-line', 'bg-0', 'ui'),
-    ('Race browse · Map caption on water', 'text-2', 'bg-bar', 'text'),
-    ('Race browse · Map pin dot on land (non-text, 3:1)', 'text-1', 'bg-1', 'ui'),
-    ('Race browse · Map pin dot on water (non-text, 3:1)', 'text-1', 'bg-bar', 'ui'),
-    ('Race browse · Map leader line on land (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
-    ('Race browse · Map leader line on water (non-text, 3:1)', 'text-2', 'bg-bar', 'ui'),
-    ('Race browse · Map state panel text (empty, error) on its panel', 'text-1', 'bg-1', 'text'),
-    ('Race browse · coastlines and borders on land', 'bg-3', 'bg-1', 'info'),
-    ('Results list · saved confirmation text ("Saved: HYROX London"), neutral surface', 'text-1', 'bg-1', 'text'),
-    ('Results list · saved confirmation icon, neutral (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
-    ('Results list · "Newest first" after the count', 'text-2', 'bg-0', 'text'),
-    ('Results list · Log result stepped down to secondary (empty, error)', 'text-1', 'bg-2', 'text'),
-    ('Results list · count separator hairline', 'line', 'bg-0', 'info'),
-    ('Skeleton count bar on the page', 'bg-2', 'bg-0', 'info'),
-    ('Race browse · filter chip remove icon on the capsule, close-circle (non-text, 3:1)', 'text-2', 'bg-2', 'ui'),
-    ('Race browse · filter chip remove icon on the capsule, hover (non-text, 3:1)', 'text-2', 'bg-3', 'ui'),
-    ('Race browse · Filters sheet calendar icon in a date field (non-text, 3:1)', 'text-1', 'bg-0', 'ui'),
-    ('Empty state icon, muted, on the page (non-text, 3:1)', 'text-2', 'bg-0', 'ui'),
-    ('Error state icon, coral, on the page (non-text, 3:1)', 'error', 'bg-0', 'ui'),
-    ('Empty or error state icon inside the map panel (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
-    ('Profile · Sign out in its row (destructive, coral; G68, designer 2026-10-23)', 'destructive', 'bg-1', 'text'),
-    ('Profile · Sign out row, hover', 'destructive', 'bg-2', 'text'),
-    ('Filters sheet · row label and checked sport type on the raised rows (G19, G20)', 'text-1', 'bg-3', 'text'),
-    ('Filters sheet · neutral checkmark on a raised row (non-text, 3:1; G19, C4)', 'control-tint', 'bg-3', 'ui'),
-    ('Filters sheet · Region value on a raised row (a native menu, G17)', 'text-2', 'bg-3', 'text'),
-    ('Filters sheet · Region pop-up chevron on a raised row (non-text, 3:1)', 'text-2', 'bg-3', 'ui'),
-    ('Filters sheet · date value on its compact-picker pill (G18)', 'text-1', 'bg-2', 'text'),
-    ('Filters sheet · calendar glyph on the date pill (non-text, 3:1)', 'text-2', 'bg-2', 'ui'),
-    ('Race browse · Sort button: the current order and its icon (G21)', 'text-1', 'bg-0', 'text'),
-    ('Race picker · the linked race’s checkmark on its card (non-text, 3:1; G47)', 'control-tint', 'bg-1', 'ui'),
-    ('Log result · the linked race on the sheet: name, facts and Unlink (step 6, #8)', 'text-1', 'bg-3', 'text'),
-    ('Date pill · "Choose a date" when empty (step 6, #26)', 'text-2', 'bg-2', 'text'),
-    ('Date pill · the date (step 6, #26)', 'text-1', 'bg-2', 'text'),
-    ('Log result · the linked race on the sheet: "From the race catalog", the place (step 6, #8)', 'text-2', 'bg-3', 'text'),
-    ('Profile · an editable value in its row (step 6, #21)', 'text-1', 'bg-1', 'text'),
-    ('Result detail · Copy link under the official result link (step 6, #10)', 'text-1', 'bg-0', 'text'),
-    ('Race browse · Sort button disabled while loading', 'text-disabled', 'bg-0', 'exempt'),
-    ('Results list · Log result stepped down to Text 1 when a state brings its own primary (-error)', 'text-1', 'bg-0', 'text'),
-    ('Kit · invalid field ring against the field (non-text, 3:1)', 'invalid', 'bg-1', 'ui'),
-    ('Kit · invalid field ring against the page (non-text, 3:1)', 'invalid', 'bg-0', 'ui'),
-    ('Results list · disclosure indicator on a row (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
-    ('Pressed card or row: meta on the pressed level', 'text-2', 'bg-3', 'text'),
-    ('Pressed race card: format chip label (the chip keeps bg-2)', 'chip-text', 'bg-2', 'text'),
-    ('Profile · pop-up chevron on a row, Saving… spinner (non-text, 3:1)', 'text-2', 'bg-1', 'ui'),
+    ('Stand panels: secondary text', 'text-secondary', 'frame', 'text'),
+    ('Focus ring against the page (non-text, 3:1)', 'text-primary', 'page', 'ui'),
+    ('Focus ring against a card (non-text, 3:1)', 'text-primary', 'surface', 'ui'),
+    ('Search field outline against its own fill (non-text, 3:1)', 'boundary', 'surface', 'ui'),
+    ('Search field outline against the page (non-text, 3:1)', 'boundary', 'page', 'ui'),
+    ('Disabled button label', 'text-disabled', 'raised', 'exempt'),
+    ('Result count number', 'text-primary', 'page', 'text'),
+    ('Result count text, Sort: label', 'text-secondary', 'page', 'text'),
+    ('Sort value (Soonest first)', 'text-primary', 'page', 'text'),
+    ('Sort chevron (non-text, 3:1)', 'text-primary', 'page', 'ui'),
+    ('Filters label and icon on the secondary button', 'text-primary', 'raised', 'text'),
+    ('Empty and error state heading', 'text-primary', 'page', 'text'),
+    ('Empty and error state body', 'text-secondary', 'page', 'text'),
+    ('Error icon in the state heading (non-text, 3:1)', 'error', 'page', 'ui'),
+    ('Kit · top bar: back link, title, Cancel, Save', 'text-primary', 'page', 'text'),
+    ('Kit · Save while saving ("Saving…")', 'text-secondary', 'page', 'text'),
+    ('Kit · detail facts label (Sport type, Race date)', 'text-secondary', 'page', 'text'),
+    ('Kit · inline error and form alert text', 'text-primary', 'error-surface', 'text'),
+    ('Kit · error icon in an inline error (non-text, 3:1)', 'error', 'error-surface', 'ui'),
+    ('Kit · action bar caption ("Opens in a new tab.")', 'text-secondary', 'graphite-5', 'text'),
+    ('Kit · primary button in the action bar', 'on-accent-fill', 'accent-fill', 'text'),
+    ('Kit · text field value and label on a field', 'text-primary', 'surface', 'text'),
+    ('Kit · field label and hint on the page', 'text-secondary', 'page', 'text'),
+    ('Kit · field boundary against the page (non-text, 3:1)', 'boundary', 'page', 'ui'),
+    ('Kit · field error icon on the page (non-text, 3:1)', 'error', 'page', 'ui'),
+    ('Kit · Profile row value and note', 'text-secondary', 'surface', 'text'),
+    ('Kit · Profile initials on their tile', 'text-primary', 'raised', 'text'),
+    ('Kit · confirm alert body', 'text-secondary', 'surface', 'text'),
+    ('Kit · small secondary button (Dismiss, Unlink race)', 'text-primary', 'raised', 'text'),
+    ('Kit · disabled catalog row label', 'text-disabled', 'surface', 'exempt'),
+    ('Disabled sort while loading', 'text-disabled', 'page', 'exempt'),
+    ('Skeleton bar on a card', 'raised', 'surface', 'info'),
+    ('Race browse · Filters sheet heading, checkbox labels', 'text-primary', 'surface', 'text'),
+    ('Race browse · Filters sheet field labels and legend', 'text-secondary', 'surface', 'text'),
+    ('Race browse · Filters sheet field value (select, dates)', 'text-primary', 'page', 'text'),
+    ('Race browse · Filters sheet field outline (non-text, 3:1)', 'boundary', 'surface', 'ui'),
+    ('Race browse · checkbox against the sheet (non-text, 3:1)', 'text-primary', 'surface', 'ui'),
+    ('Race browse · Cancel (secondary) in the sheet', 'text-primary', 'raised', 'text'),
+    ('Race browse · Map placeholder caption', 'text-secondary', 'surface', 'text'),
+    ('Race browse · Map pin label', 'text-primary', 'raised', 'text'),
+    ('Race browse · Map pin dot on its label (non-text, 3:1)', 'text-primary', 'raised', 'ui'),
+    ('Race browse · Map placeholder outline (non-text, 3:1)', 'boundary', 'page', 'ui'),
+    ('Race browse · Map caption on water', 'text-secondary', 'map-water', 'text'),
+    ('Race browse · Map pin dot on land (non-text, 3:1)', 'text-primary', 'map-land', 'ui'),
+    ('Race browse · Map pin dot on water (non-text, 3:1)', 'text-primary', 'map-water', 'ui'),
+    ('Race browse · Map leader line on land (non-text, 3:1)', 'text-secondary', 'map-land', 'ui'),
+    ('Race browse · Map leader line on water (non-text, 3:1)', 'text-secondary', 'map-water', 'ui'),
+    ('Race browse · Map state panel text (empty, error) on its panel', 'text-primary', 'surface', 'text'),
+    ('Race browse · coastlines and borders on land', 'map-lines', 'map-land', 'info'),
+    ('Results list · saved confirmation text ("Saved: HYROX London"), neutral surface', 'text-primary', 'surface', 'text'),
+    ('Results list · saved confirmation icon, neutral (non-text, 3:1)', 'text-secondary', 'surface', 'ui'),
+    ('Results list · "Newest first" after the count', 'text-secondary', 'page', 'text'),
+    ('Results list · Log result stepped down to secondary (empty, error)', 'text-primary', 'raised', 'text'),
+    ('Results list · count separator hairline', 'hairline', 'page', 'info'),
+    ('Skeleton count bar on the page', 'raised', 'page', 'info'),
+    ('Race browse · filter chip remove icon on the capsule, close-circle (non-text, 3:1)', 'text-secondary', 'raised', 'ui'),
+    ('Race browse · filter chip remove icon on the capsule, hover (non-text, 3:1)', 'text-secondary', 'pressed', 'ui'),
+    ('Race browse · Filters sheet calendar icon in a date field (non-text, 3:1)', 'text-primary', 'page', 'ui'),
+    ('Empty state icon, muted, on the page (non-text, 3:1)', 'text-secondary', 'page', 'ui'),
+    ('Error state icon, coral, on the page (non-text, 3:1)', 'error', 'page', 'ui'),
+    ('Empty or error state icon inside the map panel (non-text, 3:1)', 'text-secondary', 'surface', 'ui'),
+    ('Profile · Sign out in its row (destructive, coral; G68, designer 2026-10-23)', 'error', 'surface', 'text'),
+    ('Profile · Sign out row, hover', 'error', 'raised', 'text'),
+    ('Filters sheet · row label and checked sport type on the raised rows (G19, G20)', 'text-primary', 'group', 'text'),
+    ('Filters sheet · neutral checkmark on a raised row (non-text, 3:1; G19, C4)', 'text-primary', 'group', 'ui'),
+    ('Filters sheet · Region value on a raised row (a native menu, G17)', 'text-secondary', 'group', 'text'),
+    ('Filters sheet · Region pop-up chevron on a raised row (non-text, 3:1)', 'text-secondary', 'group', 'ui'),
+    ('Filters sheet · date value on its compact-picker pill (G18)', 'text-primary', 'raised', 'text'),
+    ('Filters sheet · calendar glyph on the date pill (non-text, 3:1)', 'text-secondary', 'raised', 'ui'),
+    ('Race browse · Sort button: the current order and its icon (G21)', 'text-primary', 'page', 'text'),
+    ('Race picker · the linked race’s checkmark on its card (non-text, 3:1; G47)', 'text-primary', 'surface', 'ui'),
+    ('Log result · the linked race on the sheet: name, facts and Unlink (step 6, #8)', 'text-primary', 'group', 'text'),
+    ('Date pill · "Choose a date" when empty (step 6, #26)', 'text-secondary', 'raised', 'text'),
+    ('Date pill · the date (step 6, #26)', 'text-primary', 'raised', 'text'),
+    ('Log result · the linked race on the sheet: "From the race catalog", the place (step 6, #8)', 'text-secondary', 'group', 'text'),
+    ('Profile · an editable value in its row (step 6, #21)', 'text-primary', 'surface', 'text'),
+    ('Result detail · Copy link under the official result link (step 6, #10)', 'text-primary', 'page', 'text'),
+    ('Race browse · Sort button disabled while loading', 'text-disabled', 'page', 'exempt'),
+    ('Results list · Log result stepped down to Text 1 when a state brings its own primary (-error)', 'text-primary', 'page', 'text'),
+    ('Kit · invalid field ring against the field (non-text, 3:1)', 'error', 'surface', 'ui'),
+    ('Kit · invalid field ring against the page (non-text, 3:1)', 'error', 'page', 'ui'),
+    ('Results list · disclosure indicator on a row (non-text, 3:1)', 'text-secondary', 'surface', 'ui'),
+    ('Pressed card or row: meta on the pressed level', 'text-secondary', 'pressed', 'text'),
+    ('Pressed race card: format chip label (the chip keeps bg-2)', 'chip-text', 'raised', 'text'),
+    ('Profile · pop-up chevron on a row, Saving… spinner (non-text, 3:1)', 'text-secondary', 'surface', 'ui'),
 ]
 # ---------------------------------------------------------------- glass (C1): text over glass, against the worst case behind it
 def _rgb(h): h = h.lstrip('#'); return [int(h[i:i+2], 16) for i in (0, 2, 4)]
@@ -157,32 +164,33 @@ def over(fg, a, bg): return '#' + ''.join(f'{round(a * f + (1 - a) * b):02X}' fo
 def glass_parts(name):
     m = re.match(r'color-mix\(in srgb, var\(--([a-z0-9-]+)\) var\(--([a-z0-9-]+)\), transparent\)', tok(name))
     return tok(m.group(1)), float(tok(m.group(2)).rstrip('%')) / 100, m.group(1), m.group(2)
-_scrim = re.match(r'rgba\(0, 0, 0, ([0-9.]+)\)', tok('scrim')); SCRIM_A = float(_scrim.group(1))
+# the scrim is a mix too since Lesson 8 (color-mix(in srgb, var(--black) var(--alpha-60), transparent)), parsed the same way
+SCRIM_BASE, SCRIM_A, _, _ = glass_parts('scrim')
 # The brightest thing that can scroll under a bar is Text 1 (a title); a photo's lightest tone after the
 # black-and-white filter is #D9D9D9, below it. Under the sheet the same Text 1 sits behind the scrim.
 # Measured with no help from the blur (a blurred glyph is darker than its solid color), so this is the floor.
-WORST = tok('text-1')
-UNDER = {'bar': WORST, 'ground': WORST, 'sheet': over('#000000', SCRIM_A, WORST)}
+WORST = tok('text-primary')
+UNDER = {'bar': WORST, 'ground': WORST, 'sheet': over(SCRIM_BASE, SCRIM_A, WORST)}
 GLASS = {'bar': 'glass-bar', 'ground': 'glass-ground', 'sheet': 'glass-sheet'}
 def glass_bg(where, alpha=None):
     base, a, _, _ = glass_parts(GLASS[where]); return over(base, a if alpha is None else alpha, UNDER[where])
 GLASS_PAIRS = [   # label, text token, glass, kind
-    ('Tab bar · inactive tab label over content', 'text-2', 'bar', 'text'),
-    ('Tab bar · current tab (accent) over content', 'accent', 'bar', 'text'),
-    ('Action bar · caption over content (“Opens in a new tab.”)', 'text-2', 'bar', 'text'),
-    ('Controls bar · Clear all filters (the chips are opaque capsules: their pairs are solid)', 'text-1', 'ground', 'text'),
-    ('Top bar · back link, title, Cancel', 'text-1', 'ground', 'text'),
-    ('Top bar · Save, Log result’s one primary (accent text)', 'accent', 'ground', 'text'),
-    ('Top bar · “Saving…” with its spinner', 'text-2', 'ground', 'text'),
-    ('Filters sheet · heading, checkbox labels', 'text-1', 'sheet', 'text'),
-    ('Filters sheet · field labels and legend', 'text-2', 'sheet', 'text'),
-    ('Filters sheet · checked box, neutral tint (non-text, 3:1)', 'control-tint', 'sheet', 'ui'),
-    ('Filters sheet · Apply filters, the sheet’s one primary, in its top bar (accent text; G12)', 'accent', 'sheet', 'text'),
-    ('Collapsed title bar · Log result, Results list’s one primary (accent text; G5)', 'accent', 'ground', 'text'),
-    ('Log result sheet · title, Cancel, row labels and values', 'text-1', 'sheet', 'text'),
-    ('Confirm alert (glass, G67) · title, Cancel', 'text-1', 'sheet', 'text'),
-    ('Confirm alert (glass, G67) · body', 'text-2', 'sheet', 'text'),
-    ('Confirm alert (glass, G67) · Sign out, destructive', 'destructive', 'sheet', 'text'),
+    ('Tab bar · inactive tab label over content', 'text-secondary', 'bar', 'text'),
+    ('Tab bar · current tab (accent) over content', 'accent-ink', 'bar', 'text'),
+    ('Action bar · caption over content (“Opens in a new tab.”)', 'text-secondary', 'bar', 'text'),
+    ('Controls bar · Clear all filters (the chips are opaque capsules: their pairs are solid)', 'text-primary', 'ground', 'text'),
+    ('Top bar · back link, title, Cancel', 'text-primary', 'ground', 'text'),
+    ('Top bar · Save, Log result’s one primary (accent text)', 'accent-ink', 'ground', 'text'),
+    ('Top bar · “Saving…” with its spinner', 'text-secondary', 'ground', 'text'),
+    ('Filters sheet · heading, checkbox labels', 'text-primary', 'sheet', 'text'),
+    ('Filters sheet · field labels and legend', 'text-secondary', 'sheet', 'text'),
+    ('Filters sheet · checked box, neutral tint (non-text, 3:1)', 'text-primary', 'sheet', 'ui'),
+    ('Filters sheet · Apply filters, the sheet’s one primary, in its top bar (accent text; G12)', 'accent-ink', 'sheet', 'text'),
+    ('Collapsed title bar · Log result, Results list’s one primary (accent text; G5)', 'accent-ink', 'ground', 'text'),
+    ('Log result sheet · title, Cancel, row labels and values', 'text-primary', 'sheet', 'text'),
+    ('Confirm alert (glass, G67) · title, Cancel', 'text-primary', 'sheet', 'text'),
+    ('Confirm alert (glass, G67) · body', 'text-secondary', 'sheet', 'text'),
+    ('Confirm alert (glass, G67) · Sign out, destructive', 'error', 'sheet', 'text'),
 ]
 def min_alpha(where):   # the lowest fill opacity at which every pair on this glass still passes
     for pct in range(0, 101):
@@ -215,7 +223,7 @@ for label, fg, where, kind in GLASS_PAIRS:
     r = cr(f, b); need = 4.5 if kind == 'text' else 3.0; ok = r >= need
     if not ok: failures.append((label, r))
     base, a, bt, at = glass_parts(GLASS[where])
-    under = f'the scrim ({SCRIM_A:g}) over Text 1' if where == 'sheet' else 'Text 1'
+    under = f'the scrim ({SCRIM_A:g}) over Text primary' if where == 'sheet' else 'Text primary'
     rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {f}</td>'
                 f'<td class="sample"><code>--{GLASS[where]}</code> (<code>--{bt}</code> at {a * 100:g}%) over {under} = {b}</td><td class="num">{r:.2f}:1</td>'
                 f'<td>{"<span class=pass>pass</span>" if ok else "<b>fail</b>"} · needs {need:g}:1</td></tr>')
@@ -224,17 +232,22 @@ print('Glass: bar', glass_bg('bar'), 'min opacity', GLASS_MIN['bar'], '% · grou
 CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text</th><th>Background</th><th>Ratio</th><th>WCAG AA</th></tr></thead><tbody>'
             + ''.join(rows) + '</tbody></table></div>')
 
-# cache-busting: stylesheet links carry a short hash of ui/kit.css + ui/map.css + concept/stand.css
+# cache-busting: stylesheet links carry a short hash of the token, component, map and docs-layer files
 import hashlib, subprocess
 # components/ (Lesson 8, step 3): bundle components/*.css into components/index.css in cascade order, check that no component
-# reads a color primitive or writes a hex, px or font name, and write ui/map-data.css; a failure stops the build
+# reads a color primitive or writes a hex, px or font name; a failure stops the build
 _c = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_components.py')], capture_output=True, text=True)
 print(_c.stdout.strip())
 if _c.returncode: sys.exit('build_components failed: the build stops')
-CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css')).encode()).hexdigest()[:8]
+# DESIGN.md's frontmatter values and .impeccable/design.json, generated from tokens/tokens.css (Lesson 8 step 4): hex lives in one file
+_d = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_design_sidecar.py')], capture_output=True, text=True)
+print(_d.stdout.strip() or _d.stderr.strip())
+if _d.returncode: sys.exit('build_design_sidecar failed: the build stops')
+COMPONENTS = _read('components/index.css')   # re-read: build_components.py just rewrote it
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit-doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css')).encode()).hexdigest()[:8]
 def _stamp(path):
     # also inside a srcdoc attribute (the showcase's tab bar frames), where the quotes are &quot;
-    html = re.sub(r'href=("|&quot;)((?:\.\./ui/|\.\./tokens/|\.\./components/|)(?:kit|kit-doc|map|map-data|stand|specimens|first-screen|tokens|index))\.css(\?v=[0-9a-f]+)?\1',
+    html = re.sub(r'href=("|&quot;)((?:\.\./ui/|\.\./tokens/|\.\./components/|)(?:kit-doc|map-data|stand|specimens|first-screen|tokens|index))\.css(\?v=[0-9a-f]+)?\1',
                   lambda m: f'href={m.group(1)}{m.group(2)}.css?v={CSS_V}{m.group(1)}', open(path).read())
     open(path, 'w').write(html)
 STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
@@ -258,7 +271,7 @@ if _k.returncode: sys.exit('check_kit failed: the build stops')
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
 import math
 from colorlib import lab, de2000, hue as lab_hue
-CSS = KIT + open(os.path.join(ROOT, 'concept/stand.css')).read() + open(os.path.join(ROOT, 'concept/specimens.css')).read()   # every component rule the color rules check
+CSS = COMPONENTS + _read('concept/stand.css') + _read('concept/specimens.css')   # every component rule the color rules check (Lesson 8 step 4: the components, not ui/kit.css)
 CSS_RULES = [(sel.strip(), body) for sel, body in re.findall(r'([^{}]+)\{([^{}]*)\}', re.sub(r'/\*.*?\*/', '', CSS, flags=re.S))]
 
 def selectors_using(*tokens):
@@ -273,8 +286,10 @@ ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.state-action:not\(\.secondary\)(
              r'^\.(register|open|submit)-btn(:hover)?$',   # the grayscale screens' one primary (kit, 2026-10-18)
              r'^\.top-bar \.(save-btn|bar-action)(:hover)?$',   # the bar action: Save on Log result (kit feedback, 2026-10-19), Log result on Results list (G5), Apply filters on the sheet (G12; markup pass, 2026-10-23)
              r'^\.bottom-nav a\[aria-current="page"\]$',
-             r'^\.swatch--accent(-hover)?$', r'^\.swatch--on-accent$']
-accent_sel = selectors_using('accent', 'accent-hover')
+             r'^\.swatch--(accent-(fill|ink|hover)|amber-\d+)$']   # the stand's swatches, one per token
+# the accent roles (--accent-fill, --accent-ink, --accent-hover, since Lesson 8 step 4) and their amber primitives, so a
+# class can't reach the amber around its roles (tokens/tokens.css's :root is not a class and isn't read here)
+accent_sel = selectors_using('accent-fill', 'accent-ink', 'accent-hover', 'amber-78', 'amber-83')
 accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK)]
 assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
 
@@ -285,7 +300,7 @@ success_bad = [x for x in success_sel if not any(re.match(p, x) for p in SUCCESS
 assert not success_bad, ('Color rule 2: success color outside the stand specimen', success_bad)
 
 # Rule 3a: depth of dark, not #000
-BG_LEVELS = ['bg-bar', 'bg-0', 'bg-1', 'bg-2', 'bg-3']
+BG_LEVELS = ['frame', 'page', 'surface', 'raised', 'pressed']   # the roles on the five graphite levels; --group shares --pressed's level (graphite-20), and the map roles reuse levels
 L_MIN, L_MAX, C_MAX, STEP_MIN = 4.5, 20.0, 6.0, 1.5
 bg_rows, prev = [], None
 for t in BG_LEVELS:
@@ -294,8 +309,8 @@ for t in BG_LEVELS:
     assert ok, ('Color rule 3a: background level out of range', t, round(L, 2), round(C, 2))
     bg_rows.append((t, L, C, None if prev is None else L - prev)); prev = L
 
-# Rule 3a, usage: --line and --field-line are hairlines, never a fill (their L* is above the background range)
-line_fill = [x for sel, body in CSS_RULES if re.search(r'background(-color)?:\s*var\(--(field-)?line(-sheet)?\)', body)
+# Rule 3a, usage: --hairline and --boundary are lines, never a fill (their L* is above the background range)
+line_fill = [x for sel, body in CSS_RULES if re.search(r'background(-color)?:\s*var\(--(hairline|boundary|graphite-22|graphite-46)\)', body)
              for x in sel.split(',') if not x.strip().startswith('.swatch--') and x.strip() != '.sheet-handle']   # the handle is a drawn 4px line, not a surface
 assert not line_fill, ('Color rule 3a: a hairline token used as a fill', [x.strip() for x in line_fill])
 
@@ -304,12 +319,14 @@ HYROX_REFS = [('RoxFit', '#FFEC00', 'roxfit-how-it-works.png, 5,786 px'), ('RoxM
 HUE_MIN, DE_MIN = 25.0, 24.0
 def hue_dist(x, y):
     d = abs(lab_hue(x) - lab_hue(y)); return min(d, 360 - d)
-hyrox_rows = [(n, c, src, hue_dist(tok('accent'), c), de2000(tok('accent'), c)) for n, c, src in HYROX_REFS]
+ACCENT = tok('accent-fill')   # = --amber-78; --accent-ink is the same primitive (asserted below), so one check covers both
+assert tok('accent-ink') == ACCENT, 'Color rule 3b: --accent-ink and --accent-fill parted; check each against HYROX yellow'
+hyrox_rows = [(n, c, src, hue_dist(ACCENT, c), de2000(ACCENT, c)) for n, c, src in HYROX_REFS]
 HYROX_PASS = all(h >= HUE_MIN and d >= DE_MIN for _, _, _, h, d in hyrox_rows)
 # Designer override (concept.md → Color rules → 3b), valid only for this exact accent
 RULE_3B_OVERRIDE = {'accent': '#F5B649', 'date': '2026-10-14',
                     'reason': 'the accent is scarce (1–2 uses per screen), the ground is graphite, not black, and the chips are neutral'}
-HYROX_ACCEPTED = (not HYROX_PASS) and tok('accent').upper() == RULE_3B_OVERRIDE['accent']
+HYROX_ACCEPTED = (not HYROX_PASS) and ACCENT.upper() == RULE_3B_OVERRIDE['accent']
 HYROX_STATUS = 'pass' if HYROX_PASS else 'accepted by designer' if HYROX_ACCEPTED else 'FAIL'
 
 # results never carry a success mark (checked on the generated markup at the end)
@@ -325,8 +342,8 @@ def decisions_section():
     <h2 id="dec-h">Decided</h2>
     <div class="stand-grid">
       <div class="stand-panel">
-        <h3>Accent · <code>{tok("accent")}</code>, kept</h3>
-        <p class="stand-why">Compared side by side against a halfway version (<code>{ACCENT_HALF}</code>) and a warmer one that just passes rule 3b (<code>{ACCENT_PASS}</code>). The designer kept the current amber, overriding rule 3b (see Color rules). Text on the accent: {cr(tok("on-accent"), tok("accent")):.2f}:1.</p>
+        <h3>Accent · <code>{tok("accent-fill")}</code>, kept</h3>
+        <p class="stand-why">Compared side by side against a halfway version (<code>{ACCENT_HALF}</code>) and a warmer one that just passes rule 3b (<code>{ACCENT_PASS}</code>). The designer kept the current amber, overriding rule 3b (see Color rules). Text on the accent: {cr(tok("on-accent-fill"), tok("accent-fill")):.2f}:1.</p>
       </div>
       <div class="stand-panel">
         <h3>Photo band · 3:1, {BAND["short"]["band"]}px</h3>
@@ -369,7 +386,7 @@ def rules_section():
 # ---------------------------------------------------------------- decision 1: accent versions (computed)
 from colorlib import lch_to_hex, chroma as lab_chroma
 def _rotate_until_pass():
-    A = tok('accent'); L, a, b = lab(A); C0 = math.hypot(a, b); h0 = lab_hue(A)
+    A = tok('accent-fill'); L, a, b = lab(A); C0 = math.hypot(a, b); h0 = lab_hue(A)
     def col(h):
         C = C0
         while lch_to_hex(L, C, h) is None: C -= 0.1     # keep lightness; lower chroma only as the gamut requires
@@ -379,7 +396,7 @@ def _rotate_until_pass():
     while not ok(col(h)): h -= 0.1                   # warmer = toward orange
     return col((h0 + h) / 2), col(h)
 ACCENT_HALF, ACCENT_PASS = _rotate_until_pass()
-ACCENT_VERSIONS = [('Current amber', tok('accent')), ('Halfway', ACCENT_HALF), ('Warmer, just passes 3b', ACCENT_PASS)]
+ACCENT_VERSIONS = [('Current amber', tok('accent-fill')), ('Halfway', ACCENT_HALF), ('Warmer, just passes 3b', ACCENT_PASS)]
 print('Accent versions:', ', '.join(f'{n} {c}' for n, c in ACCENT_VERSIONS))
 
 # ---------------------------------------------------------------- decision 2: photo band (measured in the browser)
@@ -449,26 +466,25 @@ SEARCH = '''<form class="race-search" role="search" onsubmit="return false">
 def why(*parts): return '<p class="stand-why"><b>Why:</b> ' + ' · '.join(parts) + '</p>'
 
 # ---------------------------------------------------------------- color rows
-COLOR_ROWS = [
-    ('bg-bar', 'Tab bar', 'The tab bar, the frame around a screen.', 'Never inside content.', 'Taste: dark with depth, not pure #000 (Tension C)'),
-    ('bg-0', 'Ground', 'The page behind every screen.', 'Not on cards (cards sit one level up).', 'Attribute e: dark, intense · Taste: not #000'),
-    ('bg-1', 'Surface', 'Race cards, result rows, the search field.', 'Not for controls you press (those are raised).', 'Attribute a: cards stay quiet so the time can lead'),
-    ('bg-3', 'Raised, pressed', 'Hover, open and pressed fills on raised controls: the selected List/Map segment, Filters while its sheet is open.', 'Never at rest, never a card.', 'Color rule 3a: Line is a hairline, so pressed fills get their own level'),
-    ('bg-2', 'Raised', 'Secondary button, format chip, the date tile, segmented track, skeletons, disabled buttons.', 'Never for the primary action.', 'Hierarchy rule 3: secondary is tonal'),
-    ('line', 'Line', 'Hairline dividers.', 'Not as a boundary someone must see (fields use Field line), not as a frame around every card.', 'Attribute a: the frame stays quiet'),
-    ('field-line', 'Field line', 'The boundary of the search field and other inputs.', 'Not on cards or chips.', 'WCAG 1.4.11: an input boundary needs 3:1 (critique fix)'),
-    ('control-tint', 'Control tint', 'Checked boxes and checkmarks, switches, and the tint of system-drawn controls (<code>accent-color</code>).', 'Never amber, never green.', 'C4 (designer, 2026-10-18): control tint is neutral · Color rule 1'),
-    ('invalid', 'Invalid', 'The 2px ring inside a field that failed (= Error).', 'Never on a focused-only field: focus is the white ring outside.', 'Kit feedback (designer, 2026-10-19): invalid and focus never look alike'),
-    ('destructive', 'Destructive', 'The text of a destructive action in an alert: Sign out (= Error).', 'Not on Cancel, not as a fill.', 'Kit feedback (designer, 2026-10-19), HIG Alerts: a destructive button uses the destructive style'),
-    ('text-1', 'Text 1', 'Screen titles, item titles, finish times, body.', 'Not for meta (date month, location, proof).', 'Hierarchy rule 4: three levels'),
-    ('text-2', 'Text 2', 'Meta: month and year, location, proof line, counts, inactive tab.', 'Not for titles or the finish time.', 'Attribute d: proof stated, not stamped (a quiet line)'),
-    ('chip-text', 'Chip text', 'The format chip label only.', 'Not on filter chips (those are Text 1).', 'Hierarchy rule 2: chips are metadata'),
+COLOR_ROWS = [   # the semantic roles (tokens/tokens.css, level 2), then the stand's state specimens (specimens.css)
+    ('frame', 'Frame', 'The void behind an open sheet (<code>body:has(&gt; .sheet &gt; .phone-screen)</code>); the stand panels. The tab bar glass and the map water build from the same primitive, <code>--graphite-5</code>.', 'Never inside content.', 'Taste: dark with depth, not pure #000 (Tension C) · Lesson 8: in iOS light the area behind a sheet stays black while the tab bar doesn’t, so the frame is its own role'),
+    ('page', 'Page', 'The page behind every screen.', 'Not on cards (cards sit one level up).', 'Attribute e: dark, intense · Taste: not #000'),
+    ('surface', 'Surface', 'Race cards, result rows, row groups, the search field, the saved confirmation.', 'Not for controls you press (those are raised).', 'Attribute a: cards stay quiet so the time can lead'),
+    ('raised', 'Raised', 'Secondary button, format chip, the date tile, segmented track, skeletons, disabled buttons, pin labels, the initials.', 'Never for the primary action.', 'Hierarchy rule 3: secondary is tonal'),
+    ('pressed', 'Pressed', 'Hover, open and pressed fills: the selected List/Map segment, Filters while its sheet is open, a pressed card (+2).', 'Never at rest, never a card.', 'Color rule 3a: the hairline is a line, so pressed fills get their own level'),
+    ('group', 'Group', 'A group of rows one level above its container: the rows in the Filters sheet, the linked race on Log result. Same level as Pressed today.', 'Not a state: a press uses Pressed.', 'Lesson 8: in a light appearance a group rises lighter while a press goes darker, so the two roles part'),
+    ('hairline', 'Hairline', 'Hairline dividers.', 'Not as a boundary someone must see (fields use Boundary), not as a frame around every card, never a fill.', 'Attribute a: the frame stays quiet'),
+    ('boundary', 'Boundary', 'The edge of the search field and other inputs, the pressed segment, the card hover ring, the map frame.', 'Not on cards or chips, never a fill.', 'WCAG 1.4.11: an input boundary needs 3:1 (critique fix)'),
+    ('text-primary', 'Text primary', 'Screen titles, item titles, finish times, body. Also the focus ring and the control tint (checked boxes, checkmarks, <code>accent-color</code>), which were <code>--focus</code> and <code>--control-tint</code> until Lesson 8.', 'Not for meta (date month, location, proof). The control tint is never amber, never green.', 'Hierarchy rule 4: three levels · C4 (designer, 2026-10-18): control tint is neutral · Color rule 1'),
+    ('text-secondary', 'Text secondary', 'Meta: month and year, location, proof line, counts, inactive tab.', 'Not for titles or the finish time.', 'Attribute d: proof stated, not stamped (a quiet line)'),
+    ('chip-text', 'Chip text', 'The format chip label only.', 'Not on filter chips (those are Text primary).', 'Hierarchy rule 2: chips are metadata'),
     ('text-disabled', 'Disabled', 'Disabled controls only.', 'Never for content someone must read.', 'WCAG 1.4.3 exempts disabled controls'),
-    ('accent', 'Accent (sodium amber)', 'The primary button fill (Log result, Register on &lt;domain&gt;) and the current tab. At most two per screen.', 'Not on finish times, chips, filter chips, links, focus rings, icons in content, or state messages.', 'Hierarchy rule 1: accent is scarce · Taste: a high-contrast accent (round 1 Direction 3)'),
-    ('accent-hover', 'Accent, hover', 'The primary button under the pointer.', 'Anywhere at rest.', 'Hierarchy rule 3: one primary, with a hover state'),
-    ('on-accent', 'On accent', 'Text and icons on the accent.', 'Anywhere else.', f'Contrast: {cr(tok("on-accent"), tok("accent")):.2f}:1 on the accent'),
-    ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races".', 'Not for emphasis, not for deleting, never as a fill for a whole card.', 'Taste: no aggressive red (not the #FF4D2E family)'),
-    ('error-bg', 'Error tint', 'Behind an error message.', 'Not behind a card or a field.', 'States: color second, after icon and text'),
+    ('accent-fill', 'Accent fill (sodium amber)', 'The primary button fill (Log result, Register on &lt;domain&gt;). With the ink, at most two amber uses per screen.', 'Not on finish times, chips, filter chips, links, focus rings, icons in content, or state messages.', 'Hierarchy rule 1: accent is scarce · Taste: a high-contrast accent (round 1 Direction 3)'),
+    ('accent-ink', 'Accent ink', 'Amber as text and icon on a bar: the bar action (Save, Log result, Apply filters) and the current tab.', 'Anywhere in content.', 'Hierarchy rule 1 · Lesson 8: amber text on a light bar would need a darker amber than the fill, so the ink is its own role'),
+    ('accent-hover', 'Accent, hover', 'The fill, the bar action and the current tab under the pointer.', 'Anywhere at rest.', 'Hierarchy rule 3: one primary, with a hover state'),
+    ('on-accent-fill', 'On accent fill', 'Text and icons on the accent fill. The same primitive as the page.', 'Anywhere else.', f'Contrast: {cr(tok("on-accent-fill"), tok("accent-fill")):.2f}:1 on the accent'),
+    ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races". The invalid field ring (inside the field) and destructive text (Sign out), which were <code>--invalid</code> and <code>--destructive</code> until Lesson 8.', 'Not for emphasis, never as a fill for a whole card, never on a focused-only field (focus is the Text primary ring outside).', 'Taste: no aggressive red (not the #FF4D2E family) · Kit feedback (designer, 2026-10-19): invalid and focus never look alike · HIG Alerts: destructive style'),
+    ('error-surface', 'Error surface', 'Behind an error message.', 'Not behind a card or a field.', 'States: color second, after icon and text'),
     ('success', 'Success', 'The status specimen on this stand only. No product screen uses it: the saved confirmation is neutral (Color rule 2).', 'Not on a result, not on Results list at all, not for "verified" or any claim about a result.', 'Voice principle 1: claim only what Onrace can know'),
     ('success-bg', 'Success tint', 'The status specimen on this stand only.', 'Not behind results, proof lines or the saved confirmation.', 'Voice principle 1: no verified look'),
     ('warning', 'Warning (no hue)', 'Icon plus text on a raised surface with an outline. No warning state exists in the wireframes yet.', 'No amber or yellow: every warm candidate is within ΔE 7.7–13 of the accent and would read as an action.', 'Hierarchy rule 1: keep the accent the only warm hue'),
@@ -476,7 +492,16 @@ COLOR_ROWS = [
     ('warning-line', 'Warning outline', 'Around a warning, so it differs from a secondary button.', 'Not around cards.', 'States need a shape cue when they have no hue'),
 ]
 color_trs = ''.join(f'<tr><td>{sw(t)}{n}<br><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{nu}</td><td>{w}</td></tr>' for t, n, u, nu, w in COLOR_ROWS)
-COLOR_TABLE = wrap('Color tokens', f'<table class="spec"><thead><tr><th>Token</th><th>Used</th><th>Not used</th><th>Why</th></tr></thead><tbody>{color_trs}</tbody></table>')
+COLOR_TABLE = wrap('Color roles', f'<table class="spec"><thead><tr><th>Role</th><th>Used</th><th>Not used</th><th>Why</th></tr></thead><tbody>{color_trs}</tbody></table>')
+# level 1: the color primitives, named by hue and L*, each with the roles built on it (read from tokens/tokens.css)
+_LEVELS = TOKENS.split('     2. SEMANTIC: color roles\n')   # the section marker inside :root, not the header's mention
+assert len(_LEVELS) == 2, 'tokens/tokens.css: the "2. SEMANTIC: color roles" section marker'
+_PRIM = re.findall(r'^\s*--((?:graphite|amber|coral)-\d+|black|alpha-\d+):\s*([^;]+);\s*/\*\s*(.*?)\s*\*/', _LEVELS[0], flags=re.M)
+_SEM = _LEVELS[1]
+def _built_on(n):
+    return ', '.join(f'<code>--{r}</code>' for r in dict.fromkeys(re.findall(r'^\s*--([a-z0-9-]+):[^;]*var\(--' + re.escape(n) + r'\)', _SEM, flags=re.M))) or 'None'
+prim_trs = ''.join(f'<tr><td>{"" if n.startswith("alpha") else sw(n)}<code>--{n}</code> {v.strip()}</td><td>{c}</td><td>{_built_on(n)}</td></tr>' for n, v, c in _PRIM)
+PRIM_TABLE = wrap('Color primitives', f'<table class="spec"><thead><tr><th>Primitive</th><th>L* · DESIGN.md name</th><th>Roles built on it</th></tr></thead><tbody>{prim_trs}</tbody></table>')
 
 # ---------------------------------------------------------------- type rows
 TYPE_ROWS = [
@@ -484,6 +509,7 @@ TYPE_ROWS = [
     ('size-time', 'display', '1:18:42', 'Finish time, the loudest thing on the row', 'Attribute a · Hierarchy rule 5'),
     ('size-time-hero', 'display', '1:18:42', 'The finish time leading Result detail, the largest thing on the screen', 'Attribute a: the time is what the screen proves (designer, step 6, #11)'),
     ('size-day', 'display', '27', 'Date day, the first thing read on a race card', 'Attribute b: a calendar, not a poster'),
+    ('size-initials', 'display', 'JM', 'Profile initials (split from <code>--size-day</code>, Lesson 8: same value, an avatar letter and a date figure can change apart)', 'Kit feedback (designer, 2026-10-19): iOS avatars'),
     ('size-item', 'text-strong', 'HYROX London', 'Item title (level 2): race name', 'Hierarchy rule 4'),
     ('size-body', 'text', 'Registration and payment happen on hyrox.com.', 'Body text, primary and secondary buttons, search', 'Voice principle 3: plain words'),
     ('size-meta', 'text-2', 'London, UK', 'Meta (level 3): location, counts; tertiary text links · HIG Subheadline', 'Hierarchy rule 4 · C3: 14 → 15, apart from body by color (designer, 2026-10-18)'),
@@ -491,7 +517,7 @@ TYPE_ROWS = [
     ('size-label', 'label', 'Half marathon', 'Format chip (uppercase by CSS), tab label', 'Decision A: markup keeps the name, CSS uppercases'),
 ]
 TYPE_CLASS = {'size-title': 'type-sample--display type-sample--title', 'size-time': 'type-sample--display type-sample--time', 'size-time-hero': 'type-sample--display type-sample--time-hero',
-              'size-day': 'type-sample--display type-sample--day', 'size-item': 'type-sample--item', 'size-body': 'type-sample--body',
+              'size-day': 'type-sample--display type-sample--day', 'size-initials': 'type-sample--display type-sample--day', 'size-item': 'type-sample--item', 'size-body': 'type-sample--body',
               'size-meta': 'type-sample--meta', 'size-proof': 'type-sample--proof'}
 def type_sample(kind, text, t):
     if kind == 'label':
@@ -551,13 +577,16 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('z-scrim', 'Stacking: the dimming layer under a sheet', 'Under the sheet, over the bars', 'Step 6, #37'),
            ('z-sheet', 'Stacking: sheets, alerts, action sheets', 'Highest', 'Step 6, #37'),
            ('sheet-large', 'Filters sheet height: the large detent only', 'Full height less the top safe area and the gap', 'G13 · designer, 2026-10-19: large detent only'),
-           ('glass-opacity', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge)', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
-           ('glass-opacity-sheet', 'Glass fill on the Filters sheet', f'Lowest that passes AA over the scrim and the worst case: {GLASS_MIN["sheet"]}%; set with margin · {P}', 'C1, C4: the sheet on the raised level'),
+           ('alpha-85', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge); was --glass-opacity', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
+           ('alpha-90', 'Glass fill on the Filters sheet; was --glass-opacity-sheet', f'Lowest that passes AA over the scrim and the worst case: {GLASS_MIN["sheet"]}%; set with margin · {P}', 'C1, C4: the sheet on the raised level'),
            ('glass-bar', 'Tab bar and action bar glass: the Tab bar level at the glass opacity', 'color-mix with transparent; the floating tab bar and the sticky action bar (Race detail, Result detail) stay a shade darker than the page', 'C1: translucent graphite · action bar added by the designer, 2026-10-19'),
            ('glass-ground', 'Glass for bars on the page (controls bar, top bar, status-bar edge): the Ground level at the glass opacity', 'color-mix with transparent; at rest it matches the page, so the bar shows only when content runs under it', 'C1 · G7: a scroll edge, not a custom bar background'),
            ('glass-sheet', 'Sheet glass: Raised level at the sheet opacity', 'color-mix with transparent', 'C1 · C4: the raised graphite level'),
            ('glass-blur', 'Backdrop blur on all glass', f'20px · {P}', 'C1: blur, so content under a bar reads as shape, not text'),
-           ('glass-edge', 'The glass rim (in place of a hairline)', f'Text 1 at 8% · {P}', 'C1, G7: a scroll edge, not a solid bar border · decorative, no contrast requirement'),
+           ('alpha-100', 'Glass under Reduce Transparency: every glass role turns solid', 'The glass roles swap their alpha to 100%', 'C1: Reduce Transparency'),
+           ('alpha-8', 'The glass rim’s strength', f'8% · {P}', 'C1, G7'),
+           ('alpha-60', 'The scrim’s and the float shadow’s strength', 'Black at 60%', 'Depth comes from levels and one scrim'),
+           ('glass-rim', 'The glass rim (in place of a hairline); was --glass-edge', f'Text primary’s primitive at 8% · {P}', 'C1, G7: a scroll edge, not a solid bar border · decorative, no contrast requirement'),
            ('icon-state', 'Icon on top of an empty or error state', '48px, centered above the title', 'Designer, 2026-10-19: the iOS ContentUnavailableView pattern · HIG gives no number'),
            ('dur-spin', 'Busy spinner: one turn', '800ms, linear; keeps turning under reduced motion (HIG: a still indicator reads as stalled)', 'G26'),
            ('spinner-size', 'Busy spinner size', 'Meta icon size, inside the button before its label', 'G26: an activity indicator inside the button'),
@@ -565,6 +594,12 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('scrim', 'Behind the Filters sheet', 'Black at 60%: the page dims, its colors stay', 'Depth comes from levels and one scrim, not from color · Hierarchy rule 1'),
            ('fade-end', 'Active filter chips row: its end fades out', 'Mask, last 24px', 'Says the row scrolls without a scrollbar · Critique fix: hidden overflow'),
            ('stand-col-min', 'Stand columns (stand only)', 'Narrowest panel before the grid wraps', 'Stand layout'),
+           ('leading-box', 'The line box in layout math (the 44pt target offsets, the skeleton proof bar)', '= <code>--leading-body</code>, so they can’t drift', 'Lesson 8: split by use from --leading-body'),
+           ('invalid-ring', 'The invalid field ring’s width', '2px, inside the field', 'Split from --focus-ring (Lesson 8): same value, changes apart'),
+           ('spinner-stroke', 'The busy spinner’s stroke', '2px', 'Split from --focus-ring (Lesson 8)'),
+           ('shadow-y', 'The float shadow: offset down', 'Its color is the role --float-shadow', 'Depth comes from levels; only what floats has a shadow'),
+           ('shadow-blur', 'The float shadow: blur', '32px', 'Same'),
+           ('shadow-spread', 'The float shadow: spread', '−12px, so it stays under the floating thing', 'Same'),
            ('avatar-size', 'Profile initials', '80px, the iOS profile size, in a circle (<code>--radius-avatar</code>)', 'Kit feedback (designer, 2026-10-19): iOS avatars are circular · DESIGN.md → Shapes, the one circle'),
            ('alert-width', 'The Sign out confirm alert', '270px, the iOS alert width', 'Native iOS (HIG Alerts) · kit, 2026-10-18'),
            ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (ui/kit.html only)', 'Tall enough for the Filters sheet at its large detent', 'Showcase layout: never in the product')]
@@ -585,9 +620,9 @@ SKEL_TRS = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{d}
 MAP_PINS = [('berlin-marathon', 'Berlin'), ('hyrox-london', 'London'), ('utmb', 'Chamonix'), ('hyrox-dallas', 'Dallas'),
             ('deka-strong-chicago', 'Chicago'), ('spartan-beast-killington', 'Killington'), ('boston-marathon', 'Boston')]
 MAP_TRS = ''.join(f'<tr><td><code>--{t}</code> {v}</td><td>{u}</td><td>{w}</td></tr>' for t, v, u, w in [
-    ('map-water', f'= <code>--bg-bar</code> {tok("map-water")}', 'Water: the darkest level', 'Hierarchy rule 1: no accent on the map · Color rule 3a levels only'),
-    ('map-land', f'= <code>--bg-1</code> {tok("map-land")}', 'Land: the card surface', 'Color rule 3a'),
-    ('map-lines', f'= <code>--bg-3</code> {tok("map-lines")}', 'Coastlines and borders (decorative)', 'Attribute a: the frame stays quiet'),
+    ('map-water', f'= <code>--graphite-5</code> {tok("map-water")}', 'Water: the darkest level', 'Hierarchy rule 1: no accent on the map · Color rule 3a levels only'),
+    ('map-land', f'= <code>--graphite-12</code> {tok("map-land")}', 'Land: the card surface', 'Color rule 3a'),
+    ('map-lines', f'= <code>--graphite-20</code> {tok("map-lines")}', 'Coastlines and borders (decorative)', 'Attribute a: the frame stays quiet'),
     ('map-pin-dot', tok('map-pin-dot'), 'The dot on a race’s coordinate', 'Designer: pins at real coordinates'),
     ('pin-h', tok('pin-h'), 'Pin label height', 'Sized to the 11px label'),
     ('pin-gap', tok('pin-gap'), 'Shortest leader line from label to dot', 'Designer: labels may move, dots don’t'),
@@ -607,15 +642,15 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-alert</code></td><td>{tok("radius-alert")}</td><td>The confirm alert (Profile, Sign out). {P}.</td><td>G67 (designer, 2026-10-23): the alert as iOS 26 alerts, glass and a larger radius, provisional like the sheet's</td></tr>
 <tr><td><code>--radius-avatar</code></td><td>{tok("radius-avatar")}</td><td>Profile initials (a circle); also the busy spinner's ring.</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
-<tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus, in Text 1, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
-<tr><td><code>--shadow-sheet</code></td><td>{tok("shadow-sheet")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
+<tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus, in Text primary, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
+<tr><td><code>--float-shadow</code></td><td>{tok("float-shadow")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
 <tr><td><code>--target</code></td><td>{tok("target")}</td><td>Minimum height of every control or its tap area.</td><td>Critique fix (round 2): touch targets</td></tr>
 </tbody></table></div>
 <div class="spec-wrap" tabindex="0" role="region" aria-label="Spacing scale"><table class="spec"><thead><tr><th>Spacing scale</th><th>Size</th><th>Used for</th></tr></thead><tbody>{SPACE}</tbody></table></div>
 <p class="stand-why"><b>Why:</b> one 4px-based scale for every gap · Hierarchy rule 4: more space between groups than inside them</p>
 <div class="spec-wrap" tabindex="0" role="region" aria-label="Component metrics"><table class="spec"><thead><tr><th>Component metric</th><th>Used for</th><th>Sizing</th><th>Why</th></tr></thead><tbody>{METRIC_TRS}</tbody></table></div>
 <div class="spec-wrap" tabindex="0" role="region" aria-label="Skeleton sizes"><table class="spec"><thead><tr><th>Skeleton (loading)</th><th>Used for</th><th>Sizing</th><th>Why</th></tr></thead><tbody>{SKEL_TRS}</tbody></table></div>
-<div class="spec-wrap" tabindex="0" role="region" aria-label="Map tokens"><table class="spec"><thead><tr><th>Map · <code>ui/map.css</code> (Race browse only)</th><th>Used for</th><th>Why</th></tr></thead><tbody>{MAP_TRS}</tbody></table></div>'''
+<div class="spec-wrap" tabindex="0" role="region" aria-label="Map tokens"><table class="spec"><thead><tr><th>Map · <code>tokens/tokens.css</code> (roles, sizes) and <code>ui/map-data.css</code> (generated data, Race browse only)</th><th>Used for</th><th>Why</th></tr></thead><tbody>{MAP_TRS}</tbody></table></div>'''
 
 # ---------------------------------------------------------------- icons
 ICON_PLAN = [  # where, Solar name, token (None: inline on the stand or not built yet), use, status
@@ -659,7 +694,8 @@ page = f'''<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v={CSS_V}">
+<link rel="stylesheet" href="../tokens/tokens.css?v={CSS_V}">
+<link rel="stylesheet" href="../components/index.css?v={CSS_V}">
 <link rel="stylesheet" href="specimens.css?v={CSS_V}">
 <link rel="stylesheet" href="stand.css?v={CSS_V}">
 </head>
@@ -668,7 +704,7 @@ page = f'''<!doctype html>
 
   <header class="stand-head">
     <h1>Onrace concept · Podium</h1>
-    <p>Direction A, chosen 2026-10-13 (<code>concept.md</code> → Directions). Every value and every product component on this page comes from <code>ui/kit.css</code>; the specimens no screen uses (the <code>.btn</code> family, status messages) from <code>specimens.css</code>; the stand's own layout from <code>stand.css</code>. The page itself holds no style values. Each decision below is signed with its reason: an attribute (a–e), the designer's taste, or a hierarchy rule. The full comparison is in <a class="stand-link" href="directions.html">directions.html</a>.</p>
+    <p>Direction A, chosen 2026-10-13 (<code>concept.md</code> → Directions). Every value on this page comes from <code>tokens/tokens.css</code> and every product component from <code>components/</code> (since Lesson 8); the specimens no screen uses (the <code>.btn</code> family, status messages) from <code>specimens.css</code>; the stand's own layout from <code>stand.css</code>. The page itself holds no style values. Each decision below is signed with its reason: an attribute (a–e), the designer's taste, or a hierarchy rule. The full comparison is in <a class="stand-link" href="directions.html">directions.html</a>.</p>
   </header>
 
   <section class="stand-section" id="language" aria-labelledby="language-h">
@@ -702,6 +738,8 @@ page = f'''<!doctype html>
   <section class="stand-section" aria-labelledby="color-h">
     <h2 id="color-h">Color</h2>
     <p>Background levels from the frame up, two text levels for content (plus chip text and disabled), one scarce accent, and state colors that never borrow it.</p>
+    <p>Two levels (Lesson 8): primitives hold the values, named by hue and lightness; roles say what a color is for, and the components read only roles.</p>
+    {PRIM_TABLE}
     {COLOR_TABLE}
     <div class="stand-panel">
       <h3>States: icon and text first, color second</h3>
@@ -764,7 +802,7 @@ page = f'''<!doctype html>
       <div class="stand-panel">
         <h3>Search field</h3>
         {SEARCH}
-        <p class="stand-label">Try it: hover shows a stronger outline; focus shows the 2px Text 1 ring. The outline is Field line ({cr(tok('field-line'), tok('bg-1')):.2f}:1 on the field), the placeholder Text 2 ({cr(tok('text-2'), tok('bg-1')):.2f}:1).</p>
+        <p class="stand-label">Try it: hover shows a stronger outline; focus shows the 2px Text 1 ring. The outline is Boundary ({cr(tok('boundary'), tok('surface')):.2f}:1 on the field), the placeholder Text secondary ({cr(tok('text-secondary'), tok('surface')):.2f}:1).</p>
         {why("Hierarchy rule 3: not a button, so it sits on the surface, not raised", "jtbd.md → Hypothesis 7 [?]: search by race name or city")}
       </div>
     </div>
@@ -772,7 +810,7 @@ page = f'''<!doctype html>
 
   <section class="stand-section" id="race-browse-parts" aria-labelledby="rb-h">
     <h2 id="rb-h">Race browse parts, live</h2>
-    <p>Everything Race browse needs besides the card, in the wireframes' own markup and copy, styled only from <code>ui/kit.css</code>. The screen can link the same file without markup changes.</p>
+    <p>Everything Race browse needs besides the card, in the wireframes' own markup and copy, styled only from <code>tokens/tokens.css</code> and <code>components/index.css</code>, the files the screen links.</p>
     <div class="stand-grid">
       <div class="stand-panel">
         <h3>Controls · Filters, List/Map, active filter chips, result count and sort</h3>
@@ -868,7 +906,7 @@ page = f'''<!doctype html>
 {decisions_section()}
   <section class="stand-section" aria-labelledby="contrast-h">
     <h2 id="contrast-h">Contrast · every text pair and the key non-text pairs</h2>
-    <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>ui/kit.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>
+    <p>Generated by <code>scripts/concept/build_stand.py</code> from the hex values in <code>tokens/tokens.css</code> (WCAG 2 relative luminance); the build stops if a text pair fails. Body text needs 4.5:1; non-text UI (focus ring, outlines) needs 3:1.</p>
     {CONTRAST}
   </section>
 
@@ -889,7 +927,7 @@ page = f'''<!doctype html>
 for block in re.findall(r'<article class="result-card">.*?</article>', page, flags=re.S):
     assert 'check-circle' not in block and 'verified' not in block.lower(), 'Color rule 2: a result carries a success mark'
     assert 'Self-reported · via ' in block, 'Attribute d: the proof line states the source'
-# Every token is signed: each one defined in ui/kit.css or ui/map.css appears on the stand with its reason
+# Every token is signed: each one defined in tokens/tokens.css, ui/map-data.css or the docs layer appears on the stand with its reason
 _defined = set(re.findall(r'(?:^|;)\s*--([a-z0-9-]+):', TOK, flags=re.M))
 _unsigned = sorted(n for n in _defined if not re.search(r'--' + re.escape(n) + r'(?![a-z0-9-])', page))
 assert not _unsigned, ('Unsigned tokens (add a row with its reason)', _unsigned)
@@ -910,7 +948,7 @@ else:
     if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
     elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
 # mirror to public/ (GitHub Pages serves public/)
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.css', 'ui/kit-doc.css', 'ui/map.css', 'ui/kit.html', 'ui/shell.html', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css'] + STAMPED[3:]:
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit-doc.css', 'ui/kit.html', 'ui/shell.html', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css'] + STAMPED[3:]:
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
@@ -950,5 +988,9 @@ os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
 for _v in [f for e in ('jpg', 'webp', 'avif') for f in glob.glob(os.path.join(ROOT, f'visuals/*.{e}'))]:   # the pre-cropped responsive sets too (step 7, #5)
     shutil.copyfile(_v, os.path.join(ROOT, 'public/visuals', os.path.basename(_v)))
 print('mirrored to public/')
+# every page links only files that exist (Lesson 8 step 4): a page still linking a deleted file stops the build
+_l = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_links.py')], capture_output=True, text=True)
+print(_l.stdout.strip())
+if _l.returncode: sys.exit('check_links failed: a page links a file that does not exist; the build stops')
 # the lesson overviews (06 and 07, scripts/lesson_page.py) carry the kit's counts: rebuilt with it
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_ui_overview.py')], check=True)

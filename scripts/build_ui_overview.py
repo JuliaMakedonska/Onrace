@@ -2,7 +2,7 @@
 
 Run from anywhere:  python3 scripts/build_ui_overview.py
 Re-run after editing CLAUDE.md (Sources of truth, UI assembly), DESIGN.md, concept/concept.md (→ Native iOS),
-ui/inventory.md, visuals/README.md, ui/kit.css, ui/map.css or build_stand.py; the page is generated, never hand-edited.
+ui/inventory.md, visuals/README.md, tokens/tokens.css, components/, ui/map-data.css or build_stand.py; the page is generated, never hand-edited.
 Every line on the page is rendered from those files and every count is read from the files it describes. It shares the
 Lesson 6 overview's helpers (scripts/build_concept_overview.py, imported, which also rebuilds that page).
 """
@@ -46,7 +46,7 @@ dispo_body = '<div class="dispos">' + dispo_card('Step 6 · the critique (four s
 
 # ---------------------------------------------------------------- where each change goes in (CLAUDE.md → Sources of truth)
 SRC_ROWS = [[c.strip() for c in l.strip().strip('|').split(' | ')] for l in CL['Sources of truth'].strip().split('\n')[2:] if l.startswith('|')]
-FLOW = [('A value', 'ui/kit.css', ':root, one token', 'Look'), ('A look', 'ui/kit.css', 'a kit class, shown in ui/kit.html', 'Look'),
+FLOW = [('A value', 'tokens/tokens.css', 'a primitive, or a role built on one', 'Look'), ('A look', 'components/*.css', 'the component’s file, shown in ui/kit.html', 'Look'),
         ('A word', 'microcopy.md', 'one row, then voice.html', 'Words'), ('Structure', 'wireframes/*.html', 'the page, and every screen that shares it', 'Structure')]
 assert {r[0].split('**')[1] for r in SRC_ROWS} >= {'Look', 'Words', 'Structure', 'Decisions'}
 flow_body = '<div class="flow">' + ''.join(
@@ -105,7 +105,7 @@ kit_body = f'''<p>The showcase, live: every component in its states, with its ro
   {LP.embed('ui/kit.html', 'The kit · <code>ui/kit.html</code>')}
   {LP.embed('ui/shell.html', 'The shell · <code>ui/shell.html</code>', 'phone')}
 </div>
-{LP.fold('Where the kit lives', md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0]), 'ui/kit.css, ui/map.css, ui/shell.html, ui/kit.html, ui/inventory.md')}
+{LP.fold('Where the kit lives', md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0]), 'tokens/, components/, ui/map-data.css, ui/shell.html, ui/kit.html, ui/inventory.md')}
 {LP.fold('The rules', md('**The rules:**' + ASSEMBLY.split('**The rules:**', 1)[1].split('**Checks that stop the build', 1)[0].split(chr(10), 1)[1]), 'every screen links the kit, "keep it", native iOS')}'''
 ios_body = LP.fold('The HIG rule, the component table and C1–C7', md(DS['Native iOS']), '7 decided conflicts')
 PHOTOS = [m.group(1) for m in re.finditer(r'^\| ([a-z0-9-]+) \| [^|]+ \| \d+% \|', VS['Export (step 7, 2026-10-25)'], flags=re.M)]
@@ -161,7 +161,7 @@ SAW = [bold_led('HIG gaps.', first(NATIVE['Gap triage (2026-10-18)']) if 'Gap tr
        bold_led('The final check.', first(S7.split('\n\n', 1)[0]))]
 DECIDED = [bold_led('Native iOS.', first(re.search(r'\*\*The rule\.\*\* (.*)', CO.CS[NATIVE_HEAD]).group(1))),
            bold_led('"Keep it".', re.search(r'\*\*"Keep it" rule \(2026-10-25\):\*\* (.*)', ASSEMBLY).group(1)),
-           bold_led('One kit.', re.search(r'- \*\*`ui/kit.css`:\*\* (.*?\.)', ASSEMBLY).group(1)),
+           bold_led('One kit.', re.search(r'- \*\*`tokens/tokens.css` \+ `components/`:\*\* (.*?\.)', ASSEMBLY).group(1)),
            bold_led('Race picker.', first(NATIVE['Race picker pushed (designer, 2026-10-24)'])),
            bold_led('Result detail.', re.search(r'\*\*#11, (.+?)\*\*', S6).group(1) + '.'),
            bold_led('Icons.', re.search(r'\*\*#23, (.+?)\*\*', S6).group(1) + '.')]
@@ -245,7 +245,7 @@ checks_list = ('<ol class="checks">' + ''.join(f'<li>{inline(c)}</li>' for c in 
                '<p class="note">Listed in <code>CLAUDE.md</code> → UI assembly; run by <code>scripts/concept/build_stand.py</code>.</p>')
 look_switch = look_body[look_body.index('<div class="look">'):]
 SECTIONS = ''.join([
-    LP.section('kit', 'Made', 'tag-m', 'The kit, live', '<p class="lede">Every component in its states, from <code>ui/kit.css</code> alone. Its role nav works inside the panel; the shell is in it too.</p>'
+    LP.section('kit', 'Made', 'tag-m', 'The kit, live', '<p class="lede">Every component in its states, from <code>tokens/tokens.css</code> and <code>components/</code> alone. Its role nav works inside the panel; the shell is in it too.</p>'
                + LP.embed('ui/kit.html', 'The kit · <code>ui/kit.html</code>')),
     LP.section('screens', 'See it', 'tag-p', 'The screens', '<p class="lede">Every screen and state, as the frozen Lesson 5 wireframe or as it is now. Pick one and switch.</p>' + look_switch),
     LP.section('system', 'How it works', 'tag-d', 'Where each change goes in', flow_only
@@ -258,7 +258,7 @@ SECTIONS = ''.join([
 STAGES = [('kit', 'Made', 'The kit, live'), ('screens', 'See it', 'The screens'), ('system', 'How it works', 'Changes and checks'),
           ('decisions', 'Decided', 'Key decisions'), ('photos', 'Made', 'The photos'), ('open', 'Close', "What's open"), ('more', 'More', 'The record')]
 STATS = [(ST['pages'], 'pages', f"{ST['screens']} screens and their states"), (ST['components'], 'inventory components', 'in ui/inventory.md'),
-         (ST['variables'], 'kit tokens', 'in ui/kit.css and ui/map.css'), (len(ST['checks']), 'build checks', 'each stops the build')]
+         (ST['variables'], 'tokens', 'in tokens/tokens.css and ui/map-data.css'), (len(ST['checks']), 'build checks', 'each stops the build')]
 PAGE = LP.render(7, 'UI assembly', 'ui-overview.html', '18–26 Oct 2026', 'One kit, every screen, native iOS', inline(summary),
     STATS, STAGES, None, None, SECTIONS, None, None,
     ['scripts/build_ui_overview.py', 'scripts/lesson_page.py'], extra_css=EXTRA_CSS,

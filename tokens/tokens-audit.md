@@ -695,3 +695,72 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
 - **The build's color rules, contrast pairs and signed-token check still read `ui/kit.css`.** The components have the same rules, checked as text, but the checks move to tokens and components in step 4.
 - **`ui/map-data.css` is a generated copy** of `ui/map.css`. In step 4, `ui/map.css` itself loses the six tokens, and the copy can go.
 - **Several blocks per file** keep the cascade exact. Whether to merge a component's blocks into one (a cascade change, so it needs a fresh comparison) is open.
+
+---
+
+## Step 4 record (2026-10-28): every page on tokens and components
+
+### What changed in step 4
+
+- **The 35 screens** (every page and state in `wireframes/`), in three groups as in Lesson 7: Discovery (7 pages), Archive (14), Infrastructure (14). Only the stylesheet links changed:
+  - `../ui/kit.css` → `../tokens/tokens.css`, then `../components/index.css`;
+  - on Race browse, the deferred `../ui/map.css` (and its `<noscript>` copy) → `../ui/map-data.css`.
+  - No markup, script or comment changed. `wireframes/_wireframe/` is untouched.
+- **Everything else that linked the kit:**
+  - `ui/shell.html`, `concept/first-screen.html` and the stand (generated) link tokens + components.
+  - `first-screen.html`'s `?accent=` switch sets `--accent-fill`, `--accent-ink` and `--accent-hover`.
+  - The 10 review pages and `visuals/review-round3.html` link tokens + components + `concept/stand.css`. Their style blocks use the new names (`--text-secondary`, `--hairline` …).
+- **The docs layer:**
+  - `concept/stand.css` holds the docs tokens `--stand-max`, `--stand-col-min`, `--radius-3` and `--font-mono`. `ui/kit-doc.css` keeps its own `--radius-3` and `--kit-stage-h`.
+  - `stand.css`, `specimens.css` and `first-screen.css` use the roles.
+  - The stand's swatches are one per color token, named by the token.
+- **The map:** `ui/map-data.css` is the map's own file. `scripts/concept/build_map.py` writes its block, and `build_components.py` no longer derives it.
+- **Deleted:** `ui/kit.css` and `ui/map.css`, and their `public/` copies (git keeps them).
+- **The build checks, moved onto the new files** (`scripts/concept/build_stand.py`):
+  - **Token source:** the tokens are read from `tokens/tokens.css`, `ui/map-data.css` and the docs layer; the color rules read `components/index.css` plus the stand's files.
+  - **Contrast:** the pairs are renamed to roles, split where a role split (tab label → `--accent-ink`, the sheet's rows → `--group`, the map → `--map-*`). Same 109 pairs, same ratios.
+  - **Glass:** the scrim is parsed as a `color-mix` like the glass.
+  - **Rule 1:** it checks `--accent-fill`, `--accent-ink`, `--accent-hover` and the two amber primitives.
+  - **Rule 3a:** it checks `--frame` … `--pressed`, and `--hairline`/`--boundary` (and their primitives) as fills.
+  - **Rule 3b:** it checks `--accent-fill` (asserted equal to `--accent-ink`) against the override bound to `#F5B649`.
+  - **The stand:** it signs every primitive (a generated table with the roles built on each) and every role: 204 of 204.
+- **Hex in one file:** `scripts/build_design_sidecar.py` (run by the build) writes `DESIGN.md`'s frontmatter `colors`, `typography`, `rounded` and `spacing`, and the hex in each Colors bullet, from `tokens/tokens.css`.
+  - `.impeccable/design.json` follows, its snippets' fallbacks resolved from the tokens.
+  - The frontmatter's color keys are now the 26 roles.
+  - `DESIGN.md`'s prose uses the new names.
+- **New checks:**
+  - `scripts/check_links.py`: any page in `public/` or the mirrored source folders that links a missing file fails the build.
+  - `check_overflow.mjs` also fails on a local 404. It now opens the shell and the first screen too.
+  - `check_kit.py` fails if a screen, the showcase or the shell doesn't link tokens then components (plus `ui/map-data.css` where the map shows), still links `kit.css`/`map.css`, has a style block or inline style, or uses a class `components/index.css` doesn't define.
+- **The lesson pages** read their counts from tokens + components; the 06 page's sources line names both.
+- **Docs:** `CLAUDE.md`, `README.md`, `DESIGN.md`, `components/README.md`, `tokens/README.md`, `concept/README.md`, `wireframes/_conventions.md` and `ui/inventory.md`.
+
+### How it was checked
+
+1. **Old kit against the new files, in headless Chrome over local HTTP.**
+   - "Before" is a snapshot of HEAD (`fdc4c36`); "after" is the working tree.
+   - **The five passes:** 390, 320, 390 at 200% text, 390 with Reduce Transparency, and 390 with motion on (computed styles only).
+   - **What ran:** 124 states, 620 state-passes: every screen state (Race browse with 0–5 filters × list/map/sheet, the two alerts), the showcase, the shell (3 tabs), the stand, the first screen (5 variants) and 11 review pages.
+   - **Compared:** every non-custom computed property of every element and of `::before`, `::after`, `::placeholder` and `::marker` (frames entered), every box, and a screenshot. Colors were normalized to rgba; animations were frozen at t=0.
+   - **The three control screens** (Race browse, Results list, Log result) and every other screen: 0 differences, apart from one known item: `log-result-error?cause=fields` (the `<select>` row at 200% text, 4px; a screenshot flip at 320). The old kit compared against itself shows the same thing in 2 of 4 runs (step 3 → Still unknown).
+   - **The showcase:** 0 differences, except the same `<select>` height at 200% text, which came and went between reruns.
+   - **The review pages:** page-height differences at 200%, Reduce Transparency and motion on, on different pages in different runs. The old kit against itself shows the same (lazy images), so this is noise.
+   - **The stand:** its documentation changed on purpose (the primitives table, the roles, the new metric rows), so it was compared on its product specimens alone (the phone frame, buttons, card, search, controls, skeleton, empty and error states, status messages). Every computed style matches. The screenshots differ only in glyph anti-aliasing, because the specimens moved about 2,600px down, to another fractional offset.
+2. **The real build passes:** every color rule, 109 contrast pairs, the glass pairs, 204/204 signed tokens, `check_kit`, `check_overflow` (329 states) and `check_links` (2,868 links in 115 pages).
+3. **Every check fails when it should.** Mutations were tried in a scratch copy:
+   - amber ink on a card title (rule 1);
+   - a hairline as a fill (rule 3a);
+   - Text secondary darkened, and the bar glass at 40% (contrast/glass);
+   - an unsigned token;
+   - another amber hex (3b reports FAIL);
+   - a component reading `--graphite-96`;
+   - a screen linking `ui/kit.css`, and an undefined class (`check_kit`);
+   - `ui/map-data.css` removed (`check_links` and the overflow run's 404).
+4. **Nothing links the old files:** no page in `wireframes/` (outside `_wireframe/`), `ui/`, `concept/`, `visuals/` or `public/` names `kit.css` or `map.css`.
+
+### Still unknown
+
+- **The stand overflows a phone** at 320 and at 200% text (its 320px columns plus 24px padding). This predates the switch, so it's not in `check_overflow`. It's a desk page.
+- **The `<select>` height at 200% text** (59 or 63px, by font timing) is unchanged from step 3.
+- **The `DESIGN.md` components block** is still hand-written: its references are role names (checked against `tokens.css`), but its px literals (padding, heights) aren't generated.
+- **The stand-label and doc wording** on the stand and in `DESIGN.md` now uses role names. "Text 1/Text 2" still appear in older prose as the plain-language names.

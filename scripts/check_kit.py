@@ -6,7 +6,11 @@ build_stand.py runs it on every build. It fails when:
   blocks) has no row in the inventory's Showcase map;
 - a Showcase map row names a specimen ui/kit.html doesn't have, or a state its specimen doesn't label;
 - a word shown in a specimen (text, aria-label, placeholder, alt) appears nowhere in microcopy.md: the showcase uses
-  the screens' own words, and every product word is recorded there.
+  the screens' own words, and every product word is recorded there;
+- (Lesson 8 step 4) a screen (wireframes/*.html), the showcase or the shell doesn't link tokens/tokens.css and then
+  components/index.css, a page with the static map (Race browse, the showcase) doesn't link ui/map-data.css, any of them
+  still links ui/kit.css or ui/map.css, a screen has a <style> block or a style attribute, or a screen uses a class
+  (in its markup or set by its script) that components/index.css doesn't define.
 """
 import os, re, sys
 from html.parser import HTMLParser
@@ -89,7 +93,31 @@ for w, ctx in p.words:
 for w, ctx in sorted(missing.items()):
     fails.append(f'word in a specimen, not in microcopy.md: "{w}" (in "{ctx}")')
 
+# ---------------------------------------------------------------- the screens on tokens and components (Lesson 8 step 4)
+import glob
+_css = re.sub(r'url\("[^"]*"\)', '', re.sub(r'/\*.*?\*/', '', open(os.path.join(ROOT, 'components/index.css')).read(), flags=re.S))
+DEFINED = set(re.findall(r'\.(-?[a-zA-Z_][\w-]*)', ''.join(re.findall(r'([^{}]+)\{', _css))))
+SCREENS = sorted(p for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html'))
+for sp in SCREENS + [os.path.join(ROOT, 'ui/kit.html'), os.path.join(ROOT, 'ui/shell.html')]:
+    h, name = open(sp).read(), os.path.relpath(sp, ROOT)
+    head = h[:h.index('</head>')]
+    links = re.findall(r'href="(?:\.\./|)(?:tokens|components|ui)?/?([\w./-]+?\.css)(?:\?v=[0-9a-f]+)?"', head)
+    if 'tokens.css' not in links or 'index.css' not in links or links.index('tokens.css') > links.index('index.css'):
+        fails.append(f'{name}: links tokens/tokens.css, then components/index.css? found {links}')
+    if ('race-browse' in name or name == 'ui/kit.html') and 'map-data.css' not in links:
+        fails.append(f'{name}: shows the static map but doesn\'t link ui/map-data.css')
+    if re.search(r'(?:kit|/map)\.css', head):
+        fails.append(f'{name}: still links ui/kit.css or ui/map.css')
+    if sp in SCREENS:
+        if re.search(r'<style\b|\sstyle="', h):
+            fails.append(f'{name}: a style block or a style attribute (every value comes from the kit)')
+        body = re.sub(r'<script\b.*?</script>', '', h, flags=re.S)
+        used = {c for a in re.findall(r'class="([^"]*)"', body) for c in a.split()} | set(re.findall(r"classList\.(?:add|toggle|remove)\('([\w-]+)'", h))
+        for c in sorted(used - DEFINED):
+            fails.append(f'{name}: class .{c} isn\'t defined in components/index.css')
+
 if fails:
     print(f'check_kit: FAIL ({len(fails)})\n  ' + '\n  '.join(fails))
     sys.exit(1)
-print(f'check_kit: pass ({len(names)} inventory components mapped, {len(MAP)} map rows with their states, {len(p.words)} specimen words in microcopy.md)')
+print(f'check_kit: pass ({len(names)} inventory components mapped, {len(MAP)} map rows with their states, {len(p.words)} specimen words in microcopy.md; '
+      f'{len(SCREENS)} screens, the showcase and the shell on tokens + components, every screen class defined)')

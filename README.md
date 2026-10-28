@@ -8,7 +8,7 @@ Full product brief: [`CLAUDE.md`](./CLAUDE.md). Live app: https://juliamakedonsk
 
 | What | Where | Changed by |
 |---|---|---|
-| **Look** (values and components) | [`ui/kit.css`](./ui/kit.css) (`:root` for values, kit classes for components), shown in [`ui/kit.html`](https://juliamakedonska.github.io/Onrace/ui/kit.html) | the "keep it" rule ([`CLAUDE.md`](./CLAUDE.md) → UI assembly) |
+| **Look** (values and components) | [`tokens/tokens.css`](./tokens/tokens.css) (values: primitives and semantic color roles) + [`components/`](./components/README.md) (one file per component, bundled into `components/index.css`), shown in [`ui/kit.html`](https://juliamakedonska.github.io/Onrace/ui/kit.html) | the "keep it" rule ([`CLAUDE.md`](./CLAUDE.md) → UI assembly) |
 | **Words** (every product line) | [`microcopy.md`](./microcopy.md), rendered in [`voice.html`](https://juliamakedonska.github.io/Onrace/voice.html) | `microcopy.md` first, then `scripts/build_voice_html.py` |
 | **Structure** (screens and states) | [`wireframes/*.html`](./wireframes/) | the page itself, carried to every screen that shares the component |
 | **Decisions** (and why) | [`concept/concept.md`](./concept/concept.md) | a dated entry per decision |
@@ -34,7 +34,7 @@ Each lesson is still its own file and opens on its own too (`public/research.htm
 Lesson 7 assembled every screen from one kit, in native iOS.
 
 - **[Lesson 07 overview](https://onrace-five.vercel.app/workspace.html#07)** (`public/ui-overview.html`, also [on its own](https://juliamakedonska.github.io/Onrace/ui-overview.html)): the design system from the code, the inventory, the kit, the native iOS decisions, the visuals, the assembly, the markup passes, the critique and the final check, every review page, and what's still open.
-- **[Kit showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)** (`ui/kit.html`): every component in its states, from `ui/kit.css` alone.
+- **[Kit showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)** (`ui/kit.html`): every component in its states, from `tokens/tokens.css` and `components/` alone.
 - **[Screen viewer](https://juliamakedonska.github.io/Onrace/wireframes/)** (`wireframes/index.html`): all 10 screens and 35 states in an iPhone frame, with zone notes; a Wireframe / Design toggle shows the frozen Lesson 5 wireframes beside the current screens.
 - **Sources:** [`DESIGN.md`](./DESIGN.md) (the design system, documented from the code), [`ui/`](./ui/inventory.md) (the kit, the map data, the shell, the showcase, the inventory), [`visuals/`](./visuals/README.md) (the race photos and how they were made), [`concept/concept.md`](./concept/concept.md) → Native iOS (every step and decision).
 
@@ -54,10 +54,10 @@ This is a living index — update it as folders fill up or their purpose shifts.
 | [`microcopy.md`](./microcopy.md) | Every interface line from the wireframes in one table (screen, zone, line, type), with inconsistencies flagged, becoming the source of truth for product copy | Done: Before / After for every line, matches the pages |
 | [`wireframes/`](./wireframes/README.md) | Low-fidelity, grayscale, iOS-structured wireframes for every sitemap screen and state, linked along the flows | Done: 10 screens, 35 pages ([live](https://juliamakedonska.github.io/Onrace/wireframes/)) |
 | [`concept/`](./concept/README.md) | Visual concept: the chosen direction (Podium), its rules, tokens, components and stand | Done for Lesson 6: two screens in Podium ([stand](https://juliamakedonska.github.io/Onrace/concept/concept.html)) |
-| [`ui/`](./ui/inventory.md) | The UI kit: `kit.css` (tokens and components), `map.css`, `shell.html`, `kit.html` (the showcase), `inventory.md`, and the review pages | Done for Lesson 7: all 10 screens on the kit ([showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)) |
+| [`ui/`](./ui/inventory.md) | The UI kit's pages: `map-data.css` (the static map's data), `shell.html`, `kit.html` (the showcase), `inventory.md`, and the review pages | Done for Lesson 7: all 10 screens on the kit ([showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)) |
 | [`visuals/`](./visuals/README.md) | Onrace's own race photos, pre-cropped and exported for the web | Done: 7 photos |
-| [`tokens/`](./tokens/README.md) | Design tokens (color, type, spacing, radius, elevation) | Empty |
-| [`components/`](./components/README.md) | Reusable UI component specs | Empty |
+| [`tokens/`](./tokens/README.md) | Design tokens: `tokens.css`, two levels (primitives, semantic color roles), and the audit | Lesson 8: every page on it since step 4 |
+| [`components/`](./components/README.md) | The kit's components, one file each, bundled into `index.css` | Lesson 8: every page on it since step 4 |
 | [`design-system/`](./design-system/README.md) | Assembled tokens + components as a documented system | Empty |
 | [`handoff/`](./handoff/README.md) | Dev-ready specs/assets for implementation | Empty |
 | `src/` | App source code (currently the unmodified Vite scaffold) | Placeholder |

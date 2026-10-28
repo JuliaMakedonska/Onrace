@@ -1,19 +1,72 @@
-"""Regenerate .impeccable/design.json (the impeccable sidecar) from DESIGN.md.
+"""Regenerate DESIGN.md's frontmatter values and .impeccable/design.json (the impeccable sidecar) from tokens/tokens.css.
 
-Usage, from the repo root:  python3 scripts/build_design_sidecar.py
-Follows impeccable's document reference, schemaVersion 2: the sidecar carries only
+Usage, from the repo root:  python3 scripts/build_design_sidecar.py      (build_stand.py runs it on every build)
+Lesson 8 step 4: hex values live in one file, tokens/tokens.css. This script first rewrites, in DESIGN.md:
+  - the frontmatter's colors (every semantic role, resolved), typography (each style from its tokens), rounded and
+    spacing; the components block is hand-written and only references these by name;
+  - the hex in each Colors bullet (`#RRGGBB`, `--role`), from that role.
+Then the sidecar. It follows impeccable's document reference, schemaVersion 2: the sidecar carries only
 what DESIGN.md's frontmatter can't (color display names, roles, OKLCH and tonal
 ramps; type purposes; shadows; motion; breakpoints; component snippets; the
 narrative, quoted verbatim). Everything is read from DESIGN.md, except:
-  - motion values, read from ui/kit.css (DESIGN.md names them in prose only);
+  - motion and shadow values, read from tokens/tokens.css (DESIGN.md names them in prose only);
   - component snippets: kept from the current sidecar, and replaced by COMPONENTS
     below where the kit has changed since (step 3b and its review, 2026-10-19).
 Re-run it after every DESIGN.md change."""
 import json, math, os, re, datetime
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-MD = open(os.path.join(ROOT, 'DESIGN.md')).read()
-KIT = open(os.path.join(ROOT, 'ui/kit.css')).read()
+TOKENS = open(os.path.join(ROOT, 'tokens/tokens.css')).read()
+DOCS = open(os.path.join(ROOT, 'concept/stand.css')).read()   # --radius-3, a docs-layer token DESIGN.md lists
+_DEF = {}
+for _src in (re.search(r':root\s*\{(.*?)\n\}', TOKENS, flags=re.S).group(1), re.search(r':root\s*\{(.*?)\n\}', DOCS, flags=re.S).group(1)):
+    for _n, _v in re.findall(r'(?:^|;)\s*--([a-z0-9-]+):\s*([^;]+);', re.sub(r'/\*.*?\*/', '', _src, flags=re.S), flags=re.M):   # comments out first: they quote old values
+        _DEF.setdefault(_n, _v.strip())
+def raw(n): return _DEF[n]
+def resolve(n):
+    """A token's value with every var() replaced: '#RRGGBB', 'color-mix(in srgb, #0F1114 85%, transparent)', '34px'…"""
+    v = re.sub(r'var\(--([a-z0-9-]+)\)', lambda m: resolve(m.group(1)), raw(n))
+    v = re.sub(r'#([0-9A-Fa-f]{3})\b', lambda m: '#' + ''.join(c * 2 for c in m.group(1)), v)   # #000 → #000000
+    c = re.fullmatch(r'calc\((.*)\)', v)
+    if c:   # simple px arithmetic: the type sizes (n × 1rem/16 at the default size) and the capsule radii
+        e = c.group(1).replace('calc', '').replace('1rem', '16').replace('px', '')
+        if re.fullmatch(r'[\d\s.+\-*/()]+', e): v = f'{eval(e):g}px'
+    return v
+
+# ---------------------------------------------------------------- DESIGN.md's frontmatter values, from the tokens
+MD_PATH = os.path.join(ROOT, 'DESIGN.md')
+MD = open(MD_PATH).read()
+_sem = re.search(r':root\s*\{(.*?)\n\}', TOKENS, flags=re.S).group(1).split('     2. SEMANTIC: color roles\n')[1]   # the main :root only, not the overrides
+ROLES = [n for n in re.findall(r'^\s*--([a-z0-9-]+):', _sem, flags=re.M) if n != 'float-shadow']   # a shadow, not a color
+TYPE = {   # style: font, size, weight, line height, tracking (DESIGN.md → Typography)
+    'title': ('font-display', 'size-title', 'weight-display', 'leading-tight', 'tracking-display'),
+    'finish-time': ('font-display', 'size-time', 'weight-display', 'leading-tight', 'tracking-display'),
+    'date-day': ('font-display', 'size-day', 'weight-display', 'leading-tight', 'tracking-display'),
+    'item': ('font-text', 'size-item', 'weight-strong', 'leading-item', None),
+    'body': ('font-text', 'size-body', 'weight-regular', 'leading-body', None),
+    'button': ('font-text', 'size-body', 'weight-strong', 'leading-tight', None),
+    'meta': ('font-text', 'size-meta', 'weight-regular', 'leading-body', None),
+    'proof': ('font-text', 'size-proof', 'weight-regular', 'leading-body', None),
+    'label': ('font-text', 'size-label', 'weight-strong', 'leading-tight', 'tracking-label'),
+    'tab-label': ('font-text', 'size-label', 'weight-strong', 'leading-body', None),
+}
+ROUNDED = ['radius-1', 'radius-2', 'radius-3', 'radius-sheet', 'radius-bar-control', 'radius-bar-inner', 'radius-avatar', 'radius-filter-chip', 'radius-alert', 'radius-tabbar']
+fm_lines = ['colors:'] + [f'  {n}: "{resolve(n)}"' for n in ROLES] + ['typography:']
+for t, (f, z, w, l, tr) in TYPE.items():
+    fm_lines += [f'  {t}:', f'    fontFamily: "{resolve(f).replace(chr(34), "")}"', f'    fontSize: "{resolve(z)}"', f'    fontWeight: {resolve(w)}', f'    lineHeight: {resolve(l)}']
+    if tr: fm_lines.append(f'    letterSpacing: "{resolve(tr)}"')
+fm_lines += ['rounded:'] + [f'  {n}: "{resolve(n)}"' for n in ROUNDED] + ['spacing:'] + [f'  space-{i}: "{resolve(f"space-{i}")}"' for i in range(1, 10)]
+_gen = '\n'.join(fm_lines) + '\n'
+_m = re.search(r'^colors:\n.*?(?=^components:\n)', MD, flags=re.S | re.M)
+assert _m, 'DESIGN.md: frontmatter colors … spacing before components'
+MD = MD[:_m.start()] + _gen + MD[_m.end():]
+_refs = set(re.findall(r'\{colors\.([a-z0-9-]+)\}', MD))
+assert _refs <= set(ROLES), ('DESIGN.md components reference colors tokens/tokens.css lacks', _refs - set(ROLES))
+# the Colors bullets: **Name** (`#RRGGBB`, `--role` …) take the role's hex
+def _bullet(m):
+    v = resolve(m.group(2)); return f'(`{v}`, `--{m.group(2)}`' if re.fullmatch(r'#[0-9A-F]{6}', v, flags=re.I) else m.group(0)
+MD = re.sub(r'\(`(#[0-9A-Fa-f]{6})`, `--([a-z0-9-]+)`', _bullet, MD)
+open(MD_PATH, 'w').write(MD)
 OUT = os.path.join(ROOT, '.impeccable/design.json')
 OLD = json.load(open(OUT)) if os.path.exists(OUT) else {}
 
@@ -76,7 +129,7 @@ for m in re.finditer(r'^- \*\*([^*]+)\*\* \(`([^`]+)`, `--([a-z0-9-]+)`', sectio
 for m in re.finditer(r'^- \*\*([^*]+)\*\* \(`--([a-z0-9-]+)`\)', section('Colors'), flags=re.M):
     NAMES[m.group(2)] = m.group(1)
 def role(t):
-    if t.startswith('accent') or t == 'on-accent': return 'primary'
+    if t.startswith('accent') or t == 'on-accent-fill': return 'primary'
     if t.startswith('error') or t == 'scrim': return 'state'
     if t.startswith('glass'): return 'material'
     return 'neutral'
@@ -96,8 +149,8 @@ typographyMeta = {t: {'displayName': t.replace('-', ' ').title(), 'purpose': hie
                   for t in FM['typography']}
 
 # ---------------------------------------------------------------- shadows, motion, breakpoints
-def kit(name): return re.search(r'--' + re.escape(name) + r':\s*([^;]+);', KIT).group(1).strip()
-shadows = [{'name': 'shadow-sheet', 'value': kit('shadow-sheet'), 'purpose': 'What floats over content: the Filters sheet and the floating tab bar (The Float Rule). Cards are flat.'}]
+def kit(name): return resolve(name)
+shadows = [{'name': 'float-shadow', 'value': re.sub(r'color-mix\(in srgb, #000000 60%, transparent\)', 'rgba(0, 0, 0, 0.6)', kit('float-shadow')), 'purpose': 'What floats over content: the Filters sheet and the floating tab bar (The Float Rule). Cards are flat.'}]
 motion = [
     {'name': 'ease-out', 'value': kit('ease-out'), 'purpose': 'Every transition.'},
     {'name': 'ease-in-out', 'value': kit('ease-in-out'), 'purpose': 'The skeleton pulse.'},
@@ -154,6 +207,24 @@ COMPONENTS = {
 }
 components = [COMPONENTS.get(c['name'], c) for c in OLD.get('components', [])]
 components += [c for n, c in COMPONENTS.items() if n not in {x['name'] for x in components}]
+# the snippets' fallback values come from tokens/tokens.css too (Lesson 8 step 4): var(--name, value) takes today's role
+# and its resolved value; the old kit names map to the roles; the rim and the scrim literals become their roles
+_OLD = {'bg-bar': 'graphite-5', 'bg-0': 'page', 'bg-1': 'surface', 'bg-2': 'raised', 'bg-3': 'pressed', 'line': 'hairline',
+        'field-line': 'boundary', 'text-1': 'text-primary', 'text-2': 'text-secondary', 'focus': 'text-primary',
+        'control-tint': 'text-primary', 'on-accent': 'on-accent-fill', 'error-bg': 'error-surface', 'invalid': 'error', 'destructive': 'error'}
+def _snippet(css):
+    def v(m):
+        n = _OLD.get(m.group(1), m.group(1))
+        if n == 'accent': n = 'accent-ink' if re.search(r'aria-current|bar-action|save', css[max(0, m.start() - 120):m.start()]) else 'accent-fill'
+        return f'var(--{n}, {resolve(n)})' if n in _DEF else m.group(0)
+    css = re.sub(r'color-mix\(in srgb, var\(--(bg-bar|bg-0|bg-2), #[0-9A-F]{6}\)', lambda m: 'color-mix(in srgb, var(--' + {'bg-bar': 'graphite-5', 'bg-0': 'graphite-7', 'bg-2': 'graphite-17'}[m.group(1)] + ', ' + resolve({'bg-bar': 'graphite-5', 'bg-0': 'graphite-7', 'bg-2': 'graphite-17'}[m.group(1)]) + ')', css)   # glass builds on primitives
+    css = css.replace('0 12px 32px -12px rgba(0, 0, 0, 0.6)', f'var(--float-shadow, {resolve("float-shadow")})')
+    css = re.sub(r'var\(--([a-z0-9-]+), [^()]+?\)', v, css)
+    css = css.replace('rgba(244, 245, 246, 0.08)', f'var(--glass-rim, {resolve("glass-rim")})').replace('rgba(0, 0, 0, 0.6)', f'var(--scrim, {resolve("scrim")})')
+    return css
+for c in components:
+    if 'css' in c: c['css'] = _snippet(c['css'])
+    if 'description' in c: c['description'] = re.sub(r'\b(bg-bar|bg-[0-3]|field-line|text-[12])\b', lambda m: _OLD[m.group(1)], c['description'])
 
 # ---------------------------------------------------------------- narrative, verbatim
 ov = section('Overview')

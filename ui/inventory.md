@@ -155,7 +155,7 @@ Single-screen blocks, by screen.
 Every component the step 6 critique touched, as it is now (record: `concept/concept.md` → Step 6). Each change is in `ui/kit.css` and `ui/kit.html` and on every screen that shows the component.
 - **Top bar:** text buttons 17px (HIG Body); the back chevron is Solar Linear; on a drill-down (Race detail, Result detail) the bar is transparent with no rim until content scrolls under it (`.is-scrolled`); "‹ Discover" returns to Race browse as it was (filters, search, List/Map; `?back=`). The sign-in screens' title is "Account". The bar action waits in Text disabled while a required field is empty (Sign in, Reset password and their `-error` pages). While Log result saves, Cancel is locked with the form.
 - **Sticky action bar:** transparent with no rim while nothing runs under it (`.is-at-end`).
-- **Static map:** each pin is a 44pt target (`a.map-pin[data-pin]` around a `span` label); the dot and leader take no taps; each pin's place is in `ui/map.css`, keyed on `data-pin` (no longer on the link's URL).
+- **Static map:** each pin is a 44pt target (`a.map-pin[data-pin]` around a `span` label); the dot and leader take no taps; each pin's place is in `ui/map-data.css` (`ui/map.css` until Lesson 8 step 4), keyed on `data-pin` (no longer on the link's URL).
 - **Search field:** the magnifier is Solar Linear (`--icon-search-field`); the empty state's 48px magnifier stays Bold.
 - **Pop-up select and Catalog row:** the chevron and the disclosure are Solar Linear.
 - **Date field → Date pill** (`.date-pill` with `.date-value` over the transparent `input type="date"`): the date as "23 Sep 2026", empty "Choose a date"; no glyph, no locale mask. Race browse (Filters sheet, all 4 files), Log result (all 3).
@@ -183,7 +183,7 @@ The final check found 22 defects; all are fixed (record: `concept/concept.md` �
 - **State message (detail errors):** the action inside `.state-actions`, as everywhere else.
 - **Detail loading states:** a visually hidden `h1` ("Race details", "Result details").
 - **Race card heading:** `h2` on the screens, in the showcase and on the stand.
-- **`ui/map.css`:** loaded without blocking first paint on Race browse (List is the default view).
+- **`ui/map-data.css`** (`ui/map.css` until Lesson 8 step 4): loaded without blocking first paint on Race browse (List is the default view).
 - **Showcase:** current texts and names (rows 99, 203, 370, 459), `aria-haspopup` on Sign out, unique ids, 44pt TOC links.
 - **Large text:** the result card, the controls row and the date pill wrap at 200%; `check_overflow.mjs` runs every state at 200% too.
 

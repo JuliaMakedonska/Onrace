@@ -1,7 +1,7 @@
 /* Onrace tokens: two levels (Lesson 8, step 2, 2026-10-27).
    Built from tokens/tokens-audit.md, ui/kit.css, ui/map.css and DESIGN.md. A refactor, not a redesign:
-   every value here is a value the kit already has. Linked, with components/index.css, by ui/kit.html since step 3;
-   the screens switch in step 4 (the old → new mapping is in tokens/tokens-audit.md → Mapping).
+   every value here is a value the kit already has. Linked, with components/index.css, by ui/kit.html since step 3 and
+   by every screen since step 4, when ui/kit.css and ui/map.css were deleted (the old → new mapping: tokens/tokens-audit.md → Mapping).
 
    1. PRIMITIVES: raw values, no roles in the names.
       - Colors are named by hue and lightness (CIE L*, rounded): --graphite-7 is the gray at L* 6.69.
@@ -17,7 +17,7 @@
    - the docs layer's values (--font-mono, --stand-max, --stand-col-min, --radius-3, --kit-stage-h);
      they go to the docs layer when the kit switches;
    - the map's generated data (Natural Earth masks, --map-ratio, each pin's x, y and label offset): it stays in a data
-     file linked only where the static map shows (ui/map-data.css; ui/map.css for the screens until step 4), so other
+     file linked only where the static map shows (ui/map-data.css), so other
      screens don't download 110 KB of masks. */
 
 :root {
@@ -199,7 +199,7 @@
   --dur-spin: 800ms;
   --dur-pulse: 1600ms;
 
-  /* ---------- the static map (its colors are semantic roles below; its masks and pins stay in ui/map.css) ---------- */
+  /* ---------- the static map (its colors are semantic roles below; its masks and pins are in ui/map-data.css) ---------- */
   --map-pin-dot: 10px;
   --pin-h: 22px;            /* pin label height (Drift 2: 22 against the format chip's 24, recorded) */
   --pin-gap: 6px;

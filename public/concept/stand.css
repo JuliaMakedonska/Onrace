@@ -1,13 +1,20 @@
-/* the stand's own layout token (moved out of ui/kit.css, step 6, #41) */
-:root { --phone-width: 392px; }
+/* the docs layer's tokens: the stand's own layout (moved out of ui/kit.css, step 6, #41, and Lesson 8 step 4), also read by
+   the review pages (ui/review-*.html, visuals/review-round3.html). Never in the product. */
+:root {
+  --phone-width: 392px;
+  --stand-max: 1152px;
+  --stand-col-min: 320px;
+  --radius-3: 12px;        /* stand panels and review shots (ui/kit-doc.css defines the showcase stages' own, same value) */
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;            /* code samples on the docs pages only */
+}
 /* Concept stand layout (concept/concept.html only, never in the product).
-   Values come from ui/kit.css (the stand-* tokens included); this file holds none of its own. */
+   Values come from tokens/tokens.css and the docs tokens above. */
 
-.shadow-demo { padding: var(--space-4); border-radius: var(--radius-2); background: var(--bg-1); box-shadow: var(--shadow-sheet); color: var(--text-2); font-size: var(--size-proof); }
+.shadow-demo { padding: var(--space-4); border-radius: var(--radius-2); background: var(--surface); box-shadow: var(--float-shadow); color: var(--text-secondary); font-size: var(--size-proof); }
 .stand { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-9); display: grid; gap: var(--space-9); }
 .stand-head { display: grid; gap: var(--space-3); }
 .stand p { max-width: var(--measure); }
-.stand-head p { margin: 0; color: var(--text-2); }
+.stand-head p { margin: 0; color: var(--text-secondary); }
 .stand-section { display: grid; gap: var(--space-6); }
 .stand-section > h2 {
   margin: 0;
@@ -17,37 +24,37 @@
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-display);
 }
-.stand-section > p, .stand-stack > p:not(.stand-label):not(.stand-why) { margin: 0; color: var(--text-2); }
+.stand-section > p, .stand-stack > p:not(.stand-label):not(.stand-why) { margin: 0; color: var(--text-secondary); }
 .stand-grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), 1fr)); align-items: start; }
-.stand-panel { display: grid; gap: var(--space-4); align-content: start; padding: var(--space-5); border-radius: var(--radius-3); background: var(--bg-bar); }
-.stand-panel > h3 { margin: 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-2); }
+.stand-panel { display: grid; gap: var(--space-4); align-content: start; padding: var(--space-5); border-radius: var(--radius-3); background: var(--frame); }
+.stand-panel > h3 { margin: 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-secondary); }
 .stand-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .stand-stack { display: grid; gap: var(--space-3); }
-.stand-label { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
+.stand-label { margin: 0; font-size: var(--size-proof); color: var(--text-secondary); }
 h3.stand-label { font-weight: var(--weight-strong); }   /* a heading used as a label: 600, not the browser's 700 */
-.stand-why { margin: 0; font-size: var(--size-proof); color: var(--text-2); }
-.stand-why b { color: var(--text-1); font-weight: var(--weight-strong); }
+.stand-why { margin: 0; font-size: var(--size-proof); color: var(--text-secondary); }
+.stand-why b { color: var(--text-primary); font-weight: var(--weight-strong); }
 
 .spec { width: 100%; border-collapse: collapse; font-size: var(--size-proof); }
-.spec th { text-align: left; font-weight: var(--weight-strong); color: var(--text-2); padding: 0 var(--space-3) var(--space-2) 0; border-bottom: var(--border) solid var(--line); vertical-align: bottom; }
-.spec td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: var(--border) solid var(--line); vertical-align: top; color: var(--text-2); }
-.spec td:first-child { color: var(--text-1); font-weight: var(--weight-strong); }
-.spec .num { font-variant-numeric: tabular-nums; color: var(--text-1); white-space: nowrap; }
+.spec th { text-align: left; font-weight: var(--weight-strong); color: var(--text-secondary); padding: 0 var(--space-3) var(--space-2) 0; border-bottom: var(--border) solid var(--hairline); vertical-align: bottom; }
+.spec td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: var(--border) solid var(--hairline); vertical-align: top; color: var(--text-secondary); }
+.spec td:first-child { color: var(--text-primary); font-weight: var(--weight-strong); }
+.spec .num { font-variant-numeric: tabular-nums; color: var(--text-primary); white-space: nowrap; }
 .spec .sample { white-space: nowrap; }
-.spec code, .stand code { font-family: var(--font-mono); font-size: var(--size-proof); color: var(--text-1); }
+.spec code, .stand code { font-family: var(--font-mono); font-size: var(--size-proof); color: var(--text-primary); }
 .spec-wrap { overflow-x: auto; border-radius: var(--radius-1); }
-.spec-wrap:focus-visible { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.spec-wrap:focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }
 .spec code { white-space: nowrap; }
-.swatch { display: inline-block; width: var(--space-4); height: var(--space-4); border-radius: var(--radius-1); vertical-align: middle; margin-right: var(--space-2); box-shadow: inset 0 0 0 var(--border) var(--line); }
-.pass { color: var(--text-1); font-weight: var(--weight-strong); }  /* not green: no success color as a verdict mark (Color rule 2) */
-.exempt { color: var(--text-2); }
+.swatch { display: inline-block; width: var(--space-4); height: var(--space-4); border-radius: var(--radius-1); vertical-align: middle; margin-right: var(--space-2); box-shadow: inset 0 0 0 var(--border) var(--hairline); }
+.pass { color: var(--text-primary); font-weight: var(--weight-strong); }  /* not green: no success color as a verdict mark (Color rule 2) */
+.exempt { color: var(--text-secondary); }
 
-.phone-frame { width: 100%; max-width: var(--phone-width); border-radius: var(--radius-3); overflow: hidden; background: var(--bg-0); box-shadow: inset 0 0 0 var(--border) var(--line); }
+.phone-frame { width: 100%; max-width: var(--phone-width); border-radius: var(--radius-3); overflow: hidden; background: var(--page); box-shadow: inset 0 0 0 var(--border) var(--hairline); }
 .phone-frame .stand-stack { padding: var(--space-4); }
-.icon-cell { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-1); }
+.icon-cell { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-primary); }
 .icon-cell .icon { width: var(--icon-l); height: var(--icon-l); flex: none; }
-.stand-link { color: var(--text-1); text-underline-offset: var(--space-1); }
-.type-sample { color: var(--text-1); }
+.stand-link { color: var(--text-primary); text-underline-offset: var(--space-1); }
+.type-sample { color: var(--text-primary); }
 .type-sample--display { font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .type-sample--title { font-size: var(--size-title); }
 .type-sample--time { font-size: var(--size-time); }
@@ -55,17 +62,26 @@ h3.stand-label { font-weight: var(--weight-strong); }   /* a heading used as a l
 .type-sample--day { font-size: var(--size-day); }
 .type-sample--item { font-size: var(--size-item); font-weight: var(--weight-strong); }
 .type-sample--body { font-size: var(--size-body); }
-.type-sample--meta { font-size: var(--size-meta); color: var(--text-2); }
-.type-sample--proof { font-size: var(--size-proof); color: var(--text-2); }
-.space-bar { display: inline-block; height: var(--space-3); border-radius: var(--radius-1); background: var(--text-2); }
+.type-sample--meta { font-size: var(--size-meta); color: var(--text-secondary); }
+.type-sample--proof { font-size: var(--size-proof); color: var(--text-secondary); }
+.space-bar { display: inline-block; height: var(--space-3); border-radius: var(--radius-1); background: var(--text-secondary); }
 .space-bar--1 { width: var(--space-1); } .space-bar--2 { width: var(--space-2); } .space-bar--3 { width: var(--space-3); }
 .space-bar--4 { width: var(--space-4); } .space-bar--5 { width: var(--space-5); } .space-bar--6 { width: var(--space-6); }
 .space-bar--7 { width: var(--space-7); } .space-bar--8 { width: var(--space-8); } .space-bar--9 { width: var(--space-9); }
-.swatch--bg-bar { background: var(--bg-bar); } .swatch--bg-0 { background: var(--bg-0); } .swatch--bg-1 { background: var(--bg-1); }
-.swatch--bg-2 { background: var(--bg-2); } .swatch--bg-3 { background: var(--bg-3); } .swatch--line { background: var(--line); } .swatch--field-line { background: var(--field-line); }
-.swatch--text-1 { background: var(--text-1); } .swatch--text-2 { background: var(--text-2); } .swatch--text-disabled { background: var(--text-disabled); }
-.swatch--chip-text { background: var(--chip-text); } .swatch--accent { background: var(--accent); } .swatch--accent-hover { background: var(--accent-hover); }
-.swatch--on-accent { background: var(--on-accent); } .swatch--error { background: var(--error); } .swatch--error-bg { background: var(--error-bg); }
+/* swatches: one per color token (tokens/tokens.css primitives and roles, specimens.css states), named by the token */
+.swatch--graphite-5 { background: var(--graphite-5); } .swatch--graphite-7 { background: var(--graphite-7); } .swatch--graphite-12 { background: var(--graphite-12); }
+.swatch--graphite-17 { background: var(--graphite-17); } .swatch--graphite-20 { background: var(--graphite-20); } .swatch--graphite-22 { background: var(--graphite-22); }
+.swatch--graphite-46 { background: var(--graphite-46); } .swatch--graphite-47 { background: var(--graphite-47); } .swatch--graphite-69 { background: var(--graphite-69); }
+.swatch--graphite-79 { background: var(--graphite-79); } .swatch--graphite-96 { background: var(--graphite-96); } .swatch--black { background: var(--black); }
+.swatch--amber-78 { background: var(--amber-78); } .swatch--amber-83 { background: var(--amber-83); } .swatch--coral-68 { background: var(--coral-68); }
+.swatch--coral-21 { background: var(--coral-21); } .swatch--frame { background: var(--frame); } .swatch--page { background: var(--page); }
+.swatch--surface { background: var(--surface); } .swatch--raised { background: var(--raised); } .swatch--pressed { background: var(--pressed); }
+.swatch--group { background: var(--group); } .swatch--glass-bar { background: var(--glass-bar); } .swatch--glass-ground { background: var(--glass-ground); }
+.swatch--glass-sheet { background: var(--glass-sheet); } .swatch--glass-rim { background: var(--glass-rim); } .swatch--scrim { background: var(--scrim); }
+.swatch--text-primary { background: var(--text-primary); } .swatch--text-secondary { background: var(--text-secondary); } .swatch--text-disabled { background: var(--text-disabled); }
+.swatch--chip-text { background: var(--chip-text); } .swatch--hairline { background: var(--hairline); } .swatch--boundary { background: var(--boundary); }
+.swatch--accent-fill { background: var(--accent-fill); } .swatch--on-accent-fill { background: var(--on-accent-fill); } .swatch--accent-ink { background: var(--accent-ink); }
+.swatch--accent-hover { background: var(--accent-hover); } .swatch--error { background: var(--error); } .swatch--error-surface { background: var(--error-surface); }
+.swatch--map-water { background: var(--map-water); } .swatch--map-land { background: var(--map-land); } .swatch--map-lines { background: var(--map-lines); }
 .swatch--success { background: var(--success); } .swatch--success-bg { background: var(--success-bg); } .swatch--warning { background: var(--warning); }
-.swatch--warning-bg { background: var(--warning-bg); } .swatch--focus { background: var(--focus); }
-.swatch--warning-line { background: var(--warning-line); }
+.swatch--warning-bg { background: var(--warning-bg); } .swatch--warning-line { background: var(--warning-line); }

@@ -3,7 +3,7 @@
 .fs-main { padding: 59px var(--space-4) 0; }            /* iPhone 14/15: 47px status bar + 12px */
 .fs-main header { display: grid; gap: var(--space-3); margin-bottom: var(--space-3); }
 /* the flat, edge-to-edge bar of this harness (moved out of the kit, step 6, #41); it overrides the screens' floating tab bar */
-body > .fs-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: auto; height: auto; display: block; padding: var(--space-2) var(--space-2) 34px; border: 0; border-top: var(--border) solid var(--line); border-radius: 0; box-shadow: none; } /* 34px home indicator */
+body > .fs-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: auto; height: auto; display: block; padding: var(--space-2) var(--space-2) 34px; border: 0; border-top: var(--border) solid var(--hairline); border-radius: 0; box-shadow: none; } /* 34px home indicator */
 body > .fs-tabbar a::before { content: none; }
-.fs-buttons { display: grid; gap: var(--space-3); padding: var(--space-4); background: var(--bg-bar); min-height: 100vh; align-content: start; }
+.fs-buttons { display: grid; gap: var(--space-3); padding: var(--space-4); background: var(--frame); min-height: 100vh; align-content: start; }
 .fs-buttons[hidden], .fs-main[hidden], .fs-tabbar[hidden] { display: none; }

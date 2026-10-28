@@ -16,14 +16,15 @@ _IA = open(os.path.join(ROOT, 'public/ia.html')).read()
 ROOT_CSS = _IA[_IA.index(':root{'):_IA.index('/* Hero */')]
 
 # The sources of truth, one line on every lesson page (the same map heads README.md and CLAUDE.md)
-SOURCES = [('look', 'ui/kit.css'), ('words', 'microcopy.md'), ('structure', 'wireframes/'), ('decisions', 'concept/concept.md')]
+SOURCES = [('look', 'tokens/tokens.css', 'components/'), ('words', 'microcopy.md'), ('structure', 'wireframes/'), ('decisions', 'concept/concept.md')]
 def sources_line():
-    return ' · '.join(f'<span class="src"><span class="src-k">{k}:</span> <a href="{GH}{p}"><code>{p}</code></a></span>' for k, p in SOURCES)
+    return ' · '.join(f'<span class="src{" src-more" if len(ps) > 1 else ""}"><span class="src-k">{k}:</span> ' + ' + '.join(f'<a href="{GH}{p}"><code>{p}</code></a>' for p in ps) + '</span>' for k, *ps in SOURCES)
 
 # ---------------------------------------------------------------- the numbers every lesson page shows (read from the repo)
 def repo_stats():
-    kit = open(os.path.join(ROOT, 'ui/kit.css')).read()
-    tok = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', kit + open(os.path.join(ROOT, 'ui/map.css')).read(), flags=re.S))
+    # Lesson 8 step 4: the values are tokens/tokens.css (+ the generated map data), the classes components/index.css
+    tok = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', open(os.path.join(ROOT, 'tokens/tokens.css')).read() + open(os.path.join(ROOT, 'ui/map-data.css')).read(), flags=re.S))
+    kit = open(os.path.join(ROOT, 'components/index.css')).read()
     variables = len(set(re.findall(r'(?:^|;)\s*--([a-z0-9-]+):', tok, flags=re.M)))
     rules = re.sub(r':root\s*\{.*?\n?\}', '', re.sub(r'/\*.*?\*/', '', kit, flags=re.S), flags=re.S)
     rules = re.sub(r'url\("[^"]*"\)', '', rules)
@@ -112,6 +113,7 @@ TEMPLATE_CSS = r'''  /* Hero (same as ia.html and voice.html) */
   .hero-line{color:var(--text-dim); font-size:15px; margin:10px 0 0; line-height:1.6}
   .hero-line strong{color:var(--text)}
   .src{white-space:nowrap}
+  .src-more{white-space:normal}  /* a source with two paths (look: tokens + components) may break between them on a phone */
   .src-k{color:var(--text-faint); font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:.06em}
   .hero-line a{color:var(--text); text-decoration:none}
   .hero-line a:hover code{color:var(--accent)}

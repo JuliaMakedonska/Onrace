@@ -11,6 +11,8 @@
      is the active filter chips row (.chips-row), and its own box must still fit the screen;
    - a one-line control wraps (ONE_LINE: Sort, Filters, List/Map, the chips, Clear all filters: the controls bar);
    - a page script throws, or a deferred stylesheet never applies (step 7);
+   - a local file the page requests (a stylesheet, script, image, font or frame) answers 404 (Lesson 8 step 4: a page
+     still linking ui/kit.css or ui/map.css after their removal fails here as well as in check_links.py);
    - a font the page uses didn't load (a family and weight from the kit with no loaded face: the measure would be a
      fallback's).
 
@@ -71,7 +73,7 @@ for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.h
 states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
 // the pages about the kit (2026-10-26): the showcase and the lesson overviews, also at 1440 (desk); not phone screens
-const DOCS = ['../ui/kit', '../public/concept-overview', '../public/ui-overview'];
+const DOCS = ['../ui/kit', '../public/concept-overview', '../public/ui-overview', '../ui/shell', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
 DOCS.forEach(d => states.push({ name: d, q: '', act: '', label: d.split('/').pop(), doc: true }));
 
 // ---------------------------------------------------------------- the check, in the page
@@ -148,6 +150,7 @@ await new Promise(r => ws.addEventListener('open', r, { once: true }));
 let seq = 0; const pending = new Map(); const waiters = []; const pageErrors = [];
 ws.addEventListener('message', ev => {
   const m = JSON.parse(ev.data);
+  if (m.method === 'Network.responseReceived' && m.params.response.url.startsWith('http://127.0.0.1') && m.params.response.status >= 400 && !/\/favicon\.ico$/.test(m.params.response.url)) pageErrors.push('missing file (' + m.params.response.status + '): ' + new URL(m.params.response.url).pathname);
   if (m.method === 'Runtime.exceptionThrown' && (m.params.exceptionDetails.url || '').startsWith('http://127.0.0.1')) pageErrors.push((m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text || '').split('\n')[0]);
   if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); }
   else if (m.method) waiters.filter(w => w.method === m.method).forEach(w => { w.resolve(m); waiters.splice(waiters.indexOf(w), 1); });
@@ -155,9 +158,9 @@ ws.addEventListener('message', ev => {
 const send = (method, params = {}) => new Promise(r => { const id = ++seq; pending.set(id, r); ws.send(JSON.stringify({ id, method, params })); });
 const once = method => new Promise(resolve => waiters.push({ method, resolve }));
 const evaluate = async expr => (await send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true })).result?.result?.value;
-await send('Page.enable'); await send('Runtime.enable');
+await send('Page.enable'); await send('Runtime.enable'); await send('Network.enable');
 if (process.argv.includes('--block-fonts')) {   // self-test: with the font files blocked, the check must fail
-  await send('Network.enable'); await send('Network.setBlockedURLs', { urls: ['*fonts.gstatic.com*'] });
+  await send('Network.setBlockedURLs', { urls: ['*fonts.gstatic.com*'] });
 }
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
 
@@ -179,7 +182,7 @@ for (const [w, h, text, docsOnly] of [[390, 844, 16], [320, 568, 16], [390, 844,
     if (s.act.startsWith('click:')) await evaluate(`document.querySelector(${JSON.stringify(s.act.slice(6))})?.click()`);
     if (s.act) await sleep(350);
     const bad = (await evaluate(CHECK)) || [];
-    pageErrors.forEach(e => bad.push('script error: ' + e));   // a page whose script breaks isn't measured as designed (step 7)
+    pageErrors.forEach(e => bad.push(e.startsWith('missing file') ? e : 'script error: ' + e));   // a page whose script breaks isn't measured as designed (step 7)
     checked++;
     if (bad && bad.length) failures.push(`${w}px${text !== 16 ? ' · ' + text / 16 * 100 + '% text' : ''} · ${s.label}\n    ${bad.join('\n    ')}`);
   }

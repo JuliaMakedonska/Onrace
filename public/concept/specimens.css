@@ -1,14 +1,14 @@
 /* stand-only tokens (moved out of ui/kit.css, step 6, #41): no product screen uses them */
 :root {
   --success: #7DCB9A;
-  --success-bg: #2A3835;   /* success at 14% on bg-1 */
-  --warning: var(--text-1);/* no hue of its own: any warm hue reads as the accent */
-  --warning-bg: var(--bg-2);
-  --warning-line: var(--text-2);
+  --success-bg: #2A3835;   /* success at 14% on --surface */
+  --warning: var(--text-primary);/* no hue of its own: any warm hue reads as the accent */
+  --warning-bg: var(--raised);
+  --warning-line: var(--text-secondary);
 }
 /* Specimens: classes the stand (concept/concept.html) and the first-screen study (concept/first-screen.html) show, which
-   no product screen uses. Moved out of ui/kit.css on 2026-10-23 (consolidation), unchanged. Values only from the kit's
-   tokens; load this file after ui/kit.css. */
+   no product screen uses. Moved out of ui/kit.css on 2026-10-23 (consolidation), unchanged. Values only from
+   tokens/tokens.css; load this file after components/index.css. */
 
 /* ---------- buttons, as stand specimens (the screens use .header-action, .state-action, .filters-trigger, .clear-all) ---------- */
 .btn {
@@ -30,17 +30,17 @@
 }
 .btn:active { transform: translateY(var(--border)); }
 .btn .icon { width: var(--icon-m); height: var(--icon-m); flex: none; }
-.btn--primary { background: var(--accent); color: var(--on-accent); }
+.btn--primary { background: var(--accent-fill); color: var(--on-accent-fill); }
 .btn--primary:hover { background: var(--accent-hover); }
-.btn--secondary { background: var(--bg-2); color: var(--text-1); }
-.btn--secondary:hover { background: var(--bg-3); }
+.btn--secondary { background: var(--raised); color: var(--text-primary); }
+.btn--secondary:hover { background: var(--pressed); }
 .btn--tertiary {
   position: relative;
   min-height: var(--target);
   padding: 0 var(--space-1);
   background: none;
   border: 0;
-  color: var(--text-1);
+  color: var(--text-primary);
   font-family: var(--font-text);
   font-size: var(--size-meta);
   font-weight: var(--weight-regular);
@@ -49,8 +49,8 @@
   text-underline-offset: var(--space-1);
   cursor: pointer;
 }
-.btn--tertiary:hover { color: var(--text-2); }
-.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--bg-2); color: var(--text-disabled); cursor: not-allowed; transform: none; }
+.btn--tertiary:hover { color: var(--text-secondary); }
+.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--raised); color: var(--text-disabled); cursor: not-allowed; transform: none; }
 .btn--tertiary:disabled { background: none; }
 .btn[aria-busy="true"] { cursor: progress; pointer-events: none; }  /* busy: same fill, verb in the present tense ("Saving…"), aria-disabled blocks keys */
 .btn[aria-busy="true"]::before {   /* G26: the kit's spinner, for a specimen that isn't a <button> */
@@ -72,10 +72,10 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-2);
   font-size: var(--size-meta);
-  color: var(--text-1);
+  color: var(--text-primary);
 }
 .status .icon { width: var(--icon-m); height: var(--icon-m); flex: none; margin-top: calc(var(--space-1) / 2); }
-.status--error { background: var(--error-bg); }
+.status--error { background: var(--error-surface); }
 .status--error .icon, .status--error strong { color: var(--error); }
 .status--success { background: var(--success-bg); }
 .status--success .icon, .status--success strong { color: var(--success); }
@@ -85,13 +85,13 @@
 
 /* ---------- the old Sort pop-up (a <select>): the stand and first-screen study still show it; the screens use .sort-toggle ---------- */
 .sort-control { position: relative; display: flex; align-items: center; gap: var(--space-1); }
-.sort-control label { color: var(--text-2); }
+.sort-control label { color: var(--text-secondary); }
 .sort-control select {
   min-height: var(--target);
   padding: 0 calc(var(--icon-s) + var(--space-1)) 0 0;
   border: 0;
   background: transparent;
-  color: var(--text-1);
+  color: var(--text-primary);
   font-family: var(--font-text);
   font-size: var(--size-meta);
   font-weight: var(--weight-strong);
@@ -107,7 +107,7 @@
   width: var(--icon-s);
   height: var(--icon-s);
   margin-top: calc(var(--icon-s) / -2);
-  background: var(--text-1);
+  background: var(--text-primary);
   -webkit-mask: var(--icon-chevron) center / contain no-repeat;
   mask: var(--icon-chevron) center / contain no-repeat;
   pointer-events: none;

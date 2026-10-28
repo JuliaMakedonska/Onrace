@@ -13,10 +13,7 @@ Lesson 8, step 3 (2026-10-27): the kit's component classes, one file per compone
 
 `index.css` is **generated**: edit the component files, then run `python3 scripts/build_components.py` (`scripts/concept/build_stand.py` runs it first on every build). It's one bundled file, so a page makes one request instead of an `@import` chain.
 
-**Who links it today:**
-- `ui/kit.html` (the showcase) is switched.
-- The 35 screens, `ui/shell.html`, the stand and the review pages still link `ui/kit.css` until step 4.
-- Until then, `ui/kit.css` and these files hold the same rules: a change goes into both, and step 4 compares them.
+**Who links it (since step 4, 2026-10-28):** every page that shows the product: the 35 screens, `ui/kit.html` (the showcase), `ui/shell.html`, the stand and `concept/first-screen.html`, and the review pages (for the page's base styles). `ui/kit.css` is gone: `scripts/check_kit.py` fails if a screen, the showcase or the shell links anything else, and `scripts/check_links.py` fails if any page links a missing file.
 
 ## The cascade order
 
@@ -53,5 +50,5 @@ There are 56 files. Each is named after its component in `ui/inventory.md` (keba
 - the error icon shared by `.inline-error`, `.field-error` and `.row-note.is-error` is in `inline-error.css`.
 
 **Not here:**
-- **The map's data** (Natural Earth masks, the map's ratio, each pin's place) is in `ui/map-data.css`, generated from `ui/map.css` without the six map tokens that moved to `tokens.css`. Only the pages that show the static map link it.
+- **The map's data** (Natural Earth masks, the map's ratio, each pin's place) is in `ui/map-data.css`, written by `scripts/concept/build_map.py`; the map's six design tokens (dot, label height and gap, water, land, lines) are in `tokens.css`. Only the pages that show the static map link it.
 - **The showcase's stages** (`.kit-frame`, `.kit-stage`, `.kit-shell`, `.kit-tabbar`) are documentation: they're in `ui/kit-doc.css`. The tab bar specimens are small screens in frames, so the bar is the body's child, as on a screen, and no product selector names the showcase.

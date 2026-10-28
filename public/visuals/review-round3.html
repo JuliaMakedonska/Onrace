@@ -7,17 +7,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../components/index.css">
+<link rel="stylesheet" href="../concept/stand.css">
 <style>
-  /* review page only: tokens from kit.css */
+  /* review page only: tokens from tokens/tokens.css and the docs layer (concept/stand.css) */
   .rv { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-8); }
-  .rv p { margin: 0; max-width: var(--measure); color: var(--text-2); }
-  .rv-img { display: grid; gap: var(--space-4); padding-top: var(--space-6); border-top: var(--border) solid var(--line); }
+  .rv p { margin: 0; max-width: var(--measure); color: var(--text-secondary); }
+  .rv-img { display: grid; gap: var(--space-4); padding-top: var(--space-6); border-top: var(--border) solid var(--hairline); }
   .rv-img h2 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); }
   .rv-img h3 { margin: 0; font-family: var(--font-text); font-size: var(--size-body); font-weight: var(--weight-strong); }
   .rv-two { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), 1fr)); align-items: start; }
   .rv figure { margin: 0; display: grid; gap: var(--space-2); }
-  .rv figcaption { font-size: var(--size-proof); color: var(--text-2); }
+  .rv figcaption { font-size: var(--size-proof); color: var(--text-secondary); }
   .rv figcaption span { color: var(--text-disabled); }
   .rv-two img { display: block; width: 100%; height: auto; border-radius: var(--radius-1); }
   .pairs { display: flex; flex-wrap: wrap; gap: var(--space-4); }

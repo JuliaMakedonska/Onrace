@@ -7,9 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../ui/kit.css?v=865c9332">
-<link rel="stylesheet" href="specimens.css?v=865c9332">
-<link rel="stylesheet" href="first-screen.css?v=865c9332">
+<link rel="stylesheet" href="../tokens/tokens.css?v=4f67bd9c">
+<link rel="stylesheet" href="../components/index.css?v=4f67bd9c">
+<link rel="stylesheet" href="specimens.css?v=4f67bd9c">
+<link rel="stylesheet" href="first-screen.css?v=4f67bd9c">
 </head>
 <!-- Measurement harness, not a product page. Open at 390×844 (iPhone 14/15 viewport)
      and run measure(): it counts how many race cards are visible above the tab bar.
@@ -121,15 +122,15 @@
     <li><a href="#"><svg class="tab-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 13C16.4183 13 20 15.0147 20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13Z"/><path d="M12 2C14.2091 2 16 3.79086 16 6C16 8.20914 14.2091 10 12 10C9.79086 10 8 8.20914 8 6C8 3.79086 9.79086 2 12 2Z"/></g></svg><span>Profile</span></a></li>
   </ul></nav>
 <script>
-  // Variants for the stand's comparisons, set from the URL (ui/kit.css is not changed):
-  //   ?accent=%23RRGGBB   overrides --accent (and its hover) on this page only
+  // Variants for the stand's comparisons, set from the URL (tokens/tokens.css is not changed):
+  //   ?accent=%23RRGGBB   overrides the accent (--accent-fill, --accent-ink and the hover) on this page only
   //   ?ratio=W/H          overrides --photo-ratio (the photo band)
   //   ?state=hyrox        wireframe filter state: HYROX only (2 races)
   //   ?state=filtered     wireframe filter state: HYROX + Marathon (4 races)
   //   ?mode=buttons       shows only the primary buttons from other screens, in this accent
   (function () {
     var q = new URLSearchParams(location.search), root = document.documentElement.style;
-    if (q.get('accent')) { root.setProperty('--accent', q.get('accent')); root.setProperty('--accent-hover', q.get('accent')); }
+    if (q.get('accent')) { ['--accent-fill', '--accent-ink', '--accent-hover'].forEach(function (t) { root.setProperty(t, q.get('accent')); }); }
     if (q.get('ratio')) root.setProperty('--photo-ratio', q.get('ratio').replace('/', ' / '));
     var keep = { hyrox: ['HYROX'], filtered: ['HYROX', 'Marathon'] }[q.get('state')];
     if (keep) {
