@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T21:37:44+00:00",
+  "generatedAt": "2026-10-30T15:22:56+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -272,6 +272,22 @@
       "accent-hover": {
         "role": "primary",
         "displayName": "Amber, hover",
+        "canonical": "#FFC46A",
+        "oklch": "oklch(85.6% 0.127 76.2)",
+        "tonalRamp": [
+          "#130900",
+          "#342101",
+          "#593B01",
+          "#825802",
+          "#AD7603",
+          "#D2993C",
+          "#F8BD63",
+          "#FFEBD1"
+        ]
+      },
+      "accent-ink-hover": {
+        "role": "primary",
+        "displayName": "Amber ink, hover",
         "canonical": "#FFC46A",
         "oklch": "oklch(85.6% 0.127 76.2)",
         "tonalRamp": [

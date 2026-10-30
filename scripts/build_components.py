@@ -11,6 +11,8 @@ Run from anywhere:  python3 scripts/build_components.py      (build_stand.py run
    - reads a color primitive (--graphite-*, --amber-*, --coral-*, --black, --alpha-*; anything tokens/tokens.css defines
      as a raw color or an alpha) instead of a semantic role;
    - writes a hex color, a px value or a font name in a declaration (everything goes through var());
+   - (step 5) writes a named or functional color (black, white, rgb(), hsl()) or a fixed color-scheme: a value the
+     theme can't reach;
    - has text outside an order block (other than its header comment), or two blocks share a number.
 (Until step 4 it also derived ui/map-data.css from ui/map.css. Since step 4, ui/map-data.css is the map's own file,
 written by scripts/concept/build_map.py, and ui/map.css is gone.)
@@ -50,6 +52,9 @@ for f in files:
         if re.search(r'(?<![\w-])-?\d*\.?\d+px\b', val): fails.append(f'{name}: a px value in "{decl.strip()[:80]}"')
         if any(fn in val for fn in FONT_NAMES) or (prop.strip() == 'font-family' and not re.fullmatch(r'\s*(var\(--[a-z0-9-]+\)|inherit)\s*', val)):
             fails.append(f'{name}: a font name in "{decl.strip()[:80]}"')
+        # step 5: a component never fixes the appearance; color-scheme comes from :root (dark, or light under [data-theme])
+        if prop.strip() == 'color-scheme' and val.strip() != 'inherit': fails.append(f'{name}: a fixed color-scheme in "{decl.strip()[:80]}" (inherit it)')
+        if re.search(r'(?<![\w-])(black|white|rgba?\(|hsla?\()', val) and prop.strip() not in ('mask', '-webkit-mask'): fails.append(f'{name}: a named or functional color in "{decl.strip()[:80]}" (use a role)')
 keys = [k for k, _, _ in blocks]
 for k in sorted({k for k in keys if keys.count(k) > 1}):
     fails.append(f'order {k:04d} is used by more than one block: ' + ', '.join(n for kk, n, _ in blocks if kk == k))

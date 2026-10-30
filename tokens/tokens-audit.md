@@ -687,6 +687,13 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
 ### After the lesson ("keep it" changes, not part of the refactor)
 
 - **The List/Map track at large text (designer, 2026-10-27).** At 200% text the track is 47px tall with a 22px radius, so it isn't a full capsule; C7 says capsule. After Lesson 8: decide, then change it in `tokens/tokens.css` and `components/segmented-control.css` (and its showcase stage) under the "keep it" rule.
+- **One segmented control, a capsule everywhere (designer, 2026-10-30).** The segmented control is one component and must look the same wherever it stands. Today it doesn't:
+  - List/Map, in a bar, is a capsule;
+  - Sign in / Create account, in content, has 6px corners.
+
+  **Decision:** the segmented control is a capsule everywhere, as in iOS 26. Rule C7 becomes: "capsules for every system control (segmented controls, search fields, bar buttons); cards, chips and content buttons keep Podium corners."
+
+  **When:** after Lesson 8, as one "keep it" change together with the List/Map capsule at 200% text above. That means the radius tokens in `tokens/tokens.css`, `components/segmented-control.css`, the showcase stage, C7 in `DESIGN.md`, and every screen where the control stands. Nothing changes now.
 
 ### Still unknown
 
@@ -764,3 +771,80 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
 - **The `<select>` height at 200% text** (59 or 63px, by font timing) is unchanged from step 3.
 - **The `DESIGN.md` components block** is still hand-written: its references are role names (checked against `tokens.css`), but its px literals (padding, heights) aren't generated.
 - **The stand-label and doc wording** on the stand and in `DESIGN.md` now uses role names. "Text 1/Text 2" still appear in older prose as the plain-language names.
+
+---
+
+## Step 5 record (2026-10-30): the theme stress test
+
+Onrace is dark-only (C5), so the test is a light theme: if the roles are right, a second appearance needs new values and nothing else.
+
+### What changed in step 5
+
+- **`tokens/tokens.css`:**
+  - **Primitives:** 15 light colors and 3 alphas, each named by hue and L* with its use: `--white`, `--graphite-98/93/89/87/85/77/65/56/39/27`, `--amber-40`, `--amber-33`, `--coral-40`, `--coral-94`, `--alpha-18/30/92`. No existing primitive changed.
+  - **The light block:** `:root[data-theme="light"]` overrides semantic roles only, plus `color-scheme: light`, and has its own Reduce Transparency variant. It follows iOS light (grouped backgrounds, label colors):
+    - the page is `--graphite-96`; surfaces and grouped rows are white; raised fills are `--graphite-93` and pressed fills `--graphite-89`;
+    - text is `--graphite-7`, and secondary text `--graphite-39` (opaque, so it holds AA on every fill and on glass);
+    - `--frame` stays black: behind an open sheet, iOS light stays black.
+  - **Podium kept:**
+    - `--accent-fill` is the same amber with the same dark text.
+    - `--accent-ink` is `--amber-40` (`#875206`), darker and about 8° warmer. It holds 4.9:1 on the bar glass over black and passes rule 3b on its own, with no override.
+    - The photos stay black and white, and the chips stay neutral.
+    - The coral darkens to `--coral-40`.
+  - **Glass, scrim and shadow:**
+    - The glass is light and translucent: the bar is `--graphite-98` at 90%; the ground glass (`--graphite-96`) and the sheet (white) are at 92%. The build's minimums are 87%, 88% and 85%.
+    - The scrim is black at 30%, and the float shadow black at 18% (iOS dims and shadows less in light).
+  - **The map:** water `--graphite-85`, land `--graphite-96`, lines `--graphite-77`.
+  - **A new role, `--accent-ink-hover`:** see hole 1.
+- **Holes found in `components/`, each fixed in the component:**
+  1. `top-bar.css` read `--accent-hover`, shared with the primary fill's hover. It now reads `--accent-ink-hover`.
+  2. `date-field.css` had `color-scheme: dark` written in. It now inherits.
+  - No component read a color primitive.
+  - `build_components.py` now also fails on a fixed `color-scheme` or a named or functional color.
+- **`tokens/theme.js`** (new), in the `<head>` of the 35 screens, the showcase (and its tab bar frames), the shell and the first screen:
+  - `?theme=light` or `?theme=dark` decides;
+  - the choice is kept for the tab in sessionStorage, so a state change made by a page script keeps it;
+  - a tapped link gets `theme=light` added;
+  - dark sets nothing.
+- **The viewer** (`wireframes/index.html`): a Light / Dark control next to Wireframe / Design.
+  - The theme rides in the hash (`#race-browse?theme=light`, in the workspace `#04/race-browse?theme=light`). `index.html?theme=light` works as an entry link too.
+  - The frame always gets `?theme=`, and the control is off while the frozen Wireframe shows.
+- **The build (`build_stand.py`):**
+  - **Both themes:** `tok(name, theme)` reads the light block. Every contrast pair is checked in both themes. Every glass pair is checked in both themes over its worst case (dark: Text primary behind; light: black, a photo's shadows) and as solid glass (Reduce Transparency).
+  - **Dark-only pairs:** the stand's own panels and its state specimens.
+  - **Pairs removed:** the three solid tab bar and action bar pairs. Their background was the primitive `--graphite-5`, not a role, so they couldn't follow a theme; the glass pairs (now also solid) cover the bars.
+  - **Rules in both themes:** in each theme, only the accent roles take an amber value and no role takes a success color (rules 1 and 2). Rule 3b reports the fill and the ink in both themes. Rule 3a stays dark-only.
+  - **The contrast record:** the 34 role pairs, with both ratios, are written as a generated comment at the end of `tokens.css`.
+  - **The stand:** the roles table shows each light value; the primitives table lists the light primitives with the roles built on them (marked "light"); 223 of 223 tokens signed.
+- **The review page:** `ui/review-theme.html`, with every state (105) in both themes at 390×844, and the contrast table.
+- **Docs:**
+  - `CLAUDE.md`: the "keep it" rule, now by token level; check 15; the toggle; the status.
+  - `DESIGN.md`: the ink hover and a Light theme section.
+  - `tokens/README.md` and `components/README.md`.
+
+### How it was checked
+
+1. **Dark against the commit before this step** (`c668154`), with the step 4 harness: 124 states × 5 passes (390, 320, 200% text, Reduce Transparency, motion on), 620 state-passes, every computed style, box and screenshot. Every flag was one of these:
+   - **Already known:** the stand, whose tables changed on purpose (its product specimens match in every computed style); the review pages' lazy-image heights; `log-result-error?cause=fields`; and the showcase's `<select>` at 200% text.
+   - **New, and noise:** Race browse loading with 5 filters in map view at 320. It was screenshot-only (50 pixels, Δ ≤ 7, every computed style the same) and clean on rerun.
+   - The dark theme is unchanged.
+2. **Light:** the build checks the 34 role pairs and the glass in both themes and passes. Every state was shot in both themes (`ui/review-theme.html`), and the control screens (Race browse list, sheet and map; Results list; Log result with field errors) were looked at, along with Race detail, the Profile alert, the loading skeleton and the sign-in error.
+   - Every page applied the theme it was asked for.
+   - The one script error in the shooting run came from the very first page load (in dark), before the page's own scripts ran; `check_overflow`, which logs only page script errors, passes.
+3. **The viewer**, driven in headless Chrome:
+   - a hash entry (`#race-browse?theme=light`) and a query entry (`index.html?theme=light`);
+   - a state pill;
+   - Dark, then Light again;
+   - a tap inside the frame, which the page navigates by script without the parameter: the theme held through sessionStorage;
+   - the workspace route `#04/results-list?theme=light`.
+   - Each step showed the right theme, and the control matched it.
+4. **The build passes:** both themes, 223/223 signed tokens, `check_kit`, `check_overflow` (329 states) and `check_links`. The new link check caught `theme.js` missing from `public/` on the first build.
+
+### Still unknown
+
+- **Whether light stays in the product:** the designer's call (C5 says dark-only).
+- **The light values are a first pass on iOS light,** not tuned against Apple's iOS 26 kit, and the light glass alphas are [?] like the dark ones.
+- **The stand and the review pages stay dark:** they're docs pages, and the stand's specimen tokens (success, warning) have no light values.
+- **`check_overflow` runs in dark only.** The theme changes no geometry, but nothing proves that by test in light.
+- **sessionStorage keeps the theme for the tab:** a dark page opened later in the same tab without `?theme=dark` comes up light. The viewer always passes the theme, so it isn't affected.
+- **The hover states** (`--accent-hover`, `--accent-ink-hover`) aren't held to 3b, as before. They're states, for Lesson 9.

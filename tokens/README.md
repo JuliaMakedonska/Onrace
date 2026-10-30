@@ -8,3 +8,4 @@ Lesson 8: the kit's values as two levels of design tokens.
   - **Semantic:** the color roles, each a `var()` of a primitive.
   - Since step 4 (2026-10-28) every page that shows the product links it, then `components/index.css`. `ui/kit.css` and `ui/map.css` are gone.
   - Hex values live only here: `DESIGN.md`'s frontmatter values and `.impeccable/design.json` are generated from it (`scripts/build_design_sidecar.py`).
+- **`theme.js`** and the light block (step 5, 2026-10-30, the theme stress test): `tokens.css` ends with `:root[data-theme="light"]`, which overrides semantic roles only. `theme.js`, in each page's `<head>`, sets `data-theme="light"` from `?theme=light` and keeps it for the tab, so a state change keeps it. Onrace stays dark-only (C5) until the designer decides. The contrast of every role pair in both themes is a generated comment at the end of `tokens.css` (`scripts/concept/build_stand.py`).

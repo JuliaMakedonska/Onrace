@@ -234,6 +234,7 @@
   .mode-btn:hover { color: var(--text); }
   .mode-btn[aria-pressed="true"] { background: var(--accent-dim); color: var(--accent); }
   .mode-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .mode-btn:disabled { opacity: .45; cursor: not-allowed; }   /* Light / Dark while the frozen Wireframe shows: it has no theme */
   .mode-note { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--text-faint); }
   .mode-note[hidden] { display: none; }
   #zone-mode-note { margin: 0 0 14px; }
@@ -418,6 +419,10 @@
         <div class="mode-toggle" role="group" aria-label="Show the page as">
           <button type="button" class="mode-btn" data-mode="wireframe" aria-pressed="false" title="The frozen Lesson 5 wireframe (_wireframe/)">Wireframe</button>
           <button type="button" class="mode-btn" data-mode="design" aria-pressed="true" title="The working screen, updated in place">Design</button>
+        </div>
+        <div class="mode-toggle" role="group" aria-label="Theme">
+          <button type="button" class="mode-btn theme-btn" data-theme="light" aria-pressed="false" title="The light theme stress test (Lesson 8 step 5; Onrace is dark-only, C5)">Light</button>
+          <button type="button" class="mode-btn theme-btn" data-theme="dark" aria-pressed="true" title="Onrace's theme">Dark</button>
         </div>
         <a class="open-page" id="open-page" href="race-browse.html" target="_blank" rel="noopener">Open as a page ↗</a>
       </div>
@@ -1120,25 +1125,35 @@
      the mode: it's split off here and added back only in the hash. */
   var MODES = { design: '', wireframe: '_wireframe/' };
   var mode = 'design';
-  function splitMode(h) {   // 'log-result-error?cause=link&mode=wireframe' → { key: 'log-result-error?cause=link', mode: 'wireframe' }
-    var q = h.indexOf('?'); if (q < 0) return { key: h, mode: null };
-    var p = new URLSearchParams(h.slice(q + 1)), m = p.get('mode');
-    p.delete('mode');
+  /* Light / Dark (Lesson 8 step 5): the light theme stress test. The theme rides in the hash like the mode
+     (#race-browse?theme=light, in the workspace #04/race-browse?theme=light) and reaches the frame as ?theme=,
+     which tokens/theme.js turns into <html data-theme="light">. Dark is the default and the product's theme.
+     The frozen Wireframe snapshot has no theme: there the switch is off. */
+  var theme = 'dark';
+  var queryTheme = new URLSearchParams(location.search).get('theme');   // index.html?theme=light works as an entry link too
+  function splitMode(h) {   // 'log-result-error?cause=link&mode=wireframe&theme=light' → { key: 'log-result-error?cause=link', mode: 'wireframe', theme: 'light' }
+    var q = h.indexOf('?'); if (q < 0) return { key: h, mode: null, theme: null };
+    var p = new URLSearchParams(h.slice(q + 1)), m = p.get('mode'), t = p.get('theme');
+    p.delete('mode'); p.delete('theme');
     var rest = p.toString();
-    return { key: h.slice(0, q) + (rest ? '?' + rest : ''), mode: MODES.hasOwnProperty(m) ? m : null };
+    return { key: h.slice(0, q) + (rest ? '?' + rest : ''), mode: MODES.hasOwnProperty(m) ? m : null, theme: t === 'light' || t === 'dark' ? t : null };
   }
-  function withMode(key, m) {
-    return m === 'wireframe' ? key + (key.indexOf('?') >= 0 ? '&' : '?') + 'mode=wireframe' : key;
+  function withMode(key, m, t) {
+    t = t || theme;
+    var extra = (m === 'wireframe' ? ['mode=wireframe'] : []).concat(t === 'light' ? ['theme=light'] : []);
+    return extra.length ? key + (key.indexOf('?') >= 0 ? '&' : '?') + extra.join('&') : key;
   }
-  function pageUrl(key, m) {   // the page the frame (and Open as a page) shows for this key and mode
-    var q = key.indexOf('?');
-    return MODES[m] + key.split('?')[0] + '.html' + (q >= 0 ? key.slice(q) : '');
+  function pageUrl(key, m, open) {   // the page the frame (and Open as a page) shows for this key, mode and theme
+    var q = key.indexOf('?'), url = MODES[m] + key.split('?')[0] + '.html' + (q >= 0 ? key.slice(q) : '');
+    if (m === 'wireframe' || (open && theme === 'dark')) return url;
+    return url + (q >= 0 ? '&' : '?') + 'theme=' + theme;   // the frame always says which, so a theme kept from before is reset
   }
   function hashKey() {
     var h = location.hash.replace(/^#/, '');
     try { h = decodeURIComponent(h); } catch (e) {}
     var sm = splitMode(h);
     mode = sm.mode || 'design';
+    theme = sm.theme || queryTheme || 'dark'; queryTheme = null;
     return STATES[sm.key.split('?')[0]] ? sm.key : DEFAULT_KEY;
   }
   function frameMode() {
@@ -1147,8 +1162,12 @@
   function frameKey() {
     try {
       var loc = frame.contentWindow.location;
-      return loc.pathname.split('/').pop().replace(/\.html$/, '') + loc.search;
+      var p = new URLSearchParams(loc.search); p.delete('theme');
+      return loc.pathname.split('/').pop().replace(/\.html$/, '') + (p.toString() ? '?' + p.toString() : '');
     } catch (e) { return null; }
+  }
+  function frameTheme() {
+    try { return frame.contentDocument.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; } catch (e) { return theme; }
   }
   function notesKey(key) {
     var base = key.split('?')[0] + '.html';
@@ -1170,9 +1189,13 @@
       if (x[0] === sk) a.setAttribute('aria-current', 'page');
       li.appendChild(a); pills.appendChild(li);
     });
-    document.getElementById('open-page').href = pageUrl(key, mode);
-    Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'), function (b) {
+    document.getElementById('open-page').href = pageUrl(key, mode, true);
+    Array.prototype.forEach.call(document.querySelectorAll('.mode-btn[data-mode]'), function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === mode));
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.theme-btn'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-theme') === theme));
+      b.disabled = mode === 'wireframe';   // the frozen snapshot has no theme
     });
     document.getElementById('mode-note').hidden = mode !== 'wireframe';
     document.getElementById('zone-mode-note').hidden = mode !== 'wireframe';
@@ -1192,11 +1215,11 @@
       if (a.getAttribute('data-key') === sk) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
-    document.title = 'Onrace — Wireframes · ' + s.name + (st.label === 'Base' ? '' : ' · ' + st.label) + (mode === 'wireframe' ? ' · Wireframe' : '');
+    document.title = 'Onrace — Wireframes · ' + s.name + (st.label === 'Base' ? '' : ' · ' + st.label) + (mode === 'wireframe' ? ' · Wireframe' : theme === 'light' ? ' · Light' : '');
     renderNotes(notesKey(key));
   }
   function show(key) {
-    if (frameKey() !== key || frameMode() !== mode) frame.src = pageUrl(key, mode);
+    if (frameKey() !== key || frameMode() !== mode || (mode === 'design' && frameTheme() !== theme)) frame.src = pageUrl(key, mode);
     paint(key);
   }
   frame.addEventListener('load', function () {
@@ -1204,6 +1227,7 @@
     var key = frameKey();
     if (!key || !STATES[key.split('?')[0]]) return;
     mode = frameMode();   // navigation inside the frame stays in its folder, so the frame knows the mode
+    if (mode === 'design') theme = frameTheme();   // and the page knows its theme (tokens/theme.js keeps it across state changes)
     var h = '#' + withMode(key, mode);
     if (location.hash !== h) {
       history.replaceState(null, '', h);
@@ -1211,10 +1235,16 @@
     }
     paint(key);
   });
-  Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'), function (b) {
+  Array.prototype.forEach.call(document.querySelectorAll('.mode-btn[data-mode]'), function (b) {
     b.addEventListener('click', function () {
       var m = b.getAttribute('data-mode'); if (m === mode) return;
       location.hash = withMode(hashKey(), m);   // hashchange → show() loads the other version of the same state
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.theme-btn'), function (b) {
+    b.addEventListener('click', function () {
+      var t = b.getAttribute('data-theme'), key = hashKey(); if (t === theme) return;
+      location.hash = withMode(key, mode, t);   // hashchange → show() reloads the same state in the other theme
     });
   });
   window.addEventListener('hashchange', function () { show(hashKey()); });

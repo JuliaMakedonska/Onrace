@@ -160,7 +160,7 @@ SAW = [bold_led('HIG gaps.', first(NATIVE['Gap triage (2026-10-18)']) if 'Gap tr
        bold_led('The critique.', first(S6.split('\n\n', 1)[0])),
        bold_led('The final check.', first(S7.split('\n\n', 1)[0]))]
 DECIDED = [bold_led('Native iOS.', first(re.search(r'\*\*The rule\.\*\* (.*)', CO.CS[NATIVE_HEAD]).group(1))),
-           bold_led('"Keep it".', re.search(r'\*\*"Keep it" rule \(2026-10-25\):\*\* (.*)', ASSEMBLY).group(1)),
+           bold_led('"Keep it".', re.search(r'\*\*"Keep it" rule \(2026-10-25[^)]*\):\*\* (.*)', ASSEMBLY).group(1)),
            bold_led('One kit.', re.search(r'- \*\*`tokens/tokens.css` \+ `components/`:\*\* (.*?\.)', ASSEMBLY).group(1)),
            bold_led('Race picker.', first(NATIVE['Race picker pushed (designer, 2026-10-24)'])),
            bold_led('Result detail.', re.search(r'\*\*#11, (.+?)\*\*', S6).group(1) + '.'),
@@ -217,7 +217,7 @@ KEY = [   # the decisions a reader needs first; the full register is folded unde
      '2026-10-18', 'CLAUDE.md → Wireframes', GH + 'CLAUDE.md#wireframes'),
     ('The finish time leads Result detail', '<strong>' + inline(c6('11').group(1)) + '</strong>' + inline(CO.first_sentences(c6('11').group(2), 200)),
      '2026-10-25', 'concept.md → Step 6', CO.anchor(S6_HEAD)),
-    ('The "keep it" rule', inline(re.search(r'\*\*"Keep it" rule \(2026-10-25\):\*\* (.*)', ASSEMBLY).group(1)),
+    ('The "keep it" rule', inline(re.search(r'\*\*"Keep it" rule \(2026-10-25[^)]*\):\*\* (.*)', ASSEMBLY).group(1)),
      '2026-10-25', 'CLAUDE.md → UI assembly', GH + 'CLAUDE.md#ui-assembly'),
 ]
 PHOTO_ROWS = re.findall(r'^\| ([a-z0-9-]+) \| ([^|]+?) \| \d+% \|', VS['Export (step 7, 2026-10-25)'], flags=re.M)

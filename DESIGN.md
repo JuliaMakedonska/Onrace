@@ -23,6 +23,7 @@ colors:
   on-accent-fill: "#131518"
   accent-ink: "#F5B649"
   accent-hover: "#FFC46A"
+  accent-ink-hover: "#FFC46A"
   error: "#EE8B84"
   error-surface: "#3A2F31"
   map-water: "#0F1114"
@@ -297,6 +298,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 ### Primary
 - **Sodium Amber** (`#F5B649`, `--accent-fill`, `--accent-ink`; primitive `--amber-78`): `--accent-fill` is the fill of the screen's one primary button (Log result in the Results list header; Change filters on Race browse `-empty`; Try again on both `-error` pages; Apply filters in the Filters sheet) and `--accent-ink` the icon and label of the current tab and the bar action (two roles on one primitive since Lesson 8: in a light appearance amber text needs a darker amber than the fill). On-accent text `#131518` is 10.16:1 on it. The current tab label is 10.51:1 on the tab bar.
 - **Amber, hover** (`#FFC46A`, `--accent-hover`): the primary button under the pointer. Never at rest.
+- **Amber ink, hover** (`#FFC46A`, `--accent-ink-hover`): the bar action (Save, Log result) under the pointer. Split from `--accent-hover` in Lesson 8 step 5: the same value in dark, apart in light.
 - **On Accent** (`#131518`, `--on-accent-fill`): text and icons on the amber fill. The same primitive as `--page`, `--graphite-7`.
 
 ### Neutral
@@ -325,6 +327,9 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 - **Scrim** (`rgba(0, 0, 0, 0.6)`, `--scrim`): behind the open Filters sheet.
 
 `--success` and `--success-bg` exist in `concept/specimens.css` for the stand's specimen only. No product screen uses them.
+
+### Light theme (stress test, Lesson 8 step 5, 2026-10-30)
+Onrace is dark-only (C5). To prove the roles hold a second appearance, `tokens/tokens.css` has a `:root[data-theme="light"]` block that overrides semantic roles only, on `?theme=light`. It follows iOS light: the page `--graphite-96`, white surfaces and rows, `--graphite-93` raised and `--graphite-89` pressed fills, secondary text `--graphite-39`. Podium stays: the amber fill is the same `#F5B649` with dark text; the ink is `--amber-40` (`#875206`), darker and about 8° warmer, so amber text holds AA on light bars and passes rule 3b without the override; the coral darkens to `--coral-40` (`#A33A32`); photos stay black and white; chips stay neutral. Glass is light and translucent (90–92%), checked over black, the darkest thing that can scroll under it. Whether light stays in the product is undecided; every state in both themes: `ui/review-theme.html`.
 
 ### Named Rules
 **The Two Lights Rule.** The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--pressed`, a checked checkbox is `--text-primary` (Text 1, C4), the focus ring is `--text-primary`.

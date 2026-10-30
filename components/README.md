@@ -52,3 +52,12 @@ There are 56 files. Each is named after its component in `ui/inventory.md` (keba
 **Not here:**
 - **The map's data** (Natural Earth masks, the map's ratio, each pin's place) is in `ui/map-data.css`, written by `scripts/concept/build_map.py`; the map's six design tokens (dot, label height and gap, water, land, lines) are in `tokens.css`. Only the pages that show the static map link it.
 - **The showcase's stages** (`.kit-frame`, `.kit-stage`, `.kit-shell`, `.kit-tabbar`) are documentation: they're in `ui/kit-doc.css`. The tab bar specimens are small screens in frames, so the bar is the body's child, as on a screen, and no product selector names the showcase.
+
+## The theme test (step 5, 2026-10-30)
+
+A light theme overrides semantic roles in `tokens/tokens.css`, and nothing here should need to change for it. Two things did, and each is a hole now closed:
+
+1. **`top-bar.css`:** the bar action's hover read `--accent-hover`, the same role as the primary fill's hover. In light, one value can't serve a fill under dark text and text on a light bar. It now reads `--accent-ink-hover` (the same value in dark).
+2. **`date-field.css`:** the native date input had `color-scheme: dark` written in, so its picker would stay dark in light. It now inherits the theme's `color-scheme` from `:root`.
+
+No component read a color primitive. `scripts/build_components.py` now also fails on a fixed `color-scheme` or a named or functional color (`black`, `white`, `rgb()`, `hsl()`), the two ways a component can still hold a theme of its own.

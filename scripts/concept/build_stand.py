@@ -24,11 +24,18 @@ COMPONENTS = _read('components/index.css')
 # layer (specimens.css, stand.css, kit-doc.css). tok() reads the first definition: the value at rest.
 TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', TOKENS + ''.join(_read(f) for f in ('ui/map-data.css', 'concept/specimens.css', 'concept/stand.css', 'ui/kit-doc.css')), flags=re.S))   # tokens only: map-data.css's per-pin rules set local variables, not tokens
 
-def tok(name):
-    m = re.search(r'--' + re.escape(name) + r':\s*([^;]+);', TOK)
-    v = m.group(1).strip()
+# the light theme (step 5): tokens/tokens.css's :root[data-theme="light"] block overrides roles; tok(name, 'light') reads it first
+LIGHT = re.search(r':root\[data-theme="light"\]\s*\{(.*?)\n\}', TOKENS, flags=re.S).group(1)
+LIGHT_DEF = dict(re.findall(r'^\s*--([a-z0-9-]+):\s*([^;]+);', re.sub(r'/\*.*?\*/', '', LIGHT, flags=re.S), flags=re.M))
+THEMES = ('dark', 'light')
+def tok(name, theme='dark'):
+    if theme == 'light' and name in LIGHT_DEF:
+        v = LIGHT_DEF[name].strip()
+    else:
+        m = re.search(r'--' + re.escape(name) + r':\s*([^;]+);', TOK)
+        v = m.group(1).strip()
     r = re.match(r'var\(--([a-z0-9-]+)\)', v)
-    if r: return tok(r.group(1))
+    if r: return tok(r.group(1), theme)
     return '#' + ''.join(c * 2 for c in v[1:]) if re.fullmatch(r'#[0-9A-Fa-f]{3}', v) else v   # #000 → #000000
 
 def px(name):
@@ -61,8 +68,6 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Date day on the tile', 'text-primary', 'raised', 'text'),
     ('Date month and year on the tile', 'text-secondary', 'raised', 'text'),
     ('Unselected List/Map segment', 'text-secondary', 'raised', 'text'),
-    ('Inactive tab label', 'text-secondary', 'graphite-5', 'text'),
-    ('Current tab label (accent)', 'accent-ink', 'graphite-5', 'text'),
     ('Format chip label', 'chip-text', 'raised', 'text'),
     ('Primary button label', 'on-accent-fill', 'accent-fill', 'text'),
     ('Primary button label, hover', 'on-accent-fill', 'accent-hover', 'text'),
@@ -91,7 +96,6 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Kit · detail facts label (Sport type, Race date)', 'text-secondary', 'page', 'text'),
     ('Kit · inline error and form alert text', 'text-primary', 'error-surface', 'text'),
     ('Kit · error icon in an inline error (non-text, 3:1)', 'error', 'error-surface', 'ui'),
-    ('Kit · action bar caption ("Opens in a new tab.")', 'text-secondary', 'graphite-5', 'text'),
     ('Kit · primary button in the action bar', 'on-accent-fill', 'accent-fill', 'text'),
     ('Kit · text field value and label on a field', 'text-primary', 'surface', 'text'),
     ('Kit · field label and hint on the page', 'text-secondary', 'page', 'text'),
@@ -161,19 +165,22 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
 # ---------------------------------------------------------------- glass (C1): text over glass, against the worst case behind it
 def _rgb(h): h = h.lstrip('#'); return [int(h[i:i+2], 16) for i in (0, 2, 4)]
 def over(fg, a, bg): return '#' + ''.join(f'{round(a * f + (1 - a) * b):02X}' for f, b in zip(_rgb(fg), _rgb(bg)))   # sRGB "over", as the browser blends
-def glass_parts(name):
-    m = re.match(r'color-mix\(in srgb, var\(--([a-z0-9-]+)\) var\(--([a-z0-9-]+)\), transparent\)', tok(name))
-    return tok(m.group(1)), float(tok(m.group(2)).rstrip('%')) / 100, m.group(1), m.group(2)
+def glass_parts(name, theme='dark'):
+    m = re.match(r'color-mix\(in srgb, var\(--([a-z0-9-]+)\) var\(--([a-z0-9-]+)\), transparent\)', tok(name, theme))
+    return tok(m.group(1), theme), float(tok(m.group(2), theme).rstrip('%')) / 100, m.group(1), m.group(2)
 # the scrim is a mix too since Lesson 8 (color-mix(in srgb, var(--black) var(--alpha-60), transparent)), parsed the same way
-SCRIM_BASE, SCRIM_A, _, _ = glass_parts('scrim')
-# The brightest thing that can scroll under a bar is Text 1 (a title); a photo's lightest tone after the
-# black-and-white filter is #D9D9D9, below it. Under the sheet the same Text 1 sits behind the scrim.
-# Measured with no help from the blur (a blurred glyph is darker than its solid color), so this is the floor.
-WORST = tok('text-primary')
-UNDER = {'bar': WORST, 'ground': WORST, 'sheet': over(SCRIM_BASE, SCRIM_A, WORST)}
+SCRIM = {t: glass_parts('scrim', t) for t in THEMES}
+SCRIM_BASE, SCRIM_A = SCRIM['dark'][0], SCRIM['dark'][1]
+# The worst case behind a glass is what contrasts least with its text.
+# Dark: the brightest thing that can scroll under a bar is Text primary (a title); a photo's lightest tone after the
+# black-and-white filter is #D9D9D9, below it. Light (step 5): the darkest, and a photo's shadows reach black, below
+# Text primary's #131518. Under the sheet the same sits behind the scrim. Measured with no help from the blur (a blurred
+# glyph is lighter or darker than its solid color, never further), so this is the floor.
+WORST = {'dark': tok('text-primary'), 'light': '#000000'}
+UNDER = {t: {'bar': WORST[t], 'ground': WORST[t], 'sheet': over(SCRIM[t][0], SCRIM[t][1], WORST[t])} for t in THEMES}
 GLASS = {'bar': 'glass-bar', 'ground': 'glass-ground', 'sheet': 'glass-sheet'}
-def glass_bg(where, alpha=None):
-    base, a, _, _ = glass_parts(GLASS[where]); return over(base, a if alpha is None else alpha, UNDER[where])
+def glass_bg(where, alpha=None, theme='dark'):
+    base, a, _, _ = glass_parts(GLASS[where], theme); return over(base, a if alpha is None else alpha, UNDER[theme][where])
 GLASS_PAIRS = [   # label, text token, glass, kind
     ('Tab bar · inactive tab label over content', 'text-secondary', 'bar', 'text'),
     ('Tab bar · current tab (accent) over content', 'accent-ink', 'bar', 'text'),
@@ -181,6 +188,7 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Controls bar · Clear all filters (the chips are opaque capsules: their pairs are solid)', 'text-primary', 'ground', 'text'),
     ('Top bar · back link, title, Cancel', 'text-primary', 'ground', 'text'),
     ('Top bar · Save, Log result’s one primary (accent text)', 'accent-ink', 'ground', 'text'),
+    ('Top bar · Save or Log result under the pointer (step 5: its own role)', 'accent-ink-hover', 'ground', 'text'),
     ('Top bar · “Saving…” with its spinner', 'text-secondary', 'ground', 'text'),
     ('Filters sheet · heading, checkbox labels', 'text-primary', 'sheet', 'text'),
     ('Filters sheet · field labels and legend', 'text-secondary', 'sheet', 'text'),
@@ -192,44 +200,77 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Confirm alert (glass, G67) · body', 'text-secondary', 'sheet', 'text'),
     ('Confirm alert (glass, G67) · Sign out, destructive', 'error', 'sheet', 'text'),
 ]
-def min_alpha(where):   # the lowest fill opacity at which every pair on this glass still passes
+def min_alpha(where, theme='dark'):   # the lowest fill opacity at which every pair on this glass still passes
     for pct in range(0, 101):
-        if all(cr(tok(fg), glass_bg(where, pct / 100)) >= (4.5 if k == 'text' else 3.0) for _, fg, w, k in GLASS_PAIRS if w == where):
+        if all(cr(tok(fg, theme), glass_bg(where, pct / 100, theme)) >= (4.5 if k == 'text' else 3.0) for _, fg, w, k in GLASS_PAIRS if w == where):
             return pct
     return None
-GLASS_MIN = {w: min_alpha(w) for w in GLASS}
+GLASS_MIN_T = {t: {w: min_alpha(w, t) for w in GLASS} for t in THEMES}
+GLASS_MIN = GLASS_MIN_T['dark']
 P = '[?] provisional: Apple’s iOS 26 kit wasn’t read; to be replaced from it (designer, 2026-10-19)'
 HIG_DIM = 35   # HIG Materials: "consider adding a dark dimming layer of 35% opacity" under clear Liquid Glass over bright content
-for w in GLASS:
-    _, a, _, _ = glass_parts(GLASS[w])
-    assert GLASS_MIN[w] is not None and a * 100 >= GLASS_MIN[w], ('Glass too clear for AA over the worst case', w, a, GLASS_MIN[w])
-    assert a * 100 >= HIG_DIM, ('Glass lighter than HIG’s 35% dimming floor', w)
+for t in THEMES:
+    for w in GLASS:
+        _, a, _, _ = glass_parts(GLASS[w], t)
+        assert GLASS_MIN_T[t][w] is not None and a * 100 >= GLASS_MIN_T[t][w], ('Glass too clear for AA over the worst case', t, w, a, GLASS_MIN_T[t][w])
+        assert a * 100 >= HIG_DIM, ('Glass lighter than HIG’s 35% dimming floor', t, w)
 
-rows, failures = [], []
-for label, fg, bg, kind in PAIRS:
-    f, b = tok(fg), tok(bg)
-    r = cr(f, b)
-    need = {'text': 4.5, 'large': 3.0, 'ui': 3.0, 'exempt': 0, 'info': 0}[kind]
-    ok = r >= need
-    if kind not in ('exempt', 'info') and not ok:
-        failures.append((label, r))
-    verdict = ('<span class="exempt">exempt (disabled, WCAG 1.4.3)</span>' if kind == 'exempt'
-               else '<span class="exempt">no requirement (decorative placeholder, aria-hidden)</span>' if kind == 'info'
-               else f'<span class="pass">pass</span> · needs {need:g}:1' if ok else f'<b>fail</b> · needs {need:g}:1')
-    rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {f}</td>'
-                f'<td class="sample">{sw(bg)}<code>--{bg}</code> {b}</td><td class="num">{r:.2f}:1</td><td>{verdict}</td></tr>')
+NEED = {'text': 4.5, 'large': 3.0, 'ui': 3.0, 'exempt': 0, 'info': 0}
+rows, failures, CONTRAST_LOG = [], [], []
+def _verdict(kind, oks):
+    need = NEED[kind]
+    if kind == 'exempt': return '<span class="exempt">exempt (disabled, WCAG 1.4.3)</span>'
+    if kind == 'info': return '<span class="exempt">no requirement (decorative placeholder, aria-hidden)</span>'
+    return (f'<span class="pass">pass</span> · needs {need:g}:1' if all(oks) else f'<b>fail</b> · needs {need:g}:1')
+# Dark-only pairs: the stand's own panels and its state specimens (success, warning) live on the stand, a dark-only docs
+# page that never takes the light theme; their tokens have no light value. Every product pair is checked in both themes.
+def dark_only(label, fg, bg): return label.startswith('Stand panels') or bool({fg, bg} & {'success', 'success-bg', 'warning', 'warning-bg', 'warning-line'})
+for label, fg, bg, kind in PAIRS:   # every pair in both themes (step 5); a failure in either stops the build
+    themes = ('dark',) if dark_only(label, fg, bg) else THEMES
+    rs = {t: cr(tok(fg, t), tok(bg, t)) for t in THEMES}
+    oks = [rs[t] >= NEED[kind] for t in themes]
+    for t in themes:
+        if kind not in ('exempt', 'info') and rs[t] < NEED[kind]: failures.append((t, label, rs[t]))
+    if len(themes) == 2: CONTRAST_LOG.append((fg, bg, kind, rs['dark'], rs['light']))
+    rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {tok(fg)} · {tok(fg, "light")}</td>'
+                f'<td class="sample">{sw(bg)}<code>--{bg}</code> {tok(bg)} · {tok(bg, "light")}</td><td class="num">{rs["dark"]:.2f}:1</td><td class="num">{f"{rs[chr(108) + chr(105) + chr(103) + chr(104) + chr(116)]:.2f}:1" if len(themes) == 2 else "dark only (the stand)"}</td><td>{_verdict(kind, oks)}</td></tr>')
 for label, fg, where, kind in GLASS_PAIRS:
-    f, b = tok(fg), glass_bg(where)
-    r = cr(f, b); need = 4.5 if kind == 'text' else 3.0; ok = r >= need
-    if not ok: failures.append((label, r))
+    rs = {t: cr(tok(fg, t), glass_bg(where, None, t)) for t in THEMES}
+    need = NEED[kind]; oks = [rs[t] >= need for t in THEMES]
+    for t in THEMES:
+        if rs[t] < need: failures.append((t, label, rs[t]))
+        solid = cr(tok(fg, t), glass_parts(GLASS[where], t)[0])   # Reduce Transparency: the glass turns solid (step 5; this replaced the solid tab bar pairs)
+        if solid < need: failures.append((t, label + ' · Reduce Transparency, solid', solid))
+    CONTRAST_LOG.append((fg, GLASS[where] + ' over the worst case', kind, rs['dark'], rs['light']))
     base, a, bt, at = glass_parts(GLASS[where])
-    under = f'the scrim ({SCRIM_A:g}) over Text primary' if where == 'sheet' else 'Text primary'
-    rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {f}</td>'
-                f'<td class="sample"><code>--{GLASS[where]}</code> (<code>--{bt}</code> at {a * 100:g}%) over {under} = {b}</td><td class="num">{r:.2f}:1</td>'
-                f'<td>{"<span class=pass>pass</span>" if ok else "<b>fail</b>"} · needs {need:g}:1</td></tr>')
+    lbase, la, lbt, _ = glass_parts(GLASS[where], 'light')
+    under = 'the scrim over the worst case' if where == 'sheet' else 'the worst case'
+    rows.append(f'<tr><td>{label}</td><td class="sample">{sw(fg)}<code>--{fg}</code> {tok(fg)} · {tok(fg, "light")}</td>'
+                f'<td class="sample"><code>--{GLASS[where]}</code> over {under}: dark <code>--{bt}</code> at {a * 100:g}% over Text primary = {glass_bg(where)}; light <code>--{lbt}</code> at {la * 100:g}% over black = {glass_bg(where, None, "light")}</td><td class="num">{rs["dark"]:.2f}:1</td><td class="num">{rs["light"]:.2f}:1</td>'
+                f'<td>{_verdict(kind, oks)}</td></tr>')
 assert not failures, failures
-print('Glass: bar', glass_bg('bar'), 'min opacity', GLASS_MIN['bar'], '% · ground', glass_bg('ground'), 'min', GLASS_MIN['ground'], '% · sheet', glass_bg('sheet'), 'min opacity', GLASS_MIN['sheet'], '%')
-CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text</th><th>Background</th><th>Ratio</th><th>WCAG AA</th></tr></thead><tbody>'
+for t in THEMES:
+    print(f'Glass ({t}): bar', glass_bg('bar', None, t), 'min opacity', GLASS_MIN_T[t]['bar'], '% · ground', glass_bg('ground', None, t), 'min', GLASS_MIN_T[t]['ground'], '% · sheet', glass_bg('sheet', None, t), 'min opacity', GLASS_MIN_T[t]['sheet'], '%')
+
+# the contrast record in tokens/tokens.css (step 5): every role pair the build checks, in both themes, as a generated comment
+_seen, _lines = set(), []
+for fg, bg, kind, rd, rl in CONTRAST_LOG:
+    if kind in ('exempt', 'info') or (fg, bg) in _seen: continue
+    _seen.add((fg, bg)); _lines.append(f'   --{fg} on --{bg}'.ljust(74) + f'dark {rd:5.2f}  light {rl:5.2f}  needs {NEED[kind]:g}')
+_block = ('/* contrast:start (generated by scripts/concept/build_stand.py; do not edit by hand)\n'
+          f'   Every semantic text/background pair the build checks, in both themes (WCAG 2 ratios). Glass is measured over its\n'
+          f'   worst case: dark, Text primary behind; light, black behind (a photo\'s shadows); the sheet also under its scrim.\n'
+          f'   {len(_lines)} pairs; the build stops if one falls below its need in either theme.\n'
+          + '\n'.join(_lines) + '\n   contrast:end */')
+_tok_text = open(os.path.join(ROOT, 'tokens/tokens.css')).read()
+if '/* contrast:start' in _tok_text:
+    _new = re.sub(r'/\* contrast:start.*?contrast:end \*/', lambda m: _block, _tok_text, flags=re.S)
+else:
+    _new = _tok_text.rstrip('\n') + '\n\n' + _block + '\n'
+if _new != _tok_text:
+    open(os.path.join(ROOT, 'tokens/tokens.css'), 'w').write(_new)
+print('Contrast in both themes:', len(_lines), 'role pairs written to tokens/tokens.css')
+CONTRAST = ('<div class="spec-wrap" tabindex="0" role="region" aria-label="Contrast table"><table class="spec"><thead><tr><th>Where</th><th>Text (dark · light)</th><th>Background (dark · light)</th><th>Dark</th><th>Light</th><th>WCAG AA, both</th></tr></thead><tbody>'
             + ''.join(rows) + '</tbody></table></div>')
 
 # cache-busting: stylesheet links carry a short hash of the token, component, map and docs-layer files
@@ -286,10 +327,10 @@ ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.state-action:not\(\.secondary\)(
              r'^\.(register|open|submit)-btn(:hover)?$',   # the grayscale screens' one primary (kit, 2026-10-18)
              r'^\.top-bar \.(save-btn|bar-action)(:hover)?$',   # the bar action: Save on Log result (kit feedback, 2026-10-19), Log result on Results list (G5), Apply filters on the sheet (G12; markup pass, 2026-10-23)
              r'^\.bottom-nav a\[aria-current="page"\]$',
-             r'^\.swatch--(accent-(fill|ink|hover)|amber-\d+)$']   # the stand's swatches, one per token
+             r'^\.swatch--(accent-(fill|ink|hover|ink-hover)|amber-\d+)$']   # the stand's swatches, one per token
 # the accent roles (--accent-fill, --accent-ink, --accent-hover, since Lesson 8 step 4) and their amber primitives, so a
 # class can't reach the amber around its roles (tokens/tokens.css's :root is not a class and isn't read here)
-accent_sel = selectors_using('accent-fill', 'accent-ink', 'accent-hover', 'amber-78', 'amber-83')
+accent_sel = selectors_using('accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'amber-78', 'amber-83', 'amber-40', 'amber-33')
 accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK)]
 assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
 
@@ -298,6 +339,19 @@ SUCCESS_OK = [r'^\.status--success( \.icon| strong)?$', r'^\.swatch--success(-bg
 success_sel = selectors_using('success', 'success-bg')
 success_bad = [x for x in success_sel if not any(re.match(p, x) for p in SUCCESS_OK)]
 assert not success_bad, ('Color rule 2: success color outside the stand specimen', success_bad)
+
+# Rules 1 and 2 in both themes (step 5): the classes are the same in both, so the theme can only break a rule through its
+# values. In each theme, only the accent roles may resolve to an amber primitive, and no role may resolve to a success color.
+ROLES = [n for n in re.findall(r'^\s*--([a-z0-9-]+):', TOKENS.split('     2. SEMANTIC: color roles\n')[1].split('\n}')[0], flags=re.M)]
+AMBERS = {tok(n).upper() for n in re.findall(r'--(amber-\d+):', TOKENS)}
+ACCENT_ROLES = {'accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover'}
+SUCCESS = {tok('success').upper(), tok('success-bg').upper()}
+for _t in THEMES:
+    _amber = sorted(r for r in ROLES if tok(r, _t).upper() in AMBERS)
+    assert set(_amber) <= ACCENT_ROLES, ('Color rule 1: an amber value on a non-accent role', _t, sorted(set(_amber) - ACCENT_ROLES))
+    assert ACCENT_ROLES <= set(_amber), ('Color rule 1: an accent role without an amber value', _t, sorted(ACCENT_ROLES - set(_amber)))
+    _green = sorted(r for r in ROLES if tok(r, _t).upper() in SUCCESS)
+    assert not _green, ('Color rule 2: a role takes the success color', _t, _green)
 
 # Rule 3a: depth of dark, not #000
 BG_LEVELS = ['frame', 'page', 'surface', 'raised', 'pressed']   # the roles on the five graphite levels; --group shares --pressed's level (graphite-20), and the map roles reuse levels
@@ -319,8 +373,16 @@ HYROX_REFS = [('RoxFit', '#FFEC00', 'roxfit-how-it-works.png, 5,786 px'), ('RoxM
 HUE_MIN, DE_MIN = 25.0, 24.0
 def hue_dist(x, y):
     d = abs(lab_hue(x) - lab_hue(y)); return min(d, 360 - d)
-ACCENT = tok('accent-fill')   # = --amber-78; --accent-ink is the same primitive (asserted below), so one check covers both
-assert tok('accent-ink') == ACCENT, 'Color rule 3b: --accent-ink and --accent-fill parted; check each against HYROX yellow'
+ACCENT = tok('accent-fill')   # = --amber-78 in both themes; the dark --accent-ink is the same primitive (asserted below)
+assert tok('accent-ink') == ACCENT, 'Color rule 3b: --accent-ink and --accent-fill parted in dark; check each against HYROX yellow'
+# step 5: every accent value in both themes (fill and ink; the hovers are states, Lesson 9) passes the threshold, or is
+# the exact hex the designer's override covers. Reported, not blocking, as before.
+def _3b(c): return all(hue_dist(c, y) >= HUE_MIN and de2000(c, y) >= DE_MIN for _, y, _ in HYROX_REFS)
+RULE_3B_THEMES = []
+for _t in THEMES:
+    for _r in ('accent-fill', 'accent-ink'):
+        _c = tok(_r, _t).upper()
+        RULE_3B_THEMES.append((_t, _r, _c, 'pass' if _3b(_c) else 'accepted by designer' if _c == '#F5B649' else 'FAIL'))
 hyrox_rows = [(n, c, src, hue_dist(ACCENT, c), de2000(ACCENT, c)) for n, c, src in HYROX_REFS]
 HYROX_PASS = all(h >= HUE_MIN and d >= DE_MIN for _, _, _, h, d in hyrox_rows)
 # Designer override (concept.md → Color rules → 3b), valid only for this exact accent
@@ -335,6 +397,8 @@ print('Color rule 2 (no success on results): pass ·', len(success_sel), 'select
 print('Color rule 3a (depth of dark): pass ·', ', '.join(f'{t} L*{L:.2f} C*{C:.2f}' for t, L, C, _ in bg_rows))
 print('Color rule 3b (amber vs HYROX yellow):', HYROX_STATUS if HYROX_STATUS != 'FAIL' else 'FAIL (no designer override for this accent; reported, not blocking)', '·',
       '; '.join(f'{n} {c}: {h:.1f}° ΔE {d:.1f}' for n, c, _, h, d in hyrox_rows))
+print('Color rule 3b, both themes:', '; '.join(f'{t} --{r} {c} {v}' for t, r, c, v in RULE_3B_THEMES))
+print('Color rules 1 and 2, both themes: pass ·', len(ROLES), 'roles resolved in each')
 
 def decisions_section():
     return f'''
@@ -481,7 +545,8 @@ COLOR_ROWS = [   # the semantic roles (tokens/tokens.css, level 2), then the sta
     ('text-disabled', 'Disabled', 'Disabled controls only.', 'Never for content someone must read.', 'WCAG 1.4.3 exempts disabled controls'),
     ('accent-fill', 'Accent fill (sodium amber)', 'The primary button fill (Log result, Register on &lt;domain&gt;). With the ink, at most two amber uses per screen.', 'Not on finish times, chips, filter chips, links, focus rings, icons in content, or state messages.', 'Hierarchy rule 1: accent is scarce · Taste: a high-contrast accent (round 1 Direction 3)'),
     ('accent-ink', 'Accent ink', 'Amber as text and icon on a bar: the bar action (Save, Log result, Apply filters) and the current tab.', 'Anywhere in content.', 'Hierarchy rule 1 · Lesson 8: amber text on a light bar would need a darker amber than the fill, so the ink is its own role'),
-    ('accent-hover', 'Accent, hover', 'The fill, the bar action and the current tab under the pointer.', 'Anywhere at rest.', 'Hierarchy rule 3: one primary, with a hover state'),
+    ('accent-hover', 'Accent, hover', 'The fill under the pointer.', 'Anywhere at rest; never as text (that is the ink’s hover).', 'Hierarchy rule 3: one primary, with a hover state'),
+    ('accent-ink-hover', 'Accent ink, hover', 'The bar action (Save, Log result) under the pointer.', 'Anywhere at rest; never as a fill.', 'Step 5, the theme test: split from Accent, hover. In light the fill’s hover keeps dark text while the ink’s hover is text on a light bar, so one value couldn’t serve both'),
     ('on-accent-fill', 'On accent fill', 'Text and icons on the accent fill. The same primitive as the page.', 'Anywhere else.', f'Contrast: {cr(tok("on-accent-fill"), tok("accent-fill")):.2f}:1 on the accent'),
     ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races". The invalid field ring (inside the field) and destructive text (Sign out), which were <code>--invalid</code> and <code>--destructive</code> until Lesson 8.', 'Not for emphasis, never as a fill for a whole card, never on a focused-only field (focus is the Text primary ring outside).', 'Taste: no aggressive red (not the #FF4D2E family) · Kit feedback (designer, 2026-10-19): invalid and focus never look alike · HIG Alerts: destructive style'),
     ('error-surface', 'Error surface', 'Behind an error message.', 'Not behind a card or a field.', 'States: color second, after icon and text'),
@@ -491,15 +556,17 @@ COLOR_ROWS = [   # the semantic roles (tokens/tokens.css, level 2), then the sta
     ('warning-bg', 'Warning surface', 'Behind a warning: the raised level.', 'Not a tint of any hue.', 'Hierarchy rule 1'),
     ('warning-line', 'Warning outline', 'Around a warning, so it differs from a secondary button.', 'Not around cards.', 'States need a shape cue when they have no hue'),
 ]
-color_trs = ''.join(f'<tr><td>{sw(t)}{n}<br><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{nu}</td><td>{w}</td></tr>' for t, n, u, nu, w in COLOR_ROWS)
+color_trs = ''.join(f'<tr><td>{sw(t)}{n}<br><code>--{t}</code> {tok(t)}{"<br>light: " + tok(t, "light") if t in LIGHT_DEF else ""}</td><td>{u}</td><td>{nu}</td><td>{w}</td></tr>' for t, n, u, nu, w in COLOR_ROWS)
 COLOR_TABLE = wrap('Color roles', f'<table class="spec"><thead><tr><th>Role</th><th>Used</th><th>Not used</th><th>Why</th></tr></thead><tbody>{color_trs}</tbody></table>')
 # level 1: the color primitives, named by hue and L*, each with the roles built on it (read from tokens/tokens.css)
 _LEVELS = TOKENS.split('     2. SEMANTIC: color roles\n')   # the section marker inside :root, not the header's mention
 assert len(_LEVELS) == 2, 'tokens/tokens.css: the "2. SEMANTIC: color roles" section marker'
-_PRIM = re.findall(r'^\s*--((?:graphite|amber|coral)-\d+|black|alpha-\d+):\s*([^;]+);\s*/\*\s*(.*?)\s*\*/', _LEVELS[0], flags=re.M)
+_PRIM = re.findall(r'^\s*--((?:graphite|amber|coral)-\d+|black|white|alpha-\d+):\s*([^;]+);\s*/\*\s*(.*?)\s*\*/', _LEVELS[0], flags=re.M)
 _SEM = _LEVELS[1]
 def _built_on(n):
-    return ', '.join(f'<code>--{r}</code>' for r in dict.fromkeys(re.findall(r'^\s*--([a-z0-9-]+):[^;]*var\(--' + re.escape(n) + r'\)', _SEM, flags=re.M))) or 'None'
+    dark = [f'<code>--{r}</code>' for r in dict.fromkeys(re.findall(r'^\s*--([a-z0-9-]+):[^;]*var\(--' + re.escape(n) + r'\)', _SEM.split('\n}')[0], flags=re.M))]
+    light = [f'<code>--{r}</code> (light)' for r in dict.fromkeys(re.findall(r'^\s*--([a-z0-9-]+):[^;]*var\(--' + re.escape(n) + r'\)', LIGHT, flags=re.M)) if f'<code>--{r}</code>' not in dark]
+    return ', '.join(dark + light) or 'None'
 prim_trs = ''.join(f'<tr><td>{"" if n.startswith("alpha") else sw(n)}<code>--{n}</code> {v.strip()}</td><td>{c}</td><td>{_built_on(n)}</td></tr>' for n, v, c in _PRIM)
 PRIM_TABLE = wrap('Color primitives', f'<table class="spec"><thead><tr><th>Primitive</th><th>L* · DESIGN.md name</th><th>Roles built on it</th></tr></thead><tbody>{prim_trs}</tbody></table>')
 
@@ -948,7 +1015,7 @@ else:
     if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
     elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
 # mirror to public/ (GitHub Pages serves public/)
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit-doc.css', 'ui/kit.html', 'ui/shell.html', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css'] + STAMPED[3:]:
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit-doc.css', 'ui/kit.html', 'ui/shell.html', 'tokens/tokens.css', 'tokens/theme.js', 'components/index.css', 'ui/map-data.css'] + STAMPED[3:]:
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
@@ -972,6 +1039,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-overviews'), os.path.join(ROOT, 'p
 shutil.copyfile(os.path.join(ROOT, 'ui/review-overviews.html'), os.path.join(ROOT, 'public/ui/review-overviews.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-kit-sheet'), os.path.join(ROOT, 'public/ui/review-kit-sheet'), dirs_exist_ok=True)   # the kit as a component sheet (2026-10-26)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-kit-sheet.html'), os.path.join(ROOT, 'public/ui/review-kit-sheet.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-theme'), os.path.join(ROOT, 'public/ui/review-theme'), dirs_exist_ok=True)   # step 5: every state in both themes (Lesson 8)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-theme.html'), os.path.join(ROOT, 'public/ui/review-theme.html'))
 for _f in ['visuals/review-round3.html']:   # the photos' round 3 review, linked from the Lesson 7 overview
     shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
 import glob
