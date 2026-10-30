@@ -902,3 +902,88 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 - The motion values (the sheet's slide, the title's fade, the skeleton pulse) are set but never reviewed as motion. → Lesson 11 (Animation & micro-interactions).
 - The static map: the interactive Map (Leaflet) is deferred to implementation. → Lesson 12 (Handoff).
 
+
+### The official result link becomes optional (designer, 2026-10-30; for after Lesson 8)
+
+**Recorded only: nothing changes now.** One pass after Lesson 8, with the list below as its checklist. Short entry: `tokens/tokens-audit.md` → After the lesson.
+
+**The decision:**
+1. **The link is optional.** The official result link becomes optional on Log result. An empty link is not an error; only an invalid link (not a URL) is.
+2. **A result without a link has its own state.** On Results list and Result detail the proof line says so, e.g. "Self-reported · no result link yet", with a quiet "Add link" action. The copy goes through `microcopy.md` and `voice.md`.
+3. **The field error gets lighter, iOS style.**
+   - One coral footnote line under the field replaces the helper text while the error shows.
+   - There's no bold message inside the row, and no heavy ring: a thin one, or none, whichever matches the kit's invalid rule after review.
+
+**Why it's more than a form change.** It reverses the trust model as written. `CLAUDE.md` says "Self-reported with a **required source link**"; the data model marks `official_result_url` required; MVP-core job 2 is "Log a race result with required source-link proof". A result with no link is still self-reported, but it carries no evidence until a link is added. The proof line must say that plainly (voice principle 1: claim only what Onrace can know), and it must never look like a finished proof.
+
+**Open before the pass** (each needs a designer answer):
+- **The copy.** `voice.md`'s Dictionary forbids "result link": the term is **official result link**. So "Self-reported · no result link yet" needs either "Self-reported · no official result link yet", which must fit the result row at 320 and at 200% text, or a Dictionary change.
+- **"Add link" as a button name.** It reads alone, but the Button rule names the result of the tap; "Add official result link" is the full name. The visible label and its accessible name (WCAG 2.5.3) are to be decided.
+- **Where "Add link" goes.** There's no edit screen in the MVP: Log result only creates. Options: Log result in an edit mode (pre-filled, with a new top bar title), or a single-field sheet. This is a new screen or state in `sitemap.md` and a new flow branch.
+- **Result detail without a link.** It has nothing to open, so its sticky action bar ("Open official result") goes or changes, the Copy link control goes, and Flow 3 can't end in Success. Should "Add link" take the action bar's place there?
+- **The ring.** The thin ring or none (point 3) has to keep "invalid and focus never look alike" (Kit feedback, designer, 2026-10-19).
+
+**What it touches (the checklist for the pass):**
+
+*Screens and states (`wireframes/`, then the viewer's notes in `wireframes/index.html` and `wireframes/_screens.md`):*
+- **Log result:**
+  - `log-result.html`: the link field takes an "Optional" mark ("mark what's optional"), and the intro "Every field is needed to save a result." changes;
+  - `-error?cause=fields`: the lighter field errors, and the link is no longer one of them;
+  - `-error?cause=link`: it now means an invalid link, not an empty one, so its script check changes;
+  - `-error?cause=submit` and `-loading`: only the Optional mark;
+  - `?catalog=…`: the same.
+- **Results list:** `results-list.html` needs a row without a link, which means a fifth sample result or one of the four losing its link (`_screens.md` → shared sample data); `?saved=` for a result saved without a link; `-empty` for its copy (row 185, below). The `-loading` skeleton keeps its proof bar.
+- **Result detail:** a new `?result=<slug>` sample without a link (detail section, no action bar or a changed one, no Copy link); `-error?cause=link` can't be reached for that result; `-loading` doesn't change.
+- **The new edit path for "Add link"** (screen or state, per the open question above).
+- **Shared Field error component, so the same restyle lands on:** New password `-error?cause=short`, `same` and `mismatch`, and Profile `-error?cause=save` (`.row-note.is-error`). One component looks the same everywhere.
+- **Sign in / Sign up:** the intro lines say "each result with its official result link" (rows 385–387); review whether they still hold.
+
+*Flows (`flows.md`):*
+- **Flow 2, Related Job 3 (Log a Result with Source Proof):**
+  - the node `HasLink: official_result_url filled in?` → `ValidationError: source link is required` becomes `link filled in and not a URL? → Error: not a link`;
+  - `Success2` no longer says "official_result_url populated (required)";
+  - the failure mode "No result saved, proof lost for later" and its source-link branch change;
+  - the note on the trust model's check is rewritten, and the job's own title ("with Source Proof") gets reconsidered;
+  - a revision note goes at the top.
+- **Flow 3, Related Job 4 (Retrieve Proof):** a new branch before `LinkWorks`, "result has an official result link?", where no → "Add link" (the new path), not Success.
+
+*Microcopy (`microcopy.md`, then `voice.md` and `scripts/build_voice_html.py`):*
+- **Log result:**
+  - 231, "Every field is needed to save a result.": now false;
+  - 255, the hidden "Required" tag: it becomes an "Optional" mark on the link field;
+  - 258, "Add the official result link. It's the proof this result is yours.": an empty link is no longer an error, so it's removed, and a new row is added for the invalid-link error (e.g. "That isn't a link. Paste the full address, starting with https://");
+  - 259, the link's helper text: it's replaced by the error while one shows, and its "It's your proof" framing is reviewed for an optional field;
+  - 238, 240, 250, 253, the field error lines (race name, date, sport type, finish time): they become one-line coral footnotes, possibly shortened;
+  - 254, the finish time's helper: it's replaced while its error shows.
+- **Results list:** the proof line rows 208, 213, 218 and 223 stay; a new row for the no-link proof line, a new row for the "Add link" action and its accessible name; 185, the empty state ("each with a link to the timing site"), is reviewed.
+- **Result detail:**
+  - 327 (the "Official result link" heading) and 330 ("Onrace doesn't verify results. The official result is the evidence."): what shows when there's no link;
+  - the sticky action bar rows (349–360, 540) and 557, Copy link: they're absent for a result without a link;
+  - new rows for the no-link proof line and "Add link".
+- **Sign in / Sign up:** 385–387, reviewed.
+- **New password and Profile field errors:** their text stays, only the presentation changes. Check them against the footnote form.
+- **`voice.md`:**
+  - the Dictionary entry for "official result link" (the forbidden "result link");
+  - Microcopy → Required vs optional ("Every Log result field is needed", line 171);
+  - the Error rule for a field footnote;
+  - and, if it's adopted, an "Add link" entry under actions.
+
+*Inventory components (`ui/inventory.md`, the showcase `ui/kit.html` and its Showcase map states):*
+- **Text field:** the Optional mark;
+- **Field hint:** replaced by the error while one shows;
+- **Field error:** the footnote form, the ring;
+- **Form intro:** the copy;
+- **Proof line:** a new "no link" state;
+- **Result row:** a row without a link;
+- **Detail section** and **Proof URL and note:** the no-link state of Result detail;
+- **Sticky action bar:** absent or changed without a link;
+- **Inline error:** Result detail's `-error?cause=link` scope;
+- **Text link:** the quiet "Add link".
+
+*Product docs and checks:*
+- `CLAUDE.md` → Result trust model, Data model (`official_result_url` optional), Top-3 MVP-core jobs (job 2's "required source-link proof");
+- `sitemap.md` → Entities (lines 64–81: "**required** — not optional", "the mandatory link itself") and Log result's states (lines 169–173);
+- `research/jtbd.md` → Related Job 3's wording;
+- `DESIGN.md` → the form rows and field error (the 2px invalid ring), the proof line;
+- the build: `check_overflow.mjs`'s `CAUSES` (the new sample and causes), `check_kit.py` (the Showcase map states), and the comparison harness's state list;
+- `concept.md` → Kit feedback ("invalid and focus never look alike") stays, and is checked against the lighter ring.

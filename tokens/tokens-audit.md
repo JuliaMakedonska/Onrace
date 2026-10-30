@@ -694,6 +694,16 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
   **Decision:** the segmented control is a capsule everywhere, as in iOS 26. Rule C7 becomes: "capsules for every system control (segmented controls, search fields, bar buttons); cards, chips and content buttons keep Podium corners."
 
   **When:** after Lesson 8, as one "keep it" change together with the List/Map capsule at 200% text above. That means the radius tokens in `tokens/tokens.css`, `components/segmented-control.css`, the showcase stage, C7 in `DESIGN.md`, and every screen where the control stands. Nothing changes now.
+- **The official result link becomes optional (designer, 2026-10-30).** A product decision, done after Lesson 8 in one pass. Nothing changes now.
+  1. **The link is optional** on Log result. An empty link is not an error; only an invalid link (not a URL) is.
+  2. **A result without a link gets its own state** on Results list and Result detail: the proof line says so (e.g. "Self-reported · no result link yet"), with a quiet "Add link" action. The copy goes through `microcopy.md` and `voice.md`.
+  3. **The field error gets lighter, iOS style.** One coral footnote line under the field replaces the helper text while the error shows. There's no bold message in the row, and a thin ring or none, whichever matches the kit's invalid rule after review. The Field error component is shared, so New password and Profile change with it.
+
+  **The full checklist** (every screen, state, flow, `microcopy.md` row and inventory component it touches) and the questions to settle first are in `concept/concept.md` → The official result link becomes optional. The questions:
+  - the Dictionary forbids "result link";
+  - there's no edit screen for "Add link";
+  - Result detail has nothing to open without a link;
+  - the decision reverses `CLAUDE.md`'s "required source link" trust model.
 
 ### Still unknown
 
