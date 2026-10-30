@@ -923,6 +923,14 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 - **Result detail without a link.** It has nothing to open, so its sticky action bar ("Open official result") goes or changes, the Copy link control goes, and Flow 3 can't end in Success. Should "Add link" take the action bar's place there?
 - **The ring.** The thin ring or none (point 3) has to keep "invalid and focus never look alike" (Kit feedback, designer, 2026-10-19).
 
+**Answers so far (designer, 2026-10-30, in the step 6 brief):**
+- **"Add link" opens a sheet:** a single-field sheet for the official result link, not Log result in an edit mode. In `sitemap.md` it's a state (a modal sheet) pushed from Results list and Result detail, and a new branch in Flow 3.
+- **The field error has no ring:** only the coral footnote line under the field, replacing its helper text. The "invalid and focus never look alike" rule holds by construction, since an invalid field shows no outline at all.
+- **Still open, to be answered before the pass:**
+  - the trust model's new wording in `CLAUDE.md`;
+  - the copy: "official result link" per the Dictionary, or a Dictionary change, and the "Add link" label;
+  - Result detail without a link (whether "Add link" takes the action bar's place).
+
 **What it touches (the checklist for the pass):**
 
 *Screens and states (`wireframes/`, then the viewer's notes in `wireframes/index.html` and `wireframes/_screens.md`):*

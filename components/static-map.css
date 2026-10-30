@@ -73,7 +73,7 @@
   width: var(--map-pin-dot);
   height: var(--map-pin-dot);
   transform: translate(-50%, -50%);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);   /* step 6: the dot read a raw 50% */
   background: var(--text-primary);
   box-shadow: 0 0 0 calc(var(--border) * 2) var(--map-water);
   pointer-events: none;

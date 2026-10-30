@@ -858,3 +858,53 @@ Onrace is dark-only (C5), so the test is a light theme: if the roles are right, 
 - **`check_overflow` runs in dark only.** The theme changes no geometry, but nothing proves that by test in light.
 - **sessionStorage keeps the theme for the tab:** a dark page opened later in the same tab without `?theme=dark` comes up light. The viewer always passes the theme, so it isn't affected.
 - **The hover states** (`--accent-hover`, `--accent-ink-hover`) aren't held to 3b, as before. They're states, for Lesson 9.
+
+---
+
+## Step 6 record (2026-10-30): the final check
+
+### Decisions recorded first
+
+- **The light theme is a proof, not a feature.** The product stays dark-only (C5); the light theme stays in the architecture only to prove the semantic layer, and the build keeps checking it (`concept/concept.md` → The light theme stays a proof, not a feature; `DESIGN.md` → Light theme).
+- **The official result link becomes optional**, after the lesson (above, After the lesson; the checklist and the answers so far are in `concept/concept.md`).
+
+### The check
+
+What was checked: `tokens/tokens.css`, `components/` and every state of the 35 screens, plus `/impeccable audit` (its detector over every screen page, each finding checked against the screens). Contrast was checked twice:
+- the build's 106 pairs plus the glass pairs, in both themes;
+- a browser scan of every visible text element, in every state, in both themes: 0 below AA. A test run with an impossible threshold flagged 552 lines on Results list alone, so the scan does measure.
+
+| # | File | Element | What's wrong | Evidence | Fix (done in this step) |
+|---|---|---|---|---|---|
+| 1 | `components/date-field.css` | `.date-value::after` | The date pill's tap area was the pill's own 30pt, inside a 44pt row (HIG 44pt; WCAG 2.5.8 passes) | `inset: 0`; pill 108×30, button 84×22. Filters sheet on every Race browse page, and Log result → Race date | `inset: calc((var(--target) - 100%) / -2) 0`: the target extends above and below to 44pt, as the filter chips' does |
+| 2 | `components/top-bar.css` | `.top-bar[data-collapse] .bar-title` | Geometry written as a multiplier | `padding-inline: calc(var(--target) * 3)`; the reason lived only in a comment | A new primitive, `--bar-title-inset: calc(var(--target) * 3)`, with its reason, signed on the stand |
+| 3 | `components/static-map.css` | `.map-pin::before`, the dot | A circle written as a raw `50%` | `border-radius: 50%` beside `--radius-avatar: 50%` | One circle token: **`--radius-avatar` renamed `--radius-circle`**, read by the initials, the busy spinner (and the stand's `.btn` spinner) and the pin dot |
+| 4 | `wireframes/race-detail.html`, `race-detail-error.html` | `<img class="photo">` in the 7 per-race blocks | No `src`: invalid HTML, and empty without JavaScript (`/impeccable audit`: `broken-image`, 14) | Only `data-src` / `data-srcset` | Each `<img>` has `src` = its 684 JPEG with `loading="lazy"`. Hidden lazy images never load, so only the shown race's photo still loads; the page script sets the shown one to eager and gives it its sources, as before |
+
+**Checked against the screens and found to be false positives** (`/impeccable audit`):
+- `cramped-padding` (27, `ul.rows`): the rows sit flush in their group, iOS inset style, with 16px inside each row.
+- `design-system-radius` (3): the sheet's `38px 38px 0 0` was misread as `38px0`.
+- `em-dash-overuse` (Race detail): it counted one caption, repeated in 7 hidden blocks.
+- The busy bar buttons (31×44): inert while busy, and above WCAG 2.5.8's 24×24.
+
+**Not defects, marked separately:**
+- **Single-use roles:** `--map-water`, `--map-land`, `--map-lines`, `--chip-text` and `--error-surface`. Each is a role because the theme changes it apart from the role it shares a value with in dark; step 5 proved it.
+- **Recorded exceptions:**
+  - the 3b amber override (that exact hex; the light ink passes on its own);
+  - Solar Linear for small glyphs;
+  - the provisional [?] glass alphas, blur and rim;
+  - the `--radius-sheet` and `--radius-alert` values;
+  - the same-value splits kept on purpose.
+- **Everything in "After the lesson"** above.
+
+### Mapping addition
+
+| Old variable | New token | Note |
+|---|---|---|
+| `--radius-avatar` | `--radius-circle` | Step 6: the one circle, named for its shape, not for one of its three users |
+
+### How the fixes were checked
+
+The comparison harness ran on every screen state plus the showcase and the shell, in both themes and all five passes, against the commit before the fixes (`c2be9b2`).
+- **Screenshots:** no difference.
+- **Computed styles:** the only difference is in the date pill's `::after` box (`top`/`bottom`), which is invisible.

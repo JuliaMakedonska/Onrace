@@ -86,7 +86,7 @@
   flex: none;
   width: var(--spinner-size);
   height: var(--spinner-size);
-  border-radius: var(--radius-avatar);
+  border-radius: var(--radius-circle);
   border: var(--spinner-stroke) solid currentColor;
   border-right-color: transparent;
   animation: onrace-spin var(--dur-spin) linear infinite;
@@ -679,7 +679,7 @@ body > .bottom-nav a::before {
   width: var(--map-pin-dot);
   height: var(--map-pin-dot);
   transform: translate(-50%, -50%);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);   /* step 6: the dot read a raw 50% */
   background: var(--text-primary);
   box-shadow: 0 0 0 calc(var(--border) * 2) var(--map-water);
   pointer-events: none;
@@ -822,7 +822,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .date-pill.is-empty { color: var(--text-secondary); }
 .row .date-pill input[type="date"] { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 0; margin: 0; padding: 0; opacity: 0; pointer-events: none; color-scheme: inherit; }   /* the value for the form; the button opens its picker (step 7, #3). Step 5: inherits the theme's color-scheme from :root (it was "dark", written into the component: the theme test's hole 2) */
 .date-value { margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
-.date-value::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }   /* the whole pill is the button's target */
+.date-value::after { content: ""; position: absolute; inset: calc((var(--target) - 100%) / -2) 0; border-radius: inherit; }   /* the whole pill is the button's target, extended above and below to the 44pt target like the filter chips' (Lesson 8 step 6: it was the pill's own 30pt) */
 .date-value:focus-visible { outline: none; }
 .date-pill:has(.date-value:focus-visible) { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }   /* one Tab stop, one ring (WCAG 2.4.7) */
 
@@ -963,7 +963,7 @@ a.row--nav[href]:hover { background: var(--raised); }
 .top-bar :is(.save-btn, .bar-action)[aria-disabled="true"]:not([aria-busy="true"]) { color: var(--text-disabled); cursor: not-allowed; }
 .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action { color: var(--text-primary); }   /* a state brings its own primary (Results list -error): the bar action steps down, so the screen keeps two lights */
 /* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
-.top-bar[data-collapse] .bar-title { padding-inline: calc(var(--target) * 3);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
+.top-bar[data-collapse] .bar-title { padding-inline: var(--bar-title-inset);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
 
 /* ---- components/large-title-header.css · order 0560 ---- */
@@ -1318,7 +1318,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   width: var(--avatar-size);
   height: var(--avatar-size);
   margin-bottom: var(--space-3);
-  border-radius: var(--radius-avatar);
+  border-radius: var(--radius-circle);
   background: var(--raised);
   color: var(--text-primary);
   font-family: var(--font-text);

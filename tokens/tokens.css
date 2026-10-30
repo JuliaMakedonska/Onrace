@@ -109,7 +109,7 @@
   --radius-2: 6px;          /* outer: card, button, field, row group */
   --radius-sheet: 38px;     /* the native sheet's top corners (G16) [?] */
   --radius-alert: 34px;     /* the alert's and the action sheet's corners (G67) [?] */
-  --radius-avatar: 50%;     /* the one circle: Profile initials (the busy spinner borrows it; recorded, not split) */
+  --radius-circle: 50%;     /* the one circle: Profile initials, the busy spinner, the map pin's dot. Renamed from --radius-avatar in step 6 (2026-10-30): the dot wrote 50% itself, and the spinner only borrowed the avatar's name */
   --radius-bar-control: calc(var(--target) / 2);   /* C7: a control inside a bar is a capsule, concentric with the bar */
   --radius-bar-inner: calc(var(--radius-bar-control) - var(--space-1));   /* C7: a segment inside it: outer radius minus the track's padding */
   --radius-filter-chip: calc(var(--filter-chip-height) / 2);   /* C7: the active filter chip is a capsule */
@@ -195,6 +195,7 @@
   --sheet-gap-top: var(--space-3);
   --sheet-large: calc(100% - var(--safe-top) - var(--sheet-gap-top));
   --glass-blur: 20px;       /* [?] not from Apple's kit */
+  --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
   --avatar-size: 80px;
   --alert-width: 270px;
   --shadow-y: 12px;         /* the float shadow's geometry (its color is the semantic --float-shadow) */

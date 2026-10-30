@@ -34,7 +34,7 @@
   flex: none;
   width: var(--spinner-size);
   height: var(--spinner-size);
-  border-radius: var(--radius-avatar);
+  border-radius: var(--radius-circle);
   border: var(--spinner-stroke) solid currentColor;
   border-right-color: transparent;
   animation: onrace-spin var(--dur-spin) linear infinite;

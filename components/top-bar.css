@@ -67,7 +67,7 @@
 .top-bar :is(.save-btn, .bar-action)[aria-disabled="true"]:not([aria-busy="true"]) { color: var(--text-disabled); cursor: not-allowed; }
 .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action { color: var(--text-primary); }   /* a state brings its own primary (Results list -error): the bar action steps down, so the screen keeps two lights */
 /* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
-.top-bar[data-collapse] .bar-title { padding-inline: calc(var(--target) * 3);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
+.top-bar[data-collapse] .bar-title { padding-inline: var(--bar-title-inset);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
 
 /* order 0570 */

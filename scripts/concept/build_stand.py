@@ -667,7 +667,8 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('shadow-y', 'The float shadow: offset down', 'Its color is the role --float-shadow', 'Depth comes from levels; only what floats has a shadow'),
            ('shadow-blur', 'The float shadow: blur', '32px', 'Same'),
            ('shadow-spread', 'The float shadow: spread', '−12px, so it stays under the floating thing', 'Same'),
-           ('avatar-size', 'Profile initials', '80px, the iOS profile size, in a circle (<code>--radius-avatar</code>)', 'Kit feedback (designer, 2026-10-19): iOS avatars are circular · DESIGN.md → Shapes, the one circle'),
+           ('bar-title-inset', 'The collapsed small title: its side inset in the bar', 'Three targets: clears “‹ Discover” at the 17px bar size, so the title never runs under the back link or the bar action', 'G4 · step 6, #25 (found 2026-10-26) · a token since Lesson 8 step 6'),
+           ('avatar-size', 'Profile initials', '80px, the iOS profile size, in a circle (<code>--radius-circle</code>)', 'Kit feedback (designer, 2026-10-19): iOS avatars are circular · DESIGN.md → Shapes, the one circle'),
            ('alert-width', 'The Sign out confirm alert', '270px, the iOS alert width', 'Native iOS (HIG Alerts) · kit, 2026-10-18'),
            ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (ui/kit.html only)', 'Tall enough for the Filters sheet at its large detent', 'Showcase layout: never in the product')]
 SKEL = [('skel-line', 'Meta bars (date, location, proof)', 'Same height as 12–13px meta text'),
@@ -707,7 +708,7 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-bar-inner</code></td><td>{tok("radius-bar-inner")} = 18px</td><td>A segment inside that track: the outer radius minus the track's 4px padding.</td><td>C7: concentric corners</td></tr>
 <tr><td><code>--radius-filter-chip</code></td><td>{tok("radius-filter-chip")} = 16px</td><td>Active filter chips in the controls bar: a capsule, half the 32px chip height.</td><td>C7: a control inside a bar is a capsule (designer, 2026-10-22). Format chips on cards keep 4px</td></tr>
 <tr><td><code>--radius-alert</code></td><td>{tok("radius-alert")}</td><td>The confirm alert (Profile, Sign out). {P}.</td><td>G67 (designer, 2026-10-23): the alert as iOS 26 alerts, glass and a larger radius, provisional like the sheet's</td></tr>
-<tr><td><code>--radius-avatar</code></td><td>{tok("radius-avatar")}</td><td>Profile initials (a circle); also the busy spinner's ring.</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
+<tr><td><code>--radius-circle</code></td><td>{tok("radius-circle")}</td><td>The one circle: Profile initials, the busy spinner's ring and the map pin's dot (renamed from <code>--radius-avatar</code>, Lesson 8 step 6).</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
 <tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus, in Text primary, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
 <tr><td><code>--float-shadow</code></td><td>{tok("float-shadow")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
@@ -1063,3 +1064,6 @@ print(_l.stdout.strip())
 if _l.returncode: sys.exit('check_links failed: a page links a file that does not exist; the build stops')
 # the lesson overviews (06 and 07, scripts/lesson_page.py) carry the kit's counts: rebuilt with it
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_ui_overview.py')], check=True)
+# the Lesson 08 overview (scripts/build_tokens_overview.py), the workspace rail and every lesson bar: rebuilt with the kit
+for _s in ('scripts/build_tokens_overview.py', 'scripts/lessons_nav.py', 'scripts/build_voice_html.py', 'scripts/build_workspace.py'):
+    subprocess.run([sys.executable, os.path.join(ROOT, _s)], check=True)

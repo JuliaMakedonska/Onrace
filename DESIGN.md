@@ -91,7 +91,7 @@ rounded:
   radius-sheet: "38px"
   radius-bar-control: "22px"
   radius-bar-inner: "18px"
-  radius-avatar: "50%"
+  radius-circle: "50%"
   radius-filter-chip: "16px"
   radius-alert: "34px"
   radius-tabbar: "32px"

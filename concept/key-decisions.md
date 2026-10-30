@@ -1,6 +1,6 @@
 # Key decisions, in plain words
 
-The cards at the top of the lesson overviews (`public/concept-overview.html`, `public/ui-overview.html`), read by `scripts/build_concept_overview.py` and `scripts/build_ui_overview.py`. Each summary is written for the card in one or two plain lines, and says no more than its record does; the record is the source and wins if they ever differ. The full register of each lesson stays on its page, folded, quoted from the records.
+The cards at the top of the lesson overviews (`public/concept-overview.html`, `public/ui-overview.html`, `public/tokens-overview.html`), read by `scripts/build_concept_overview.py`, `scripts/build_ui_overview.py` and `scripts/build_tokens_overview.py`. Each summary is written for the card in one or two plain lines, and says no more than its record does; the record is the source and wins if they ever differ. The full register of each lesson stays on its page, folded, quoted from the records.
 
 | Lesson | Decision | Summary | Date | Record |
 |---|---|---|---|---|
@@ -18,3 +18,9 @@ The cards at the top of the lesson overviews (`public/concept-overview.html`, `p
 | 07 | The frozen wireframe snapshot | The Lesson 5 wireframes stay frozen in `wireframes/_wireframe/`; the viewer switches any screen between them and the current design. | 2026-10-18 | CLAUDE.md#wireframes |
 | 07 | The finish time leads Result detail | On Result detail the finish time is the largest thing on the screen; the race name steps down to a normal heading above it. | 2026-10-25 | concept/concept.md#step-6-critique-fixes-designer-priorities-2026-10-25 |
 | 07 | The "keep it" rule | A visual change the designer keeps goes into the kit and its showcase, its reason into `DESIGN.md`, and onto every screen that uses it. | 2026-10-25 | CLAUDE.md#ui-assembly |
+| 08 | Two levels of tokens | Raw values are primitives, named by hue and lightness (`--amber-78`); components read only semantic roles that say what a color is for (`--accent-fill`). A value changes in one place. | 2026-10-27 | tokens/tokens-audit.md#step-2-record-2026-10-27 |
+| 08 | Every page on tokens | All 35 screens, the showcase, the shell, the stand and the review pages link `tokens/tokens.css` and `components/index.css`. `ui/kit.css` is gone, and nothing changed to the pixel. | 2026-10-28 | tokens/tokens-audit.md#step-4-record-2026-10-28-every-page-on-tokens-and-components |
+| 08 | Hex in one file | `DESIGN.md`'s frontmatter and the impeccable sidecar are generated from `tokens/tokens.css`, so every color is written once. | 2026-10-28 | tokens/tokens-audit.md#step-4-record-2026-10-28-every-page-on-tokens-and-components |
+| 08 | Amber text is its own role | The button fill and amber used as text (the current tab, the bar action) are two roles on one amber. In light they part: text needs a darker, warmer amber. | 2026-10-29 | tokens/tokens-audit.md#step-5-record-2026-10-30-the-theme-stress-test |
+| 08 | The light theme is a proof only | Onrace stays dark. The light theme stays only to prove every color goes through a role; the build keeps checking it, so a component that bypasses the roles is caught. | 2026-10-30 | concept/concept.md#the-light-theme-stays-a-proof-not-a-feature-designer-2026-10-30 |
+| 08 | "Keep it" by token level | A visual change the designer keeps goes into a primitive or a role in `tokens/tokens.css`, never into a component; a markup change goes into the showcase and every screen. | 2026-10-30 | CLAUDE.md#tokens |

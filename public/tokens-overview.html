@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onrace — Design tokens</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root{
+    --bg:#0b0c0e;
+    --bg-elev:#141518;
+    --bg-elev-2:#1b1d21;
+    --border:#2a2c31;
+    --text:#eef0f2;
+    --text-dim:#9aa0a8;
+    --text-faint:#686e77;
+    --accent:#ff4d2e;
+    --accent-dim:#ff4d2e33;
+    --benchmark:#2dd4bf;
+    --benchmark-dim:#2dd4bf26;
+    --patterns:#a78bfa;
+    --patterns-dim:#a78bfa26;
+    --unconfirmed:#e6a23c;
+    --unconfirmed-dim:#e6a23c22;
+    --ok:#4ade80;
+    --ok-dim:#4ade8026;
+    --job-loc:#60a5fa;
+    --job-loc-dim:#60a5fa26;
+    --job-log:#f472b6;
+    --job-log-dim:#f472b626;
+    --job-retrieve:#fbbf24;
+    --job-retrieve-dim:#fbbf2426;
+    --radius:10px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+    font-size:16px;
+  }
+  a{color:var(--accent)}
+  a:hover{text-decoration-thickness:2px}
+  code{
+    background:var(--bg-elev-2);
+    padding:.1em .4em;
+    border-radius:4px;
+    font-size:.9em;
+    color:#d7dadf;
+  }
+
+  /* Nav */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,12,14,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .brand{font-weight:800; letter-spacing:.02em; text-transform:uppercase; font-size:14px; color:var(--text)}
+  .brand span{color:var(--accent)}
+  .navlinks{display:flex; gap:4px; margin-left:auto; flex-wrap:wrap}
+  .navlinks a{
+    color:var(--text-dim); text-decoration:none; font-size:13px; font-weight:700;
+    letter-spacing:.04em; text-transform:uppercase; padding:8px 12px; border-radius:6px;
+  }
+  .navlinks a:hover{background:var(--bg-elev-2); color:var(--text)}
+  .navlinks a.active{color:var(--text); background:var(--bg-elev-2)}
+
+  
+  /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
+  .lessonbar{border-bottom:1px solid var(--border)}
+  .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
+  .lessonbar-inner::-webkit-scrollbar{display:none}
+  .lessonbar a{flex:none; color:var(--text-faint); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:.04em; padding:8px 10px; border-bottom:2px solid transparent; white-space:nowrap}
+  .lessonbar a:hover{color:var(--text)}
+  .lessonbar a[aria-current="page"]{color:var(--text); border-bottom-color:var(--accent)}
+  .in-shell .lessonbar{display:none}
+  /* Hero (same as ia.html and voice.html) */
+  header.hero{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px; }
+  .kicker{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
+  header.hero h1{ font-size:clamp(36px,6vw,60px); margin:0 0 14px; font-weight:800; letter-spacing:-.02em; }
+  .hero-desc{color:var(--text-dim); font-size:18px; max-width:720px; margin:0 0 6px; line-height:1.5}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin:24px 0 0}
+  .pill{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim); }
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:28px 0 0}
+  a.card-link{ display:block; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; text-decoration:none; transition:border-color .15s, transform .15s; }
+  a.card-link:hover{border-color:var(--accent); transform:translateY(-1px)}
+  .si-tag{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px}
+  .si-title{color:var(--text); font-weight:700; font-size:15px; display:block; margin-bottom:4px}
+  .si-desc{color:var(--text-dim); font-size:13px; display:block}
+  main{max-width:var(--maxw); margin:0 auto; padding:0 24px 80px}
+  section.block{padding:56px 0; border-top:1px solid var(--border); scroll-margin-top:72px}
+  .section-tag{ display:inline-flex; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:5px 12px; border-radius:999px; margin-bottom:16px; }
+  .tag-p{background:var(--accent-dim); color:var(--accent)}
+  .tag-d{background:var(--patterns-dim); color:var(--patterns)}
+  .tag-f{background:var(--unconfirmed-dim); color:var(--unconfirmed)}
+  .tag-m{background:var(--benchmark-dim); color:var(--benchmark)}
+  .tag-t{background:var(--job-loc-dim); color:var(--job-loc)}
+  .tag-o{background:var(--ok-dim); color:var(--ok)}
+  h2{font-size:28px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em}
+  h3{font-size:19px; margin:34px 0 10px; font-weight:700}
+  h3[id]{scroll-margin-top:72px}
+  .prose p, .prose li{color:var(--text-dim); font-size:15px; max-width:820px}
+  .prose strong{color:var(--text)}
+  .prose ul, .prose ol{padding-left:20px; margin:0 0 14px}
+  .prose li{margin-bottom:6px}
+  .prose li ul{margin-top:6px}
+  .prose p.rule{font-size:16.5px; color:var(--text); background:var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:12px 16px}
+  .prose p.note{font-size:13.5px; color:var(--text-faint)}
+  .tbl-wrap{overflow-x:auto; margin:10px 0 20px; border:1px solid var(--border); border-radius:var(--radius)}
+  table{border-collapse:collapse; width:100%; font-size:13.5px}
+  th{text-align:left; background:var(--bg-elev-2); color:var(--text-faint); font-size:11px; text-transform:uppercase; letter-spacing:.05em; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap}
+  td{padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top; color:var(--text-dim)}
+  tr:last-child td{border-bottom:none}
+  td strong{color:var(--text)}
+  .two-col{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:18px}
+  .two-col h3{margin-top:6px}
+  .panel{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:6px 20px 8px}
+  .tech-grid, .attr-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:14px; margin:14px 0 8px}
+  .tech, .attr{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px}
+  .tech p, .attr p{margin:0 0 8px}
+  .tech-from{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--patterns)}
+  .prose .tech-name, .prose .attr-title{color:var(--text); font-weight:700; font-size:15.5px; margin-top:6px}
+  .prose .tech-meta, .prose .attr-strength{font-size:13px; color:var(--text-faint)}
+  .scope{color:var(--benchmark); font-weight:700}
+  a.btn{display:inline-block; background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-weight:700; font-size:14px; text-decoration:none}
+  a.btn:hover{border-color:var(--accent)}
+  .stat-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:6px 0 18px}
+  .stat{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px}
+  .stat-n{display:block; font-size:36px; font-weight:800; letter-spacing:-.02em; color:var(--text); line-height:1.1}
+  .stat-l{display:block; font-size:13px; color:var(--text-dim); margin-top:6px}
+  .phones{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:28px; margin:18px 0}
+  .phone-fig{margin:0}
+  /* device frame: copied from wireframes/index.html at build time */
+{DEVICE_CSS}
+  .phone-fig .device-slot{margin:0 auto}
+  figcaption{max-width:412px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}
+  figcaption strong{color:var(--text)}
+  .states{color:var(--text-faint)}
+  footer{max-width:var(--maxw); margin:0 auto; padding:24px; color:var(--text-faint); font-size:12.5px; border-top:1px solid var(--border)}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} a.card-link{transition:none} a.card-link:hover{transform:none} }
+
+  /* lesson template (scripts/lesson_page.py, 2026-10-26) */
+  .hero-line{color:var(--text-dim); font-size:15px; margin:10px 0 0; line-height:1.6}
+  .hero-line strong{color:var(--text)}
+  .src{white-space:nowrap}
+  .src-more{white-space:normal}  /* a source with two paths (look: tokens + components) may break between them on a phone */
+  .src-k{color:var(--text-faint); font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:.06em}
+  .hero-line a{color:var(--text); text-decoration:none}
+  .hero-line a:hover code{color:var(--accent)}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); gap:12px; margin:28px 0 0}
+  .stats .stat{padding:14px 16px}
+  .stats .stat-n{font-size:30px}
+  .stat-sub{display:block; font-size:12px; color:var(--text-faint); margin-top:4px}
+  .stages{list-style:none; counter-reset:st; margin:24px 0 0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:8px}
+  .stages a{display:flex; gap:10px; align-items:baseline; background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 12px; text-decoration:none; color:var(--text-dim); font-size:13.5px; min-height:44px; box-sizing:border-box}
+  .stages a:hover{border-color:var(--accent); color:var(--text)}
+  .stages .st-k{flex:none; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent)}
+  .stages .st-l{color:var(--text); font-weight:700}
+  .led li strong:first-child{color:var(--text)}
+  .reg{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr)); gap:14px; margin:12px 0}
+  .reg--key{grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}   /* the key cards: wide, so a summary reads in one or two lines */
+  .reg-card{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; display:grid; gap:6px; align-content:start}
+  .reg-q{margin:0; color:var(--text); font-weight:700; font-size:15px}
+  .reg-a{margin:0; color:var(--text-dim); font-size:14px}
+  .reg-meta{margin:0; font-size:12px; color:var(--text-faint)}
+  .reg-meta a{color:var(--text-faint)}
+  .lesson-tag{display:inline-block; font-size:11px; font-weight:800; letter-spacing:.06em; padding:3px 8px; border-radius:999px; background:var(--accent-dim); color:var(--accent); white-space:nowrap}
+  .prose{overflow-wrap:break-word}   /* long URLs in the rendered text break instead of widening the page */
+  .prose code, .hero-line code{overflow-wrap:anywhere}
+  .nav-inner{flex-wrap:nowrap; gap:16px}
+  .brand{flex:none}
+  .navlinks{flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; min-width:0}   /* one row that scrolls: a lesson has many stages */
+  .navlinks::-webkit-scrollbar{display:none}
+  .navlinks a{white-space:nowrap; flex:none}
+  @media (max-width:560px){ .nav-inner{flex-direction:column; align-items:stretch; gap:6px; padding:10px 16px} .navlinks{margin-left:0} }
+  .embed{border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--bg-elev); margin:14px 0 18px}
+  .embed-bar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 16px; padding:10px 14px; border-bottom:1px solid var(--border)}
+  .embed-t{font-weight:700; color:var(--text); font-size:14px}
+  .embed-t code{font-weight:400}
+  .embed-bar a{display:inline-flex; align-items:center; min-height:44px; color:var(--text); font-weight:700; font-size:13.5px; text-decoration:none}
+  .embed-bar a:hover{color:var(--accent)}
+  .embed iframe{display:block; width:100%; border:0; background:#131518}
+  .embed--tall iframe{height:min(82vh, 980px); min-height:560px}
+  .embed--phone{max-width:392px}
+  .embed--phone iframe{height:760px}
+  .embeds{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,392px); gap:18px; align-items:start}
+  @media (max-width:900px){ .embeds{grid-template-columns:minmax(0,1fr)} }
+  details.fold{border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-elev); margin:12px 0 16px}
+  details.fold > summary{cursor:pointer; list-style:none; display:flex; align-items:center; gap:10px; min-height:48px; padding:6px 16px; font-weight:700; color:var(--text); font-size:15px}
+  details.fold > summary::-webkit-details-marker{display:none}
+  details.fold > summary::before{content:"▸"; color:var(--accent); transition:transform .15s}
+  details.fold[open] > summary::before{transform:rotate(90deg)}
+  details.fold > summary:focus-visible{outline:2px solid var(--text); outline-offset:2px}
+  .fold-sub{font-weight:400; color:var(--text-faint); font-size:13px}
+  details.fold > .fold-body{padding:4px 16px 12px}
+  @media (prefers-reduced-motion: reduce){ details.fold > summary::before{transition:none} }
+  .strip{list-style:none; padding:0; margin:8px 0; display:grid; gap:2px}
+  .strip li{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; min-height:40px; border-bottom:1px solid var(--border); padding:8px 0}
+  .strip a{color:var(--text); font-weight:700; text-decoration:none}
+  .strip a:hover{color:var(--accent)}
+  .lede{font-size:16px; color:var(--text-dim); max-width:820px; margin:0 0 14px}
+  footer p{margin:0 0 6px}
+  footer a{color:var(--text-dim)}
+  @media (max-width:480px){ header.hero{padding:40px 16px 28px} main{padding:0 16px 64px} .nav-inner{padding:0 16px} }
+  .device-slot { position: relative; width: 412px; height: 866px; }
+  .device {
+    --bezel: 11px;
+    --status-h: 47px;
+    --home-h: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(390px + 2 * var(--bezel));
+    height: calc(844px + 2 * var(--bezel));
+    padding: var(--bezel);
+    transform-origin: top left;
+  }
+  .device-body {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.35)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+  }
+  .device-body .body-fill { fill: #101113; stroke: #3b3e44; stroke-width: 1; }
+  .device-body .screen-edge { fill: none; stroke: #000; stroke-width: 1; }
+  .device-screen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    color: #000;
+  }
+
+  /* status bar: time left, grayscale signal/Wi-Fi/battery right */
+  .status-bar {
+    flex: 0 0 var(--status-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 28px 0 40px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    user-select: none;
+  }
+  .status-icons { display: flex; align-items: center; gap: 6px; }
+  .status-icons svg { display: block; }
+
+  .device-screen iframe {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    border: 0;
+    background: #fff;
+  }
+
+  /* home indicator: 134×5pt rounded bar, centered low in its strip */
+  /* Overlaps the iframe's last pixel row (white in every screen: tab bar or
+     action bar) so a half-pixel frame position can't leave a seam where
+     scrolled content peeks through below the bar. */
+  .home-indicator {
+    position: relative;
+    margin-top: -1px;
+    background: #fff;
+    flex: 0 0 calc(var(--home-h) + 1px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+  }
+  .home-indicator::before {
+    content: "";
+    width: 134px;
+    height: 5px;
+    border-radius: 100px;
+    background: currentColor;   /* light or dark with the bottom edge, set by matchEdges() */
+  }
+  .dg{display:grid; gap:12px; margin:12px 0 10px}
+  .dg-row{display:grid; grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) 28px minmax(0,1fr); align-items:stretch; gap:6px}
+  .dg-node{background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 12px; display:grid; gap:3px; align-content:start}
+  .dg-role{border-left:3px solid var(--accent)}
+  .dg-light .dg-node{background:var(--bg-elev-2)}
+  .dg-k{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint)}
+  .dg-v{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--text-dim)}
+  .dg-n{font-size:12.5px; color:var(--text-faint)}
+  .dg-arrow{align-self:center; text-align:center; color:var(--accent); font-weight:800; font-size:18px}
+  .sw{display:inline-block; width:14px; height:14px; border-radius:3px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+  @media (max-width:760px){ .dg-row{grid-template-columns:minmax(0,1fr)} .dg-arrow{transform:rotate(90deg); width:20px} }
+  .look{display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:24px; align-items:start; margin:16px 0}
+  .look-controls{display:grid; gap:10px; align-content:start}
+  .look .device-slot{overflow:hidden}
+  .look-controls label{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint)}
+  .look-controls select{min-height:44px; background:var(--bg-elev); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:0 10px; font:inherit}
+  .look-switch{display:grid; grid-template-columns:1fr 1fr; background:var(--bg-elev); border:1px solid var(--border); border-radius:999px; padding:3px}
+  .look-switch button{min-height:40px; border:0; border-radius:999px; background:transparent; color:var(--text-dim); font:inherit; font-weight:700; cursor:pointer}
+  .look-switch button[aria-pressed="true"]{background:var(--accent-dim); color:var(--accent)}
+  .look-switch button:focus-visible, .look-controls select:focus-visible{outline:2px solid var(--text); outline-offset:2px}
+  .holes{font-size:13.5px}
+  .holes h3{margin:8px 0 4px}
+  @media (max-width:760px){ .look{grid-template-columns:minmax(0,1fr)} }
+  .checks{padding-left:22px}
+  .checks li{margin-bottom:8px}
+  .after li{margin-bottom:10px}
+
+</style>
+</head>
+<body>
+<!-- lessons:start --><script>if (window.top !== window.self) document.documentElement.classList.add("in-shell");</script><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html">06 · Concept</a><a href="ui-overview.html">07 · UI assembly</a><a href="tokens-overview.html" aria-current="page">08 · Design tokens</a></div></div><!-- lessons:end -->
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Design tokens</a>
+    <div class="navlinks"><a href="#how">Primitive → role → component</a><a href="#proof">The theme stress test</a><a href="#decisions">Key decisions</a><a href="#after">After the lesson</a><a href="#more">The record</a></div>
+  </div>
+</nav>
+<a id="top"></a>
+<header class="hero">
+  <p class="kicker">Lesson 8 of 12 · Design tokens</p>
+  <h1>Two levels of tokens, every page on them</h1>
+  <p class="hero-desc">Lesson 8 (2026-10-27 to 2026-10-30): the kit's values as two levels of design tokens, every page switched to them, a light theme as a stress test, and a final check.</p>
+  <p class="hero-line"><strong>Lesson 8 of 12</strong> · 27–30 Oct 2026 · Sources of truth: <span class="src src-more"><span class="src-k">look:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens.css"><code>tokens/tokens.css</code></a> + <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/components/"><code>components/</code></a></span> · <span class="src"><span class="src-k">words:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/microcopy.md"><code>microcopy.md</code></a></span> · <span class="src"><span class="src-k">structure:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/wireframes/"><code>wireframes/</code></a></span> · <span class="src"><span class="src-k">decisions:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md"><code>concept/concept.md</code></a></span></p>
+  <div class="stats"><div class="stat"><span class="stat-n">161</span><span class="stat-l">primitives</span><span class=stat-sub>31 of them colors, named by hue and L*</span></div><div class="stat"><span class="stat-n">28</span><span class="stat-l">semantic roles</span><span class=stat-sub>color only; components read nothing else</span></div><div class="stat"><span class="stat-n">56</span><span class="stat-l">component files</span><span class=stat-sub>bundled into components/index.css</span></div><div class="stat"><span class="stat-n">34</span><span class="stat-l">role pairs, both themes</span><span class=stat-sub>106 use pairs and 17 glass pairs checked by the build</span></div><div class="stat"><span class="stat-n">15</span><span class="stat-l">build checks</span><span class=stat-sub>each stops the build</span></div></div>
+  
+  <ol class="stages"><li><a href="#how"><span class="st-k">How it works</span><span><span class="st-l">Primitive → role → component</span></span></a></li><li><a href="#proof"><span class="st-k">The proof</span><span><span class="st-l">The theme stress test</span></span></a></li><li><a href="#decisions"><span class="st-k">Decided</span><span><span class="st-l">Key decisions</span></span></a></li><li><a href="#after"><span class="st-k">Next</span><span><span class="st-l">After the lesson</span></span></a></li><li><a href="#more"><span class="st-k">More</span><span><span class="st-l">The record</span></span></a></li></ol>
+</header>
+<main>
+
+
+<section class="block" id="how"><span class="section-tag tag-d">How it works</span><h2>Primitive → role → component</h2><div class="prose"><div class="dg">
+  <div class="dg-row">
+    <div class="dg-node dg-primitive"><span class="dg-k">primitive</span><code>--amber-78</code><span class="dg-v"><span class="sw" style="background:#F5B649"></span>#F5B649</span><span class="dg-n">a raw value, named by hue and L*</span></div>
+    <span class="dg-arrow" aria-hidden="true">→</span>
+    <div class="dg-node dg-role"><span class="dg-k">role</span><code>--accent-fill</code><span class="dg-v"><span class="sw" style="background:#F5B649"></span>#F5B649</span><span class="dg-n">the primary action’s fill</span></div>
+    <span class="dg-arrow" aria-hidden="true">→</span>
+    <div class="dg-node dg-component"><span class="dg-k">component</span><code>.register-btn</code><span class="dg-n">Register on hyrox.com, Race detail · also 3 more selectors</span></div>
+  </div>
+  <div class="dg-row">
+    <div class="dg-node dg-primitive"><span class="dg-k">primitive</span><code>--amber-78</code><span class="dg-v"><span class="sw" style="background:#F5B649"></span>#F5B649</span><span class="dg-n">the same primitive, in dark</span></div>
+    <span class="dg-arrow" aria-hidden="true">→</span>
+    <div class="dg-node dg-role"><span class="dg-k">role</span><code>--accent-ink</code><span class="dg-v"><span class="sw" style="background:#F5B649"></span>#F5B649</span><span class="dg-n">amber as text on a bar</span></div>
+    <span class="dg-arrow" aria-hidden="true">→</span>
+    <div class="dg-node dg-component"><span class="dg-k">component</span><code>.top-bar .bar-action</code><span class="dg-n">Log result on Results list, and the current tab · 3 selectors</span></div>
+  </div>
+  <div class="dg-row dg-light">
+    <div class="dg-node dg-primitive"><span class="dg-k">primitive</span><code>--amber-40</code><span class="dg-v"><span class="sw" style="background:#875206"></span>#875206</span><span class="dg-n">light theme only</span></div>
+    <span class="dg-arrow" aria-hidden="true">→</span>
+    <div class="dg-node dg-role"><span class="dg-k">role</span><code>--accent-ink</code><span class="dg-v"><span class="sw" style="background:#875206"></span>#875206</span><span class="dg-n">the same role, in light</span></div>
+    <span class="dg-arrow" aria-hidden="true">→</span>
+    <div class="dg-node dg-component"><span class="dg-k">component</span><code>.top-bar .bar-action</code><span class="dg-n">the same component, untouched</span></div>
+  </div>
+</div>
+<p class="note">Read from <code>tokens/tokens.css</code> and <code>components/index.css</code>. In dark the fill and the ink are one amber; in light the ink takes a darker, warmer one so amber text holds AA on a light bar. The component never changes: only the role's value does.</p><details class="fold"><summary>The two levels, the rules, where they live <span class=fold-sub>CLAUDE.md → Tokens</span></summary><div class="fold-body"><p><strong>The two levels:</strong></p>
+<ul><li><strong>Primitives:</strong> raw values with no role in their names. Colors are named by hue and lightness (CIE L*, rounded): <code>--graphite-7</code> is the gray at L* 6.69, <code>--amber-78</code> the amber. Every other value keeps a scale or part name (<code>--space-4</code>, <code>--radius-2</code>, <code>--target</code>, <code>--bar-title-inset</code>).</li><li><strong>Semantic roles:</strong> color only. Each role is a <code>var()</code> of a primitive, with a comment naming the usages it grew from (<code>--page</code>, <code>--surface</code>, <code>--text-primary</code>, <code>--accent-fill</code>, <code>--accent-ink</code>, <code>--error</code>, <code>--map-water</code> …). A role is split wherever its uses would need different values in another appearance; the light theme is the test.</li></ul>
+<p><strong>Where they live:</strong></p>
+<ul><li><code>tokens/tokens.css</code>: both levels, the Dynamic Type, reduced-motion and Reduce Transparency overrides, the light block (<code>:root[data-theme="light"]</code>, roles only), and, at the end, a generated comment with every role pair's contrast in both themes.</li><li><code>components/</code>: one file per component, reading roles and primitives through <code>var()</code>.</li><li><code>components/index.css</code>: those files bundled in cascade order by <code>scripts/build_components.py</code>; it is what a page links.</li><li><code>ui/map-data.css</code>: the static map's generated data (Natural Earth masks, <code>--map-ratio</code>, each pin's place), written by <code>scripts/concept/build_map.py</code>, linked only where the map shows.</li><li><code>tokens/theme.js</code>: turns <code>?theme=light</code> into <code>&lt;html data-theme="light"&gt;</code> and keeps it for the tab.</li><li>A page links <code>tokens/tokens.css</code>, then <code>components/index.css</code> (plus <code>ui/map-data.css</code> on Race browse and the showcase) and <code>tokens/theme.js</code>.</li></ul>
+<p><strong>The rules:</strong></p>
+<ul><li><strong>Color only through roles:</strong> no component reads a color primitive.</li><li><strong>Geometry from primitives:</strong> radius, spacing and size come from tokens, never a number in a class. The only numbers left are math inside <code>calc()</code>.</li><li><strong>No hex, px or font name in a component,</strong> no named or functional color (<code>black</code>, <code>white</code>, <code>rgb()</code>), and no fixed <code>color-scheme</code>.</li><li><strong>Hex lives in one file:</strong> <code>DESIGN.md</code>'s frontmatter values and <code>.impeccable/design.json</code> are generated from <code>tokens/tokens.css</code> (<code>scripts/build_design_sidecar.py</code>).</li></ul>
+<p><strong>The build checks that enforce them</strong> (<code>scripts/concept/build_stand.py</code>, see UI assembly → Checks that stop the build):</p>
+<ul><li><code>build_components.py</code>: no primitive, hex, px, font name, named color or fixed color-scheme in a component.</li><li><strong>Color rules 1–3:</strong> 1 and 2 in both themes, 3a dark only, 3b reported for both themes' fill and ink.</li><li><strong>Contrast:</strong> every pair and every glass pair in both themes.</li><li><strong>Signed tokens:</strong> every token in <code>tokens/tokens.css</code>, <code>ui/map-data.css</code> and the docs layer has a row on the stand.</li><li><code>check_kit.py</code>: every screen on tokens and components, every class defined.</li><li><code>check_links.py</code>: no page links a missing file.</li></ul>
+<p><strong>The "keep it" rule</strong> (UI assembly): a value change goes into the token of the right level, a primitive or a role, never into a component; a markup change goes into the showcase and every screen where the component stands.</p>
+<p><strong>The light theme is a proof only (designer, 2026-10-30):</strong> the product stays dark-only (C5). The light block isn't offered to users and won't be polished. The viewer's Light / Dark control stays for the course, and the build keeps checking light, so a component that bypasses the roles is caught. Step 5 found two such holes and fixed them in the components.</p></div></details></div></section>
+<section class="block" id="proof"><span class="section-tag tag-p">The proof</span><h2>The theme stress test</h2><div class="prose"><p class="lede">The proof that every color goes through a role: a second appearance needs new role values and nothing else. Pick a screen and switch it.</p>
+<div class="look">
+  <div class="look-controls">
+    <label for="theme-page">Screen and state</label>
+    <select id="theme-page"><option value="log-result">log-result</option><option value="log-result-error">log-result-error</option><option value="log-result-loading">log-result-loading</option><option value="new-password">new-password</option><option value="new-password-error">new-password-error</option><option value="new-password-loading">new-password-loading</option><option value="profile">profile</option><option value="profile-error">profile-error</option><option value="profile-loading">profile-loading</option><option value="race-browse">race-browse</option><option value="race-browse-empty">race-browse-empty</option><option value="race-browse-error">race-browse-error</option><option value="race-browse-loading">race-browse-loading</option><option value="race-detail">race-detail</option><option value="race-detail-error">race-detail-error</option><option value="race-detail-loading">race-detail-loading</option><option value="race-picker">race-picker</option><option value="race-picker-empty">race-picker-empty</option><option value="race-picker-error">race-picker-error</option><option value="race-picker-loading">race-picker-loading</option><option value="reset-password">reset-password</option><option value="reset-password-check-inbox">reset-password-check-inbox</option><option value="reset-password-error">reset-password-error</option><option value="reset-password-loading">reset-password-loading</option><option value="result-detail">result-detail</option><option value="result-detail-error">result-detail-error</option><option value="result-detail-loading">result-detail-loading</option><option value="results-list" selected>results-list</option><option value="results-list-empty">results-list-empty</option><option value="results-list-error">results-list-error</option><option value="results-list-loading">results-list-loading</option><option value="sign-in-sign-up">sign-in-sign-up</option><option value="sign-in-sign-up-check-inbox">sign-in-sign-up-check-inbox</option><option value="sign-in-sign-up-error">sign-in-sign-up-error</option><option value="sign-in-sign-up-loading">sign-in-sign-up-loading</option></select>
+    <div class="look-switch" role="group" aria-label="Theme">
+      <button type="button" data-theme="dark" aria-pressed="true">Dark</button>
+      <button type="button" data-theme="light" aria-pressed="false">Light</button>
+    </div>
+    <a class="btn" id="theme-open" href="wireframes/index.html#results-list">Open it in the viewer →</a>
+    <div class="holes"><h3>The two holes it found</h3><p>A light theme overrides semantic roles in <code>tokens/tokens.css</code>, and nothing here should need to change for it. Two things did, and each is a hole now closed:</p>
+<ol><li><strong><code>top-bar.css</code>:</strong> the bar action's hover read <code>--accent-hover</code>, the same role as the primary fill's hover. In light, one value can't serve a fill under dark text and text on a light bar. It now reads <code>--accent-ink-hover</code> (the same value in dark).</li><li><strong><code>date-field.css</code>:</strong> the native date input had <code>color-scheme: dark</code> written in, so its picker would stay dark in light. It now inherits the theme's <code>color-scheme</code> from <code>:root</code>.</li></ol>
+<p>No component read a color primitive. <code>scripts/build_components.py</code> now also fails on a fixed <code>color-scheme</code> or a named or functional color (<code>black</code>, <code>white</code>, <code>rgb()</code>, <code>hsl()</code>), the two ways a component can still hold a theme of its own.</p></div>
+  </div>
+  <figure class="phone-fig" id="theme-fig">
+    <div class="device-slot"><div class="device">
+      <svg class="device-body" aria-hidden="true"><path class="body-fill"/><path class="screen-edge"/></svg>
+      <div class="device-screen">
+        <div class="status-bar" aria-hidden="true"><span>09:41</span>
+              <span class="status-icons">
+                <!-- cellular signal: 4 bars, last one outline-only -->
+                <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
+                  <rect x="0" y="8" width="3" height="4" rx="1"/>
+                  <rect x="5" y="5.5" width="3" height="6.5" rx="1"/>
+                  <rect x="10" y="3" width="3" height="9" rx="1"/>
+                  <rect x="15.5" y="0.5" width="2" height="11" rx="1" fill="none" stroke="currentColor" stroke-width="1"/>
+                </svg>
+                <!-- Wi-Fi -->
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <path d="M1 4.2a10 10 0 0 1 14 0"/>
+                  <path d="M3.4 6.8a6.5 6.5 0 0 1 9.2 0"/>
+                  <path d="M5.8 9.3a3 3 0 0 1 4.4 0"/>
+                  <circle cx="8" cy="11" r="0.6" fill="currentColor"/>
+                </svg>
+                <!-- battery: outline body + cap, grayscale fill -->
+                <svg width="27" height="13" viewBox="0 0 27 13">
+                  <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-opacity="0.45"/>
+                  <rect x="2.5" y="2.5" width="15" height="8" rx="1.8" fill="currentColor"/>
+                  <path d="M25 4.5v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity="0.45"/>
+                </svg>
+              </span></div>
+        <iframe src="wireframes/results-list.html?theme=dark" title="Results list, live" loading="lazy"></iframe>
+        <div class="home-indicator" aria-hidden="true"></div>
+      </div>
+    </div></div>
+    <figcaption><strong>Results list</strong><br>The same page in both themes: <code>?theme=light</code> sets <code>data-theme</code>, and <code>tokens/tokens.css</code> swaps the role values.<br><span class="states">States: <a href="wireframes/results-list.html?theme=dark">Dark</a> · <a href="wireframes/results-list.html?theme=light">Light</a></span></figcaption>
+  </figure>
+</div>
+<p>The product stays dark-only. <a href="ui/review-theme.html">Every state in both themes →</a></p></div></section>
+<section class="block" id="decisions"><span class="section-tag tag-t">Decided</span><h2>Key decisions</h2><div class="prose"><div class="reg reg--key"><div class="reg-card"><p class="reg-q">Two levels of tokens</p><p class="reg-a">Raw values are primitives, named by hue and lightness (<code>--amber-78</code>); components read only semantic roles that say what a color is for (<code>--accent-fill</code>). A value changes in one place.</p><p class="reg-meta">2026-10-27 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-2-record-2026-10-27">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Every page on tokens</p><p class="reg-a">All 35 screens, the showcase, the shell, the stand and the review pages link <code>tokens/tokens.css</code> and <code>components/index.css</code>. <code>ui/kit.css</code> is gone, and nothing changed to the pixel.</p><p class="reg-meta">2026-10-28 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-4-record-2026-10-28-every-page-on-tokens-and-components">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Hex in one file</p><p class="reg-a"><code>DESIGN.md</code>'s frontmatter and the impeccable sidecar are generated from <code>tokens/tokens.css</code>, so every color is written once.</p><p class="reg-meta">2026-10-28 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-4-record-2026-10-28-every-page-on-tokens-and-components">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Amber text is its own role</p><p class="reg-a">The button fill and amber used as text (the current tab, the bar action) are two roles on one amber. In light they part: text needs a darker, warmer amber.</p><p class="reg-meta">2026-10-29 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-5-record-2026-10-30-the-theme-stress-test">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">The light theme is a proof only</p><p class="reg-a">Onrace stays dark. The light theme stays only to prove every color goes through a role; the build keeps checking it, so a component that bypasses the roles is caught.</p><p class="reg-meta">2026-10-30 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-light-theme-stays-a-proof-not-a-feature-designer-2026-10-30">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">"Keep it" by token level</p><p class="reg-a">A visual change the designer keeps goes into a primitive or a role in <code>tokens/tokens.css</code>, never into a component; a markup change goes into the showcase and every screen.</p><p class="reg-meta">2026-10-30 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/CLAUDE.md#tokens">Full record ↗</a></p></div></div></div></section>
+<section class="block" id="after"><span class="section-tag tag-f">Next</span><h2>After the lesson</h2><div class="prose"><div class="after"><p class="lede">Decided, and done after Lesson 8 as "keep it" changes or one product pass. Nothing changed for them in this lesson.</p><ul><li><strong>The List/Map track at large text (designer, 2026-10-27).</strong> At 200% text the track is 47px tall with a 22px radius, so it isn't a full capsule; C7 says capsule. After Lesson 8: decide, then change it in <code>tokens/tokens.css</code> and <code>components/segmented-control.css</code> (and its showcase stage) under the "keep it" rule.</li><li><strong>One segmented control, a capsule everywhere (designer, 2026-10-30).</strong> The segmented control is one component and must look the same wherever it stands. Today it doesn't:<ul><li>List/Map, in a bar, is a capsule;</li><li>Sign in / Create account, in content, has 6px corners.</li></ul></li></ul>
+<p><strong>Decision:</strong> the segmented control is a capsule everywhere, as in iOS 26. Rule C7 becomes: "capsules for every system control (segmented controls, search fields, bar buttons); cards, chips and content buttons keep Podium corners."</p>
+<p><strong>When:</strong> after Lesson 8, as one "keep it" change together with the List/Map capsule at 200% text above. That means the radius tokens in <code>tokens/tokens.css</code>, <code>components/segmented-control.css</code>, the showcase stage, C7 in <code>DESIGN.md</code>, and every screen where the control stands. Nothing changes now.</p>
+<ul><li><strong>The official result link becomes optional (designer, 2026-10-30).</strong> A product decision, done after Lesson 8 in one pass. Nothing changes now.<ol><li><strong>The link is optional</strong> on Log result. An empty link is not an error; only an invalid link (not a URL) is.</li><li><strong>A result without a link gets its own state</strong> on Results list and Result detail: the proof line says so (e.g. "Self-reported · no result link yet"), with a quiet "Add link" action. The copy goes through <code>microcopy.md</code> and <code>voice.md</code>.</li><li><strong>The field error gets lighter, iOS style.</strong> One coral footnote line under the field replaces the helper text while the error shows. There's no bold message in the row, and a thin ring or none, whichever matches the kit's invalid rule after review. The Field error component is shared, so New password and Profile change with it.</li></ol></li></ul>
+<p><strong>The full checklist</strong> (every screen, state, flow, <code>microcopy.md</code> row and inventory component it touches) and the questions to settle first are in <code>concept/concept.md</code> → The official result link becomes optional. The questions:</p>
+<ul><li>the Dictionary forbids "result link";</li><li>there's no edit screen for "Add link";</li><li>Result detail has nothing to open without a link;</li><li>the decision reverses <code>CLAUDE.md</code>'s "required source link" trust model.</li></ul><p class="note">From <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md">tokens/tokens-audit.md</a> → After the lesson; the optional link’s full checklist is in <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md">concept/concept.md</a>.</p></div></div></section>
+<section class="block" id="more"><span class="section-tag tag-m">More</span><h2>The rest of the record</h2><div class="prose"><details class="fold"><summary>The audit (step 1): findings <span class=fold-sub>3 kinds of finding, from tokens/tokens-audit.md</span></summary><div class="fold-body"><h3>1. Value drift: one role, different values</h3>
+<ol><li><strong>Hover and pressed fills step by different amounts.</strong><ul><li>A raised control (bg-2) goes one level up to <strong>bg-3</strong> on hover, pressed or open: <code>.filters-trigger:hover</code>, <code>.chip:hover</code>, <code>.secondary-btn:hover</code>, <code>.filters-trigger[aria-expanded]</code>, <code>.view-btn[aria-pressed]</code>, <code>.map-pin:hover &gt; span</code>, the alert and action-sheet buttons on hover.</li><li>A row on a surface (bg-1) goes one level up to <strong>bg-2</strong>: <code>.row--check:active</code>, <code>a.row--nav[href]:hover</code>, <code>.signout:hover</code>.</li><li>A card on a surface (bg-1) jumps two levels to <strong>bg-3</strong>: <code>.race-card:has(.card-link:active)</code>, <code>.result-card .card-link:active</code>.</li><li>So "pressed" means +1 level on rows and +2 on cards. There's no pressed or hover token: each rule picks a level by hand.</li></ul></li><li><strong>The chip family has three heights:</strong><ul><li><code>--chip-height</code> 24 (format chip, <code>.sport-tag</code>);</li><li><code>--filter-chip-height</code> 32 (filter chip, <code>.chip</code>);</li><li><code>--pin-h</code> 22 (map pin label, styled like a chip: bg-2, <code>--size-label</code>).</li><li>These are three components, so the gap may be intended. It's recorded because the pin label reads as the same small tag as the format chip, at 22 against 24.</li></ul></li><li><strong>Body and meta have the same size, under two names.</strong><ul><li><code>--size-body</code> and <code>--size-meta</code> are both <code>calc(15 * var(--type-unit))</code>. Meta was 14 until C3 raised it.</li><li>Every element sized 15 has to choose one of the two names, and nothing distinguishes them.</li></ul></li><li><strong>The radii are spread across eight tokens with two scales.</strong><ul><li>Content uses fixed px: <code>--radius-1</code> 4, <code>--radius-2</code> 6, <code>--radius-3</code> 12.</li><li>iOS shapes use other values: <code>--radius-sheet</code> 38, <code>--radius-alert</code> 34, and the capsules <code>--radius-bar-control</code>, <code>--radius-filter-chip</code> and <code>--radius-tabbar</code>, each written as height ÷ 2.</li><li><code>--radius-avatar</code> is 50%.</li><li>All three capsule tokens express the same role: a capsule is half its own height.</li></ul></li><li><strong>Two tokens serve a role they weren't named for.</strong><ul><li><code>--focus-ring</code> (2px) is the focus outline width, and it's also the width of the invalid ring (the <code>.rows li:has([aria-invalid])</code> ring sides).</li><li><code>--leading-body</code> (1.45) is a line height, and it's also a vertical spacing unit (<code>margin-block</code> on <code>.sort-toggle</code>, <code>.form-alert .alert-link</code> and two skeleton bars).</li></ul></li><li><strong>The display size is shared by two different things.</strong> <code>--size-day</code> (30) sizes the race card's date day and also the Profile initials. An avatar letter and a date figure are different roles that happen to share a size.</li></ol>
+<h3>2. One variable, several roles</h3>
+<p>Each row below is one token. A token that's aliased lists its alias's roles too.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Variable</th><th>Roles it plays</th><th>Where</th></tr></thead><tbody><tr><td><code>--accent</code></td><td>(a) <strong>primary action fill</strong></td><td><code>.state-action:not(.secondary)</code>, <code>.register-btn</code>, <code>.open-btn</code>, <code>.submit-btn</code> (background)</td></tr><tr><td></td><td>(b) <strong>action in a bar</strong> (text, no fill)</td><td><code>.top-bar .save-btn</code>, <code>.top-bar .bar-action</code> (Save, Log result, Apply filters)</td></tr><tr><td></td><td>(c) <strong>current place</strong></td><td><code>.bottom-nav a[aria-current="page"]</code> (the current tab)</td></tr><tr><td><code>--accent-hover</code></td><td>the hover of (a), (b) and (c)</td><td>the same selectors with <code>:hover</code></td></tr><tr><td><code>--error</code></td><td>(a) <strong>error icon</strong></td><td><code>.inline-error h2::before</code>, <code>.form-alert h2::before</code>, the gate error icon</td></tr><tr><td></td><td>(b) <strong>invalid</strong> ring (as <code>--invalid</code>)</td><td><code>.rows li:has([aria-invalid="true"])</code> ring top and sides</td></tr><tr><td></td><td>(c) <strong>destructive</strong> action text (as <code>--destructive</code>)</td><td><code>.signout</code>, <code>dialog.alert #signout-confirm</code>, <code>.action-sheet .is-destructive</code></td></tr><tr><td><code>--text-1</code></td><td>(a) <strong>primary text</strong></td><td>about 50 color rules: titles, body, finish times, secondary-button labels</td></tr><tr><td></td><td>(b) <strong>focus</strong> ring (as <code>--focus</code>)</td><td><code>:focus-visible</code> outlines (6 rules)</td></tr><tr><td></td><td>(c) <strong>control tint</strong> (as <code>--control-tint</code>)</td><td>the checkmark (<code>.race-card:has(.card-link[aria-current])</code>), <code>.row--check input[type="checkbox"]</code>, <code>accent-color</code></td></tr><tr><td></td><td>(d) selection fill</td><td><code>.onrace ::selection</code> (background)</td></tr><tr><td></td><td>(e) map pin dot</td><td><code>.map-pin::before</code> (background)</td></tr><tr><td><code>--text-2</code></td><td>(a) <strong>secondary text</strong></td><td>meta, location, proof line, month and year</td></tr><tr><td></td><td>(b) placeholder</td><td><code>.race-search input::placeholder</code></td></tr><tr><td></td><td>(c) inactive tab</td><td><code>.bottom-nav a</code></td></tr><tr><td></td><td>(d) glyph fill</td><td><code>.chip span</code> (×), the search magnifier, disclosure chevrons, the select chevron, the location and proof icons</td></tr><tr><td></td><td>(e) <strong>boundary on hover</strong></td><td><code>.race-search input:hover</code> (the field's ring, normally <code>--field-line</code>)</td></tr><tr><td></td><td>(f) map leader line</td><td><code>.map-pin::after</code></td></tr><tr><td></td><td>(g) empty or error state icon</td><td><code>.state-message::before</code></td></tr><tr><td></td><td>(h) link hover</td><td><code>.clear-all:hover</code></td></tr><tr><td><code>--bg-0</code></td><td>(a) <strong>page background</strong></td><td><code>.onrace</code>, <code>.kit-frame</code>, <code>.kit-shell</code></td></tr><tr><td></td><td>(b) glass base (as <code>--glass-ground</code>)</td><td>the controls bar, the top bar, the status-bar edge</td></tr><tr><td></td><td>(c) selection text</td><td><code>.onrace ::selection</code> (color)</td></tr><tr><td></td><td>(d) <strong>on-accent</strong> has the same hex</td><td><code>--on-accent: #131518</code> is written raw, not <code>var(--bg-0)</code></td></tr><tr><td><code>--bg-1</code></td><td>(a) <strong>surface</strong></td><td><code>.race-card</code>, <code>.result-card .card-link</code>, the search field, <code>.rows</code>, <code>.saved-status</code>, <code>.signout</code>, the receded Results edge, <code>.skeleton-card</code></td></tr><tr><td></td><td>(b) map land (as <code>--map-land</code>)</td><td><code>.map-placeholder::before</code></td></tr><tr><td><code>--bg-2</code></td><td>(a) <strong>raised</strong></td><td>secondary buttons, <code>.sport-tag</code>, <code>.chip</code>, the date tile, the segmented track, skeleton <code>.bar</code>, pin labels, <code>.initials</code></td></tr><tr><td></td><td>(b) glass base (as <code>--glass-sheet</code>)</td><td>the sheet, the alert, the action sheet</td></tr><tr><td></td><td>(c) <strong>hover or pressed on rows</strong></td><td><code>.row--check:active</code>, <code>a.row--nav[href]:hover</code>, <code>.signout:hover</code></td></tr><tr><td><code>--bg-3</code></td><td>(a) <strong>hover, pressed or open on raised controls</strong></td><td>see Drift 1</td></tr><tr><td></td><td>(b) <strong>pressed card</strong> (from bg-1, +2)</td><td><code>.race-card:active</code>, <code>.result-card .card-link:active</code></td></tr><tr><td></td><td>(c) <strong>a group raised on a sheet or form</strong></td><td><code>.sheet .rows</code>, <code>.linked-race</code></td></tr><tr><td></td><td>(d) map lines (as <code>--map-lines</code>)</td><td><code>.map-placeholder::after</code></td></tr><tr><td><code>--bg-bar</code></td><td>(a) frame and void</td><td><code>body:has(&gt; .sheet &gt; .phone-screen)</code> (behind the sheet)</td></tr><tr><td></td><td>(b) glass base (as <code>--glass-bar</code>)</td><td>the tab bar, the action bar</td></tr><tr><td></td><td>(c) map water (as <code>--map-water</code>)</td><td><code>.map-placeholder</code>, the ring of <code>.map-pin::before</code></td></tr><tr><td><code>--line</code></td><td>(a) hairline divider</td><td><code>.controls</code>, <code>.rows li + li::before</code>, <code>.results-order</code>, the alert buttons, the action-sheet message</td></tr><tr><td></td><td>(b) showcase frame outline</td><td><code>.kit-frame</code>, <code>.kit-shell</code></td></tr><tr><td><code>--field-line</code></td><td>(a) <strong>input boundary</strong></td><td>the search field, rows with inputs</td></tr><tr><td></td><td>(b) selected segment outline</td><td><code>.view-btn[aria-pressed="true"]</code></td></tr><tr><td></td><td>(c) card hover ring</td><td><code>.race-card:hover .card-link::after</code></td></tr><tr><td></td><td>(d) map frame</td><td><code>.map-placeholder</code></td></tr><tr><td></td><td>(e) scrollbar</td><td><code>scrollbar-color</code> on <code>.sheet</code> and <code>.phone-screen</code></td></tr><tr><td><code>--glass-edge</code></td><td>the rim of every glass surface</td><td>the tab bar, sheet, alert and action sheet (one role, four components)</td></tr><tr><td><code>--shadow-sheet</code></td><td>the float shadow, also on the tab bar</td><td>the tab bar, sheet, alert and action sheet (its name says "sheet" but it isn't limited to one)</td></tr><tr><td><code>--icon-s</code></td><td>a small glyph; also the spinner size (as <code>--spinner-size</code>)</td><td></td></tr><tr><td><code>--radius-avatar</code> (50%)</td><td>the initials circle; also the busy spinner</td><td><code>:is(button, .submit-btn)[aria-busy="true"]::after</code></td></tr><tr><td><code>--space-6</code></td><td>spacing; also the fade length (in <code>--fade-end</code>)</td><td></td></tr></tbody></table></div>
+<p><strong>Names that sound like a role but cover more than one:</strong></p>
+<ul><li><code>--accent</code> covers action, bar action and current place.</li><li><code>--error</code> covers error, invalid and destructive.</li><li><code>--text-2</code> covers text, glyph, boundary and line.</li><li><code>--bg-2</code> covers a raised level, row hover and a glass base.</li><li><code>--bg-3</code> covers pressed, pressed card, a group on a sheet and map lines.</li><li><code>--shadow-sheet</code> covers more than the sheet.</li><li><code>--field-line</code> is used beyond fields: a segment outline, a card hover ring, the map frame and the scrollbar.</li></ul>
+<h3>3. Values bypassing variables</h3>
+<p><strong>In product class rules: none of substance.</strong> The only literals are keywords and layout math:</p>
+<ul><li>keywords: <code>none</code>, <code>transparent</code>, <code>currentColor</code>, <code>inherit</code>;</li><li>opacity <code>0</code> and <code>1</code>;</li><li><code>font-size: 0</code> on <code>.chip span</code> (it hides the text and keeps the glyph);</li><li><code>letter-spacing: normal</code> (kit.css lines 674 and 1101);</li><li>the centering transforms <code>-50%</code> in <code>.map-placeholder &gt; .map-pin</code> and <code>.map-pin::before</code>;</li><li><code>100vw</code> in the inset of <code>dialog.action-sheet</code>.</li></ul>
+<p><strong>Raw values inside token definitions that repeat another token:</strong></p>
+<div class="tbl-wrap"><table><thead><tr><th>Token</th><th>Raw value</th><th>What it repeats</th></tr></thead><tbody><tr><td><code>--on-accent</code></td><td><code>#131518</code></td><td>the hex of <code>--bg-0</code></td></tr><tr><td><code>--glass-edge</code></td><td><code>rgba(244, 245, 246, 0.08)</code></td><td><code>--text-1</code> (#F4F5F6) at 8%, written as rgba</td></tr><tr><td><code>--shadow-sheet</code></td><td><code>… rgba(0, 0, 0, 0.6)</code></td><td>the same color as <code>--scrim</code></td></tr><tr><td><code>--fade-end</code></td><td><code>#000</code></td><td>a mask's opaque stop (not a color role; noted for completeness)</td></tr><tr><td><code>--scrim</code></td><td><code>rgba(0, 0, 0, 0.6)</code></td><td>pure black, which color rule 3a keeps off backgrounds; allowed here because it's a dimming layer, not a level</td></tr></tbody></table></div>
+<p><strong>Outside the CSS, the same values are written a second time:</strong></p>
+<ul><li><code>DESIGN.md</code> frontmatter repeats every color hex and the three glass formulas;</li><li><code>.impeccable/design.json</code> is generated from DESIGN.md.</li><li>Either one drifts if <code>kit.css</code> changes and they aren't regenerated.</li></ul>
+<p><strong>In the kit file, but not product:</strong></p>
+<ul><li><code>ui/kit.css</code> holds the showcase scaffolding classes <code>.kit-frame</code>, <code>.kit-frame--flush</code>, <code>.kit-shell</code>, <code>.kit-stage</code> and <code>.kit-tabbar</code>.</li><li>It also holds the tokens only they use: <code>--radius-3</code> and <code>--kit-stage-h</code>.</li><li>They're product-file classes that serve only <code>ui/kit.html</code> and <code>ui/shell.html</code>.</li></ul></div></details><details class="fold"><summary>The old → new mapping <span class=fold-sub>every kit variable and the token that replaced it</span></summary><div class="fold-body"><p><code>tokens/tokens.css</code> holds the two levels. Nothing links it yet, and <code>ui/kit.css</code>'s tokens are unchanged. Use this table to switch the kit: each <code>var(--old)</code> in a kit class becomes the new token named here. Where one old token splits by use, the selectors are in the note.</p>
+<p>The counts are uses in <code>ui/kit.css</code>'s classes, as the step 2 test rewrote them. That rewrite is a scratch file, not in the repo. It's described below under "How it was checked".</p>
+<h3>Changed: 23 tokens</h3>
+<div class="tbl-wrap"><table><thead><tr><th>Old variable</th><th>Value today</th><th>Change</th><th>New token(s): uses in ui/kit.css classes</th><th>Note</th></tr></thead><tbody><tr><td><code>--bg-bar</code></td><td><code>#0F1114</code></td><td>color → role</td><td><code>--frame</code></td><td>split: the void behind the sheet → <code>--frame</code>; the tab bar glass and the map water now build from <code>--graphite-5</code> themselves</td></tr><tr><td><code>--bg-0</code></td><td><code>#131518</code></td><td>color → role</td><td><code>--page</code></td><td>and the <code>::selection</code> text; <code>--glass-ground</code> builds from <code>--graphite-7</code></td></tr><tr><td><code>--bg-1</code></td><td><code>#1D2024</code></td><td>color → role</td><td><code>--surface</code></td><td><code>--map-land</code> builds from <code>--graphite-12</code></td></tr><tr><td><code>--bg-2</code></td><td><code>#272B30</code></td><td>color → role</td><td><code>--raised</code></td><td>row hover and press keep it (Lesson 9); <code>--glass-sheet</code> builds from <code>--graphite-17</code></td></tr><tr><td><code>--bg-3</code></td><td><code>#2C3035</code></td><td>color → role</td><td><code>--pressed</code> ×10, <code>--group</code> ×2</td><td>split by use: <code>.sheet .rows</code>, <code>.linked-race</code> → <code>--group</code>; <code>--map-lines</code> builds from <code>--graphite-20</code></td></tr><tr><td><code>--line</code></td><td><code>#31363C</code></td><td>color → role</td><td><code>--hairline</code></td><td></td></tr><tr><td><code>--field-line</code></td><td><code>#686E75</code></td><td>color → role</td><td><code>--boundary</code></td><td></td></tr><tr><td><code>--text-1</code></td><td><code>#F4F5F6</code></td><td>color → role</td><td><code>--text-primary</code></td><td></td></tr><tr><td><code>--text-2</code></td><td><code>#A3A9B0</code></td><td>color → role</td><td><code>--text-secondary</code></td><td></td></tr><tr><td><code>--accent</code></td><td><code>#F5B649</code></td><td>color → role</td><td><code>--accent-fill</code> ×2, <code>--accent-ink</code> ×2</td><td>split by use: <code>.top-bar .save-btn</code>, <code>.top-bar .bar-action</code>, <code>.bottom-nav a[aria-current="page"]</code> → <code>--accent-ink</code></td></tr><tr><td><code>--on-accent</code></td><td><code>#131518</code></td><td>color → role</td><td><code>--on-accent-fill</code></td><td>merge: same primitive as the page, <code>--graphite-7</code></td></tr><tr><td><code>--error-bg</code></td><td><code>#3A2F31</code></td><td>color → role</td><td><code>--error-surface</code></td><td>single use</td></tr><tr><td><code>--glass-edge</code></td><td><code>rgba(244, 245, 246, 0.08)</code></td><td>color → role</td><td><code>--glass-rim</code></td><td>was raw rgba; now a mix of <code>--graphite-96</code> at <code>--alpha-8</code></td></tr><tr><td><code>--shadow-sheet</code></td><td><code>0 12px 32px -12px rgba(0, 0, 0, 0.6)</code></td><td>color → role</td><td><code>--float-shadow</code></td><td>geometry from <code>--shadow-y</code>, <code>--shadow-blur</code>, <code>--shadow-spread</code>; color its own mix of <code>--black</code> at <code>--alpha-60</code></td></tr><tr><td><code>--focus</code></td><td><code>var(--text-1)</code></td><td>merged</td><td><code>--text-primary</code></td><td>no focus role until Lesson 9</td></tr><tr><td><code>--invalid</code></td><td><code>var(--error)</code></td><td>merged</td><td><code>--error</code></td><td></td></tr><tr><td><code>--destructive</code></td><td><code>var(--error)</code></td><td>merged</td><td><code>--error</code></td><td></td></tr><tr><td><code>--control-tint</code></td><td><code>var(--text-1)</code></td><td>merged</td><td><code>--text-primary</code></td><td>C4: neutral; in light it stays the primary text color</td></tr><tr><td><code>--size-day</code></td><td><code>calc(30 * var(--type-unit))</code></td><td>split by use</td><td><code>--size-day</code> ×1, <code>--size-initials</code> ×1</td><td><code>.initials</code> → <code>--size-initials</code></td></tr><tr><td><code>--leading-body</code></td><td><code>1.45</code></td><td>split by use</td><td><code>--leading-box</code> ×7, <code>--leading-body</code> ×1</td><td>inside layout math (the 44pt target offsets, the skeleton proof bar) → <code>--leading-box</code></td></tr><tr><td><code>--focus-ring</code></td><td><code>2px</code></td><td>split by use</td><td><code>--focus-ring</code> ×12, <code>--invalid-ring</code> ×4, <code>--spinner-stroke</code> ×1</td><td>the invalid ring (<code>--ring-*</code>) → <code>--invalid-ring</code>; the busy spinner's border → <code>--spinner-stroke</code></td></tr><tr><td><code>--glass-opacity</code></td><td><code>85%</code>; <code>100%</code> (reduced transparency)</td><td>absorbed</td><td><code>--alpha-85</code> (token definitions only)</td><td>inside <code>--glass-bar</code> and <code>--glass-ground</code>; Reduce Transparency now swaps the glass roles to <code>--alpha-100</code></td></tr><tr><td><code>--glass-opacity-sheet</code></td><td><code>90%</code>; <code>100%</code> (reduced transparency)</td><td>absorbed</td><td><code>--alpha-90</code> (token definitions only)</td><td>inside <code>--glass-sheet</code></td></tr></tbody></table></div>
+<h3>Same name, value rebuilt from primitives: 12 tokens</h3>
+<div class="tbl-wrap"><table><thead><tr><th>Old variable</th><th>Value today</th><th>Change</th><th>New token(s): uses in ui/kit.css classes</th><th>Note</th></tr></thead><tbody><tr><td><code>--chip-text</code></td><td><code>#BFC4CA</code></td><td>same name</td><td><code>--chip-text</code></td><td>single use</td></tr><tr><td><code>--glass-bar</code></td><td><code>color-mix(in srgb, var(--bg-bar) var(--glass-opa…</code></td><td>same name</td><td><code>--glass-bar</code></td><td>built from <code>--graphite-5</code> and <code>--alpha-85</code></td></tr><tr><td><code>--glass-ground</code></td><td><code>color-mix(in srgb, var(--bg-0) var(--glass-opaci…</code></td><td>same name</td><td><code>--glass-ground</code></td><td>built from <code>--graphite-7</code> and <code>--alpha-85</code></td></tr><tr><td><code>--glass-sheet</code></td><td><code>color-mix(in srgb, var(--bg-2) var(--glass-opaci…</code></td><td>same name</td><td><code>--glass-sheet</code></td><td>built from <code>--graphite-17</code> and <code>--alpha-90</code></td></tr><tr><td><code>--scrim</code></td><td><code>rgba(0, 0, 0, 0.6)</code></td><td>same name</td><td><code>--scrim</code></td><td>was raw rgba; now a mix of <code>--black</code> at <code>--alpha-60</code></td></tr><tr><td><code>--fade-end</code></td><td><code>linear-gradient(to right, #000 calc(100% - var(-…</code></td><td>same name</td><td><code>--fade-end</code></td><td><code>#000</code> → <code>var(--black)</code></td></tr><tr><td><code>--map-pin-dot</code></td><td><code>10px</code></td><td>same name</td><td><code>--map-pin-dot</code></td><td>moves from ui/map.css to tokens.css</td></tr><tr><td><code>--map-water</code></td><td><code>var(--bg-bar)</code></td><td>same name</td><td><code>--map-water</code></td><td>moves from ui/map.css to tokens.css; single use</td></tr><tr><td><code>--map-land</code></td><td><code>var(--bg-1)</code></td><td>same name</td><td><code>--map-land</code></td><td>moves from ui/map.css to tokens.css; single use</td></tr><tr><td><code>--map-lines</code></td><td><code>var(--bg-3)</code></td><td>same name</td><td><code>--map-lines</code></td><td>moves from ui/map.css to tokens.css; single use</td></tr><tr><td><code>--pin-h</code></td><td><code>22px</code></td><td>same name</td><td><code>--pin-h</code></td><td>moves from ui/map.css to tokens.css</td></tr><tr><td><code>--pin-gap</code></td><td><code>6px</code></td><td>same name</td><td><code>--pin-gap</code></td><td>moves from ui/map.css to tokens.css</td></tr></tbody></table></div>
+<h3>Same name, same value: 110 tokens</h3>
+<p>Nothing changes in the classes for these. They move from <code>ui/kit.css</code> to <code>tokens/tokens.css</code> as they are:</p>
+<p><code>--text-disabled</code>, <code>--accent-hover</code>, <code>--error</code>, <code>--glass-blur</code>, <code>--font-display</code>, <code>--font-text</code>, <code>--type-root</code>, <code>--type-unit</code>, <code>--size-title</code>, <code>--size-time</code>, <code>--size-time-hero</code>, <code>--size-time-hero-cap</code>, <code>--size-item</code>, <code>--size-body</code>, <code>--size-meta</code>, <code>--size-proof</code>, <code>--size-label</code>, <code>--weight-display</code>, <code>--weight-strong</code>, <code>--weight-regular</code>, <code>--leading-tight</code>, <code>--leading-item</code>, <code>--tracking-display</code>, <code>--tracking-label</code>, <code>--radius-1</code>, <code>--radius-2</code>, <code>--radius-sheet</code>, <code>--radius-bar-control</code>, <code>--radius-bar-inner</code>, <code>--radius-filter-chip</code>, <code>--radius-alert</code>, <code>--radius-avatar</code>, <code>--border</code>, <code>--target</code>, <code>--measure</code>, <code>--tap-pad</code>, <code>--hidden-size</code>, <code>--chip-height</code>, <code>--filter-chip-height</code>, <code>--space-1</code>, <code>--space-2</code>, <code>--space-3</code>, <code>--space-4</code>, <code>--space-5</code>, <code>--space-6</code>, <code>--space-7</code>, <code>--space-8</code>, <code>--space-9</code>, <code>--date-col</code>, <code>--photo-ratio</code>, <code>--photo-filter</code>, <code>--icon-s</code>, <code>--icon-m</code>, <code>--icon-l</code>, <code>--icon-search</code>, <code>--icon-search-field</code>, <code>--icon-pin</code>, <code>--icon-link</code>, <code>--icon-filters</code>, <code>--icon-chevron</code>, <code>--icon-error</code>, <code>--icon-check</code>, <code>--icon-saved</code>, <code>--icon-compass</code>, <code>--icon-stopwatch</code>, <code>--icon-user</code>, <code>--icon-close</code>, <code>--icon-back</code>, <code>--icon-disclosure</code>, <code>--icon-archive</code>, <code>--icon-sort</code>, <code>--icon-state</code>, <code>--skel-pulse-dim</code>, <code>--dur-pulse</code>, <code>--skel-line</code>, <code>--skel-title</code>, <code>--skel-title-w</code>, <code>--skel-tag-w</code>, <code>--skel-loc-w</code>, <code>--skel-count-w</code>, <code>--skel-row-title-w</code>, <code>--skel-time-w</code>, <code>--skel-time-h</code>, <code>--skel-date-w</code>, <code>--skel-proof-w</code>, <code>--screen-w</code>, <code>--tabbar-h</code>, <code>--tabbar-inset</code>, <code>--tabbar-gap</code>, <code>--radius-tabbar</code>, <code>--tabbar-clear</code>, <code>--sheet-gap-top</code>, <code>--z-under</code>, <code>--z-lift</code>, <code>--z-float</code>, <code>--z-bar</code>, <code>--z-edge</code>, <code>--z-scrim</code>, <code>--z-sheet</code>, <code>--sheet-large</code>, <code>--dur-sheet</code>, <code>--safe-top</code>, <code>--safe-bottom</code>, <code>--avatar-size</code>, <code>--alert-width</code>, <code>--ease-out</code>, <code>--dur-fast</code>, <code>--ease-in-out</code>, <code>--dur-spin</code>, <code>--spinner-size</code>.</p>
+<h3>Docs layer: 5 tokens (not in tokens.css)</h3>
+<p><code>--font-mono</code>, <code>--radius-3</code>, <code>--stand-max</code>, <code>--stand-col-min</code>, <code>--kit-stage-h</code>.</p>
+<p>Only the stand, the showcase stages and the docs CSS use these. When the kit switches, they move to the docs layer (<code>concept/stand.css</code> or <code>ui/kit-doc.css</code>). Until then, they stay in <code>ui/kit.css</code>, so that <code>build_stand.py</code>'s signed-token check still finds them.</p>
+<h3>Map data: 24 tokens (stay in ui/map.css)</h3>
+<p><code>--map-ratio</code>, <code>--map-land-mask</code>, <code>--map-lines-mask</code>, and each pin's <code>-x</code>, <code>-yf</code> and <code>-dy</code>. They're generated by <code>scripts/concept/build_map.py</code>, and only Race browse and the showcase load them. In step 3, <code>ui/map.css</code> loses its six design tokens (<code>--map-pin-dot</code>, <code>--map-water</code>, <code>--map-land</code>, <code>--map-lines</code>, <code>--pin-h</code>, <code>--pin-gap</code>), which are now in <code>tokens/tokens.css</code>.</p>
+<h3>New tokens with no old name</h3>
+<ul><li><strong>Primitives:</strong><ul><li>the graphite ramp: <code>--graphite-5</code>, <code>-7</code>, <code>-12</code>, <code>-17</code>, <code>-20</code>, <code>-22</code>, <code>-46</code>, <code>-47</code>, <code>-69</code>, <code>-79</code> and <code>-96</code>;</li><li><code>--black</code>, <code>--amber-78</code>, <code>--amber-83</code>, <code>--coral-68</code> and <code>--coral-21</code>;</li><li>the alphas: <code>--alpha-8</code>, <code>-60</code>, <code>-85</code>, <code>-90</code> and <code>-100</code>;</li><li>the shadow geometry: <code>--shadow-y</code>, <code>--shadow-blur</code> and <code>--shadow-spread</code>.</li></ul></li><li><strong>Splits:</strong> <code>--size-initials</code>, <code>--leading-box</code>, <code>--invalid-ring</code> and <code>--spinner-stroke</code>.</li><li><strong>Semantic roles:</strong><ul><li>grounds and levels: <code>--frame</code>, <code>--page</code>, <code>--surface</code>, <code>--raised</code>, <code>--pressed</code> and <code>--group</code>;</li><li>glass and depth: <code>--glass-rim</code> and <code>--float-shadow</code>;</li><li>text and lines: <code>--text-primary</code>, <code>--text-secondary</code>, <code>--hairline</code> and <code>--boundary</code>;</li><li>accent: <code>--accent-fill</code>, <code>--on-accent-fill</code> and <code>--accent-ink</code>;</li><li>error: <code>--error-surface</code>.</li></ul></li></ul>
+<h3>The semantic level: 27 color roles</h3>
+<div class="tbl-wrap"><table><thead><tr><th>Role</th><th>Primitive</th><th>Why it's its own role (the light-appearance test)</th></tr></thead><tbody><tr><td><code>--frame</code></td><td><code>--graphite-5</code></td><td>behind an open sheet, iOS light stays black; the tab bar doesn't</td></tr><tr><td><code>--page</code></td><td><code>--graphite-7</code></td><td>the page</td></tr><tr><td><code>--surface</code></td><td><code>--graphite-12</code></td><td>cards and row groups</td></tr><tr><td><code>--raised</code></td><td><code>--graphite-17</code></td><td>fills on a surface</td></tr><tr><td><code>--pressed</code></td><td><code>--graphite-20</code></td><td>an existing state role, kept for Lesson 9</td></tr><tr><td><code>--group</code></td><td><code>--graphite-20</code></td><td>a group rises lighter in light, while a press goes darker</td></tr><tr><td><code>--glass-bar</code>, <code>--glass-ground</code>, <code>--glass-sheet</code></td><td>mixes</td><td>glass is its own material in light; the sheet doesn't follow <code>--raised</code></td></tr><tr><td><code>--glass-rim</code>, <code>--scrim</code>, <code>--float-shadow</code></td><td>mixes of <code>--graphite-96</code> / <code>--black</code></td><td>light changes the scrim and the shadow differently, so the shadow doesn't reuse <code>--scrim</code></td></tr><tr><td><code>--text-primary</code>, <code>--text-secondary</code>, <code>--text-disabled</code></td><td>graphite</td><td>the text levels; also absorb <code>--focus</code> and <code>--control-tint</code> (no split in light)</td></tr><tr><td><code>--chip-text</code></td><td><code>--graphite-79</code></td><td>single use</td></tr><tr><td><code>--hairline</code>, <code>--boundary</code></td><td>graphite</td><td>a decorative line vs a 3:1 boundary</td></tr><tr><td><code>--accent-fill</code>, <code>--on-accent-fill</code></td><td>amber, <code>--graphite-7</code></td><td>the amber fill and the dark text on it stay in light, while the page turns light</td></tr><tr><td><code>--accent-ink</code></td><td><code>--amber-78</code></td><td>amber text on a light bar needs a darker amber than the fill; the bar action and the current tab would change together</td></tr><tr><td><code>--accent-hover</code></td><td><code>--amber-83</code></td><td>a state, kept whole for Lesson 9</td></tr><tr><td><code>--error</code></td><td><code>--coral-68</code></td><td>the icon, the invalid ring and destructive text take the same red in iOS light</td></tr><tr><td><code>--error-surface</code></td><td><code>--coral-21</code></td><td>single use</td></tr><tr><td><code>--map-water</code>, <code>--map-land</code>, <code>--map-lines</code></td><td>graphite</td><td>single use</td></tr></tbody></table></div>
+<p><strong>Single-use roles, for the step 6 check:</strong> <code>--chip-text</code> (<code>.sport-tag</code>), <code>--error-surface</code> (<code>.inline-error</code>, <code>.form-alert</code>), <code>--map-water</code> (<code>.map-placeholder</code>, the ring of <code>.map-pin::before</code>), <code>--map-land</code> (<code>.map-placeholder::before</code>) and <code>--map-lines</code> (<code>.map-placeholder::after</code>). Each carries the comment "single use, a role because the theme changes it".</p>
+<p><strong>Not merged, recorded:</strong></p>
+<ul><li><strong>The three chip heights</strong> (24, 32, 22): three different components.</li><li><strong>The hover and pressed steps:</strong> +1 on rows and controls, +2 on cards. These are states, for Lesson 9.</li><li><strong>The three capsule radii:</strong> tried as one formula, rejected because it changes pixels. At 200% text the List/Map track is 47px tall and today keeps a 22px radius; a capsule would make it 23.5px.</li><li><strong>The spinner's circle</strong> borrows <code>--radius-avatar</code>: recorded, not split.</li></ul>
+<h3>What steps 3–4 must rename outside ui/kit.css</h3>
+<div class="tbl-wrap"><table><thead><tr><th>Where</th><th>What names an old token</th></tr></thead><tbody><tr><td><code>build_stand.py</code>: <code>PAIRS</code></td><td><code>bg-*</code>, <code>line</code>, <code>field-line</code>, <code>text-1</code>, <code>text-2</code>, <code>accent</code>, <code>on-accent</code>, <code>error-bg</code>, <code>focus</code>, <code>invalid</code>, <code>destructive</code> and <code>control-tint</code>. The last four now resolve to <code>--text-primary</code> or <code>--error</code>, so their pairs become duplicates of existing ones.</td></tr><tr><td><code>build_stand.py</code>: <code>GLASS_PAIRS</code>, <code>glass_parts()</code>, <code>SCRIM_A</code></td><td><code>glass_parts()</code> expects <code>color-mix(in srgb, var(--A) var(--B), transparent)</code>; the glass roles keep that form (<code>--B</code> is now <code>--alpha-85</code> or <code>--alpha-90</code>). <code>SCRIM_A</code> parses <code>rgba(0, 0, 0, a)</code>, but <code>--scrim</code> is now a <code>color-mix</code> with <code>--black</code>, so the parse must change.</td></tr><tr><td><code>build_stand.py</code>: rule 1</td><td><code>selectors_using('accent', 'accent-hover')</code> → <code>accent-fill</code>, <code>accent-ink</code>, <code>accent-hover</code>; <code>ACCENT_OK</code> is unchanged (the same selectors)</td></tr><tr><td><code>build_stand.py</code>: rule 3a</td><td><code>BG_LEVELS</code> → the graphite primitives or <code>--frame</code> … <code>--pressed</code>; the line-as-fill regex → <code>--hairline</code>, <code>--boundary</code></td></tr><tr><td><code>build_stand.py</code>: rule 3b</td><td><code>tok('accent')</code> → <code>tok('amber-78')</code>; <code>RULE_3B_OVERRIDE</code> stays bound to <code>#F5B649</code></td></tr><tr><td><code>build_stand.py</code>: signed tokens</td><td>the stand must sign every primitive and role in <code>tokens/tokens.css</code> (it reads <code>:root</code> blocks from the kit and map files today)</td></tr><tr><td><code>build_stand.py</code>, <code>lesson_page.py</code>, <code>build_concept_overview.py</code></td><td>read <code>ui/kit.css</code> for <code>TOK</code>; they'll need <code>tokens/tokens.css</code></td></tr><tr><td><code>build_design_sidecar.py</code></td><td>reads <code>--dur-<em></code> and <code>--ease-</em></code> from <code>ui/kit.css</code></td></tr><tr><td><code>DESIGN.md</code> frontmatter, <code>.impeccable/design.json</code></td><td>the hex values under the old names</td></tr><tr><td><code>concept/stand.css</code>, <code>concept/specimens.css</code>, <code>ui/kit-doc.css</code> (the stages)</td><td>the old names (<code>--bg-0</code>, <code>--line</code>, <code>--accent</code>, <code>--text-*</code> …); they need the mapping too, or an alias layer while they move</td></tr><tr><td><code>.kit-tabbar &gt; .bottom-nav</code></td><td>still in two product selectors in <code>ui/kit.css</code> (see "What changed in step 2")</td></tr></tbody></table></div></div></details><details class="fold"><summary>15 checks stop the build <span class=fold-sub>color rules in both themes, contrast, signed tokens, components, links, overflow</span></summary><div class="fold-body"><ol class="checks"><li>Color rule 1: the accent only where you act or where you are (<code>ACCENT_OK</code>).</li><li>Color rule 2: no success color on results; on the stand's markup, no result carries a success mark and the proof line states its source.</li><li>Color rule 3a: the depth of dark, background levels in even steps.</li><li>Contrast: every text pair at WCAG AA, glass against its worst case behind it.</li><li>Signed tokens: every token in <code>tokens/tokens.css</code>, <code>ui/map-data.css</code> and the docs layer's files has a row on the stand with its reason.</li><li>Overflow: every wireframe state at 390, at 320 and at 390 with 200% text (Race browse with 0–5 filters, the sheet, the map, the alerts): nothing past the screen edge, nothing scrolling sideways but the chips row.</li><li>One line: Sort, Filters, List/Map, the filter chips and Clear all filters never wrap.</li><li>Fonts: every family and weight a page renders text in has loaded, so the real fonts are measured.</li><li>Scripts and styles: no page script throws, every deferred stylesheet applies, and no file a page requests answers 404.</li><li>The showcase against the inventory: every inventory component has a Showcase map row, a specimen and every state it lists (<code>scripts/check_kit.py</code>).</li><li>The showcase's words: every word in a specimen is in <code>microcopy.md</code> (<code>scripts/check_kit.py</code>).</li><li>The screens on the kit: every screen, the showcase and the shell link <code>tokens/tokens.css</code> then <code>components/index.css</code> (Race browse and the showcase also <code>ui/map-data.css</code>); no screen has a style block, an inline style or a class <code>components/index.css</code> doesn't define (<code>scripts/check_kit.py</code>).</li><li>Links: no page links a file that doesn't exist (<code>scripts/check_links.py</code>, every page of <code>public/</code> and of the mirrored source folders; the frozen <code>_wireframe/</code> excepted).</li><li>Components: no component reads a color primitive or writes a hex, px or font name (<code>scripts/build_components.py</code>); since step 5, no named or functional color and no fixed <code>color-scheme</code> either.</li><li>Both themes (step 5): every contrast pair and glass pair (also solid, as under Reduce Transparency) holds in dark and in the light stress-test theme; in each theme only the accent roles take an amber value and no role takes a success color; 3b reports both themes' fill and ink. Rule 3a stays dark-only (<code>build_stand.py</code>).</li></ol><p class="note">Listed in <code>CLAUDE.md</code> → UI assembly; run by <code>scripts/concept/build_stand.py</code>. The token rules they enforce: <code>CLAUDE.md</code> → Tokens.</p></div></details><details class="fold"><summary>The final check (step 6): the defect table <span class=fold-sub>4 defects, each fixed without a pixel changed</span></summary><div class="fold-body"><p>What was checked: <code>tokens/tokens.css</code>, <code>components/</code> and every state of the 35 screens, plus <code>/impeccable audit</code> (its detector over every screen page, each finding checked against the screens). Contrast was checked twice:</p>
+<ul><li>the build's 106 pairs plus the glass pairs, in both themes;</li><li>a browser scan of every visible text element, in every state, in both themes: 0 below AA. A test run with an impossible threshold flagged 552 lines on Results list alone, so the scan does measure.</li></ul>
+<div class="tbl-wrap"><table><thead><tr><th>#</th><th>File</th><th>Element</th><th>What's wrong</th><th>Evidence</th><th>Fix (done in this step)</th></tr></thead><tbody><tr><td>1</td><td><code>components/date-field.css</code></td><td><code>.date-value::after</code></td><td>The date pill's tap area was the pill's own 30pt, inside a 44pt row (HIG 44pt; WCAG 2.5.8 passes)</td><td><code>inset: 0</code>; pill 108×30, button 84×22. Filters sheet on every Race browse page, and Log result → Race date</td><td><code>inset: calc((var(--target) - 100%) / -2) 0</code>: the target extends above and below to 44pt, as the filter chips' does</td></tr><tr><td>2</td><td><code>components/top-bar.css</code></td><td><code>.top-bar[data-collapse] .bar-title</code></td><td>Geometry written as a multiplier</td><td><code>padding-inline: calc(var(--target) * 3)</code>; the reason lived only in a comment</td><td>A new primitive, <code>--bar-title-inset: calc(var(--target) * 3)</code>, with its reason, signed on the stand</td></tr><tr><td>3</td><td><code>components/static-map.css</code></td><td><code>.map-pin::before</code>, the dot</td><td>A circle written as a raw <code>50%</code></td><td><code>border-radius: 50%</code> beside <code>--radius-avatar: 50%</code></td><td>One circle token: <strong><code>--radius-avatar</code> renamed <code>--radius-circle</code></strong>, read by the initials, the busy spinner (and the stand's <code>.btn</code> spinner) and the pin dot</td></tr><tr><td>4</td><td><code>wireframes/race-detail.html</code>, <code>race-detail-error.html</code></td><td><code>&lt;img class="photo"&gt;</code> in the 7 per-race blocks</td><td>No <code>src</code>: invalid HTML, and empty without JavaScript (<code>/impeccable audit</code>: <code>broken-image</code>, 14)</td><td>Only <code>data-src</code> / <code>data-srcset</code></td><td>Each <code>&lt;img&gt;</code> has <code>src</code> = its 684 JPEG with <code>loading="lazy"</code>. Hidden lazy images never load, so only the shown race's photo still loads; the page script sets the shown one to eager and gives it its sources, as before</td></tr></tbody></table></div>
+<p><strong>Checked against the screens and found to be false positives</strong> (<code>/impeccable audit</code>):</p>
+<ul><li><code>cramped-padding</code> (27, <code>ul.rows</code>): the rows sit flush in their group, iOS inset style, with 16px inside each row.</li><li><code>design-system-radius</code> (3): the sheet's <code>38px 38px 0 0</code> was misread as <code>38px0</code>.</li><li><code>em-dash-overuse</code> (Race detail): it counted one caption, repeated in 7 hidden blocks.</li><li>The busy bar buttons (31×44): inert while busy, and above WCAG 2.5.8's 24×24.</li></ul>
+<p><strong>Not defects, marked separately:</strong></p>
+<ul><li><strong>Single-use roles:</strong> <code>--map-water</code>, <code>--map-land</code>, <code>--map-lines</code>, <code>--chip-text</code> and <code>--error-surface</code>. Each is a role because the theme changes it apart from the role it shares a value with in dark; step 5 proved it.</li><li><strong>Recorded exceptions:</strong><ul><li>the 3b amber override (that exact hex; the light ink passes on its own);</li><li>Solar Linear for small glyphs;</li><li>the provisional [?] glass alphas, blur and rim;</li><li>the <code>--radius-sheet</code> and <code>--radius-alert</code> values;</li><li>the same-value splits kept on purpose.</li></ul></li><li><strong>Everything in "After the lesson"</strong> above.</li></ul></div></details><details class="fold"><summary>3 review pages <span class=fold-sub>the themes, the stand, the showcase</span></summary><div class="fold-body"><div class="card-grid"><a class="card-link" href="ui/review-theme.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Step 5 · every state in both themes</span><span class="si-desc">ui/review-theme.html →</span></a><a class="card-link" href="concept/concept.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">The stand · every token signed, contrast in both themes</span><span class="si-desc">concept/concept.html →</span></a><a class="card-link" href="ui/kit.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">The showcase · on tokens and components</span><span class="si-desc">ui/kit.html →</span></a></div></div></details><details class="fold"><summary>The record, step by step <span class=fold-sub>5 records in tokens/tokens-audit.md</span></summary><div class="fold-body"><ul class="strip"><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-2-record-2026-10-27">Step 2 record (2026-10-27)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-3-record-2026-10-27-the-classes-into-components">Step 3 record (2026-10-27): the classes into components/</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-4-record-2026-10-28-every-page-on-tokens-and-components">Step 4 record (2026-10-28): every page on tokens and components</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-5-record-2026-10-30-the-theme-stress-test">Step 5 record (2026-10-30): the theme stress test</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/tokens/tokens-audit.md#step-6-record-2026-10-30-the-final-check">Step 6 record (2026-10-30): the final check</a></li></ul></div></details></div></section>
+
+
+
+</main>
+<footer>
+  <p>Lesson 8 of 12. This page is built by <code>scripts/build_tokens_overview.py</code> · <code>scripts/lesson_page.py</code>, from the repo files it names; it is never edited by hand.</p>
+  <p>The kit is built and checked by <code>scripts/concept/build_stand.py</code> (the stand, the color rules, the contrast pairs, the signed tokens), <code>scripts/check_overflow.mjs</code> (every state at 390, 320 and 200% text) and <code>scripts/check_kit.py</code> (the showcase against the inventory and <code>microcopy.md</code>); <code>scripts/build_kit_showcase.py</code> arranges the showcase.</p>
+</footer>
+<script>
+(function () {
+  function corner(r, s) {
+    var rad = Math.PI / 180;
+    var p = (1 + s) * r;
+    var arcDeg = 90 * (1 - s);
+    var arc = Math.sin(arcDeg / 2 * rad) * r * Math.SQRT2;
+    var p34 = r * Math.tan((90 - arcDeg) / 4 * rad);
+    var c = p34 * Math.cos(45 * s * rad);
+    var d = c * Math.tan(45 * s * rad);
+    var b = (p - arc - c - d) / 3;
+    return { r: r, p: p, a: 2 * b, b: b, c: c, d: d, arc: arc };
+  }
+  function squircle(x, y, w, h, r, s) {
+    var k = corner(Math.min(r, w / 2, h / 2), s);
+    var a = k.a, b = k.b, c = k.c, d = k.d, A = k.arc, R = k.r, P = k.p, abc = a + b + c;
+    return [
+      'M', x + w - P, y,
+      'c', a, 0, a + b, 0, abc, d, 'a', R, R, 0, 0, 1, A, A, 'c', d, c, d, b + c, d, abc,
+      'L', x + w, y + h - P,
+      'c', 0, a, 0, a + b, -d, abc, 'a', R, R, 0, 0, 1, -A, A, 'c', -c, d, -(b + c), d, -abc, d,
+      'L', x + P, y + h,
+      'c', -a, 0, -(a + b), 0, -abc, -d, 'a', R, R, 0, 0, 1, -A, -A, 'c', -d, -c, -d, -(b + c), -d, -abc,
+      'L', x, y + P,
+      'c', 0, -a, 0, -(a + b), d, -abc, 'a', R, R, 0, 0, 1, A, -A, 'c', c, -d, b + c, -d, abc, -d,
+      'Z'
+    ].map(function (v) { return typeof v === 'number' ? +v.toFixed(3) : v; }).join(' ');
+  }
+  function luminance(color) {
+    var c = /^#([0-9a-f]{3})$/i.test(color) ? color.slice(1).split('').map(function (h) { return parseInt(h + h, 16); })
+      : /^#([0-9a-f]{6})$/i.test(color) ? [1, 3, 5].map(function (i) { return parseInt(color.substr(i, 2), 16); })
+      : (color.match(/[\d.]+/g) || [255, 255, 255]).slice(0, 3).map(Number);
+    var lin = c.map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+  }
+  function statusContent(bg) {
+    return luminance(bg) < 0.179 ? '#fff' : '#000';
+  }
+  var SCREEN_R = 47, SMOOTH = 0.6;
+  // As in the viewer, the status bar and home strip take the colour of the screen's own top and bottom edge,
+  // and the status bar's content and the home indicator turn light or dark with them.
+  function edgeColor(doc, y) {
+    var el = doc.elementFromPoint(doc.documentElement.clientWidth / 2, y);
+    while (el) {
+      var bg = doc.defaultView.getComputedStyle(el).backgroundColor;
+      if (bg && bg !== 'transparent' && !/rgba\(\s*0,\s*0,\s*0,\s*0\s*\)/.test(bg)) return bg;
+      el = el.parentElement;
+    }
+    return '#fff';
+  }
+  var devices = Array.prototype.slice.call(document.querySelectorAll('.phone-fig .device'));
+  devices.forEach(function (device) {
+    var bezel = parseFloat(getComputedStyle(device).paddingLeft);
+    var W = device.offsetWidth, H = device.offsetHeight, sw = W - 2 * bezel, sh = H - 2 * bezel;
+    var body = device.querySelector('.device-body');
+    body.setAttribute('viewBox', '0 0 ' + W + ' ' + H); body.setAttribute('width', W); body.setAttribute('height', H);
+    body.querySelector('.body-fill').setAttribute('d', squircle(0.5, 0.5, W - 1, H - 1, SCREEN_R + bezel, SMOOTH));
+    body.querySelector('.screen-edge').setAttribute('d', squircle(bezel - 0.5, bezel - 0.5, sw + 1, sh + 1, SCREEN_R + 0.5, SMOOTH));
+    device.querySelector('.device-screen').style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
+    var frame = device.querySelector('iframe'), bar = device.querySelector('.status-bar'), home = device.querySelector('.home-indicator');
+    frame.addEventListener('load', function () {
+      try { var doc = frame.contentDocument; bar.style.background = edgeColor(doc, 1); bar.style.color = statusContent(bar.style.background); home.style.background = edgeColor(doc, frame.contentWindow.innerHeight - 1); home.style.color = statusContent(home.style.background); }
+      catch (e) { bar.style.background = home.style.background = '#fff'; bar.style.color = home.style.color = '#000'; }
+    });
+  });
+  // Scale each device as one piece (never its internals) to fit its column, as the viewer does for the window.
+  function fit() {
+    devices.forEach(function (device) {
+      var slot = device.parentElement, W = device.offsetWidth, H = device.offsetHeight;
+      var scale = Math.min(1, slot.parentElement.clientWidth / W);
+      device.style.transform = 'scale(' + scale + ')';
+      slot.style.width = (W * scale) + 'px'; slot.style.height = (H * scale) + 'px';
+    });
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+(function () {
+  var sel = document.getElementById('theme-page'), fig = document.getElementById('theme-fig');
+  var frame = fig.querySelector('iframe'), open = document.getElementById('theme-open'), theme = 'dark';
+  var btns = Array.prototype.slice.call(document.querySelectorAll('[data-theme]'));
+  function show() {
+    frame.src = 'wireframes/' + sel.value + '.html?theme=' + theme;
+    frame.title = sel.value + ', ' + theme + ' theme';
+    open.href = 'wireframes/index.html#' + sel.value + (theme === 'light' ? '?theme=light' : '');
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-theme') === theme)); });
+  }
+  sel.addEventListener('change', show);
+  btns.forEach(function (b) { b.addEventListener('click', function () { theme = b.getAttribute('data-theme'); show(); }); });
+})();
+</script>
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+  var byId = {};
+  links.forEach(function(l){ byId[l.getAttribute('href').slice(1)] = l; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section.block[id]'));
+  if(!('IntersectionObserver' in window) || !sections.length) return;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ links.forEach(function(l){ l.classList.remove('active'); }); var l = byId[e.target.id]; if(l) l.classList.add('active'); }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px'});
+  sections.forEach(function(s){ io.observe(s); });
+})();
+</script>
+</body>
+</html>

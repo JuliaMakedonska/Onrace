@@ -73,7 +73,7 @@ for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.h
 states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
 // the pages about the kit (2026-10-26): the showcase and the lesson overviews, also at 1440 (desk); not phone screens
-const DOCS = ['../ui/kit', '../public/concept-overview', '../public/ui-overview', '../ui/shell', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
+const DOCS = ['../ui/kit', '../public/concept-overview', '../public/ui-overview', '../public/tokens-overview', '../ui/shell', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
 DOCS.forEach(d => states.push({ name: d, q: '', act: '', label: d.split('/').pop(), doc: true }));
 
 // ---------------------------------------------------------------- the check, in the page

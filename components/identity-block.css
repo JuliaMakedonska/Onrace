@@ -12,7 +12,7 @@
   width: var(--avatar-size);
   height: var(--avatar-size);
   margin-bottom: var(--space-3);
-  border-radius: var(--radius-avatar);
+  border-radius: var(--radius-circle);
   background: var(--raised);
   color: var(--text-primary);
   font-family: var(--font-text);
