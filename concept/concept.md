@@ -987,3 +987,12 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 - `DESIGN.md` → the form rows and field error (the 2px invalid ring), the proof line;
 - the build: `check_overflow.mjs`'s `CAUSES` (the new sample and causes), `check_kit.py` (the Showcase map states), and the comparison harness's state list;
 - `concept.md` → Kit feedback ("invalid and focus never look alike") stays, and is checked against the lighter ring.
+
+### The light theme stays a proof, not a feature (designer, 2026-10-30)
+
+**The decision.**
+- **The product stays dark-only (C5).** The light theme from Lesson 8 step 5 (`tokens/tokens.css` → `:root[data-theme="light"]`) stays in the architecture only as proof of the semantic layer. It's not offered to users and won't be polished.
+- **The viewer's Light / Dark control stays for the course.**
+- **The build keeps checking the light theme:** contrast and glass in both themes, and color rules 1 and 2 plus the 3b report in both (3a stays dark-only). It keeps catching any component that reads a color primitive directly, or fixes a theme of its own.
+
+**Why.** A second appearance is the cheapest test that every color goes through a role. Keeping it checked costs a block of overrides and a few seconds of build; shipping it would mean designing it.
