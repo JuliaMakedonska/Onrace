@@ -6,6 +6,7 @@ concept/key-decisions.md or build_stand.py; the page is generated, never hand-ed
 those files and every count is read from the files it describes, as on the 06 and 07 pages, whose helpers it shares.
 
 Visible: the hero (a short summary, five numbers), primitive → role → component with the amber as the real example,
+the token reference (scripts/tokens_reference.py: every token, folded, with Expand all / Collapse all),
 the light-theme stress test on a live screen with the two holes it found, the key decisions, "After the lesson".
 Folded under "More": the audit, the old → new mapping, the build checks, the step 6 table, the review pages.
 """
@@ -13,6 +14,7 @@ import os, re, glob
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_concept_overview as CO
 import lesson_page as LP
+import tokens_reference as REF
 ROOT, GH = CO.ROOT, CO.GH
 md, inline, sections, esc = CO.md, CO.inline, CO.sections, CO.esc
 read = lambda p: open(os.path.join(ROOT, p)).read()
@@ -173,7 +175,7 @@ EXTRA_CSS = CO.DEVICE_CSS + '''
   .checks{padding-left:22px}
   .checks li{margin-bottom:8px}
   .after li{margin-bottom:10px}
-'''
+''' + REF.CSS
 summary = ' '.join(re.split(r'(?<=[.!?])\s', re.sub(r'\s+', ' ', TOKENS_SEC.strip().split('\n\n', 1)[0]))[:1])
 STATS = [(N_PRIM, 'primitives', f'{N_COLOR_PRIM} of them colors, named by hue and L*'), (len(ROLES), 'semantic roles', 'color only; components read nothing else'),
          (N_FILES, 'component files', 'bundled into components/index.css'), (len(ROLE_PAIRS), 'role pairs, both themes', f'{N_USE_PAIRS} use pairs and {N_GLASS} glass pairs checked by the build'),
@@ -182,15 +184,21 @@ after_body = ('<p class="lede">Decided, and done after Lesson 8 as "keep it" cha
               + md(after) + f'<p class="note">From <a href="{GH}tokens/tokens-audit.md">tokens/tokens-audit.md</a> → After the lesson; the optional link’s full checklist is in <a href="{GH}concept/concept.md">concept/concept.md</a>.</p>')
 SECTIONS = ''.join([
     LP.section('how', 'How it works', 'tag-d', 'Primitive → role → component', diagram + LP.fold('The two levels, the rules, where they live', md(TOKENS_SEC.split('\n\n', 1)[1]), 'CLAUDE.md → Tokens')),
+    LP.section('reference', 'Reference', 'tag-d', 'Every token', REF.reference()),
     LP.section('proof', 'The proof', 'tag-p', 'The theme stress test', proof_body),
     LP.section('decisions', 'Decided', 'tag-t', 'Key decisions', LP.key_decisions(8, inline)[0]),
     LP.section('after', 'Next', 'tag-f', 'After the lesson', f'<div class="after">{after_body}</div>'),
     LP.section('more', 'More', 'tag-m', 'The rest of the record', MORE)])
-STAGES = [('how', 'How it works', 'Primitive → role → component'), ('proof', 'The proof', 'The theme stress test'), ('decisions', 'Decided', 'Key decisions'),
+STAGES = [('how', 'How it works', 'Primitive → role → component'), ('reference', 'Reference', 'Every token'), ('proof', 'The proof', 'The theme stress test'), ('decisions', 'Decided', 'Key decisions'),
           ('after', 'Next', 'After the lesson'), ('more', 'More', 'The record')]
 PAGE = LP.render(8, 'Design tokens', 'tokens-overview.html', '27–30 Oct 2026', 'Two levels of tokens, every page on them', inline(summary),
     STATS, STAGES, None, None, SECTIONS, None, None,
     ['scripts/build_tokens_overview.py', 'scripts/lesson_page.py'], extra_css=EXTRA_CSS,
-    scripts='<script>\n' + CO.DEVICE_JS + '\n' + THEME_JS + '\n</script>')
+    scripts='<script>\n' + CO.DEVICE_JS + '\n' + THEME_JS + '\n' + REF.JS + '\n</script>')
+# the reference's type samples render in the product's two families: they load from the page's <head>, as on the screens
+FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">\n')
+assert PAGE.count('</head>') == 1
+PAGE = PAGE.replace('</head>', FONTS + '</head>')
 open(os.path.join(ROOT, 'public/tokens-overview.html'), 'w').write(PAGE)
 print('tokens overview: primitives', N_PRIM, 'roles', len(ROLES), 'files', N_FILES, 'role pairs', len(ROLE_PAIRS), 'after', len(after_items), 'bytes', len(PAGE))

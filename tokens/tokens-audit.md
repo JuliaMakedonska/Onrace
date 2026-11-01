@@ -702,6 +702,8 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
 
   **The full checklist** (every screen, state, flow, `microcopy.md` row and inventory component it touches) is in `concept/concept.md` → The official result link becomes optional. All five questions are answered (2026-10-30 and 2026-11-01); nothing is open.
 
+- **For Lesson 12 (designer, 2026-11-01): common token namespaces.** Consider renaming the tokens to common namespaces (`--color-*`, `--space-*`, `--radius-*`, `--typescale-*`) for handoff and Figma variables. To consider at handoff; nothing changes now (`concept/concept.md` → For Lesson 12: common token namespaces).
+
 ### Still unknown
 
 - **The `<select>` height at 200% text** depends on whether the fonts were already cached at first layout (59 or 63px). It predates this step. Worth a look in Lesson 9, with the states.
@@ -905,3 +907,44 @@ What was checked: `tokens/tokens.css`, `components/` and every state of the 35 s
 The comparison harness ran on every screen state plus the showcase and the shell, in both themes and all five passes, against the commit before the fixes (`c2be9b2`).
 - **Screenshots:** no difference.
 - **Computed styles:** the only difference is in the date pill's `::after` box (`top`/`bottom`), which is invisible.
+
+## Step 7 record (2026-11-01): the token reference, the count guard, the showcase's theme switch
+
+Documentation and guards, modeled on a reference page the designer gave; everything is generated from `tokens/tokens.css`, and no pixel of the product changed.
+
+### What changed
+
+- **The token reference** on the Lesson 08 overview (`public/tokens-overview.html` → Reference), rendered by `scripts/tokens_reference.py` on every build. Four groups of closed folds, each group with "Expand all / Collapse all":
+  - **color primitives** as hue ladders (graphite with white and black, amber, coral), lightest first: the swatch, the hex, the L* and name from the source comment, and the roles that read it in dark and in light;
+  - **the other primitives**, one table per group of `tokens.css` with a sample: spacing and sizes as bars, radii as corners, type sizes as real text in the product's fonts (the screens' own words), durations as a moving marker that stands still under reduced motion, easings as their curve, icons as their masks, z-index, alpha and glass values listed;
+  - **semantic roles:** the dark value, the light value, and the role's source comment (what it's for, the usages it grew from);
+  - **contrast pairs** in both themes with an "Aa" or a dot sample: text (4.5:1, large text 3:1) and non-text (3:1) apart. The generated contrast comment at the end of `tokens.css` now ends each line with its kind, so the split is read, not guessed.
+- **A new build check (16): no count of a primitive.** No geometry written as `calc(var(--x) * n)` or `calc(n * var(--x))` in `tokens/tokens.css`, `components/`, `ui/map-data.css` or the docs layer. Not counts: a sign (`* -1`), a division, and the type sizes in `--type-unit`. Five values were counts; each is now a named primitive with its reason, signed on the stand:
+
+| Was | Now | Equal |
+|---|---|---|
+| `--bar-title-inset: calc(var(--target) * 3)` | `--bar-title-inset: 132px` | 3 × 44px |
+| `left: calc(var(--space-4) * 2)` (Race picker's search icon) | `--picker-search-icon-x: 32px` | 2 × 16px |
+| `box-shadow: 0 0 0 calc(var(--border) * 2) …` (the pin dot's ring) | `--map-pin-ring: 2px` | 2 × 1px |
+| `(100cqw + 2 * var(--space-4))` (the pins' full map width) | `--map-pad-inline-total: 32px` | 2 × 16px |
+| `calc(var(--tabbar-h) + var(--tabbar-gap) * 2)` (the showcase tab bar strip) | `--kit-tabbar-room: 16px` (docs layer, `ui/kit-doc.css`) | 2 × 8px |
+
+  The cost: these primitives no longer follow `--target`, `--space-4`, `--border` or `--tabbar-gap` if those change; each comment names what it was built from.
+- **A Light / Dark switch in the kit showcase** (`ui/kit.html`, under the intro): it sets `data-theme` on the page and in every tab bar frame, keeps the choice for the tab as `tokens/theme.js` does, and writes `?theme=light` into the URL. The documentation layer stays as it is; only the stages change.
+- **Decided and recorded:** no styling framework, plain CSS by hand (`concept/concept.md`, `CLAUDE.md`, a Lesson 08 key decision); for Lesson 12, common token namespaces to consider (above, After the lesson).
+- `check_overflow.mjs` also measures the overview with every fold open (390, 320, 200% text, 1440).
+- **A build-order fix found on the way:** `build_stand.py` rebuilt the lesson pages after the overflow and link checks, so both measured the pages the previous build wrote. The lesson pages are now rebuilt first. The first honest run caught two faults in the new reference, both fixed: a font sample at a weight the page doesn't load (Schibsted 400), and an iOS name with no break (`secondarySystemGroupedBackground`) pushing a ladder row past 320.
+
+### How it was checked
+
+- **The guard:** a count put back into `components/search-field.css` stopped the build with its file and line; removed, the build passes.
+- **No pixel changed:** the comparison harness against the commit before this step, every screen state plus the showcase, the shell, the stand and the review pages, 5 passes, both themes (625 state-passes each). On the screens no computed style changed; screenshots differ only in the known map render noise (under 60 pixels, Δ ≤ 7) and, once, a text caret (two clean re-runs). The showcase and the stand differ by their new switch and rows; the review pages, untouched, change height between passes in both directions (lazy loading), as before.
+- **The build passes:** every check, 228 of 228 tokens signed, overflow in 337 states (the overview's own two among them, closed and with every fold open), 3,852 links.
+- **The reference** looked at with every fold open at 1280, 390 and 320 (no sideways scroll, no script error). On a phone each table row becomes a small card.
+- **The showcase switch:** Light sets the page, the six tab bar frames, the URL and the tab's memory; Dark clears them.
+
+### Still unknown
+
+- The type samples' words are the screens' own, picked by hand in `scripts/tokens_reference.py`; they don't follow a copy change.
+- The reference draws a glass role at its own tint; its ratio is measured over the worst case behind it, which the sample doesn't show.
+- The overflow check measures the overview in its own dark page only, and the showcase in dark only.

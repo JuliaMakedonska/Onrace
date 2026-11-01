@@ -129,7 +129,11 @@ intro = (f'<p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: {len
          f'every state on its own stage, styled by <a href="../tokens/tokens.css"><code>tokens/tokens.css</code></a> and <a href="../components/index.css"><code>components/</code></a> alone. '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/inventory.md">The inventory</a> · '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/tree/main/components">components/ on GitHub</a></p>')
-main = ['<main class="kd-main">', '  ' + intro, '', '  <div class="kit-item kd-shell" id="shell-card" data-names="shell tab bar large title">', shell.replace('  <section', '  <section', 1), '  </div>']
+# the theme switch (Lesson 8, 2026-11-01): the stress test from step 5 on every specimen at once. Light is a proof only (C5)
+THEME = ('<div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span>'
+         '<button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button>'
+         '<span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>')
+main = ['<main class="kd-main">', '  ' + intro, '  ' + THEME, '', '  <div class="kit-item kd-shell" id="shell-card" data-names="shell tab bar large title">', shell.replace('  <section', '  <section', 1), '  </div>']
 for r in ROLES:
     main.append(f'\n  <!-- ================================================================ {r} -->\n'
                 f'  <section class="kit-section" id="{slug(r)}" aria-labelledby="{slug(r)}-h">\n    <h2 id="{slug(r)}-h">{r} <span>{len(specs_by_role[r])}</span></h2>\n\n'
@@ -173,6 +177,20 @@ JS = '''<script>
     var open = menu.getAttribute('aria-expanded') !== 'true';
     menu.setAttribute('aria-expanded', String(open)); nav.classList.toggle('is-open', open);
   });
+  // the theme: <html data-theme="light"> here and in each tab bar frame; kept for the tab as tokens/theme.js keeps it, and in the URL
+  var themeBtns = Array.prototype.slice.call(document.querySelectorAll('[data-kd-theme]'));
+  function docs() { return [document].concat(Array.prototype.slice.call(document.querySelectorAll('iframe')).map(function (f) { try { return f.contentDocument; } catch (e) { return null; } }).filter(function (d) { return d && d.documentElement; })); }   // a frame still loading has no root yet; its load event applies the theme
+  function setTheme(t, save) {
+    docs().forEach(function (d) { if (t === 'light') d.documentElement.setAttribute('data-theme', 'light'); else d.documentElement.removeAttribute('data-theme'); });
+    themeBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-kd-theme') === t)); });
+    if (!save) return;
+    try { sessionStorage.setItem('onrace-theme', t); } catch (e) {}
+    try { var u = new URL(location.href); if (t === 'light') u.searchParams.set('theme', 'light'); else u.searchParams.delete('theme'); history.replaceState(null, '', u); } catch (e) {}
+  }
+  var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  setTheme(current, false);
+  document.querySelectorAll('iframe').forEach(function (f) { f.addEventListener('load', function () { setTheme(current, false); }); });
+  themeBtns.forEach(function (b) { b.addEventListener('click', function () { current = b.getAttribute('data-kd-theme'); setTheme(current, true); }); });
   nav.addEventListener('click', function (e) {
     if (e.target.closest('a') && window.matchMedia('(max-width: 860px)').matches) { menu.setAttribute('aria-expanded', 'false'); nav.classList.remove('is-open'); }
   });

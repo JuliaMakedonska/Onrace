@@ -193,6 +193,7 @@ Lesson 7 (2026-10-18 to 2026-10-25): every screen assembled from one kit, in nat
 13. Links: no page links a file that doesn't exist (`scripts/check_links.py`, every page of `public/` and of the mirrored source folders; the frozen `_wireframe/` excepted).
 14. Components: no component reads a color primitive or writes a hex, px or font name (`scripts/build_components.py`); since step 5, no named or functional color and no fixed `color-scheme` either.
 15. Both themes (step 5): every contrast pair and glass pair (also solid, as under Reduce Transparency) holds in dark and in the light stress-test theme; in each theme only the accent roles take an amber value and no role takes a success color; 3b reports both themes' fill and ink. Rule 3a stays dark-only (`build_stand.py`).
+16. No count of a primitive (Lesson 8, 2026-11-01): no geometry written as `calc(var(--x) * n)` or `calc(n * var(--x))` in `tokens/tokens.css`, `components/`, `ui/map-data.css` or the docs layer; each such value gets its own named primitive. A sign (`* -1`), a division (halves for capsules and centering) and the type sizes in `--type-unit` (Dynamic Type, G28) aren't counts (`build_stand.py`).
 
 - **Accessible names start with the visible label** (WCAG 2.5.3); text changes go through `microcopy.md` first, then `scripts/build_voice_html.py`.
 - **The record:** `concept.md` → Native iOS, step by step (3a, 3b, 5, Consolidation, the markup passes, Overflow fix, Step 6, Step 7). Before/after of each step: `ui/review-3b.html`, `ui/review-step5.html`, `ui/review-markup.html`, `ui/review-markup-2.html`, `ui/review-overflow.html`, `ui/review-step6.html`, `ui/review-step7.html`, and the lesson pages and showcase restructure (2026-10-26): `ui/review-lessons.html`, `ui/review-overviews.html`, `ui/review-kit-sheet.html`; the photos' round 3: `visuals/review-round3.html`.
@@ -218,7 +219,7 @@ Lesson 8 (2026-10-27 to 2026-10-30): the kit's values as two levels of design to
 
 **The rules:**
 - **Color only through roles:** no component reads a color primitive.
-- **Geometry from primitives:** radius, spacing and size come from tokens, never a number in a class. The only numbers left are math inside `calc()`.
+- **Geometry from primitives:** radius, spacing and size come from tokens, never a number in a class. The only numbers left are math inside `calc()`: a sign, a half, the type scale in type units. Never a count of a primitive (build check 16).
 - **No hex, px or font name in a component,** no named or functional color (`black`, `white`, `rgb()`), and no fixed `color-scheme`.
 - **Hex lives in one file:** `DESIGN.md`'s frontmatter values and `.impeccable/design.json` are generated from `tokens/tokens.css` (`scripts/build_design_sidecar.py`).
 
@@ -229,8 +230,13 @@ Lesson 8 (2026-10-27 to 2026-10-30): the kit's values as two levels of design to
 - **Signed tokens:** every token in `tokens/tokens.css`, `ui/map-data.css` and the docs layer has a row on the stand.
 - `check_kit.py`: every screen on tokens and components, every class defined.
 - `check_links.py`: no page links a missing file.
+- **No count of a primitive:** a value like three targets is its own named primitive (`--bar-title-inset: 132px`), never `calc(var(--target) * 3)` in a token or a component.
 
 **The "keep it" rule** (UI assembly): a value change goes into the token of the right level, a primitive or a role, never into a component; a markup change goes into the showcase and every screen where the component stands.
+
+**No styling framework (designer, 2026-11-01):** plain CSS by hand, the values in `tokens/tokens.css` and one file per component in `components/`; no Tailwind, CSS-in-JS, preprocessor or token pipeline. The point is to understand how tokens, components and themes work (`concept/concept.md` → No styling framework). For Lesson 12, to consider and not decided: common namespaces (`--color-*`, `--space-*`, `--radius-*`, `--typescale-*`) for handoff and Figma variables.
+
+**The reference:** every token, rendered from `tokens/tokens.css` on each build, is on the Lesson 08 overview (`scripts/tokens_reference.py`): color primitives as hue ladders with the roles that read each one in both themes, the other primitives with a visual sample, the semantic roles in both themes with their source comments, and every contrast pair. The kit showcase (`ui/kit.html`) has its own Light / Dark switch.
 
 **The light theme is a proof only (designer, 2026-10-30):** the product stays dark-only (C5). The light block isn't offered to users and won't be polished. The viewer's Light / Dark control stays for the course, and the build keeps checking light, so a component that bypasses the roles is caught. Step 5 found two such holes and fixed them in the components.
 

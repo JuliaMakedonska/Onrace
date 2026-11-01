@@ -44,7 +44,7 @@
   position: absolute;
   z-index: var(--z-float);
   left: var(--x);
-  top: calc(50% + (var(--yf) - 0.5) * (100cqw + 2 * var(--space-4)) * var(--map-ratio));
+  top: calc(50% + (var(--yf) - 0.5) * (100cqw + var(--map-pad-inline-total)) * var(--map-ratio));
   transform: translate(-50%, calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
   min-width: var(--target);
   height: var(--target);
@@ -75,7 +75,7 @@
   transform: translate(-50%, -50%);
   border-radius: var(--radius-circle);   /* step 6: the dot read a raw 50% */
   background: var(--text-primary);
-  box-shadow: 0 0 0 calc(var(--border) * 2) var(--map-water);
+  box-shadow: 0 0 0 var(--map-pin-ring) var(--map-water);
   pointer-events: none;
 }
 .map-pin::after {   /* leader line from the label's edge to the dot */

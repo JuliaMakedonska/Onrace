@@ -19,7 +19,7 @@
   mask: var(--icon-search-field) center / contain no-repeat;
   pointer-events: none;
 }
-.phone-screen > form.search::before { left: calc(var(--space-4) * 2); }
+.phone-screen > form.search::before { left: var(--picker-search-icon-x); }
 .race-search input, .phone-screen > form.search input[type="search"] {
   width: 100%;
   min-height: var(--target);

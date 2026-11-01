@@ -11,6 +11,7 @@
 :root {
   --radius-3: 12px;        /* a stage's corners */
   --kit-stage-h: 600px;    /* stage for the sheet, the map and the alert */
+  --kit-tabbar-room: 16px; /* the tab bar strip's room round the bar: its 8px gap above and below (was var(--tabbar-gap) * 2; step 7 guard) */
 }
 .kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
   width: 100%;
@@ -22,7 +23,7 @@
   overflow: hidden;
 }
 .kit-frame--flush { padding: 0; }
-.kit-tabbar { position: relative; height: calc(var(--tabbar-h) + var(--tabbar-gap) * 2); }   /* the floating tab bar, on its own strip in the showcase */
+.kit-tabbar { position: relative; height: calc(var(--tabbar-h) + var(--kit-tabbar-room)); }   /* the floating tab bar, on its own strip in the showcase */
 /* the tab bar specimens (Lesson 8, step 3): each is a small screen of its own in a frame, so the bar is the body's child as on a
    screen (body > .bottom-nav) and the product needs no showcase selector. The frame's document is transparent: the stage's
    ground and outline show through, as they did around the bar before. */
@@ -68,6 +69,13 @@
 /* doc links and focus only: the specimens keep the product's own (an amber button's text is --on-accent, not doc white) */
 :is(.kd-side, .kd-intro, .kd-meta, .kd-notes) a { color: var(--d-text); }
 :is(.kd-side, .kd-intro, .kd-meta, .kd-notes) :focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
+/* the theme switch under the intro (2026-11-01): the step 5 stress test on every specimen; the doc layer stays as it is */
+.kd-theme { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 28px; }
+.kd-theme-l { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--d-faint); }
+.kd-theme button { min-height: 44px; padding: 0 16px; border: 1px solid var(--d-border); border-radius: 999px; background: var(--d-elev); color: var(--d-dim); font: 700 13px var(--d-font); cursor: pointer; }
+.kd-theme button[aria-pressed="true"] { background: var(--d-elev-2); color: var(--d-text); border-color: var(--d-text); }
+.kd-theme button:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
+.kd-theme-note { flex-basis: 100%; font-size: 13px; color: var(--d-faint); }
 .kd { display: grid; grid-template-columns: var(--d-side) minmax(0, 1fr); min-height: 100vh; }
 
 /* the sidebar */

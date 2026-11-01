@@ -75,6 +75,7 @@ states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%
 // the pages about the kit (2026-10-26): the showcase and the lesson overviews, also at 1440 (desk); not phone screens
 const DOCS = ['../ui/kit', '../public/concept-overview', '../public/ui-overview', '../public/tokens-overview', '../ui/shell', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
 DOCS.forEach(d => states.push({ name: d, q: '', act: '', label: d.split('/').pop(), doc: true }));
+states.push({ name: '../public/tokens-overview', q: '', act: 'open', label: 'tokens-overview, every fold open (the token reference)', doc: true });   // 2026-11-01: the reference's tables and ladders are measured open
 
 // ---------------------------------------------------------------- the check, in the page
 const ONE_LINE = '.sort-toggle, .filters-trigger, .controls .view-btn, .chips-row .chip, .clear-all';   // the controls bar's; a segment in content (Sign in | Create account) may wrap at 200% text rather than truncate (step 7)
@@ -178,6 +179,7 @@ for (const [w, h, text, docsOnly] of [[390, 844, 16], [320, 568, 16], [390, 844,
     await Promise.race([loaded, sleep(5000)]);
     await sleep(150);
     if (s.act === 'map') await evaluate(`document.querySelector('.view-btn[data-view="map"]')?.click()`);
+    if (s.act === 'open') await evaluate(`document.querySelectorAll('details').forEach(d => { d.open = true; })`);
     if (s.act === 'sheet') await evaluate(`document.querySelector('.filters-trigger')?.click()`);
     if (s.act.startsWith('click:')) await evaluate(`document.querySelector(${JSON.stringify(s.act.slice(6))})?.click()`);
     if (s.act) await sleep(350);

@@ -901,6 +901,7 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 - Real devices: every check ran in Chrome; Safari and iPhone (the date pill's `showPicker()`, glass, scroll-edge bars, the clipboard) are untested. → Lesson 10 (Responsive).
 - The motion values (the sheet's slide, the title's fade, the skeleton pulse) are set but never reviewed as motion. → Lesson 11 (Animation & micro-interactions).
 - The static map: the interactive Map (Leaflet) is deferred to implementation. → Lesson 12 (Handoff).
+- Common token namespaces (`--color-*`, `--space-*`, `--radius-*`, `--typescale-*`) for handoff and Figma variables: to consider, not decided (2026-11-01; below, For Lesson 12). → Lesson 12 (Handoff).
 
 
 ### The official result link becomes optional (designer, 2026-10-30; for after Lesson 8)
@@ -1009,3 +1010,18 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 - **The build keeps checking the light theme:** contrast and glass in both themes, and color rules 1 and 2 plus the 3b report in both (3a stays dark-only). It keeps catching any component that reads a color primitive directly, or fixes a theme of its own.
 
 **Why.** A second appearance is the cheapest test that every color goes through a role. Keeping it checked costs a block of overrides and a few seconds of build; shipping it would mean designing it.
+
+### No styling framework: plain CSS by hand (designer, 2026-11-01)
+
+**The decision.** Onrace uses no styling framework: no Tailwind, no CSS-in-JS, no preprocessor and no token pipeline such as Style Dictionary. The look is plain CSS written by hand: the values in `tokens/tokens.css`, one file per component in `components/`, bundled by our own short script (`scripts/build_components.py`).
+
+**Why.** The point of the course is to understand how tokens, components and themes work. A framework would hide exactly that: where a value lives, how a role swaps in a second theme, and what the cascade does. Our own checks in `scripts/concept/build_stand.py` enforce the rules a framework would otherwise impose.
+
+**What it means.** A new value goes into `tokens/tokens.css` and a new class into its file in `components/`, by the "keep it" rule.
+
+### For Lesson 12: common token namespaces (designer, 2026-11-01; not now)
+
+**To consider at handoff, not now.** Rename the tokens to common namespaces for handoff and Figma variables: `--color-*` for the color primitives and roles, `--space-*`, `--radius-*` and `--typescale-*` for the type sizes.
+- **Why:** developers and Figma variables expect groups by kind. Today a color primitive is named by hue and L* alone (`--amber-78`), and a type size is `--size-*`.
+- **What it would touch:** every `var()` in `components/`, the old → new mapping in `tokens/tokens-audit.md`, the stand's signed rows, `DESIGN.md`, the sidecar generator, and the build checks that read token names.
+- **Not decided:** whether the roles take the prefix too (`--color-accent-fill`) and whether the L* names stay inside it (`--color-amber-78`). Nothing changes until Lesson 12.
