@@ -15,7 +15,8 @@
 
    Not here:
    - the docs layer's values (--font-mono, --stand-max, --stand-col-min, --radius-3, --kit-stage-h);
-     they go to the docs layer when the kit switches;
+     they go to the docs layer when the kit switches. One exception, --kit-tabbar-room, read only by the showcase: it is a
+     count of --tabbar-gap, and a count is defined only here (build check 16);
    - the map's generated data (Natural Earth masks, --map-ratio, each pin's x, y and label offset): it stays in a data
      file linked only where the static map shows (ui/map-data.css), so other
      screens don't download 110 KB of masks. */
@@ -191,12 +192,13 @@
   --tabbar-h: 64px;
   --tabbar-inset: var(--space-4);
   --tabbar-gap: var(--space-2);
+  --kit-tabbar-room: calc(var(--tabbar-gap) * 2);   /* read only by the showcase (ui/kit-doc.css): the tab bar strip's room round the bar, its gap above and below. Here, not in the docs layer, because a count of a primitive is defined only in this file (build check 16, 2026-11-01) */
   --tabbar-clear: calc(var(--tabbar-h) + var(--tabbar-gap) + var(--safe-bottom));
   --sheet-gap-top: var(--space-3);
   --sheet-large: calc(100% - var(--safe-top) - var(--sheet-gap-top));
   --glass-blur: 20px;       /* [?] not from Apple's kit */
-  --bar-title-inset: 132px;   /* the collapsed small title's side inset: three targets (3 × --target, 44px) clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
-  --picker-search-icon-x: 32px;   /* Race picker: the search icon's left edge, the form's 16px gutter plus the field's own 16px inset (was calc(var(--space-4) * 2); a named primitive, not a count, step 7 guard, 2026-11-01) */
+  --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
+  --picker-search-icon-x: calc(var(--space-4) * 2);   /* Race picker: the search icon's left edge, the form's 16px gutter plus the field's own 16px inset, so it follows the spacing step (named 2026-11-01; was a count in components/search-field.css) */
   --avatar-size: 80px;
   --alert-width: 270px;
   --shadow-y: 12px;         /* the float shadow's geometry (its color is the semantic --float-shadow) */
@@ -225,8 +227,8 @@
   --map-pin-dot: 10px;
   --pin-h: 22px;            /* pin label height (Drift 2: 22 against the format chip's 24, recorded) */
   --pin-gap: 6px;
-  --map-pin-ring: 2px;      /* the ring of map water round a pin's dot, two hairlines wide (was calc(var(--border) * 2); step 7 guard, 2026-11-01) */
-  --map-pad-inline-total: 32px;   /* the map's padding on both sides (16 + 16): 100cqw is its content box, so a pin adds this back to reach the mask's full width (was 2 * var(--space-4); step 7 guard, 2026-11-01) */
+  --map-pin-ring: calc(var(--border) * 2);   /* the ring of map water round a pin's dot, two hairlines wide (named 2026-11-01; was a count in components/static-map.css) */
+  --map-pad-inline-total: calc(var(--space-4) * 2);   /* the map's padding on both sides (its own --space-4, twice): 100cqw is its content box, so a pin adds this back to reach the mask's full width (named 2026-11-01; was a count inside the pin formula) */
 
   /* =================================================================
      2. SEMANTIC: color roles

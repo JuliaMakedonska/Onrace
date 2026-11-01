@@ -285,20 +285,27 @@ _d = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_design_si
 print(_d.stdout.strip() or _d.stderr.strip())
 if _d.returncode: sys.exit('build_design_sidecar failed: the build stops')
 COMPONENTS = _read('components/index.css')   # re-read: build_components.py just rewrote it
-# No count of a primitive (Lesson 8 step 7, 2026-11-01): geometry written as calc(var(--x) * n) or calc(n * var(--x)) hides a
-# value with no name and no reason. Each such value gets its own named primitive. Not a count: a sign (* -1), a division
-# (halves for capsules and centering), and the type scale's sizes in --type-unit, which is how text follows Dynamic Type (G28).
+# Counts of a primitive name their relationship (Lesson 8 step 7, 2026-11-01; reworked the same day): a value like three
+# targets is written as calc(var(--target) * 3) only in tokens/tokens.css, as the whole definition of a named primitive with
+# its reason in a comment on the same line (--bar-title-inset: calc(var(--target) * 3); /* … */), so it follows --target.
+# Anywhere else (components/, the map data, the docs layer), and inside a longer expression in tokens.css, a count stops the
+# build. Not a count: a sign (* -1) and a division (halves for capsules and centering).
 _COUNT_FILES = ['tokens/tokens.css', 'ui/map-data.css', 'ui/kit-doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css'] + sorted(
     'components/' + f for f in os.listdir(os.path.join(ROOT, 'components')) if f.endswith('.css') and f != 'index.css')
-_counts = []
+_COUNT = r'var\(--([a-z0-9-]+)\)\s*\*\s*(-?[0-9.]+)|(-?[0-9.]+)\s*\*\s*var\(--([a-z0-9-]+)\)'
+_DEFINITION = re.compile(r'^\s*--[a-z0-9-]+:\s*calc\(\s*(?:var\(--[a-z0-9-]+\)\s*\*\s*[0-9.]+|[0-9.]+\s*\*\s*var\(--[a-z0-9-]+\))\s*\);\s*/\*.*\S.*\*/\s*$')
+_counts, _named = [], []
 for _f in _COUNT_FILES:
-    for _i, _line in enumerate(open(os.path.join(ROOT, _f)).read().split('\n'), 1):
+    _lines = open(os.path.join(ROOT, _f)).read().split('\n')
+    _semantic = next((i for i, l in enumerate(_lines) if re.fullmatch(r'\s*2\. SEMANTIC: color roles', l)), len(_lines)) if _f == 'tokens/tokens.css' else -1   # the section's own header, not the file's intro
+    for _i, _line in enumerate(_lines, 1):
         _code = re.sub(r'/\*.*?(\*/|$)', '', _line)
-        for _m in re.finditer(r'var\(--([a-z0-9-]+)\)\s*\*\s*(-?[0-9.]+)|(-?[0-9.]+)\s*\*\s*var\(--([a-z0-9-]+)\)', _code):
-            _name, _n = (_m.group(1), _m.group(2)) if _m.group(1) else (_m.group(4), _m.group(3))
-            if _name != 'type-unit' and float(_n) not in (1.0, -1.0): _counts.append(f'{_f}:{_i}: {_m.group(0)}')
-if _counts: sys.exit('Geometry written as a count of a primitive (give it its own named primitive):\n  ' + '\n  '.join(_counts))
-print('No count of a primitive:', len(_COUNT_FILES), 'files')
+        _hits = [m for m in re.finditer(_COUNT, _code) if float(m.group(2) or m.group(3)) not in (1.0, -1.0)]
+        if not _hits: continue
+        if _f == 'tokens/tokens.css' and _i <= _semantic and len(_hits) == 1 and _DEFINITION.match(_line): _named.append(_line.split(':')[0].strip()); continue
+        _counts += [f'{_f}:{_i}: {m.group(0)}' for m in _hits]
+if _counts: sys.exit('A count of a primitive outside its own definition in tokens/tokens.css (define a named primitive there, with a comment, and read it):\n  ' + '\n  '.join(_counts))
+print('Counts of a primitive:', len(_named), 'named primitives in tokens/tokens.css, none elsewhere in', len(_COUNT_FILES), 'files')
 CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit-doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css', 'tokens/tokens.css', 'components/index.css', 'ui/map-data.css')).encode()).hexdigest()[:8]
 def _stamp(path):
     # also inside a srcdoc attribute (the showcase's tab bar frames), where the quotes are &quot;
@@ -684,8 +691,8 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('bar-title-inset', 'The collapsed small title: its side inset in the bar', 'Three targets: clears “‹ Discover” at the 17px bar size, so the title never runs under the back link or the bar action', 'G4 · step 6, #25 (found 2026-10-26) · a token since Lesson 8 step 6'),
            ('avatar-size', 'Profile initials', '80px, the iOS profile size, in a circle (<code>--radius-circle</code>)', 'Kit feedback (designer, 2026-10-19): iOS avatars are circular · DESIGN.md → Shapes, the one circle'),
            ('alert-width', 'The Sign out confirm alert', '270px, the iOS alert width', 'Native iOS (HIG Alerts) · kit, 2026-10-18'),
-           ('picker-search-icon-x', 'Race picker: the search icon’s left edge', '32px: the form’s gutter plus the field’s inset', 'A named primitive, not a count of --space-4 (step 7 guard, 2026-11-01)'),
-           ('kit-tabbar-room', 'Showcase tab bar strip: room round the bar (ui/kit.html only)', '16px: the bar’s 8px gap above and below', 'Showcase layout: never in the product · step 7 guard'),
+           ('picker-search-icon-x', 'Race picker: the search icon’s left edge', '<code>--space-4</code> × 2: the form’s gutter plus the field’s inset', 'A named count, defined in tokens.css, so it follows the spacing step (check 16, 2026-11-01)'),
+           ('kit-tabbar-room', 'Showcase tab bar strip: room round the bar (ui/kit.html only)', '<code>--tabbar-gap</code> × 2: the gap above and below', 'Showcase layout: never in the product · defined in tokens.css because a count lives only there (check 16)'),
            ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (ui/kit.html only)', 'Tall enough for the Filters sheet at its large detent', 'Showcase layout: never in the product')]
 SKEL = [('skel-line', 'Meta bars (date, location, proof)', 'Same height as 12–13px meta text'),
         ('skel-title', 'Title bar height', 'Same height as the 17px item title'),
@@ -710,8 +717,8 @@ MAP_TRS = ''.join(f'<tr><td><code>--{t}</code> {v}</td><td>{u}</td><td>{w}</td><
     ('map-pin-dot', tok('map-pin-dot'), 'The dot on a race’s coordinate', 'Designer: pins at real coordinates'),
     ('pin-h', tok('pin-h'), 'Pin label height', 'Sized to the 11px label'),
     ('pin-gap', tok('pin-gap'), 'Shortest leader line from label to dot', 'Designer: labels may move, dots don’t'),
-    ('map-pin-ring', tok('map-pin-ring'), 'The ring of water round a pin’s dot', 'Keeps a dot readable on land · a named primitive, not a count of --border (step 7 guard)'),
-    ('map-pad-inline-total', tok('map-pad-inline-total'), 'The map’s padding on both sides, added back to place pins on the full-width mask', 'A named primitive, not a count of --space-4 (step 7 guard)'),
+    ('map-pin-ring', tok('map-pin-ring'), 'The ring of water round a pin’s dot', '<code>--border</code> × 2 · keeps a dot readable on land · a named count (check 16)'),
+    ('map-pad-inline-total', tok('map-pad-inline-total'), 'The map’s padding on both sides, added back to place pins on the full-width mask', '<code>--space-4</code> × 2 · a named count, so it follows the map’s padding (check 16)'),
     ('map-ratio', tok('map-ratio'), 'Map height ÷ width', 'Generated by build_map.py from the Mercator crop'),
     ('map-land-mask', 'SVG mask', 'Land shape', 'Natural Earth 1:110m, public domain · designer: static map'),
     ('map-lines-mask', 'SVG mask', 'Coastline and border shape', 'Same source; colors come from the tokens above')]) + ''.join(

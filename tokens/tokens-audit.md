@@ -919,17 +919,18 @@ Documentation and guards, modeled on a reference page the designer gave; everyth
   - **the other primitives**, one table per group of `tokens.css` with a sample: spacing and sizes as bars, radii as corners, type sizes as real text in the product's fonts (the screens' own words), durations as a moving marker that stands still under reduced motion, easings as their curve, icons as their masks, z-index, alpha and glass values listed;
   - **semantic roles:** the dark value, the light value, and the role's source comment (what it's for, the usages it grew from);
   - **contrast pairs** in both themes with an "Aa" or a dot sample: text (4.5:1, large text 3:1) and non-text (3:1) apart. The generated contrast comment at the end of `tokens.css` now ends each line with its kind, so the split is read, not guessed.
-- **A new build check (16): no count of a primitive.** No geometry written as `calc(var(--x) * n)` or `calc(n * var(--x))` in `tokens/tokens.css`, `components/`, `ui/map-data.css` or the docs layer. Not counts: a sign (`* -1`), a division, and the type sizes in `--type-unit`. Five values were counts; each is now a named primitive with its reason, signed on the stand:
+- **A new build check (16): counts of a primitive are named** (reworked the same day, designer, 2026-11-01). `calc(var(--x) * n)` or `calc(n * var(--x))` is allowed only in `tokens/tokens.css`, as the whole definition of a named primitive with its reason in a comment on the same line, so it names the relationship and follows the primitive it counts. In `components/`, the map data and the docs layer, and inside a longer expression in `tokens/tokens.css`, a count stops the build. Not counts: a sign (`* -1`) and a division. Five counts sat outside their own definition; each is now a named primitive defined in `tokens.css` by the same calc(), signed on the stand. Today 16 named counts: the 10 type sizes and `--date-col` in type units, and these five:
 
-| Was | Now | Equal |
+| Was (a count where it's used) | Now (a named count in `tokens/tokens.css`) | Today |
 |---|---|---|
-| `--bar-title-inset: calc(var(--target) * 3)` | `--bar-title-inset: 132px` | 3 × 44px |
-| `left: calc(var(--space-4) * 2)` (Race picker's search icon) | `--picker-search-icon-x: 32px` | 2 × 16px |
-| `box-shadow: 0 0 0 calc(var(--border) * 2) …` (the pin dot's ring) | `--map-pin-ring: 2px` | 2 × 1px |
-| `(100cqw + 2 * var(--space-4))` (the pins' full map width) | `--map-pad-inline-total: 32px` | 2 × 16px |
-| `calc(var(--tabbar-h) + var(--tabbar-gap) * 2)` (the showcase tab bar strip) | `--kit-tabbar-room: 16px` (docs layer, `ui/kit-doc.css`) | 2 × 8px |
+| `--bar-title-inset: calc(var(--target) * 3)` (already a named count, step 6) | unchanged | 132px |
+| `left: calc(var(--space-4) * 2)` (Race picker's search icon) | `--picker-search-icon-x: calc(var(--space-4) * 2)` | 32px |
+| `box-shadow: 0 0 0 calc(var(--border) * 2) …` (the pin dot's ring) | `--map-pin-ring: calc(var(--border) * 2)` | 2px |
+| `(100cqw + 2 * var(--space-4))` (the pins' full map width) | `--map-pad-inline-total: calc(var(--space-4) * 2)` | 32px |
+| `calc(var(--tabbar-h) + var(--tabbar-gap) * 2)` (the showcase tab bar strip, `ui/kit-doc.css`) | `--kit-tabbar-room: calc(var(--tabbar-gap) * 2)` | 16px |
 
-  The cost: these primitives no longer follow `--target`, `--space-4`, `--border` or `--tabbar-gap` if those change; each comment names what it was built from.
+  - **First version, same day, reverted:** check 16 forbade every count, and the five became raw values (`132px`, `32px`, `2px`, `32px`, `16px`), which broke their link to `--target`, `--space-4`, `--border` and `--tabbar-gap`. The designer asked for the relationship to be named instead.
+  - **`--kit-tabbar-room` is the one showcase value in `tokens/tokens.css`:** it moved from the docs layer because a count is defined only there. Its comment says only the showcase reads it.
 - **A Light / Dark switch in the kit showcase** (`ui/kit.html`, under the intro): it sets `data-theme` on the page and in every tab bar frame, keeps the choice for the tab as `tokens/theme.js` does, and writes `?theme=light` into the URL. The documentation layer stays as it is; only the stages change.
 - **Decided and recorded:** no styling framework, plain CSS by hand (`concept/concept.md`, `CLAUDE.md`, a Lesson 08 key decision); for Lesson 12, common token namespaces to consider (above, After the lesson).
 - `check_overflow.mjs` also measures the overview with every fold open (390, 320, 200% text, 1440).
@@ -937,7 +938,8 @@ Documentation and guards, modeled on a reference page the designer gave; everyth
 
 ### How it was checked
 
-- **The guard:** a count put back into `components/search-field.css` stopped the build with its file and line; removed, the build passes.
+- **The guard** stopped the build, with file and line, in each of four injected cases: a count in `components/search-field.css`, a named count with no comment in `tokens.css`, a count inside a longer expression in `tokens.css` (`--tabbar-clear`), and a named count with a comment in the docs layer (`ui/kit-doc.css`). Each was removed and the build passes.
+- **The rework changed no pixel:** compared against the first version (`ca232d8`) in both themes: every screen state, the showcase and the shell, 5 passes each (535 state-passes per theme), with no difference in a computed style or a screenshot. That covers the Race picker's search icon, the pin dots' ring, the pins' places on Map view, the collapsed bar title and the showcase tab bar strip. A full run that also took in the review pages stalled on one of them, in both themes at the same point, and was stopped; the review pages don't read the five tokens.
 - **No pixel changed:** the comparison harness against the commit before this step, every screen state plus the showcase, the shell, the stand and the review pages, 5 passes, both themes (625 state-passes each). On the screens no computed style changed; screenshots differ only in the known map render noise (under 60 pixels, Δ ≤ 7) and, once, a text caret (two clean re-runs). The showcase and the stand differ by their new switch and rows; the review pages, untouched, change height between passes in both directions (lazy loading), as before.
 - **The build passes:** every check, 228 of 228 tokens signed, overflow in 337 states (the overview's own two among them, closed and with every fold open), 3,852 links.
 - **The reference** looked at with every fold open at 1280, 390 and 320 (no sideways scroll, no script error). On a phone each table row becomes a small card.

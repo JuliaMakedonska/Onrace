@@ -11,7 +11,6 @@
 :root {
   --radius-3: 12px;        /* a stage's corners */
   --kit-stage-h: 600px;    /* stage for the sheet, the map and the alert */
-  --kit-tabbar-room: 16px; /* the tab bar strip's room round the bar: its 8px gap above and below (was var(--tabbar-gap) * 2; step 7 guard) */
 }
 .kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
   width: 100%;
