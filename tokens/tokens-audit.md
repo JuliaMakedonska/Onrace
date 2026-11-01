@@ -696,14 +696,11 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
   **When:** after Lesson 8, as one "keep it" change together with the List/Map capsule at 200% text above. That means the radius tokens in `tokens/tokens.css`, `components/segmented-control.css`, the showcase stage, C7 in `DESIGN.md`, and every screen where the control stands. Nothing changes now.
 - **The official result link becomes optional (designer, 2026-10-30).** A product decision, done after Lesson 8 in one pass. Nothing changes now.
   1. **The link is optional** on Log result. An empty link is not an error; only an invalid link (not a URL) is.
-  2. **A result without a link gets its own state** on Results list and Result detail: the proof line says so (e.g. "Self-reported · no result link yet"), with a quiet "Add link" action. The copy goes through `microcopy.md` and `voice.md`.
-  3. **The field error gets lighter, iOS style.** One coral footnote line under the field replaces the helper text while the error shows. There's no bold message in the row, and a thin ring or none, whichever matches the kit's invalid rule after review. The Field error component is shared, so New password and Profile change with it.
+  2. **A result without a link gets its own state** on Results list and Result detail: the proof line says "Self-reported · no official result link yet" (it wraps to two lines at 320 or 200% text: a caption, not a control), with an "Add official result link" action that opens a single-field sheet. On Result detail that action replaces "Open official result" as the primary button, and Copy link is hidden.
+  3. **The field error gets lighter, iOS style.** One coral footnote line under the field replaces the helper text while the error shows, with no ring. The Field error component is shared, so New password and Profile change with it.
+  4. **The trust model is reworded, not dropped:** the official result link is the proof; a result without it stays self-reported, with no evidence, until one is added. Job 2 becomes "log a result, add the proof now or later" (`CLAUDE.md`, the data model, `research/jtbd.md`, `sitemap.md`, in the same pass).
 
-  **The full checklist** (every screen, state, flow, `microcopy.md` row and inventory component it touches) and the questions to settle first are in `concept/concept.md` → The official result link becomes optional. The questions:
-  - the Dictionary forbids "result link";
-  - there's no edit screen for "Add link";
-  - Result detail has nothing to open without a link;
-  - the decision reverses `CLAUDE.md`'s "required source link" trust model.
+  **The full checklist** (every screen, state, flow, `microcopy.md` row and inventory component it touches) is in `concept/concept.md` → The official result link becomes optional. All five questions are answered (2026-10-30 and 2026-11-01); nothing is open.
 
 ### Still unknown
 
@@ -866,7 +863,7 @@ Onrace is dark-only (C5), so the test is a light theme: if the roles are right, 
 ### Decisions recorded first
 
 - **The light theme is a proof, not a feature.** The product stays dark-only (C5); the light theme stays in the architecture only to prove the semantic layer, and the build keeps checking it (`concept/concept.md` → The light theme stays a proof, not a feature; `DESIGN.md` → Light theme).
-- **The official result link becomes optional**, after the lesson (above, After the lesson; the checklist and the answers so far are in `concept/concept.md`).
+- **The official result link becomes optional**, after the lesson (above, After the lesson; the checklist and all five answers are in `concept/concept.md`).
 
 ### The check
 

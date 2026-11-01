@@ -45,7 +45,7 @@ def apply(path, current):
     h = open(path).read()
     h = re.sub(r'\n\s*<a href="concept-overview\.html">06 · Concept</a>', '', h)   # the single link from the first pass
     h = re.sub(r'<!-- lessons:start -->.*?<!-- lessons:end -->\n?', '', h, flags=re.S)
-    h = re.sub(r'\n  /\* Lessons bar \(scripts/lessons_nav\.py\).*?\.lessonbar a\[aria-current="page"\]\{[^}]*\}\n(  \.in-shell \.lessonbar\{display:none\}\n)?', '\n', h, flags=re.S)
+    h = re.sub(r'\n  /\* Lessons bar \(scripts/lessons_nav\.py\).*?\.lessonbar a\[aria-current="page"\]\{[^}]*\}\n(  \.in-shell \.lessonbar\{display:none\}\n)?', '', h, flags=re.S)
     assert h.count('<nav>\n') == 1, path
     h = h.replace('</style>', BAR_CSS + '</style>', 1)
     h = h.replace('<nav>\n', bar(current) + '\n<nav>\n', 1)
