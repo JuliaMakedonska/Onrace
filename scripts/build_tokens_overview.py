@@ -1,7 +1,7 @@
 """Build public/tokens-overview.html, the Lesson 8 overview (Design tokens), on the lessons' template (scripts/lesson_page.py).
 
 Run from anywhere:  python3 scripts/build_tokens_overview.py      (build_stand.py runs it after the 06 and 07 pages)
-Re-run after editing CLAUDE.md (→ Tokens), tokens/tokens.css, tokens/tokens-audit.md, components/, concept/concept.md,
+Re-run after editing CLAUDE.md (→ Tokens), design-system/tokens/tokens.css, design-system/tokens/tokens-audit.md, design-system/components/, concept/concept.md,
 concept/key-decisions.md or build_stand.py; the page is generated, never hand-edited. Every line on it is rendered from
 those files and every count is read from the files it describes, as on the 06 and 07 pages, whose helpers it shares.
 
@@ -21,11 +21,11 @@ read = lambda p: open(os.path.join(ROOT, p)).read()
 
 CLAUDE = read('CLAUDE.md')
 TOKENS_SEC = sections(CLAUDE)['Tokens']
-TOK = read('tokens/tokens.css')
-AUDIT = read('tokens/tokens-audit.md')
+TOK = read('design-system/tokens/tokens.css')
+AUDIT = read('design-system/tokens/tokens-audit.md')
 AS = sections(AUDIT)
-COMP = read('components/index.css')
-COMP_README = read('components/README.md')
+COMP = read('design-system/components/index.css')
+COMP_README = read('design-system/components/README.md')
 ST = LP.repo_stats()
 
 # ---------------------------------------------------------------- the numbers, read from the files
@@ -35,7 +35,7 @@ code = lambda s: re.sub(r'/\*.*?\*/', '', s, flags=re.S)
 N_PRIM = len(re.findall(r'^\s*--[a-z0-9-]+:', code(PRIM), flags=re.M))
 N_COLOR_PRIM = len([1 for n, v in re.findall(r'^\s*--([a-z0-9-]+):\s*([^;]+);', code(PRIM), flags=re.M) if re.match(r'#[0-9A-Fa-f]{3,8}$', v.strip())])
 ROLES = re.findall(r'^\s*--([a-z0-9-]+):', code(SEM), flags=re.M)
-N_FILES = len([f for f in glob.glob(os.path.join(ROOT, 'components/*.css')) if not f.endswith('index.css')])
+N_FILES = len([f for f in glob.glob(os.path.join(ROOT, 'design-system/components/*.css')) if not f.endswith('index.css')])
 CONTRAST = re.search(r'/\* contrast:start.*?\n(.*?)\n   contrast:end \*/', TOK, flags=re.S).group(1)
 ROLE_PAIRS = [l for l in CONTRAST.split('\n') if l.strip().startswith('--')]
 BS = read('scripts/concept/build_stand.py')
@@ -91,7 +91,7 @@ diagram = f'''<div class="dg">
     {comp('.top-bar .bar-action', 'the same component, untouched')}
   </div>
 </div>
-<p class="note">Read from <code>tokens/tokens.css</code> and <code>components/index.css</code>. In dark the fill and the ink are one amber; in light the ink takes a darker, warmer one so amber text holds AA on a light bar. The component never changes: only the role's value does.</p>'''
+<p class="note">Read from <code>design-system/tokens/tokens.css</code> and <code>design-system/components/index.css</code>. In dark the fill and the ink are one amber; in light the ink takes a darker, warmer one so amber text holds AA on a light bar. The component never changes: only the role's value does.</p>'''
 
 # ---------------------------------------------------------------- the stress test: a live screen, Light / Dark
 PAGES = sorted(os.path.basename(p)[:-5] for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html'))
@@ -109,7 +109,7 @@ proof_body = f'''<p class="lede">The proof that every color goes through a role:
     <a class="btn" id="theme-open" href="wireframes/index.html#results-list">Open it in the viewer →</a>
     <div class="holes"><h3>The two holes it found</h3>{md(holes)}</div>
   </div>
-  {CO.phone('results-list.html?theme=dark', 'Results list', [('results-list.html?theme=dark', 'Dark'), ('results-list.html?theme=light', 'Light')], 'The same page in both themes: <code>?theme=light</code> sets <code>data-theme</code>, and <code>tokens/tokens.css</code> swaps the role values.').replace('<figure class="phone-fig">', '<figure class="phone-fig" id="theme-fig">')}
+  {CO.phone('results-list.html?theme=dark', 'Results list', [('results-list.html?theme=dark', 'Dark'), ('results-list.html?theme=light', 'Light')], 'The same page in both themes: <code>?theme=light</code> sets <code>data-theme</code>, and <code>design-system/tokens/tokens.css</code> swaps the role values.').replace('<figure class="phone-fig">', '<figure class="phone-fig" id="theme-fig">')}
 </div>
 <p>The product stays dark-only. <a href="ui/review-theme.html">Every state in both themes →</a></p>'''
 THEME_JS = '''(function () {
@@ -139,13 +139,13 @@ REVIEWS = [('ui/review-theme.html', 'Step 5 · every state in both themes'), ('c
            ('ui/kit.html', 'The showcase · on tokens and components')]
 reviews_body = '<div class="card-grid">' + ''.join(
     f'<a class="card-link" href="{h}"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">{esc(t)}</span><span class="si-desc">{h} →</span></a>' for h, t in REVIEWS) + '</div>'
-RECORD = [(t, GH + 'tokens/tokens-audit.md#' + re.sub(r'[^a-z0-9 -]', '', t.lower()).replace(' ', '-'), '') for t in AS if re.match(r'Step \d record', t)]
-MORE = (LP.fold('The audit (step 1): findings', md(findings), f'{len(re.findall(r"^### ", findings, flags=re.M))} kinds of finding, from tokens/tokens-audit.md')
+RECORD = [(t, GH + 'design-system/tokens/tokens-audit.md#' + re.sub(r'[^a-z0-9 -]', '', t.lower()).replace(' ', '-'), '') for t in AS if re.match(r'Step \d record', t)]
+MORE = (LP.fold('The audit (step 1): findings', md(findings), f'{len(re.findall(r"^### ", findings, flags=re.M))} kinds of finding, from design-system/tokens/tokens-audit.md')
         + LP.fold('The old → new mapping', md(mapping), 'every kit variable and the token that replaced it')
         + LP.fold(f'{len(ST["checks"])} checks stop the build', checks_list, 'color rules in both themes, contrast, signed tokens, components, links, overflow')
         + LP.fold('The final check (step 6): the defect table', md(step6_table), '4 defects, each fixed without a pixel changed')
         + LP.fold(f'{len(REVIEWS)} review pages', reviews_body, 'the themes, the stand, the showcase')
-        + LP.fold('The record, step by step', LP.strip(RECORD), f'{len(RECORD)} records in tokens/tokens-audit.md'))
+        + LP.fold('The record, step by step', LP.strip(RECORD), f'{len(RECORD)} records in design-system/tokens/tokens-audit.md'))
 
 # ---------------------------------------------------------------- the page
 EXTRA_CSS = CO.DEVICE_CSS + '''
@@ -178,10 +178,10 @@ EXTRA_CSS = CO.DEVICE_CSS + '''
 ''' + REF.CSS
 summary = ' '.join(re.split(r'(?<=[.!?])\s', re.sub(r'\s+', ' ', TOKENS_SEC.strip().split('\n\n', 1)[0]))[:1])
 STATS = [(N_PRIM, 'primitives', f'{N_COLOR_PRIM} of them colors, named by hue and L*'), (len(ROLES), 'semantic roles', 'color only; components read nothing else'),
-         (N_FILES, 'component files', 'bundled into components/index.css'), (len(ROLE_PAIRS), 'role pairs, both themes', f'{N_USE_PAIRS} use pairs and {N_GLASS} glass pairs checked by the build'),
+         (N_FILES, 'component files', 'bundled into design-system/components/index.css'), (len(ROLE_PAIRS), 'role pairs, both themes', f'{N_USE_PAIRS} use pairs and {N_GLASS} glass pairs checked by the build'),
          (len(ST['checks']), 'build checks', 'each stops the build')]
 after_body = ('<p class="lede">Decided, and done after Lesson 8 as "keep it" changes or one product pass. Nothing changed for them in this lesson.</p>'
-              + md(after) + f'<p class="note">From <a href="{GH}tokens/tokens-audit.md">tokens/tokens-audit.md</a> → After the lesson; the optional link’s full checklist is in <a href="{GH}concept/concept.md">concept/concept.md</a>.</p>')
+              + md(after) + f'<p class="note">From <a href="{GH}design-system/tokens/tokens-audit.md">design-system/tokens/tokens-audit.md</a> → After the lesson; the optional link’s full checklist is in <a href="{GH}concept/concept.md">concept/concept.md</a>.</p>')
 SECTIONS = ''.join([
     LP.section('how', 'How it works', 'tag-d', 'Primitive → role → component', diagram + LP.fold('The two levels, the rules, where they live', md(TOKENS_SEC.split('\n\n', 1)[1]), 'CLAUDE.md → Tokens')),
     LP.section('reference', 'Reference', 'tag-d', 'Every token', REF.reference()),

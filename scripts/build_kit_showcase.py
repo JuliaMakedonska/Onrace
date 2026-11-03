@@ -5,11 +5,11 @@ The specimens stay hand-written in ui/kit.html (the "keep it" rule: a change goe
 script only (re)writes, idempotently, everything around them:
 - a sticky left sidebar: a quick filter, then the roles (Navigation, Cards and lists, Forms, Feedback, One-off) with every
   specimen under its role, the current one highlighted on scroll; on a phone it folds into a menu;
-- one short intro line (what the kit is, the counts, links to ui/inventory.md, tokens/tokens.css and components/);
+- one short intro line (what the kit is, the counts, links to ui/inventory.md, design-system/tokens/tokens.css and design-system/components/);
 - one card per specimen: a compact header in the documentation's own style (name, classes, "Used on N screens" linked to
   the viewer, the HIG link, where interaction is live), the specimen's notes folded, then its states side by side, each on
   its own stage with its label under it.
-The documentation's look is ui/kit-doc.css (the artifact pages' style); the stages are product: tokens/tokens.css + components/index.css
+The documentation's look is ui/kit-doc.css (the artifact pages' style); the stages are product: design-system/tokens/tokens.css + design-system/components/index.css
 (Lesson 8, step 3).
 """
 import os, re, glob, html as H
@@ -69,8 +69,8 @@ unmapped = [i for i in items if i not in role_of]
 assert not unmapped, ('specimens with no Showcase map row', unmapped)
 head = KIT[:KIT.index('<body')]
 head = re.sub(r'\n<link rel="stylesheet" href="kit-doc\.css[^"]*">', '', head)
-head = re.sub(r'(<link rel="stylesheet" href="\.\./components/index\.css[^"]*">)', r'\1\n<link rel="stylesheet" href="kit-doc.css">', head, count=1)   # after the components (Lesson 8, step 3); build_stand.py stamps it
-assert 'href="kit-doc.css"' in head, 'ui/kit.html: no components/index.css link to put kit-doc.css after'
+head = re.sub(r'(<link rel="stylesheet" href="\.\./design-system/index\.css[^"]*">)', r'\1\n<link rel="stylesheet" href="kit-doc.css">', head, count=1)   # after the design system (Lesson 8, step 3; one file since Lesson 9, step 1); build_stand.py stamps it
+assert 'href="kit-doc.css"' in head, 'ui/kit.html: no design-system/index.css link to put kit-doc.css after'
 shell = re.search(r'  <section class="kit-section" id="shell".*?\n  </section>\n', KIT, re.S).group(0)
 tail_from = KIT.index('<!-- /kd -->') + len('<!-- /kd -->') if '<!-- /kd -->' in KIT else KIT.index('</main>') + len('</main>')
 tail = re.sub(r'\n<script>\n/\* kd:js.*?</script>', '', KIT[tail_from:], flags=re.S)
@@ -126,9 +126,9 @@ for r in ROLES:
                 + ''.join(f'<li><a href="#{s}" data-names="{H.escape(" ".join([title_of(s)] + [x["name"] for x in rows_of[s]]).lower())}">{H.escape(title_of(s))}</a></li>' for s in specs_by_role[r]) + '</ul>')
 side += ['    </nav>', '    <p class="kd-empty" hidden>No component matches.</p>', '  </div>', '</aside>']
 intro = (f'<p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: {len(items)} specimens covering {N_COMPONENTS} inventory components, '
-         f'every state on its own stage, styled by <a href="../tokens/tokens.css"><code>tokens/tokens.css</code></a> and <a href="../components/index.css"><code>components/</code></a> alone. '
+         f'every state on its own stage, styled by <a href="../design-system/index.css"><code>design-system/index.css</code></a> alone. '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/inventory.md">The inventory</a> · '
-         f'<a href="https://github.com/JuliaMakedonska/Onrace/tree/main/components">components/ on GitHub</a></p>')
+         f'<a href="https://github.com/JuliaMakedonska/Onrace/tree/main/design-system">design-system/ on GitHub</a></p>')
 # the theme switch (Lesson 8, 2026-11-01): the stress test from step 5 on every specimen at once. Light is a proof only (C5)
 THEME = ('<div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span>'
          '<button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button>'
@@ -177,7 +177,7 @@ JS = '''<script>
     var open = menu.getAttribute('aria-expanded') !== 'true';
     menu.setAttribute('aria-expanded', String(open)); nav.classList.toggle('is-open', open);
   });
-  // the theme: <html data-theme="light"> here and in each tab bar frame; kept for the tab as tokens/theme.js keeps it, and in the URL
+  // the theme: <html data-theme="light"> here and in each tab bar frame; kept for the tab as design-system/tokens/theme.js keeps it, and in the URL
   var themeBtns = Array.prototype.slice.call(document.querySelectorAll('[data-kd-theme]'));
   function docs() { return [document].concat(Array.prototype.slice.call(document.querySelectorAll('iframe')).map(function (f) { try { return f.contentDocument; } catch (e) { return null; } }).filter(function (d) { return d && d.documentElement; })); }   // a frame still loading has no root yet; its load event applies the theme
   function setTheme(t, save) {

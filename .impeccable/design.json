@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-01T20:47:32+00:00",
+  "generatedAt": "2026-11-03T20:23:17+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -610,7 +610,7 @@
       "**Do** show every photo in black and white (`--photo-filter`), inset at 3:1 with a 4px radius.",
       "**Do** state proof as its own 13px `--text-secondary` line with one link icon: \"Self-reported · via \\<domain\\>\".",
       "**Do** step a secondary action up or down so the screen keeps exactly one filled button.",
-      "**Do** take every value from `tokens/tokens.css`, and give components semantic roles, never color primitives. Pages and the components hold no raw values.",
+      "**Do** take every value from `design-system/tokens/tokens.css`, and give components semantic roles, never color primitives. Pages and the components hold no raw values.",
       "**Do** draw icons as Solar Bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar. The small UI glyphs (back, chevrons, disclosure, the search magnifier) are Solar Linear (designer exception, step 6).",
       "**Do** keep 44px targets, a 2px `--text-primary` focus ring, and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).",
       "**Do** check text on glass against the worst case behind it, not against the glass's own tint."

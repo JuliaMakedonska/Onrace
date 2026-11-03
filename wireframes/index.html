@@ -1127,7 +1127,7 @@
   var mode = 'design';
   /* Light / Dark (Lesson 8 step 5): the light theme stress test. The theme rides in the hash like the mode
      (#race-browse?theme=light, in the workspace #04/race-browse?theme=light) and reaches the frame as ?theme=,
-     which tokens/theme.js turns into <html data-theme="light">. Dark is the default and the product's theme.
+     which design-system/tokens/theme.js turns into <html data-theme="light">. Dark is the default and the product's theme.
      The frozen Wireframe snapshot has no theme: there the switch is off. */
   var theme = 'dark';
   var queryTheme = new URLSearchParams(location.search).get('theme');   // index.html?theme=light works as an entry link too
@@ -1227,7 +1227,7 @@
     var key = frameKey();
     if (!key || !STATES[key.split('?')[0]]) return;
     mode = frameMode();   // navigation inside the frame stays in its folder, so the frame knows the mode
-    if (mode === 'design') theme = frameTheme();   // and the page knows its theme (tokens/theme.js keeps it across state changes)
+    if (mode === 'design') theme = frameTheme();   // and the page knows its theme (design-system/tokens/theme.js keeps it across state changes)
     var h = '#' + withMode(key, mode);
     if (location.hash !== h) {
       history.replaceState(null, '', h);

@@ -1025,3 +1025,28 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 - **Why:** developers and Figma variables expect groups by kind. Today a color primitive is named by hue and L* alone (`--amber-78`), and a type size is `--size-*`.
 - **What it would touch:** every `var()` in `components/`, the old → new mapping in `tokens/tokens-audit.md`, the stand's signed rows, `DESIGN.md`, the sidecar generator, and the build checks that read token names.
 - **Not decided:** whether the roles take the prefix too (`--color-accent-fill`) and whether the L* names stay inside it (`--color-amber-78`). Nothing changes until Lesson 12.
+
+## Lesson 9: the design system
+
+### Step 1: one folder, one entry point (2026-11-03)
+
+**What changed.** A move, not a copy, and no look changed.
+- `tokens/` (`tokens.css`, `theme.js`, `tokens-audit.md`, `README.md`), `components/` (56 files, `README.md`, the bundle) and `ui/map-data.css` moved into `design-system/`. Git keeps their history. The root `tokens/` and `components/` are gone, and so are `public/tokens/`, `public/components/` and `public/ui/map-data.css`.
+- **`design-system/index.css`, the entry point.** `scripts/build_components.py` generates it as `tokens/tokens.css`, then `components/index.css`, in one file. That is the order of the two `<link>`s it replaces, so the cascade is the same, and a page makes one request rather than an `@import` chain. The source files stay separate.
+- **The map data** stays a separate file, `design-system/map-data.css`, linked only by Race browse and the showcase.
+- **Empty `patterns/`, `docs/` and `examples/`** were added, and `design-system/README.md` documents the folder.
+- **Every consumer is switched** to `design-system/index.css` and `design-system/tokens/theme.js`: the 35 screens, the shell, the showcase (also its three tab bar `srcdoc` frames), the stand, the first screen, the 12 review pages and their `public/` copies. The frozen `wireframes/_wireframe/` is untouched.
+- **The scripts follow:** `build_stand.py` (paths, the `?v=` hash, the stamp, the mirror to `public/design-system/`), `build_components.py`, `check_kit.py` (a page must link `design-system/index.css` exactly once and never the two halves), `build_map.py`, `build_design_sidecar.py`, `lesson_page.py`, `tokens_reference.py`, `build_kit_showcase.py` and the three overview generators.
+
+**How it was checked.**
+1. **As text.** `tokens.css`, `theme.js`, `map-data.css` and all 56 component files are byte-identical to `a5d7959`. With comments stripped, `design-system/index.css` equals the old `tokens.css` followed by the old `components/index.css`.
+2. **In headless Chrome,** against `a5d7959` with the Lesson 8 harness: 125 states (every screen state, Race browse with 0–5 filters × list/map/sheet, the two alerts, the showcase, the shell's three tabs, the stand, the first screen's five variants, the review pages), five passes (390, 320, 200% text, Reduce Transparency, motion on), both themes: 1,250 state-passes. It compared every computed style, every box and a screenshot.
+   - **Every screen, the shell, the stand and the first screen: 0 differences** in both themes.
+   - **The showcase at 200% text** was 32px shorter once in dark and clean on a rerun: the known first-load `<select>` timing (Lesson 8 step 3).
+   - **Four review pages** change height between passes, in both directions. The old commit compared against itself shows the same thing on the same pages (lazy images), so this is noise.
+3. **The real build passes:** the color rules, the contrast pairs in both themes, 228/228 signed tokens, `check_kit`, `check_overflow` (337 states) and `check_links`.
+4. **Then the documentation text:** the showcase's intro line and four lines of the stand's prose name the new paths. Those pages were compared again, and only those text elements differ.
+
+**Still unknown.**
+- **The build order has a gap when paths change.** `check_overflow` measures the published overviews before the build mirrors the pages into `public/`, so on the first run after a path change it reads stale copies. This time the pages were mirrored by hand first. It doesn't arise when no path changes.
+- `patterns/`, `docs/` and `examples/` have no content and no rule yet.

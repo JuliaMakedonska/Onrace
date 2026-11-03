@@ -4,16 +4,15 @@ Lesson 8, step 3 (2026-10-27): the kit's component classes, one file per compone
 
 ## What a page links
 
+No page links this folder directly. Since Lesson 9 step 1 (2026-11-03), a page links `design-system/index.css`, which is `../tokens/tokens.css` followed by this folder's `index.css` in one file (`../README.md`):
+
 ```html
-<link rel="stylesheet" href="../tokens/tokens.css">       <!-- primitives + semantic color roles -->
-<link rel="stylesheet" href="../components/index.css">    <!-- every component, one file, generated -->
-<!-- Race browse and the showcase only, not render-blocking: -->
-<link rel="preload" as="style" href="../ui/map-data.css" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="../design-system/index.css">   <!-- tokens, then every component: one file, generated -->
 ```
 
-`index.css` is **generated**: edit the component files, then run `python3 scripts/build_components.py` (`scripts/concept/build_stand.py` runs it first on every build). It's one bundled file, so a page makes one request instead of an `@import` chain.
+`index.css` here is **generated** too: edit the component files, then run `python3 scripts/build_components.py` (`scripts/concept/build_stand.py` runs it on every build). The script writes this bundle, then the entry point.
 
-**Who links it (since step 4, 2026-10-28):** every page that shows the product: the 35 screens, `ui/kit.html` (the showcase), `ui/shell.html`, the stand and `concept/first-screen.html`, and the review pages (for the page's base styles). `ui/kit.css` is gone: `scripts/check_kit.py` fails if a screen, the showcase or the shell links anything else, and `scripts/check_links.py` fails if any page links a missing file.
+**Who links the entry point:** every page that shows the product: the 35 screens, `ui/kit.html` (the showcase), `ui/shell.html`, the stand, `concept/first-screen.html`, and the review pages (for the page's base styles). From step 4 (2026-10-28) to Lesson 9 step 1, they linked `tokens/tokens.css` and then this `index.css`. `scripts/check_kit.py` fails if a screen, the showcase or the shell doesn't link `design-system/index.css` once, or links a components file directly. `scripts/check_links.py` fails if any page links a missing file.
 
 ## The cascade order
 
@@ -50,12 +49,12 @@ There are 56 files. Each is named after its component in `ui/inventory.md` (keba
 - the error icon shared by `.inline-error`, `.field-error` and `.row-note.is-error` is in `inline-error.css`.
 
 **Not here:**
-- **The map's data** (Natural Earth masks, the map's ratio, each pin's place) is in `ui/map-data.css`, written by `scripts/concept/build_map.py`; the map's six design tokens (dot, label height and gap, water, land, lines) are in `tokens.css`. Only the pages that show the static map link it.
+- **The map's data** (Natural Earth masks, the map's ratio, each pin's place) is in `../map-data.css` (`ui/map-data.css` until Lesson 9 step 1), written by `scripts/concept/build_map.py`; the map's six design tokens (dot, label height and gap, water, land, lines) are in `tokens.css`. Only the pages that show the static map link it.
 - **The showcase's stages** (`.kit-frame`, `.kit-stage`, `.kit-shell`, `.kit-tabbar`) are documentation: they're in `ui/kit-doc.css`. The tab bar specimens are small screens in frames, so the bar is the body's child, as on a screen, and no product selector names the showcase.
 
 ## The theme test (step 5, 2026-10-30)
 
-A light theme overrides semantic roles in `tokens/tokens.css`, and nothing here should need to change for it. Two things did, and each is a hole now closed:
+A light theme overrides semantic roles in `../tokens/tokens.css`, and nothing here should need to change for it. Two things did, and each is a hole now closed:
 
 1. **`top-bar.css`:** the bar action's hover read `--accent-hover`, the same role as the primary fill's hover. In light, one value can't serve a fill under dark text and text on a light bar. It now reads `--accent-ink-hover` (the same value in dark).
 2. **`date-field.css`:** the native date input had `color-scheme: dark` written in, so its picker would stay dark in light. It now inherits the theme's `color-scheme` from `:root`.

@@ -1,4 +1,4 @@
-"""The token reference on the Lesson 8 overview (2026-11-01): every token in tokens/tokens.css, rendered from the file.
+"""The token reference on the Lesson 8 overview (2026-11-01): every token in design-system/tokens/tokens.css, rendered from the file.
 
 Imported by scripts/build_tokens_overview.py; nothing here is typed by hand but the sample words, which are the screens'
 own (each named where it's used). Four groups, each a run of closed folds with "Expand all / Collapse all":
@@ -13,7 +13,7 @@ own (each named where it's used). Four groups, each a run of closed folds with "
 import os, re, html
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TOK = open(os.path.join(ROOT, 'tokens/tokens.css')).read()
+TOK = open(os.path.join(ROOT, 'design-system/tokens/tokens.css')).read()
 esc = lambda s: html.escape(s, quote=True)
 code = lambda s: re.sub(r'/\*.*?\*/', '', s, flags=re.S)
 
@@ -230,13 +230,13 @@ def contrast_html():
     text, non = rows(lambda k: k != 'non-text'), rows(lambda k: k == 'non-text')
     return (fold(f'Text: {len(text)} pairs', table(['Pair', 'Dark', 'Light', 'Needs'], text, 'ref contrast'), 'an “Aa” on its background')
             + fold(f'Non-text: {len(non)} pairs', table(['Pair', 'Dark', 'Light', 'Needs'], non, 'ref contrast'), 'an edge, a dot or an icon at 3:1')
-            + '<p class="note">From the generated comment at the end of <code>tokens/tokens.css</code>, written by <code>scripts/concept/build_stand.py</code> on every build. A glass background is drawn at its own tint; its ratio is measured over the worst case behind it.</p>')
+            + '<p class="note">From the generated comment at the end of <code>design-system/tokens/tokens.css</code>, written by <code>scripts/concept/build_stand.py</code> on every build. A glass background is drawn at its own tint; its ratio is measured over the worst case behind it.</p>')
 
 # ---------------------------------------------------------------- the whole reference
 def reference():
     def group(id_, title, lede, body):
         return f'<div class="ref-group" id="{id_}"><div class="ref-head"><h3>{title}</h3><span class="ref-ctl"><button type="button" data-ref="open">Expand all</button><button type="button" data-ref="close">Collapse all</button></span></div><p class="ref-lede">{lede}</p>{body}</div>'
-    return (f'<p class="lede">Every token in <code>tokens/tokens.css</code>, rendered from the file on each build: {len(COLOR_PRIMS)} color primitives, {N_OTHER} other primitives, {len(ROLES)} semantic roles and {len(PAIRS)} contrast pairs.</p>'
+    return (f'<p class="lede">Every token in <code>design-system/tokens/tokens.css</code>, rendered from the file on each build: {len(COLOR_PRIMS)} color primitives, {N_OTHER} other primitives, {len(ROLES)} semantic roles and {len(PAIRS)} contrast pairs.</p>'
             + group('ref-color', f'Color primitives · {len(COLOR_PRIMS)}', 'Hue ladders, lightest first. Each row: the swatch, the hex, the L* and name from the source comment, and the roles that read it in each theme. A role the light block doesn’t redefine reads its dark primitive in light too.', colors_html())
             + group('ref-geometry', f'Geometry and the other primitives · {N_OTHER}', 'One table per group of <code>tokens.css</code>, in file order. Type sizes are written in type units: one unit is 1px at the default size, so they double at 200% text.', other_html())
             + group('ref-roles', f'Semantic roles · {len(ROLES)}', 'Color only. Each role names a primitive, or mixes primitives for glass, the scrim and the shadow. The last column is the role’s comment in the source.', roles_html())

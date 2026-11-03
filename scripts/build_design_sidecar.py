@@ -1,7 +1,7 @@
-"""Regenerate DESIGN.md's frontmatter values and .impeccable/design.json (the impeccable sidecar) from tokens/tokens.css.
+"""Regenerate DESIGN.md's frontmatter values and .impeccable/design.json (the impeccable sidecar) from design-system/tokens/tokens.css.
 
 Usage, from the repo root:  python3 scripts/build_design_sidecar.py      (build_stand.py runs it on every build)
-Lesson 8 step 4: hex values live in one file, tokens/tokens.css. This script first rewrites, in DESIGN.md:
+Lesson 8 step 4: hex values live in one file, design-system/tokens/tokens.css. This script first rewrites, in DESIGN.md:
   - the frontmatter's colors (every semantic role, resolved), typography (each style from its tokens), rounded and
     spacing; the components block is hand-written and only references these by name;
   - the hex in each Colors bullet (`#RRGGBB`, `--role`), from that role.
@@ -9,14 +9,14 @@ Then the sidecar. It follows impeccable's document reference, schemaVersion 2: t
 what DESIGN.md's frontmatter can't (color display names, roles, OKLCH and tonal
 ramps; type purposes; shadows; motion; breakpoints; component snippets; the
 narrative, quoted verbatim). Everything is read from DESIGN.md, except:
-  - motion and shadow values, read from tokens/tokens.css (DESIGN.md names them in prose only);
+  - motion and shadow values, read from design-system/tokens/tokens.css (DESIGN.md names them in prose only);
   - component snippets: kept from the current sidecar, and replaced by COMPONENTS
     below where the kit has changed since (step 3b and its review, 2026-10-19).
 Re-run it after every DESIGN.md change."""
 import json, math, os, re, datetime
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-TOKENS = open(os.path.join(ROOT, 'tokens/tokens.css')).read()
+TOKENS = open(os.path.join(ROOT, 'design-system/tokens/tokens.css')).read()
 DOCS = open(os.path.join(ROOT, 'concept/stand.css')).read()   # --radius-3, a docs-layer token DESIGN.md lists
 _DEF = {}
 for _src in (re.search(r':root\s*\{(.*?)\n\}', TOKENS, flags=re.S).group(1), re.search(r':root\s*\{(.*?)\n\}', DOCS, flags=re.S).group(1)):
@@ -61,7 +61,7 @@ _m = re.search(r'^colors:\n.*?(?=^components:\n)', MD, flags=re.S | re.M)
 assert _m, 'DESIGN.md: frontmatter colors … spacing before components'
 MD = MD[:_m.start()] + _gen + MD[_m.end():]
 _refs = set(re.findall(r'\{colors\.([a-z0-9-]+)\}', MD))
-assert _refs <= set(ROLES), ('DESIGN.md components reference colors tokens/tokens.css lacks', _refs - set(ROLES))
+assert _refs <= set(ROLES), ('DESIGN.md components reference colors design-system/tokens/tokens.css lacks', _refs - set(ROLES))
 # the Colors bullets: **Name** (`#RRGGBB`, `--role` …) take the role's hex
 def _bullet(m):
     v = resolve(m.group(2)); return f'(`{v}`, `--{m.group(2)}`' if re.fullmatch(r'#[0-9A-F]{6}', v, flags=re.I) else m.group(0)
@@ -207,7 +207,7 @@ COMPONENTS = {
 }
 components = [COMPONENTS.get(c['name'], c) for c in OLD.get('components', [])]
 components += [c for n, c in COMPONENTS.items() if n not in {x['name'] for x in components}]
-# the snippets' fallback values come from tokens/tokens.css too (Lesson 8 step 4): var(--name, value) takes today's role
+# the snippets' fallback values come from design-system/tokens/tokens.css too (Lesson 8 step 4): var(--name, value) takes today's role
 # and its resolved value; the old kit names map to the roles; the rim and the scrim literals become their roles
 _OLD = {'bg-bar': 'graphite-5', 'bg-0': 'page', 'bg-1': 'surface', 'bg-2': 'raised', 'bg-3': 'pressed', 'line': 'hairline',
         'field-line': 'boundary', 'text-1': 'text-primary', 'text-2': 'text-secondary', 'focus': 'text-primary',

@@ -16,15 +16,15 @@ _IA = open(os.path.join(ROOT, 'public/ia.html')).read()
 ROOT_CSS = _IA[_IA.index(':root{'):_IA.index('/* Hero */')]
 
 # The sources of truth, one line on every lesson page (the same map heads README.md and CLAUDE.md)
-SOURCES = [('look', 'tokens/tokens.css', 'components/'), ('words', 'microcopy.md'), ('structure', 'wireframes/'), ('decisions', 'concept/concept.md')]
+SOURCES = [('look', 'design-system/tokens/tokens.css', 'design-system/components/'), ('words', 'microcopy.md'), ('structure', 'wireframes/'), ('decisions', 'concept/concept.md')]
 def sources_line():
     return ' · '.join(f'<span class="src{" src-more" if len(ps) > 1 else ""}"><span class="src-k">{k}:</span> ' + ' + '.join(f'<a href="{GH}{p}"><code>{p}</code></a>' for p in ps) + '</span>' for k, *ps in SOURCES)
 
 # ---------------------------------------------------------------- the numbers every lesson page shows (read from the repo)
 def repo_stats():
-    # Lesson 8 step 4: the values are tokens/tokens.css (+ the generated map data), the classes components/index.css
-    tok = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', open(os.path.join(ROOT, 'tokens/tokens.css')).read() + open(os.path.join(ROOT, 'ui/map-data.css')).read(), flags=re.S))
-    kit = open(os.path.join(ROOT, 'components/index.css')).read()
+    # Lesson 8 step 4: the values are design-system/tokens/tokens.css (+ the generated map data), the classes design-system/components/index.css
+    tok = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', open(os.path.join(ROOT, 'design-system/tokens/tokens.css')).read() + open(os.path.join(ROOT, 'design-system/map-data.css')).read(), flags=re.S))
+    kit = open(os.path.join(ROOT, 'design-system/components/index.css')).read()
     variables = len(set(re.findall(r'(?:^|;)\s*--([a-z0-9-]+):', tok, flags=re.M)))
     rules = re.sub(r':root\s*\{.*?\n?\}', '', re.sub(r'/\*.*?\*/', '', kit, flags=re.S), flags=re.S)
     rules = re.sub(r'url\("[^"]*"\)', '', rules)

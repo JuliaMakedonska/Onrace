@@ -8,7 +8,7 @@ Full product brief: [`CLAUDE.md`](./CLAUDE.md). Live app: https://juliamakedonsk
 
 | What | Where | Changed by |
 |---|---|---|
-| **Look** (values and components) | [`tokens/tokens.css`](./tokens/tokens.css) (values: primitives and semantic color roles) + [`components/`](./components/README.md) (one file per component, bundled into `components/index.css`), shown in [`ui/kit.html`](https://juliamakedonska.github.io/Onrace/ui/kit.html) | the "keep it" rule ([`CLAUDE.md`](./CLAUDE.md) → UI assembly) |
+| **Look** (values and components) | [`design-system/`](./design-system/README.md): [`tokens/tokens.css`](./design-system/tokens/tokens.css) (values: primitives and semantic color roles) + [`components/`](./design-system/components/README.md) (one file per component), bundled into `design-system/index.css`, the one file the pages link; shown in [`ui/kit.html`](https://juliamakedonska.github.io/Onrace/ui/kit.html) | the "keep it" rule ([`CLAUDE.md`](./CLAUDE.md) → UI assembly) |
 | **Words** (every product line) | [`microcopy.md`](./microcopy.md), rendered in [`voice.html`](https://juliamakedonska.github.io/Onrace/voice.html) | `microcopy.md` first, then `scripts/build_voice_html.py` |
 | **Structure** (screens and states) | [`wireframes/*.html`](./wireframes/) | the page itself, carried to every screen that shares the component |
 | **Decisions** (and why) | [`concept/concept.md`](./concept/concept.md) | a dated entry per decision |
@@ -35,18 +35,18 @@ Each lesson is still its own file and opens on its own too (`public/research.htm
 Lesson 7 assembled every screen from one kit, in native iOS.
 
 - **[Lesson 07 overview](https://onrace-five.vercel.app/workspace.html#07)** (`public/ui-overview.html`, also [on its own](https://juliamakedonska.github.io/Onrace/ui-overview.html)): the design system from the code, the inventory, the kit, the native iOS decisions, the visuals, the assembly, the markup passes, the critique and the final check, every review page, and what's still open.
-- **[Kit showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)** (`ui/kit.html`): every component in its states, from `tokens/tokens.css` and `components/` alone.
+- **[Kit showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)** (`ui/kit.html`): every component in its states, from `design-system/index.css` alone.
 - **[Screen viewer](https://juliamakedonska.github.io/Onrace/wireframes/)** (`wireframes/index.html`): all 10 screens and 35 states in an iPhone frame, with zone notes; a Wireframe / Design toggle shows the frozen Lesson 5 wireframes beside the current screens.
-- **Sources:** [`DESIGN.md`](./DESIGN.md) (the design system, documented from the code), [`ui/`](./ui/inventory.md) (the kit, the map data, the shell, the showcase, the inventory), [`visuals/`](./visuals/README.md) (the race photos and how they were made), [`concept/concept.md`](./concept/concept.md) → Native iOS (every step and decision).
+- **Sources:** [`DESIGN.md`](./DESIGN.md) (the design system, documented from the code), [`ui/`](./ui/inventory.md) (the shell, the showcase, the inventory), [`visuals/`](./visuals/README.md) (the race photos and how they were made), [`concept/concept.md`](./concept/concept.md) → Native iOS (every step and decision).
 
 ## Tokens
 
 Lesson 8 put the kit's values into two levels of design tokens and moved every page onto them.
 
 - **[Lesson 08 overview](https://onrace-five.vercel.app/workspace.html#08)** (`public/tokens-overview.html`, also [on its own](https://juliamakedonska.github.io/Onrace/tokens-overview.html)): primitive → role → component, the light-theme stress test on a live screen, the key decisions and what's left for after the lesson.
-- **[`tokens/tokens.css`](./tokens/tokens.css):** the primitives (colors named by hue and L*) and the semantic color roles, the overrides, the light stress-test block, and the contrast of every role pair in both themes. [`tokens/README.md`](./tokens/README.md).
-- **[`components/`](./components/README.md):** one file per component, reading only roles for color; bundled into [`components/index.css`](./components/index.css), which the pages link. Map data: [`ui/map-data.css`](./ui/map-data.css). Theme switch: [`tokens/theme.js`](./tokens/theme.js).
-- **[`tokens/tokens-audit.md`](./tokens/tokens-audit.md):** the audit, the old → new mapping, and the record of every step: the switch, the light-theme stress test, the final check, and "After the lesson".
+- **[`design-system/tokens/tokens.css`](./design-system/tokens/tokens.css):** the primitives (colors named by hue and L*) and the semantic color roles, the overrides, the light stress-test block, and the contrast of every role pair in both themes. [`design-system/tokens/README.md`](./design-system/tokens/README.md).
+- **[`design-system/components/`](./design-system/components/README.md):** one file per component, reading only roles for color; bundled into [`components/index.css`](./design-system/components/index.css) and, after the tokens, into [`design-system/index.css`](./design-system/index.css), the one file the pages link ([`design-system/README.md`](./design-system/README.md)). Map data: [`design-system/map-data.css`](./design-system/map-data.css). Theme switch: [`design-system/tokens/theme.js`](./design-system/tokens/theme.js).
+- **[`design-system/tokens/tokens-audit.md`](./design-system/tokens/tokens-audit.md):** the audit, the old → new mapping, and the record of every step: the switch, the light-theme stress test, the final check, and "After the lesson".
 - **Review pages:** [both themes, every state](https://juliamakedonska.github.io/Onrace/ui/review-theme.html).
 - **The light theme is a proof only:** Onrace stays dark-only. Try it in the [viewer](https://juliamakedonska.github.io/Onrace/wireframes/#race-browse?theme=light) with its Light / Dark switch.
 
@@ -66,16 +66,14 @@ This is a living index — update it as folders fill up or their purpose shifts.
 | [`microcopy.md`](./microcopy.md) | Every interface line from the wireframes in one table (screen, zone, line, type), with inconsistencies flagged, becoming the source of truth for product copy | Done: Before / After for every line, matches the pages |
 | [`wireframes/`](./wireframes/README.md) | Low-fidelity, grayscale, iOS-structured wireframes for every sitemap screen and state, linked along the flows | Done: 10 screens, 35 pages ([live](https://juliamakedonska.github.io/Onrace/wireframes/)) |
 | [`concept/`](./concept/README.md) | Visual concept: the chosen direction (Podium), its rules, tokens, components and stand | Done for Lesson 6: two screens in Podium ([stand](https://juliamakedonska.github.io/Onrace/concept/concept.html)) |
-| [`ui/`](./ui/inventory.md) | The UI kit's pages: `map-data.css` (the static map's data), `shell.html`, `kit.html` (the showcase), `inventory.md`, and the review pages | Done for Lesson 7: all 10 screens on the kit ([showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)) |
+| [`ui/`](./ui/inventory.md) | The UI kit's pages: `shell.html`, `kit.html` (the showcase), `inventory.md`, and the review pages | Done for Lesson 7: all 10 screens on the kit ([showcase](https://juliamakedonska.github.io/Onrace/ui/kit.html)) |
 | [`visuals/`](./visuals/README.md) | Onrace's own race photos, pre-cropped and exported for the web | Done: 7 photos |
-| [`tokens/`](./tokens/README.md) | Design tokens: `tokens.css`, two levels (primitives, semantic color roles), and the audit | Lesson 8: every page on it since step 4 |
-| [`components/`](./components/README.md) | The kit's components, one file each, bundled into `index.css` | Lesson 8: every page on it since step 4 |
-| [`design-system/`](./design-system/README.md) | Assembled tokens + components as a documented system | Empty |
+| [`design-system/`](./design-system/README.md) | The design system: `tokens/` (two levels of tokens, the theme switch, the Lesson 8 audit), `components/` (one file each), the map data, and `index.css`, the one generated file every page links; `patterns/`, `docs/`, `examples/` still empty | Lesson 9, step 1: one folder, one entry point (2026-11-03) |
 | [`handoff/`](./handoff/README.md) | Dev-ready specs/assets for implementation | Empty |
 | `src/` | App source code (currently the unmodified Vite scaffold) | Placeholder |
 | `.github/workflows/` | CI: auto-deploys `main` to GitHub Pages | Working |
 
-Intended flow: `research/` → `sitemap.md`/`flows.md` (IA) → `wireframes/` → `concept/` → `tokens/` → `components/` → `design-system/` → `handoff/` → implementation in `src/`.
+Intended flow: `research/` → `sitemap.md`/`flows.md` (IA) → `wireframes/` → `concept/` → `design-system/` (tokens, components) → `handoff/` → implementation in `src/`.
 
 ## Wireframes
 
