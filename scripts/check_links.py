@@ -2,7 +2,7 @@
 
 Run from anywhere:  python3 scripts/check_links.py      exit code 1 on any failure.
 build_stand.py runs it on every build. It reads every .html page of the published site, public/ (what GitHub Pages
-serves), and of the source folders mirrored into it as they are (wireframes/, ui/, concept/, visuals/), but not the
+serves), and of the source folders mirrored into it as they are (wireframes/, ui/, concept/, visuals/, design-system/), but not the
 frozen wireframes/_wireframe/ snapshots, which link files that are gone on purpose. The repo-root pages (ia.html,
 voice.html, index.html) are checked as their published copies in public/. It fails when a local
 stylesheet, script, image, frame, link or srcset entry points to a file that doesn't exist: href, src and srcset
@@ -13,7 +13,7 @@ It is how the build stops a page that still links a deleted file (ui/kit.css and
 import os, re, sys, html
 from urllib.parse import unquote
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DIRS = ['public', 'wireframes', 'ui', 'concept', 'visuals']
+DIRS = ['public', 'wireframes', 'ui', 'concept', 'visuals', 'design-system']   # design-system/docs since Lesson 9, step 2
 SKIP_DIRS = {'_wireframe'}
 ATTR = re.compile(r'''\b(href|src|srcset)\s*=\s*("|'|&quot;)(.*?)\2''', flags=re.S | re.I)
 EXTERNAL = re.compile(r'^(?:[a-z][a-z0-9+.-]*:|//|#|\$\{|\{)', flags=re.I)   # scheme, protocol-relative, anchor, template

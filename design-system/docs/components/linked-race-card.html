@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linked race card · Onrace design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../../index.css?v=b5e00fb3">
+<link rel="stylesheet" href="../doc.css?v=b5e00fb3">
+<script src="../../tokens/theme.js"></script>
+</head>
+<!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
+     states, styled only by design-system/tokens/tokens.css and design-system/components/index.css (design-system/map-data.css for the static map; Lesson 8, step 3). Texts are the
+     screens' own (microcopy.md). All 10 screens link the kit (step 5), so each
+     specimen is the component as it is on its screens; a change goes here and
+     to every screen that shows it (CLAUDE.md → "Keep it" rule). Hover, press
+     and keyboard focus are live: point at or tab to any control. -->
+<body class="onrace kit-doc">
+<main class="dp">
+  <nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>
+  <p class="kd-k dp-role">Forms</p>
+  <h1>Linked race card</h1>
+  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">What we already show</h2>
+    <div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.linked-race</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../../../wireframes/index.html#log-result-error">Log result</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">In the kit</span> <a href="../index.html#log-result-parts">Log result · form intro, catalog row, linked race</a>, with every specimen beside it</p></div>
+    <div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span><button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button><span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>
+  </section>
+  <section class="dp-sec" id="anatomy" aria-labelledby="anatomy-h"><h2 id="anatomy-h">Anatomy</h2>
+    <div class="an" data-anatomy="[[&quot;.linked-race&quot;, &quot;Linked race card&quot;], [&quot;.linked-source&quot;, &quot;From the race catalog&quot;], [&quot;.unlink-btn&quot;, &quot;Unlink race&quot;]]"><div class="kit-state"><p class="kit-label">A race linked from the catalog</p>
+          <div class="kit-frame"><section class="linked-race" aria-labelledby="k-linked-an"><p class="linked-source">From the race catalog</p><h3 id="k-linked-an">Berlin Marathon</h3><p class="linked-fact"><time datetime="2025-09-21">21 Sep 2025</time></p><p class="linked-fact">Marathon</p><p class="linked-fact place">Berlin, Germany</p><button type="button" class="unlink-btn">Unlink race</button></section></div>
+        </div></div><ol class="an-legend"><li><span class="an-n">1</span> Linked race card <code>.linked-race</code></li><li><span class="an-n">2</span> From the race catalog <code>.linked-source</code></li><li><span class="an-n">3</span> Unlink race <code>.unlink-btn</code></li></ol>
+  </section>
+  <section class="dp-sec" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants and sizes <span>1</span></h2>
+    <div class="kit-states"><div class="kit-state"><p class="kit-label">A race linked from the catalog</p>
+          <div class="kit-frame"><section class="linked-race" aria-labelledby="k-linked"><p class="linked-source">From the race catalog</p><h3 id="k-linked">Berlin Marathon</h3><p class="linked-fact"><time datetime="2025-09-21">21 Sep 2025</time></p><p class="linked-fact">Marathon</p><p class="linked-fact place">Berlin, Germany</p><button type="button" class="unlink-btn">Unlink race</button></section></div>
+        </div></div>
+    <div class="kd-meta dp-inv"><p class="kd-line"><span class="kd-k">In the inventory</span> <strong>Linked race card</strong> (<code>section.linked-race</code>: "From the race catalog", name, date, sport type, place, <code>.unlink-btn</code> "Unlink race"; shown with <code>?catalog=</code>).</p></div>
+  </section>
+  <section class="dp-sec" id="use" aria-labelledby="use-h"><h2 id="use-h">When to use</h2>
+    <blockquote class="dp-quote"><p><strong>Log result:</strong> a modal sheet over Results (round 2, G40): the sheet glass at the large detent, Results receded under the scrim; Cancel (Text 1) on the leading edge of its bar, "Log result", <strong>Save in amber text</strong> (the one primary). Saving: the spinner alone in Save's place. A grouped form (see Form rows): the catalog row, the race facts (or the linked race's card), the finish time, the official result link, each with its footer. Cancel with anything entered opens the <strong>action sheet</strong>: two glass blocks at the bottom, 34px corners [?], a 13px Text 2 message ("This result isn’t saved yet."), <strong>Discard result</strong> in coral, and <strong>Keep editing</strong> apart below it, 600.</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → The other screens (step 5, 2026-10-22)</footer></blockquote>
+    <h3>The words it carries</h3>
+    <div class="tbl-wrap"><table class="dp-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>From the race catalog</td><td>body text</td><td>Log result</td></tr><tr><td>Unlink race</td><td>button</td><td>Log result</td></tr></tbody></table></div>
+  </section>
+  <section class="dp-sec" id="rule" aria-labelledby="rule-h"><h2 id="rule-h">Rule and anti-rule</h2>
+    <div class="dp-rules"><div class="dp-rule"><p class="kd-k dp-yes">Rule</p><p>A race linked from the catalog, in place of its fields.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#log-result?catalog=spartan-beast-killington-2025">Log result ↗</a></p></div><div class="dp-rule dp-rule--anti"><p class="kd-k dp-no">Anti-rule · use <a href="race-card.html">Race card</a></p><p>In the catalog list the same race is a race card you tap.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#race-picker">Race picker ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../../visuals/ocr-wall-1-684.avif 684w, ../../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../../visuals/ocr-wall-1-684.webp 684w, ../../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../../visuals/ocr-wall-1-1026.jpg" srcset="../../../visuals/ocr-wall-1-684.jpg 684w, ../../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div></div></div>
+  </section>
+  <section class="dp-sec dp-states" id="states" aria-labelledby="states-h"><h2 id="states-h">States</h2>
+    <p class="dp-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+  </section>
+  <nav class="dp-pn" aria-label="Components"><a href="catalog-row.html">‹ Catalog row</a><a href="forgot-password-link.html">Forgot password? link ›</a></nav>
+</main>
+<script>
+  // Segmented controls are live: pressing one releases the other (as on the screens)
+  document.querySelectorAll('.view-toggle').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.view-btn'); if (!btn || btn.disabled) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    });
+  });
+</script>
+<script>
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
+    function show() {
+      var v = input.value, text;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
+    }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
+  });
+})();
+</script>
+<script src="../doc.js"></script>
+</body>
+</html>

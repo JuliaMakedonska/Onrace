@@ -21,8 +21,8 @@ TOKENS = _read('design-system/tokens/tokens.css')
 COMPONENTS = _read('design-system/components/index.css')
 # the tokens: every :root block of design-system/tokens/tokens.css (its first block holds every value; the later ones are the Dynamic
 # Type, reduced-motion and Reduce Transparency overrides), of design-system/map-data.css (the generated map data) and of the docs
-# layer (specimens.css, stand.css, kit-doc.css). tok() reads the first definition: the value at rest.
-TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', TOKENS + ''.join(_read(f) for f in ('design-system/map-data.css', 'concept/specimens.css', 'concept/stand.css', 'ui/kit-doc.css')), flags=re.S))   # tokens only: map-data.css's per-pin rules set local variables, not tokens
+# layer (specimens.css, stand.css, design-system/docs/doc.css). tok() reads the first definition: the value at rest.
+TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', TOKENS + ''.join(_read(f) for f in ('design-system/map-data.css', 'concept/specimens.css', 'concept/stand.css', 'design-system/docs/doc.css')), flags=re.S))   # tokens only: map-data.css's per-pin rules set local variables, not tokens
 
 # the light theme (step 5): design-system/tokens/tokens.css's :root[data-theme="light"] block overrides roles; tok(name, 'light') reads it first
 LIGHT = re.search(r':root\[data-theme="light"\]\s*\{(.*?)\n\}', TOKENS, flags=re.S).group(1)
@@ -290,7 +290,7 @@ COMPONENTS = _read('design-system/components/index.css')   # re-read: build_comp
 # its reason in a comment on the same line (--bar-title-inset: calc(var(--target) * 3); /* … */), so it follows --target.
 # Anywhere else (design-system/components/, the map data, the docs layer), and inside a longer expression in tokens.css, a count stops the
 # build. Not a count: a sign (* -1) and a division (halves for capsules and centering).
-_COUNT_FILES = ['design-system/tokens/tokens.css', 'design-system/map-data.css', 'ui/kit-doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css'] + sorted(
+_COUNT_FILES = ['design-system/tokens/tokens.css', 'design-system/map-data.css', 'design-system/docs/doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css'] + sorted(
     'design-system/components/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/components')) if f.endswith('.css') and f != 'index.css')
 _COUNT = r'var\(--([a-z0-9-]+)\)\s*\*\s*(-?[0-9.]+)|(-?[0-9.]+)\s*\*\s*var\(--([a-z0-9-]+)\)'
 _DEFINITION = re.compile(r'^\s*--[a-z0-9-]+:\s*calc\(\s*(?:var\(--[a-z0-9-]+\)\s*\*\s*[0-9.]+|[0-9.]+\s*\*\s*var\(--[a-z0-9-]+\))\s*\);\s*/\*.*\S.*\*/\s*$')
@@ -306,13 +306,13 @@ for _f in _COUNT_FILES:
         _counts += [f'{_f}:{_i}: {m.group(0)}' for m in _hits]
 if _counts: sys.exit('A count of a primitive outside its own definition in design-system/tokens/tokens.css (define a named primitive there, with a comment, and read it):\n  ' + '\n  '.join(_counts))
 print('Counts of a primitive:', len(_named), 'named primitives in design-system/tokens/tokens.css, none elsewhere in', len(_COUNT_FILES), 'files')
-CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('ui/kit-doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css', 'design-system/index.css', 'design-system/map-data.css')).encode()).hexdigest()[:8]
+CSS_V = hashlib.sha1(''.join(open(os.path.join(ROOT, n)).read() for n in ('design-system/docs/doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css', 'design-system/index.css', 'design-system/map-data.css')).encode()).hexdigest()[:8]
 def _stamp(path):
     # also inside a srcdoc attribute (the showcase's tab bar frames), where the quotes are &quot;
-    html = re.sub(r'href=("|&quot;)((?:\.\./ui/|\.\./design-system/|)(?:kit-doc|map-data|stand|specimens|first-screen|index))\.css(\?v=[0-9a-f]+)?\1',
+    html = re.sub(r'href=("|&quot;)((?:\.\./)*(?:ui/|design-system/)?(?:doc|map-data|stand|specimens|first-screen|index))\.css(\?v=[0-9a-f]+)?\1',
                   lambda m: f'href={m.group(1)}{m.group(2)}.css?v={CSS_V}{m.group(1)}', open(path).read())
     open(path, 'w').write(html)
-STAMPED = ['concept/first-screen.html', 'ui/kit.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
+STAMPED = ['concept/first-screen.html', 'ui/shell.html'] + [f'wireframes/{s}{x}.html' for s in ('race-browse', 'results-list') for x in ('', '-empty', '-error', '-loading')]
 STAMPED += [f'wireframes/race-detail{x}.html' for x in ('', '-error', '-loading')]   # step 5, Discovery group (2026-10-22)
 STAMPED += [f'wireframes/{p}.html' for p in (   # step 5, Archive and Infrastructure groups (2026-10-22)
     'log-result', 'log-result-error', 'log-result-loading', 'race-picker', 'race-picker-empty', 'race-picker-error', 'race-picker-loading',
@@ -323,7 +323,12 @@ STAMPED += [f'wireframes/{p}.html' for p in (   # step 5, Archive and Infrastruc
 import subprocess
 # the showcase: arranged by role, each specimen's facts from ui/inventory.md → Showcase map (2026-10-26), before stamping
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_kit_showcase.py')], check=True)
-for _p in STAMPED:
+# the design-system docs (Lesson 9, step 2, 2026-11-04): why.html from concept.md and references.md; the overview and the
+# component pages (written just above) are stamped with the screens
+subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_docs_why.py')], check=True)
+DOC_PAGES = ['design-system/docs/index.html', 'design-system/docs/why.html'] + sorted(
+    'design-system/docs/components/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/docs/components')) if f.endswith('.html'))
+for _p in STAMPED + DOC_PAGES:
     _stamp(os.path.join(ROOT, _p))
 # the showcase against the inventory and microcopy.md (2026-10-26): every component mapped, every state labelled, every word recorded
 _k = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_kit.py')], capture_output=True, text=True)
@@ -692,8 +697,8 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('avatar-size', 'Profile initials', '80px, the iOS profile size, in a circle (<code>--radius-circle</code>)', 'Kit feedback (designer, 2026-10-19): iOS avatars are circular · DESIGN.md → Shapes, the one circle'),
            ('alert-width', 'The Sign out confirm alert', '270px, the iOS alert width', 'Native iOS (HIG Alerts) · kit, 2026-10-18'),
            ('picker-search-icon-x', 'Race picker: the search icon’s left edge', '<code>--space-4</code> × 2: the form’s gutter plus the field’s inset', 'A named count, defined in tokens.css, so it follows the spacing step (check 16, 2026-11-01)'),
-           ('kit-tabbar-room', 'Showcase tab bar strip: room round the bar (ui/kit.html only)', '<code>--tabbar-gap</code> × 2: the gap above and below', 'Showcase layout: never in the product · defined in tokens.css because a count lives only there (check 16)'),
-           ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (ui/kit.html only)', 'Tall enough for the Filters sheet at its large detent', 'Showcase layout: never in the product')]
+           ('kit-tabbar-room', 'Showcase tab bar strip: room round the bar (the showcase only)', '<code>--tabbar-gap</code> × 2: the gap above and below', 'Showcase layout: never in the product · defined in tokens.css because a count lives only there (check 16)'),
+           ('kit-stage-h', 'Showcase stage for the sheet, the map and the alert (the showcase only)', 'Tall enough for the Filters sheet at its large detent', 'Showcase layout: never in the product')]
 SKEL = [('skel-line', 'Meta bars (date, location, proof)', 'Same height as 12–13px meta text'),
         ('skel-title', 'Title bar height', 'Same height as the 17px item title'),
         ('skel-title-w', 'Race card title bar width', 'A typical race name'),
@@ -1033,24 +1038,17 @@ subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_ui_overview.py
 # the Lesson 08 overview (scripts/build_tokens_overview.py), the workspace rail and every lesson bar: rebuilt with the kit
 for _s in ('scripts/build_tokens_overview.py', 'scripts/lessons_nav.py', 'scripts/build_voice_html.py', 'scripts/build_workspace.py'):
     subprocess.run([sys.executable, os.path.join(ROOT, _s)], check=True)
-# Horizontal overflow (2026-10-24): every wireframe page and state at 390 and 320 wide, Race browse with 0-5 active
-# filters (scripts/check_overflow.mjs, headless Chrome, over local HTTP with the real fonts; since 2026-10-25 it also
-# fails on a wrapped one-line control or a font that didn't load). The build stops on any overflow; it is skipped, with a
-# message, only when Node or Chrome is missing.
-import subprocess, shutil
-_node = shutil.which('node')
-if not _node:
-    print('check_overflow: SKIPPED, node not found')
-else:
-    _r = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_overflow.mjs'), '--quiet'], capture_output=True, text=True)
-    print(_r.stdout.strip() or _r.stderr.strip())
-    if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
-    elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
-# mirror to public/ (GitHub Pages serves public/)
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit-doc.css', 'ui/kit.html', 'ui/shell.html', 'design-system/index.css', 'design-system/tokens/theme.js', 'design-system/map-data.css'] + STAMPED[3:]:
+# mirror to public/ (GitHub Pages serves public/). Before the overflow and link checks (Lesson 9 step 1 follow-up,
+# 2026-11-04): both read public/, so a path change must never leave them reading stale pages
+import shutil
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.html', 'ui/shell.html', 'design-system/index.css', 'design-system/tokens/theme.js', 'design-system/map-data.css'] + STAMPED[2:]:
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
+# the design-system docs (Lesson 9, step 2): the overview, why.html, the component pages, doc.css and doc.js; a page
+# whose component left the inventory leaves public/ too
+shutil.rmtree(os.path.join(ROOT, 'public/design-system/docs'), ignore_errors=True)
+shutil.copytree(os.path.join(ROOT, 'design-system/docs'), os.path.join(ROOT, 'public/design-system/docs'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots
@@ -1089,6 +1087,19 @@ os.makedirs(os.path.join(ROOT, 'public/visuals'), exist_ok=True)
 for _v in [f for e in ('jpg', 'webp', 'avif') for f in glob.glob(os.path.join(ROOT, f'visuals/*.{e}'))]:   # the pre-cropped responsive sets too (step 7, #5)
     shutil.copyfile(_v, os.path.join(ROOT, 'public/visuals', os.path.basename(_v)))
 print('mirrored to public/')
+# Horizontal overflow (2026-10-24): every wireframe page and state at 390 and 320 wide, Race browse with 0-5 active
+# filters (scripts/check_overflow.mjs, headless Chrome, over local HTTP with the real fonts; since 2026-10-25 it also
+# fails on a wrapped one-line control or a font that didn't load). The build stops on any overflow; it is skipped, with a
+# message, only when Node or Chrome is missing.
+import subprocess, shutil
+_node = shutil.which('node')
+if not _node:
+    print('check_overflow: SKIPPED, node not found')
+else:
+    _r = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_overflow.mjs'), '--quiet'], capture_output=True, text=True)
+    print(_r.stdout.strip() or _r.stderr.strip())
+    if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
+    elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
 # every page links only files that exist (Lesson 8 step 4): a page still linking a deleted file stops the build
 _l = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_links.py')], capture_output=True, text=True)
 print(_l.stdout.strip())

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gate layout · Onrace design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../../index.css?v=b5e00fb3">
+<link rel="stylesheet" href="../doc.css?v=b5e00fb3">
+<script src="../../tokens/theme.js"></script>
+</head>
+<!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
+     states, styled only by design-system/tokens/tokens.css and design-system/components/index.css (design-system/map-data.css for the static map; Lesson 8, step 3). Texts are the
+     screens' own (microcopy.md). All 10 screens link the kit (step 5), so each
+     specimen is the component as it is on its screens; a change goes here and
+     to every screen that shows it (CLAUDE.md → "Keep it" rule). Hover, press
+     and keyboard focus are live: point at or tab to any control. -->
+<body class="onrace kit-doc">
+<main class="dp">
+  <nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>
+  <p class="kd-k dp-role">Navigation</p>
+  <h1>Gate layout</h1>
+  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">What we already show</h2>
+    <div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.gate</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../../../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../../../wireframes/index.html#reset-password-check-inbox">Reset password</a>, <a href="../../../wireframes/index.html#new-password-error">New password</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/toolbars">Toolbars ↗</a></p><p class="kd-line"><span class="kd-k">In the kit</span> <a href="../index.html#gate-layout">Gate layout · top bar over the page</a>, with every specimen beside it</p></div>
+    <div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span><button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button><span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>
+  </section>
+  <section class="dp-sec" id="anatomy" aria-labelledby="anatomy-h"><h2 id="anatomy-h">Anatomy</h2>
+    <div class="an" data-anatomy="[[&quot;.top-bar&quot;, &quot;Top bar over the page&quot;], [&quot;.close&quot;, &quot;Cancel&quot;], [&quot;.bar-title&quot;, &quot;Title&quot;], [&quot;.bar-action&quot;, &quot;Bar action&quot;], [&quot;.view-toggle&quot;, &quot;Segmented control&quot;], [&quot;.group&quot;, &quot;Grouped rows&quot;]]"><div class="kit-state"><p class="kit-label">Sign in: the bar (Cancel, "Account", Sign in), the mode switch, the grouped rows</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action">Sign in</button></header>
+            <form class="gate form-rows" onsubmit="return false;"><div class="view-toggle" role="group" aria-label="Sign in or create an account"><button type="button" class="view-btn" aria-pressed="true">Sign in</button><button type="button" class="view-btn" aria-pressed="false">Create account</button></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-g1-an">Email</label><input type="email" id="k-g1-an" value="maya.rossi@example.com"></div></li><li><div class="row"><label for="k-g2-an">Password</label><input type="password" id="k-g2-an" placeholder="Required"></div></li></ul></div></form></div>
+        </div></div><ol class="an-legend"><li><span class="an-n">1</span> Top bar over the page <code>.top-bar</code></li><li><span class="an-n">2</span> Cancel <code>.close</code></li><li><span class="an-n">3</span> Title <code>.bar-title</code></li><li><span class="an-n">4</span> Bar action <code>.bar-action</code></li><li><span class="an-n">5</span> Segmented control <code>.view-toggle</code></li><li><span class="an-n">6</span> Grouped rows <code>.group</code></li></ol>
+  </section>
+  <section class="dp-sec" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants and sizes <span>1</span></h2>
+    <div class="kit-states"><div class="kit-state"><p class="kit-label">Sign in: the bar (Cancel, "Account", Sign in), the mode switch, the grouped rows</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action">Sign in</button></header>
+            <form class="gate form-rows" onsubmit="return false;"><div class="view-toggle" role="group" aria-label="Sign in or create an account"><button type="button" class="view-btn" aria-pressed="true">Sign in</button><button type="button" class="view-btn" aria-pressed="false">Create account</button></div>
+            <div class="group"><ul class="rows"><li><div class="row"><label for="k-g1">Email</label><input type="email" id="k-g1" value="maya.rossi@example.com"></div></li><li><div class="row"><label for="k-g2">Password</label><input type="password" id="k-g2" placeholder="Required"></div></li></ul></div></form></div>
+        </div></div>
+    <div class="kd-meta dp-inv"><p class="kd-line"><span class="kd-k">Screens</span> Sign in / Sign up (all 4); Reset password (all 4); New password (all 3)</p><p class="kd-line"><span class="kd-k">States</span> Every state: the bar floats over the page's top edge in ground glass, the page starts below it and scrolls under it</p></div>
+  </section>
+  <section class="dp-sec" id="use" aria-labelledby="use-h"><h2 id="use-h">When to use</h2>
+    <blockquote class="dp-quote"><p><strong>Sign in / Sign up, Reset password, New password (the gates):</strong> modals with a ground-glass top bar (Cancel or "‹ Sign in", the centered title) that floats over the page, which scrolls under it. A gate intro in <code>--text-secondary</code>, the Sign in / Create account segmented control (6px in content), fields, one full-width amber submit; busy: the spinner and the present-tense label, the form locked. Small text links (Forgot password?, Reset password again) have 44pt targets. Check your inbox: the address in 600, Send a new link (secondary, a spinner while sending). Full-screen errors (an expired reset or confirmation link) are the empty/error component on the page, not a box. Round 2 (G60, G61): the fields are a grouped form and the confirm action is the bar's trailing button, not a full-width button at the form's end.</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → The other screens (step 5, 2026-10-22)</footer></blockquote>
+    <h3>The words it carries</h3>
+    <div class="tbl-wrap"><table class="dp-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>Email</td><td>field label</td><td>Sign in / Sign up, Reset password, Profile</td></tr><tr><td>Password</td><td>field label</td><td>Sign in / Sign up</td></tr><tr><td>Sign in</td><td>button (nav)</td><td>Reset password, New password</td></tr><tr><td>Account</td><td>heading</td><td>Profile</td></tr><tr><td>Required</td><td>placeholder</td><td>Sign in / Sign up</td></tr></tbody></table></div>
+  </section>
+  <section class="dp-sec" id="rule" aria-labelledby="rule-h"><h2 id="rule-h">Rule and anti-rule</h2>
+    <div class="dp-rules"><div class="dp-rule"><p class="kd-k dp-yes">Rule</p><p>The modal gate: Cancel leaves, the bar action is Sign in.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#sign-in-sign-up">Sign in / Sign up ↗</a></p></div><div class="dp-rule dp-rule--anti"><p class="kd-k dp-no">Anti-rule · use <a href="large-title-header.html">Large title header</a></p><p>Once signed in, the account is a top-level tab with the large title, not a gate.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#profile">Profile ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Results, at rest: Log result in the bar</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><header class="top-bar top-bar--large" data-collapse><span class="bar-title" aria-hidden="true">Results</span><a class="bar-action" href="#">Log result</a></header><div class="screen-main"><header><h1>Results</h1></header></div></div></div>
+        </div></div></div></div>
+  </section>
+  <section class="dp-sec dp-states" id="states" aria-labelledby="states-h"><h2 id="states-h">States</h2>
+    <p class="dp-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+  </section>
+  <nav class="dp-pn" aria-label="Components"><a href="top-bar.html">‹ Top bar</a><a href="segmented-control.html">Segmented control ›</a></nav>
+</main>
+<script>
+  // Segmented controls are live: pressing one releases the other (as on the screens)
+  document.querySelectorAll('.view-toggle').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.view-btn'); if (!btn || btn.disabled) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    });
+  });
+</script>
+<script>
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
+    function show() {
+      var v = input.value, text;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
+    }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
+  });
+})();
+</script>
+<script src="../doc.js"></script>
+</body>
+</html>

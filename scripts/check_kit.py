@@ -1,23 +1,30 @@
-"""Check the kit showcase (ui/kit.html) against the inventory and microcopy.md (2026-10-26).
+"""Check the kit showcase (design-system/docs/index.html, ui/kit.html until Lesson 9 step 2) and the design-system docs
+against the inventory and microcopy.md (2026-10-26; the docs pages since 2026-11-04).
 
 Run from anywhere:  python3 scripts/check_kit.py      exit code 1 on any failure.
 build_stand.py runs it on every build. It fails when:
 - an inventory component (ui/inventory.md: the Shared, Discovery, Archive and Infrastructure tables, and the One-off
   blocks) has no row in the inventory's Showcase map;
-- a Showcase map row names a specimen ui/kit.html doesn't have, or a state its specimen doesn't label;
+- a Showcase map row names a specimen the showcase doesn't have, or a state its specimen doesn't label;
 - a word shown in a specimen (text, aria-label, placeholder, alt) appears nowhere in microcopy.md: the showcase uses
   the screens' own words, and every product word is recorded there;
 - (Lesson 8 step 4; Lesson 9 step 1) a screen (wireframes/*.html), the showcase or the shell doesn't link
   design-system/index.css once, links tokens.css or a components file directly, a page with the static map (Race
   browse, the showcase) doesn't link design-system/map-data.css, any of them still links ui/kit.css or ui/map.css,
   a screen has a <style> block or a style attribute, or a screen uses a class (in its markup or set by its script)
-  that design-system/components/index.css doesn't define.
+  that design-system/components/index.css doesn't define;
+- (Lesson 9 step 2) an inventory component has no page in design-system/docs/components/, a docs page doesn't link
+  design-system/index.css once (the file the product links, so a page can't show another look), a docs page that
+  shows the static map doesn't link design-system/map-data.css, or a word on a docs page (its text, aria-label, alt,
+  placeholder, title) appears neither in microcopy.md nor in the source docs: DESIGN.md, concept/concept.md,
+  concept/references.md and ui/inventory.md, but not the inventory's own Docs map, whose words must come from the rest.
 """
 import os, re, sys
 from html.parser import HTMLParser
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INV = open(os.path.join(ROOT, 'ui/inventory.md')).read()
-KIT = open(os.path.join(ROOT, 'ui/kit.html')).read()
+KIT_PATH = os.path.join(ROOT, 'design-system/docs/index.html')
+KIT = open(KIT_PATH).read()
 MC = open(os.path.join(ROOT, 'microcopy.md')).read()
 fails = []
 
@@ -56,7 +63,7 @@ for r in MAP:
             fails.append(f'{r["name"]}: no specimen and not marked retired')
         continue
     if r['spec'] not in items:
-        fails.append(f'{r["name"]}: specimen #{r["spec"]} is not in ui/kit.html'); continue
+        fails.append(f'{r["name"]}: specimen #{r["spec"]} is not in the showcase'); continue
     labels = [re.sub(r'<[^>]+>', '', l).replace('&amp;', '&').lower() for l in re.findall(r'<p class="kit-label">(.*?)</p>', block(r['spec']), flags=re.S)]
     for st in r['states']:
         if not any(st.lower() in l for l in labels):
@@ -99,16 +106,19 @@ import glob
 _css = re.sub(r'url\("[^"]*"\)', '', re.sub(r'/\*.*?\*/', '', open(os.path.join(ROOT, 'design-system/components/index.css')).read(), flags=re.S))
 DEFINED = set(re.findall(r'\.(-?[a-zA-Z_][\w-]*)', ''.join(re.findall(r'([^{}]+)\{', _css))))
 SCREENS = sorted(p for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html'))
-for sp in SCREENS + [os.path.join(ROOT, 'ui/kit.html'), os.path.join(ROOT, 'ui/shell.html')]:
+ENTRY, MAPDATA = os.path.join(ROOT, 'design-system/index.css'), os.path.join(ROOT, 'design-system/map-data.css')
+DOC_PAGES = sorted(glob.glob(os.path.join(ROOT, 'design-system/docs/*.html')) + glob.glob(os.path.join(ROOT, 'design-system/docs/components/*.html')))
+for sp in SCREENS + [os.path.join(ROOT, 'ui/shell.html')] + DOC_PAGES:
     h, name = open(sp).read(), os.path.relpath(sp, ROOT)
     head = h[:h.index('</head>')]
-    links = re.findall(r'href="([\w./-]+?\.css)(?:\?v=[0-9a-f]+)?"', head)
+    links = [os.path.normpath(os.path.join(os.path.dirname(sp), l)) for l in re.findall(r'href="([\w./-]+?\.css)(?:\?v=[0-9a-f]+)?"', head)]
+    shown = [os.path.relpath(l, ROOT) for l in links]
     # Lesson 9 step 1: one entry point, design-system/index.css (tokens + components, generated); never the two halves
-    if links.count('../design-system/index.css') != 1:
-        fails.append(f'{name}: links design-system/index.css once? found {links}')
-    if any(re.search(r'(?:^|/)(?:tokens|components)/[\w-]+\.css$', l) for l in links):
-        fails.append(f'{name}: links tokens.css or a components file directly (link design-system/index.css): {links}')
-    if ('race-browse' in name or name == 'ui/kit.html') and '../design-system/map-data.css' not in links:
+    if links.count(ENTRY) != 1:
+        fails.append(f'{name}: links design-system/index.css once? found {shown}')
+    if any(re.search(r'/design-system/(?:tokens|components)/[\w-]+\.css$', l) for l in links):
+        fails.append(f'{name}: links tokens.css or a components file directly (link design-system/index.css): {shown}')
+    if ('race-browse' in name or 'map-placeholder' in h) and MAPDATA not in links:
         fails.append(f'{name}: shows the static map but doesn\'t link design-system/map-data.css')
     if re.search(r'(?:kit|/map)\.css', head):
         fails.append(f'{name}: still links ui/kit.css or ui/map.css')
@@ -120,8 +130,37 @@ for sp in SCREENS + [os.path.join(ROOT, 'ui/kit.html'), os.path.join(ROOT, 'ui/s
         for c in sorted(used - DEFINED):
             fails.append(f'{name}: class .{c} isn\'t defined in design-system/components/index.css')
 
+# ---------------------------------------------------------------- the docs pages (Lesson 9 step 2, 2026-11-04)
+slug_c = lambda n: re.sub(r'[^a-z0-9]+', '-', n.lower()).strip('-')
+for n in names:
+    if not os.path.exists(os.path.join(ROOT, 'design-system/docs/components', slug_c(n.rstrip(':')) + '.html')):
+        fails.append(f'inventory component without a page: {n} (design-system/docs/components/{slug_c(n.rstrip(":"))}.html)')
+SOURCES = {f: open(os.path.join(ROOT, f)).read() for f in ('DESIGN.md', 'concept/concept.md', 'concept/references.md')}
+SOURCES['ui/inventory.md'] = re.sub(r'^## Docs map .*?(?=^## |\Z)', '', INV, flags=re.M | re.S)   # the Docs map's words must come from the rest
+VOCAB = MC_WORDS | {norm(w) for t in SOURCES.values() for w in WORD.findall(t)}
+class Doc(HTMLParser):   # every word a reader sees on a docs page (scripts and styles aside)
+    def __init__(self):
+        super().__init__(); self.skip = 0; self.words = []
+    def handle_starttag(self, tag, attrs):
+        if tag in ('script', 'style', 'code'): self.skip += 1   # <code> holds selectors and paths, not words
+        for k, v in attrs:
+            if k in ('aria-label', 'placeholder', 'alt', 'title') and v: self.words += [(w, v) for w in WORD.findall(v)]
+            if k == 'srcdoc' and v: d = Doc(); d.feed(v); self.words += d.words
+    def handle_endtag(self, tag):
+        if tag in ('script', 'style', 'code'): self.skip -= 1
+    def handle_data(self, d):
+        if not self.skip and d.strip(): self.words += [(w, d.strip()) for w in WORD.findall(d)]
+doc_words, doc_missing = 0, {}
+for dp in DOC_PAGES:
+    d = Doc(); d.feed(open(dp).read()); doc_words += len(d.words)
+    for w, ctx in d.words:
+        if norm(w) not in VOCAB: doc_missing.setdefault(norm(w), f'{os.path.relpath(dp, ROOT)}: "{ctx[:60]}"')
+for w, where in sorted(doc_missing.items()):
+    fails.append(f'word on a docs page, in neither microcopy.md nor the source docs: "{w}" ({where})')
+
 if fails:
     print(f'check_kit: FAIL ({len(fails)})\n  ' + '\n  '.join(fails))
     sys.exit(1)
 print(f'check_kit: pass ({len(names)} inventory components mapped, {len(MAP)} map rows with their states, {len(p.words)} specimen words in microcopy.md; '
-      f'{len(SCREENS)} screens, the showcase and the shell on design-system/index.css, every screen class defined)')
+      f'{len(SCREENS)} screens, the shell and {len(DOC_PAGES)} docs pages on design-system/index.css, every screen class defined; '
+      f'every component with its page; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')

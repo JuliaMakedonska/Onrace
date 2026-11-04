@@ -12,7 +12,7 @@ No page links this folder directly. Since Lesson 9 step 1 (2026-11-03), a page l
 
 `index.css` here is **generated** too: edit the component files, then run `python3 scripts/build_components.py` (`scripts/concept/build_stand.py` runs it on every build). The script writes this bundle, then the entry point.
 
-**Who links the entry point:** every page that shows the product: the 35 screens, `ui/kit.html` (the showcase), `ui/shell.html`, the stand, `concept/first-screen.html`, and the review pages (for the page's base styles). From step 4 (2026-10-28) to Lesson 9 step 1, they linked `tokens/tokens.css` and then this `index.css`. `scripts/check_kit.py` fails if a screen, the showcase or the shell doesn't link `design-system/index.css` once, or links a components file directly. `scripts/check_links.py` fails if any page links a missing file.
+**Who links the entry point:** every page that shows the product: the 35 screens, the showcase and every page of `design-system/docs/`, `ui/shell.html`, the stand, `concept/first-screen.html`, and the review pages (for the page's base styles). From step 4 (2026-10-28) to Lesson 9 step 1, they linked `tokens/tokens.css` and then this `index.css`. `scripts/check_kit.py` fails if a screen, the showcase or the shell doesn't link `design-system/index.css` once, or links a components file directly. `scripts/check_links.py` fails if any page links a missing file.
 
 ## The cascade order
 
@@ -50,7 +50,7 @@ There are 56 files. Each is named after its component in `ui/inventory.md` (keba
 
 **Not here:**
 - **The map's data** (Natural Earth masks, the map's ratio, each pin's place) is in `../map-data.css` (`ui/map-data.css` until Lesson 9 step 1), written by `scripts/concept/build_map.py`; the map's six design tokens (dot, label height and gap, water, land, lines) are in `tokens.css`. Only the pages that show the static map link it.
-- **The showcase's stages** (`.kit-frame`, `.kit-stage`, `.kit-shell`, `.kit-tabbar`) are documentation: they're in `ui/kit-doc.css`. The tab bar specimens are small screens in frames, so the bar is the body's child, as on a screen, and no product selector names the showcase.
+- **The showcase's stages** (`.kit-frame`, `.kit-stage`, `.kit-shell`, `.kit-tabbar`) are documentation: they're in `../docs/doc.css` (`ui/kit-doc.css` until Lesson 9 step 2). The tab bar specimens are small screens in frames, so the bar is the body's child, as on a screen, and no product selector names the showcase.
 
 ## The theme test (step 5, 2026-10-30)
 

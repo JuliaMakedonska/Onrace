@@ -1050,3 +1050,48 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 **Still unknown.**
 - **The build order has a gap when paths change.** `check_overflow` measures the published overviews before the build mirrors the pages into `public/`, so on the first run after a path change it reads stale copies. This time the pages were mirrored by hand first. It doesn't arise when no path changes.
 - `patterns/`, `docs/` and `examples/` have no content and no rule yet.
+
+### Step 1 follow-up (designer, 2026-11-04)
+
+- **The new paths stay** in the showcase's intro and the stand's text: the docs name files that exist.
+- **The build order is fixed.** `build_stand.py` now copies every page to `public/` before `check_overflow` and `check_links` run (until then, after the overflow check). A path change can no longer leave the checks reading stale pages, as it did in step 1.
+
+### Step 2: living documentation (2026-11-04)
+
+**What changed.**
+- **The showcase moved,** with no copy left behind. `ui/kit.html` → `design-system/docs/index.html`, the overview; every relative URL in it was rebased (`scripts/docs_paths.py`), including in the tab bar's `srcdoc` frames. `ui/kit.html` is now a redirect that keeps the query and the hash. `ui/kit-doc.css` → `design-system/docs/doc.css`.
+- **A page per inventory component,** `design-system/docs/components/<name>.html`: 56, plus one for the retired Sheet screen. `scripts/build_kit_showcase.py` writes them from the same Showcase map as the overview. Each links `design-system/index.css`, the file the product links, and has:
+  - **What we already show:** its classes, "used on N screens" linked to the viewer, the native counterpart with its HIG link, the Light / Dark switch, and a link to its card in the overview.
+  - **Anatomy:** its first variant (or the one the Docs map names), live, with each part numbered on the stage (`doc.js`) and listed with its selector.
+  - **Variants and sizes:** every stage whose label holds one of its States from the inventory, side by side, then the inventory's own Screens and States.
+  - **When to use:** the `DESIGN.md` passage the Docs map points to, quoted, and the `microcopy.md` lines (UI copy only) its stages carry.
+  - **Rule and anti-rule:** a real screen state where it's right, and a real one where another component is, with that component live and linked.
+  - **States:** room for step 3.
+- **`ui/inventory.md` → Docs map:** the part of each page that can't be read from the files: the anatomy's parts, the `DESIGN.md` pointer, the rule and the anti-rule. Its words must come from the other sources.
+- **`design-system/docs/why.html`:** why the system looks like this, rendered by `scripts/build_docs_why.py` from `concept/references.md` (Visual language per product, Picked styles) and `concept/concept.md` (Designer's taste, Attributes, Hierarchy rules, Directions), each section under its source heading and linked back to it.
+- **`design-system/docs/doc.js`:** the theme switch (moved out of the overview's own script) and the anatomy markers.
+- **Reworded on the overview,** for the words check: four notes and one stage label ("the bar collapsed" → "the bar turns to glass"), each to words the sources already use.
+
+**The checks** (`check_kit.py`, `check_overflow.mjs`, `check_links.py`):
+- every inventory component has a page;
+- every docs page links `design-system/index.css` once (and the map data where it shows the map);
+- every word on a docs page (text, aria-label, alt, placeholder, title; `<code>` aside) is in `microcopy.md` or the source docs (`DESIGN.md`, `concept/concept.md`, `concept/references.md`, `ui/inventory.md` outside the Docs map);
+- an anatomy selector that finds nothing throws, so the overflow check stops the build;
+- the overflow check covers all 59 docs pages at 390, 320, 200% text and 1440;
+- the link check reads `design-system/`.
+
+Each was shown to fail on a planted fault: a missing page, an invented word, a selector that finds nothing.
+
+**How it was checked.**
+1. **Every stage on every component page against the same stage on the overview,** in headless Chrome at 390, in both themes: 241 stages on 57 pages, 23 computed properties of every element (frames entered). **0 differ.** That took two fixes first, both found by this comparison:
+   - `doc.css` had leaked into the specimens. `.dp h1` and `.dp-sec h3` set the product's own headings in the doc's weights, and the doc's focus ring and link color would have reached a stage. All four are now scoped to the doc's chrome.
+   - The second copy of a stage on one page renames its ids. One of them, `#signout-confirm`, is what the product's CSS colors coral, so the copy lost the destructive red. Ids the product CSS selects on now keep their names.
+2. **The overview against the old `ui/kit.html` (HEAD):** 104 of 105 stages identical in both themes. The 105th is the stage whose label was reworded.
+3. **The product didn't change:** `design-system/index.css`, the components, the tokens and the map data are untouched. On the screens only the `?v=` hash moved, because it also covers `doc.css`.
+4. **The real build passes:** `check_kit` (59 docs pages, 33,998 words), `check_overflow` (569 states) and `check_links`.
+
+**Still unknown.**
+- **The stage comparison (1) isn't a build check yet.** It caught both leaks, and a later `doc.css` change could reintroduce one.
+- **A component styled by an id** (`#signout-confirm`) is why a copied stage can't simply rename its ids. A class would remove the exception. That's a component change, for the "keep it" rule.
+- **The anatomy markers are measured by script after load,** so a part that moves later (a font swap, a lazy image) is re-measured only on resize. The overflow check sees them after fonts load.
+- **The Docs map is written by hand,** the one part of a page that is. The words check limits its vocabulary, not whether a rule is right.

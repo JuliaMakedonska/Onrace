@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Identity block · Onrace design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../../index.css?v=b5e00fb3">
+<link rel="stylesheet" href="../doc.css?v=b5e00fb3">
+<script src="../../tokens/theme.js"></script>
+</head>
+<!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
+     states, styled only by design-system/tokens/tokens.css and design-system/components/index.css (design-system/map-data.css for the static map; Lesson 8, step 3). Texts are the
+     screens' own (microcopy.md). All 10 screens link the kit (step 5), so each
+     specimen is the component as it is on its screens; a change goes here and
+     to every screen that shows it (CLAUDE.md → "Keep it" rule). Hover, press
+     and keyboard focus are live: point at or tab to any control. -->
+<body class="onrace kit-doc">
+<main class="dp">
+  <nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>
+  <p class="kd-k dp-role">One-off</p>
+  <h1>Identity block</h1>
+  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">What we already show</h2>
+    <div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.identity</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../../../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">In the kit</span> <a href="../index.html#profile-parts">Profile · identity, grouped rows, Sign out, confirm alert</a>, with every specimen beside it</p></div>
+    <div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span><button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button><span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>
+  </section>
+  <section class="dp-sec" id="anatomy" aria-labelledby="anatomy-h"><h2 id="anatomy-h">Anatomy</h2>
+    <div class="an" data-anatomy="[[&quot;.identity&quot;, &quot;Identity block&quot;], [&quot;.initials&quot;, &quot;Initials&quot;], [&quot;.identity h2&quot;, &quot;Name&quot;], [&quot;.identity p&quot;, &quot;Email&quot;]]"><div class="kit-state"><p class="kit-label">Profile</p>
+          <div class="kit-frame kit-frame--flush">
+            <section class="identity" aria-labelledby="k-pn-an"><div class="initials" aria-hidden="true">MR</div><h2 id="k-pn-an">Maya Rossi</h2><p>maya.rossi@example.com</p></section>
+            <section class="group" aria-labelledby="k-acc-an"><h2 id="k-acc-an" class="group-heading">Account</h2>
+              <ul class="rows">
+                <li><div class="row"><label for="k-n2-an">Name</label><input type="text" id="k-n2-an" value="Maya Rossi" autocomplete="off"></div></li>
+                <li><div class="row"><label for="k-c2-an">Country</label><select id="k-c2-an"><option selected>Italy</option><option>Spain</option></select></div></li>
+                <li><div class="row"><label for="k-l3-an">Language</label><select id="k-l3-an"><option selected>English</option><option>Italiano</option></select></div></li>
+                <li><div class="row"><span class="row-label" id="k-el-an">Email</span><p class="row-value" aria-labelledby="k-el-an">maya.rossi@example.com</p></div></li>
+              </ul>
+              <p class="group-footer">Changes save as you make them. Your email is the one you sign in with, so it can’t be changed here.</p>
+            </section>
+            <section class="group" aria-label="Sign out"><button type="button" class="signout" aria-haspopup="dialog">Sign out</button></section>
+          </div>
+        </div></div><ol class="an-legend"><li><span class="an-n">1</span> Identity block <code>.identity</code></li><li><span class="an-n">2</span> Initials <code>.initials</code></li><li><span class="an-n">3</span> Name <code>.identity h2</code></li><li><span class="an-n">4</span> Email <code>.identity p</code></li></ol>
+  </section>
+  <section class="dp-sec" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants and sizes <span>1</span></h2>
+    <div class="kit-states"><div class="kit-state"><p class="kit-label">Profile</p>
+          <div class="kit-frame kit-frame--flush">
+            <section class="identity" aria-labelledby="k-pn"><div class="initials" aria-hidden="true">MR</div><h2 id="k-pn">Maya Rossi</h2><p>maya.rossi@example.com</p></section>
+            <section class="group" aria-labelledby="k-acc"><h2 id="k-acc" class="group-heading">Account</h2>
+              <ul class="rows">
+                <li><div class="row"><label for="k-n2">Name</label><input type="text" id="k-n2" value="Maya Rossi" autocomplete="off"></div></li>
+                <li><div class="row"><label for="k-c2">Country</label><select id="k-c2"><option selected>Italy</option><option>Spain</option></select></div></li>
+                <li><div class="row"><label for="k-l3">Language</label><select id="k-l3"><option selected>English</option><option>Italiano</option></select></div></li>
+                <li><div class="row"><span class="row-label" id="k-el">Email</span><p class="row-value" aria-labelledby="k-el">maya.rossi@example.com</p></div></li>
+              </ul>
+              <p class="group-footer">Changes save as you make them. Your email is the one you sign in with, so it can’t be changed here.</p>
+            </section>
+            <section class="group" aria-label="Sign out"><button type="button" class="signout" aria-haspopup="dialog">Sign out</button></section>
+          </div>
+        </div></div>
+    <div class="kd-meta dp-inv"><p class="kd-line"><span class="kd-k">In the inventory</span> <strong>Identity block</strong> (<code>.identity</code>: initials <code>MR</code>, name, email). Photo: no (deferred; initials instead).</p></div>
+  </section>
+  <section class="dp-sec" id="use" aria-labelledby="use-h"><h2 id="use-h">When to use</h2>
+    <blockquote class="dp-quote"><p><strong>Profile:</strong> a top-level tab with the large title and the floating tab bar (the current tab its one amber). The initials in an 80px circle on <code>--raised</code>; the name and email; the grouped Account rows on <code>--surface</code> (44px; the editable Name in <code>--text-primary</code>, the read-only Email and the menu values (Country, Language) in <code>--text-secondary</code>, as iOS Settings: designer decisions, step 6 and step 7; a Solar chevron after Country and Language), the group footer; Sign out as a full-width <code>--surface</code> button in coral (<code>--error</code>, a destructive action; G68, 2026-10-23); its confirm alert with Cancel and Sign out in coral (<code>--destructive</code>).</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → The other screens (step 5, 2026-10-22)</footer></blockquote>
+    <h3>The words it carries</h3>
+    <p class="dp-note">What it shows carries no line of its own from <code>microcopy.md</code>: it shows catalog data, user data or another component's words.</p>
+  </section>
+  <section class="dp-sec" id="rule" aria-labelledby="rule-h"><h2 id="rule-h">Rule and anti-rule</h2>
+    <div class="dp-rules"><div class="dp-rule"><p class="kd-k dp-yes">Rule</p><p>Who is signed in: initials, name and email.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#profile">Profile ↗</a></p></div><div class="dp-rule dp-rule--anti"><p class="kd-k dp-no">Anti-rule · use <a href="grouped-settings-rows.html">Grouped settings rows</a></p><p>What a person can change sits in the rows below.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#profile">Profile ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Profile</p>
+          <div class="kit-frame kit-frame--flush">
+            <section class="identity" aria-labelledby="k-pn-alt"><div class="initials" aria-hidden="true">MR</div><h2 id="k-pn-alt">Maya Rossi</h2><p>maya.rossi@example.com</p></section>
+            <section class="group" aria-labelledby="k-acc-alt"><h2 id="k-acc-alt" class="group-heading">Account</h2>
+              <ul class="rows">
+                <li><div class="row"><label for="k-n2-alt">Name</label><input type="text" id="k-n2-alt" value="Maya Rossi" autocomplete="off"></div></li>
+                <li><div class="row"><label for="k-c2-alt">Country</label><select id="k-c2-alt"><option selected>Italy</option><option>Spain</option></select></div></li>
+                <li><div class="row"><label for="k-l3-alt">Language</label><select id="k-l3-alt"><option selected>English</option><option>Italiano</option></select></div></li>
+                <li><div class="row"><span class="row-label" id="k-el-alt">Email</span><p class="row-value" aria-labelledby="k-el-alt">maya.rossi@example.com</p></div></li>
+              </ul>
+              <p class="group-footer">Changes save as you make them. Your email is the one you sign in with, so it can’t be changed here.</p>
+            </section>
+            <section class="group" aria-label="Sign out"><button type="button" class="signout" aria-haspopup="dialog">Sign out</button></section>
+          </div>
+        </div></div></div></div>
+  </section>
+  <section class="dp-sec dp-states" id="states" aria-labelledby="states-h"><h2 id="states-h">States</h2>
+    <p class="dp-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+  </section>
+  <nav class="dp-pn" aria-label="Components"><a href="gate-intro.html">‹ Gate intro</a><a href="grouped-settings-rows.html">Grouped settings rows ›</a></nav>
+</main>
+<script>
+  // Segmented controls are live: pressing one releases the other (as on the screens)
+  document.querySelectorAll('.view-toggle').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.view-btn'); if (!btn || btn.disabled) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    });
+  });
+</script>
+<script>
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
+    function show() {
+      var v = input.value, text;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
+    }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
+  });
+})();
+</script>
+<script src="../doc.js"></script>
+</body>
+</html>

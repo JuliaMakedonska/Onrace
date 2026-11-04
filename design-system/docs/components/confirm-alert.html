@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confirm alert · Onrace design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../../index.css?v=b5e00fb3">
+<link rel="stylesheet" href="../doc.css?v=b5e00fb3">
+<script src="../../tokens/theme.js"></script>
+</head>
+<!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
+     states, styled only by design-system/tokens/tokens.css and design-system/components/index.css (design-system/map-data.css for the static map; Lesson 8, step 3). Texts are the
+     screens' own (microcopy.md). All 10 screens link the kit (step 5), so each
+     specimen is the component as it is on its screens; a change goes here and
+     to every screen that shows it (CLAUDE.md → "Keep it" rule). Hover, press
+     and keyboard focus are live: point at or tab to any control. -->
+<body class="onrace kit-doc">
+<main class="dp">
+  <nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>
+  <p class="kd-k dp-role">One-off</p>
+  <h1>Confirm alert</h1>
+  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">What we already show</h2>
+    <div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.alert</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../../../wireframes/index.html#race-detail-error">Race detail</a>, <a href="../../../wireframes/index.html#result-detail-error">Result detail</a>, <a href="../../../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts ↗</a></p><p class="kd-line"><span class="kd-k">In the kit</span> <a href="../index.html#profile-parts">Profile · identity, grouped rows, Sign out, confirm alert</a>, with every specimen beside it</p></div>
+    <div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span><button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button><span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>
+  </section>
+  <section class="dp-sec" id="anatomy" aria-labelledby="anatomy-h"><h2 id="anatomy-h">Anatomy</h2>
+    <div class="an" data-anatomy="[[&quot;.alert&quot;, &quot;Confirm alert, the sheet&#x27;s glass&quot;], [&quot;.alert h2&quot;, &quot;Title&quot;], [&quot;.alert-actions&quot;, &quot;Actions&quot;]]"><div class="kit-state"><p class="kit-label">Sign out: the confirm alert (Sign out in the destructive style)</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <dialog class="alert" open aria-labelledby="k-so-an" aria-describedby="k-sod-an"><div class="alert-body"><h2 id="k-so-an">Sign out of Onrace?</h2><p id="k-sod-an">Your results stay saved. Sign back in anytime to see them.</p></div><div class="alert-actions"><button type="button">Cancel</button><button type="button" id="signout-confirm">Sign out</button></div></dialog>
+          </div>
+        </div></div><ol class="an-legend"><li><span class="an-n">1</span> Confirm alert, the sheet&#x27;s glass <code>.alert</code></li><li><span class="an-n">2</span> Title <code>.alert h2</code></li><li><span class="an-n">3</span> Actions <code>.alert-actions</code></li></ol>
+  </section>
+  <section class="dp-sec" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants and sizes <span>3</span></h2>
+    <div class="kit-states"><div class="kit-state"><p class="kit-label">Sign out: the confirm alert (Sign out in the destructive style)</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <dialog class="alert" open aria-labelledby="k-so" aria-describedby="k-sod"><div class="alert-body"><h2 id="k-so">Sign out of Onrace?</h2><p id="k-sod">Your results stay saved. Sign back in anytime to see them.</p></div><div class="alert-actions"><button type="button">Cancel</button><button type="button" id="signout-confirm">Sign out</button></div></dialog>
+          </div>
+        </div><div class="kit-state"><p class="kit-label">Race detail: "Couldn’t open the race website", one action</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <dialog class="alert" open aria-labelledby="k-reg" aria-describedby="k-regd"><div class="alert-body"><h2 id="k-reg">Couldn’t open the race website</h2><p id="k-regd">The race website didn’t open. Your browser may have blocked it. Tap Register again, or come back to this race later.</p></div><div class="alert-actions"><button type="button" aria-label="Dismiss this message">Dismiss</button></div></dialog>
+          </div>
+        </div><div class="kit-state"><p class="kit-label">Result detail: "Couldn’t open the official result", Dismiss and Try again (round 2)</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <dialog class="alert" open aria-labelledby="k-lnk" aria-describedby="k-lnkd"><div class="alert-body"><h2 id="k-lnk">Couldn’t open the official result</h2><p id="k-lnkd">The official result on results.hyrox.com didn’t open. Your browser may have blocked it. Try again, or tap Copy link and paste it into your browser.</p></div><div class="alert-actions"><button type="button" aria-label="Dismiss this message">Dismiss</button><button type="button" aria-label="Try again, opening the official result">Try again</button></div></dialog></div>
+        </div></div>
+    <div class="kd-meta dp-inv"><p class="kd-line"><span class="kd-k">In the inventory</span> <strong>Confirm alert</strong> (<code>dialog.alert</code>: "Sign out of Onrace?", Cancel, Sign out; the same component is Race detail's and Result detail's link error since the markup pass). Native: <a href="https://developer.apple.com/design/human-interface-guidelines/alerts">Alerts</a>. Step 5: Cancel's focus ring drawn inside the button (the alert clips its edge). Gaps: G67 K, closed 2026-10-23 (designer): the sheet glass over the scrim, the rim, <code>--radius-alert</code> 34px [?], as iOS 26 alerts.</p></div>
+  </section>
+  <section class="dp-sec" id="use" aria-labelledby="use-h"><h2 id="use-h">When to use</h2>
+    <blockquote class="dp-quote"><p><strong>Confirm alert:</strong> the sheet's glass over the scrim, with its blur and rim, 34px corners [?] (G67, designer 2026-10-23: as iOS 26 alerts). Sign out, the destructive action, is <code>--error</code> (coral) text, in the alert and in its Profile row (G68); Cancel stays <code>--text-primary</code> (HIG Alerts). The pressed segment is <code>--pressed</code>, <code>--text-primary</code>, with a 1px <code>--boundary</code> outline. Race detail uses the same alert for "Couldn’t open the race website", with one action, Dismiss, bold as the default (markup pass, 2026-10-23); its body says "Tap Register again" (step 6). Alert buttons are 17px (step 6). Result detail uses it too for "Couldn’t open the official result", with Dismiss and Try again (round 2); its body points to Copy link (step 6).</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Navigation</footer></blockquote>
+    <h3>The words it carries</h3>
+    <div class="tbl-wrap"><table class="dp-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>Results</td><td>tab label</td><td>Race browse, Results list, Result detail, Profile</td></tr><tr><td>Cancel</td><td>button</td><td>Race browse, Log result, Sign in / Sign up, Profile</td></tr><tr><td>Back</td><td>a11y label</td><td>Race detail, Result detail</td></tr><tr><td>Save</td><td>button</td><td>Log result</td></tr><tr><td>Saved</td><td>helper text</td><td>Profile</td></tr><tr><td>Sign out</td><td>a11y label</td><td>Profile</td></tr><tr><td>Sign out of Onrace?</td><td>heading</td><td>Profile</td></tr><tr><td>Your results stay saved. Sign back in anytime to see them.</td><td>state message</td><td>Profile</td></tr><tr><td>Couldn’t open the race website</td><td>heading</td><td>Race detail</td></tr><tr><td>The race website didn’t open. Your browser may have blocked it. Tap Register again, or come back to this race later.</td><td>state message</td><td>Race detail</td></tr><tr><td>Dismiss</td><td>button</td><td>Race detail, Result detail</td></tr><tr><td>Dismiss this message</td><td>a11y label</td><td>Race detail, Result detail</td></tr></tbody></table></div>
+  </section>
+  <section class="dp-sec" id="rule" aria-labelledby="rule-h"><h2 id="rule-h">Rule and anti-rule</h2>
+    <div class="dp-rules"><div class="dp-rule"><p class="kd-k dp-yes">Rule</p><p>Sign out of Onrace? One question before a destructive action.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#profile">Profile ↗</a></p></div><div class="dp-rule dp-rule--anti"><p class="kd-k dp-no">Anti-rule · use <a href="action-sheet.html">Action sheet</a></p><p>Cancel with a result entered asks with an action sheet at the bottom.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#log-result">Log result ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">The sheet's bar: Cancel, title, Save</p>
+          <div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Log result</h1><button type="button" class="save-btn" aria-label="Save result">Save</button></header></div>
+        </div></div></div></div>
+  </section>
+  <section class="dp-sec dp-states" id="states" aria-labelledby="states-h"><h2 id="states-h">States</h2>
+    <p class="dp-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+  </section>
+  <nav class="dp-pn" aria-label="Components"><a href="sign-out-button.html">‹ Sign out button</a></nav>
+</main>
+<script>
+  // Segmented controls are live: pressing one releases the other (as on the screens)
+  document.querySelectorAll('.view-toggle').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.view-btn'); if (!btn || btn.disabled) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    });
+  });
+</script>
+<script>
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
+    function show() {
+      var v = input.value, text;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
+    }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
+  });
+})();
+</script>
+<script src="../doc.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status line · Onrace design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../../index.css?v=b5e00fb3">
+<link rel="stylesheet" href="../doc.css?v=b5e00fb3">
+<script src="../../tokens/theme.js"></script>
+</head>
+<!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
+     states, styled only by design-system/tokens/tokens.css and design-system/components/index.css (design-system/map-data.css for the static map; Lesson 8, step 3). Texts are the
+     screens' own (microcopy.md). All 10 screens link the kit (step 5), so each
+     specimen is the component as it is on its screens; a change goes here and
+     to every screen that shows it (CLAUDE.md → "Keep it" rule). Hover, press
+     and keyboard focus are live: point at or tab to any control. -->
+<body class="onrace kit-doc">
+<main class="dp">
+  <nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>
+  <p class="kd-k dp-role">Feedback</p>
+  <h1>Status line</h1>
+  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">What we already show</h2>
+    <div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.saved-status</code> <code>.reset-done</code> <code>.sent-note</code> <code>.row-note</code></p><p class="kd-line"><span class="kd-k">Used on 3 screens</span> <a href="../../../wireframes/index.html#results-list">Results list</a>, <a href="../../../wireframes/index.html#sign-in-sign-up-check-inbox">Sign in / Sign up</a>, <a href="../../../wireframes/index.html#profile-error">Profile</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">In the kit</span> <a href="../index.html#status-line">Status line</a>, with every specimen beside it</p></div>
+    <div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span><button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button><span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>
+  </section>
+  <section class="dp-sec" id="anatomy" aria-labelledby="anatomy-h"><h2 id="anatomy-h">Anatomy</h2>
+    <div class="an" data-anatomy="[[&quot;.saved-status&quot;, &quot;Status line, never green&quot;]]"><div class="kit-state"><p class="kit-label">Results list ?saved=</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><p class="saved-status" role="status">Saved: <strong>Valencia Half Marathon</strong></p></div></div></div>
+        </div></div><ol class="an-legend"><li><span class="an-n">1</span> Status line, never green <code>.saved-status</code></li></ol>
+  </section>
+  <section class="dp-sec" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants and sizes <span>3</span></h2>
+    <div class="kit-states"><div class="kit-state"><p class="kit-label">Results list ?saved=</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><p class="saved-status" role="status">Saved: <strong>Valencia Half Marathon</strong></p></div></div></div>
+        </div><div class="kit-state"><p class="kit-label">Sign in ?reset=done · Check inbox: Sent</p>
+          <div class="kit-frame gate"><p class="reset-done" role="status">Password changed. Sign in with your new password.</p><p class="sent-note">Sent. Check your inbox again.</p></div>
+        </div><div class="kit-state"><p class="kit-label">Profile: a field saving (the spinner before "Saving…", G26), then saved</p>
+          <div class="kit-frame"><ul class="rows"><li><div class="row"><label for="k-nm">Name</label><input type="text" id="k-nm" value="Maya Rossi"></div><p class="row-note"><span data-saving>Saving…</span><span data-saved hidden>Saved</span></p></li><li><div class="row"><label for="k-lg">Language</label><select id="k-lg"><option selected>English</option><option>Italiano</option></select></div><p class="row-note"><span data-saving hidden>Saving…</span><span data-saved>Saved</span></p></li></ul></div>
+        </div></div>
+    <div class="kd-meta dp-inv"><p class="kd-line"><span class="kd-k">Screens</span> Results list (<code>.saved-status</code>, "Saved: &lt;race&gt;", <code>?saved=</code>); Sign in / Sign up (<code>.reset-done</code>, "Password changed…", <code>?reset=done</code>; <code>.sent-note</code>, "Sent. Check your inbox again.", <code>-check-inbox</code>); Profile (<code>.row-note</code>, "Saving…" / "Saved")</p><p class="kd-line"><span class="kd-k">States</span> Hidden until its URL switch or event</p></div>
+  </section>
+  <section class="dp-sec" id="use" aria-labelledby="use-h"><h2 id="use-h">When to use</h2>
+    <blockquote class="dp-quote"><p><strong>Saved confirmation:</strong> <code>--surface</code>, 6px radius, <code>12px 16px</code>, 14px <code>--text-primary</code> with the race name in 600, and an 18px Solar save glyph in <code>--text-secondary</code>. Never green, never a check.</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Cards / Containers</footer></blockquote>
+    <h3>The words it carries</h3>
+    <div class="tbl-wrap"><table class="dp-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>Save</td><td>button</td><td>Log result</td></tr><tr><td>Saved</td><td>helper text</td><td>Profile</td></tr><tr><td>Check your inbox</td><td>heading</td><td>Sign in / Sign up, Reset password</td></tr><tr><td>Sent. Check your inbox again.</td><td>helper text</td><td>Sign in / Sign up</td></tr><tr><td>Password</td><td>field label</td><td>Sign in / Sign up</td></tr><tr><td>Password changed. Sign in with your new password.</td><td>status (a11y / live)</td><td>Sign in / Sign up</td></tr><tr><td>Sign in</td><td>button (nav)</td><td>Reset password, New password</td></tr><tr><td>New password</td><td>heading</td><td>New password</td></tr><tr><td>Saving…</td><td>helper text</td><td>Profile</td></tr></tbody></table></div>
+  </section>
+  <section class="dp-sec" id="rule" aria-labelledby="rule-h"><h2 id="rule-h">Rule and anti-rule</h2>
+    <div class="dp-rules"><div class="dp-rule"><p class="kd-k dp-yes">Rule</p><p>After Save: one quiet line.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#results-list?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington">Results list ↗</a></p></div><div class="dp-rule dp-rule--anti"><p class="kd-k dp-no">Anti-rule · use <a href="form-alert.html">Form alert</a></p><p>A save that failed is a form alert, not a status line.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#log-result-error?cause=submit">Log result · error ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Log result -error?cause=submit</p>
+          <div class="kit-frame"><div class="form-alert" role="alert"><h2>Couldn’t save your result</h2><p>The connection may have dropped. Check it, then tap Save to try again. Everything you entered is still here.</p></div></div>
+        </div></div></div></div>
+  </section>
+  <section class="dp-sec dp-states" id="states" aria-labelledby="states-h"><h2 id="states-h">States</h2>
+    <p class="dp-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+  </section>
+  <nav class="dp-pn" aria-label="Components"><a href="inline-error.html">‹ Inline error</a><a href="check-inbox-block.html">Check-inbox block ›</a></nav>
+</main>
+<script>
+  // Segmented controls are live: pressing one releases the other (as on the screens)
+  document.querySelectorAll('.view-toggle').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.view-btn'); if (!btn || btn.disabled) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    });
+  });
+</script>
+<script>
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
+    function show() {
+      var v = input.value, text;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
+    }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
+  });
+})();
+</script>
+<script src="../doc.js"></script>
+</body>
+</html>

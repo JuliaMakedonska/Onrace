@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controls bar · Onrace design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../../index.css?v=b5e00fb3">
+<link rel="stylesheet" href="../doc.css?v=b5e00fb3">
+<script src="../../tokens/theme.js"></script>
+</head>
+<!-- The kit showcase (Lesson 7). Every component in ui/inventory.md, in its
+     states, styled only by design-system/tokens/tokens.css and design-system/components/index.css (design-system/map-data.css for the static map; Lesson 8, step 3). Texts are the
+     screens' own (microcopy.md). All 10 screens link the kit (step 5), so each
+     specimen is the component as it is on its screens; a change goes here and
+     to every screen that shows it (CLAUDE.md → "Keep it" rule). Hover, press
+     and keyboard focus are live: point at or tab to any control. -->
+<body class="onrace kit-doc">
+<main class="dp">
+  <nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>
+  <p class="kd-k dp-role">One-off</p>
+  <h1>Controls bar</h1>
+  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">What we already show</h2>
+    <div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.controls</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../../../wireframes/index.html#race-browse-empty">Race browse</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">In the kit</span> <a href="../index.html#controls">Race browse · controls bar, active filter chips</a>, with every specimen beside it</p></div>
+    <div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span><button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button><span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>
+  </section>
+  <section class="dp-sec" id="anatomy" aria-labelledby="anatomy-h"><h2 id="anatomy-h">Anatomy</h2>
+    <div class="an" data-anatomy="[[&quot;.controls&quot;, &quot;Controls bar, sticky&quot;], [&quot;.filters-trigger&quot;, &quot;Filters&quot;], [&quot;.view-toggle&quot;, &quot;List / Map&quot;], [&quot;.chips-row&quot;, &quot;Chips row&quot;], [&quot;.clear-all&quot;, &quot;Clear all filters&quot;]]"><div class="kit-state"><p class="kit-label">Two filters (?sport=hyrox&amp;sport=marathon)</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="HYROX, remove filter">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Marathon, remove filter">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
+        </div></div><ol class="an-legend"><li><span class="an-n">1</span> Controls bar, sticky <code>.controls</code></li><li><span class="an-n">2</span> Filters <code>.filters-trigger</code></li><li><span class="an-n">3</span> List / Map <code>.view-toggle</code></li><li><span class="an-n">4</span> Chips row <code>.chips-row</code></li><li><span class="an-n">5</span> Clear all filters <code>.clear-all</code></li></ol>
+  </section>
+  <section class="dp-sec" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants and sizes <span>3</span></h2>
+    <div class="kit-states"><div class="kit-state"><p class="kit-label">No filters</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div></div></div></div></div>
+        </div><div class="kit-state"><p class="kit-label">Two filters (?sport=hyrox&amp;sport=marathon)</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 2</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="HYROX, remove filter">HYROX <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Marathon, remove filter">Marathon <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
+        </div><div class="kit-state"><p class="kit-label">Three filters, the row fades (-empty)</p>
+          <div class="kit-frame kit-frame--flush"><div class="phone-screen"><div class="screen-main"><div class="controls"><div class="control-row"><button type="button" class="filters-trigger" aria-expanded="false">Filters · 3</button><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="view-btn" aria-pressed="true">List</button><button type="button" class="view-btn" aria-pressed="false">Map</button></div></div><div class="chips-bar"><ul class="chips-row" aria-label="Active filters"><li><button type="button" class="chip" aria-label="Middle East, remove filter">Middle East <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="Triathlon, remove filter">Triathlon <span aria-hidden="true">×</span></button></li><li><button type="button" class="chip" aria-label="1 Oct – 30 Nov 2026, remove filter">1 Oct – 30 Nov 2026 <span aria-hidden="true">×</span></button></li></ul><button type="button" class="clear-all">Clear all filters</button></div></div></div></div></div>
+        </div></div>
+    <div class="kd-meta dp-inv"><p class="kd-line"><span class="kd-k">In the inventory</span> <strong>Controls bar</strong> (<code>.controls</code>, sticky: Filters + List/Map, then the chips row). Gaps: G7 K. <strong>Overflow fix (2026-10-24):</strong> the grid column is <code>minmax(0, 1fr)</code>, so the chips' width can't widen the bar; List/Map never shrinks, Filters takes the rest down to its label. Checked at 390 and 320 with 0–5 filters (<code>scripts/check_overflow.mjs</code>).</p></div>
+  </section>
+  <section class="dp-sec" id="use" aria-labelledby="use-h"><h2 id="use-h">When to use</h2>
+    <blockquote class="dp-quote"><p><strong>Active filter chip</strong> (a removable state, in the controls bar): an iOS capsule (16px radius, C7) in a quiet <code>--raised</code> fill with no outline; the format's own name in sentence case, 13px / 600 <code>--text-primary</code> (13.05:1); 32px tall (44px tap area), <code>0 8px 0 12px</code>; the 15px Solar close-circle inside, 4px after the name, in <code>--text-secondary</code> (6.01:1). Hover <code>--pressed</code>. Designer, 2026-10-22.</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Chips</footer></blockquote>
+    <h3>The words it carries</h3>
+    <div class="tbl-wrap"><table class="dp-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>Choose view</td><td>a11y label</td><td>Race browse</td></tr><tr><td>List</td><td>button</td><td>Race browse</td></tr><tr><td>Map</td><td>button</td><td>Race browse</td></tr><tr><td>Filters</td><td>heading</td><td>Race browse</td></tr><tr><td>Active filters</td><td>a11y label</td><td>Race browse</td></tr><tr><td>Clear all filters</td><td>button</td><td>Race browse</td></tr><tr><td>Filters · 2</td><td>button</td><td>Race browse</td></tr><tr><td>Filters · 3</td><td>button</td><td>Race browse</td></tr><tr><td>Middle East, remove filter</td><td>a11y label</td><td>Race browse</td></tr><tr><td>Triathlon, remove filter</td><td>a11y label</td><td>Race browse</td></tr><tr><td>1 Oct – 30 Nov 2026, remove filter</td><td>a11y label</td><td>Race browse</td></tr></tbody></table></div>
+  </section>
+  <section class="dp-sec" id="rule" aria-labelledby="rule-h"><h2 id="rule-h">Rule and anti-rule</h2>
+    <div class="dp-rules"><div class="dp-rule"><p class="kd-k dp-yes">Rule</p><p>Everything that changes the list, under the title.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#race-browse">Race browse ↗</a></p></div><div class="dp-rule dp-rule--anti"><p class="kd-k dp-no">Anti-rule · use <a href="results-row.html">Results row</a></p><p>The count and Sort sit with the list, not in the bar.</p><p class="kd-line">See it: <a href="../../../wireframes/index.html#race-browse">Race browse ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Race browse, unfiltered</p>
+          <div class="kit-frame"><div class="results-row"><p class="results-count"><strong>7</strong> upcoming races</p><button type="button" class="sort-toggle" aria-label="Soonest first, sort order"><span>Soonest first</span></button></div></div>
+        </div></div></div></div>
+  </section>
+  <section class="dp-sec dp-states" id="states" aria-labelledby="states-h"><h2 id="states-h">States</h2>
+    <p class="dp-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+  </section>
+  <nav class="dp-pn" aria-label="Components"><a href="action-sheet.html">‹ Action sheet</a><a href="active-filter-chips-row.html">Active filter chips row ›</a></nav>
+</main>
+<script>
+  // Segmented controls are live: pressing one releases the other (as on the screens)
+  document.querySelectorAll('.view-toggle').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.view-btn'); if (!btn || btn.disabled) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    });
+  });
+</script>
+<script>
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
+    function show() {
+      var v = input.value, text;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
+    }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
+  });
+})();
+</script>
+<script src="../doc.js"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@ with Mercator, cropped to North America and Europe, into two SVG masks:
 land fill, and coastlines + borders as hairlines. Colors come from the map roles
 in design-system/tokens/tokens.css (the masks only carry shape). Also writes each race pin's
 position from its real latitude/longitude. Output goes between the map markers in
-design-system/map-data.css (linked only by the Race browse pages and the ui/kit.html showcase).
+design-system/map-data.css (linked only by the Race browse pages and the showcase, design-system/docs/index.html).
 
 Usage, from the repo root:  python3 scripts/concept/build_map.py
 """
