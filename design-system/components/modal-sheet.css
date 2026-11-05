@@ -54,7 +54,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .sheet:has(> .top-bar) { padding: 0; overflow: hidden; }
 .sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--space-2) var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
 .sheet .group { margin: 0 0 var(--space-6); padding: 0; border: 0; min-width: 0; }
-.sheet .rows { background: var(--group); }   /* one level above the sheet, as the picker's cards */
+.sheet .rows { background: var(--group); --row-hover: var(--group-hover); --row-pressed: var(--group-pressed); }   /* one level above the sheet, as the picker's cards; its rows' states follow */
 
 /* order 0580 */
 /* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,

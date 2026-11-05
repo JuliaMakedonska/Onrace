@@ -686,6 +686,8 @@ Only the stand, the showcase stages and the docs CSS use these. When the kit swi
 
 ### After the lesson ("keep it" changes, not part of the refactor)
 
+**Done in Lesson 9 step 3 (2026-11-05):** the List/Map track at large text and the segmented control as a capsule everywhere (`--radius-capsule`; C7 reworded), the field error, iOS style (point 3 below); and Drift 1 (the hover and pressed steps) is resolved by one rule for fills, hover one level up and pressed two, for every component (`concept/concept.md` → Lesson 9 → Step 3).
+
 - **The List/Map track at large text (designer, 2026-10-27).** At 200% text the track is 47px tall with a 22px radius, so it isn't a full capsule; C7 says capsule. After Lesson 8: decide, then change it in `tokens/tokens.css` and `components/segmented-control.css` (and its showcase stage) under the "keep it" rule.
 - **One segmented control, a capsule everywhere (designer, 2026-10-30).** The segmented control is one component and must look the same wherever it stands. Today it doesn't:
   - List/Map, in a bar, is a capsule;

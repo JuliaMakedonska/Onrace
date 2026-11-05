@@ -19,12 +19,13 @@
   line-height: var(--leading-tight);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
-.filters-trigger:active, .state-action:active { transform: translateY(var(--border)); }
-/* primary: filled accent (Log result, Register on <domain>) */
+/* primary: filled accent (Log result, Register on <domain>). States change the fill only, never the place or size
+   (Lesson 9 step 3: the 1px press is gone): hover one step up, pressed two */
 .state-action:not(.secondary) { background: var(--accent-fill); color: var(--on-accent-fill); }
-.state-action:not(.secondary):hover { background: var(--accent-hover); }
+@media (hover: hover) { .state-action:not(.secondary):is(:hover, .is-hover) { background: var(--accent-hover); } }
+.state-action:not(.secondary):is(:active, .is-pressed) { background: var(--accent-pressed); }
 
 /* order 0050 */
 /* G26: an activity indicator inside a busy button, before its present-tense label; also before the labels the
@@ -64,10 +65,10 @@
   text-decoration: none;
   overflow-wrap: anywhere;
   cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
-.register-btn:hover, .open-btn:hover, .submit-btn:hover { background: var(--accent-hover); }
-.register-btn:active, .open-btn:active, .submit-btn:active { transform: translateY(var(--border)); }
+@media (hover: hover) { :is(.register-btn, .open-btn, .submit-btn):is(:hover, .is-hover) { background: var(--accent-hover); } }
+:is(.register-btn, .open-btn, .submit-btn):is(:active, .is-pressed) { background: var(--accent-pressed); }
 
 /* order 0920 */
 .submit-btn { margin: var(--space-2) 0 0; }

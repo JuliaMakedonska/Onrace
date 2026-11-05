@@ -31,5 +31,5 @@
 /* order 1020 */
 .row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-secondary); }
 .row-note[hidden] { display: none; }
-.row-note.is-error { text-align: left; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-primary); }   /* one look for "this row failed": the field error's (step 6, #13) */
+.row-note.is-error { text-align: left; font-size: var(--size-proof); font-weight: var(--weight-regular); color: var(--error); }   /* one look for "this row failed": the field error's coral footnote (step 6, #13; Lesson 9 step 3) */
 .row-note.is-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }

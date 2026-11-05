@@ -25,7 +25,9 @@ DOCS = 'design-system/docs'
 P = os.path.join(ROOT, DOCS, 'specimens.html')   # the hand-written specimens
 VIEWER = '../../wireframes/index.html'   # the screen viewer, from design-system/docs/
 KIT = open(P).read()
+KIT = re.sub(r'\n      <!-- kit:states .*?<!-- /kit:states -->', '', KIT, flags=re.S)   # the States grids are generated (below): read without them
 INV = open(os.path.join(ROOT, 'ui/inventory.md')).read()
+import docs_states as DST
 
 # ---------------------------------------------------------------- the Showcase map
 sec = re.search(r'^## Showcase map \(2026-10-26\)\n(.*?)(?=^## |\Z)', INV, flags=re.M | re.S).group(1)
@@ -118,8 +120,37 @@ def card(spec):
     m = re.search(r'(<!-- /kit:meta -->)((?:\n      <p>.*?</p>)+)', b, flags=re.S)
     if m:
         b = b[:m.end(1)] + '\n      <details class="kd-notes"><summary>Notes <span class="fold-sub">what it shows and why</span></summary>' + m.group(2) + '</details><!-- /kd-notes -->' + b[m.end():]
+    st = states_of_spec(spec)
+    if st:
+        i = b.index('<div class="kit-states">'); j = element_end(b, i)
+        b = b[:j] + '\n      <!-- kit:states (scripts/build_kit_showcase.py: ui/inventory.md → States map) -->' + st + '<!-- /kit:states -->' + b[j:]
     names = ' '.join([title_of(spec)] + [r['name'] for r in rows_of[spec]]).lower()
     return b.replace(f'<div class="kit-item" id="{spec}">', f'<div class="kit-item" id="{spec}" data-names="{H.escape(names)}">', 1) if 'data-names' not in b.split('>', 1)[0] else b
+
+# ---------------------------------------------------------------- the States grids (Lesson 9 step 3): ui/inventory.md → States map
+def _cells(line): return [c.strip() for c in re.split(r'(?<!\\)\|', line.strip().strip('|'))]
+SMAP = DST.read_map(INV, _cells)
+def _stages(spec):
+    b, out_ = RAW[spec], []
+    for m in re.finditer(r'<div class="kit-state">', b):
+        h = b[m.start():element_end(b, m.start())]
+        out_.append((H.unescape(re.sub(r'<[^>]+>', '', re.search(r'<p class="kit-label">(.*?)</p>', h, re.S).group(1))).strip(), h))
+    return out_
+def _unid(h, sfx):
+    ids = set(re.findall(r'#([a-zA-Z][\w-]*)', re.sub(r'/\*.*?\*/|\{[^{}]*\}', '', open(os.path.join(ROOT, 'design-system/index.css')).read(), flags=re.S)))
+    h = re.sub(r'\b(id|for|aria-labelledby|aria-describedby|aria-controls|list|form)="([^"]+)"', lambda m: f'{m.group(1)}="' + ' '.join(x if x in ids else x + sfx for x in m.group(2).split()) + '"', h)
+    return re.sub(r'href="#([^"]+)"', lambda m: f'href="#{m.group(1)}{sfx}"', h)
+def _stage(h, sfx, sels, label):   # the docs' stage(): a crop window round the frame, the label kept as data
+    h = _unid(h, sfx)
+    i = h.index('<div class="kit-frame'); j = element_end(h, i)
+    h = h[:i] + f'<div class="an-window" data-crop="{H.escape(json.dumps(sels))}"><div class="an-pan">' + h[i:j] + '</div></div>' + h[j:]
+    h = re.sub(r'\s*<p class="kit-label">.*?</p>', '', h, count=1, flags=re.S)
+    return h.replace('<div class="kit-state">', f'<div class="kit-state" data-label="{H.escape(label)}">', 1)
+def states_grid(name, spec, sfx):
+    return DST.grid(name, SMAP[name], _stages(spec), element_end, _stage, _unid, sfx)
+def states_of_spec(spec):
+    names = [r['name'] for r in rows_of.get(spec, []) if r['name'] in SMAP]
+    return ''.join(f'<div class="kd-states"><h4 class="kd-states-h">{H.escape(n)} · States</h4>{states_grid(n, spec, "-s" + slug_c(n))}</div>' for n in names)
 
 # ---------------------------------------------------------------- the page
 slug = lambda r: 'role-' + re.sub(r'[^a-z]+', '-', r.lower()).strip('-')
@@ -383,8 +414,12 @@ def component(row):
         out += [f'<h3 class="dc-h" id="{sl}-variants">Variants</h3>',
                 '<div class="dc-variants">' + ''.join(f'<figure class="dc-variant">{stage(h, f"-{sl}-v{i}", sels, lab)}<figcaption>{H.escape(lab)}</figcaption></figure>'
                                                     for i, (lab, h) in enumerate(others)) + '</div>']
-    out += [tech(row, vs), '</section>']   # a States section comes when there are real states to show
-    return '\n'.join(out), 'map-placeholder' in vs[top_i][1] + ''.join(h for _, h in others)
+    st = ''
+    if name in SMAP:   # every component you act on (ui/inventory.md → States map)
+        st = states_grid(name, row['spec'], '-' + sl + '-st')
+        out += [f'<h3 class="dc-h" id="{sl}-states">States</h3>', st]
+    out += [tech(row, vs), '</section>']
+    return '\n'.join(out), 'map-placeholder' in vs[top_i][1] + ''.join(h for _, h in others) + st
 
 def retired(row):
     sl = slug_c(row['name'])

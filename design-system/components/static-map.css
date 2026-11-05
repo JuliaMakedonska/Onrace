@@ -87,7 +87,8 @@
   background: var(--text-secondary);
   pointer-events: none;
 }
-.map-pin:hover > span { background: var(--pressed); }
+@media (hover: hover) { .map-pin:is(:hover, .is-hover) > span { background: var(--raised-hover); } }   /* the label rests on --raised */
+.map-pin:is(:active, .is-pressed) > span { background: var(--raised-pressed); }
 .map-pin[hidden] { display: none; }
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */

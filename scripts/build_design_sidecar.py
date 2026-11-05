@@ -37,7 +37,7 @@ def resolve(n):
 MD_PATH = os.path.join(ROOT, 'DESIGN.md')
 MD = open(MD_PATH).read()
 _sem = re.search(r':root\s*\{(.*?)\n\}', TOKENS, flags=re.S).group(1).split('     2. SEMANTIC: color roles\n')[1]   # the main :root only, not the overrides
-ROLES = [n for n in re.findall(r'^\s*--([a-z0-9-]+):', _sem, flags=re.M) if n != 'float-shadow']   # a shadow, not a color
+ROLES = [n for n in re.findall(r'^\s*--([a-z0-9-]+):', _sem, flags=re.M) if n not in ('float-shadow', 'opacity-disabled')]   # a shadow and an opacity, not colors
 TYPE = {   # style: font, size, weight, line height, tracking (DESIGN.md → Typography)
     'title': ('font-display', 'size-title', 'weight-display', 'leading-tight', 'tracking-display'),
     'finish-time': ('font-display', 'size-time', 'weight-display', 'leading-tight', 'tracking-display'),
@@ -50,7 +50,7 @@ TYPE = {   # style: font, size, weight, line height, tracking (DESIGN.md → Typ
     'label': ('font-text', 'size-label', 'weight-strong', 'leading-tight', 'tracking-label'),
     'tab-label': ('font-text', 'size-label', 'weight-strong', 'leading-body', None),
 }
-ROUNDED = ['radius-1', 'radius-2', 'radius-3', 'radius-sheet', 'radius-bar-control', 'radius-bar-inner', 'radius-circle', 'radius-filter-chip', 'radius-alert', 'radius-tabbar']
+ROUNDED = ['radius-1', 'radius-2', 'radius-3', 'radius-sheet', 'radius-bar-control', 'radius-capsule', 'radius-circle', 'radius-filter-chip', 'radius-alert', 'radius-tabbar']
 fm_lines = ['colors:'] + [f'  {n}: "{resolve(n)}"' for n in ROLES] + ['typography:']
 for t, (f, z, w, l, tr) in TYPE.items():
     fm_lines += [f'  {t}:', f'    fontFamily: "{resolve(f).replace(chr(34), "")}"', f'    fontSize: "{resolve(z)}"', f'    fontWeight: {resolve(w)}', f'    lineHeight: {resolve(l)}']
@@ -166,18 +166,18 @@ FONT = 'font-family:"Hanken Grotesk", sans-serif;'
 COMPONENTS = {
     'List / Map Segmented Control': {
         'name': 'List / Map Segmented Control', 'kind': 'custom', 'refersTo': 'segmented-track',
-        'description': 'In the controls bar: a capsule track with concentric segments of equal width (C7, G11); the pressed segment is bg-3 with a field-line outline.',
+        'description': 'A capsule track with capsule segments of equal width, in a bar or in content (C7, G11); the selected segment is the selected level with a boundary outline; an unselected one goes one level up on hover, two pressed.',
         'html': '<div class="ds-seg" role="group" aria-label="View"><button aria-pressed="true">List</button><button aria-pressed="false">Map</button></div>',
-        'css': '.ds-seg { display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; padding:4px; border-radius:var(--radius-bar-control, 22px); background:var(--bg-2, #272B30); } '
-               '.ds-seg button { min-height:36px; padding:0 16px; border:0; border-radius:var(--radius-bar-inner, 18px); background:transparent; color:var(--text-2, #A3A9B0); ' + FONT + ' font-size:15px; font-weight:600; cursor:pointer; } '
-               '.ds-seg button:hover { background:var(--bg-3, #2C3035); } .ds-seg button[aria-pressed="true"] { background:var(--bg-3, #2C3035); color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line, #686E75); } '
+        'css': '.ds-seg { display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; padding:4px; border-radius:var(--radius-capsule, 999px); background:var(--bg-2, #272B30); } '
+               '.ds-seg button { min-height:36px; padding:0 16px; border:0; border-radius:var(--radius-capsule, 999px); background:transparent; color:var(--text-2, #A3A9B0); ' + FONT + ' font-size:15px; font-weight:600; cursor:pointer; } '
+               '@media (hover: hover) { .ds-seg button[aria-pressed="false"]:hover { background:var(--raised-hover, #2C3035); } } .ds-seg button[aria-pressed="false"]:active { background:var(--raised-pressed, #33383E); } .ds-seg button[aria-pressed="true"] { background:var(--selected, #2C3035); color:var(--text-1, #F4F5F6); box-shadow:inset 0 0 0 1px var(--field-line, #686E75); } '
                '.ds-seg button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }'},
     'Result Row': {
         'name': 'Result Row', 'kind': 'card', 'refersTo': 'result-row',
         'description': 'Signature: the finish time is the loudest thing on the row; proof stated, not stamped. The disclosure indicator ends the meta row (G22), so the time and the proof keep the full width.',
         'html': '<a class="ds-result" href="#"><span class="ds-result-top"><span class="ds-result-name">HYROX London</span><span class="ds-result-time">1:18:42</span></span><span class="ds-result-meta"><span class="ds-result-chip">HYROX</span> 6 Dec 2025<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M15.8351 11.6296L9.20467 5.1999C8.79094 4.79869 8 5.04189 8 5.5703L8 18.4297C8 18.9581 8.79094 19.2013 9.20467 18.8001L15.8351 12.3704C16.055 12.1573 16.0549 11.8427 15.8351 11.6296Z"/></svg></span><span class="ds-result-proof">Self-reported · via results.hyrox.com</span></a>',
         'css': '.ds-result { display:grid; gap:8px; padding:12px 16px 16px; border-radius:var(--radius-2, 6px); background:var(--bg-1, #1D2024); color:var(--text-1, #F4F5F6); text-decoration:none; ' + FONT + ' } '
-               '.ds-result:hover { box-shadow:inset 0 0 0 1px var(--field-line, #686E75); } .ds-result:active { background:var(--bg-3, #2C3035); } .ds-result:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; } '
+               '@media (hover: hover) { .ds-result:hover { background:var(--surface-hover, #272B30); } } .ds-result:active { background:var(--surface-pressed, #2C3035); } .ds-result:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; } '
                '.ds-result-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; } .ds-result-name { font-size:17px; font-weight:600; line-height:1.2; } '
                '.ds-result-time { font-family:"Schibsted Grotesk", "Hanken Grotesk", sans-serif; font-size:32px; font-weight:800; line-height:1; letter-spacing:-0.03em; white-space:nowrap; } '
                '.ds-result-meta { display:flex; align-items:center; gap:12px; font-size:15px; color:var(--text-2, #A3A9B0); } .ds-result-meta svg { margin-left:auto; flex:none; } '
@@ -209,8 +209,8 @@ components = [COMPONENTS.get(c['name'], c) for c in OLD.get('components', [])]
 components += [c for n, c in COMPONENTS.items() if n not in {x['name'] for x in components}]
 # the snippets' fallback values come from design-system/tokens/tokens.css too (Lesson 8 step 4): var(--name, value) takes today's role
 # and its resolved value; the old kit names map to the roles; the rim and the scrim literals become their roles
-_OLD = {'bg-bar': 'graphite-5', 'bg-0': 'page', 'bg-1': 'surface', 'bg-2': 'raised', 'bg-3': 'pressed', 'line': 'hairline',
-        'field-line': 'boundary', 'text-1': 'text-primary', 'text-2': 'text-secondary', 'focus': 'text-primary',
+_OLD = {'bg-bar': 'graphite-5', 'bg-0': 'page', 'bg-1': 'surface', 'bg-2': 'raised', 'bg-3': 'selected', 'line': 'hairline',
+        'field-line': 'boundary', 'text-1': 'text-primary', 'text-2': 'text-secondary', 'focus': 'focus',
         'control-tint': 'text-primary', 'on-accent': 'on-accent-fill', 'error-bg': 'error-surface', 'invalid': 'error', 'destructive': 'error'}
 def _snippet(css):
     def v(m):

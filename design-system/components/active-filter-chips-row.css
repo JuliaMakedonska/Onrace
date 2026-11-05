@@ -23,7 +23,8 @@
   cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
-.chip:hover { background: var(--pressed); }
+@media (hover: hover) { .chip:is(:hover, .is-hover) { background: var(--raised-hover); } }
+.chip:is(:active, .is-pressed) { background: var(--raised-pressed); }
 .chip span {   /* the remove mark: Solar close-circle drawn in CSS; the text "×" stays in the markup (aria-hidden) until Lesson 7 */
   display: inline-block;
   flex: none;

@@ -5,7 +5,7 @@
    radius, spacing, shadow, outline, opacity, size, display, gap, backdrop. Four passes: 1280 and 390, dark and light.
    The frame itself is the docs layer (borderless on the family pages since 2026-11-05), so the comparison starts at its
    children, the product; a stage cropped to its component keeps its full width inside the crop window, so widths and
-   heights are compared too. Any difference means the documentation's own CSS reached a specimen, and fails. It caught three such leaks while the docs were built (doc.css → Lesson 9 in concept.md).
+   heights are compared too, except in the States cells ([data-nogeo]), whose width is the cell's. Any difference means the documentation's own CSS reached a specimen, and fails. It caught three such leaks while the docs were built (doc.css → Lesson 9 in concept.md).
    Run from the repo root: node scripts/check_docs_stages.mjs [--quiet]. build_stand.py runs it; exit 1 on a difference,
    2 if Chrome isn't there, 3 if a page never settled (fonts or frames didn't load: not measured, so scripts/ship.sh retries). */
 import { spawn } from 'node:child_process'; import { createServer } from 'node:http';
@@ -42,7 +42,7 @@ const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
   const out = {};
   for (const st of document.querySelectorAll('.kit-state')) {
     const lab = st.getAttribute('data-label') || st.querySelector('.kit-label')?.textContent.trim(); const fr = st.querySelector('.kit-frame'); if (!fr || !lab || st.closest('[hidden]')) continue;
-    const geo = ${geometry};
+    const geo = ${geometry} && !st.hasAttribute('data-nogeo');   // a States cell (Lesson 9 step 3): its width is the page's layout, so widths and heights aren't compared
     const rec = []; const walk = (root, doc) => { for (const el of [root, ...root.querySelectorAll('*')]) {
       if (el.closest('.an-layer')) continue;
       const cs = doc.defaultView.getComputedStyle(el); const s = {};

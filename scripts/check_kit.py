@@ -131,6 +131,10 @@ for sp in SCREENS + [os.path.join(ROOT, 'ui/shell.html')] + [p for p in DOC_PAGE
         used = {c for a in re.findall(r'class="([^"]*)"', body) for c in a.split()} | set(re.findall(r"classList\.(?:add|toggle|remove)\('([\w-]+)'", h))
         for c in sorted(used - DEFINED):
             fails.append(f'{name}: class .{c} isn\'t defined in design-system/components/index.css')
+        # Lesson 9 step 3: .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and
+        # :focus-visible; a screen shows a state only when it happens
+        for c in sorted(used & {'is-hover', 'is-pressed', 'is-focus'}):
+            fails.append(f'{name}: uses the docs-only state stand-in .{c}')
 
 # ---------------------------------------------------------------- the docs pages (Lesson 9 step 2, 2026-11-04)
 slug_c = lambda n: re.sub(r'[^a-z0-9]+', '-', n.lower()).strip('-')

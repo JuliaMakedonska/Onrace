@@ -324,6 +324,48 @@ What each component's section on its family page in `design-system/docs/` says b
 | **Sign out button** | Sign out, apart from everything else on Profile. | Profile | `.signout` Sign out, coral, in its own group | Navigation › Confirm alert | `profile` A destructive action, apart from the rows. | **Text link** `profile-error?cause=save&field=country&value=France&prev=Italy` Try again on a row is a text link. |
 | **Confirm alert** | One question before a destructive action, in the middle of the screen. | Sign out | `.alert` Confirm alert, the sheet's glass; `.alert h2` Title; `.alert-actions` Actions | Navigation › Confirm alert | `profile` Sign out of Onrace? One question before a destructive action. | **Action sheet** `log-result` Cancel with a result entered asks with an action sheet at the bottom. |
 
+## States map (Lesson 9, step 3, 2026-11-05)
+
+What each component's States shows on its family page in `design-system/docs/` (and under its specimen on `specimens.html`), read by `scripts/build_kit_showcase.py`. Every component you act on has a row; a component that is only content, a container or a state of another (the field error is the text field's Invalid) has none. The build cuts the named stage of the component's specimen down to the **Keep** part and its ancestors, then shows it At rest, Hover, Pressed, Focus and Disabled, in Dark and in Light (`data-theme-scope`), and Invalid where a stage is named. The states come from the product's own selectors through the stand-ins `.is-hover`, `.is-pressed` and `.is-focus`; Disabled sets `disabled` (or `aria-disabled="true"` on an element that has none).
+
+- **Stage:** the specimen stage, by a part of its label.
+- **Keep:** the part kept, the nearest ancestor-or-self of the control (— the control itself).
+- **Control:** the element that takes Hover and Pressed (the first match in the stage; in the tab bar, inside its frame).
+- **Focus, Disabled:** the element that takes each, inside the control (— the control). `*` before a selector: every match inside Keep.
+- **Crop:** what the window shows: `keep` or `control`.
+- **Width:** the stage's width in a cell: `s` 160, `m` 210, `l` 330 (never wider than the page).
+- **Invalid:** the specimen stage that shows the component invalid, by a part of its label (— none).
+
+| Component | Stage | Keep | Control | Focus | Disabled | Crop | Width | Invalid |
+|---|---|---|---|---|---|---|---|---|
+| **Tab bar** | Discover current | `.bottom-nav` | `a[data-tab="results"]` | — | — | keep | l | — |
+| **Top bar** | Cancel, title and Save | `.top-bar` | `.save-btn` | — | — | keep | l | — |
+| **Segmented control** | Sign in / Sign up, full width | `.view-toggle` | `.view-btn[aria-pressed="false"]` | — | `*.view-btn` | keep | m | — |
+| **Search field** | Empty, placeholder | `.race-search` | `input` | — | — | keep | l | — |
+| **Sport-type rows** | Filters sheet, open | `li` | `.row--check` | `input` | `input` | keep | l | — |
+| **Race card** | Race browse, with photo | `.race-card` | `.card-link` | — | — | keep | l | — |
+| **Sort button** | Race browse, unfiltered | `.results-row` | `.sort-toggle` | — | — | control | m | — |
+| **Result row** | Results list: the result row | `.result-card` | `.card-link` | — | — | keep | l | — |
+| **Static map** | Seven races | `.map-placeholder` | `.map-pin` | — | — | control | l | — |
+| **Official race website link** | Race detail | `.official` | `a` | — | — | control | m | — |
+| **Primary button** | In a state message | — | `.state-action` | — | — | keep | m | — |
+| **Secondary button** | State actions and Check inbox | — | `.secondary-btn` | — | — | keep | m | — |
+| **Filters trigger with count** | Filters: rest, with a count, open | `.control-row` | `.filters-trigger` | — | — | control | m | — |
+| **Text link** | Use a different email | — | `.text-link` | — | — | keep | m | — |
+| **Text field** | Sign in: email and password | `li` | `.row` | `input` | `input` | keep | l | Errors under their rows |
+| **Pop-up select** | Log result: Sport type, empty | `li` | `.row` | `select` | `select` | keep | l | Log result -error: missing |
+| **Date field** | Log result: Race date, empty | `li` | `.date-value` | — | — | keep | l | Log result -error: missing |
+| **Catalog row** | Base | `li` | `.row--nav` | — | — | keep | l | — |
+| **Linked race card** | A race linked | `.linked-race` | `.unlink-btn` | — | — | control | m | — |
+| **Forgot password? link** | Forgot password? (44pt | `.forgot` | `a` | — | — | keep | m | — |
+| **Action sheet** | Cancel with a result entered | `dialog` | `.is-destructive` | — | — | keep | l | — |
+| **Active filter chips row** | Two filters | `.chips-row` | `.chip` | — | — | control | l | — |
+| **Grouped settings rows** | Profile | `li` | `.row` | `input` | `input` | keep | l | a row didn't save |
+| **Sign out button** | Profile | — | `.signout` | — | — | keep | l | — |
+| **Confirm alert** | Sign out: the confirm alert | `dialog` | `.is-destructive` | — | — | keep | l | — |
+
+---
+
 ## Docs families (Lesson 9, 2026-11-05)
 
 How `design-system/docs/` is organised, read by `scripts/build_kit_showcase.py`: the left nav's roles, the family pages in each, and the components in each family, in order. Every component of the Showcase map sits in exactly one family, or the build stops. Like the Docs map, its words must come from the other source docs.

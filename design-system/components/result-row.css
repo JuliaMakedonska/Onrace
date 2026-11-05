@@ -32,8 +32,8 @@
 /* ---------- Results list screen (wireframes/results-list*.html) ---------- */
 /* one primary per screen: when a state block brings its own primary (Log your first result, Try again), the header action steps down to secondary */
 .result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
-.result-card .card-link:hover { box-shadow: inset 0 0 0 var(--border) var(--boundary); }   /* same hover as the race card */
-.result-card .card-link:active, .result-card .card-link.is-pressed { background: var(--pressed); }   /* G23: pressed highlight on tap */
+@media (hover: hover) { .result-card .card-link:is(:hover, .is-hover) { background: var(--surface-hover); } }   /* the race card's states */
+.result-card .card-link:is(:active, .is-pressed) { background: var(--surface-pressed); }   /* G23: pressed highlight on tap */
 .result-card .card-meta::after {   /* G22: the row drills into Result detail, so it shows a disclosure indicator (Solar, C2).
      It ends the short meta row, under the finish time's right edge: the time and the proof line keep the full width */
   content: "";

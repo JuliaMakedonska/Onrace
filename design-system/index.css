@@ -14,7 +14,8 @@
       - Merges and splits are marked "merge:" and "split:".
    2. SEMANTIC: color roles only, each a var() of a primitive, each with the audit usages it grew from.
       A role is split only where its uses would need different values in a light appearance (iOS light is
-      the test). No focus role and no new states: they come in Lesson 9.
+      the test). The state roles (hover, pressed, focus, disabled) came in Lesson 9 step 3 (2026-11-05): every one
+      has a value in the dark :root and in the light block; one with a value in a single theme stops the build.
 
    Not here:
    - the docs layer's values (--font-mono, --stand-max, --stand-col-min, --radius-3, --kit-stage-h);
@@ -38,8 +39,9 @@
   --graphite-17: #272B30;   /* L* 17.33 · "Graphite Raised" */
   --graphite-20: #2C3035;   /* L* 19.67 · "Graphite Pressed" */
   --graphite-22: #31363C;   /* L* 22.36 · "Hairline" */
+  --graphite-23: #33383E;   /* L* 23.27 · "Graphite Raised, pressed": a raised fill and a sheet's button two levels up, a group's row one level up (Lesson 9 step 3) */
+  --graphite-26: #383D43;   /* L* 25.51 · "Graphite Group, pressed": a group's row two levels up; the last step that keeps Text secondary at AA (4.62:1) */
   --graphite-46: #686E75;   /* L* 46.15 · "Field Line" */
-  --graphite-47: #6B7178;   /* L* 47.36 · "Disabled" */
   --graphite-69: #A3A9B0;   /* L* 68.97 · "Ash" */
   --graphite-79: #BFC4CA;   /* L* 78.94 · "Chip Text" */
   --graphite-96: #F4F5F6;   /* L* 96.49 · "Chalk" */
@@ -48,6 +50,7 @@
   /* ---------- color: amber and coral ---------- */
   --amber-78: #F5B649;      /* L* 78.08 · "Sodium Amber". Rule 3b's designer override (2026-10-14) is bound to this exact hex */
   --amber-83: #FFC46A;      /* L* 82.80 · "Amber, hover" */
+  --amber-87: #FFD28A;      /* L* 86.60 · "Amber, pressed": the fill and the dark ink two steps up (Lesson 9 step 3) */
   --coral-68: #EE8B84;      /* L* 68.25 · "Soft Coral" */
   --coral-21: #3A2F31;      /* L* 20.65 · "Coral Wash" (coral at 14% on graphite-12) */
 
@@ -59,17 +62,19 @@
   --graphite-87: #D6DADE;   /* L* 86.86 · light: the hairline (iOS separator, opaque) */
   --graphite-85: #D0D5DB;   /* L* 85.05 · light: the map's water */
   --graphite-77: #B9BFC6;   /* L* 77.07 · light: the map's coastlines and borders */
-  --graphite-65: #9A9FA6;   /* L* 65.29 · light: disabled text */
   --graphite-56: #80868D;   /* L* 55.65 · light: an input's boundary, 3:1 on the page and the surface */
   --graphite-39: #575C63;   /* L* 38.87 · light: secondary text (iOS secondaryLabel's place, opaque so it holds AA on every fill) */
   --graphite-27: #3B4046;   /* L* 26.85 · light: the format chip's text */
   --amber-40: #875206;      /* L* 39.91 · light: amber as text (the ink), darker and ~8° warmer than amber-78, so it holds AA on light bars and passes rule 3b on its own */
   --amber-33: #6F4305;      /* L* 32.71 · light: the ink under the pointer */
+  --amber-26: #5A3604;      /* L* 26.22 · light: the ink pressed, two steps darker (Lesson 9 step 3) */
   --coral-40: #A33A32;      /* L* 39.65 · light: error icon, invalid ring, destructive text (soft coral darkened to AA on white and the sheet glass) */
   --coral-94: #FBE9E7;      /* L* 93.69 · light: the error surface */
 
   /* ---------- alpha: the strengths used in mixes ---------- */
   --alpha-8: 8%;            /* the glass rim */
+  --alpha-38: 38%;          /* light: a disabled control's opacity (Lesson 9 step 3): Text primary at 38% on the page is 2.40:1, the retired light Text disabled's 2.44 */
+  --alpha-40: 40%;          /* a disabled control's opacity (Lesson 9 step 3): Text primary at 40% on the page is 3.63:1, the retired Text disabled's 3.71 */
   --alpha-60: 60%;          /* the scrim, the float shadow */
   --alpha-85: 85%;          /* bar glass [?] (was --glass-opacity) */
   --alpha-90: 90%;          /* sheet glass [?] (was --glass-opacity-sheet) */
@@ -115,17 +120,17 @@
   --radius-alert: 34px;     /* the alert's and the action sheet's corners (G67) [?] */
   --radius-circle: 50%;     /* the one circle: Profile initials, the busy spinner, the map pin's dot. Renamed from --radius-avatar in step 6 (2026-10-30): the dot wrote 50% itself, and the spinner only borrowed the avatar's name */
   --radius-bar-control: calc(var(--target) / 2);   /* C7: a control inside a bar is a capsule, concentric with the bar */
-  --radius-bar-inner: calc(var(--radius-bar-control) - var(--space-1));   /* C7: a segment inside it: outer radius minus the track's padding */
   --radius-filter-chip: calc(var(--filter-chip-height) / 2);   /* C7: the active filter chip is a capsule */
   --radius-tabbar: calc(var(--tabbar-h) / 2);   /* G1: the floating tab bar is a capsule */
+  --radius-capsule: 999px;  /* C7 (Lesson 9 step 3): a full capsule at any height, larger than any control is tall, so the corners stay half the box's own height (the browser clamps it). The segmented control's track and segments, everywhere, also at 200% text */
   /* Not merged (tried in this step): one capsule radius for the three (calc(infinity * 1px), clamped to half of each box's
      own height) changes pixels. At 200% text the List/Map track (.view-toggle) is 47px tall and keeps 22px today, so it
      isn't a full capsule there; one formula would round it to 23.5px. The three stay "half the nominal height".
      Designer, 2026-10-27: it stays as today through the refactor; a full capsule at large text is a "keep it" change for
-     after Lesson 8 (tokens/tokens-audit.md → After the lesson). */
+     after Lesson 8 (tokens/tokens-audit.md → After the lesson). Done in Lesson 9 step 3 for the segmented control:
+     --radius-capsule. The other three keep half the nominal height. */
   --border: 1px;
-  --focus-ring: 2px;        /* the focus outline's width and offset */
-  --invalid-ring: 2px;      /* split: the invalid field ring's width, which borrowed --focus-ring. Same value */
+  --focus-ring: 2px;        /* the focus outline's width and offset; its color is the semantic --focus */
   --spinner-stroke: 2px;    /* split: the busy spinner's stroke, which borrowed --focus-ring (found in this step; not in the audit). Same value */
   --target: 44px;           /* minimum touch target */
   --measure: 65ch;          /* longest line of running text */
@@ -241,9 +246,9 @@
   --frame: var(--graphite-5);        /* the void behind an open sheet: body:has(> .sheet > .phone-screen). Split from the tab bar's glass: in iOS light the area behind a sheet stays black, while the tab bar turns light */
   --page: var(--graphite-7);         /* the page: .onrace (and the showcase stages .kit-frame, .kit-shell); ::selection text */
   --surface: var(--graphite-12);     /* cards and row groups: .race-card, .result-card .card-link, .rows, .skeleton-card, the search field, .saved-status, .signout, the receded Results edge */
-  --raised: var(--graphite-17);      /* a fill on a surface: secondary buttons, .sport-tag, .chip, the date tile, the List/Map track, skeleton .bar, pin labels, .initials. Rows still take it on hover and press (.row--check:active, a.row--nav:hover, .signout:hover): states, Lesson 9 */
-  --pressed: var(--graphite-20);     /* hover, open and pressed fills: raised controls (+1) and the pressed race and result cards (+2, audit Drift 1). An existing state role, kept as it is for Lesson 9 */
-  --group: var(--graphite-20);       /* split from --pressed: a group of rows one level above its container (.sheet .rows, .linked-race). In a light appearance a group rises lighter while a press goes darker */
+  --raised: var(--graphite-17);      /* a fill on a surface: secondary buttons, .sport-tag, .chip, the date tile, the List/Map track, skeleton .bar, pin labels, .initials */
+  --selected: var(--graphite-20);    /* a control that is on: the selected List/Map segment, Filters while its sheet is open. Renamed from --pressed in Lesson 9 step 3, when hover and press got their own roles below */
+  --group: var(--graphite-20);       /* split from --pressed (now --selected): a group of rows one level above its container (.sheet .rows, .linked-race). In a light appearance a group rises lighter while a press goes darker */
 
   /* ---------- glass, scrim, shadow (C1): mixes of primitives ---------- */
   --glass-bar: color-mix(in srgb, var(--graphite-5) var(--alpha-85), transparent);      /* .bottom-nav, .action-bar */
@@ -254,12 +259,11 @@
   --float-shadow: 0 var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--black) var(--alpha-60), transparent);   /* the tab bar, sheet, alert and action sheet (was --shadow-sheet). Its own mix, not var(--scrim): a light scrim and a light shadow differ */
 
   /* ---------- text and lines ---------- */
-  --text-primary: var(--graphite-96);    /* titles, body, finish times, secondary-button labels; also the checkmark and checkbox (was --control-tint, C4), the focus ring (was --focus; no focus role until Lesson 9), the ::selection fill and the map pin dot */
-  --text-secondary: var(--graphite-69);  /* meta, location, proof line, placeholder, inactive tab, small glyphs (chip ×, search, disclosure, select chevron), the empty-state icon, the map leader line; and two hover states (.race-search input:hover ring, link hover), Lesson 9 */
-  --text-disabled: var(--graphite-47);   /* :disabled controls only */
+  --text-primary: var(--graphite-96);    /* titles, body, finish times, secondary-button labels; also the checkmark and checkbox (was --control-tint, C4), the ::selection fill and the map pin dot */
+  --text-secondary: var(--graphite-69);  /* meta, location, proof line, placeholder, inactive tab, small glyphs (chip ×, search, disclosure, select chevron), the empty-state icon, the map leader line */
   --chip-text: var(--graphite-79);       /* single use, a role because the theme changes it: .sport-tag */
   --hairline: var(--graphite-22);        /* dividers: .controls, .rows li + li, .results-order, the alert buttons, the action-sheet message; the showcase frame outline */
-  --boundary: var(--graphite-46);        /* an input's edge, 3:1 (WCAG 1.4.11): the search field, rows with inputs, the pressed segment, the card hover ring, the map frame, the scrollbar */
+  --boundary: var(--graphite-46);        /* an input's edge, 3:1 (WCAG 1.4.11): the search field, rows with inputs, the selected segment, the map frame, the scrollbar */
 
   /* ---------- accent (Color rule 1: only where you act or where you are) ---------- */
   --accent-fill: var(--amber-78);        /* the primary action's fill: .state-action:not(.secondary), .register-btn, .open-btn, .submit-btn */
@@ -269,13 +273,36 @@
   --accent-ink-hover: var(--amber-83);   /* the bar action under the pointer (.top-bar .save-btn, .bar-action). Split from --accent-hover in step 5: in light the fill's hover takes dark text and the ink's hover is text on a light bar, so one value can't serve both (the theme test's hole 1) */
 
   /* ---------- error ---------- */
-  --error: var(--coral-68);              /* the error icon (.inline-error h2::before, .form-alert, the gate), the invalid ring (was --invalid) and destructive text (was --destructive: .signout, #signout-confirm, .is-destructive). Not split: in iOS light all three take the same red */
+  --error: var(--coral-68);              /* the error icon (.inline-error h2::before, .form-alert, the gate), the field error's footnote (Lesson 9 step 3: it replaced the invalid ring, was --invalid) and destructive text (was --destructive: .signout, .is-destructive). Not split: in iOS light all three take the same red */
   --error-surface: var(--coral-21);      /* single use, a role because the theme changes it: .inline-error, .form-alert */
 
   /* ---------- the static map ---------- */
   --map-water: var(--graphite-5);        /* single use, a role because the theme changes it: .map-placeholder, the ring of .map-pin::before */
   --map-land: var(--graphite-12);        /* single use, a role because the theme changes it: .map-placeholder::before */
   --map-lines: var(--graphite-20);       /* single use, a role because the theme changes it: .map-placeholder::after (coastlines, borders) */
+
+  /* ---------- states (Lesson 9 step 3, 2026-11-05) ----------
+     One rule for fills: hover one level up, pressed two levels up, for every component. A fill's levels depend on where
+     it rests, so each resting level has its pair. "Up" is lighter in dark; in light a state goes darker (iOS light).
+     Hover only under @media (hover: hover); pressed is the state on touch. A state changes fill, color or border only. */
+  --surface-hover: var(--graphite-17);   /* a fill resting on --surface: the race card, the result row, rows on the page (catalog, select, check, Profile's), Sign out */
+  --surface-pressed: var(--graphite-20);
+  --raised-hover: var(--graphite-20);    /* a fill resting on --raised: secondary buttons, Filters, the filter chip, the date pill, an unselected segment, a map pin's label */
+  --raised-pressed: var(--graphite-23);
+  --group-hover: var(--graphite-23);     /* a row resting on --group: the rows on a sheet (Filters, Log result) */
+  --group-pressed: var(--graphite-26);
+  --sheet-hover: var(--graphite-20);     /* a button on the sheet glass: the confirm alert's and the action sheet's buttons. Its own pair: the glass is the raised level in dark and white in light */
+  --sheet-pressed: var(--graphite-23);
+  --bar-hover: var(--graphite-12);       /* a tab on the tab bar's glass (graphite-5 in dark): one level up is the surface, two the raised level */
+  --bar-pressed: var(--graphite-17);
+  --accent-pressed: var(--amber-87);     /* the primary fill pressed, two steps up from --accent-fill (hover is --accent-hover, one) */
+  --accent-ink-pressed: var(--amber-87); /* the bar action pressed (.top-bar .save-btn, .bar-action) */
+  --text-hover: var(--graphite-79);      /* a text control in Text primary under the pointer: links, Clear all filters, Copy link, Sort, the bar's back and Cancel. One step dimmer */
+  --text-pressed: var(--graphite-69);    /* the same pressed: two steps dimmer */
+  --boundary-hover: var(--graphite-69);  /* an input's boundary under the pointer: the search field. One step stronger than --boundary */
+  --boundary-pressed: var(--graphite-79);
+  --focus: var(--graphite-96);           /* the keyboard focus ring: white in dark (C4, neutral, never the accent); at least 3:1 on every background it sits on, in both themes */
+  --opacity-disabled: var(--alpha-40);   /* a disabled control: the whole control at this opacity, no pointer events; never recolored by hand. Replaced --text-disabled */
 }
 
 /* G28: on iOS the root text size follows Dynamic Type (Body is 17 at the default size) */
@@ -302,16 +329,17 @@
 /* =================================================================
    LIGHT THEME (Lesson 8 step 5, 2026-10-29): the theme stress test. Onrace is dark-only (C5); this block exists to prove
    the roles hold a second appearance. Semantic roles only: no primitive is redefined and no component reads one.
-   On by <html data-theme="light">, set by tokens/theme.js from ?theme=light. Based on iOS light (grouped backgrounds,
+   On by <html data-theme="light">, set by tokens/theme.js from ?theme=light, or on one part of a page by
+   data-theme-scope="light" (the dark roles' copy for data-theme-scope="dark" is generated below). Based on iOS light (grouped backgrounds,
    label colors), keeping Podium: the amber fill, black-and-white photos, neutral chips.
    ================================================================= */
-:root[data-theme="light"] {
+:root[data-theme="light"], [data-theme-scope="light"] {   /* [data-theme-scope]: one part of a page in the other theme (the docs' States grids, Lesson 9 step 3) */
   color-scheme: light;
   /* --frame stays --graphite-5: behind an open sheet iOS light stays black */
   --page: var(--graphite-96);
   --surface: var(--white);
   --raised: var(--graphite-93);
-  --pressed: var(--graphite-89);
+  --selected: var(--graphite-89);
   --group: var(--white);                 /* a group rises lighter in light while a press goes darker: the two roles part here */
   --glass-bar: color-mix(in srgb, var(--graphite-98) var(--alpha-90), transparent);
   --glass-ground: color-mix(in srgb, var(--graphite-96) var(--alpha-92), transparent);
@@ -321,7 +349,6 @@
   --float-shadow: 0 var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--black) var(--alpha-18), transparent);
   --text-primary: var(--graphite-7);
   --text-secondary: var(--graphite-39);
-  --text-disabled: var(--graphite-65);
   --chip-text: var(--graphite-27);
   --hairline: var(--graphite-87);
   --boundary: var(--graphite-56);
@@ -333,24 +360,103 @@
   --map-water: var(--graphite-85);
   --map-land: var(--graphite-96);
   --map-lines: var(--graphite-77);
+  /* states: in light a state goes darker. Two levels down from white skip the page's level (graphite-96), so a hovered
+     row never matches the ground around its group */
+  --surface-hover: var(--graphite-93);
+  --surface-pressed: var(--graphite-89);
+  --raised-hover: var(--graphite-89);
+  --raised-pressed: var(--graphite-85);
+  --group-hover: var(--graphite-93);
+  --group-pressed: var(--graphite-89);
+  --sheet-hover: var(--graphite-93);
+  --sheet-pressed: var(--graphite-89);
+  --bar-hover: var(--graphite-93);
+  --bar-pressed: var(--graphite-89);
+  --accent-pressed: var(--amber-87);     /* a fill with dark text: the same as dark */
+  --accent-ink-pressed: var(--amber-26);
+  --text-hover: var(--graphite-27);
+  --text-pressed: var(--graphite-39);
+  --boundary-hover: var(--graphite-39);
+  --boundary-pressed: var(--graphite-27);
+  --focus: var(--graphite-7);            /* dark on light */
+  --opacity-disabled: var(--alpha-38);
 }
 @media (prefers-reduced-transparency: reduce) {
-  :root[data-theme="light"] {
+  :root[data-theme="light"], [data-theme-scope="light"] {
     --glass-bar: color-mix(in srgb, var(--graphite-98) var(--alpha-100), transparent);
     --glass-ground: color-mix(in srgb, var(--graphite-96) var(--alpha-100), transparent);
     --glass-sheet: color-mix(in srgb, var(--white) var(--alpha-100), transparent);
   }
 }
 
+/* dark-scope:start (generated by scripts/build_components.py from the dark roles above; do not edit by hand) */
+[data-theme-scope="dark"] {
+  color-scheme: dark;
+  --frame: var(--graphite-5);
+  --page: var(--graphite-7);
+  --surface: var(--graphite-12);
+  --raised: var(--graphite-17);
+  --selected: var(--graphite-20);
+  --group: var(--graphite-20);
+  --glass-bar: color-mix(in srgb, var(--graphite-5) var(--alpha-85), transparent);
+  --glass-ground: color-mix(in srgb, var(--graphite-7) var(--alpha-85), transparent);
+  --glass-sheet: color-mix(in srgb, var(--graphite-17) var(--alpha-90), transparent);
+  --glass-rim: color-mix(in srgb, var(--graphite-96) var(--alpha-8), transparent);
+  --scrim: color-mix(in srgb, var(--black) var(--alpha-60), transparent);
+  --float-shadow: 0 var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--black) var(--alpha-60), transparent);
+  --text-primary: var(--graphite-96);
+  --text-secondary: var(--graphite-69);
+  --chip-text: var(--graphite-79);
+  --hairline: var(--graphite-22);
+  --boundary: var(--graphite-46);
+  --accent-fill: var(--amber-78);
+  --on-accent-fill: var(--graphite-7);
+  --accent-ink: var(--amber-78);
+  --accent-hover: var(--amber-83);
+  --accent-ink-hover: var(--amber-83);
+  --error: var(--coral-68);
+  --error-surface: var(--coral-21);
+  --map-water: var(--graphite-5);
+  --map-land: var(--graphite-12);
+  --map-lines: var(--graphite-20);
+  --surface-hover: var(--graphite-17);
+  --surface-pressed: var(--graphite-20);
+  --raised-hover: var(--graphite-20);
+  --raised-pressed: var(--graphite-23);
+  --group-hover: var(--graphite-23);
+  --group-pressed: var(--graphite-26);
+  --sheet-hover: var(--graphite-20);
+  --sheet-pressed: var(--graphite-23);
+  --bar-hover: var(--graphite-12);
+  --bar-pressed: var(--graphite-17);
+  --accent-pressed: var(--amber-87);
+  --accent-ink-pressed: var(--amber-87);
+  --text-hover: var(--graphite-79);
+  --text-pressed: var(--graphite-69);
+  --boundary-hover: var(--graphite-69);
+  --boundary-pressed: var(--graphite-79);
+  --focus: var(--graphite-96);
+  --opacity-disabled: var(--alpha-40);
+}
+@media (prefers-reduced-transparency: reduce) {
+  [data-theme-scope="dark"] {
+    --glass-bar: color-mix(in srgb, var(--graphite-5) var(--alpha-100), transparent);
+    --glass-ground: color-mix(in srgb, var(--graphite-7) var(--alpha-100), transparent);
+    --glass-sheet: color-mix(in srgb, var(--graphite-17) var(--alpha-100), transparent);
+  }
+}
+/* dark-scope:end */
+
 /* contrast:start (generated by scripts/concept/build_stand.py; do not edit by hand)
    Every semantic text/background pair the build checks, in both themes (WCAG 2 ratios). Glass is measured over its
    worst case: dark, Text primary behind; light, black behind (a photo's shadows); the sheet also under its scrim.
-   34 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
+   74 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
    --text-primary on --page                                               dark 16.76  light 16.76  needs 4.5  text
    --text-primary on --surface                                            dark 14.98  light 18.29  needs 4.5  text
    --text-primary on --raised                                             dark 13.05  light 15.31  needs 4.5  text
-   --text-primary on --pressed                                            dark 12.17  light 13.68  needs 4.5  text
-   --text-secondary on --pressed                                          dark  5.60  light  5.04  needs 4.5  text
+   --text-primary on --raised-hover                                       dark 12.17  light 13.68  needs 4.5  text
+   --text-primary on --selected                                           dark 12.17  light 13.68  needs 4.5  text
+   --text-secondary on --raised-hover                                     dark  5.60  light  5.04  needs 4.5  text
    --text-secondary on --page                                             dark  7.72  light  6.17  needs 4.5  text
    --text-secondary on --surface                                          dark  6.90  light  6.74  needs 4.5  text
    --text-secondary on --raised                                           dark  6.01  light  5.64  needs 4.5  text
@@ -367,9 +473,40 @@
    --text-primary on --map-land                                           dark 14.98  light 16.76  needs 3  non-text
    --text-primary on --map-water                                          dark 17.32  light 12.39  needs 3  non-text
    --text-secondary on --map-land                                         dark  6.90  light  6.17  needs 3  non-text
-   --error on --raised                                                    dark  5.87  light  5.48  needs 4.5  text
    --text-primary on --group                                              dark 12.17  light 18.29  needs 4.5  text
    --text-secondary on --group                                            dark  5.60  light  6.74  needs 4.5  text
+   --text-primary on --surface-hover                                      dark 13.05  light 15.31  needs 4.5  text
+   --text-secondary on --surface-hover                                    dark  6.01  light  5.64  needs 4.5  text
+   --text-primary on --surface-pressed                                    dark 12.17  light 13.68  needs 4.5  text
+   --text-secondary on --surface-pressed                                  dark  5.60  light  5.04  needs 4.5  text
+   --error on --surface-hover                                             dark  5.87  light  5.48  needs 4.5  text
+   --error on --surface-pressed                                           dark  5.48  light  4.90  needs 4.5  text
+   --text-primary on --raised-pressed                                     dark 10.83  light 12.39  needs 4.5  text
+   --text-secondary on --raised-pressed                                   dark  4.99  light  4.56  needs 4.5  text
+   --text-primary on --group-hover                                        dark 10.83  light 15.31  needs 4.5  text
+   --text-secondary on --group-hover                                      dark  4.99  light  5.64  needs 4.5  text
+   --text-primary on --group-pressed                                      dark 10.04  light 13.68  needs 4.5  text
+   --text-secondary on --group-pressed                                    dark  4.62  light  5.04  needs 4.5  text
+   --error on --group                                                     dark  5.48  light  6.54  needs 4.5  text
+   --on-accent-fill on --accent-pressed                                   dark 12.92  light 12.92  needs 4.5  text
+   --text-hover on --page                                                 dark 10.42  light  9.58  needs 4.5  text
+   --text-hover on --surface                                              dark  9.32  light 10.46  needs 4.5  text
+   --text-pressed on --page                                               dark  7.72  light  6.17  needs 4.5  text
+   --text-pressed on --surface                                            dark  6.90  light  6.74  needs 4.5  text
+   --text-pressed on --group                                              dark  5.60  light  6.74  needs 4.5  text
+   --boundary-hover on --surface                                          dark  6.90  light  6.74  needs 3  non-text
+   --boundary-pressed on --surface                                        dark  9.32  light 10.46  needs 3  non-text
+   --boundary-hover on --page                                             dark  7.72  light  6.17  needs 3  non-text
+   --focus on --page                                                      dark 16.76  light 16.76  needs 3  non-text
+   --focus on --surface                                                   dark 14.98  light 18.29  needs 3  non-text
+   --focus on --raised                                                    dark 13.05  light 15.31  needs 3  non-text
+   --focus on --raised-hover                                              dark 12.17  light 13.68  needs 3  non-text
+   --focus on --group                                                     dark 12.17  light 18.29  needs 3  non-text
+   --focus on --group-hover                                               dark 10.83  light 15.31  needs 3  non-text
+   --focus on --surface-hover                                             dark 13.05  light 15.31  needs 3  non-text
+   --focus on --error-surface                                             dark 11.80  light 15.60  needs 3  non-text
+   --focus on --map-water                                                 dark 17.32  light 12.39  needs 3  non-text
+   --focus on --map-land                                                  dark 14.98  light 16.76  needs 3  non-text
    --text-secondary on --glass-bar over the worst case                    dark  5.35  light  5.11  needs 4.5  text
    --accent-ink on --glass-bar over the worst case                        dark  7.04  light  4.91  needs 4.5  text
    --text-primary on --glass-ground over the worst case                   dark 10.95  light 13.97  needs 4.5  text
@@ -380,6 +517,14 @@
    --text-secondary on --glass-sheet over the worst case                  dark  5.59  light  5.65  needs 4.5  text
    --accent-ink on --glass-sheet over the worst case                      dark  7.36  light  5.44  needs 4.5  text
    --error on --glass-sheet over the worst case                           dark  5.46  light  5.49  needs 4.5  text
+   --accent-ink-pressed on --glass-ground over the worst case             dark  8.45  light  8.17  needs 4.5  text
+   --accent-ink-pressed on --glass-sheet over the worst case              dark  9.36  light  8.97  needs 4.5  text
+   --text-hover on --glass-ground over the worst case                     dark  6.81  light  7.99  needs 4.5  text
+   --text-pressed on --glass-ground over the worst case                   dark  5.04  light  5.15  needs 4.5  text
+   --text-pressed on --glass-sheet over the worst case                    dark  5.59  light  5.65  needs 4.5  text
+   --focus on --glass-bar over the worst case                             dark 11.61  light 13.86  needs 3  non-text
+   --focus on --glass-ground over the worst case                          dark 10.95  light 13.97  needs 3  non-text
+   --focus on --glass-sheet over the worst case                           dark 12.13  light 15.34  needs 3  non-text
    contrast:end */
 
 /* design-system/components/index.css: GENERATED by scripts/build_components.py from design-system/components/*.css. Do not edit.
@@ -400,7 +545,18 @@
 }
 .onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
 .onrace ::selection { background: var(--text-primary); color: var(--page); }
-.onrace :focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }
+/* states (Lesson 9 step 3): .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and
+   :focus-visible, written into the same selector so a stand-in can't drift from its state; no screen uses them */
+.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* the keyboard ring: --focus, 3:1 on every ground in both themes */
+/* disabled: one treatment for every control, the whole control at --opacity-disabled with no pointer events, never
+   recolored by hand. A busy control isn't disabled. A disabled field's label fades with it. The date pill and a check row fade as one (their inner control
+   doesn't fade again); a race card fades whole (its link doesn't fade again) */
+.onrace :is(button:not(.date-value), input:not([type="checkbox"], [type="date"]), select, textarea):disabled:not([aria-busy="true"]),
+.onrace [aria-disabled="true"]:not([aria-busy="true"]):not(.race-card .card-link),
+.onrace .date-pill:has(> .date-value:disabled),
+.onrace .row--check:has(> input:disabled),
+.onrace .row:has(> :is(input, select):disabled) > :is(label, .row-label),
+.onrace .race-card:has(> .card-link[aria-disabled="true"]) { opacity: var(--opacity-disabled); pointer-events: none; }
 .onrace .visually-hidden {
   position: absolute; width: var(--hidden-size); height: var(--hidden-size); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
 }
@@ -431,17 +587,19 @@
   line-height: var(--leading-tight);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
-.filters-trigger:active, .state-action:active { transform: translateY(var(--border)); }
-/* primary: filled accent (Log result, Register on <domain>) */
+/* primary: filled accent (Log result, Register on <domain>). States change the fill only, never the place or size
+   (Lesson 9 step 3: the 1px press is gone): hover one step up, pressed two */
 .state-action:not(.secondary) { background: var(--accent-fill); color: var(--on-accent-fill); }
-.state-action:not(.secondary):hover { background: var(--accent-hover); }
+@media (hover: hover) { .state-action:not(.secondary):is(:hover, .is-hover) { background: var(--accent-hover); } }
+.state-action:not(.secondary):is(:active, .is-pressed) { background: var(--accent-pressed); }
 
 /* ---- design-system/components/secondary-button.css · order 0030 ---- */
 /* secondary: tonal (Filters, Clear all filters on an empty state) */
 .filters-trigger, .state-action.secondary { background: var(--raised); color: var(--text-primary); }
-.filters-trigger:hover, .state-action.secondary:hover { background: var(--pressed); }
+@media (hover: hover) { :is(.filters-trigger, .state-action.secondary):is(:hover, .is-hover) { background: var(--raised-hover); } }
+:is(.filters-trigger, .state-action.secondary):is(:active, .is-pressed) { background: var(--raised-pressed); }
 
 /* ---- design-system/components/text-link.css · order 0040 ---- */
 /* tertiary: text link (Clear all filters in the chips row, Cancel) */
@@ -460,7 +618,7 @@
   text-underline-offset: var(--space-1);
   cursor: pointer;
 }
-.clear-all:hover { color: var(--text-secondary); }
+/* states: .text-link's, below */
 
 /* ---- design-system/components/primary-button.css · order 0050 ---- */
 /* G26: an activity indicator inside a busy button, before its present-tense label; also before the labels the
@@ -519,7 +677,8 @@
   cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
-.chip:hover { background: var(--pressed); }
+@media (hover: hover) { .chip:is(:hover, .is-hover) { background: var(--raised-hover); } }
+.chip:is(:active, .is-pressed) { background: var(--raised-pressed); }
 .chip span {   /* the remove mark: Solar close-circle drawn in CSS; the text "×" stays in the markup (aria-hidden) until Lesson 7 */
   display: inline-block;
   flex: none;
@@ -565,8 +724,9 @@
   appearance: none;
 }
 .race-search input::placeholder, .phone-screen > form.search input[type="search"]::placeholder { color: var(--text-secondary); opacity: 1; }
-.race-search input:hover, .phone-screen > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-secondary); }
-.race-search input:focus-visible, .phone-screen > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: 0; box-shadow: none; }
+@media (hover: hover) { :is(.race-search input, .phone-screen > form.search input[type="search"]):is(:hover, .is-hover) { box-shadow: inset 0 0 0 var(--border) var(--boundary-hover); } }   /* an input: its boundary, one step stronger, two pressed */
+:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:active, .is-pressed) { box-shadow: inset 0 0 0 var(--border) var(--boundary-pressed); }
+:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
 .race-search input::-webkit-search-cancel-button, .phone-screen > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
 
 /* ---- design-system/components/race-card.css · order 0090 ---- */
@@ -578,8 +738,8 @@
   background: var(--surface);
 }
 .race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
-.race-card .card-link:focus-visible { outline: none; }
-.race-card .card-link:focus-visible::after { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }
+.race-card .card-link:is(:focus-visible, .is-focus) { outline: none; }
+.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
 
 /* ---- design-system/components/race-photo.css · order 0100 ---- */
 picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper takes no box: the img stays the card's and the page's item (step 7, #5) */
@@ -710,12 +870,12 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 
 /* ---- design-system/components/segmented-control.css · order 0160 ---- */
 /* ---------- segmented List / Map ---------- */
-.view-toggle { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: var(--space-1); border-radius: var(--radius-2); background: var(--raised); }   /* G11: segments of equal width */
+.view-toggle { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: var(--space-1); border-radius: var(--radius-capsule); background: var(--raised); }   /* G11: segments of equal width. C7 (Lesson 9 step 3): a capsule everywhere, in a bar or in content, at any text size */
 .view-btn {
   min-height: calc(var(--target) - var(--space-2));
   padding: 0 var(--space-4);
   border: 0;
-  border-radius: var(--radius-1);
+  border-radius: var(--radius-capsule);   /* concentric with the track: both capsules */
   background: transparent;
   color: var(--text-secondary);
   font-family: var(--font-text);
@@ -724,11 +884,12 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
   cursor: pointer;
 }
 .view-toggle[hidden] { display: none; }
-.view-btn[aria-pressed="true"] { background: var(--pressed); color: var(--text-primary); box-shadow: inset 0 0 0 var(--border) var(--boundary); }  /* pressed: calm outline, like the active chip */
+.view-btn[aria-pressed="true"] { background: var(--selected); color: var(--text-primary); box-shadow: inset 0 0 0 var(--border) var(--boundary); }  /* selected: calm outline */
+/* an unselected segment rests on the raised track: hover one level up, pressed two (Lesson 9 step 3) */
+@media (hover: hover) { .view-btn[aria-pressed="false"]:is(:hover, .is-hover) { background: var(--raised-hover); } }
+.view-btn[aria-pressed="false"]:is(:active, .is-pressed) { background: var(--raised-pressed); }
 .view-btn { position: relative; }
 .view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
-:is(.controls, .top-bar) .view-toggle { border-radius: var(--radius-bar-control); }   /* C7: inside a bar, the track is a capsule */
-:is(.controls, .top-bar) .view-btn { border-radius: var(--radius-bar-inner); }        /* and each segment is concentric with it */
 
 /* ---- design-system/components/filters-trigger-with-count.css · order 0170 ---- */
 :is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-bar-control); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
@@ -750,6 +911,9 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
   text-decoration: none;
 }
 .bottom-nav a[aria-current="page"] { color: var(--accent-ink); }
+.bottom-nav a { border-radius: var(--radius-capsule); }   /* a tab's state fill is a capsule inside the capsule bar (iOS 26) */
+@media (hover: hover) { .bottom-nav a:is(:hover, .is-hover) { background: var(--bar-hover); } }   /* on the bar's glass: one level up, two pressed (Lesson 9 step 3) */
+.bottom-nav a:is(:active, .is-pressed) { background: var(--bar-pressed); }
 
 /* ---- design-system/components/skeleton.css · order 0190 ---- */
 /* ---------- skeleton (loading): no spinner, no invented progress ---------- */
@@ -814,8 +978,8 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
   cursor: pointer;
 }
 .sort-toggle::after { content: ""; flex: none; width: var(--icon-s); height: var(--icon-s); background: currentColor; -webkit-mask: var(--icon-sort) center / contain no-repeat; mask: var(--icon-sort) center / contain no-repeat; }
-.sort-toggle:hover { color: var(--text-secondary); }
-.sort-toggle:disabled { color: var(--text-disabled); cursor: not-allowed; }
+@media (hover: hover) { .sort-toggle:is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: color only */
+.sort-toggle:is(:active, .is-pressed) { color: var(--text-pressed); }
 .sort-toggle[hidden] { display: none; }
 
 /* ---- design-system/components/race-card.css · order 0270 ---- */
@@ -937,7 +1101,7 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 .results-row[hidden] { display: none; }
 
 /* ---- design-system/components/filters-trigger-with-count.css · order 0350 ---- */
-.filters-trigger[aria-expanded="true"] { background: var(--pressed); }
+.filters-trigger[aria-expanded="true"] { background: var(--selected); }   /* open: the selected level, while its sheet is up */
 
 /* ---- design-system/components/screen.css · order 0360 ---- */
 .view-area { display: contents; }
@@ -946,8 +1110,9 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 #list-view { padding: 0 var(--space-4) var(--space-4); }
 
 /* ---- design-system/components/race-card.css · order 0370 ---- */
-.race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--boundary); }
-.race-card:has(.card-link:active), .race-card.is-pressed { background: var(--pressed); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
+/* hover one level up, pressed two (Lesson 9 step 3; the hover ring went: one rule for every fill). G23: the pressed highlight on tap */
+@media (hover: hover) { .race-card:has(.card-link:is(:hover, .is-hover)) { background: var(--surface-hover); } }
+.race-card:is(.is-pressed, :has(.card-link:is(:active, .is-pressed))) { background: var(--surface-pressed); }
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
 .race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-l) + var(--space-3)); }   /* G47: room for the checkmark */
 .race-card:has(.card-link[aria-current="true"])::after {   /* G47: the linked race in Race picker, the filter rows' neutral checkmark (C4) */
@@ -1077,7 +1242,8 @@ body > .bottom-nav a::before {
   background: var(--text-secondary);
   pointer-events: none;
 }
-.map-pin:hover > span { background: var(--pressed); }
+@media (hover: hover) { .map-pin:is(:hover, .is-hover) > span { background: var(--raised-hover); } }   /* the label rests on --raised */
+.map-pin:is(:active, .is-pressed) > span { background: var(--raised-pressed); }
 .map-pin[hidden] { display: none; }
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
@@ -1090,8 +1256,8 @@ body > .bottom-nav a::before {
 /* ---------- Results list screen (wireframes/results-list*.html) ---------- */
 /* one primary per screen: when a state block brings its own primary (Log your first result, Try again), the header action steps down to secondary */
 .result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
-.result-card .card-link:hover { box-shadow: inset 0 0 0 var(--border) var(--boundary); }   /* same hover as the race card */
-.result-card .card-link:active, .result-card .card-link.is-pressed { background: var(--pressed); }   /* G23: pressed highlight on tap */
+@media (hover: hover) { .result-card .card-link:is(:hover, .is-hover) { background: var(--surface-hover); } }   /* the race card's states */
+.result-card .card-link:is(:active, .is-pressed) { background: var(--surface-pressed); }   /* G23: pressed highlight on tap */
 .result-card .card-meta::after {   /* G22: the row drills into Result detail, so it shows a disclosure indicator (Solar, C2).
      It ends the short meta row, under the finish time's right edge: the time and the proof line keep the full width */
   content: "";
@@ -1184,7 +1350,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .sheet:has(> .top-bar) { padding: 0; overflow: hidden; }
 .sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--space-2) var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
 .sheet .group { margin: 0 0 var(--space-6); padding: 0; border: 0; min-width: 0; }
-.sheet .rows { background: var(--group); }   /* one level above the sheet, as the picker's cards */
+.sheet .rows { background: var(--group); --row-hover: var(--group-hover); --row-pressed: var(--group-pressed); }   /* one level above the sheet, as the picker's cards; its rows' states follow */
 
 /* ---- design-system/components/date-field.css · order 0450 ---- */
 /* a compact date picker (G18, G44; step 6, #26): the value on a pill, written as the chips and cards write dates
@@ -1207,8 +1373,10 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .row .date-pill input[type="date"] { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 0; margin: 0; padding: 0; opacity: 0; pointer-events: none; color-scheme: inherit; }   /* the value for the form; the button opens its picker (step 7, #3). Step 5: inherits the theme's color-scheme from :root (it was "dark", written into the component: the theme test's hole 2) */
 .date-value { margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
 .date-value::after { content: ""; position: absolute; inset: calc((var(--target) - 100%) / -2) 0; border-radius: inherit; }   /* the whole pill is the button's target, extended above and below to the 44pt target like the filter chips' (Lesson 8 step 6: it was the pill's own 30pt) */
-.date-value:focus-visible { outline: none; }
-.date-pill:has(.date-value:focus-visible) { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }   /* one Tab stop, one ring (WCAG 2.4.7) */
+.date-value:is(:focus-visible, .is-focus) { outline: none; }
+.date-pill:has(.date-value:is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* one Tab stop, one ring (WCAG 2.4.7) */
+@media (hover: hover) { .date-pill:has(.date-value:is(:hover, .is-hover)) { background: var(--raised-hover); } }   /* it rests on --raised */
+.date-pill:has(.date-value:is(:active, .is-pressed)) { background: var(--raised-pressed); }
 
 /* ---- design-system/components/sport-type-rows.css · order 0460 ---- */
 .row--check { cursor: pointer; color: var(--text-primary); font-size: var(--size-body); }
@@ -1227,13 +1395,13 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
   cursor: pointer;
 }
 .row--check input[type="checkbox"]:checked { opacity: 1; }
-.row--check input:focus-visible { outline: none; }
-.row--check:has(input:focus-visible) { outline: var(--focus-ring) solid var(--text-primary); outline-offset: calc(var(--focus-ring) * -1); }
-.row--check:active { background: var(--raised); }   /* G23: a pressed row */
+.row--check input:is(:focus-visible, .is-focus) { outline: none; }
+.row--check:has(input:is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: calc(var(--focus-ring) * -1); }
+/* G23: a pressed row; hover and press are every row's (grouped-settings-rows.css) */
 
 /* ---- design-system/components/text-field.css · order 0470 ---- */
 /* forms as grouped rows (round 2: Log result G42, the sign-in screens G61): a label and its control in a row; hints
-   are the group's footer; an error sits under its row; an invalid row takes the coral ring (kit feedback #4) */
+   are the group's footer; an error is a coral footnote under its row, or under its group in the hint's place (Lesson 9 step 3: no ring) */
 .form-rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]) { text-align: left; text-align-last: left; color: var(--text-primary); }
 
 /* ---- design-system/components/pop-up-select.css · order 0480 ---- */
@@ -1243,15 +1411,13 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .form-rows .row input::placeholder { color: var(--text-secondary); opacity: 1; }
 
 /* ---- design-system/components/locked-form.css · order 0500 ---- */
-/* a locked form (saving, signing in; step 6, #9): one treatment for the whole form, every control in Text disabled
-   (labels, values, placeholders, pickers, the catalog row, the linked race and Unlink), and the bar's Cancel with it.
-   The help text around it (intro, footers) stays Text 2: it is content, not a control. */
-.form-rows .row :is(input, select):disabled { cursor: not-allowed; }
-fieldset:disabled :is(.row label, .row .row-label, .row input, .row select, .row-value, .row--nav, .linked-race, .linked-race *) { color: var(--text-disabled); -webkit-text-fill-color: currentColor; opacity: 1; }
-fieldset:disabled .row input::placeholder { color: var(--text-disabled); }
-fieldset:disabled :is(.row:has(> select)::after, .row--nav::after) { background: var(--text-disabled); }
-fieldset:disabled .date-pill, fieldset:disabled .date-value { color: var(--text-disabled); cursor: not-allowed; }
-.top-bar .close[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
+/* a locked form (saving, signing in; step 6, #9): one treatment for the whole form, the disabled one (Lesson 9 step 3:
+   --opacity-disabled, it was Text disabled): every control fades (base.css: inputs, menus, the date pill, Unlink, the
+   bar's Cancel), and so do the parts of a row that aren't controls themselves (labels, values, the menu chevron, the
+   linked race's words). The help text around it (intro, footers) stays: it is content, not a control. */
+fieldset:disabled :is(.row label, .row .row-label, .row-value, .row--nav, .linked-race > :not(.unlink-btn), .row:has(> select)::after) { opacity: var(--opacity-disabled); }
+fieldset:disabled .row--nav { pointer-events: none; }
+.top-bar .close[aria-disabled="true"] { cursor: default; }   /* the bar's Cancel while the form is locked: base.css fades it with the form */
 
 /* ---- design-system/components/text-field.css · order 0510 ---- */
 .rows .row--stacked { flex-direction: column; align-items: stretch; gap: 0; padding-block: var(--space-2); }   /* .rows: outranks .row, defined later */
@@ -1259,25 +1425,15 @@ fieldset:disabled .date-pill, fieldset:disabled .date-value { color: var(--text-
 .rows .row--stacked input { padding-block: var(--space-1); }
 
 /* ---- design-system/components/field-error.css · order 0520 ---- */
-.rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-3); }
-/* the invalid ring (step 6, #4): one ring around each run of invalid rows, drawn from four inset edges, so adjacent
-   invalid rows share one outline instead of stacking rings; the hairlines that touch an invalid row are hidden */
-.rows li:has([aria-invalid="true"]) {
-  --ring-top: inset 0 var(--invalid-ring) 0 0 var(--error);
-  --ring-bottom: inset 0 calc(var(--invalid-ring) * -1) 0 0 var(--error);
-  --ring-sides: inset var(--invalid-ring) 0 0 0 var(--error), inset calc(var(--invalid-ring) * -1) 0 0 0 var(--error);
-  box-shadow: var(--ring-top), var(--ring-bottom), var(--ring-sides);
-}
-.rows li:has([aria-invalid="true"]) + li:has([aria-invalid="true"]) { box-shadow: var(--ring-bottom), var(--ring-sides); }
-.rows li:has([aria-invalid="true"]):has(+ li [aria-invalid="true"]) { box-shadow: var(--ring-top), var(--ring-sides); }
-.rows li:has([aria-invalid="true"]) + li:has([aria-invalid="true"]):has(+ li [aria-invalid="true"]) { box-shadow: var(--ring-sides); }
-.rows li:has([aria-invalid="true"])::before, .rows li:has([aria-invalid="true"]) + li::before { border-top-color: transparent; }
+/* the field error, iOS style (Lesson 9 step 3; designer, 2026-10-30): no ring and no line on the field. A coral footnote
+   line with the small error icon, under its row in a group of several fields, or under its group in the hint's place,
+   which it replaces while it shows (the page's script hides the hint and points aria-describedby at the error) */
+.rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-2); }
 
 /* ---- design-system/components/catalog-row.css · order 0530 ---- */
 .row--nav { justify-content: space-between; color: var(--text-primary); font-size: var(--size-body); text-decoration: none; }   /* a row that opens another screen (Find in race catalog) */
 .row--nav::after { content: ""; flex: none; width: var(--icon-s); height: var(--icon-s); background: var(--text-secondary); -webkit-mask: var(--icon-disclosure) center / contain no-repeat; mask: var(--icon-disclosure) center / contain no-repeat; }
-a.row--nav[href]:hover { background: var(--raised); }
-.row--nav[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
+/* its hover and press are every row's (grouped-settings-rows.css); disabled is base.css's */
 
 /* ---- design-system/components/gate-layout.css · order 0540 ---- */
 .gate .group { margin: 0 0 var(--space-5); }
@@ -1337,15 +1493,18 @@ a.row--nav[href]:hover { background: var(--raised); }
   letter-spacing: normal;
   color: var(--text-primary);
 }
-.top-bar :is(a, button):hover { color: var(--text-secondary); }
+@media (hover: hover) { .top-bar :is(a, button):is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: one step dimmer, two pressed */
+.top-bar :is(a, button):is(:active, .is-pressed) { color: var(--text-pressed); }
 /* the bar action: the screen's one primary in its bar, amber text like a native bar button (Color rule 1): Save on
    Log result, Log result on Results list (G5), Apply filters on the Filters sheet (G12) */
 .top-bar .save-btn, .top-bar .bar-action { margin-left: auto; font-weight: var(--weight-strong); color: var(--accent-ink); }
-.top-bar .save-btn:hover, .top-bar .bar-action:hover { color: var(--accent-ink-hover); }   /* step 5: the ink's own hover role (was --accent-hover, shared with the fill) */
+@media (hover: hover) { .top-bar :is(.save-btn, .bar-action):is(:hover, .is-hover) { color: var(--accent-ink-hover); } }   /* step 5: the ink's own hover role (was --accent-hover, shared with the fill) */
+.top-bar :is(.save-btn, .bar-action):is(:active, .is-pressed) { color: var(--accent-ink-pressed); }
 .top-bar .bar-action[hidden] { display: none; }
 .top-bar :is(.save-btn, .bar-action)[aria-busy="true"] { color: var(--text-secondary); }   /* busy: the spinner alone, the label ("Saving…", "Signing in…") visually hidden for screen readers (round 2) */
-.top-bar :is(.save-btn, .bar-action)[aria-disabled="true"]:not([aria-busy="true"]) { color: var(--text-disabled); cursor: not-allowed; }
 .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action { color: var(--text-primary); }   /* a state brings its own primary (Results list -error): the bar action steps down, so the screen keeps two lights */
+@media (hover: hover) { .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:hover, .is-hover) { color: var(--text-hover); } }
+.phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:active, .is-pressed) { color: var(--text-pressed); }
 /* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
 .top-bar[data-collapse] .bar-title { padding-inline: var(--bar-title-inset);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
@@ -1477,7 +1636,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   text-underline-offset: var(--space-1);
   cursor: pointer;
 }
-.copy-link:hover { color: var(--text-secondary); }
+/* states: .text-link's, below */
 
 /* ---- design-system/components/proof-url-and-note.css · order 0750 ---- */
 .proof-note { font-size: var(--size-proof); color: var(--text-secondary); }
@@ -1518,10 +1677,10 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   text-decoration: none;
   overflow-wrap: anywhere;
   cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
-.register-btn:hover, .open-btn:hover, .submit-btn:hover { background: var(--accent-hover); }
-.register-btn:active, .open-btn:active, .submit-btn:active { transform: translateY(var(--border)); }
+@media (hover: hover) { :is(.register-btn, .open-btn, .submit-btn):is(:hover, .is-hover) { background: var(--accent-hover); } }
+:is(.register-btn, .open-btn, .submit-btn):is(:active, .is-pressed) { background: var(--accent-pressed); }
 
 /* ---- design-system/components/sticky-action-bar.css · order 0780 ---- */
 .action-caption { margin: var(--space-2) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-secondary); text-wrap: balance; }   /* no one-word last line (step 6, #28) */
@@ -1547,8 +1706,8 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 }
 .secondary-btn { display: flex; width: 100%; font-size: var(--size-body); }
 .unlink-btn { display: inline-flex; }
-.secondary-btn:hover:not(:disabled), .unlink-btn:hover:not(:disabled) { background: var(--pressed); }
-.secondary-btn:disabled, .unlink-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+@media (hover: hover) { :is(.secondary-btn, .unlink-btn):is(:hover, .is-hover) { background: var(--raised-hover); } }
+:is(.secondary-btn, .unlink-btn):is(:active, .is-pressed) { background: var(--raised-pressed); }
 .secondary-btn[aria-busy="true"] { color: var(--text-primary); }   /* busy, not disabled: the label keeps its color, as a busy primary keeps its fill */
 
 /* ---- design-system/components/text-link.css · order 0800 ---- */
@@ -1564,7 +1723,9 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   text-decoration-thickness: var(--border);
   text-underline-offset: var(--space-1);
 }
-.text-link:hover, .official a:hover, .row-note a:hover, .alert-link:hover, .forgot a:hover { color: var(--text-secondary); }
+/* every text link and text action: color only, one step dimmer under the pointer, two pressed (Lesson 9 step 3) */
+@media (hover: hover) { :is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
+:is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }
 
 /* ---- design-system/components/inline-error.css · order 0810 ---- */
 /* ---------- inline error and form alert: icon + text, color second ---------- */
@@ -1626,7 +1787,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .gate fieldset, fieldset.locked { margin: 0; padding: 0; border: 0; min-width: 0; }
 
 /* ---- design-system/components/field-error.css · order 0860 ---- */
-.field-error { margin: var(--space-2) 0 0; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-primary); }
+.field-error { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); font-weight: var(--weight-regular); color: var(--error); }   /* under a group: the footer's place and size (field-hint.css) */
 .field-error[hidden] { display: none; }
 .field-error::before, .row-note.is-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
 
@@ -1647,7 +1808,8 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   text-decoration-thickness: var(--border);
   text-underline-offset: var(--space-1);
 }
-.linked-race .unlink-btn:hover:not(:disabled) { background: none; color: var(--text-secondary); }
+@media (hover: hover) { .linked-race .unlink-btn:is(:hover, .is-hover) { background: none; color: var(--text-hover); } }   /* a text action: color, not fill */
+.linked-race .unlink-btn:is(:active, .is-pressed) { background: none; color: var(--text-pressed); }
 
 /* ---- design-system/components/list-intro.css · order 0880 ---- */
 /* ---------- Race picker: the list intro (a pushed screen since 2026-10-24; its top bar, search and cards are with their components) ---------- */
@@ -1664,14 +1826,14 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* ---- design-system/components/segmented-control.css · order 0910 ---- */
 .gate .view-toggle:not([hidden]) { display: flex; margin: 0 0 var(--space-6); }
 .gate .view-btn { flex: 1; }
-.view-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+/* disabled: base.css */
 
 /* ---- design-system/components/primary-button.css · order 0920 ---- */
 .submit-btn { margin: var(--space-2) 0 0; }
 
 /* ---- design-system/components/forgot-password-link.css · order 0930 ---- */
 .forgot { margin: var(--space-2) 0 0; text-align: right; font-size: var(--size-meta); }
-.forgot a[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
+/* disabled: base.css */
 
 /* ---- design-system/components/form-note.css · order 0940 ---- */
 .form-note, .sent-note { margin: var(--space-3) 0 0; text-align: left; font-size: var(--size-meta); color: var(--text-secondary); }   /* left, with the form and the footers (step 6, #30): centred only made sense under the old full-width button */
@@ -1723,10 +1885,14 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   text-transform: uppercase;
   color: var(--text-secondary);
 }
-.rows { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-2); background: var(--surface); overflow: hidden; }
+.rows { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-2); background: var(--surface); overflow: hidden; --row-hover: var(--surface-hover); --row-pressed: var(--surface-pressed); }   /* a row's states follow the level its group rests on (a sheet's: modal-sheet.css) */
 .rows li { position: relative; }
 .rows li + li::before { content: ""; position: absolute; top: 0; left: var(--space-4); right: 0; border-top: var(--border) solid var(--hairline); }
 .row { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); padding: 0 var(--space-4); }
+/* a row you act on (a link, a check, an editable field or a menu): hover one level up, pressed two (Lesson 9 step 3).
+   A date row isn't one: its pill is the control */
+@media (hover: hover) { .row:is(a[href], .row--check, :has(> :is(input:not([readonly]):not([type="checkbox"]), select))):is(:hover, .is-hover) { background: var(--row-hover); } }
+.row:is(a[href], .row--check, :has(> :is(input:not([readonly]):not([type="checkbox"]), select))):is(:active, .is-pressed) { background: var(--row-pressed); }
 .row label, .row .row-label { flex: none; font-size: var(--size-body); color: var(--text-primary); }
 .row input, .row select, .row .row-value {
   flex: 1;
@@ -1762,12 +1928,12 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 }
 
 /* ---- design-system/components/text-field.css · order 1010 ---- */
-.row input:focus-visible, .row select:focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: 0; color: var(--text-primary); }
+.row :is(input, select):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-primary); }
 
 /* ---- design-system/components/status-line.css · order 1020 ---- */
 .row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-secondary); }
 .row-note[hidden] { display: none; }
-.row-note.is-error { text-align: left; font-size: var(--size-meta); font-weight: var(--weight-strong); color: var(--text-primary); }   /* one look for "this row failed": the field error's (step 6, #13) */
+.row-note.is-error { text-align: left; font-size: var(--size-proof); font-weight: var(--weight-regular); color: var(--error); }   /* one look for "this row failed": the field error's coral footnote (step 6, #13; Lesson 9 step 3) */
 .row-note.is-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }
 
 /* ---- design-system/components/field-hint.css · order 1030 ---- */
@@ -1788,7 +1954,8 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
-.signout:hover { background: var(--raised); }
+@media (hover: hover) { .signout:is(:hover, .is-hover) { background: var(--surface-hover); } }   /* it rests on --surface: one level up, two pressed */
+.signout:is(:active, .is-pressed) { background: var(--surface-pressed); }
 
 /* ---- design-system/components/confirm-alert.css · order 1050 ---- */
 dialog.alert {   /* the confirm alert floats like a sheet: the sheet's glass over the scrim, its rim and shadow (G67, designer 2026-10-23: as iOS 26 alerts) */
@@ -1824,9 +1991,10 @@ dialog.alert .alert-actions button:first-child { border-bottom-left-radius: var(
 dialog.alert .alert-actions button:last-child { border-bottom-right-radius: var(--radius-alert); }
 dialog.alert .alert-actions button + button { border-left: var(--border) solid var(--hairline); font-weight: var(--weight-strong); }
 dialog.alert .alert-actions button:only-child { font-weight: var(--weight-strong); }   /* one action (Race detail: Dismiss): the default, bold */
-dialog.alert #signout-confirm { color: var(--error); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1 */
-dialog.alert .alert-actions button:hover { background: var(--pressed); }   /* one level above the alert's raised glass */
-dialog.alert .alert-actions button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }
+dialog.alert .alert-actions .is-destructive { color: var(--error); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1. A class since Lesson 9 step 3 (it was styled by its id) */
+@media (hover: hover) { dialog.alert .alert-actions button:is(:hover, .is-hover) { background: var(--sheet-hover); } }   /* on the alert's glass: one level up, two pressed */
+dialog.alert .alert-actions button:is(:active, .is-pressed) { background: var(--sheet-pressed); }
+dialog.alert .alert-actions button:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }
 
 /* ---- design-system/components/action-sheet.css · order 1060 ---- */
 /* the action sheet (round 2, G41): leaving a sheet with unsaved data asks first (HIG Sheets, Action sheets): a message,
@@ -1855,8 +2023,9 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 }
 .action-sheet .action-message { margin: 0; padding: var(--space-4); text-align: center; font-size: var(--size-proof); color: var(--text-secondary); border-bottom: var(--border) solid var(--hairline); }
 .action-sheet button { display: block; width: 100%; min-height: calc(var(--target) + var(--space-3)); border: 0; background: transparent; color: var(--text-primary); font-family: var(--font-text); font-size: var(--size-item); cursor: pointer; }
-.action-sheet button:hover { background: var(--pressed); }
-.action-sheet button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }
+@media (hover: hover) { .action-sheet button:is(:hover, .is-hover) { background: var(--sheet-hover); } }   /* on the sheet glass: one level up, two pressed */
+.action-sheet button:is(:active, .is-pressed) { background: var(--sheet-pressed); }
+.action-sheet button:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }
 .action-sheet .is-destructive { color: var(--error); }
 .action-sheet .action-cancel { font-weight: var(--weight-strong); }   /* the alert clips its edges: the ring sits inside the button, whole */
 

@@ -60,6 +60,7 @@ def md(text):
             out.append(s); continue
         blk = []
         while i < len(lines) and lines[i].strip() and not re.match(r'^(#|\||\s*- |\s*\d+\. |---)', lines[i]): blk.append(lines[i].strip()); i += 1
+        if not blk: raise ValueError(f'md(): no rule for line {i + 1}: {lines[i][:60]!r}')   # a line nothing consumes would loop forever
         out.append(f'<p>{inline(" ".join(blk))}</p>')
     return '\n'.join(out)
 

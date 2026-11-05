@@ -19,6 +19,6 @@
   cursor: pointer;
 }
 .row--check input[type="checkbox"]:checked { opacity: 1; }
-.row--check input:focus-visible { outline: none; }
-.row--check:has(input:focus-visible) { outline: var(--focus-ring) solid var(--text-primary); outline-offset: calc(var(--focus-ring) * -1); }
-.row--check:active { background: var(--raised); }   /* G23: a pressed row */
+.row--check input:is(:focus-visible, .is-focus) { outline: none; }
+.row--check:has(input:is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: calc(var(--focus-ring) * -1); }
+/* G23: a pressed row; hover and press are every row's (grouped-settings-rows.css) */

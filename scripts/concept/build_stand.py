@@ -25,7 +25,7 @@ COMPONENTS = _read('design-system/components/index.css')
 TOK = ''.join(re.findall(r':root\s*\{(.*?)\n?\}', TOKENS + ''.join(_read(f) for f in ('design-system/map-data.css', 'concept/specimens.css', 'concept/stand.css', 'design-system/docs/doc.css')), flags=re.S))   # tokens only: map-data.css's per-pin rules set local variables, not tokens
 
 # the light theme (step 5): design-system/tokens/tokens.css's :root[data-theme="light"] block overrides roles; tok(name, 'light') reads it first
-LIGHT = re.search(r':root\[data-theme="light"\]\s*\{(.*?)\n\}', TOKENS, flags=re.S).group(1)
+LIGHT = re.search(r':root\[data-theme="light"\][^{]*\{(.*?)\n\}', TOKENS, flags=re.S).group(1)
 LIGHT_DEF = dict(re.findall(r'^\s*--([a-z0-9-]+):\s*([^;]+);', re.sub(r'/\*.*?\*/', '', LIGHT, flags=re.S), flags=re.M))
 THEMES = ('dark', 'light')
 def tok(name, theme='dark'):
@@ -59,9 +59,9 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Titles, item titles, finish time on a card', 'text-primary', 'surface', 'text'),
     ('Secondary button label', 'text-primary', 'raised', 'text'),
     ('Active filter chip label on its tonal capsule (designer, 2026-10-22)', 'text-primary', 'raised', 'text'),
-    ('Active filter chip label, hover', 'text-primary', 'pressed', 'text'),
-    ('Selected List/Map segment, hover and open fills', 'text-primary', 'pressed', 'text'),
-    ('Unselected List/Map segment on hover', 'text-secondary', 'pressed', 'text'),
+    ('Active filter chip label, hover', 'text-primary', 'raised-hover', 'text'),
+    ('Selected List/Map segment, Filters while its sheet is open', 'text-primary', 'selected', 'text'),
+    ('Unselected List/Map segment on hover', 'text-secondary', 'raised-hover', 'text'),
     ('Meta on the page (counts, sort)', 'text-secondary', 'page', 'text'),
     ('Meta on a card (month and year, location, proof line)', 'text-secondary', 'surface', 'text'),
     ('Search placeholder', 'text-secondary', 'surface', 'text'),
@@ -82,7 +82,6 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Focus ring against a card (non-text, 3:1)', 'text-primary', 'surface', 'ui'),
     ('Search field outline against its own fill (non-text, 3:1)', 'boundary', 'surface', 'ui'),
     ('Search field outline against the page (non-text, 3:1)', 'boundary', 'page', 'ui'),
-    ('Disabled button label', 'text-disabled', 'raised', 'exempt'),
     ('Result count number', 'text-primary', 'page', 'text'),
     ('Result count text, Sort: label', 'text-secondary', 'page', 'text'),
     ('Sort value (Soonest first)', 'text-primary', 'page', 'text'),
@@ -105,8 +104,6 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Kit · Profile initials on their tile', 'text-primary', 'raised', 'text'),
     ('Kit · confirm alert body', 'text-secondary', 'surface', 'text'),
     ('Kit · small secondary button (Dismiss, Unlink race)', 'text-primary', 'raised', 'text'),
-    ('Kit · disabled catalog row label', 'text-disabled', 'surface', 'exempt'),
-    ('Disabled sort while loading', 'text-disabled', 'page', 'exempt'),
     ('Skeleton bar on a card', 'raised', 'surface', 'info'),
     ('Race browse · Filters sheet heading, checkbox labels', 'text-primary', 'surface', 'text'),
     ('Race browse · Filters sheet field labels and legend', 'text-secondary', 'surface', 'text'),
@@ -132,13 +129,12 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Results list · count separator hairline', 'hairline', 'page', 'info'),
     ('Skeleton count bar on the page', 'raised', 'page', 'info'),
     ('Race browse · filter chip remove icon on the capsule, close-circle (non-text, 3:1)', 'text-secondary', 'raised', 'ui'),
-    ('Race browse · filter chip remove icon on the capsule, hover (non-text, 3:1)', 'text-secondary', 'pressed', 'ui'),
+    ('Race browse · filter chip remove icon on the capsule, hover (non-text, 3:1)', 'text-secondary', 'raised-hover', 'ui'),
     ('Race browse · Filters sheet calendar icon in a date field (non-text, 3:1)', 'text-primary', 'page', 'ui'),
     ('Empty state icon, muted, on the page (non-text, 3:1)', 'text-secondary', 'page', 'ui'),
     ('Error state icon, coral, on the page (non-text, 3:1)', 'error', 'page', 'ui'),
     ('Empty or error state icon inside the map panel (non-text, 3:1)', 'text-secondary', 'surface', 'ui'),
     ('Profile · Sign out in its row (destructive, coral; G68, designer 2026-10-23)', 'error', 'surface', 'text'),
-    ('Profile · Sign out row, hover', 'error', 'raised', 'text'),
     ('Filters sheet · row label and checked sport type on the raised rows (G19, G20)', 'text-primary', 'group', 'text'),
     ('Filters sheet · neutral checkmark on a raised row (non-text, 3:1; G19, C4)', 'text-primary', 'group', 'ui'),
     ('Filters sheet · Region value on a raised row (a native menu, G17)', 'text-secondary', 'group', 'text'),
@@ -153,13 +149,47 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Log result · the linked race on the sheet: "From the race catalog", the place (step 6, #8)', 'text-secondary', 'group', 'text'),
     ('Profile · an editable value in its row (step 6, #21)', 'text-primary', 'surface', 'text'),
     ('Result detail · Copy link under the official result link (step 6, #10)', 'text-primary', 'page', 'text'),
-    ('Race browse · Sort button disabled while loading', 'text-disabled', 'page', 'exempt'),
     ('Results list · Log result stepped down to Text 1 when a state brings its own primary (-error)', 'text-primary', 'page', 'text'),
     ('Kit · invalid field ring against the field (non-text, 3:1)', 'error', 'surface', 'ui'),
     ('Kit · invalid field ring against the page (non-text, 3:1)', 'error', 'page', 'ui'),
     ('Results list · disclosure indicator on a row (non-text, 3:1)', 'text-secondary', 'surface', 'ui'),
-    ('Pressed card or row: meta on the pressed level', 'text-secondary', 'pressed', 'text'),
     ('Pressed race card: format chip label (the chip keeps bg-2)', 'chip-text', 'raised', 'text'),
+    # ---- states (Lesson 9 step 3): every resting level's hover (one up) and pressed (two up), in both themes
+    ('States · a card or row on the surface, hover: title, value', 'text-primary', 'surface-hover', 'text'),
+    ('States · a card or row on the surface, hover: meta, chevron', 'text-secondary', 'surface-hover', 'text'),
+    ('States · a card or row on the surface, pressed: title, value', 'text-primary', 'surface-pressed', 'text'),
+    ('States · a card or row on the surface, pressed: meta, chevron', 'text-secondary', 'surface-pressed', 'text'),
+    ('States · Sign out in its row, hover (destructive)', 'error', 'surface-hover', 'text'),
+    ('States · Sign out in its row, pressed (destructive)', 'error', 'surface-pressed', 'text'),
+    ('States · a raised control, hover: label', 'text-primary', 'raised-hover', 'text'),
+    ('States · a raised control, pressed: label', 'text-primary', 'raised-pressed', 'text'),
+    ('States · an unselected segment, pressed', 'text-secondary', 'raised-pressed', 'text'),
+    ('States · filter chip remove icon, pressed (non-text, 3:1)', 'text-secondary', 'raised-pressed', 'ui'),
+    ('States · a row on a sheet, hover: label', 'text-primary', 'group-hover', 'text'),
+    ('States · a row on a sheet, hover: menu value', 'text-secondary', 'group-hover', 'text'),
+    ('States · a row on a sheet, pressed: label', 'text-primary', 'group-pressed', 'text'),
+    ('States · a row on a sheet, pressed: menu value', 'text-secondary', 'group-pressed', 'text'),
+    ('States · a field error under its row on a sheet (Log result)', 'error', 'group', 'text'),
+    ('States · the primary button pressed', 'on-accent-fill', 'accent-pressed', 'text'),
+    ('States · a text control under the pointer, on the page', 'text-hover', 'page', 'text'),
+    ('States · a text control under the pointer, on a card or row', 'text-hover', 'surface', 'text'),
+    ('States · a text control pressed, on the page', 'text-pressed', 'page', 'text'),
+    ('States · a text control pressed, on a card or row', 'text-pressed', 'surface', 'text'),
+    ('States · Unlink on the linked race, hover and pressed', 'text-pressed', 'group', 'text'),
+    ('States · Try again in a Profile row error, pressed', 'text-pressed', 'surface', 'text'),
+    ('States · the search field’s boundary under the pointer (non-text, 3:1)', 'boundary-hover', 'surface', 'ui'),
+    ('States · the search field’s boundary pressed (non-text, 3:1)', 'boundary-pressed', 'surface', 'ui'),
+    ('States · the search field’s boundary under the pointer, against the page (non-text, 3:1)', 'boundary-hover', 'page', 'ui'),
+    ('Focus ring on the page (non-text, 3:1)', 'focus', 'page', 'ui'),
+    ('Focus ring on a card, a row group, the search field (non-text, 3:1)', 'focus', 'surface', 'ui'),
+    ('Focus ring on a raised fill: the date pill, a secondary button, a segment (non-text, 3:1)', 'focus', 'raised', 'ui'),
+    ('Focus ring inside a hovered raised fill (non-text, 3:1)', 'focus', 'raised-hover', 'ui'),
+    ('Focus ring inside a check row on a sheet (non-text, 3:1)', 'focus', 'group', 'ui'),
+    ('Focus ring inside a hovered row on a sheet (non-text, 3:1)', 'focus', 'group-hover', 'ui'),
+    ('Focus ring inside a hovered card or row (non-text, 3:1)', 'focus', 'surface-hover', 'ui'),
+    ('Focus ring round a button in an error message (non-text, 3:1)', 'focus', 'error-surface', 'ui'),
+    ('Focus ring round a map pin, on the map’s water (non-text, 3:1)', 'focus', 'map-water', 'ui'),
+    ('Focus ring round a map pin, on the map’s land (non-text, 3:1)', 'focus', 'map-land', 'ui'),
     ('Profile · pop-up chevron on a row, Saving… spinner (non-text, 3:1)', 'text-secondary', 'surface', 'ui'),
 ]
 # ---------------------------------------------------------------- glass (C1): text over glass, against the worst case behind it
@@ -199,6 +229,14 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('Confirm alert (glass, G67) · title, Cancel', 'text-primary', 'sheet', 'text'),
     ('Confirm alert (glass, G67) · body', 'text-secondary', 'sheet', 'text'),
     ('Confirm alert (glass, G67) · Sign out, destructive', 'error', 'sheet', 'text'),
+    ('States · Save or Log result pressed (its own role)', 'accent-ink-pressed', 'ground', 'text'),
+    ('States · Apply filters pressed, on the sheet', 'accent-ink-pressed', 'sheet', 'text'),
+    ('States · back link, Cancel under the pointer', 'text-hover', 'ground', 'text'),
+    ('States · back link, Cancel pressed', 'text-pressed', 'ground', 'text'),
+    ('States · Cancel on a sheet, pressed', 'text-pressed', 'sheet', 'text'),
+    ('Focus ring on the tab bar (non-text, 3:1)', 'focus', 'bar', 'ui'),
+    ('Focus ring in a top bar or the controls bar (non-text, 3:1)', 'focus', 'ground', 'ui'),
+    ('Focus ring on a sheet, an alert, the action sheet (non-text, 3:1)', 'focus', 'sheet', 'ui'),
 ]
 def min_alpha(where, theme='dark'):   # the lowest fill opacity at which every pair on this glass still passes
     for pct in range(0, 101):
@@ -341,22 +379,30 @@ from colorlib import lab, de2000, hue as lab_hue
 CSS = COMPONENTS + _read('concept/stand.css') + _read('concept/specimens.css')   # every component rule the color rules check (Lesson 8 step 4: the components, not ui/kit.css)
 CSS_RULES = [(sel.strip(), body) for sel, body in re.findall(r'([^{}]+)\{([^{}]*)\}', re.sub(r'/\*.*?\*/', '', CSS, flags=re.S))]
 
+def split_sel(sel):   # a selector list split on its top-level commas only: :is(:hover, .is-hover) stays whole
+    out, depth, cur = [], 0, ''
+    for ch in sel:
+        depth += (ch == '(') - (ch == ')')
+        if ch == ',' and depth == 0: out.append(cur.strip()); cur = ''
+        else: cur += ch
+    return out + [cur.strip()]
 def selectors_using(*tokens):
     out = []
     for sel, body in CSS_RULES:
         if any(f'var(--{t})' in body for t in tokens):
-            out += [x.strip() for x in sel.split(',')]
+            out += [re.sub(r'^@media \(hover: hover\) \{\s*', '', x) for x in split_sel(sel)]
     return out
 
 # Rule 1: amber only where you can act or where you are
-ACCENT_OK = [r'^\.btn--primary(:hover)?$', r'^\.state-action:not\(\.secondary\)(:hover)?$',
-             r'^\.(register|open|submit)-btn(:hover)?$',   # the grayscale screens' one primary (kit, 2026-10-18)
-             r'^\.top-bar \.(save-btn|bar-action)(:hover)?$',   # the bar action: Save on Log result (kit feedback, 2026-10-19), Log result on Results list (G5), Apply filters on the sheet (G12; markup pass, 2026-10-23)
+STATE = r'(:hover|:active|:is\(:hover, \.is-hover\)|:is\(:active, \.is-pressed\))?'   # a state of the same control (Lesson 9 step 3)
+ACCENT_OK = [r'^\.btn--primary' + STATE + '$', r'^\.state-action:not\(\.secondary\)' + STATE + '$',
+             r'^(\.(register|open|submit)-btn|:is\(\.register-btn, \.open-btn, \.submit-btn\))' + STATE + '$',   # the grayscale screens' one primary (kit, 2026-10-18)
+             r'^\.top-bar (\.(save-btn|bar-action)|:is\(\.save-btn, \.bar-action\))' + STATE + '$',   # the bar action: Save on Log result (kit feedback, 2026-10-19), Log result on Results list (G5), Apply filters on the sheet (G12; markup pass, 2026-10-23)
              r'^\.bottom-nav a\[aria-current="page"\]$',
-             r'^\.swatch--(accent-(fill|ink|hover|ink-hover)|amber-\d+)$']   # the stand's swatches, one per token
+             r'^\.swatch--(accent-(fill|ink|hover|ink-hover|pressed|ink-pressed)|amber-\d+)$']   # the stand's swatches, one per token
 # the accent roles (--accent-fill, --accent-ink, --accent-hover, since Lesson 8 step 4) and their amber primitives, so a
 # class can't reach the amber around its roles (tokens/tokens.css's :root is not a class and isn't read here)
-accent_sel = selectors_using('accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'amber-78', 'amber-83', 'amber-40', 'amber-33')
+accent_sel = selectors_using('accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'accent-pressed', 'accent-ink-pressed', 'amber-78', 'amber-83', 'amber-87', 'amber-40', 'amber-33', 'amber-26')
 accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK)]
 assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
 
@@ -370,7 +416,7 @@ assert not success_bad, ('Color rule 2: success color outside the stand specimen
 # values. In each theme, only the accent roles may resolve to an amber primitive, and no role may resolve to a success color.
 ROLES = [n for n in re.findall(r'^\s*--([a-z0-9-]+):', TOKENS.split('     2. SEMANTIC: color roles\n')[1].split('\n}')[0], flags=re.M)]
 AMBERS = {tok(n).upper() for n in re.findall(r'--(amber-\d+):', TOKENS)}
-ACCENT_ROLES = {'accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover'}
+ACCENT_ROLES = {'accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'accent-pressed', 'accent-ink-pressed'}
 SUCCESS = {tok('success').upper(), tok('success-bg').upper()}
 for _t in THEMES:
     _amber = sorted(r for r in ROLES if tok(r, _t).upper() in AMBERS)
@@ -380,7 +426,7 @@ for _t in THEMES:
     assert not _green, ('Color rule 2: a role takes the success color', _t, _green)
 
 # Rule 3a: depth of dark, not #000
-BG_LEVELS = ['frame', 'page', 'surface', 'raised', 'pressed']   # the roles on the five graphite levels; --group shares --pressed's level (graphite-20), and the map roles reuse levels
+BG_LEVELS = ['frame', 'page', 'surface', 'raised', 'selected']   # the roles on the five graphite levels at rest; --group shares --selected's level (graphite-20), and the map roles reuse levels
 L_MIN, L_MAX, C_MAX, STEP_MIN = 4.5, 20.0, 6.0, 1.5
 bg_rows, prev = [], None
 for t in BG_LEVELS:
@@ -393,6 +439,22 @@ for t in BG_LEVELS:
 line_fill = [x for sel, body in CSS_RULES if re.search(r'background(-color)?:\s*var\(--(hairline|boundary|graphite-22|graphite-46)\)', body)
              for x in sel.split(',') if not x.strip().startswith('.swatch--') and x.strip() != '.sheet-handle']   # the handle is a drawn 4px line, not a surface
 assert not line_fill, ('Color rule 3a: a hairline token used as a fill', [x.strip() for x in line_fill])
+
+# One rule for fills (Lesson 9 step 3): every state goes one level from rest on hover and two on press, in one direction
+# (lighter in dark; darker in light for the graphite fills; the amber lighter in both; a text control dimmer; a boundary
+# stronger), each step at least STEP_MIN in L*, in both themes. A state that skipped or reversed a step stops the build.
+LADDERS = [('surface', 'surface-hover', 'surface-pressed'), ('raised', 'raised-hover', 'raised-pressed'), ('group', 'group-hover', 'group-pressed'),
+           ('glass-sheet', 'sheet-hover', 'sheet-pressed'), ('glass-bar', 'bar-hover', 'bar-pressed'), ('accent-fill', 'accent-hover', 'accent-pressed'),
+           ('accent-ink', 'accent-ink-hover', 'accent-ink-pressed'), ('text-primary', 'text-hover', 'text-pressed'), ('boundary', 'boundary-hover', 'boundary-pressed')]
+def _solid(name, t): v = tok(name, t); return glass_parts(name, t)[0] if v.startswith('color-mix') else v
+STATE_LADDER = []
+for _t in THEMES:
+    for rest, hov, prs in LADDERS:
+        Ls = [lab(_solid(n, _t))[0] for n in (rest, hov, prs)]
+        d1, d2 = Ls[1] - Ls[0], Ls[2] - Ls[1]
+        assert abs(d1) >= STEP_MIN and abs(d2) >= STEP_MIN and d1 * d2 > 0, ('One rule for fills: a state skips or reverses a step', _t, rest, [round(x, 2) for x in Ls])
+        STATE_LADDER.append((_t, rest, [round(x, 2) for x in Ls]))
+print('States: one rule for fills,', len(LADDERS), 'ladders × 2 themes, every step one way and at least', STEP_MIN, 'L*')
 
 # Rule 3b: amber, not HYROX yellow (reported, not blocking: the designer keeps the amber knowingly)
 HYROX_REFS = [('RoxFit', '#FFEC00', 'roxfit-how-it-works.png, 5,786 px'), ('RoxMatchUp', '#F5E401', 'roxmatchup-home.png, 2,770 px')]
@@ -561,21 +623,38 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('page', 'Page', 'The page behind every screen.', 'Not on cards (cards sit one level up).', 'Attribute e: dark, intense · Taste: not #000'),
     ('surface', 'Surface', 'Race cards, result rows, row groups, the search field, the saved confirmation.', 'Not for controls you press (those are raised).', 'Attribute a: cards stay quiet so the time can lead'),
     ('raised', 'Raised', 'Secondary button, format chip, the date tile, segmented track, skeletons, disabled buttons, pin labels, the initials.', 'Never for the primary action.', 'Hierarchy rule 3: secondary is tonal'),
-    ('pressed', 'Pressed', 'Hover, open and pressed fills: the selected List/Map segment, Filters while its sheet is open, a pressed card (+2).', 'Never at rest, never a card.', 'Color rule 3a: the hairline is a line, so pressed fills get their own level'),
+    ('selected', 'Selected', 'A control that is on: the selected List/Map segment, Filters while its sheet is open.', 'Never a hover or a press (those are the state roles), never a card.', 'Color rule 3a: the hairline is a line, so a selected fill gets its own level · Lesson 9: renamed from Pressed when hover and press got their own roles'),
     ('group', 'Group', 'A group of rows one level above its container: the rows in the Filters sheet, the linked race on Log result. Same level as Pressed today.', 'Not a state: a press uses Pressed.', 'Lesson 8: in a light appearance a group rises lighter while a press goes darker, so the two roles part'),
     ('hairline', 'Hairline', 'Hairline dividers.', 'Not as a boundary someone must see (fields use Boundary), not as a frame around every card, never a fill.', 'Attribute a: the frame stays quiet'),
     ('boundary', 'Boundary', 'The edge of the search field and other inputs, the pressed segment, the card hover ring, the map frame.', 'Not on cards or chips, never a fill.', 'WCAG 1.4.11: an input boundary needs 3:1 (critique fix)'),
-    ('text-primary', 'Text primary', 'Screen titles, item titles, finish times, body. Also the focus ring and the control tint (checked boxes, checkmarks, <code>accent-color</code>), which were <code>--focus</code> and <code>--control-tint</code> until Lesson 8.', 'Not for meta (date month, location, proof). The control tint is never amber, never green.', 'Hierarchy rule 4: three levels · C4 (designer, 2026-10-18): control tint is neutral · Color rule 1'),
+    ('text-primary', 'Text primary', 'Screen titles, item titles, finish times, body. Also the control tint (checked boxes, checkmarks, <code>accent-color</code>), which was <code>--control-tint</code> until Lesson 8. The focus ring is its own role again since Lesson 9, <code>--focus</code>.', 'Not for meta (date month, location, proof). The control tint is never amber, never green.', 'Hierarchy rule 4: three levels · C4 (designer, 2026-10-18): control tint is neutral · Color rule 1'),
     ('text-secondary', 'Text secondary', 'Meta: month and year, location, proof line, counts, inactive tab.', 'Not for titles or the finish time.', 'Attribute d: proof stated, not stamped (a quiet line)'),
     ('chip-text', 'Chip text', 'The format chip label only.', 'Not on filter chips (those are Text primary).', 'Hierarchy rule 2: chips are metadata'),
-    ('text-disabled', 'Disabled', 'Disabled controls only.', 'Never for content someone must read.', 'WCAG 1.4.3 exempts disabled controls'),
     ('accent-fill', 'Accent fill (sodium amber)', 'The primary button fill (Log result, Register on &lt;domain&gt;). With the ink, at most two amber uses per screen.', 'Not on finish times, chips, filter chips, links, focus rings, icons in content, or state messages.', 'Hierarchy rule 1: accent is scarce · Taste: a high-contrast accent (round 1 Direction 3)'),
     ('accent-ink', 'Accent ink', 'Amber as text and icon on a bar: the bar action (Save, Log result, Apply filters) and the current tab.', 'Anywhere in content.', 'Hierarchy rule 1 · Lesson 8: amber text on a light bar would need a darker amber than the fill, so the ink is its own role'),
     ('accent-hover', 'Accent, hover', 'The fill under the pointer.', 'Anywhere at rest; never as text (that is the ink’s hover).', 'Hierarchy rule 3: one primary, with a hover state'),
     ('accent-ink-hover', 'Accent ink, hover', 'The bar action (Save, Log result) under the pointer.', 'Anywhere at rest; never as a fill.', 'Step 5, the theme test: split from Accent, hover. In light the fill’s hover keeps dark text while the ink’s hover is text on a light bar, so one value couldn’t serve both'),
     ('on-accent-fill', 'On accent fill', 'Text and icons on the accent fill. The same primitive as the page.', 'Anywhere else.', f'Contrast: {cr(tok("on-accent-fill"), tok("accent-fill")):.2f}:1 on the accent'),
-    ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races". The invalid field ring (inside the field) and destructive text (Sign out), which were <code>--invalid</code> and <code>--destructive</code> until Lesson 8.', 'Not for emphasis, never as a fill for a whole card, never on a focused-only field (focus is the Text primary ring outside).', 'Taste: no aggressive red (not the #FF4D2E family) · Kit feedback (designer, 2026-10-19): invalid and focus never look alike · HIG Alerts: destructive style'),
+    ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races". The field error’s footnote and its small icon, and destructive text (Sign out), which were <code>--invalid</code> and <code>--destructive</code> until Lesson 8.', 'Not for emphasis, never as a fill for a whole card, never a ring or a line on a field (Lesson 9: the field error is a footnote under it).', 'Taste: no aggressive red (not the #FF4D2E family) · Kit feedback (designer, 2026-10-19): invalid and focus never look alike · HIG Alerts: destructive style · Designer, 2026-10-30: the field error, iOS style'),
     ('error-surface', 'Error surface', 'Behind an error message.', 'Not behind a card or a field.', 'States: color second, after icon and text'),
+    ('surface-hover', 'Surface, hover', 'A card or row resting on Surface under the pointer: the race card, the result row, rows on the page, Sign out. One level up.', 'At rest; on touch (hover only where there is a pointer).', 'One rule for fills (Lesson 9): hover one level up, pressed two, for every component, cards included. It ends the Lesson 8 hover drift (+1 on rows, +2 on cards)'),
+    ('surface-pressed', 'Surface, pressed', 'The same, pressed: two levels up. On touch, the state that matters (iOS).', 'At rest.', 'One rule for fills · HIG Lists and tables: selection gives feedback'),
+    ('raised-hover', 'Raised, hover', 'A fill resting on Raised under the pointer: secondary buttons, Filters, the filter chip, the date pill, an unselected segment, a map pin’s label.', 'At rest; as a selected fill (that is Selected).', 'One rule for fills'),
+    ('raised-pressed', 'Raised, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
+    ('group-hover', 'Group, hover', 'A row on a sheet’s group under the pointer: the Filters sheet, Log result.', 'At rest.', 'One rule for fills: the group rests a level above the sheet, so its states start there'),
+    ('group-pressed', 'Group, pressed', 'The same, pressed. The last dark step that keeps Text secondary at AA.', 'At rest.', 'One rule for fills · WCAG 1.4.3'),
+    ('sheet-hover', 'Sheet, hover', 'A button on the sheet glass under the pointer: the confirm alert’s and the action sheet’s buttons.', 'At rest.', 'One rule for fills: the glass is the raised level in dark and white in light, so its states are their own pair'),
+    ('sheet-pressed', 'Sheet, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
+    ('bar-hover', 'Bar, hover', 'A tab on the tab bar’s glass under the pointer, a capsule inside the bar.', 'At rest; anywhere but the tab bar.', 'One rule for fills · HIG Tab bars, iOS 26: a tab shows its press'),
+    ('bar-pressed', 'Bar, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
+    ('accent-pressed', 'Accent, pressed', 'The primary fill pressed, two steps up from the fill.', 'At rest; as text.', 'One rule for fills · Lesson 9: the 1px press is gone, a state never moves an element'),
+    ('accent-ink-pressed', 'Accent ink, pressed', 'The bar action pressed (Save, Log result, Apply filters).', 'At rest; as a fill.', 'One rule for fills, on the ink’s own ladder (darker in light)'),
+    ('text-hover', 'Text, hover', 'A text control in Text primary under the pointer: links, Clear all filters, Copy link, Sort, Unlink, the bar’s back and Cancel. One step dimmer.', 'On text that isn’t a control.', 'One rule, for text: color only, a step at a time'),
+    ('text-pressed', 'Text, pressed', 'The same, pressed: two steps dimmer, still AA.', 'At rest.', 'One rule, for text · WCAG 1.4.3'),
+    ('boundary-hover', 'Boundary, hover', 'An input’s boundary under the pointer: the search field. One step stronger.', 'At rest.', 'One rule, for borders'),
+    ('boundary-pressed', 'Boundary, pressed', 'The same, pressed.', 'At rest.', 'One rule, for borders'),
+    ('focus', 'Focus', 'The keyboard focus ring, 2px: white in dark, dark in light, at least 3:1 on every background it sits on.', 'Never the accent; never on a click (only :focus-visible).', 'C4: neutral · WCAG 2.4.7 and 1.4.11 · Lesson 9: a role again, apart from Text primary'),
+    ('opacity-disabled', 'Disabled opacity', 'A disabled control: the whole control at this opacity, with no pointer events. 40% in dark, 38% in light.', 'Never on content someone must read; never a color by hand.', 'WCAG 1.4.3 exempts disabled controls · Lesson 9: replaced Text disabled; each value keeps that color’s contrast in its theme (3.6:1 dark, 2.4:1 light)'),
     ('success', 'Success', 'The status specimen on this stand only. No product screen uses it: the saved confirmation is neutral (Color rule 2).', 'Not on a result, not on Results list at all, not for "verified" or any claim about a result.', 'Voice principle 1: claim only what Onrace can know'),
     ('success-bg', 'Success tint', 'The status specimen on this stand only.', 'Not behind results, proof lines or the saved confirmation.', 'Voice principle 1: no verified look'),
     ('warning', 'Warning (no hue)', 'Icon plus text on a raised surface with an outline. No warning state exists in the wireframes yet.', 'No amber or yellow: every warm candidate is within ΔE 7.7–13 of the accent and would read as an action.', 'Hierarchy rule 1: keep the accent the only warm hue'),
@@ -688,7 +767,6 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('fade-end', 'Active filter chips row: its end fades out', 'Mask, last 24px', 'Says the row scrolls without a scrollbar · Critique fix: hidden overflow'),
            ('stand-col-min', 'Stand columns (stand only)', 'Narrowest panel before the grid wraps', 'Stand layout'),
            ('leading-box', 'The line box in layout math (the 44pt target offsets, the skeleton proof bar)', '= <code>--leading-body</code>, so they can’t drift', 'Lesson 8: split by use from --leading-body'),
-           ('invalid-ring', 'The invalid field ring’s width', '2px, inside the field', 'Split from --focus-ring (Lesson 8): same value, changes apart'),
            ('spinner-stroke', 'The busy spinner’s stroke', '2px', 'Split from --focus-ring (Lesson 8)'),
            ('shadow-y', 'The float shadow: offset down', 'Its color is the role --float-shadow', 'Depth comes from levels; only what floats has a shadow'),
            ('shadow-blur', 'The float shadow: blur', '32px', 'Same'),
@@ -735,12 +813,12 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-3</code></td><td>{tok("radius-3")}</td><td>Stand panels only, never in the product. (The Filters sheet had it until step 3b; it now takes <code>--radius-sheet</code>.)</td><td>Keeps the product's shapes at 4 and 6</td></tr>
 <tr><td><code>--radius-sheet</code></td><td>{tok("radius-sheet")}</td><td>The Filters sheet's (and Race picker's) top corners. {P}.</td><td>G16 · Native sheet anatomy (designer, 2026-10-18): the system's sheet radius, not a Podium radius</td></tr>
 <tr><td><code>--radius-bar-control</code></td><td>{tok("radius-bar-control")} = 22px</td><td>A control inside a bar: the Filters button and the segmented track in the controls bar (Filters added by the designer, 2026-10-19); the search field once it pins to a bar (G8).</td><td>C7: concentric only inside bars; content keeps 4/6</td></tr>
-<tr><td><code>--radius-bar-inner</code></td><td>{tok("radius-bar-inner")} = 18px</td><td>A segment inside that track: the outer radius minus the track's 4px padding.</td><td>C7: concentric corners</td></tr>
+<tr><td><code>--radius-capsule</code></td><td>{tok("radius-capsule")}</td><td>A full capsule at any height: the segmented control's track and segments, in a bar or in content, also at 200% text; a tab's state fill.</td><td>C7 (designer, 2026-10-30): capsules for every system control · Lesson 9: the List/Map track stays a full capsule at large text</td></tr>
 <tr><td><code>--radius-filter-chip</code></td><td>{tok("radius-filter-chip")} = 16px</td><td>Active filter chips in the controls bar: a capsule, half the 32px chip height.</td><td>C7: a control inside a bar is a capsule (designer, 2026-10-22). Format chips on cards keep 4px</td></tr>
 <tr><td><code>--radius-alert</code></td><td>{tok("radius-alert")}</td><td>The confirm alert (Profile, Sign out). {P}.</td><td>G67 (designer, 2026-10-23): the alert as iOS 26 alerts, glass and a larger radius, provisional like the sheet's</td></tr>
 <tr><td><code>--radius-circle</code></td><td>{tok("radius-circle")}</td><td>The one circle: Profile initials, the busy spinner's ring and the map pin's dot (renamed from <code>--radius-avatar</code>, Lesson 8 step 6).</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
-<tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus, in Text primary, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
+<tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus: its width and offset. Its color is the role <code>--focus</code>, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
 <tr><td><code>--float-shadow</code></td><td>{tok("float-shadow")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
 <tr><td><code>--target</code></td><td>{tok("target")}</td><td>Minimum height of every control or its tap area.</td><td>Critique fix (round 2): touch targets</td></tr>
 </tbody></table></div>
@@ -1049,6 +1127,8 @@ for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css',
 # whose component left the inventory leaves public/ too
 shutil.rmtree(os.path.join(ROOT, 'public/design-system/docs'), ignore_errors=True)
 shutil.copytree(os.path.join(ROOT, 'design-system/docs'), os.path.join(ROOT, 'public/design-system/docs'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots

@@ -13,10 +13,14 @@
   text-transform: uppercase;
   color: var(--text-secondary);
 }
-.rows { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-2); background: var(--surface); overflow: hidden; }
+.rows { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-2); background: var(--surface); overflow: hidden; --row-hover: var(--surface-hover); --row-pressed: var(--surface-pressed); }   /* a row's states follow the level its group rests on (a sheet's: modal-sheet.css) */
 .rows li { position: relative; }
 .rows li + li::before { content: ""; position: absolute; top: 0; left: var(--space-4); right: 0; border-top: var(--border) solid var(--hairline); }
 .row { display: flex; align-items: center; gap: var(--space-3); min-height: var(--target); padding: 0 var(--space-4); }
+/* a row you act on (a link, a check, an editable field or a menu): hover one level up, pressed two (Lesson 9 step 3).
+   A date row isn't one: its pill is the control */
+@media (hover: hover) { .row:is(a[href], .row--check, :has(> :is(input:not([readonly]):not([type="checkbox"]), select))):is(:hover, .is-hover) { background: var(--row-hover); } }
+.row:is(a[href], .row--check, :has(> :is(input:not([readonly]):not([type="checkbox"]), select))):is(:active, .is-pressed) { background: var(--row-pressed); }
 .row label, .row .row-label { flex: none; font-size: var(--size-body); color: var(--text-primary); }
 .row input, .row select, .row .row-value {
   flex: 1;

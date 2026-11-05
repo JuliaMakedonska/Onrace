@@ -19,7 +19,7 @@ code = lambda s: re.sub(r'/\*.*?\*/', '', s, flags=re.S)
 
 MAIN = re.search(r':root\s*\{(.*?)\n\}', TOK, flags=re.S).group(1)
 PRIM_SRC, SEM_SRC = MAIN.split('     2. SEMANTIC: color roles\n')
-LIGHT_SRC = re.search(r':root\[data-theme="light"\]\s*\{(.*?)\n\}', TOK, flags=re.S).group(1)
+LIGHT_SRC = re.search(r':root\[data-theme="light"\][^{]*\{(.*?)\n\}', TOK, flags=re.S).group(1)
 MOTION_SRC = re.search(r'@media \(prefers-reduced-motion: reduce\)\s*\{(.*?)\n\}', TOK, flags=re.S).group(1)
 DECL = re.compile(r'^\s*--([a-z0-9-]+):\s*(.+?);\s*(?:/\*\s*(.*?)\s*(?:\*/)?)?\s*$')
 

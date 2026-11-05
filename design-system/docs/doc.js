@@ -107,6 +107,8 @@
   }
   function crop(win) {
     var pan = win.firstElementChild, sels = JSON.parse(win.getAttribute('data-crop'));
+    var cell = win.closest('.dc-state');   // a States cell lays its stage out at the cell's width, then shrinks to the crop
+    if (cell) cell.style.width = '';
     win.classList.remove('is-cropped'); win.style.width = ''; win.style.height = ''; pan.style.transform = ''; pan.style.width = '';
     var full = win.parentNode.clientWidth;
     pan.style.width = full + 'px';   // the stage keeps the width it has uncropped
@@ -116,12 +118,13 @@
       var r = rectOf(hit);
       u = u ? { left: Math.min(u.left, r.left), top: Math.min(u.top, r.top), right: Math.max(u.right, r.right), bottom: Math.max(u.bottom, r.bottom) } : r;
     });
-    if (!u || (u.right - u.left) * (u.bottom - u.top) > SHARE * p.width * p.height) return false;
+    if (!u || (!cell && (u.right - u.left) * (u.bottom - u.top) > SHARE * p.width * p.height)) return false;   // a States cell always crops to its part
     var x = Math.max(0, u.left - p.left - PAD), y = Math.max(0, u.top - p.top - PAD);
     win.style.width = Math.min(full, u.right - p.left + PAD - x) + 'px';
     win.style.height = Math.min(p.height - y, u.bottom - p.top + PAD - y) + 'px';
     pan.style.transform = 'translate(' + (-x) + 'px, ' + (-y) + 'px)';
     win.classList.add('is-cropped');
+    if (cell) cell.style.width = win.style.width;
     return true;
   }
   function cropAll() { $$('.an-window[data-crop]').forEach(crop); }

@@ -3,15 +3,13 @@
    components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
 
 /* order 0500 */
-/* a locked form (saving, signing in; step 6, #9): one treatment for the whole form, every control in Text disabled
-   (labels, values, placeholders, pickers, the catalog row, the linked race and Unlink), and the bar's Cancel with it.
-   The help text around it (intro, footers) stays Text 2: it is content, not a control. */
-.form-rows .row :is(input, select):disabled { cursor: not-allowed; }
-fieldset:disabled :is(.row label, .row .row-label, .row input, .row select, .row-value, .row--nav, .linked-race, .linked-race *) { color: var(--text-disabled); -webkit-text-fill-color: currentColor; opacity: 1; }
-fieldset:disabled .row input::placeholder { color: var(--text-disabled); }
-fieldset:disabled :is(.row:has(> select)::after, .row--nav::after) { background: var(--text-disabled); }
-fieldset:disabled .date-pill, fieldset:disabled .date-value { color: var(--text-disabled); cursor: not-allowed; }
-.top-bar .close[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
+/* a locked form (saving, signing in; step 6, #9): one treatment for the whole form, the disabled one (Lesson 9 step 3:
+   --opacity-disabled, it was Text disabled): every control fades (base.css: inputs, menus, the date pill, Unlink, the
+   bar's Cancel), and so do the parts of a row that aren't controls themselves (labels, values, the menu chevron, the
+   linked race's words). The help text around it (intro, footers) stays: it is content, not a control. */
+fieldset:disabled :is(.row label, .row .row-label, .row-value, .row--nav, .linked-race > :not(.unlink-btn), .row:has(> select)::after) { opacity: var(--opacity-disabled); }
+fieldset:disabled .row--nav { pointer-events: none; }
+.top-bar .close[aria-disabled="true"] { cursor: default; }   /* the bar's Cancel while the form is locked: base.css fades it with the form */
 
 /* order 0850 */
 .gate fieldset, fieldset.locked { margin: 0; padding: 0; border: 0; min-width: 0; }

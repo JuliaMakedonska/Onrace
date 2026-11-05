@@ -11,8 +11,8 @@
   background: var(--surface);
 }
 .race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
-.race-card .card-link:focus-visible { outline: none; }
-.race-card .card-link:focus-visible::after { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }
+.race-card .card-link:is(:focus-visible, .is-focus) { outline: none; }
+.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
 
 /* order 0110 */
 .race-card .card-link {
@@ -84,8 +84,9 @@
 .race-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
 
 /* order 0370 */
-.race-card:hover .card-link::after { box-shadow: inset 0 0 0 var(--border) var(--boundary); }
-.race-card:has(.card-link:active), .race-card.is-pressed { background: var(--pressed); }   /* G23: pressed highlight on tap (.is-pressed: the showcase's still stand-in) */
+/* hover one level up, pressed two (Lesson 9 step 3; the hover ring went: one rule for every fill). G23: the pressed highlight on tap */
+@media (hover: hover) { .race-card:has(.card-link:is(:hover, .is-hover)) { background: var(--surface-hover); } }
+.race-card:is(.is-pressed, :has(.card-link:is(:active, .is-pressed))) { background: var(--surface-pressed); }
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
 .race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-l) + var(--space-3)); }   /* G47: room for the checkmark */
 .race-card:has(.card-link[aria-current="true"])::after {   /* G47: the linked race in Race picker, the filter rows' neutral checkmark (C4) */

@@ -19,7 +19,7 @@
   text-underline-offset: var(--space-1);
   cursor: pointer;
 }
-.clear-all:hover { color: var(--text-secondary); }
+/* states: .text-link's, below */
 
 /* order 0670 */
 .official a, .row-note a, .alert-link, .forgot a {
@@ -46,7 +46,7 @@
   text-underline-offset: var(--space-1);
   cursor: pointer;
 }
-.copy-link:hover { color: var(--text-secondary); }
+/* states: .text-link's, below */
 
 /* order 0800 */
 .text-link {
@@ -61,4 +61,6 @@
   text-decoration-thickness: var(--border);
   text-underline-offset: var(--space-1);
 }
-.text-link:hover, .official a:hover, .row-note a:hover, .alert-link:hover, .forgot a:hover { color: var(--text-secondary); }
+/* every text link and text action: color only, one step dimmer under the pointer, two pressed (Lesson 9 step 3) */
+@media (hover: hover) { :is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
+:is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }

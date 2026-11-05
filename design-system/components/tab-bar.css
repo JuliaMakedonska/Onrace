@@ -19,6 +19,9 @@
   text-decoration: none;
 }
 .bottom-nav a[aria-current="page"] { color: var(--accent-ink); }
+.bottom-nav a { border-radius: var(--radius-capsule); }   /* a tab's state fill is a capsule inside the capsule bar (iOS 26) */
+@media (hover: hover) { .bottom-nav a:is(:hover, .is-hover) { background: var(--bar-hover); } }   /* on the bar's glass: one level up, two pressed (Lesson 9 step 3) */
+.bottom-nav a:is(:active, .is-pressed) { background: var(--bar-pressed); }
 
 /* order 0380 */
 /* tab bar on a screen: fixed to the frame's bottom; Solar icons from tokens (the markup's own glyphs are hidden) */

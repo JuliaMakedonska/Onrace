@@ -22,6 +22,6 @@
   cursor: pointer;
 }
 .sort-toggle::after { content: ""; flex: none; width: var(--icon-s); height: var(--icon-s); background: currentColor; -webkit-mask: var(--icon-sort) center / contain no-repeat; mask: var(--icon-sort) center / contain no-repeat; }
-.sort-toggle:hover { color: var(--text-secondary); }
-.sort-toggle:disabled { color: var(--text-disabled); cursor: not-allowed; }
+@media (hover: hover) { .sort-toggle:is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: color only */
+.sort-toggle:is(:active, .is-pressed) { color: var(--text-pressed); }
 .sort-toggle[hidden] { display: none; }

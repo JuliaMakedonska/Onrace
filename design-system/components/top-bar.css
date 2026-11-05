@@ -57,15 +57,18 @@
   letter-spacing: normal;
   color: var(--text-primary);
 }
-.top-bar :is(a, button):hover { color: var(--text-secondary); }
+@media (hover: hover) { .top-bar :is(a, button):is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: one step dimmer, two pressed */
+.top-bar :is(a, button):is(:active, .is-pressed) { color: var(--text-pressed); }
 /* the bar action: the screen's one primary in its bar, amber text like a native bar button (Color rule 1): Save on
    Log result, Log result on Results list (G5), Apply filters on the Filters sheet (G12) */
 .top-bar .save-btn, .top-bar .bar-action { margin-left: auto; font-weight: var(--weight-strong); color: var(--accent-ink); }
-.top-bar .save-btn:hover, .top-bar .bar-action:hover { color: var(--accent-ink-hover); }   /* step 5: the ink's own hover role (was --accent-hover, shared with the fill) */
+@media (hover: hover) { .top-bar :is(.save-btn, .bar-action):is(:hover, .is-hover) { color: var(--accent-ink-hover); } }   /* step 5: the ink's own hover role (was --accent-hover, shared with the fill) */
+.top-bar :is(.save-btn, .bar-action):is(:active, .is-pressed) { color: var(--accent-ink-pressed); }
 .top-bar .bar-action[hidden] { display: none; }
 .top-bar :is(.save-btn, .bar-action)[aria-busy="true"] { color: var(--text-secondary); }   /* busy: the spinner alone, the label ("Saving…", "Signing in…") visually hidden for screen readers (round 2) */
-.top-bar :is(.save-btn, .bar-action)[aria-disabled="true"]:not([aria-busy="true"]) { color: var(--text-disabled); cursor: not-allowed; }
 .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action { color: var(--text-primary); }   /* a state brings its own primary (Results list -error): the bar action steps down, so the screen keeps two lights */
+@media (hover: hover) { .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:hover, .is-hover) { color: var(--text-hover); } }
+.phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:active, .is-pressed) { color: var(--text-pressed); }
 /* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
 .top-bar[data-collapse] .bar-title { padding-inline: var(--bar-title-inset);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }

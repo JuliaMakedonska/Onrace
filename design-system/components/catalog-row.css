@@ -5,5 +5,4 @@
 /* order 0530 */
 .row--nav { justify-content: space-between; color: var(--text-primary); font-size: var(--size-body); text-decoration: none; }   /* a row that opens another screen (Find in race catalog) */
 .row--nav::after { content: ""; flex: none; width: var(--icon-s); height: var(--icon-s); background: var(--text-secondary); -webkit-mask: var(--icon-disclosure) center / contain no-repeat; mask: var(--icon-disclosure) center / contain no-repeat; }
-a.row--nav[href]:hover { background: var(--raised); }
-.row--nav[aria-disabled="true"] { color: var(--text-disabled); cursor: not-allowed; }
+/* its hover and press are every row's (grouped-settings-rows.css); disabled is base.css's */

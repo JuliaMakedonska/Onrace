@@ -36,6 +36,7 @@ dialog.alert .alert-actions button:first-child { border-bottom-left-radius: var(
 dialog.alert .alert-actions button:last-child { border-bottom-right-radius: var(--radius-alert); }
 dialog.alert .alert-actions button + button { border-left: var(--border) solid var(--hairline); font-weight: var(--weight-strong); }
 dialog.alert .alert-actions button:only-child { font-weight: var(--weight-strong); }   /* one action (Race detail: Dismiss): the default, bold */
-dialog.alert #signout-confirm { color: var(--error); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1 */
-dialog.alert .alert-actions button:hover { background: var(--pressed); }   /* one level above the alert's raised glass */
-dialog.alert .alert-actions button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }
+dialog.alert .alert-actions .is-destructive { color: var(--error); }   /* Sign out is destructive: coral text (HIG Alerts); Cancel stays Text 1. A class since Lesson 9 step 3 (it was styled by its id) */
+@media (hover: hover) { dialog.alert .alert-actions button:is(:hover, .is-hover) { background: var(--sheet-hover); } }   /* on the alert's glass: one level up, two pressed */
+dialog.alert .alert-actions button:is(:active, .is-pressed) { background: var(--sheet-pressed); }
+dialog.alert .alert-actions button:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }

@@ -4,7 +4,7 @@
 
 /* order 0470 */
 /* forms as grouped rows (round 2: Log result G42, the sign-in screens G61): a label and its control in a row; hints
-   are the group's footer; an error sits under its row; an invalid row takes the coral ring (kit feedback #4) */
+   are the group's footer; an error is a coral footnote under its row, or under its group in the hint's place (Lesson 9 step 3: no ring) */
 .form-rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]) { text-align: left; text-align-last: left; color: var(--text-primary); }
 
 /* order 0490 */
@@ -19,4 +19,4 @@
 .rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]):not([readonly]):not(:disabled) { color: var(--text-primary); }   /* editable text in Text 1, read-only values (Email) and menu values in Text 2, as iOS Settings (designer, step 6, #21) */
 
 /* order 1010 */
-.row input:focus-visible, .row select:focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: 0; color: var(--text-primary); }
+.row :is(input, select):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-primary); }

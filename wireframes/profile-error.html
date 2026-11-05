@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=b22e417c">
+<link rel="stylesheet" href="../design-system/index.css?v=2980b37d">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace" data-state="error">
@@ -188,7 +188,7 @@
     </div>
     <div class="alert-actions">
       <button type="button" id="signout-cancel" autofocus>Cancel</button>
-      <button type="button" id="signout-confirm">Sign out</button>
+      <button type="button" class="is-destructive" id="signout-confirm">Sign out</button>
     </div>
   </dialog>
 
@@ -279,6 +279,13 @@
       err.querySelector('[data-retry]').href = 'profile.html?retry=' + field + '&value=' + encodeURIComponent(attempted);
     }
     err.hidden = false;
+    // The error is the row's coral footnote (Lesson 9 step 3): it describes
+    // its field (aria-invalid + aria-describedby) and replaces the group's
+    // hint while it shows.
+    fEl.setAttribute('aria-invalid', 'true');
+    fEl.setAttribute('aria-describedby', err.id);
+    var hint = fEl.closest('.group').querySelector('.group-footer');
+    if (hint) hint.hidden = true;
   }
 
   // --- Save as you go. Last saved value per field, so a failed save can
@@ -293,7 +300,12 @@
     var saving = note.querySelector('[data-saving]');
     var done = note.querySelector('[data-saved]');
     var errNote = document.getElementById(f + '-error');
-    if (errNote) errNote.hidden = true; // a new attempt replaces the old error
+    if (errNote && !errNote.hidden) { // a new attempt replaces the old error
+      errNote.hidden = true;
+      el.removeAttribute('aria-invalid'); el.removeAttribute('aria-describedby');
+      var hint = el.closest('.group').querySelector('.group-footer');
+      if (hint) hint.hidden = false;
+    }
     window.clearTimeout(timers[f]);
     saving.hidden = false; done.hidden = true; note.hidden = false;
     timers[f] = window.setTimeout(function () {

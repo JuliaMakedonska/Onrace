@@ -35,6 +35,7 @@
   appearance: none;
 }
 .race-search input::placeholder, .phone-screen > form.search input[type="search"]::placeholder { color: var(--text-secondary); opacity: 1; }
-.race-search input:hover, .phone-screen > form.search input[type="search"]:hover { box-shadow: inset 0 0 0 var(--border) var(--text-secondary); }
-.race-search input:focus-visible, .phone-screen > form.search input[type="search"]:focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: 0; box-shadow: none; }
+@media (hover: hover) { :is(.race-search input, .phone-screen > form.search input[type="search"]):is(:hover, .is-hover) { box-shadow: inset 0 0 0 var(--border) var(--boundary-hover); } }   /* an input: its boundary, one step stronger, two pressed */
+:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:active, .is-pressed) { box-shadow: inset 0 0 0 var(--border) var(--boundary-pressed); }
+:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
 .race-search input::-webkit-search-cancel-button, .phone-screen > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */

@@ -29,7 +29,8 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 }
 .action-sheet .action-message { margin: 0; padding: var(--space-4); text-align: center; font-size: var(--size-proof); color: var(--text-secondary); border-bottom: var(--border) solid var(--hairline); }
 .action-sheet button { display: block; width: 100%; min-height: calc(var(--target) + var(--space-3)); border: 0; background: transparent; color: var(--text-primary); font-family: var(--font-text); font-size: var(--size-item); cursor: pointer; }
-.action-sheet button:hover { background: var(--pressed); }
-.action-sheet button:focus-visible { outline-offset: calc(var(--focus-ring) * -1); }
+@media (hover: hover) { .action-sheet button:is(:hover, .is-hover) { background: var(--sheet-hover); } }   /* on the sheet glass: one level up, two pressed */
+.action-sheet button:is(:active, .is-pressed) { background: var(--sheet-pressed); }
+.action-sheet button:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }
 .action-sheet .is-destructive { color: var(--error); }
 .action-sheet .action-cancel { font-weight: var(--weight-strong); }   /* the alert clips its edges: the ring sits inside the button, whole */

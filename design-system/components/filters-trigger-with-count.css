@@ -20,4 +20,4 @@
 }
 
 /* order 0350 */
-.filters-trigger[aria-expanded="true"] { background: var(--pressed); }
+.filters-trigger[aria-expanded="true"] { background: var(--selected); }   /* open: the selected level, while its sheet is up */

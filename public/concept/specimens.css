@@ -26,14 +26,15 @@
   line-height: var(--leading-tight);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
-.btn:active { transform: translateY(var(--border)); }
 .btn .icon { width: var(--icon-m); height: var(--icon-m); flex: none; }
 .btn--primary { background: var(--accent-fill); color: var(--on-accent-fill); }
 .btn--primary:hover { background: var(--accent-hover); }
+.btn--primary:active { background: var(--accent-pressed); }   /* the kit's states (Lesson 9 step 3): fill only, nothing moves */
 .btn--secondary { background: var(--raised); color: var(--text-primary); }
-.btn--secondary:hover { background: var(--pressed); }
+.btn--secondary:hover { background: var(--raised-hover); }
+.btn--secondary:active { background: var(--raised-pressed); }
 .btn--tertiary {
   position: relative;
   min-height: var(--target);
@@ -49,9 +50,9 @@
   text-underline-offset: var(--space-1);
   cursor: pointer;
 }
-.btn--tertiary:hover { color: var(--text-secondary); }
-.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { background: var(--raised); color: var(--text-disabled); cursor: not-allowed; transform: none; }
-.btn--tertiary:disabled { background: none; }
+.btn--tertiary:hover { color: var(--text-hover); }
+.btn--tertiary:active { color: var(--text-pressed); }
+.btn:disabled, .btn[aria-disabled="true"]:not([aria-busy="true"]) { opacity: var(--opacity-disabled); pointer-events: none; }
 .btn[aria-busy="true"] { cursor: progress; pointer-events: none; }  /* busy: same fill, verb in the present tense ("Saving…"), aria-disabled blocks keys */
 .btn[aria-busy="true"]::before {   /* G26: the kit's spinner, for a specimen that isn't a <button> */
   content: "";
@@ -112,8 +113,7 @@
   mask: var(--icon-chevron) center / contain no-repeat;
   pointer-events: none;
 }
-.sort-control select:disabled { color: var(--text-disabled); cursor: not-allowed; }
-.sort-control:has(select:disabled)::after { background: var(--text-disabled); }
+.sort-control:has(select:disabled) { opacity: var(--opacity-disabled); pointer-events: none; }
 /* ---------- the old drawn tab icons: first-screen.html still has them (the screens use Solar masks) ---------- */
 .bottom-nav .tab-icon { width: var(--icon-l); height: var(--icon-l); }
 .sort-control[hidden] { display: none; }

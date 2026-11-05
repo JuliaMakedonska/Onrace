@@ -19,4 +19,5 @@
   text-decoration-thickness: var(--border);
   text-underline-offset: var(--space-1);
 }
-.linked-race .unlink-btn:hover:not(:disabled) { background: none; color: var(--text-secondary); }
+@media (hover: hover) { .linked-race .unlink-btn:is(:hover, .is-hover) { background: none; color: var(--text-hover); } }   /* a text action: color, not fill */
+.linked-race .unlink-btn:is(:active, .is-pressed) { background: none; color: var(--text-pressed); }

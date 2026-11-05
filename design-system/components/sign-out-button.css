@@ -17,4 +17,5 @@
   cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
-.signout:hover { background: var(--raised); }
+@media (hover: hover) { .signout:is(:hover, .is-hover) { background: var(--surface-hover); } }   /* it rests on --surface: one level up, two pressed */
+.signout:is(:active, .is-pressed) { background: var(--surface-pressed); }

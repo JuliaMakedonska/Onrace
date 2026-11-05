@@ -1,6 +1,6 @@
 # Components
 
-Lesson 8, step 3 (2026-10-27): the kit's component classes, one file per component, on the two token levels in `../tokens/tokens.css`. The classes, the markup they style and the states they cover (hover, pressed, focus, disabled) are exactly those of `ui/kit.css`. Nothing new was added; new states come in Lesson 9.
+Lesson 8, step 3 (2026-10-27): the kit's component classes, one file per component, on the two token levels in `../tokens/tokens.css`. The classes, the markup they style and the states they cover (hover, pressed, focus, disabled) are exactly those of `ui/kit.css`. Nothing new was added then; the states came in Lesson 9 step 3 (below).
 
 ## What a page links
 
@@ -60,3 +60,15 @@ A light theme overrides semantic roles in `../tokens/tokens.css`, and nothing he
 2. **`date-field.css`:** the native date input had `color-scheme: dark` written in, so its picker would stay dark in light. It now inherits the theme's `color-scheme` from `:root`.
 
 No component read a color primitive. `scripts/build_components.py` now also fails on a fixed `color-scheme` or a named or functional color (`black`, `white`, `rgb()`, `hsl()`), the two ways a component can still hold a theme of its own.
+
+## States (Lesson 9 step 3, 2026-11-05)
+
+Every component you act on has Hover, Pressed, Focus and Disabled, from the state roles in `../tokens/tokens.css` (`DESIGN.md` → Component states):
+
+- **Hover** sits in `@media (hover: hover) { … }`, one level up from where the fill rests (`--surface-hover`, `--raised-hover`, `--group-hover`, `--sheet-hover`, `--bar-hover`, `--accent-hover`; text `--text-hover`; a boundary `--boundary-hover`).
+- **Pressed** (`:active`) two levels up: the `-pressed` of the same pair.
+- **Focus** (`:focus-visible`): the ring in `--focus`, from `base.css` unless a component draws it inside.
+- **Disabled:** one rule in `base.css`, the whole control at `--opacity-disabled` with no pointer events. No component recolors a disabled control.
+- **Only fill, color or border change.** No `transform`, no size.
+- **The stand-ins:** each state is written `:is(:hover, .is-hover)`, `:is(:active, .is-pressed)`, `:is(:focus-visible, .is-focus)`, so the docs show a state with the very rule a pointer triggers. `scripts/check_kit.py` stops the build if a screen uses a stand-in.
+

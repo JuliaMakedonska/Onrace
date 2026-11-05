@@ -5,7 +5,8 @@
 /* order 0030 */
 /* secondary: tonal (Filters, Clear all filters on an empty state) */
 .filters-trigger, .state-action.secondary { background: var(--raised); color: var(--text-primary); }
-.filters-trigger:hover, .state-action.secondary:hover { background: var(--pressed); }
+@media (hover: hover) { :is(.filters-trigger, .state-action.secondary):is(:hover, .is-hover) { background: var(--raised-hover); } }
+:is(.filters-trigger, .state-action.secondary):is(:active, .is-pressed) { background: var(--raised-pressed); }
 
 /* order 0790 */
 /* ---------- secondary and small buttons on the grayscale screens ---------- */
@@ -28,6 +29,6 @@
 }
 .secondary-btn { display: flex; width: 100%; font-size: var(--size-body); }
 .unlink-btn { display: inline-flex; }
-.secondary-btn:hover:not(:disabled), .unlink-btn:hover:not(:disabled) { background: var(--pressed); }
-.secondary-btn:disabled, .unlink-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+@media (hover: hover) { :is(.secondary-btn, .unlink-btn):is(:hover, .is-hover) { background: var(--raised-hover); } }
+:is(.secondary-btn, .unlink-btn):is(:active, .is-pressed) { background: var(--raised-pressed); }
 .secondary-btn[aria-busy="true"] { color: var(--text-primary); }   /* busy, not disabled: the label keeps its color, as a busy primary keeps its fill */

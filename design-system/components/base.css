@@ -16,7 +16,18 @@
 }
 .onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
 .onrace ::selection { background: var(--text-primary); color: var(--page); }
-.onrace :focus-visible { outline: var(--focus-ring) solid var(--text-primary); outline-offset: var(--focus-ring); }
+/* states (Lesson 9 step 3): .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and
+   :focus-visible, written into the same selector so a stand-in can't drift from its state; no screen uses them */
+.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* the keyboard ring: --focus, 3:1 on every ground in both themes */
+/* disabled: one treatment for every control, the whole control at --opacity-disabled with no pointer events, never
+   recolored by hand. A busy control isn't disabled. A disabled field's label fades with it. The date pill and a check row fade as one (their inner control
+   doesn't fade again); a race card fades whole (its link doesn't fade again) */
+.onrace :is(button:not(.date-value), input:not([type="checkbox"], [type="date"]), select, textarea):disabled:not([aria-busy="true"]),
+.onrace [aria-disabled="true"]:not([aria-busy="true"]):not(.race-card .card-link),
+.onrace .date-pill:has(> .date-value:disabled),
+.onrace .row--check:has(> input:disabled),
+.onrace .row:has(> :is(input, select):disabled) > :is(label, .row-label),
+.onrace .race-card:has(> .card-link[aria-disabled="true"]) { opacity: var(--opacity-disabled); pointer-events: none; }
 .onrace .visually-hidden {
   position: absolute; width: var(--hidden-size); height: var(--hidden-size); overflow: hidden; clip-path: inset(50%); white-space: nowrap;
 }

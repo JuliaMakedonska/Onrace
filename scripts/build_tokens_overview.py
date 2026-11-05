@@ -45,12 +45,12 @@ assert N_PRIM and ROLES and N_FILES and ROLE_PAIRS and N_USE_PAIRS and N_GLASS
 
 def val(name, theme='dark'):
     """A token's hex in a theme, following var() through the light block when asked."""
-    light = dict(re.findall(r'^\s*--([a-z0-9-]+):\s*([^;]+);', code(re.search(r':root\[data-theme="light"\]\s*\{(.*?)\n\}', TOK, flags=re.S).group(1)), flags=re.M))
+    light = dict(re.findall(r'^\s*--([a-z0-9-]+):\s*([^;]+);', code(re.search(r':root\[data-theme="light"\][^{]*\{(.*?)\n\}', TOK, flags=re.S).group(1)), flags=re.M))
     v = (light.get(name) if theme == 'light' and name in light else re.search(r'--' + re.escape(name) + r':\s*([^;]+);', code(MAIN)).group(1)).strip()
     m = re.match(r'var\(--([a-z0-9-]+)\)$', v)
     return val(m.group(1), theme) if m else v
 def prim_of(name, theme='dark'):
-    light = dict(re.findall(r'^\s*--([a-z0-9-]+):\s*var\(--([a-z0-9-]+)\);', code(re.search(r':root\[data-theme="light"\]\s*\{(.*?)\n\}', TOK, flags=re.S).group(1)), flags=re.M))
+    light = dict(re.findall(r'^\s*--([a-z0-9-]+):\s*var\(--([a-z0-9-]+)\);', code(re.search(r':root\[data-theme="light"\][^{]*\{(.*?)\n\}', TOK, flags=re.S).group(1)), flags=re.M))
     if theme == 'light' and name in light: return light[name]
     return re.search(r'--' + re.escape(name) + r':\s*var\(--([a-z0-9-]+)\)', code(SEM)).group(1)
 def users(role):
@@ -96,7 +96,7 @@ diagram = f'''<div class="dg">
 # ---------------------------------------------------------------- the stress test: a live screen, Light / Dark
 PAGES = sorted(os.path.basename(p)[:-5] for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html'))
 options = ''.join(f'<option value="{p}"{" selected" if p == "results-list" else ""}>{p}</option>' for p in PAGES)
-holes = COMP_README.split('## The theme test', 1)[1].split('\n', 1)[1]
+holes = COMP_README.split('## The theme test', 1)[1].split('\n', 1)[1].split('\n## ', 1)[0]   # only the theme test section, up to the next ## heading
 proof_body = f'''<p class="lede">The proof that every color goes through a role: a second appearance needs new role values and nothing else. Pick a screen and switch it.</p>
 <div class="look">
   <div class="look-controls">

@@ -11,7 +11,8 @@
       - Merges and splits are marked "merge:" and "split:".
    2. SEMANTIC: color roles only, each a var() of a primitive, each with the audit usages it grew from.
       A role is split only where its uses would need different values in a light appearance (iOS light is
-      the test). No focus role and no new states: they come in Lesson 9.
+      the test). The state roles (hover, pressed, focus, disabled) came in Lesson 9 step 3 (2026-11-05): every one
+      has a value in the dark :root and in the light block; one with a value in a single theme stops the build.
 
    Not here:
    - the docs layer's values (--font-mono, --stand-max, --stand-col-min, --radius-3, --kit-stage-h);
@@ -35,8 +36,9 @@
   --graphite-17: #272B30;   /* L* 17.33 · "Graphite Raised" */
   --graphite-20: #2C3035;   /* L* 19.67 · "Graphite Pressed" */
   --graphite-22: #31363C;   /* L* 22.36 · "Hairline" */
+  --graphite-23: #33383E;   /* L* 23.27 · "Graphite Raised, pressed": a raised fill and a sheet's button two levels up, a group's row one level up (Lesson 9 step 3) */
+  --graphite-26: #383D43;   /* L* 25.51 · "Graphite Group, pressed": a group's row two levels up; the last step that keeps Text secondary at AA (4.62:1) */
   --graphite-46: #686E75;   /* L* 46.15 · "Field Line" */
-  --graphite-47: #6B7178;   /* L* 47.36 · "Disabled" */
   --graphite-69: #A3A9B0;   /* L* 68.97 · "Ash" */
   --graphite-79: #BFC4CA;   /* L* 78.94 · "Chip Text" */
   --graphite-96: #F4F5F6;   /* L* 96.49 · "Chalk" */
@@ -45,6 +47,7 @@
   /* ---------- color: amber and coral ---------- */
   --amber-78: #F5B649;      /* L* 78.08 · "Sodium Amber". Rule 3b's designer override (2026-10-14) is bound to this exact hex */
   --amber-83: #FFC46A;      /* L* 82.80 · "Amber, hover" */
+  --amber-87: #FFD28A;      /* L* 86.60 · "Amber, pressed": the fill and the dark ink two steps up (Lesson 9 step 3) */
   --coral-68: #EE8B84;      /* L* 68.25 · "Soft Coral" */
   --coral-21: #3A2F31;      /* L* 20.65 · "Coral Wash" (coral at 14% on graphite-12) */
 
@@ -56,17 +59,19 @@
   --graphite-87: #D6DADE;   /* L* 86.86 · light: the hairline (iOS separator, opaque) */
   --graphite-85: #D0D5DB;   /* L* 85.05 · light: the map's water */
   --graphite-77: #B9BFC6;   /* L* 77.07 · light: the map's coastlines and borders */
-  --graphite-65: #9A9FA6;   /* L* 65.29 · light: disabled text */
   --graphite-56: #80868D;   /* L* 55.65 · light: an input's boundary, 3:1 on the page and the surface */
   --graphite-39: #575C63;   /* L* 38.87 · light: secondary text (iOS secondaryLabel's place, opaque so it holds AA on every fill) */
   --graphite-27: #3B4046;   /* L* 26.85 · light: the format chip's text */
   --amber-40: #875206;      /* L* 39.91 · light: amber as text (the ink), darker and ~8° warmer than amber-78, so it holds AA on light bars and passes rule 3b on its own */
   --amber-33: #6F4305;      /* L* 32.71 · light: the ink under the pointer */
+  --amber-26: #5A3604;      /* L* 26.22 · light: the ink pressed, two steps darker (Lesson 9 step 3) */
   --coral-40: #A33A32;      /* L* 39.65 · light: error icon, invalid ring, destructive text (soft coral darkened to AA on white and the sheet glass) */
   --coral-94: #FBE9E7;      /* L* 93.69 · light: the error surface */
 
   /* ---------- alpha: the strengths used in mixes ---------- */
   --alpha-8: 8%;            /* the glass rim */
+  --alpha-38: 38%;          /* light: a disabled control's opacity (Lesson 9 step 3): Text primary at 38% on the page is 2.40:1, the retired light Text disabled's 2.44 */
+  --alpha-40: 40%;          /* a disabled control's opacity (Lesson 9 step 3): Text primary at 40% on the page is 3.63:1, the retired Text disabled's 3.71 */
   --alpha-60: 60%;          /* the scrim, the float shadow */
   --alpha-85: 85%;          /* bar glass [?] (was --glass-opacity) */
   --alpha-90: 90%;          /* sheet glass [?] (was --glass-opacity-sheet) */
@@ -112,17 +117,17 @@
   --radius-alert: 34px;     /* the alert's and the action sheet's corners (G67) [?] */
   --radius-circle: 50%;     /* the one circle: Profile initials, the busy spinner, the map pin's dot. Renamed from --radius-avatar in step 6 (2026-10-30): the dot wrote 50% itself, and the spinner only borrowed the avatar's name */
   --radius-bar-control: calc(var(--target) / 2);   /* C7: a control inside a bar is a capsule, concentric with the bar */
-  --radius-bar-inner: calc(var(--radius-bar-control) - var(--space-1));   /* C7: a segment inside it: outer radius minus the track's padding */
   --radius-filter-chip: calc(var(--filter-chip-height) / 2);   /* C7: the active filter chip is a capsule */
   --radius-tabbar: calc(var(--tabbar-h) / 2);   /* G1: the floating tab bar is a capsule */
+  --radius-capsule: 999px;  /* C7 (Lesson 9 step 3): a full capsule at any height, larger than any control is tall, so the corners stay half the box's own height (the browser clamps it). The segmented control's track and segments, everywhere, also at 200% text */
   /* Not merged (tried in this step): one capsule radius for the three (calc(infinity * 1px), clamped to half of each box's
      own height) changes pixels. At 200% text the List/Map track (.view-toggle) is 47px tall and keeps 22px today, so it
      isn't a full capsule there; one formula would round it to 23.5px. The three stay "half the nominal height".
      Designer, 2026-10-27: it stays as today through the refactor; a full capsule at large text is a "keep it" change for
-     after Lesson 8 (tokens/tokens-audit.md → After the lesson). */
+     after Lesson 8 (tokens/tokens-audit.md → After the lesson). Done in Lesson 9 step 3 for the segmented control:
+     --radius-capsule. The other three keep half the nominal height. */
   --border: 1px;
-  --focus-ring: 2px;        /* the focus outline's width and offset */
-  --invalid-ring: 2px;      /* split: the invalid field ring's width, which borrowed --focus-ring. Same value */
+  --focus-ring: 2px;        /* the focus outline's width and offset; its color is the semantic --focus */
   --spinner-stroke: 2px;    /* split: the busy spinner's stroke, which borrowed --focus-ring (found in this step; not in the audit). Same value */
   --target: 44px;           /* minimum touch target */
   --measure: 65ch;          /* longest line of running text */
@@ -238,9 +243,9 @@
   --frame: var(--graphite-5);        /* the void behind an open sheet: body:has(> .sheet > .phone-screen). Split from the tab bar's glass: in iOS light the area behind a sheet stays black, while the tab bar turns light */
   --page: var(--graphite-7);         /* the page: .onrace (and the showcase stages .kit-frame, .kit-shell); ::selection text */
   --surface: var(--graphite-12);     /* cards and row groups: .race-card, .result-card .card-link, .rows, .skeleton-card, the search field, .saved-status, .signout, the receded Results edge */
-  --raised: var(--graphite-17);      /* a fill on a surface: secondary buttons, .sport-tag, .chip, the date tile, the List/Map track, skeleton .bar, pin labels, .initials. Rows still take it on hover and press (.row--check:active, a.row--nav:hover, .signout:hover): states, Lesson 9 */
-  --pressed: var(--graphite-20);     /* hover, open and pressed fills: raised controls (+1) and the pressed race and result cards (+2, audit Drift 1). An existing state role, kept as it is for Lesson 9 */
-  --group: var(--graphite-20);       /* split from --pressed: a group of rows one level above its container (.sheet .rows, .linked-race). In a light appearance a group rises lighter while a press goes darker */
+  --raised: var(--graphite-17);      /* a fill on a surface: secondary buttons, .sport-tag, .chip, the date tile, the List/Map track, skeleton .bar, pin labels, .initials */
+  --selected: var(--graphite-20);    /* a control that is on: the selected List/Map segment, Filters while its sheet is open. Renamed from --pressed in Lesson 9 step 3, when hover and press got their own roles below */
+  --group: var(--graphite-20);       /* split from --pressed (now --selected): a group of rows one level above its container (.sheet .rows, .linked-race). In a light appearance a group rises lighter while a press goes darker */
 
   /* ---------- glass, scrim, shadow (C1): mixes of primitives ---------- */
   --glass-bar: color-mix(in srgb, var(--graphite-5) var(--alpha-85), transparent);      /* .bottom-nav, .action-bar */
@@ -251,12 +256,11 @@
   --float-shadow: 0 var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--black) var(--alpha-60), transparent);   /* the tab bar, sheet, alert and action sheet (was --shadow-sheet). Its own mix, not var(--scrim): a light scrim and a light shadow differ */
 
   /* ---------- text and lines ---------- */
-  --text-primary: var(--graphite-96);    /* titles, body, finish times, secondary-button labels; also the checkmark and checkbox (was --control-tint, C4), the focus ring (was --focus; no focus role until Lesson 9), the ::selection fill and the map pin dot */
-  --text-secondary: var(--graphite-69);  /* meta, location, proof line, placeholder, inactive tab, small glyphs (chip ×, search, disclosure, select chevron), the empty-state icon, the map leader line; and two hover states (.race-search input:hover ring, link hover), Lesson 9 */
-  --text-disabled: var(--graphite-47);   /* :disabled controls only */
+  --text-primary: var(--graphite-96);    /* titles, body, finish times, secondary-button labels; also the checkmark and checkbox (was --control-tint, C4), the ::selection fill and the map pin dot */
+  --text-secondary: var(--graphite-69);  /* meta, location, proof line, placeholder, inactive tab, small glyphs (chip ×, search, disclosure, select chevron), the empty-state icon, the map leader line */
   --chip-text: var(--graphite-79);       /* single use, a role because the theme changes it: .sport-tag */
   --hairline: var(--graphite-22);        /* dividers: .controls, .rows li + li, .results-order, the alert buttons, the action-sheet message; the showcase frame outline */
-  --boundary: var(--graphite-46);        /* an input's edge, 3:1 (WCAG 1.4.11): the search field, rows with inputs, the pressed segment, the card hover ring, the map frame, the scrollbar */
+  --boundary: var(--graphite-46);        /* an input's edge, 3:1 (WCAG 1.4.11): the search field, rows with inputs, the selected segment, the map frame, the scrollbar */
 
   /* ---------- accent (Color rule 1: only where you act or where you are) ---------- */
   --accent-fill: var(--amber-78);        /* the primary action's fill: .state-action:not(.secondary), .register-btn, .open-btn, .submit-btn */
@@ -266,13 +270,36 @@
   --accent-ink-hover: var(--amber-83);   /* the bar action under the pointer (.top-bar .save-btn, .bar-action). Split from --accent-hover in step 5: in light the fill's hover takes dark text and the ink's hover is text on a light bar, so one value can't serve both (the theme test's hole 1) */
 
   /* ---------- error ---------- */
-  --error: var(--coral-68);              /* the error icon (.inline-error h2::before, .form-alert, the gate), the invalid ring (was --invalid) and destructive text (was --destructive: .signout, #signout-confirm, .is-destructive). Not split: in iOS light all three take the same red */
+  --error: var(--coral-68);              /* the error icon (.inline-error h2::before, .form-alert, the gate), the field error's footnote (Lesson 9 step 3: it replaced the invalid ring, was --invalid) and destructive text (was --destructive: .signout, .is-destructive). Not split: in iOS light all three take the same red */
   --error-surface: var(--coral-21);      /* single use, a role because the theme changes it: .inline-error, .form-alert */
 
   /* ---------- the static map ---------- */
   --map-water: var(--graphite-5);        /* single use, a role because the theme changes it: .map-placeholder, the ring of .map-pin::before */
   --map-land: var(--graphite-12);        /* single use, a role because the theme changes it: .map-placeholder::before */
   --map-lines: var(--graphite-20);       /* single use, a role because the theme changes it: .map-placeholder::after (coastlines, borders) */
+
+  /* ---------- states (Lesson 9 step 3, 2026-11-05) ----------
+     One rule for fills: hover one level up, pressed two levels up, for every component. A fill's levels depend on where
+     it rests, so each resting level has its pair. "Up" is lighter in dark; in light a state goes darker (iOS light).
+     Hover only under @media (hover: hover); pressed is the state on touch. A state changes fill, color or border only. */
+  --surface-hover: var(--graphite-17);   /* a fill resting on --surface: the race card, the result row, rows on the page (catalog, select, check, Profile's), Sign out */
+  --surface-pressed: var(--graphite-20);
+  --raised-hover: var(--graphite-20);    /* a fill resting on --raised: secondary buttons, Filters, the filter chip, the date pill, an unselected segment, a map pin's label */
+  --raised-pressed: var(--graphite-23);
+  --group-hover: var(--graphite-23);     /* a row resting on --group: the rows on a sheet (Filters, Log result) */
+  --group-pressed: var(--graphite-26);
+  --sheet-hover: var(--graphite-20);     /* a button on the sheet glass: the confirm alert's and the action sheet's buttons. Its own pair: the glass is the raised level in dark and white in light */
+  --sheet-pressed: var(--graphite-23);
+  --bar-hover: var(--graphite-12);       /* a tab on the tab bar's glass (graphite-5 in dark): one level up is the surface, two the raised level */
+  --bar-pressed: var(--graphite-17);
+  --accent-pressed: var(--amber-87);     /* the primary fill pressed, two steps up from --accent-fill (hover is --accent-hover, one) */
+  --accent-ink-pressed: var(--amber-87); /* the bar action pressed (.top-bar .save-btn, .bar-action) */
+  --text-hover: var(--graphite-79);      /* a text control in Text primary under the pointer: links, Clear all filters, Copy link, Sort, the bar's back and Cancel. One step dimmer */
+  --text-pressed: var(--graphite-69);    /* the same pressed: two steps dimmer */
+  --boundary-hover: var(--graphite-69);  /* an input's boundary under the pointer: the search field. One step stronger than --boundary */
+  --boundary-pressed: var(--graphite-79);
+  --focus: var(--graphite-96);           /* the keyboard focus ring: white in dark (C4, neutral, never the accent); at least 3:1 on every background it sits on, in both themes */
+  --opacity-disabled: var(--alpha-40);   /* a disabled control: the whole control at this opacity, no pointer events; never recolored by hand. Replaced --text-disabled */
 }
 
 /* G28: on iOS the root text size follows Dynamic Type (Body is 17 at the default size) */
@@ -299,16 +326,17 @@
 /* =================================================================
    LIGHT THEME (Lesson 8 step 5, 2026-10-29): the theme stress test. Onrace is dark-only (C5); this block exists to prove
    the roles hold a second appearance. Semantic roles only: no primitive is redefined and no component reads one.
-   On by <html data-theme="light">, set by tokens/theme.js from ?theme=light. Based on iOS light (grouped backgrounds,
+   On by <html data-theme="light">, set by tokens/theme.js from ?theme=light, or on one part of a page by
+   data-theme-scope="light" (the dark roles' copy for data-theme-scope="dark" is generated below). Based on iOS light (grouped backgrounds,
    label colors), keeping Podium: the amber fill, black-and-white photos, neutral chips.
    ================================================================= */
-:root[data-theme="light"] {
+:root[data-theme="light"], [data-theme-scope="light"] {   /* [data-theme-scope]: one part of a page in the other theme (the docs' States grids, Lesson 9 step 3) */
   color-scheme: light;
   /* --frame stays --graphite-5: behind an open sheet iOS light stays black */
   --page: var(--graphite-96);
   --surface: var(--white);
   --raised: var(--graphite-93);
-  --pressed: var(--graphite-89);
+  --selected: var(--graphite-89);
   --group: var(--white);                 /* a group rises lighter in light while a press goes darker: the two roles part here */
   --glass-bar: color-mix(in srgb, var(--graphite-98) var(--alpha-90), transparent);
   --glass-ground: color-mix(in srgb, var(--graphite-96) var(--alpha-92), transparent);
@@ -318,7 +346,6 @@
   --float-shadow: 0 var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--black) var(--alpha-18), transparent);
   --text-primary: var(--graphite-7);
   --text-secondary: var(--graphite-39);
-  --text-disabled: var(--graphite-65);
   --chip-text: var(--graphite-27);
   --hairline: var(--graphite-87);
   --boundary: var(--graphite-56);
@@ -330,24 +357,103 @@
   --map-water: var(--graphite-85);
   --map-land: var(--graphite-96);
   --map-lines: var(--graphite-77);
+  /* states: in light a state goes darker. Two levels down from white skip the page's level (graphite-96), so a hovered
+     row never matches the ground around its group */
+  --surface-hover: var(--graphite-93);
+  --surface-pressed: var(--graphite-89);
+  --raised-hover: var(--graphite-89);
+  --raised-pressed: var(--graphite-85);
+  --group-hover: var(--graphite-93);
+  --group-pressed: var(--graphite-89);
+  --sheet-hover: var(--graphite-93);
+  --sheet-pressed: var(--graphite-89);
+  --bar-hover: var(--graphite-93);
+  --bar-pressed: var(--graphite-89);
+  --accent-pressed: var(--amber-87);     /* a fill with dark text: the same as dark */
+  --accent-ink-pressed: var(--amber-26);
+  --text-hover: var(--graphite-27);
+  --text-pressed: var(--graphite-39);
+  --boundary-hover: var(--graphite-39);
+  --boundary-pressed: var(--graphite-27);
+  --focus: var(--graphite-7);            /* dark on light */
+  --opacity-disabled: var(--alpha-38);
 }
 @media (prefers-reduced-transparency: reduce) {
-  :root[data-theme="light"] {
+  :root[data-theme="light"], [data-theme-scope="light"] {
     --glass-bar: color-mix(in srgb, var(--graphite-98) var(--alpha-100), transparent);
     --glass-ground: color-mix(in srgb, var(--graphite-96) var(--alpha-100), transparent);
     --glass-sheet: color-mix(in srgb, var(--white) var(--alpha-100), transparent);
   }
 }
 
+/* dark-scope:start (generated by scripts/build_components.py from the dark roles above; do not edit by hand) */
+[data-theme-scope="dark"] {
+  color-scheme: dark;
+  --frame: var(--graphite-5);
+  --page: var(--graphite-7);
+  --surface: var(--graphite-12);
+  --raised: var(--graphite-17);
+  --selected: var(--graphite-20);
+  --group: var(--graphite-20);
+  --glass-bar: color-mix(in srgb, var(--graphite-5) var(--alpha-85), transparent);
+  --glass-ground: color-mix(in srgb, var(--graphite-7) var(--alpha-85), transparent);
+  --glass-sheet: color-mix(in srgb, var(--graphite-17) var(--alpha-90), transparent);
+  --glass-rim: color-mix(in srgb, var(--graphite-96) var(--alpha-8), transparent);
+  --scrim: color-mix(in srgb, var(--black) var(--alpha-60), transparent);
+  --float-shadow: 0 var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--black) var(--alpha-60), transparent);
+  --text-primary: var(--graphite-96);
+  --text-secondary: var(--graphite-69);
+  --chip-text: var(--graphite-79);
+  --hairline: var(--graphite-22);
+  --boundary: var(--graphite-46);
+  --accent-fill: var(--amber-78);
+  --on-accent-fill: var(--graphite-7);
+  --accent-ink: var(--amber-78);
+  --accent-hover: var(--amber-83);
+  --accent-ink-hover: var(--amber-83);
+  --error: var(--coral-68);
+  --error-surface: var(--coral-21);
+  --map-water: var(--graphite-5);
+  --map-land: var(--graphite-12);
+  --map-lines: var(--graphite-20);
+  --surface-hover: var(--graphite-17);
+  --surface-pressed: var(--graphite-20);
+  --raised-hover: var(--graphite-20);
+  --raised-pressed: var(--graphite-23);
+  --group-hover: var(--graphite-23);
+  --group-pressed: var(--graphite-26);
+  --sheet-hover: var(--graphite-20);
+  --sheet-pressed: var(--graphite-23);
+  --bar-hover: var(--graphite-12);
+  --bar-pressed: var(--graphite-17);
+  --accent-pressed: var(--amber-87);
+  --accent-ink-pressed: var(--amber-87);
+  --text-hover: var(--graphite-79);
+  --text-pressed: var(--graphite-69);
+  --boundary-hover: var(--graphite-69);
+  --boundary-pressed: var(--graphite-79);
+  --focus: var(--graphite-96);
+  --opacity-disabled: var(--alpha-40);
+}
+@media (prefers-reduced-transparency: reduce) {
+  [data-theme-scope="dark"] {
+    --glass-bar: color-mix(in srgb, var(--graphite-5) var(--alpha-100), transparent);
+    --glass-ground: color-mix(in srgb, var(--graphite-7) var(--alpha-100), transparent);
+    --glass-sheet: color-mix(in srgb, var(--graphite-17) var(--alpha-100), transparent);
+  }
+}
+/* dark-scope:end */
+
 /* contrast:start (generated by scripts/concept/build_stand.py; do not edit by hand)
    Every semantic text/background pair the build checks, in both themes (WCAG 2 ratios). Glass is measured over its
    worst case: dark, Text primary behind; light, black behind (a photo's shadows); the sheet also under its scrim.
-   34 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
+   74 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
    --text-primary on --page                                               dark 16.76  light 16.76  needs 4.5  text
    --text-primary on --surface                                            dark 14.98  light 18.29  needs 4.5  text
    --text-primary on --raised                                             dark 13.05  light 15.31  needs 4.5  text
-   --text-primary on --pressed                                            dark 12.17  light 13.68  needs 4.5  text
-   --text-secondary on --pressed                                          dark  5.60  light  5.04  needs 4.5  text
+   --text-primary on --raised-hover                                       dark 12.17  light 13.68  needs 4.5  text
+   --text-primary on --selected                                           dark 12.17  light 13.68  needs 4.5  text
+   --text-secondary on --raised-hover                                     dark  5.60  light  5.04  needs 4.5  text
    --text-secondary on --page                                             dark  7.72  light  6.17  needs 4.5  text
    --text-secondary on --surface                                          dark  6.90  light  6.74  needs 4.5  text
    --text-secondary on --raised                                           dark  6.01  light  5.64  needs 4.5  text
@@ -364,9 +470,40 @@
    --text-primary on --map-land                                           dark 14.98  light 16.76  needs 3  non-text
    --text-primary on --map-water                                          dark 17.32  light 12.39  needs 3  non-text
    --text-secondary on --map-land                                         dark  6.90  light  6.17  needs 3  non-text
-   --error on --raised                                                    dark  5.87  light  5.48  needs 4.5  text
    --text-primary on --group                                              dark 12.17  light 18.29  needs 4.5  text
    --text-secondary on --group                                            dark  5.60  light  6.74  needs 4.5  text
+   --text-primary on --surface-hover                                      dark 13.05  light 15.31  needs 4.5  text
+   --text-secondary on --surface-hover                                    dark  6.01  light  5.64  needs 4.5  text
+   --text-primary on --surface-pressed                                    dark 12.17  light 13.68  needs 4.5  text
+   --text-secondary on --surface-pressed                                  dark  5.60  light  5.04  needs 4.5  text
+   --error on --surface-hover                                             dark  5.87  light  5.48  needs 4.5  text
+   --error on --surface-pressed                                           dark  5.48  light  4.90  needs 4.5  text
+   --text-primary on --raised-pressed                                     dark 10.83  light 12.39  needs 4.5  text
+   --text-secondary on --raised-pressed                                   dark  4.99  light  4.56  needs 4.5  text
+   --text-primary on --group-hover                                        dark 10.83  light 15.31  needs 4.5  text
+   --text-secondary on --group-hover                                      dark  4.99  light  5.64  needs 4.5  text
+   --text-primary on --group-pressed                                      dark 10.04  light 13.68  needs 4.5  text
+   --text-secondary on --group-pressed                                    dark  4.62  light  5.04  needs 4.5  text
+   --error on --group                                                     dark  5.48  light  6.54  needs 4.5  text
+   --on-accent-fill on --accent-pressed                                   dark 12.92  light 12.92  needs 4.5  text
+   --text-hover on --page                                                 dark 10.42  light  9.58  needs 4.5  text
+   --text-hover on --surface                                              dark  9.32  light 10.46  needs 4.5  text
+   --text-pressed on --page                                               dark  7.72  light  6.17  needs 4.5  text
+   --text-pressed on --surface                                            dark  6.90  light  6.74  needs 4.5  text
+   --text-pressed on --group                                              dark  5.60  light  6.74  needs 4.5  text
+   --boundary-hover on --surface                                          dark  6.90  light  6.74  needs 3  non-text
+   --boundary-pressed on --surface                                        dark  9.32  light 10.46  needs 3  non-text
+   --boundary-hover on --page                                             dark  7.72  light  6.17  needs 3  non-text
+   --focus on --page                                                      dark 16.76  light 16.76  needs 3  non-text
+   --focus on --surface                                                   dark 14.98  light 18.29  needs 3  non-text
+   --focus on --raised                                                    dark 13.05  light 15.31  needs 3  non-text
+   --focus on --raised-hover                                              dark 12.17  light 13.68  needs 3  non-text
+   --focus on --group                                                     dark 12.17  light 18.29  needs 3  non-text
+   --focus on --group-hover                                               dark 10.83  light 15.31  needs 3  non-text
+   --focus on --surface-hover                                             dark 13.05  light 15.31  needs 3  non-text
+   --focus on --error-surface                                             dark 11.80  light 15.60  needs 3  non-text
+   --focus on --map-water                                                 dark 17.32  light 12.39  needs 3  non-text
+   --focus on --map-land                                                  dark 14.98  light 16.76  needs 3  non-text
    --text-secondary on --glass-bar over the worst case                    dark  5.35  light  5.11  needs 4.5  text
    --accent-ink on --glass-bar over the worst case                        dark  7.04  light  4.91  needs 4.5  text
    --text-primary on --glass-ground over the worst case                   dark 10.95  light 13.97  needs 4.5  text
@@ -377,4 +514,12 @@
    --text-secondary on --glass-sheet over the worst case                  dark  5.59  light  5.65  needs 4.5  text
    --accent-ink on --glass-sheet over the worst case                      dark  7.36  light  5.44  needs 4.5  text
    --error on --glass-sheet over the worst case                           dark  5.46  light  5.49  needs 4.5  text
+   --accent-ink-pressed on --glass-ground over the worst case             dark  8.45  light  8.17  needs 4.5  text
+   --accent-ink-pressed on --glass-sheet over the worst case              dark  9.36  light  8.97  needs 4.5  text
+   --text-hover on --glass-ground over the worst case                     dark  6.81  light  7.99  needs 4.5  text
+   --text-pressed on --glass-ground over the worst case                   dark  5.04  light  5.15  needs 4.5  text
+   --text-pressed on --glass-sheet over the worst case                    dark  5.59  light  5.65  needs 4.5  text
+   --focus on --glass-bar over the worst case                             dark 11.61  light 13.86  needs 3  non-text
+   --focus on --glass-ground over the worst case                          dark 10.95  light 13.97  needs 3  non-text
+   --focus on --glass-sheet over the worst case                           dark 12.13  light 15.34  needs 3  non-text
    contrast:end */

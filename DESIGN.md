@@ -6,7 +6,7 @@ colors:
   page: "#131518"
   surface: "#1D2024"
   raised: "#272B30"
-  pressed: "#2C3035"
+  selected: "#2C3035"
   group: "#2C3035"
   glass-bar: "color-mix(in srgb, #0F1114 85%, transparent)"
   glass-ground: "color-mix(in srgb, #131518 85%, transparent)"
@@ -15,7 +15,6 @@ colors:
   scrim: "color-mix(in srgb, #000000 60%, transparent)"
   text-primary: "#F4F5F6"
   text-secondary: "#A3A9B0"
-  text-disabled: "#6B7178"
   chip-text: "#BFC4CA"
   hairline: "#31363C"
   boundary: "#686E75"
@@ -29,6 +28,23 @@ colors:
   map-water: "#0F1114"
   map-land: "#1D2024"
   map-lines: "#2C3035"
+  surface-hover: "#272B30"
+  surface-pressed: "#2C3035"
+  raised-hover: "#2C3035"
+  raised-pressed: "#33383E"
+  group-hover: "#33383E"
+  group-pressed: "#383D43"
+  sheet-hover: "#2C3035"
+  sheet-pressed: "#33383E"
+  bar-hover: "#1D2024"
+  bar-pressed: "#272B30"
+  accent-pressed: "#FFD28A"
+  accent-ink-pressed: "#FFD28A"
+  text-hover: "#BFC4CA"
+  text-pressed: "#A3A9B0"
+  boundary-hover: "#A3A9B0"
+  boundary-pressed: "#BFC4CA"
+  focus: "#F4F5F6"
 typography:
   title:
     fontFamily: "Schibsted Grotesk, Hanken Grotesk, sans-serif"
@@ -90,7 +106,7 @@ rounded:
   radius-3: "12px"
   radius-sheet: "38px"
   radius-bar-control: "22px"
-  radius-bar-inner: "18px"
+  radius-capsule: "999px"
   radius-circle: "50%"
   radius-filter-chip: "16px"
   radius-alert: "34px"
@@ -116,6 +132,9 @@ components:
   button-primary-hover:
     backgroundColor: "{colors.accent-hover}"
     textColor: "{colors.on-accent-fill}"
+  button-primary-pressed:
+    backgroundColor: "{colors.accent-pressed}"
+    textColor: "{colors.on-accent-fill}"
   button-secondary:
     backgroundColor: "{colors.raised}"
     textColor: "{colors.text-primary}"
@@ -124,7 +143,10 @@ components:
     padding: "0 20px"
     height: "44px"
   button-secondary-hover:
-    backgroundColor: "{colors.pressed}"
+    backgroundColor: "{colors.raised-hover}"
+    textColor: "{colors.text-primary}"
+  button-secondary-pressed:
+    backgroundColor: "{colors.raised-pressed}"
     textColor: "{colors.text-primary}"
   button-tertiary:
     textColor: "{colors.text-primary}"
@@ -132,7 +154,9 @@ components:
     padding: "0 4px"
     height: "44px"
   button-tertiary-hover:
-    textColor: "{colors.text-secondary}"
+    textColor: "{colors.text-hover}"
+  button-tertiary-pressed:
+    textColor: "{colors.text-pressed}"
   format-chip:
     backgroundColor: "{colors.raised}"
     textColor: "{colors.chip-text}"
@@ -148,7 +172,10 @@ components:
     padding: "0 8px 0 12px"
     height: "32px"
   filter-chip-hover:
-    backgroundColor: "{colors.pressed}"
+    backgroundColor: "{colors.raised-hover}"
+    textColor: "{colors.text-primary}"
+  filter-chip-pressed:
+    backgroundColor: "{colors.raised-pressed}"
     textColor: "{colors.text-primary}"
   race-detail-photo:
     rounded: "{rounded.radius-2}"
@@ -174,20 +201,27 @@ components:
     height: "44px"
   segmented-track:
     backgroundColor: "{colors.raised}"
-    rounded: "{rounded.radius-bar-control}"
+    rounded: "{rounded.radius-capsule}"
     padding: "4px"
   segment:
     textColor: "{colors.text-secondary}"
-    rounded: "{rounded.radius-bar-inner}"
+    rounded: "{rounded.radius-capsule}"
     padding: "0 16px"
     height: "36px"
-  segment-pressed:
-    backgroundColor: "{colors.pressed}"
+  segment-selected:
+    backgroundColor: "{colors.selected}"
     textColor: "{colors.text-primary}"
+  segment-hover:
+    backgroundColor: "{colors.raised-hover}"
+    textColor: "{colors.text-secondary}"
   race-card:
     backgroundColor: "{colors.surface}"
     rounded: "{rounded.radius-2}"
     padding: "8px"
+  race-card-hover:
+    backgroundColor: "{colors.surface-hover}"
+  race-card-pressed:
+    backgroundColor: "{colors.surface-pressed}"
   date-tile:
     backgroundColor: "{colors.raised}"
     textColor: "{colors.text-secondary}"
@@ -306,13 +340,12 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 - **Graphite Ground** (`#131518`, `--page`, L* 6.69): the page, the sticky controls bar, the fields inside the Filters sheet, an unchecked checkbox.
 - **Graphite Surface** (`#1D2024`, `--surface`, L* 12.10): race cards, result rows, the search field, the saved confirmation, the Filters sheet, land on the map.
 - **Graphite Raised** (`#272B30`, `--raised`, L* 17.33): the secondary button, the format chip, the date tile, the List/Map track, map pin labels, skeleton bars.
-- **Graphite Pressed** (`#2C3035`, `--pressed`; primitive `--graphite-20`, L* 19.67): hover, open and pressed fills on raised controls (secondary hover, the pressed List/Map segment, Filters while its sheet is open, pin hover). Never at rest on a card. The same primitive is `--group` (a group of rows one level above its container: the Filters sheet's rows, the linked race on Log result) and `--map-lines` (the coastlines and borders on the map).
+- **Graphite Selected** (`#2C3035`, `--selected`; primitive `--graphite-20`, L* 19.67): a control that is on: the selected List/Map segment, Filters while its sheet is open. Never a hover or a press (those are the state roles, Component states below), never a card. It was `--pressed` until Lesson 9 step 3. The same primitive is `--group` (a group of rows one level above its container: the Filters sheet's rows, the linked race on Log result) and `--map-lines` (the coastlines and borders on the map).
 - **Hairline** (`#31363C`, `--hairline`): dividers only (above the sheet footer, before "Newest first", between Profile rows). Never a fill. Bars use the glass rim instead (step 3b).
-- **Field Line** (`#686E75`, `--boundary`): the 1px boundary of inputs, the pressed segment's outline, the hover ring on cards, the map frame. 3:1 against `--page` and `--surface`.
-- **Chalk** (`#F4F5F6`, `--text-primary`): titles, race names, finish times, date days, body text, links, focus rings, the dot on a map pin, a checked checkbox. 16.76:1 on `--page`.
+- **Field Line** (`#686E75`, `--boundary`): the 1px boundary of inputs, the selected segment's outline, the map frame. 3:1 against `--page` and `--surface`.
+- **Chalk** (`#F4F5F6`, `--text-primary`): titles, race names, finish times, date days, body text, links, the dot on a map pin, a checked checkbox. The focus ring has its own role, `--focus` (Component states). 16.76:1 on `--page`.
 - **Ash** (`#A3A9B0`, `--text-secondary`): meta (date month and year, location, counts, proof line), placeholder text, inactive tabs, sheet labels, the active filter chip's remove mark. 6.90:1 on `--surface`.
 - **Chip Text** (`#BFC4CA`, `--chip-text`): the format chip's label. 8.11:1 on `--raised`.
-- **Disabled** (`#6B7178`, `--text-disabled`): a disabled sort control only. Never content.
 
 ### Glass (C1, step 3b)
 - **Tab-bar glass** (`--glass-bar`): `--graphite-5` at 85% (`--alpha-85`) with a 20px blur [?] and a faint Chalk rim at 8% [?]. The floating tab bar and the sticky action bar on Race detail and Result detail, a shade darker than the page so they separate.
@@ -322,7 +355,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 - **Reduce Transparency:** every glass turns into the solid level it's tinted from.
 
 ### States
-- **Soft Coral** (`#EE8B84`, `--error`): the one error icon before an error heading, the ring of an invalid field, and the text of a destructive alert action, Sign out (`--invalid` and `--destructive` until Lesson 8, merged into `--error`). Not the banned aggressive red.
+- **Soft Coral** (`#EE8B84`, `--error`): the one error icon before an error heading, the field error's footnote and its small icon (it replaced the invalid ring in Lesson 9 step 3), and the text of a destructive alert action, Sign out (`--invalid` and `--destructive` until Lesson 8, merged into `--error`). Not the banned aggressive red.
 - **Coral Wash** (`#3A2F31`, `--error-surface`): the error status surface (defined; not shown on these two screens).
 - **Scrim** (`rgba(0, 0, 0, 0.6)`, `--scrim`): behind the open Filters sheet.
 
@@ -387,7 +420,7 @@ Spacing scale: 4, 8, 12, 16, 20, 24, 32, 48, 64.
 
 ## Elevation & Depth
 
-Flat by default. Depth comes from tonal layering: the tab bar (`--graphite-5`) under the page (`--page`) under cards (`--surface`) under raised controls (`--raised`) under pressed fills (`--pressed`). Cards have no shadow and no border at rest. On hover a card gets a 1px inset ring in `--boundary`.
+Flat by default. Depth comes from tonal layering: the tab bar (`--graphite-5`) under the page (`--page`) under cards (`--surface`) under raised controls (`--raised`) under selected fills (`--selected`). Cards have no shadow and no border at rest, and none in any state: hover takes them one level up, a press two (Component states).
 
 ### Shadow Vocabulary
 - **Float** (`box-shadow: 0 12px 32px -12px`, black at 60%, `--float-shadow`): what floats over content, the Filters sheet and (since step 3b) the floating tab bar. A scrim of black at 60% (`--scrim`) dims the page behind the sheet.
@@ -402,7 +435,8 @@ Flat by default. Depth comes from tonal layering: the tab bar (`--graphite-5`) u
 Slightly rounded in content, never sharp. Pills only in bar chrome (C7).
 - **4px** (`--radius-1`), inner shapes: the photo inside a card, the date tile, format chips, List/Map segments, skeleton bars, map pin labels.
 - **6px** (`--radius-2`), outer shapes: cards, result rows, the Race detail photo (it sits on the page), buttons outside bars, the date pills, the Sign in segmented track, the saved confirmation, the map frame.
-- **Bar chrome (step 3b; designer decision 2026-10-19, C7):** bar controls are all full capsules, iOS 26 style: radius = half the height. The floating tab bar (`--radius-tabbar`, 32px); the search field, the Filters button and the List/Map track (`--radius-bar-control`, 22px); the List/Map segment concentric inside (`--radius-bar-inner`, 18px = 22 − the 4px track padding); the action bar's Register / Open button (22px, step 5); the active filter chips (`--radius-filter-chip`, 16px = half of 32; designer 2026-10-22). Content (cards, format chips, tiles, buttons outside bars) keeps 4/6px.
+- **Bar chrome (step 3b; designer decision 2026-10-19, C7):** bar controls are all full capsules, iOS 26 style: radius = half the height. The floating tab bar (`--radius-tabbar`, 32px); the search field, the Filters button and the List/Map track (`--radius-bar-control`, 22px); the action bar's Register / Open button (22px, step 5); the active filter chips (`--radius-filter-chip`, 16px = half of 32; designer 2026-10-22). Content (cards, format chips, tiles, buttons outside bars) keeps 4/6px.
+- **The segmented control (Lesson 9 step 3; designer, 2026-10-30):** a capsule everywhere, in a bar or in content, at any text size: the track and each segment take `--radius-capsule` (999px, clamped by the browser to half the box's own height), so the List/Map track stays a full capsule at 200% text (47px tall, 23.5px corners) and Sign in / Create account is a capsule too. The other bar capsules keep half their nominal height.
 - **Sheet** (`--radius-sheet`, 38px [?]): the top corners of the Filters sheet and the Log result sheet, the native sheet radius (Race picker is a pushed screen with square corners since 2026-10-24); also the receded edge of Results behind the Log result sheet. Replaces the 12px they had until step 3b. `--radius-3` (12px) is now stand panels only.
 - **Confirm alert** (`--radius-alert`, 34px [?]): as iOS 26 alerts (G67, designer 2026-10-23), provisional like the sheet radius. Its last row of buttons follows the corners, so the inset focus ring and the hover fill do too (step 6).
 - **Tab bar** (`--radius-tabbar`, 32px = half its 64px height): the floating capsule.
@@ -414,12 +448,12 @@ Slightly rounded in content, never sharp. Pills only in bar chrome (C7).
 ### Buttons
 Exactly one filled button per screen.
 - **Shape:** 6px radius, 44px minimum height, `0 20px` padding, 15px / 600, 8px gap to an 18px icon.
-- **Primary:** `--accent-fill` fill, `--on-accent-fill` text. Hover `--accent-hover`. Pressed moves down 1px. Background and transform ease over 160ms (`--ease-out`, `cubic-bezier(0.2, 0.8, 0.2, 1)`); 0ms under reduced motion.
-- **Secondary:** `--raised` fill, `--text-primary` text, hover `--pressed`. Filters on Race browse (with the Solar filters icon, `--pressed` while its sheet is open), "Type it in instead" on Race picker `-error`. (Race browse `-empty` has one "Clear all filters" since step 6: the pinned link in the chips row; its state's own action is "Change filters".)
-- **Tertiary:** a text link, 15px / 400, `--text-primary`, 1px underline 4px below, hover `--text-secondary`, a 44pt target. "Clear all filters" in the chips row; "Copy link" under the official result link (Result detail, step 6); "Unlink race" on the linked race card (on the sheet's `--group`, a tonal fill would vanish; step 6); the check-inbox links, left-aligned with their text.
+- **Primary:** `--accent-fill` fill, `--on-accent-fill` text. Hover `--accent-hover`, pressed `--accent-pressed`; nothing moves (the 1px press went in Lesson 9 step 3). The background eases over 160ms (`--ease-out`, `cubic-bezier(0.2, 0.8, 0.2, 1)`); 0ms under reduced motion.
+- **Secondary:** `--raised` fill, `--text-primary` text, hover `--raised-hover`, pressed `--raised-pressed`. Filters on Race browse (with the Solar filters icon, `--selected` while its sheet is open), "Type it in instead" on Race picker `-error`. (Race browse `-empty` has one "Clear all filters" since step 6: the pinned link in the chips row; its state's own action is "Change filters".)
+- **Tertiary:** a text link, 15px / 400, `--text-primary`, 1px underline 4px below, hover `--text-hover`, pressed `--text-pressed`, a 44pt target. "Clear all filters" in the chips row; "Copy link" under the official result link (Result detail, step 6); "Unlink race" on the linked race card (on the sheet's `--group`, a tonal fill would vanish; step 6); the check-inbox links, left-aligned with their text.
 - **Stepping down:** when a state block brings its own primary (Try again on Results list `-error`), the bar's Log result turns Text 1, so the screen keeps two lights; on `-empty` it's hidden and "Log your first result" is the one way in (markup pass, 2026-10-23).
-- **Disabled:** `--raised` fill, `--text-disabled` text. **Busy** (`aria-busy="true"`): same fill, a 15px CSS spinner (a 2px ring in the label's color, one turn per 800ms, still turning under reduced motion, as HIG asks) before the present-tense verb ("Saving…") (G26).
-- **Pressed cards and rows:** a race card or a result row takes `--pressed` while pressed (G23).
+- **Disabled:** the whole button at `--opacity-disabled`, no pointer events (Component states). **Busy** (`aria-busy="true"`): same fill, a 15px CSS spinner (a 2px ring in the label's color, one turn per 800ms, still turning under reduced motion, as HIG asks) before the present-tense verb ("Saving…") (G26).
+- **Cards and rows in their states:** a race card or a result row takes `--surface-hover` under the pointer and `--surface-pressed` while pressed (G23): the same rule as every fill (Component states).
 
 ### Chips
 - **Format chip** (metadata): `--raised` fill, `--chip-text`, 4px radius, 24px tall, `0 8px`, 11px / 600 uppercase, 0.07em. The same for every format: no per-format color.
@@ -433,16 +467,16 @@ Exactly one filled button per screen.
 - **Skeletons (loading):** `--raised` bars with a 4px radius, in the exact shape of the card or row they stand for. The finish-time bar is 32px tall, so nothing shifts. A subtle pulse (opacity to 0.55 and back over 1.6s), still under reduced motion (C6). No spinner, no shimmer.
 
 ### Inputs / Fields
-- **Search field:** `--surface`, a full capsule (C7), 44px tall, a 1px `--boundary` inset boundary, an 18px Solar magnifier (Linear, step 6) in `--text-secondary` 16px in from the start, placeholder in `--text-secondary`. Hover: the boundary turns `--text-secondary`. Focus: a 2px `--text-primary` outline replaces it. Filled and focused, it shows the browser's own Clear button (system-drawn, C2; G10).
-- **Form rows (round 2, 2026-10-23):** Log result and the sign-in screens are grouped forms, as iOS: a label (15px Text 1) and its field in a 44px row on the rows' level (`--surface` on the page, `--group` on a sheet), the value in Text 1, left-aligned; a long value (the official result link) stacks under its label. Pickers sit at the row's trailing edge: a menu value with its chevron, a date on a `--raised` pill. Editable text values are Text 1; read-only values (Profile's Email) and menu values are Text 2, as iOS Settings (designer, step 6). Hints are the group's footer (13px Text 2); an error sits under its row (15px / 600 Text 1 after an 18px coral icon; Profile's row error is the same since step 6), and the invalid rows take one 2px `--error` ring (`--invalid-ring` wide) inside, around each run of adjacent invalid rows, with the hairlines that touch it hidden (step 6); focus is the white ring outside, so the two never look alike. A navigation row (Find in race catalog) ends in a Text 2 disclosure chevron; it goes while a race is linked (the card's Unlink changes it; step 6). The finish time takes the numeric keypad. Empty required fields hold the bar's confirm in Text disabled until they're filled (Sign in, Create, Send; step 6, HIG Sheets), so an empty submit never reaches the browser's bubble; password rows say "Required". While saving, the whole form is locked in one treatment: every control in Text disabled, the bar's Cancel with it; the help text stays Text 2 (step 6).
+- **Search field:** `--surface`, a full capsule (C7), 44px tall, a 1px `--boundary` inset boundary, an 18px Solar magnifier (Linear, step 6) in `--text-secondary` 16px in from the start, placeholder in `--text-secondary`. Hover: the boundary turns `--boundary-hover`, pressed `--boundary-pressed`. Focus: a 2px `--focus` outline replaces it. Filled and focused, it shows the browser's own Clear button (system-drawn, C2; G10).
+- **Form rows (round 2, 2026-10-23):** Log result and the sign-in screens are grouped forms, as iOS: a label (15px Text 1) and its field in a 44px row on the rows' level (`--surface` on the page, `--group` on a sheet), the value in Text 1, left-aligned; a long value (the official result link) stacks under its label. Pickers sit at the row's trailing edge: a menu value with its chevron, a date on a `--raised` pill. Editable text values are Text 1; read-only values (Profile's Email) and menu values are Text 2, as iOS Settings (designer, step 6). Hints are the group's footer (13px Text 2). **The field error (Lesson 9 step 3; designer, 2026-10-30, iOS style):** no ring and no line on the field; a coral footnote line (13px / 400 `--error`) after the 15px error icon, under its row in a group of several fields, or under its group in the hint's place; it replaces the hint while it shows. The field carries `aria-invalid` and `aria-describedby` (the error, not the hidden hint). Log result, New password and Profile's row error are the same. Focus is the 2px ring outside the field, so an error and a focus never look alike. A navigation row (Find in race catalog) ends in a Text 2 disclosure chevron; it goes while a race is linked (the card's Unlink changes it; step 6). The finish time takes the numeric keypad. Empty required fields hold the bar's confirm disabled until they're filled (Sign in, Create, Send; step 6, HIG Sheets), so an empty submit never reaches the browser's bubble; password rows say "Required". While saving, the whole form is locked in one treatment, the disabled one: every control and its label at `--opacity-disabled`, the bar's Cancel with it; the help text stays Text 2 (step 6; Lesson 9 step 3).
 - **Date pill** (step 6, 2026-10-25; one button since step 7): the date written as the chips and cards write it ("23 Sep 2026"), 15px Text 1 on a `--raised` pill (6px radius). The pill is one button (one Tab stop, one focus ring; its name "23 Sep 2026, race date") that opens the system's calendar (`showPicker()`); the native date input beside it holds the value, out of the tab order. At large text sizes the pill goes under its label. No glyph and no browser locale mask: empty, it says "Choose a date" in Text 2. Filters sheet (From, To), Log result (Race date).
 - **Checkmark row:** a sport type is a row; checked, a 26px Solar check in `--text-primary` (the control tint, C4) at its trailing edge (the glyph about 17px wide, as HIG's list checkmark; step 6), nothing when off. Race picker's linked race carries the same checkmark. Never the accent. Every system-drawn control takes the same tint (`accent-color`, C4).
-- **Sort button:** one button that flips the order, showing the current one: "Soonest first" in `--text-primary` 15px / 600, then the 15px Solar sort icon (G21; markup pass, 2026-10-23). Its name starts with its label: "Soonest first, sort order". Disabled in `--text-disabled` while loading; a 44pt target inside the row's text height. It never shrinks and never wraps: the count beside it takes the remaining width and wraps there instead (2026-10-25; checked at 320 by `scripts/check_overflow.mjs`).
+- **Sort button:** one button that flips the order, showing the current one: "Soonest first" in `--text-primary` 15px / 600, then the 15px Solar sort icon (G21; markup pass, 2026-10-23). Its name starts with its label: "Soonest first, sort order". Disabled while loading (`--opacity-disabled`); a 44pt target inside the row's text height. It never shrinks and never wraps: the count beside it takes the remaining width and wraps there instead (2026-10-25; checked at 320 by `scripts/check_overflow.mjs`).
 - **Focus (everything):** a 2px `--text-primary` outline, 2px offset. Never the accent.
 
 ### Navigation
-- **Tab bar:** a floating 64px capsule of tab-bar glass with a faint rim and the float shadow, three tabs (Discover, Results, Profile). Each has a 26px Solar icon (compass, stopwatch, user) over an 11px / 600 label. Inactive: `--text-secondary`. Current: `--accent-ink`, icon and label.
-- **List / Map segmented control:** a `--raised` track with 4px padding; in the controls bar a 22px capsule with 18px segments (C7), in content (Sign in) 6px with 4px segments. Segments are of equal width (G11), 36px (44px tap area), 15px / 600, `--text-secondary`.
+- **Tab bar:** a floating 64px capsule of tab-bar glass with a faint rim and the float shadow, three tabs (Discover, Results, Profile). Each has a 26px Solar icon (compass, stopwatch, user) over an 11px / 600 label. Inactive: `--text-secondary`. Current: `--accent-ink`, icon and label. A tab under the pointer takes `--bar-hover` behind it, pressed `--bar-pressed`, a capsule inside the bar.
+- **List / Map segmented control:** a `--raised` track with 4px padding, a capsule with capsule segments everywhere (C7, `--radius-capsule`); the selected segment `--selected` with a `--boundary` outline; an unselected one `--raised-hover` under the pointer, `--raised-pressed` pressed. Segments are of equal width (G11), 36px (44px tap area), 15px / 600, `--text-secondary`.
 - **Action bar (Race detail, Result detail):** tab-bar glass with a rim instead of the hairline, above the bottom safe area (C1, designer 2026-10-19). Its caption passes AA over the worst case behind it. Its one button (Register on \<domain\>, Open official result) is the screen's amber primary and a 22px capsule, as every control inside a bar (C7, step 5). On a drill-down the top bar and the action bar are transparent, with no rim, while nothing runs under them (iOS 26 scroll edge; step 6): glass once content scrolls under. A link that won't open is the confirm alert (markup pass).
 - **Top bar:** one element on every screen, `header.top-bar` (step 7); ground glass with a rim, below the top safe area; its text buttons 17px. The back link is `a.back`, its Solar Linear chevron drawn by the kit (no glyph in the markup). Back (a Solar Linear chevron and the parent's name) and Cancel in `--text-primary`; Save on Log result in `--accent-ink` (that screen's one primary); saving, the spinner alone, Cancel locked. The sign-in screens' title is "Account" in both modes (step 6): the segmented switch carries the mode, the bar action does it.
 - **Collapsing title (G4, G34, G53; markup pass, 2026-10-23):** on Race browse, Results and Profile a top bar floats over the large title, transparent and empty at rest; once the h1 has mostly scrolled away it turns to ground glass with its rim and shows the small title (17px / 600), fading over 160ms. Race browse's controls stick under it. Race detail and Result detail show the race name in their bar the same way, truncated between the back button and the edge.
@@ -469,6 +503,19 @@ Sheet glass (`--graphite-17` at 90%, blurred), 38px top corners [?] with a rim a
 ### Static map (signature)
 A frame in `--map-water` with a 1px `--boundary` boundary and a 6px radius. Natural Earth land is masked in `--map-land`, coastlines and borders in `--map-lines`. Pins: a 10px `--text-primary` dot ringed in water color on the real coordinate, and a 22px `--raised` label (11px / 600, `--text-primary`, 4px radius) joined by a 1px `--text-secondary` leader line. Each pin is a 44pt target centred on its label; the dot and the leader take no taps, so where dots nearly touch (Boston, Killington) each label is its own target (step 6). Hover lifts the label to `--pressed`. Each pin's place is map data in `ui/map.css`, keyed on its `data-pin`. No accent anywhere on the map. The map has no caption: the wireframe note in its place ("[ static map … ]") is hidden on the working pages (2026-10-23), as are the bracketed notes in its empty, error and loading states. While the map holds an empty or error state, the frame gives way (see Empty and error states). While it loads (`aria-busy`), the whole map surface pulses with the skeletons (C6: to 0.55 and back over 1.6s; still under reduced motion; designer 2026-10-23).
 
+## Component states
+
+Lesson 9 step 3 (2026-11-05). Every component you act on has four states besides rest: **Hover**, **Pressed**, **Focus** and **Disabled**, and a field has **Invalid**. Each comes from a semantic role in `design-system/tokens/tokens.css` with a value in the dark `:root` and in the light block; a state role with a value in one theme only stops the build.
+
+- **One rule for fills:** hover goes one level up, pressed two levels up, for every component, cards included. A fill's levels start where it rests, so each resting level has its pair: `--surface-hover` / `--surface-pressed` (the race card, the result row, rows on the page, Sign out), `--raised-hover` / `--raised-pressed` (secondary buttons, Filters, the filter chip, the date pill, an unselected segment, a map pin's label), `--group-hover` / `--group-pressed` (rows on a sheet), `--sheet-hover` / `--sheet-pressed` (the alert's and the action sheet's buttons), `--bar-hover` / `--bar-pressed` (a tab). Up is lighter in dark; in light a state goes darker, as iOS. The amber fill goes `--accent-hover`, then `--accent-pressed`. This resolves the Lesson 8 hover drift, where a row went one level up and a card two (`design-system/tokens/tokens-audit.md` → Drift 1).
+- **Text and borders, the same rule:** a text control in Text primary (links, Clear all filters, Copy link, Sort, Unlink, the bar's back and Cancel) goes one step dimmer under the pointer (`--text-hover`) and two pressed (`--text-pressed`), still at AA; the bar action's amber ink goes `--accent-ink-hover`, then `--accent-ink-pressed`; an input's boundary goes `--boundary-hover`, then `--boundary-pressed`. The build checks that every ladder moves one way, each step at least 1.5 L*, in both themes.
+- **Hover only where there's a pointer:** every hover sits under `@media (hover: hover)`. On touch, pressed is the state that matters (iOS).
+- **A state never moves an element or changes its size:** only fill, color or border. The 1px press is gone, and so is the card's hover ring.
+- **Focus:** `--focus`, a 2px ring outside the control (inside, where the control is clipped: alert buttons, check rows): white in dark (C4, neutral), dark in light, never the accent. It is at least 3:1 on every background it sits on, in both themes, hover fills included.
+- **Disabled:** the whole control at `--opacity-disabled` (40% in dark, 38% in light: each keeps the contrast the retired Text disabled had, 3.6:1 and 2.4:1, which WCAG 1.4.3 exempts) and no pointer events. Never recolored by hand. A busy control isn't disabled.
+- **Invalid:** a field's error is the coral footnote under it (Inputs / Fields above), never a ring.
+- **In the docs:** each component's States shows At rest, Hover, Pressed, Focus and Disabled side by side, in Dark and Light, and Invalid where it has one. `.is-hover`, `.is-pressed` and `.is-focus` are the docs' still stand-ins, written into the same selectors as `:hover`, `:active` and `:focus-visible`; no screen uses them.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -480,7 +527,7 @@ A frame in `--map-water` with a 1px `--boundary` boundary and a 6px radius. Natu
 - **Do** step a secondary action up or down so the screen keeps exactly one filled button.
 - **Do** take every value from `design-system/tokens/tokens.css`, and give components semantic roles, never color primitives. Pages and the components hold no raw values.
 - **Do** draw icons as Solar Bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar. The small UI glyphs (back, chevrons, disclosure, the search magnifier) are Solar Linear (designer exception, step 6).
-- **Do** keep 44px targets, a 2px `--text-primary` focus ring, and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).
+- **Do** keep 44px targets, a 2px `--focus` ring (white in dark, dark in light), and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).
 - **Do** check text on glass against the worst case behind it, not against the glass's own tint.
 
 ### Don't:
@@ -493,7 +540,7 @@ A frame in `--map-water` with a 1px `--boundary` boundary and a 6px radius. Natu
 - **Don't** drop the radius to 0, or round content into pills (pills belong to bar chrome only).
 - **Don't** give cards a shadow, a border at rest, or glass.
 - **Don't** use `--hairline` or `--boundary` as a fill.
-- **Don't** let invalid and focus look alike: coral inside for invalid, white outside for focus.
+- **Don't** let an error and a focus look alike: a coral footnote under the field for an error, the ring outside for focus. Never a ring or a line on an invalid field.
 - **Don't** use tabular figures on finish times: Schibsted spaces the colons wide ("24 : 36").
 
 ## Native iOS
@@ -507,8 +554,8 @@ HIG read on 2026-10-18; every link returned HTTP 200. "System" means HIG publish
 | Tab bar (Discover, Results, Profile) | [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars) | For navigation, not actions. Visible in every section; only a modal may cover it. Labels under icons, single words where possible. Prefer filled icons. On iOS it floats above content at the bottom on a Liquid Glass background, and content shows through beneath it. It may include a search tab at the trailing end. | Solar bold icons (filled, as HIG prefers), Hanken labels, amber on the current tab. Material: translucent graphite with blur in Podium tones (**C1**). Icons: Solar (**C2**). |
 | Screen title ("Discover", "Results") and top bar | [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars), [Typography](https://developer.apple.com/design/human-interface-guidelines/typography) | A large title that turns into a standard inline title in the top bar as people scroll, and back to large at the top. Titles under 15 characters. Actions sit in the toolbar; the key action uses the `.prominent` style, only one, on the trailing side. Prefer symbols to text for toolbar items. Fewer custom toolbar backgrounds: a scroll edge effect separates bar and content. | The title's text in Schibsted Grotesk 800 at Large Title size, 34 (**C3**). Top bar: translucent graphite with blur (**C1**). The amber on the one primary action. |
 | Search field (Race browse) | [Search fields](https://developer.apple.com/design/human-interface-guidelines/search-fields), [Text fields](https://developer.apple.com/design/human-interface-guidelines/text-fields) | A search icon, placeholder text, and a Clear button at the trailing end. Search starts as people type. An inline field sits above the list it filters and can pin to the top toolbar on scroll. Bottom-toolbar search or a search tab are the other native placements. | `--surface` field, `--boundary` boundary, Solar magnifier (**C2**), the placeholder "Race name or city". Inside a bar, its corners are concentric with the bar (**C7**). |
-| List / Map segmented control | [Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls) | For closely related subviews (List and Map qualify). Segments of equal width, text only, nouns, at most about five on iPhone. | `--raised` track, `--pressed` selected segment, Hanken 15/600. Inside the controls bar, corners concentric with the bar (**C7**). |
-| Buttons (Filters, Log result, state actions, sheet actions) | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Hit region at least 44×44pt. A press state on every custom button. One or two prominent buttons per view. Style, not size, separates the preferred choice. The primary role takes the accent. A delayed action shows an activity indicator inside the button, with an alternative label ("Checking out…"). | Amber primary, tonal secondary, underlined tertiary, Hanken 15/600, the 1px press. Buttons in content keep 6px (**C7**); a button inside a bar is concentric with it. |
+| List / Map segmented control | [Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls) | For closely related subviews (List and Map qualify). Segments of equal width, text only, nouns, at most about five on iPhone. | `--raised` track, `--selected` selected segment, Hanken 15/600. A capsule everywhere, the segments concentric (**C7**). |
+| Buttons (Filters, Log result, state actions, sheet actions) | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Hit region at least 44×44pt. A press state on every custom button. One or two prominent buttons per view. Style, not size, separates the preferred choice. The primary role takes the accent. A delayed action shows an activity indicator inside the button, with an alternative label ("Checking out…"). | Amber primary, tonal secondary, underlined tertiary, Hanken 15/600, a press state on each (fill or color, nothing moves). Buttons in content keep 6px (**C7**); a button inside a bar is concentric with it. |
 | Filters sheet | [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets) | See *Native sheet anatomy* below. | Our raised graphite level as its background (**C4**), translucent with blur (**C1**), the scrim, Hanken type, Solar icons inside. |
 | Region select (sheet) | [Pull-down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons), [Pickers](https://developer.apple.com/design/human-interface-guidelines/pickers) | A short list of choices (6 regions) is a menu from a button, not a picker. Mutually exclusive choices that aren't commands belong in a pop-up button, which shows the current value. | The button: Hanken 15, `--text-primary` value, Solar chevron (**C2**). The menu it opens is the system's (**C2**). |
 | Race date from / to (sheet) | [Pickers](https://developer.apple.com/design/human-interface-guidelines/pickers) | A compact date picker: a button showing the current value in the app's accent color, which opens a calendar editor in a modal view. Values and their order follow the device's locale. | The date picker is drawn by the system (**C2**). Its tint is neutral text color, not amber (**C4**). Hanken type on our button. |
@@ -541,7 +588,7 @@ The Filters sheet follows the native iOS sheet, not a one-off radius (designer d
 - **C4 Control tint:** neutral (text color) for checkmarks and switches. Amber stays only per Color rule 1. The sheet's background is the raised graphite level, `--raised` (confirmed 2026-10-18).
 - **C5 Dark only:** kept, as a designer decision. Dark is Onrace's identity from the brand tone and the attributes, and every color rule and contrast check is built for it.
 - **C6 Loading:** a subtle pulse on skeletons, still under reduced motion.
-- **C7 Corners:** concentric only for elements inside bars. **Designer decision, 2026-10-19:** bar controls are all full capsules, iOS 26 style (radius = half the height): the search field, the Filters button and the List/Map control, with the segment concentric inside. Content (cards, chips, tiles, buttons outside bars) keeps 4/6px.
+- **C7 Corners:** capsules for every system control (segmented controls, search fields, bar buttons); cards, chips and content buttons keep Podium corners. (Designer, 2026-10-30, applied in Lesson 9 step 3; it was "concentric only for elements inside bars", 2026-10-19, with the Sign in segmented control at 6/4px.)
 
 ## Sources
 
