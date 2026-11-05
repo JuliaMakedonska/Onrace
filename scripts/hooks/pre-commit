@@ -1,0 +1,16 @@
+#!/bin/sh
+# A commit is only ever of a tree a passing build checked (2026-11-05). scripts/concept/build_stand.py writes .build-ok,
+# the tree hash of the working copy, only when every check passed and none was skipped. This refuses any other commit.
+# Installed with: git config core.hooksPath scripts/hooks (scripts/ship.sh checks it is).
+root=$(git rev-parse --show-toplevel)
+staged=$(git write-tree) || exit 1
+if [ ! -f "$root/.build-ok" ]; then
+  echo "pre-commit: no passing build (.build-ok is missing). Run scripts/ship.sh, which builds, then commits." >&2
+  exit 1
+fi
+built=$(cat "$root/.build-ok")
+if [ "$staged" != "$built" ]; then
+  echo "pre-commit: the staged tree ($staged) isn't the one the last passing build checked ($built)." >&2
+  echo "Something changed after the build, or not every change is staged. Run scripts/ship.sh." >&2
+  exit 1
+fi

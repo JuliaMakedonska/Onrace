@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs, quiet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../design-system/index.css">
+<link rel="stylesheet" href="../concept/stand.css">
+<style>
+  /* review page only: tokens from design-system/index.css and the docs layer (concept/stand.css), no values of its own */
+  .rv { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-8); }
+  .rv-head { display: grid; gap: var(--space-3); }
+  .rv-head p, .rv-pair > p { margin: 0; max-width: var(--measure); color: var(--text-secondary); }
+  .rv-head a, .rv-pair a { color: var(--text-primary); text-underline-offset: var(--space-1); }
+  .rv-pair { display: grid; gap: var(--space-3); padding-top: var(--space-6); border-top: var(--border) solid var(--hairline); }
+  .rv-pair h2 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+  .rv-pair h3 { margin: var(--space-3) 0 0; font-family: var(--font-text); font-size: var(--size-body); font-weight: var(--weight-strong); color: var(--text-secondary); }
+  .rv-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), 1fr)); gap: var(--space-5); align-items: start; }
+  .rv-shots figure { margin: 0; display: grid; gap: var(--space-2); }
+  .rv-shots figcaption { font-size: var(--size-proof); color: var(--text-secondary); }
+  .rv-shots img { display: block; width: 100%; height: auto; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--hairline); }
+  .rv-shots--phone { grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), var(--screen-w))); }
+</style>
+</head>
+<body class="onrace">
+<main class="rv">
+  <header class="rv-head">
+    <h1>The docs, quiet</h1>
+    <p>Lesson 9, 2026-11-05, the same day as the family pages. The docs layer turned light and quiet, like Apple HIG, so the product speaks: one accent, used rarely; neutral headings; no frames round the stages; class names as plain gray monospace. Every component section in one order: its name and what it's for; one specimen, cropped to the component when it is a small part of its stage, with the parts legend directly under it (hover, focus or a tap outlines a part; no numbers, no second copy); When to use and When not to as text with a thin green or coral bar, another component only ever a link by name; the other variants, if any; States; the technical details folded. The section in view is now the one marked in the nav and in "On this page". Every shot: 1280 × 1500 and 390 × 1700. Live: <a href="../design-system/docs/">design-system/docs/</a>.</p>
+    <p>Not a look change to the product: every stage on the family pages computes as the same stage on <code>specimens.html</code>, widths and heights included, both themes, at 1280 and 390 (<code>scripts/check_docs_stages.mjs</code>).</p>
+  </header>
+
+  <section class="rv-pair" aria-labelledby="bl-h">
+    <h2 id="bl-h">Buttons and links · Sort button · <code>buttons-and-links.html#sort-button</code></h2>
+    <p>Your example. Before: the specimen twice (on top and in the anatomy, with a number on it), both rules boxed with equal weight, and a live pop-up select inside "When not to". After: one specimen with its legend under it, the two rules as text with a thin bar, the pop-up select a link by name, and the disabled variant cropped to the button.</p>
+    <h3>1280</h3>
+    <div class="rv-shots">
+      <figure><img src="review-docs-2/b-1280-buttons-and-links-sort-button.jpg" alt="Before at 1280: Buttons and links · Sort button" width="1280" height="1500" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs-2/a-1280-buttons-and-links-sort-button.jpg" alt="After at 1280: Buttons and links · Sort button" width="1280" height="1500" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+    <h3>390</h3>
+    <div class="rv-shots rv-shots--phone">
+      <figure><img src="review-docs-2/b-390-buttons-and-links-sort-button.jpg" alt="Before at 390: Buttons and links · Sort button" width="390" height="1700" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs-2/a-390-buttons-and-links-sort-button.jpg" alt="After at 390: Buttons and links · Sort button" width="390" height="1700" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="rv-pair" aria-labelledby="fo-h">
+    <h2 id="fo-h">Forms · the top of the page · <code>forms.html</code></h2>
+    <p>The page as a whole. Before: dark, orange headings, every specimen framed. After: light, like Apple HIG; neutral headings; the dark specimens as windows without frames; the accent only as the current item's line in the nav and in "On this page".</p>
+    <h3>1280</h3>
+    <div class="rv-shots">
+      <figure><img src="review-docs-2/b-1280-forms.jpg" alt="Before at 1280: Forms · the top of the page" width="1280" height="1500" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs-2/a-1280-forms.jpg" alt="After at 1280: Forms · the top of the page" width="1280" height="1500" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+    <h3>390</h3>
+    <div class="rv-shots rv-shots--phone">
+      <figure><img src="review-docs-2/b-390-forms.jpg" alt="Before at 390: Forms · the top of the page" width="390" height="1700" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs-2/a-390-forms.jpg" alt="After at 390: Forms · the top of the page" width="390" height="1700" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="rv-pair" aria-labelledby="sa-h">
+    <h2 id="sa-h">Sheets and alerts · Confirm alert · <code>sheets-and-alerts.html#confirm-alert</code></h2>
+    <p>A small part of a large stage. Before: the whole 600px dialog stage, twice. After: the alert on its own at its real width, cropped from the same stage (nothing in it changes; the window hides the rest), its two variants cropped the same way.</p>
+    <h3>1280</h3>
+    <div class="rv-shots">
+      <figure><img src="review-docs-2/b-1280-sheets-and-alerts-confirm-alert.jpg" alt="Before at 1280: Sheets and alerts · Confirm alert" width="1280" height="1500" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs-2/a-1280-sheets-and-alerts-confirm-alert.jpg" alt="After at 1280: Sheets and alerts · Confirm alert" width="1280" height="1500" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+    <h3>390</h3>
+    <div class="rv-shots rv-shots--phone">
+      <figure><img src="review-docs-2/b-390-sheets-and-alerts-confirm-alert.jpg" alt="Before at 390: Sheets and alerts · Confirm alert" width="390" height="1700" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs-2/a-390-sheets-and-alerts-confirm-alert.jpg" alt="After at 390: Sheets and alerts · Confirm alert" width="390" height="1700" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

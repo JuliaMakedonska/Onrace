@@ -20,7 +20,8 @@
    (the region "North America", the sport type "DEKA / functional fitness", a date range across two years) and a
    search chip, in List view, Map view and with the Filters sheet open.
 
-   Usage: node scripts/check_overflow.mjs [--quiet] [--block-fonts]   exit code 1 on any failure, 2 if Chrome can't start.
+   Usage: node scripts/check_overflow.mjs [--quiet] [--block-fonts]   exit code 1 on any failure, 2 if Chrome can't start,
+   3 if the only failures are fonts that didn't load (Google Fonts unreachable; scripts/ship.sh retries the build once).
    --block-fonts blocks the font files, to prove the font check fails without them.
    build_stand.py runs it on every build. */
 import { spawn } from 'node:child_process';
@@ -98,7 +99,10 @@ const CHECK = `(async () => {
     if (${JSON.stringify(FONTS)}.includes(fam) && !used.has(fam + ' ' + cs.fontWeight)) used.set(fam + ' ' + cs.fontWeight, el);
   }
   const loaded = new Set([...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/["']/g, '') + ' ' + f.weight));
-  for (const [u, el] of used) if (!loaded.has(u)) bad.push('font not loaded: ' + u + ' (first on ' + name(el) + ')');
+  // "no font loaded" (none of the page's faces arrived: Google Fonts unreachable) is told apart from a weight no face
+  // provides while the others loaded (a page bug): only the first lets scripts/ship.sh retry the build (2026-11-05)
+  const none = ![...document.fonts].some(f => f.status === 'loaded' && ${JSON.stringify(FONTS)}.includes(f.family.replace(/["']/g, '')));
+  for (const [u, el] of used) if (!loaded.has(u)) bad.push('font not loaded' + (none ? ' (no font loaded at all)' : '') + ': ' + u + ' (first on ' + name(el) + ')');
   // one-line controls: their text sits on a single line
   for (const el of document.querySelectorAll(${JSON.stringify(ONE_LINE)})) {
     if (!el.getClientRects().length || el.closest('.sheet:not(.open)') || el.closest('[hidden]')) continue;
@@ -120,6 +124,7 @@ const CHECK = `(async () => {
     if (r.width <= 1 && r.height <= 1) continue;                     // visually hidden text
     if (el.closest('.visually-hidden')) continue;                     // clipped to 1px with it (a busy button's hidden label)
     if (el.closest('.sheet:not(.open)') || el.closest('dialog:not([open])')) continue;   // off-screen until opened
+    if (el.closest('.an-window.is-cropped')) continue;   // the docs' crop window hides the rest of a stage on purpose (its own whole stage is measured on specimens.html)
     const inScroller = el.parentElement && el.parentElement.closest('.chips-row, .tbl-wrap, .spec-wrap, .lessonbar-inner, .navlinks');
     if (!inScroller && (r.right > W + 0.5 || r.left < -0.5)) bad.push(name(el) + ' spans ' + Math.round(r.left) + '–' + Math.round(r.right) + ' on a ' + W + 'px screen');
     if (el.scrollWidth > el.clientWidth + 1 && /(auto|scroll)/.test(cs.overflowX) && !scrollerX(el)) bad.push(name(el) + ' scrolls sideways (' + el.scrollWidth + ' > ' + el.clientWidth + ')');
@@ -200,7 +205,12 @@ const fontFails = failures.filter(f => f.includes('font not loaded')).length;
 if (fontFails) console.log(`check_overflow: ${fontFails} states measured without their real fonts (offline, or Google Fonts unreachable)`);
 if (failures.length) {
   console.log(`check_overflow: FAIL in ${failures.length} of ${checked} states (overflow, a wrapped one-line control, or a font not loaded)\n` + failures.join('\n'));
-  process.exit(1);
+  // exit 3 when every failing state is one where no font loaded at all (Google Fonts unreachable): such a state was laid
+  // out in a fallback face, so anything else it shows (a chip a few px wider, a wrap) may be that face's doing, not the page's.
+  // Those pages weren't really measured: scripts/ship.sh retries the build once, with the fonts. A state that loaded its
+  // fonts and still fails is a real failure, exit 1 (2026-11-05).
+  const fontsOnly = failures.every(f => f.includes('(no font loaded at all)'));
+  process.exit(fontsOnly ? 3 : 1);
 }
 if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320 and 390 at 200% text; the kit and lesson pages also at 1440)`);
 else console.log(`check_overflow: pass (${checked} states)`);

@@ -287,7 +287,7 @@ def stages_of(spec):
     return out
 def variants(row):
     sts = [st.lower() for st in MAPROW[row['name']]['states']]
-    return [(lab, h) for lab, h in stages_of(row['spec']) if any(st in lab.lower() for st in sts)]
+    return [(lab, h) for lab, h in stages_of(row['spec']) if any(st in lab.lower() for st in sts) and '<div class="kit-frame' in h]   # a stage that is only a note isn't a variant
 # an id the product's CSS selects on (dialog.alert #signout-confirm) keeps its name, or the copy would lose its look
 CSS_IDS = set(re.findall(r'#([a-zA-Z][\w-]*)', re.sub(r'/\*.*?\*/|\{[^{}]*\}', '', open(os.path.join(ROOT, 'design-system/index.css')).read(), flags=re.S)))
 def unid(h, sfx):   # a second copy of a stage on one page: its ids (and what points at them) take a suffix
@@ -323,12 +323,11 @@ def viewer(key):
     return f'<a href="{VIEWER}#{H.escape(key)}">{H.escape(SCREEN[scr])}{" · " + H.escape(state) if state else ""} ↗</a>'
 def label_of(h):
     return re.sub(r'<[^>]+>', '', re.search(r'<p class="kit-label">(.*?)</p>', h, re.S).group(1))
-def tech(row, vs):
+def tech(row, vs):   # technical details, folded: classes, the screens that use it, the native counterpart, then the sources
     classes = row['classes']
     code = ' '.join(f'<code>{"&lt;" + c[1:] if c.startswith("<") else "." + c}</code>' for c in classes)
     hits = used_on(classes)
     screens = ', '.join(f'<a href="{VIEWER}#{pages[0]}">{SCREEN[s]}</a>' for s, pages in sorted(hits.items(), key=lambda kv: list(SCREEN).index(kv[0])))
-    used = f'<span class="kd-k">Used on {len(hits)} screen{"s" if len(hits) != 1 else ""}</span> {screens}' if hits else '<span class="kd-k">Used on</span> the showcase only'
     ios = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1 ↗</a>', row['ios']) if row['ios'] != 'none' else 'none'
     quotes = ''.join(f'<blockquote class="dc-quote"><p>{inline(q, "DESIGN.md")}</p><footer><a href="{GH}DESIGN.md">DESIGN.md</a> → {H.escape(t)}</footer></blockquote>'
                      for t, q in (design_quote(x) for x in DMAP[row['name']]['design']))
@@ -339,13 +338,25 @@ def tech(row, vs):
             w['screens'] += [x for x in v['screens'] if x not in w['screens']]
     mc = ('<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody>'
           + ''.join(f'<tr><td>{H.escape(l)}</td><td>{H.escape(v["type"])}</td><td>{H.escape(", ".join(v["screens"]))}</td></tr>' for l, v in list(words.items())[:12])
-          + '</tbody></table></div>') if words else '<p class="dc-note">It carries no line of its own from <code>microcopy.md</code>: it shows catalog data, user data or another component\'s words.</p>'
-    inv = ''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(v, "ui/inventory.md")}</p>' for k, v in inv_row(row['name']))
+          + '</tbody></table></div>') if words else ''
+    rows = [('Classes', code),
+            (f'Used on {len(hits)} screen{"s" if len(hits) != 1 else ""}' if hits else 'Used on', screens or 'the showcase only'),
+            ('Native iOS', ios),
+            ('Specimen', f'<a href="specimens.html#{row["spec"]}">{H.escape(title_of(row["spec"]))}</a>, with every state beside it')]
+    rows += [(k, inline(v, 'ui/inventory.md')) for k, v in inv_row(row['name'])]
     return ('<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body">'
-            f'<div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> {code}</p><p class="kd-line">{used}</p>'
-            f'<p class="kd-line"><span class="kd-k">Native iOS</span> {ios}</p>{inv}'
-            f'<p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#{row["spec"]}">{H.escape(title_of(row["spec"]))}</a>, with every state beside it</p></div>'
-            f'<h4>From DESIGN.md</h4>{quotes or "<p class=dc-note>No passage of its own.</p>"}<h4>The words it carries</h4>{mc}</div></details>')
+            '<dl>' + ''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in rows) + '</dl>'
+            + (f'<h4>From DESIGN.md</h4>{quotes}' if quotes else '') + (f'<h4>The words it carries</h4>{mc}' if mc else '') + '</div></details>')
+
+def stage(h, sfx, sels, label):
+    """One stage for a section: its ids suffixed, its label kept as data (the stage check keys on it), and its frame in a
+    crop window: doc.js shows the component on its own when its parts cover a small share of the stage. The stage
+    inside keeps its width and every style; the window only hides the rest."""
+    h = unid(h, sfx)
+    i = h.index('<div class="kit-frame'); j = element_end(h, i)
+    h = h[:i] + f'<div class="an-window" data-crop="{H.escape(json.dumps(sels))}"><div class="an-pan">' + h[i:j] + '</div></div>' + h[j:]
+    h = re.sub(r'\s*<p class="kit-label">.*?</p>', '', h, count=1, flags=re.S)
+    return h.replace('<div class="kit-state">', f'<div class="kit-state" data-label="{H.escape(label)}">', 1)
 
 def component(row):
     name, d = row['name'], DMAP[row['name']]
@@ -353,30 +364,28 @@ def component(row):
     vs = variants(row)
     assert vs, f'{name}: no stage matches its States'
     top_i = next((i for i, (lab, _) in enumerate(vs) if d['stage'] and d['stage'].lower() in lab.lower()), 0)
-    top = vs[top_i][1]
-    others = [h for i, (_, h) in enumerate(vs) if i != top_i]
-    legend = ''.join(f'<li data-part="{n}" tabindex="0"><span class="an-n">{n + 1}</span> {H.escape(label)} <code>{H.escape(sel)}</code></li>' for n, (sel, label) in enumerate(d['parts']))
+    sels = [sel for sel, _ in d['parts']]
+    others = [(lab, h) for i, (lab, h) in enumerate(vs) if i != top_i]
+    legend = ''.join(f'<li><button type="button" class="an-part" data-part="{n}" aria-pressed="false"><span>{H.escape(label)}</span> <code>{H.escape(sel)}</code></button></li>'
+                     for n, (sel, label) in enumerate(d['parts']))
     rkey, rtext = d['rule']
     other, akey, atext = d['anti']
-    orow = by_name[other]
-    assert orow['spec'], f'{name}: the anti-rule names {other}, which has no specimen'
-    ostage = variants(orow)[0][1]
     out = [f'<section class="dc" id="{sl}" aria-labelledby="{sl}-h">',
            f'<h2 id="{sl}-h">{H.escape(name)}</h2>',
            f'<p class="dc-for">{H.escape(d["for"])}</p>',
-           f'<div class="dc-spec kit-states">{unid(top, "-" + sl)}</div>',
-           '<div class="dc-dos">'
-           f'<div class="dc-do"><p class="dc-k">When to use</p><p>{H.escape(rtext)}</p><p class="dc-see">See it: {viewer(rkey)}</p></div>'
-           f'<div class="dc-dont"><p class="dc-k">When not to · use <a href="{DS.section_url(other)}">{H.escape(other)}</a></p><p>{H.escape(atext)}</p>'
-           f'<p class="dc-see">See it: {viewer(akey)}</p><div class="kit-states">{unid(ostage, "-" + sl + "-alt")}</div></div>'
-           '</div>',
-           f'<h3 id="{sl}-anatomy">Anatomy</h3>',
-           f'<div class="dc-anatomy"><div class="an" data-anatomy="{H.escape(json.dumps(d["parts"]))}">{unid(top, "-" + sl + "-an")}</div><ol class="an-legend">{legend}</ol></div>']
+           f'<div class="dc-spec" data-anatomy="{H.escape(json.dumps(d["parts"]))}">{stage(vs[top_i][1], "-" + sl, sels, vs[top_i][0])}</div>',
+           f'<ul class="an-legend" aria-label="Parts of the {H.escape(name.lower())}">{legend}</ul>',
+           '<div class="dc-rules">'
+           f'<div class="dc-do"><h3>When to use</h3><p>{H.escape(rtext)}</p><p class="dc-see">See it: {viewer(rkey)}</p></div>'
+           f'<div class="dc-dont"><h3>When not to</h3><p>{H.escape(atext)} Use <a href="{DS.section_url(other)}">{H.escape(other)}</a>.</p><p class="dc-see">See it: {viewer(akey)}</p></div>'
+           '</div>']
     if others:
-        out += [f'<h3 id="{sl}-variants">Variants <span>{len(others)} more</span></h3>', '<div class="kit-states">' + ''.join(unid(h, f'-{sl}-v{i}') for i, h in enumerate(others)) + '</div>']
-    out += [f'<h3 id="{sl}-states">States</h3>', '<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>',
+        out += [f'<h3 class="dc-h" id="{sl}-variants">Variants</h3>',
+                '<div class="dc-variants">' + ''.join(f'<figure class="dc-variant">{stage(h, f"-{sl}-v{i}", sels, lab)}<figcaption>{H.escape(lab)}</figcaption></figure>'
+                                                    for i, (lab, h) in enumerate(others)) + '</div>']
+    out += [f'<h3 class="dc-h" id="{sl}-states">States</h3>', '<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>',
             tech(row, vs), '</section>']
-    return '\n'.join(out), 'map-placeholder' in top + ''.join(others) + ostage
+    return '\n'.join(out), 'map-placeholder' in vs[top_i][1] + ''.join(h for _, h in others)
 
 def retired(row):
     sl = slug_c(row['name'])

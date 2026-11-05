@@ -3,9 +3,9 @@
    stage on specimens.html, the hand-written source, in headless Chrome over local HTTP. For every element in a stage's
    frame (frames entered, each loaded and styled first) it compares 23 computed properties: color, type, borders,
    radius, spacing, shadow, outline, opacity, size, display, gap, backdrop. Four passes: 1280 and 390, dark and light.
-   A stage narrower by layout (the anatomy's on a phone, beside its gutter; the When-not-to sample, half a row on a desk)
-   is compared without its width and height. Any other difference means the documentation's own CSS reached a
-   specimen, and fails. It caught three such leaks while the docs were built (doc.css → Lesson 9 in concept.md).
+   The frame itself is the docs layer (borderless on the family pages since 2026-11-05), so the comparison starts at its
+   children, the product; a stage cropped to its component keeps its full width inside the crop window, so widths and
+   heights are compared too. Any difference means the documentation's own CSS reached a specimen, and fails. It caught three such leaks while the docs were built (doc.css → Lesson 9 in concept.md).
    Run from the repo root: node scripts/check_docs_stages.mjs [--quiet]. build_stand.py runs it; exit 1 on a difference,
    2 if Chrome isn't there. */
 import { spawn } from 'node:child_process'; import { createServer } from 'node:http';
@@ -34,15 +34,15 @@ const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
   await new Promise(r => setTimeout(r, 300));
   const out = {};
   for (const st of document.querySelectorAll('.kit-state')) {
-    const lab = st.querySelector('.kit-label')?.textContent.trim(); const fr = st.querySelector('.kit-frame'); if (!fr || !lab) continue;
-    const geo = ${geometry} || !((st.closest('.an') && innerWidth < 600) || st.closest('.dc-dont'));   // an anatomy stage on a phone (its gutter) and the When-not-to sample (half a row on a desk) are narrower by layout
+    const lab = st.getAttribute('data-label') || st.querySelector('.kit-label')?.textContent.trim(); const fr = st.querySelector('.kit-frame'); if (!fr || !lab || st.closest('[hidden]')) continue;
+    const geo = ${geometry};
     const rec = []; const walk = (root, doc) => { for (const el of [root, ...root.querySelectorAll('*')]) {
       if (el.closest('.an-layer')) continue;
       const cs = doc.defaultView.getComputedStyle(el); const s = {};
       for (const p of ${JSON.stringify(PROPS)}) if (geo || (p !== 'width' && p !== 'height')) s[p] = cs.getPropertyValue(p);
       rec.push(el.tagName + '.' + [...el.classList].join('.') + ' ' + JSON.stringify(s));
       if (el.tagName === 'IFRAME' && el.contentDocument?.body) walk(el.contentDocument.body, el.contentDocument); } };
-    walk(fr, document);
+    [...fr.children].forEach(c => walk(c, document));   // the frame is the docs layer (borderless on the family pages); the product starts inside it
     (out[lab + (geo ? '' : ' [no geometry]')] ||= []).push(rec.join('\\n'));
   } return out; })()`;
 async function load(u, geometry) { const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url: u }); await Promise.race([l, sl(8000)]); return ev(COLLECT(geometry)); }
@@ -53,7 +53,7 @@ const ref = await load(B + 'specimens.html' + THEME, true);
 // the reference without geometry: the same stages with width and height dropped
 const noGeo = {}; for (const [k, v] of Object.entries(ref)) noGeo[k + ' [no geometry]'] = v.map(r => r.replace(/,"width":"[^"]*","height":"[^"]*"/g, ''));
 for (const f of readdirSync(join(ROOT, 'design-system/docs')).filter(f => f.endsWith('.html') && !['index.html', 'why.html', 'specimens.html'].includes(f)).sort()) {
-  const got = await load(B + f + THEME, false); if (THEME === '' && WIDTH === 1280) pages++;
+  const got = await load(B + f + THEME, true); if (THEME === '' && WIDTH === 1280) pages++;   // every property, widths and heights included
   for (const [lab, recs] of Object.entries(got)) for (const r of recs) {
     stages++;
     const want = ref[lab] || noGeo[lab];

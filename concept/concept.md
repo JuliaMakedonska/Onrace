@@ -1143,3 +1143,51 @@ The model is Apple HIG and Primer.
 **Still unknown.**
 - **The gutter has room for one number per line.** Parts on one line (a bar's back button, title and action) step down below it in their own order; the legend's hover shows the exact part.
 - **On a phone the anatomy stage is 32px narrower than the screen** (its gutter). The components hold there by the overflow check, but it isn't the width they ship at.
+
+### Shipping: a failed build never commits (designer, 2026-11-05)
+
+**Why.** A build stopped on the overflow check, and the commit and push that followed still ran: the build was piped through `grep`, whose exit 0 hid the failure, so a build that hadn't passed was deployed.
+
+**What changed.**
+- `scripts/ship.sh "message"` is the only way changes leave the machine. It runs the build, then the commit, then the push (the deploy), then waits for the Pages run; each step runs only if the one before it exited 0.
+- **Fonts:** a build that fails only because the fonts didn't load (`check_overflow` exit 3) is retried once; a second failure stops everything. A state measured without its fonts counts as fonts only, whatever else it shows: in a fallback face a chip measured wider and scrolled sideways, which is the face's doing, not the page's.
+- **The stamp:** the build ends by writing `.build-ok`, the tree hash of the working copy, only when every check passed and none was skipped.
+- **Two hooks** (`scripts/hooks/`): `pre-commit` refuses a commit whose tree isn't the stamped one, `pre-push` a push whose HEAD isn't. So a commit made by hand, a change made after the build, or `--no-verify` can't reach the site.
+
+**How it was checked.**
+- **A real failure** (an invented word on a docs page): ship stopped at the build, exit 1; HEAD and `origin/main` unchanged, no stamp.
+- **Fonts unreachable twice** (`ONRACE_BLOCK_FONTS=1`): exit 3, one retry, exit 3 again, ship stopped with exit 3; HEAD and `origin/main` unchanged.
+- **The hooks:** see the next entry's ship.
+
+### The docs made quiet (designer, 2026-11-05)
+
+**Why.** The family pages still mixed the component, its rules and other components, all boxed with equal weight. Sort button showed its specimen twice, and "When not to" held a live pop-up select.
+
+**What changed.**
+- **The docs layer is light, like Apple HIG** (designer's choice). The dark product specimens stand out as windows without frames.
+  - One accent, `#0071e3`, used only for the current nav item's line and the outline a legend item draws.
+  - Headings are neutral; class names are plain gray monospace.
+  - More space, fewer small labels.
+  - Text pairs at AA: 16.8, 10.3 and 5.0:1 on white.
+- **Every component section, in one order:**
+  1. Name and what it's for.
+  2. One specimen, no frame, with the parts legend directly under it. There's no Anatomy section, no second copy and no numbers. A legend item is a button: hover, focus or a tap (it stays pressed) outlines that part.
+  3. When to use / When not to: text only, each with a thin green or coral bar on the left. Another component is only ever a link to its section by name.
+  4. Variants, only if there's more than one, and States.
+  5. Technical details, folded.
+
+  A clear divider and generous space separate components.
+- **A component on its own.** When its parts cover less than 60% of their stage (Sign out inside the whole Profile screen, an alert in its 600px dialog stage), the specimen and the variants show a window cropped to it. The stage inside keeps its full width and every style; the window only hides the rest. The rules' "See it" links show it on its screen.
+- **The scroll highlight.** The nav and "On this page" mark the last section whose heading has passed under the sticky header, read on every scroll frame. Before, an observer marked a section only as it entered a band, so the mark lagged a section behind.
+
+**How it was checked.**
+- **The stage check, tightened.** It now compares from the frame's children (the frame is docs layer, borderless now) with every property, widths and heights included: 516 stage-passes on the 11 family pages, 0 differences. A planted 1px letter-spacing on the finish time failed 16 of them.
+- **The other checks:**
+  - the words check, on 71 pages;
+  - overflow, on every docs page at 390, 320, 200% text and 1440 (content a crop window hides is skipped: its whole stage is measured on `specimens.html`);
+  - links.
+- **Review page:** `ui/review-docs-2.html`, before and after of Buttons and links (Sort button), Forms and Sheets and alerts (Confirm alert), at 1280 and 390.
+
+**Still unknown.**
+- **A variant without the component's parts isn't cropped.** Sign out's "Sign out" state is the confirm alert, where the button isn't, so it shows the whole dialog stage.
+- **The 60% share is a judgment:** a component just above it shows its whole stage.

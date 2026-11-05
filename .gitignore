@@ -30,3 +30,6 @@ concept/_review.html
 
 # Visuals waiting for the check, and the retouch work files (never published)
 visuals/incoming/
+
+# The build stamp: the tree the last passing build checked (scripts/concept/build_stand.py, read by scripts/hooks/)
+.build-ok

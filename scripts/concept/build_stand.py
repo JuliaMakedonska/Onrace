@@ -1069,6 +1069,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-overviews'), os.path.join(ROOT, 'p
 shutil.copyfile(os.path.join(ROOT, 'ui/review-overviews.html'), os.path.join(ROOT, 'public/ui/review-overviews.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-kit-sheet'), os.path.join(ROOT, 'public/ui/review-kit-sheet'), dirs_exist_ok=True)   # the kit as a component sheet (2026-10-26)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-kit-sheet.html'), os.path.join(ROOT, 'public/ui/review-kit-sheet.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-docs-2'), os.path.join(ROOT, 'public/ui/review-docs-2'), dirs_exist_ok=True)   # the docs made quiet (2026-11-05)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-docs-2.html'), os.path.join(ROOT, 'public/ui/review-docs-2.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-docs'), os.path.join(ROOT, 'public/ui/review-docs'), dirs_exist_ok=True)   # the docs restructured (Lesson 9, 2026-11-05)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-docs.html'), os.path.join(ROOT, 'public/ui/review-docs.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-theme'), os.path.join(ROOT, 'public/ui/review-theme'), dirs_exist_ok=True)   # step 5: every state in both themes (Lesson 8)
@@ -1095,18 +1097,42 @@ print('mirrored to public/')
 # message, only when Node or Chrome is missing.
 import subprocess, shutil
 _node = shutil.which('node')
+_skipped = []   # a skipped check is a missing guarantee: the build then writes no .build-ok, so nothing can ship
 if not _node:
-    print('check_overflow: SKIPPED, node not found')
+    print('check_overflow: SKIPPED, node not found'); _skipped.append('check_overflow, check_docs_stages (no node)')
 else:
-    _r = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_overflow.mjs'), '--quiet'], capture_output=True, text=True)
+    # ONRACE_BLOCK_FONTS=1 blocks the font files (a test of scripts/ship.sh's retry: Google Fonts unreachable)
+    _r = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_overflow.mjs'), '--quiet'] + (['--block-fonts'] if os.environ.get('ONRACE_BLOCK_FONTS') else []), capture_output=True, text=True)
     print(_r.stdout.strip() or _r.stderr.strip())
-    if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
+    if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available'); _skipped.append('check_overflow (no Chrome)')
+    elif _r.returncode == 3: print('check_overflow failed only on fonts that did not load (Google Fonts unreachable): the build stops, exit 3'); sys.exit(3)
     elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
     # the docs can't lie (Lesson 9, 2026-11-05): every stage on a family page computes as the same stage on specimens.html
     _d = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_docs_stages.mjs'), '--quiet'], capture_output=True, text=True)
     print(_d.stdout.strip() or _d.stderr.strip())
     if _d.returncode == 1: sys.exit('check_docs_stages failed (the docs\' CSS reached a specimen): the build stops')
+    if _d.returncode == 2: _skipped.append('check_docs_stages (no Chrome)')
 # every page links only files that exist (Lesson 8 step 4): a page still linking a deleted file stops the build
 _l = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_links.py')], capture_output=True, text=True)
 print(_l.stdout.strip())
 if _l.returncode: sys.exit('check_links failed: a page links a file that does not exist; the build stops')
+
+# ---------------------------------------------------------------- the build stamp (2026-11-05)
+# Every check above stops the build with a non-zero exit. Reaching this line means all of them passed, so the build
+# records what it checked: the tree the working copy would commit as (every file, staged or not, .gitignore applied),
+# hashed through a scratch index so the real one isn't touched. scripts/hooks/pre-commit refuses a commit whose tree
+# isn't this one, and scripts/hooks/pre-push a push whose HEAD isn't: a commit is only ever of a tree that passed.
+# .build-ok is git-ignored. A skipped check writes no stamp: nothing ships on a build that didn't run every check.
+_stamp = os.path.join(ROOT, '.build-ok')
+if os.path.exists(_stamp): os.remove(_stamp)
+if _skipped:
+    print('build: every check that ran passed, but these were skipped, so no .build-ok (nothing can be committed): ' + '; '.join(_skipped))
+else:
+    import tempfile
+    with tempfile.TemporaryDirectory() as _t:
+        _env = dict(os.environ, GIT_INDEX_FILE=os.path.join(_t, 'index'))
+        subprocess.run(['git', 'add', '-A'], cwd=ROOT, env=_env, check=True)
+        _tree = subprocess.run(['git', 'write-tree'], cwd=ROOT, env=_env, check=True, capture_output=True, text=True).stdout.strip()
+    open(_stamp, 'w').write(_tree + '\n')
+    print(f'build: every check passed · .build-ok = {_tree[:12]} (the tree a commit of this working copy must have)')
+
