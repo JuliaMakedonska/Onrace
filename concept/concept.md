@@ -1205,3 +1205,28 @@ The model is Apple HIG and Primer.
 - **What happened.** The light rework's headings (weight 700) took the product's display face, which loads at 800 only, so all 52 docs states failed their font check on every run.
 - **The flaw it exposed.** The ship rule counted that as "Google Fonts unreachable", retried, and stopped. Safe, but a page bug got a network retry.
 - **The fix.** The docs' headings take the docs' own face. `check_overflow` now counts a failure as fonts only when no font loaded at all on the page (exit 3, a retry). A weight that's missing while the others loaded is exit 1, a real failure. Shown both ways: blocked fonts gave 3; the headings fix taken out gave 1.
+
+### One fold, the same everywhere (designer, 2026-11-05)
+
+**Why.** The folds didn't look expandable: "Technical details" read as a plain heading, and its focus ring was a heavy full-width white box.
+
+**What changed (the docs layer and the lesson pages only; the product untouched).**
+- **One disclosure, the same everywhere:** in `design-system/docs/` (Technical details, a specimen's Notes) and on the lesson overviews (`scripts/lesson_page.py`, and the token reference's folds).
+- **Its parts:**
+  - the title, then a short gray hint of what's inside after a middot ("Technical details · classes, screens, iOS", "The full register: 42 decisions · each with its date…");
+  - a Solar Linear chevron at the end, down when closed and up when open, turning over 200ms (instant under reduced motion);
+  - a pointer cursor and a quiet hover fill on the row, which is as wide as its content;
+  - the focus ring of the other docs controls: 2px, offset 2px, rounded to the row's 8px corners.
+- **Native `<details>`,** so Enter and Space toggle it. The lesson pages' old accent "▸" is gone.
+- **A hint is now required:** `lesson_page.fold()` and `tokens_reference.fold()` assert one. Folds that had none got one: the inventory's, the Native iOS records', and the reference's hues, geometry and roles.
+
+**How it was checked.**
+- **Real key presses in headless Chrome** on a docs fold, a specimen's Notes and a lesson-page fold:
+  - Tab focuses the summary with `:focus-visible`: a 2px ring with an 8px radius around the row only (322 of 688px in the docs, not the full width), pointer cursor;
+  - Enter opens it; Space closes it and opens it again.
+- **The build:** words, overflow, stage and link checks, through `scripts/ship.sh`.
+
+**Found on the way: the stage check could cry wolf.**
+- **What happened.** The first ship of this change stopped on `check_docs_stages`: 88 stages differed. The differences were on the reference side. `specimens.html` had been read before its tab bar frames were styled (Times, black) and before its fonts had arrived, and two runs of the check alone passed. Ship was right to stop, but a flake read as a leak.
+- **The fix.** The check now forces the product's three faces to load and checks that every frame is styled before it reads a page. A page that isn't settled loads again, up to three times. One that never settles exits 3 ("not measured", like fonts unreachable: `ship.sh` retries once), never 1. So exit 1 always means a leak measured on settled pages.
+- **Shown both ways:** fonts blocked (`ONRACE_BLOCK_FONTS=1`) gave 3; a planted 1px letter-spacing gave 1 (16 stages).

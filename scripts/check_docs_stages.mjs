@@ -7,7 +7,7 @@
    children, the product; a stage cropped to its component keeps its full width inside the crop window, so widths and
    heights are compared too. Any difference means the documentation's own CSS reached a specimen, and fails. It caught three such leaks while the docs were built (doc.css → Lesson 9 in concept.md).
    Run from the repo root: node scripts/check_docs_stages.mjs [--quiet]. build_stand.py runs it; exit 1 on a difference,
-   2 if Chrome isn't there. */
+   2 if Chrome isn't there, 3 if a page never settled (fonts or frames didn't load: not measured, so scripts/ship.sh retries). */
 import { spawn } from 'node:child_process'; import { createServer } from 'node:http';
 import { mkdtempSync, readFileSync, readdirSync, rmSync, existsSync } from 'node:fs'; import { tmpdir } from 'node:os'; import { join, normalize, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,14 +23,21 @@ const tg = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json(); con
 let id = 0; const pend = new Map(), wait = []; ws.addEventListener('message', e => { const m = JSON.parse(e.data); if (m.id && pend.has(m.id)) { pend.get(m.id)(m); pend.delete(m.id); } else if (m.method) wait.filter(w => w.m === m.method).forEach(w => { w.r(m); wait.splice(wait.indexOf(w), 1); }); });
 const send = (method, params = {}) => new Promise(r => { const i = ++id; pend.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
 const ev = async x => (await send('Runtime.evaluate', { expression: x, returnByValue: true, awaitPromise: true })).result?.result?.value;
-await send('Page.enable');
+await send('Page.enable'); await send('Network.enable');
+if (process.env.ONRACE_BLOCK_FONTS) await send('Network.setBlockedURLs', { urls: ['*fonts.gstatic.com*'] });   // a test of the exit 3: fonts unreachable
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
 const PROPS = ['color', 'background-color', 'font-family', 'font-size', 'font-weight', 'line-height', 'letter-spacing', 'text-transform', 'border-top-left-radius', 'border-top-color', 'border-top-width', 'padding-top', 'padding-left', 'margin-top', 'box-shadow', 'outline-style', 'text-decoration-line', 'opacity', 'width', 'height', 'display', 'gap', 'backdrop-filter'];
+const FACES = ['800 1em "Schibsted Grotesk"', '400 1em "Hanken Grotesk"', '600 1em "Hanken Grotesk"'];   // the product's three faces
 const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
+  const faces = ${JSON.stringify(FACES)};
+  await Promise.all(faces.map(f => document.fonts.load(f).catch(() => null)));
   for (const f of document.querySelectorAll('iframe')) {   // every frame loaded and styled before anything is read
     for (let i = 0; i < 100 && !(f.contentDocument && f.contentDocument.readyState === 'complete' && [...f.contentDocument.styleSheets].length); i++) await new Promise(r => setTimeout(r, 50));
-    try { await f.contentDocument.fonts.ready; } catch (e) {}
+    try { await f.contentDocument.fonts.ready; await Promise.all(faces.map(x => f.contentDocument.fonts.load(x).catch(() => null))); } catch (e) {}
   }
+  // settled: every face loaded here and in every frame, and every frame styled (an unstyled frame reads Times)
+  const docs = [document, ...[...document.querySelectorAll('iframe')].map(f => f.contentDocument).filter(Boolean)];
+  const settled = docs.every(d => faces.every(x => d.fonts.check(x)) && (d === document || d.defaultView.getComputedStyle(d.body).fontFamily.includes('Hanken')));
   await new Promise(r => setTimeout(r, 300));
   const out = {};
   for (const st of document.querySelectorAll('.kit-state')) {
@@ -44,8 +51,19 @@ const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
       if (el.tagName === 'IFRAME' && el.contentDocument?.body) walk(el.contentDocument.body, el.contentDocument); } };
     [...fr.children].forEach(c => walk(c, document));   // the frame is the docs layer (borderless on the family pages); the product starts inside it
     (out[lab + (geo ? '' : ' [no geometry]')] ||= []).push(rec.join('\\n'));
-  } return out; })()`;
-async function load(u, geometry) { const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url: u }); await Promise.race([l, sl(8000)]); return ev(COLLECT(geometry)); }
+  } return { settled, out }; })()`;
+// a page read before its frames and fonts settled would report a leak that isn't there (it happened once, 2026-11-05):
+// so a page that isn't settled is loaded again, up to three times; one that never settles wasn't measured: exit 3
+async function load(u, geometry) {
+  for (let t = 0; t < 3; t++) {
+    const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url: u }); await Promise.race([l, sl(8000)]);
+    const r = await ev(COLLECT(geometry));
+    if (r && r.settled) return r.out;
+    await sl(1000);
+  }
+  console.log(`check_docs_stages: ${u.split('/').pop()} never settled (fonts or frames didn't load): not measured, exit 3`);
+  ws.close(); srv.close(); ch.kill(); process.exit(3);
+}
 let pages = 0, stages = 0; const bad = [];
 for (const [WIDTH, THEME] of [[1280, ''], [1280, '?theme=light'], [390, ''], [390, '?theme=light']]) {
 await send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height: 900, deviceScaleFactor: 1, mobile: false });

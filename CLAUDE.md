@@ -265,7 +265,7 @@ Lesson 9 (from 2026-11-03): the kit as one folder with one entry point. `design-
 ## Shipping (2026-11-05)
 
 A failed build never commits or deploys. Changes leave this machine only through `scripts/ship.sh "message"`: the build (`scripts/concept/build_stand.py`, every check), then `git add -A` and commit, then push to `main` (which deploys), then it waits for the GitHub Pages run. Each step runs only if the one before it exited 0.
-- **Fonts:** if the build fails only because Google Fonts couldn't be reached (`check_overflow` exit 3: on every failing state no font loaded at all), it is retried once; a second failure stops everything, and the designer is told. A weight no face provides while the others loaded is a page bug: exit 1, no retry.
+- **Fonts:** if the build fails only because Google Fonts couldn't be reached (`check_overflow` exit 3: on every failing state no font loaded at all), it is retried once; a second failure stops everything, and the designer is told. A weight no face provides while the others loaded is a page bug: exit 1, no retry. The same for `check_docs_stages` (exit 3 when a page never settled: its fonts or frames didn't load after three loads).
 - **The stamp:** the build writes `.build-ok` (git-ignored), the tree hash of the working copy, only when every check passed and none was skipped.
 - **The hooks** (`scripts/hooks/`, installed with `git config core.hooksPath scripts/hooks`): `pre-commit` refuses any commit whose tree isn't the stamped one, `pre-push` any push whose HEAD isn't. No `--no-verify`.
 

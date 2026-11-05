@@ -1114,6 +1114,7 @@ else:
     print(_d.stdout.strip() or _d.stderr.strip())
     if _d.returncode == 1: sys.exit('check_docs_stages failed (the docs\' CSS reached a specimen): the build stops')
     if _d.returncode == 2: _skipped.append('check_docs_stages (no Chrome)')
+    if _d.returncode == 3: print('check_docs_stages: a page never settled (fonts or frames didn\'t load), not measured: the build stops, exit 3'); sys.exit(3)
 # every page links only files that exist (Lesson 8 step 4): a page still linking a deleted file stops the build
 _l = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_links.py')], capture_output=True, text=True)
 print(_l.stdout.strip())

@@ -112,12 +112,12 @@ def meta(spec):
 def card(spec):
     b = items[spec]
     b = re.sub(r'\n      <!-- kit:meta.*?<!-- /kit:meta -->', '', b, flags=re.S)
-    b = re.sub(r'\n      <details class="kd-notes"><summary>Notes</summary>(.*?)</details><!-- /kd-notes -->', r'\1', b, flags=re.S)
+    b = re.sub(r'\n      <details class="kd-notes"><summary>Notes.*?</summary>(.*?)</details><!-- /kd-notes -->', r'\1', b, flags=re.S)
     b = re.sub(r'(</h3>)', r'\1\n      ' + meta(spec).replace('\\', r'\\'), b, count=1)
     # the hand-written notes (the paragraphs between the facts and the states) fold under "Notes"
     m = re.search(r'(<!-- /kit:meta -->)((?:\n      <p>.*?</p>)+)', b, flags=re.S)
     if m:
-        b = b[:m.end(1)] + '\n      <details class="kd-notes"><summary>Notes</summary>' + m.group(2) + '</details><!-- /kd-notes -->' + b[m.end():]
+        b = b[:m.end(1)] + '\n      <details class="kd-notes"><summary>Notes <span class="fold-sub">what it shows and why</span></summary>' + m.group(2) + '</details><!-- /kd-notes -->' + b[m.end():]
     names = ' '.join([title_of(spec)] + [r['name'] for r in rows_of[spec]]).lower()
     return b.replace(f'<div class="kit-item" id="{spec}">', f'<div class="kit-item" id="{spec}" data-names="{H.escape(names)}">', 1) if 'data-names' not in b.split('>', 1)[0] else b
 
@@ -344,7 +344,7 @@ def tech(row, vs):   # technical details, folded: classes, the screens that use 
             ('Native iOS', ios),
             ('Specimen', f'<a href="specimens.html#{row["spec"]}">{H.escape(title_of(row["spec"]))}</a>, with every state beside it')]
     rows += [(k, inline(v, 'ui/inventory.md')) for k, v in inv_row(row['name'])]
-    return ('<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body">'
+    return ('<details class="dc-tech"><summary>Technical details <span class="fold-sub">classes, screens, iOS</span></summary><div class="dc-tech-body">'
             '<dl>' + ''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in rows) + '</dl>'
             + (f'<h4>From DESIGN.md</h4>{quotes}' if quotes else '') + (f'<h4>The words it carries</h4>{mc}' if mc else '') + '</div></details>')
 

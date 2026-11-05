@@ -155,15 +155,21 @@ TEMPLATE_CSS = r'''  /* Hero (same as ia.html and voice.html) */
   .embed--phone iframe{height:760px}
   .embeds{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,392px); gap:18px; align-items:start}
   @media (max-width:900px){ .embeds{grid-template-columns:minmax(0,1fr)} }
-  details.fold{border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-elev); margin:12px 0 16px}
-  details.fold > summary{cursor:pointer; list-style:none; display:flex; align-items:center; gap:10px; min-height:48px; padding:6px 16px; font-weight:700; color:var(--text); font-size:15px}
+  /* the fold (2026-11-05): one disclosure, the same as the design-system docs' (design-system/docs/doc.css): the title, a
+     short hint of what's inside, a Solar Linear chevron at the end (down closed, up open); a pointer, a quiet hover fill,
+     a rounded focus ring that hugs the row. Native <details>: Enter and Space toggle it. */
+  details.fold{border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-elev); margin:12px 0 16px; padding:4px 16px}
+  details.fold > summary{list-style:none; display:inline-flex; flex-wrap:wrap; align-items:center; gap:2px 0; width:fit-content; max-width:100%; box-sizing:border-box; min-height:44px; margin:0 -10px; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600; color:var(--text); font-size:15px}
   details.fold > summary::-webkit-details-marker{display:none}
-  details.fold > summary::before{content:"▸"; color:var(--accent); transition:transform .15s}
-  details.fold[open] > summary::before{transform:rotate(90deg)}
+  details.fold > summary::after{content:""; flex:none; width:16px; height:16px; margin-left:8px; background:var(--text-faint); -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; transition:transform 200ms ease}
+  details.fold[open] > summary::after{transform:rotate(180deg)}
+  details.fold > summary:hover{background:var(--bg-elev-2, rgba(255,255,255,.05))}
+  details.fold > summary:hover::after{background:var(--text)}
   details.fold > summary:focus-visible{outline:2px solid var(--text); outline-offset:2px}
-  .fold-sub{font-weight:400; color:var(--text-faint); font-size:13px}
-  details.fold > .fold-body{padding:4px 16px 12px}
-  @media (prefers-reduced-motion: reduce){ details.fold > summary::before{transition:none} }
+  .fold-sub{font-weight:400; color:var(--text-faint); font-size:inherit}
+  details.fold .fold-sub::before{content:"·"; margin:0 6px}
+  details.fold > .fold-body{padding:4px 0 12px}
+  @media (prefers-reduced-motion: reduce){ details.fold > summary::after{transition:none} }
   .strip{list-style:none; padding:0; margin:8px 0; display:grid; gap:2px}
   .strip li{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; min-height:40px; border-bottom:1px solid var(--border); padding:8px 0}
   .strip a{color:var(--text); font-weight:700; text-decoration:none}
@@ -180,9 +186,10 @@ def embed(src, title, kind='tall', note=''):
             f'<a href="{src}" target="_blank" rel="noopener">Open full screen ↗</a></div>'
             f'<iframe src="{src}" title="{esc(re.sub("<[^>]+>", "", title))}, live" loading="lazy"></iframe></div>{note}')
 
-def fold(summary, body, sub=''):
-    """A long block, closed by default: the summary carries the count."""
-    return f'<details class="fold"><summary>{summary}{f" <span class=fold-sub>{sub}</span>" if sub else ""}</summary><div class="fold-body">{body}</div></details>'
+def fold(summary, body, sub):
+    """A long block, closed by default: the summary carries the count, the hint says what's inside (required, 2026-11-05)."""
+    assert sub, f'a fold needs a hint of what is inside: {summary}'
+    return f'<details class="fold"><summary>{summary} <span class=fold-sub>{sub}</span></summary><div class="fold-body">{body}</div></details>'
 
 def stat(n, label, sub=''):
     return f'<div class="stat"><span class="stat-n">{n}</span><span class="stat-l">{label}</span>{f"<span class=stat-sub>{sub}</span>" if sub else ""}</div>'

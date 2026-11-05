@@ -75,8 +75,9 @@ def css_color(value, theme='dark'):
 # ---------------------------------------------------------------- small renderers
 def chip(role): return f'<code class="rc">--{role}</code>'
 def sw(color, cls='sw'): return f'<span class="{cls}" style="background:{esc(color)}"></span>'
-def fold(summary, body, sub='', open_=False):
-    return f'<details class="fold ref-fold"{" open" if open_ else ""}><summary>{summary}{f" <span class=fold-sub>{sub}</span>" if sub else ""}</summary><div class="fold-body">{body}</div></details>'
+def fold(summary, body, sub, open_=False):   # the hint of what's inside is required (2026-11-05: every fold says it)
+    assert sub, f'a fold needs a hint of what is inside: {summary}'
+    return f'<details class="fold ref-fold"{" open" if open_ else ""}><summary>{summary} <span class=fold-sub>{sub}</span></summary><div class="fold-body">{body}</div></details>'
 def table(head, rows, cls='ref'):
     return (f'<div class="tbl-wrap"><table class="{cls}"><thead><tr>' + ''.join(f'<th>{h}</th>' for h in head) + '</tr></thead><tbody>'
             + ''.join('<tr>' + ''.join(f'<td data-h="{esc(re.sub("<[^>]+>", "", h))}">{c}</td>' for h, c in zip(head, r)) + '</tr>' for r in rows) + '</tbody></table></div>')
@@ -107,7 +108,7 @@ def ladder(h):
 
 HUES = sorted({hue(n) for n in COLOR_PRIMS}, key=lambda h: ['graphite', 'amber', 'coral'].index(h) if h in ('graphite', 'amber', 'coral') else 9)
 def colors_html():
-    return ''.join(fold(f'{h.capitalize()}: {sum(1 for n in COLOR_PRIMS if hue(n) == h)} primitives', ladder(h), HUE_NOTE.get(h, '')) for h in HUES)
+    return ''.join(fold(f'{h.capitalize()}: {sum(1 for n in COLOR_PRIMS if hue(n) == h)} primitives', ladder(h), HUE_NOTE.get(h) or 'lightest first, with the roles that read each') for h in HUES)
 
 # ---------------------------------------------------------------- 2. geometry and the other primitives
 # The sample words are the screens' own: wireframes/race-browse.html (Discover, the date day 27, Berlin, Germany),
@@ -177,7 +178,7 @@ def other_html():
         if title.startswith('color'): continue
         rows = [(f'<code>--{n}</code>', value_cell(n, v), sample(n, v)) for n, v, _ in ds]
         sub = ('type sizes at the default text size (one type unit = 1px); they double at 200%' if title == 'type'
-               else 'still under reduced motion' if title == 'motion' else '')
+               else 'still under reduced motion' if title == 'motion' else 'each with its value and a sample')
         short = re.sub(r'\s*\(.*\)$', '', title)   # the header without its parenthesis
         out.append(fold(f'{short[0].upper() + short[1:]}: {len(ds)}', table(['Primitive', 'Value', 'Looks like'], rows), sub))
     return ''.join(out)
@@ -202,7 +203,7 @@ def roles_html():
     out = []
     for title, ds in SEM_GROUPS:
         rows = [(f'<code>--{n}</code>', role_cell(n, 'dark'), role_cell(n, 'light'), esc(c)) for n, _, c in ds]
-        out.append(fold(f'{title[0].upper() + title[1:]}: {len(ds)}', table(['Role', 'Dark', 'Light', 'What it is for, and the usages it grew from'], rows, 'ref roles')))
+        out.append(fold(f'{title[0].upper() + title[1:]}: {len(ds)}', table(['Role', 'Dark', 'Light', 'What it is for, and the usages it grew from'], rows, 'ref roles'), 'dark and light, and what each is for'))
     return ''.join(out)
 
 # ---------------------------------------------------------------- 4. contrast

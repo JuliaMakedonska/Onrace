@@ -96,7 +96,7 @@ role_counts = {}
 for l in IS['Showcase map (2026-10-26)'].split('\n'):
     if l.startswith('| ') and not l.startswith(('| Role', '|---')):
         role_counts[l.split(' | ')[0].strip('| ')] = role_counts.get(l.split(' | ')[0].strip('| '), 0) + 1
-inventory_body = f'''{LP.fold('How the inventory reads', md(inv_intro))}
+inventory_body = f'''{LP.fold('How the inventory reads', md(inv_intro), 'from ui/inventory.md')}
 <div class="tbl-wrap"><table><thead><tr><th>Role</th><th>Components</th></tr></thead><tbody>{"".join(f"<tr><td>{r}</td><td>{n}</td></tr>" for r, n in role_counts.items())}</tbody></table></div>
 <p class="note">Roles as <code>ui/inventory.md</code> → Showcase map groups them; the kit showcase's nav follows it.</p>
 <p><a class="btn" href="{GH}ui/inventory.md">Open the inventory →</a> <a class="btn" href="design-system/docs/specimens.html">The showcase →</a></p>'''
@@ -114,13 +114,13 @@ visuals_body = f'''<div class="thumbs">{thumbs}</div>
 {LP.fold('How they were made', md(VIS.split(chr(10) + '## ', 1)[0].split(chr(10), 1)[1]) + '<h3>Tool</h3>' + md(VS['Tool']) + '<h3>Workflow</h3>' + md(VS['Workflow']), 'the tool, the workflow, the check')}
 {LP.fold('How they were exported', md(VS['Export (step 7, 2026-10-25)']), '3:1 crops, AVIF / WebP / JPEG, srcset')}
 <p><a class="btn" href="{GH}visuals/README.md">Open visuals/README.md →</a> <a class="btn" href="visuals/review-round3.html">Round 3 retouching review →</a></p>'''
-native = lambda t: LP.fold(inline(t), md(NATIVE[t]))
+native = lambda t: LP.fold(inline(t), md(NATIVE[t]), 'the record in concept.md')
 assembly_body = '\n'.join(native(t) for t in ['Step 3b: native iOS pass in the kit (2026-10-19)', 'Step 5, Discovery: Race detail on the kit (2026-10-22)',
                                                'Step 5, Archive and Infrastructure on the kit (2026-10-22)', 'Consolidation (2026-10-23)'])
 markup_body = '\n'.join(native(t) for t in ['Markup pass (2026-10-23)', 'Markup pass, round 2 (2026-10-23)', 'Race picker pushed (designer, 2026-10-24)',
                                              'Overflow fix: the controls bar (designer report, 2026-10-24)', 'Overflow check, round 2 (designer, 2026-10-25)'])
 critique_body = LP.fold(f'{N6 + N7} findings', dispo_body, f'step 6: {N6} · step 7: {N7} · by disposition') + native('Step 6: critique fixes (designer priorities, 2026-10-25)') + \
-    LP.fold(inline('Step 7: the final check (designer priorities, 2026-10-25)'), md(S7.split('**Still deferred', 1)[0]))
+    LP.fold(inline('Step 7: the final check (designer priorities, 2026-10-25)'), md(S7.split('**Still deferred', 1)[0]), 'the record in concept.md')
 REVIEWS = sorted(glob.glob(os.path.join(ROOT, 'ui/review-*.html'))) + [os.path.join(ROOT, 'visuals/review-round3.html')]
 title_of = lambda p: re.search(r'<title>([^<]+)</title>', open(p).read()).group(1).strip()
 reviews_body = '<div class="card-grid">' + ''.join(

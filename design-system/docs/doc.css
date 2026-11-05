@@ -126,7 +126,6 @@
 .kd-meta a { color: var(--d-text); text-underline-offset: 3px; }
 .kd-meta a:hover { color: var(--d-dim); }
 .kd-notes { font-size: 13px; color: var(--d-dim); }
-.kd-notes > summary { cursor: pointer; min-height: 32px; display: inline-flex; align-items: center; color: var(--d-faint); font-weight: 700; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
 .kd-notes > p { margin: 6px 0 0; max-width: 820px; }
 .kd-notes code { font-size: 12px; }
 
@@ -257,8 +256,6 @@
 
 /* technical details, folded */
 .dc-tech { margin-top: 48px; border-top: 1px solid var(--d-border); }
-.dc-tech > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; font-size: 15px; font-weight: 500; color: var(--d-dim); }
-.dc-tech > summary:hover { color: var(--d-text); }
 .dc-tech-body { display: grid; gap: 16px; padding: 4px 0 8px; max-width: 900px; }
 .dc-tech-body dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 24px; margin: 0; font-size: 14px; }
 .dc-tech-body dt { color: var(--d-faint); }
@@ -308,3 +305,22 @@
   .ds-main .kit-frame, .an-window { border-radius: 0; }
   .dc-variant { max-width: none; }
 }
+
+/* =================================================================
+   The fold (2026-11-05): every <details> in the docs (Technical details, a specimen's Notes) is one disclosure, the same
+   as the lesson overviews' (scripts/lesson_page.py): the title, a short hint of what's inside, a Solar Linear chevron at
+   the end, down when closed and up when open; a pointer, a quiet hover fill, a rounded focus ring that hugs the row.
+   Native <details>: Enter and Space toggle it. The docs layer's values only.
+   ================================================================= */
+:is(.dc-tech, .kd-notes) > summary { list-style: none; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 0; width: fit-content; max-width: 100%; box-sizing: border-box; min-height: 44px; margin-inline: -10px; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; color: var(--d-text); }
+:is(.dc-tech, .kd-notes) > summary::-webkit-details-marker { display: none; }
+:is(.dc-tech, .kd-notes) > summary::after { content: ""; flex: none; width: 16px; height: 16px; margin-left: 8px; background: var(--d-faint); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform 200ms ease; }
+:is(.dc-tech, .kd-notes)[open] > summary::after { transform: rotate(180deg); }
+:is(.dc-tech, .kd-notes) > summary:hover { background: var(--d-elev); }
+:is(.dc-tech, .kd-notes) > summary:hover::after { background: var(--d-text); }
+:is(.dc-tech, .kd-notes) > summary:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
+.fold-sub { font-weight: 400; color: var(--d-faint); }
+.fold-sub::before { content: "·"; margin: 0 6px; }
+.dc-tech { padding-top: 8px; }
+.kd-notes > summary { font-size: 13px; min-height: 36px; }
+@media (prefers-reduced-motion: reduce) { :is(.dc-tech, .kd-notes) > summary::after { transition: none; } }
