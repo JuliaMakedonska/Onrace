@@ -1095,3 +1095,51 @@ Each was shown to fail on a planted fault: a missing page, an invented word, a s
 - **A component styled by an id** (`#signout-confirm`) is why a copied stage can't simply rename its ids. A class would remove the exception. That's a component change, for the "keep it" rule.
 - **The anatomy markers are measured by script after load,** so a part that moves later (a font swap, a lazy image) is re-measured only on resize. The overflow check sees them after fonts load.
 - **The Docs map is written by hand,** the one part of a page that is. The words check limits its vocabulary, not whether a rule is right.
+
+### The docs restructured into families (designer, 2026-11-05)
+
+**Why.** The step 2 docs felt chaotic:
+- no navigation stayed put;
+- pages were too granular (a whole page for Form intro);
+- the anatomy and the variants repeated one specimen when there was one variant;
+- the anatomy numbers covered the specimen's text;
+- the rules came last.
+
+The model is Apple HIG and Primer.
+
+**What changed.**
+- **One shell on every page** (`scripts/docs_shell.py`):
+  - a header with a small Light / Dark switch;
+  - a sticky left nav, roles → families → components (`ui/inventory.md` → Docs families), with a filter and the current page and section marked;
+  - a right "On this page" list (a desk only);
+  - on a phone, the nav folds into a menu.
+- **11 family pages** in place of 57 per-component pages, grouped by role:
+  - Navigation: Bars and navigation, Sheets and alerts;
+  - Content: Cards, Lists and rows, Detail screens, Chips, Map;
+  - Input: Buttons and links, Forms;
+  - Feedback: Empty, error and status, Loading.
+
+  Each component is a section with its own anchor. The 57 old addresses (`components/<name>.html`) redirect to their sections, keeping `?theme=light`.
+- **One order for every component:**
+  1. its name and one sentence on what it's for (the Docs map's new **For** column);
+  2. the live specimen (the Docs map's Stage, or its first variant);
+  3. **When to use / When not to**, two cards side by side (the rule; the anti-rule with the other component live), each with a real screen;
+  4. the anatomy, its numbers in a gutter beside the stage, never over it, with parts on one line kept in their own order (a legend item outlines its part while hovered or focused);
+  5. the other variants, only if there are any (the one shown on top isn't repeated);
+  6. states (step 3);
+  7. technical details, folded: classes, "used on N screens" linked to the viewer, the native counterpart and its HIG link, the inventory's screens and states, `DESIGN.md`, the `microcopy.md` lines.
+- **`index.html` is a short start page:** what the system is (`ui/inventory.md` → Docs families → Start page), the roles and their families as cards, and links to `why.html`, every specimen, `DESIGN.md` and the folder.
+- **The hand-written specimens moved to `specimens.html`,** the source the family pages copy from (the "keep it" rule now points there). `ui/kit.html` forwards to it, and an old `index.html#<specimen>` link does too.
+- **`why.html` is in the shell,** its six sections in "On this page".
+
+**What keeps the docs honest, kept and tightened.**
+- Every page links `design-system/index.css`.
+- **The stage comparison is in the build now:** `scripts/check_docs_stages.mjs`, run by `build_stand.py`. Every stage on every family page against the same stage on `specimens.html`: 23 properties of every element (frames entered, each loaded and styled first), at 1280 and 390, dark and light, 964 stage-passes, 0 differences. Two stages are narrower by layout and are compared without their width and height: the anatomy's on a phone (beside its gutter), and the When-not-to sample (half a row on a desk). It caught one more leak while the shell was built: `.ds-main a:not([class])` colored the product's Official race website link in the doc's white. It's now scoped to the doc's own paragraphs. A planted leak (a red finish time in `doc.css`) failed it in 36 stage-passes.
+- **The words check** covers the new start page, the family pages and the Docs families table. Two of the new For lines were reworded to the sources' words.
+- **The overflow check** covers the 14 docs pages at 390, 320, 200% text and 1440, the anatomy stages beside their gutter included. The redirects aren't measured.
+
+**Review page:** `ui/review-docs.html`, before and after of Race card, Form intro and Gate layout at 1280 and 390.
+
+**Still unknown.**
+- **The gutter has room for one number per line.** Parts on one line (a bar's back button, title and action) step down below it in their own order; the legend's hover shows the exact part.
+- **On a phone the anatomy stage is 32px narrower than the screen** (its gutter). The components hold there by the overflow check, but it isn't the width they ship at.

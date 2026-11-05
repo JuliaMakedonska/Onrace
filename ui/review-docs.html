@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs restructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../design-system/index.css">
+<link rel="stylesheet" href="../concept/stand.css">
+<style>
+  /* review page only: tokens from design-system/index.css and the docs layer (concept/stand.css), no values of its own */
+  .rv { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-8); }
+  .rv-head { display: grid; gap: var(--space-3); }
+  .rv-head p, .rv-pair > p { margin: 0; max-width: var(--measure); color: var(--text-secondary); }
+  .rv-head a, .rv-pair a { color: var(--text-primary); text-underline-offset: var(--space-1); }
+  .rv-pair { display: grid; gap: var(--space-3); padding-top: var(--space-6); border-top: var(--border) solid var(--hairline); }
+  .rv-pair h2 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+  .rv-pair h3 { margin: var(--space-3) 0 0; font-family: var(--font-text); font-size: var(--size-body); font-weight: var(--weight-strong); color: var(--text-secondary); }
+  .rv-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), 1fr)); gap: var(--space-5); align-items: start; }
+  .rv-shots figure { margin: 0; display: grid; gap: var(--space-2); }
+  .rv-shots figcaption { font-size: var(--size-proof); color: var(--text-secondary); }
+  .rv-shots img { display: block; width: 100%; height: auto; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--hairline); }
+  .rv-shots--phone { grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--stand-col-min)), var(--screen-w))); }
+</style>
+</head>
+<body class="onrace">
+<main class="rv">
+  <header class="rv-head">
+    <h1>The docs, restructured</h1>
+    <p>Lesson 9, 2026-11-05. Before: a page per component (step 2, the day before), with no navigation that stayed, anatomy numbers over the stage's text, and the rules near the bottom. After: one shell on every page, modeled on Apple HIG and Primer (a sticky nav by role and family with a filter, "On this page", a small Light / Dark switch), and 11 family pages, each component a section in one order: what it's for, the live specimen, When to use / When not to side by side, the anatomy with its numbers in a gutter beside the stage, the other variants if any, states, then the technical details folded. The old per-component addresses redirect to their sections. Every shot: the top of the page or of the section, 1280 × 1500 and 390 × 1700. Live: <a href="../design-system/docs/">design-system/docs/</a>.</p>
+    <p>Not a look change: every stage on the family pages computes as the same stage on <code>specimens.html</code>, both themes, at 1280 and 390 (<code>scripts/check_docs_stages.mjs</code>, now in the build).</p>
+  </header>
+
+  <section class="rv-pair" aria-labelledby="rc-h">
+    <h2 id="rc-h">Race card · <code>components/race-card.html</code> → <code>cards.html#race-card</code></h2>
+    <p>Before, the facts came first and the rules last; the anatomy's numbers sat on the photo and the date. After, the nav shows where the card sits (Content → Cards), the rule and the anti-rule follow the specimen, and the numbers sit beside the stage.</p>
+    <h3>1280</h3>
+    <div class="rv-shots">
+      <figure><img src="review-docs/b-1280-race-card.jpg" alt="Before at 1280: the race card's own page, facts and theme switch first, the anatomy numbers over the card" width="1280" height="1500" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs/a-1280-cards-race-card.jpg" alt="After at 1280: the Cards family page, the nav on the left, the race card section with its specimen and the two cards When to use and When not to" width="1280" height="1500" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+    <h3>390</h3>
+    <div class="rv-shots rv-shots--phone">
+      <figure><img src="review-docs/b-390-race-card.jpg" alt="Before at 390" width="390" height="1700" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs/a-390-cards-race-card.jpg" alt="After at 390: the nav folded into Menu, the stages edge to edge" width="390" height="1700" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="rv-pair" aria-labelledby="fi-h">
+    <h2 id="fi-h">Form intro · <code>components/form-intro.html</code> → <code>forms.html#form-intro</code></h2>
+    <p>The page that was too granular: a whole page for one line. After, it's one section of Forms, between Date field and Form note, with "On this page" listing its neighbours.</p>
+    <h3>1280</h3>
+    <div class="rv-shots">
+      <figure><img src="review-docs/b-1280-form-intro.jpg" alt="Before at 1280: a full page for the form intro" width="1280" height="1500" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs/a-1280-forms-form-intro.jpg" alt="After at 1280: the form intro as a section of the Forms page, with On this page on the right" width="1280" height="1500" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+    <h3>390</h3>
+    <div class="rv-shots rv-shots--phone">
+      <figure><img src="review-docs/b-390-form-intro.jpg" alt="Before at 390" width="390" height="1700" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs/a-390-forms-form-intro.jpg" alt="After at 390" width="390" height="1700" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="rv-pair" aria-labelledby="gl-h">
+    <h2 id="gl-h">Gate layout · <code>components/gate-layout.html</code> → <code>bars-and-navigation.html#gate-layout</code></h2>
+    <p>The anatomy with the most parts on one line. Before, numbers 1 to 4 sat on top of Cancel, the title and Sign in. After, they sit in the gutter beside the bar, in order, and a legend item outlines its part while hovered or focused. The one variant is shown once: there's no Variants block.</p>
+    <h3>1280</h3>
+    <div class="rv-shots">
+      <figure><img src="review-docs/b-1280-gate-layout.jpg" alt="Before at 1280: numbers over the top bar's text" width="1280" height="1500" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs/a-1280-bars-and-navigation-gate-layout.jpg" alt="After at 1280: the gate layout section on the Bars and navigation page" width="1280" height="1500" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+    <h3>390</h3>
+    <div class="rv-shots rv-shots--phone">
+      <figure><img src="review-docs/b-390-gate-layout.jpg" alt="Before at 390" width="390" height="1700" loading="lazy"><figcaption>Before</figcaption></figure>
+      <figure><img src="review-docs/a-390-bars-and-navigation-gate-layout.jpg" alt="After at 390: the numbers in a gutter beside the stage, 1 to 4 in order beside the bar" width="390" height="1700" loading="lazy"><figcaption>After</figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

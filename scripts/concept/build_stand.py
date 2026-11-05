@@ -1069,6 +1069,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-overviews'), os.path.join(ROOT, 'p
 shutil.copyfile(os.path.join(ROOT, 'ui/review-overviews.html'), os.path.join(ROOT, 'public/ui/review-overviews.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-kit-sheet'), os.path.join(ROOT, 'public/ui/review-kit-sheet'), dirs_exist_ok=True)   # the kit as a component sheet (2026-10-26)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-kit-sheet.html'), os.path.join(ROOT, 'public/ui/review-kit-sheet.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-docs'), os.path.join(ROOT, 'public/ui/review-docs'), dirs_exist_ok=True)   # the docs restructured (Lesson 9, 2026-11-05)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-docs.html'), os.path.join(ROOT, 'public/ui/review-docs.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-theme'), os.path.join(ROOT, 'public/ui/review-theme'), dirs_exist_ok=True)   # step 5: every state in both themes (Lesson 8)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-theme.html'), os.path.join(ROOT, 'public/ui/review-theme.html'))
 for _f in ['visuals/review-round3.html']:   # the photos' round 3 review, linked from the Lesson 7 overview
@@ -1100,6 +1102,10 @@ else:
     print(_r.stdout.strip() or _r.stderr.strip())
     if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available')
     elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
+    # the docs can't lie (Lesson 9, 2026-11-05): every stage on a family page computes as the same stage on specimens.html
+    _d = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_docs_stages.mjs'), '--quiet'], capture_output=True, text=True)
+    print(_d.stdout.strip() or _d.stderr.strip())
+    if _d.returncode == 1: sys.exit('check_docs_stages failed (the docs\' CSS reached a specimen): the build stops')
 # every page links only files that exist (Lesson 8 step 4): a page still linking a deleted file stops the build
 _l = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_links.py')], capture_output=True, text=True)
 print(_l.stdout.strip())

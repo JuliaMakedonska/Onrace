@@ -1,31 +1,28 @@
-"""Lay out the kit showcase as a component sheet, and write a page per component, from ui/inventory.md (2026-10-26;
-the showcase moved from ui/kit.html to design-system/docs/index.html and the component pages came in Lesson 9, step 2).
+"""The design-system docs, from ui/inventory.md (2026-10-26; restructured into family pages in Lesson 9, 2026-11-05).
 
 Run from anywhere:  python3 scripts/build_kit_showcase.py      (build_stand.py runs it before its checks)
-The specimens stay hand-written in design-system/docs/index.html (the "keep it" rule: a change goes there and to every screen). This
-script only (re)writes, idempotently, everything around them:
-- a sticky left sidebar: a quick filter, then the roles (Navigation, Cards and lists, Forms, Feedback, One-off) with every
-  specimen under its role, the current one highlighted on scroll; on a phone it folds into a menu;
-- one short intro line (what the kit is, the counts, links to ui/inventory.md, design-system/tokens/tokens.css and design-system/components/);
-- one card per specimen: a compact header in the documentation's own style (name, classes, "Used on N screens" linked to
-  the viewer, the HIG link, where interaction is live), the specimen's notes folded, then its states side by side, each on
-  its own stage with its label under it.
-The documentation's look is design-system/docs/doc.css (the artifact pages' style), its script design-system/docs/doc.js
-(the Light / Dark switch, the anatomy markers); the stages are product: design-system/index.css (Lesson 8, step 3).
-
-The component pages (Lesson 9, step 2, 2026-11-04): one per inventory component, in design-system/docs/components/, from
-the same Showcase map. Each links design-system/index.css, the file the product links, so its stages can't differ from
-the screens. Each shows what we already show (classes, the screens that use it, the native counterpart, the theme), the
-anatomy (its first variant live, the parts numbered from ui/inventory.md → Docs map), the variants side by side (every
-stage whose label holds one of its States), when to use it (DESIGN.md, quoted by the Docs map's pointer, and the
-microcopy.md lines its stages carry), the rule and the anti-rule (the Docs map), and room for its states (step 3).
+Writes, in design-system/docs/:
+- specimens.html, every specimen on one page. The specimens in it are hand-written (the "keep it" rule: a markup
+  change goes there and to every screen); this script (re)writes, idempotently, everything around them: a sidebar by
+  role with a filter, one intro line, and a card per specimen with its facts from ui/inventory.md → Showcase map, then
+  its states side by side. It was ui/kit.html until Lesson 9 step 2, then index.html until the restructure.
+- index.html, the start page: what the system is, how it's organised, the families, why.html.
+- a page per family (ui/inventory.md → Docs families), each component a section with its own anchor, in one order:
+  its name and what it's for; the live specimen; When to use / When not to, side by side, with real screens; the
+  anatomy, its parts numbered beside the stage; the other variants, if any; states (step 3); technical details folded
+  (classes, the screens that use it, the native counterpart, DESIGN.md, the microcopy.md lines it carries).
+  What isn't read from the files (what it's for, the parts, the rule and anti-rule) is ui/inventory.md → Docs map.
+- components/<name>.html, one redirect per component to its section (the per-component pages of Lesson 9 step 2).
+Every page links design-system/index.css, the file the product links, so a stage can't differ from the screens; the
+frame is scripts/docs_shell.py, the documentation's look design-system/docs/doc.css, its script doc.js.
 """
 import os, re, sys, glob, json, html as H
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from docs_paths import rebase
+import docs_shell as DS
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = 'design-system/docs'
-P = os.path.join(ROOT, DOCS, 'index.html')
+P = os.path.join(ROOT, DOCS, 'specimens.html')   # the hand-written specimens
 VIEWER = '../../wireframes/index.html'   # the screen viewer, from design-system/docs/
 KIT = open(P).read()
 INV = open(os.path.join(ROOT, 'ui/inventory.md')).read()
@@ -84,7 +81,7 @@ assert not unmapped, ('specimens with no Showcase map row', unmapped)
 head = KIT[:KIT.index('<body')]
 head = re.sub(r'\n<link rel="stylesheet" href="doc\.css[^"]*">', '', head)
 head = re.sub(r'(<link rel="stylesheet" href="\.\./index\.css[^"]*">)', r'\1\n<link rel="stylesheet" href="doc.css">', head, count=1)   # after the design system (Lesson 8, step 3; one file since Lesson 9, step 1); build_stand.py stamps it
-assert 'href="doc.css"' in head, 'design-system/docs/index.html: no design-system/index.css link to put doc.css after'
+assert 'href="doc.css"' in head, 'design-system/docs/specimens.html: no design-system/index.css link to put doc.css after'
 shell = re.search(r'  <section class="kit-section" id="shell".*?\n  </section>\n', KIT, re.S).group(0)
 tail_from = KIT.index('<!-- /kd -->') + len('<!-- /kd -->') if '<!-- /kd -->' in KIT else KIT.index('</main>') + len('</main>')
 tail = re.sub(r'\n<script>\n/\* kd:js.*?</script>', '', KIT[tail_from:], flags=re.S)
@@ -108,8 +105,8 @@ def meta(spec):
     live = re.search(r'<(button|a href|input|select|textarea)\b', H.unescape(items[spec].split('<div class="kit-states">', 1)[-1])) is not None   # unescaped: the tab bar's stages are srcdoc frames
     parts = ([f'<p class="kd-line kd-comps">{H.escape(comps)}</p>'] if comps != title_of(spec) else []) + [f'<p class="kd-line">{code}</p>', f'<p class="kd-line">{used}</p>',
              f'<p class="kd-line"><span class="kd-k">Native iOS</span> {ios_html}</p>']
-    pages = ', '.join(f'<a href="components/{slug_c(n)}.html">{H.escape(n)}</a>' for n in dict.fromkeys(r['name'] for r in rows))
-    parts.append(f'<p class="kd-line"><span class="kd-k">Pages</span> {pages}</p>')
+    pages = ', '.join(f'<a href="{DS.section_url(n)}">{H.escape(n)}</a>' for n in dict.fromkeys(r['name'] for r in rows))
+    parts.append(f'<p class="kd-line"><span class="kd-k">In the docs</span> {pages}</p>')
     if live: parts.append('<p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the specimens below</p>')
     return '<!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta">' + ''.join(parts) + '</div><!-- /kit:meta -->'
 def card(spec):
@@ -145,7 +142,7 @@ for r in ROLES:
 side += ['    </nav>', '    <p class="kd-empty" hidden>No component matches.</p>', '  </div>', '</aside>']
 intro = (f'<p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: {len(items)} specimens for {N_COMPONENTS} inventory components, '
          f'every state shown on its own, from <a href="../index.css"><code>design-system/index.css</code></a> alone. '
-         f'Each component has <a href="#role-navigation">its own page</a> (the Pages line on every card). <a href="why.html">Why the system looks like this</a> · '
+         f'Every specimen on one page, the source the family pages are built from. <a href="index.html">The docs</a> · <a href="why.html">Why the system looks like this</a> · '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/inventory.md">The inventory</a> · '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/tree/main/design-system">design-system/ on GitHub</a></p>')
 # the theme switch (Lesson 8, 2026-11-01): the stress test from step 5 on every specimen at once. Light is a proof only (C5)
@@ -214,18 +211,6 @@ def section(md, title):
 def cells(line):
     return [c.strip() for c in re.split(r'(?<!\\)\|', line.strip().strip('|'))]
 from docs_md import inline, GH   # markdown inline → HTML, a relative link to GitHub (shared with why.html)
-
-# ---------------------------------------------------------------- ui/inventory.md → Docs map
-DMAP = {}
-for l in section(INV, 'Docs map (Lesson 9, step 2, 2026-11-04)').split('\n'):
-    if not l.startswith('| **'): continue
-    c = cells(l)
-    name = c[0].strip('*')
-    m = re.match(r'\*\*([^*]+)\*\* `([^`]+)` (.*)', c[5])
-    DMAP[name] = {'stage': None if c[1] == '—' else c[1],
-                  'parts': [(m2.group(1), m2.group(2).strip()) for m2 in (re.match(r'`([^`]+)` (.*)', x.strip()) for x in c[2].split('; ')) if m2],
-                  'design': [x.strip() for x in c[3].split(' + ') if x.strip() and x.strip() != '—'],
-                  'rule': re.match(r'`([^`]+)` (.*)', c[4]).groups(), 'anti': m.groups() if m else None}
 
 # ---------------------------------------------------------------- the inventory row: where it is and what states it shows
 def inv_row(name):
@@ -308,130 +293,151 @@ CSS_IDS = set(re.findall(r'#([a-zA-Z][\w-]*)', re.sub(r'/\*.*?\*/|\{[^{}]*\}', '
 def unid(h, sfx):   # a second copy of a stage on one page: its ids (and what points at them) take a suffix
     h = re.sub(r'\b(id|for|aria-labelledby|aria-describedby|aria-controls|list|form)="([^"]+)"', lambda m: f'{m.group(1)}="' + ' '.join(x if x in CSS_IDS else x + sfx for x in m.group(2).split()) + '"', h)
     return re.sub(r'href="#([^"]+)"', lambda m: f'href="#{m.group(1)}{sfx}"', h)
-def here(h):   # a stage from the overview, rebased for a page one folder down
-    return rebase(h, DOCS, DOCS + '/components')
 MAPROW = {}
 for line in section(INV, 'Showcase map (2026-10-26)').split('\n'):
     c = cells(line) if line.startswith('| ') and not line.startswith('| Role') and not line.startswith('|---') else None
     if c and len(c) == 6: MAPROW[c[1].strip('*')] = {'states': [x.strip() for x in c[5].split(';') if x.strip()]}
 
-# ---------------------------------------------------------------- one page
+# ---------------------------------------------------------------- the pages (the family restructure, 2026-11-05)
 COMP_ROWS = [r for r in MAP if r['spec']]
 by_name = {r['name']: r for r in MAP}
+in_fams = [n for f in DS.FAMILIES for n in f['comps']]
+assert sorted(in_fams) == sorted(r['name'] for r in MAP), ('ui/inventory.md → Docs families must hold every Showcase map component once',
+    sorted(set(r['name'] for r in MAP) ^ set(in_fams)), [n for n in in_fams if in_fams.count(n) > 1])
+# ui/inventory.md → Docs map: what each section says that can't be read from the files
+DMAP = {}
+for l in section(INV, 'Docs map (Lesson 9, step 2, 2026-11-04)').split('\n'):
+    if not l.startswith('| **'): continue
+    c = cells(l)
+    m = re.match(r'\*\*([^*]+)\*\* `([^`]+)` (.*)', c[6])
+    DMAP[c[0].strip('*')] = {'for': c[1], 'stage': None if c[2] == '—' else c[2],
+        'parts': [(m2.group(1), m2.group(2).strip()) for m2 in (re.match(r'`([^`]+)` (.*)', x.strip()) for x in c[3].split('; ')) if m2],
+        'design': [x.strip() for x in c[4].split(' + ') if x.strip() and x.strip() != '—'],
+        'rule': re.match(r'`([^`]+)` (.*)', c[5]).groups(), 'anti': m.groups() if m else None}
+
 assert all(r['name'] in DMAP for r in COMP_ROWS), ('components with no Docs map row', [r['name'] for r in COMP_ROWS if r['name'] not in DMAP])
-head_pg = re.sub(r'<title>.*?</title>', '<title>{TITLE}</title>', here(head))
-head_pg = re.sub(r'\n<link rel="preload" as="style" href="[^"]*map-data[^"]*"[^>]*>(<!--.*?-->)?\n<noscript>.*?</noscript>', '{MAP}', head_pg, flags=re.S)
-assert '{MAP}' in head_pg, 'the overview head: no map-data preload to carry'
-MAP_LINKS = re.search(r'\n<link rel="preload" as="style" href="[^"]*map-data[^"]*"[^>]*>(<!--.*?-->)?\n<noscript>.*?</noscript>', here(head), flags=re.S).group(0)
-FONTS_ETC = head_pg
-def facts(row):
+
+def viewer(key):
+    base = key.split('?')[0]; scr = screen_of(base)
+    state = base[len(scr) + 1:] if base != scr else ''
+    return f'<a href="{VIEWER}#{H.escape(key)}">{H.escape(SCREEN[scr])}{" · " + H.escape(state) if state else ""} ↗</a>'
+def label_of(h):
+    return re.sub(r'<[^>]+>', '', re.search(r'<p class="kit-label">(.*?)</p>', h, re.S).group(1))
+def tech(row, vs):
     classes = row['classes']
     code = ' '.join(f'<code>{"&lt;" + c[1:] if c.startswith("<") else "." + c}</code>' for c in classes)
     hits = used_on(classes)
-    screens = ', '.join(f'<a href="../{VIEWER}#{pages[0]}">{SCREEN[s]}</a>' for s, pages in sorted(hits.items(), key=lambda kv: list(SCREEN).index(kv[0])))
+    screens = ', '.join(f'<a href="{VIEWER}#{pages[0]}">{SCREEN[s]}</a>' for s, pages in sorted(hits.items(), key=lambda kv: list(SCREEN).index(kv[0])))
     used = f'<span class="kd-k">Used on {len(hits)} screen{"s" if len(hits) != 1 else ""}</span> {screens}' if hits else '<span class="kd-k">Used on</span> the showcase only'
     ios = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1 ↗</a>', row['ios']) if row['ios'] != 'none' else 'none'
-    return ('<div class="kd-meta">' + f'<p class="kd-line"><span class="kd-k">Classes</span> {code}</p>' + f'<p class="kd-line">{used}</p>'
-            + f'<p class="kd-line"><span class="kd-k">Native iOS</span> {ios}</p>'
-            + f'<p class="kd-line"><span class="kd-k">In the kit</span> <a href="../index.html#{row["spec"]}">{H.escape(title_of(row["spec"]))}</a>, with every specimen beside it</p></div>')
-def viewer(key, text):
-    screen = SCREEN[screen_of(key.split('?')[0])]
-    return f'<a href="../{VIEWER}#{H.escape(key)}">{H.escape(screen)}{" · " + H.escape(key.split("?")[0][len(screen_of(key.split("?")[0])) + 1:]) if key.split("?")[0] != screen_of(key.split("?")[0]) else ""} ↗</a>'
-def page_for(i, row):
-    name, spec, d = row['name'], row['spec'], DMAP[row['name']]
-    vs = variants(row)
-    assert vs, f'{name}: no stage matches its States'
-    an = next((h for lab, h in vs if d['stage'] and d['stage'].lower() in lab.lower()), vs[0][1]) if d['stage'] else vs[0][1]
-    an_label = re.search(r'<p class="kit-label">(.*?)</p>', an, re.S).group(1)
-    an = unid(an, '-an')
-    legend = ''.join(f'<li><span class="an-n">{n + 1}</span> {H.escape(label)} <code>{H.escape(sel)}</code></li>' for n, (sel, label) in enumerate(d['parts']))
-    anatomy = (f'<div class="an" data-anatomy="{H.escape(json.dumps(d["parts"]))}">' + here(an) + '</div>'
-               f'<ol class="an-legend">{legend}</ol>')
-    var_html = '<div class="kit-states">' + ''.join(here(h) for _, h in vs) + '</div>'
-    inv = ''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(v, "ui/inventory.md")}</p>' for k, v in inv_row(name))
-    quotes = ''.join(f'<blockquote class="dp-quote"><p>{inline(q, "DESIGN.md")}</p><footer><a href="{GH}DESIGN.md">DESIGN.md</a> → {H.escape(t)}</footer></blockquote>' for t, q in (design_quote(x) for x in d['design']))
+    quotes = ''.join(f'<blockquote class="dc-quote"><p>{inline(q, "DESIGN.md")}</p><footer><a href="{GH}DESIGN.md">DESIGN.md</a> → {H.escape(t)}</footer></blockquote>'
+                     for t, q in (design_quote(x) for x in DMAP[row['name']]['design']))
     words = {}
     for _, h in vs:
-        for line, v in carried(row['classes'], h).items():
+        for line, v in carried(classes, h).items():
             w = words.setdefault(line, {'type': v['type'], 'screens': []})
-            w['screens'] += [s for s in v['screens'] if s not in w['screens']]
-    mc = ('<div class="tbl-wrap"><table class="dp-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody>'
+            w['screens'] += [x for x in v['screens'] if x not in w['screens']]
+    mc = ('<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody>'
           + ''.join(f'<tr><td>{H.escape(l)}</td><td>{H.escape(v["type"])}</td><td>{H.escape(", ".join(v["screens"]))}</td></tr>' for l, v in list(words.items())[:12])
-          + '</tbody></table></div>') if words else '<p class="dp-note">What it shows carries no line of its own from <code>microcopy.md</code>: it shows catalog data, user data or another component\'s words.</p>'
+          + '</tbody></table></div>') if words else '<p class="dc-note">It carries no line of its own from <code>microcopy.md</code>: it shows catalog data, user data or another component\'s words.</p>'
+    inv = ''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(v, "ui/inventory.md")}</p>' for k, v in inv_row(row['name']))
+    return ('<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body">'
+            f'<div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> {code}</p><p class="kd-line">{used}</p>'
+            f'<p class="kd-line"><span class="kd-k">Native iOS</span> {ios}</p>{inv}'
+            f'<p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#{row["spec"]}">{H.escape(title_of(row["spec"]))}</a>, with every state beside it</p></div>'
+            f'<h4>From DESIGN.md</h4>{quotes or "<p class=dc-note>No passage of its own.</p>"}<h4>The words it carries</h4>{mc}</div></details>')
+
+def component(row):
+    name, d = row['name'], DMAP[row['name']]
+    sl = slug_c(name)
+    vs = variants(row)
+    assert vs, f'{name}: no stage matches its States'
+    top_i = next((i for i, (lab, _) in enumerate(vs) if d['stage'] and d['stage'].lower() in lab.lower()), 0)
+    top = vs[top_i][1]
+    others = [h for i, (_, h) in enumerate(vs) if i != top_i]
+    legend = ''.join(f'<li data-part="{n}" tabindex="0"><span class="an-n">{n + 1}</span> {H.escape(label)} <code>{H.escape(sel)}</code></li>' for n, (sel, label) in enumerate(d['parts']))
     rkey, rtext = d['rule']
     other, akey, atext = d['anti']
     orow = by_name[other]
     assert orow['spec'], f'{name}: the anti-rule names {other}, which has no specimen'
-    ostage = unid(next(iter(variants(orow)))[1], '-alt')
-    rule = (f'<div class="dp-rule"><p class="kd-k dp-yes">Rule</p><p>{H.escape(rtext)}</p><p class="kd-line">See it: {viewer(rkey, rtext)}</p></div>'
-            f'<div class="dp-rule dp-rule--anti"><p class="kd-k dp-no">Anti-rule · use <a href="{slug_c(other)}.html">{H.escape(other)}</a></p><p>{H.escape(atext)}</p>'
-            f'<p class="kd-line">See it: {viewer(akey, atext)}</p><div class="kit-states">{here(ostage)}</div></div>')
-    prev_, next_ = COMP_ROWS[i - 1] if i else None, COMP_ROWS[i + 1] if i + 1 < len(COMP_ROWS) else None
-    nav = ('<nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>')
-    pn = ('<nav class="dp-pn" aria-label="Components">' + (f'<a href="{slug_c(prev_["name"])}.html">‹ {H.escape(prev_["name"])}</a>' if prev_ else '<span></span>')
-          + (f'<a href="{slug_c(next_["name"])}.html">{H.escape(next_["name"])} ›</a>' if next_ else '') + '</nav>')
-    body = f"""<body class="onrace kit-doc">
-<main class="dp">
-  {nav}
-  <p class="kd-k dp-role">{H.escape(row['role'])}</p>
-  <h1>{H.escape(name)}</h1>
-  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">What we already show</h2>
-    {facts(row)}
-    {THEME}
-  </section>
-  <section class="dp-sec" id="anatomy" aria-labelledby="anatomy-h"><h2 id="anatomy-h">Anatomy</h2>
-    {anatomy}
-  </section>
-  <section class="dp-sec" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants and sizes <span>{len(vs)}</span></h2>
-    {var_html}
-    <div class="kd-meta dp-inv">{inv}</div>
-  </section>
-  <section class="dp-sec" id="use" aria-labelledby="use-h"><h2 id="use-h">When to use</h2>
-    {quotes}
-    <h3>The words it carries</h3>
-    {mc}
-  </section>
-  <section class="dp-sec" id="rule" aria-labelledby="rule-h"><h2 id="rule-h">Rule and anti-rule</h2>
-    <div class="dp-rules">{rule}</div>
-  </section>
-  <section class="dp-sec dp-states" id="states" aria-labelledby="states-h"><h2 id="states-h">States</h2>
-    <p class="dp-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
-  </section>
-  {pn}
-</main>
-{SPEC_JS}<script src="../doc.js"></script>
-</body>
-</html>
-"""
-    needs_map = 'map-placeholder' in an + var_html + rule
-    h = FONTS_ETC.replace('{TITLE}', H.escape(name) + ' · Onrace design system').replace('{MAP}', MAP_LINKS if needs_map else '')
-    return h + body
+    ostage = variants(orow)[0][1]
+    out = [f'<section class="dc" id="{sl}" aria-labelledby="{sl}-h">',
+           f'<h2 id="{sl}-h">{H.escape(name)}</h2>',
+           f'<p class="dc-for">{H.escape(d["for"])}</p>',
+           f'<div class="dc-spec kit-states">{unid(top, "-" + sl)}</div>',
+           '<div class="dc-dos">'
+           f'<div class="dc-do"><p class="dc-k">When to use</p><p>{H.escape(rtext)}</p><p class="dc-see">See it: {viewer(rkey)}</p></div>'
+           f'<div class="dc-dont"><p class="dc-k">When not to · use <a href="{DS.section_url(other)}">{H.escape(other)}</a></p><p>{H.escape(atext)}</p>'
+           f'<p class="dc-see">See it: {viewer(akey)}</p><div class="kit-states">{unid(ostage, "-" + sl + "-alt")}</div></div>'
+           '</div>',
+           f'<h3 id="{sl}-anatomy">Anatomy</h3>',
+           f'<div class="dc-anatomy"><div class="an" data-anatomy="{H.escape(json.dumps(d["parts"]))}">{unid(top, "-" + sl + "-an")}</div><ol class="an-legend">{legend}</ol></div>']
+    if others:
+        out += [f'<h3 id="{sl}-variants">Variants <span>{len(others)} more</span></h3>', '<div class="kit-states">' + ''.join(unid(h, f'-{sl}-v{i}') for i, h in enumerate(others)) + '</div>']
+    out += [f'<h3 id="{sl}-states">States</h3>', '<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>',
+            tech(row, vs), '</section>']
+    return '\n'.join(out), 'map-placeholder' in top + ''.join(others) + ostage
 
-os.makedirs(os.path.join(ROOT, DOCS, 'components'), exist_ok=True)
-written = set()
-for i, row in enumerate(COMP_ROWS):
-    f = os.path.join(ROOT, DOCS, 'components', slug_c(row['name']) + '.html')
-    open(f, 'w').write(page_for(i, row)); written.add(os.path.basename(f))
-# a retired component keeps a page that says so and where it went
-for row in [r for r in MAP if not r['spec']]:
-    f = os.path.join(ROOT, DOCS, 'components', slug_c(row['name']) + '.html')
+def retired(row):
+    sl = slug_c(row['name'])
     why = MAPROW[row['name']]['states'][0]
-    open(f, 'w').write(FONTS_ETC.replace('{TITLE}', H.escape(row['name']) + ' · Onrace design system').replace('{MAP}', '')
-        + f"""<body class="onrace kit-doc">
-<main class="dp">
-  <nav class="dp-top" aria-label="Design system docs"><a href="../index.html">All components</a> · <a href="../why.html">Why it looks like this</a></nav>
-  <p class="kd-k dp-role">{H.escape(row['role'])}</p>
-  <h1>{H.escape(row['name'])}</h1>
-  <section class="dp-sec" id="show" aria-labelledby="show-h"><h2 id="show-h">Retired</h2>
-    <p class="dp-note">{H.escape(why[0].upper() + why[1:])}.</p>
-    <div class="kd-meta">{''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(v, "ui/inventory.md")}</p>' for k, v in inv_row(row['name']))}</div>
-  </section>
-</main>
-<script src="../doc.js"></script>
+    inv = ''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(v, "ui/inventory.md")}</p>' for k, v in inv_row(row['name']))
+    return (f'<section class="dc dc--retired" id="{sl}" aria-labelledby="{sl}-h"><h2 id="{sl}-h">{H.escape(row["name"])} <span class="dc-tag">Retired</span></h2>'
+            f'<p class="dc-for">{H.escape(why[0].upper() + why[1:])}.</p><div class="kd-meta">{inv}</div></section>')
+
+written = set()
+def write(rel, html_):
+    open(os.path.join(ROOT, DOCS, rel), 'w').write(html_); written.add(rel)
+for f in DS.FAMILIES:
+    parts, needs_map = [], False
+    for n in f['comps']:
+        row = by_name[n]
+        if row['spec']:
+            h, m = component(row); parts.append(h); needs_map = needs_map or m
+        else:
+            parts.append(retired(row))
+    main = (f'<p class="ds-crumb">{H.escape(f["role"])}</p><h1>{H.escape(f["name"])}</h1><p class="ds-lede">{H.escape(f["line"])}</p>\n' + '\n'.join(parts))
+    write(f['page'] + '.html', DS.page(f'{f["name"]} · Onrace design system', f['page'], main, [(slug_c(n), n) for n in f['comps']],
+                                       DS.MAP_DATA if needs_map else '', SPEC_JS))
+
+# the start page: what the system is, how it's organised, the families, why.html
+cards = []
+for role in DS.ROLES:
+    cards.append(f'<section class="ds-group" aria-labelledby="g-{slug_c(role)}"><h2 id="g-{slug_c(role)}">{H.escape(role)}</h2><div class="ds-cards">'
+                 + ''.join(f'<a class="ds-card" href="{f["page"]}.html"><span class="ds-card-t">{H.escape(f["name"])}</span><span class="ds-card-l">{H.escape(f["line"])}</span>'
+                           f'<span class="ds-card-n">{len(f["comps"])} component{"s" if len(f["comps"]) != 1 else ""}</span></a>' for f in DS.FAMILIES if f['role'] == role)
+                 + '</div></section>')
+start = (f'<h1>Onrace design system</h1><p class="ds-lede">{inline(DS.START, "ui/inventory.md")}</p>'
+         '<p class="ds-links"><a href="why.html">Why the system looks like this</a> · <a href="specimens.html">Every specimen on one page</a> · '
+         f'<a href="{GH}DESIGN.md">DESIGN.md</a> · <a href="{GH}design-system/README.md">The folder on GitHub</a></p>' + ''.join(cards))
+# yesterday's start page was the specimen sheet: an old link to one of its cards (index.html#race-card) goes there
+OLD = json.dumps(sorted(set(RAW) | {'shell'}))
+write('index.html', DS.page('Onrace design system', 'index', start,
+      scripts=f'<script>(function () {{ var id = location.hash.slice(1); if ({OLD}.indexOf(id) > -1) location.replace("specimens.html" + location.search + location.hash); }})();</script>\n'))
+
+# the per-component pages of step 2: each now redirects to its section, keeping the query (?theme=light)
+os.makedirs(os.path.join(ROOT, DOCS, 'components'), exist_ok=True)
+for row in MAP:
+    to = '../' + DS.section_url(row['name'])
+    url, frag = to.split('#')
+    write(f'components/{slug_c(row["name"])}.html', f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{H.escape(row['name'])} · Onrace design system</title>
+<!-- GENERATED by scripts/build_kit_showcase.py: the component's page until 2026-11-05, now its section of a family page. -->
+<script>location.replace('{url}' + location.search + '#{frag}');</script>
+<meta http-equiv="refresh" content="0; url={to}">
+<link rel="canonical" href="{to}">
+</head>
+<body>
+<p><a href="{to}">{H.escape(row['name'])}</a></p>
 </body>
 </html>
-"""); written.add(os.path.basename(f))
-for f in glob.glob(os.path.join(ROOT, DOCS, 'components', '*.html')):   # a page whose component left the inventory goes too
-    if os.path.basename(f) not in written: os.remove(f)
-print('component pages:', len(written), 'in', DOCS + '/components/')
+""")
+for f in glob.glob(os.path.join(ROOT, DOCS, '*.html')) + glob.glob(os.path.join(ROOT, DOCS, 'components', '*.html')):   # pages no family names any more
+    rel = os.path.relpath(f, os.path.join(ROOT, DOCS))
+    if rel not in written and rel not in ('specimens.html', 'why.html'): os.remove(f)
+print('docs:', len(DS.FAMILIES), 'family pages,', len(COMP_ROWS), 'components (and', len(MAP) - len(COMP_ROWS), 'retired), the start page,', len(MAP), 'redirects')
 print('kit showcase:', ', '.join(f'{r} {len(specs_by_role[r])}' for r in ROLES), '·', len(items), 'specimens,', N_COMPONENTS, 'components')

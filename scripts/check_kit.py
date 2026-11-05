@@ -1,4 +1,4 @@
-"""Check the kit showcase (design-system/docs/index.html, ui/kit.html until Lesson 9 step 2) and the design-system docs
+"""Check the kit showcase (design-system/docs/specimens.html; ui/kit.html until Lesson 9 step 2) and the design-system docs
 against the inventory and microcopy.md (2026-10-26; the docs pages since 2026-11-04).
 
 Run from anywhere:  python3 scripts/check_kit.py      exit code 1 on any failure.
@@ -13,7 +13,8 @@ build_stand.py runs it on every build. It fails when:
   browse, the showcase) doesn't link design-system/map-data.css, any of them still links ui/kit.css or ui/map.css,
   a screen has a <style> block or a style attribute, or a screen uses a class (in its markup or set by its script)
   that design-system/components/index.css doesn't define;
-- (Lesson 9 step 2) an inventory component has no page in design-system/docs/components/, a docs page doesn't link
+- (Lesson 9 step 2; the family restructure, 2026-11-05) an inventory component has no section on a family page in
+  design-system/docs/ (or its old components/<name>.html doesn't redirect there), a docs page doesn't link
   design-system/index.css once (the file the product links, so a page can't show another look), a docs page that
   shows the static map doesn't link design-system/map-data.css, or a word on a docs page (its text, aria-label, alt,
   placeholder, title) appears neither in microcopy.md nor in the source docs: DESIGN.md, concept/concept.md,
@@ -23,7 +24,7 @@ import os, re, sys
 from html.parser import HTMLParser
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INV = open(os.path.join(ROOT, 'ui/inventory.md')).read()
-KIT_PATH = os.path.join(ROOT, 'design-system/docs/index.html')
+KIT_PATH = os.path.join(ROOT, 'design-system/docs/specimens.html')   # the hand-written specimens (index.html until the family restructure)
 KIT = open(KIT_PATH).read()
 MC = open(os.path.join(ROOT, 'microcopy.md')).read()
 fails = []
@@ -108,7 +109,8 @@ DEFINED = set(re.findall(r'\.(-?[a-zA-Z_][\w-]*)', ''.join(re.findall(r'([^{}]+)
 SCREENS = sorted(p for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) if not p.endswith('index.html'))
 ENTRY, MAPDATA = os.path.join(ROOT, 'design-system/index.css'), os.path.join(ROOT, 'design-system/map-data.css')
 DOC_PAGES = sorted(glob.glob(os.path.join(ROOT, 'design-system/docs/*.html')) + glob.glob(os.path.join(ROOT, 'design-system/docs/components/*.html')))
-for sp in SCREENS + [os.path.join(ROOT, 'ui/shell.html')] + DOC_PAGES:
+REDIRECTS = [p for p in DOC_PAGES if 'http-equiv="refresh"' in open(p).read()]   # the old per-component addresses: no stylesheet, by design
+for sp in SCREENS + [os.path.join(ROOT, 'ui/shell.html')] + [p for p in DOC_PAGES if p not in REDIRECTS]:
     h, name = open(sp).read(), os.path.relpath(sp, ROOT)
     head = h[:h.index('</head>')]
     links = [os.path.normpath(os.path.join(os.path.dirname(sp), l)) for l in re.findall(r'href="([\w./-]+?\.css)(?:\?v=[0-9a-f]+)?"', head)]
@@ -132,9 +134,19 @@ for sp in SCREENS + [os.path.join(ROOT, 'ui/shell.html')] + DOC_PAGES:
 
 # ---------------------------------------------------------------- the docs pages (Lesson 9 step 2, 2026-11-04)
 slug_c = lambda n: re.sub(r'[^a-z0-9]+', '-', n.lower()).strip('-')
+# since the family restructure (2026-11-05): a section with its own anchor on a family page, and its old address redirecting there
+SECTIONS = {}
+for dp in DOC_PAGES:
+    for sid in re.findall(r'<section class="dc[^"]*" id="([^"]+)"', open(dp).read()):
+        SECTIONS[sid] = os.path.basename(dp)
 for n in names:
-    if not os.path.exists(os.path.join(ROOT, 'design-system/docs/components', slug_c(n.rstrip(':')) + '.html')):
-        fails.append(f'inventory component without a page: {n} (design-system/docs/components/{slug_c(n.rstrip(":"))}.html)')
+    sl = slug_c(n.rstrip(':'))
+    if sl not in SECTIONS:
+        fails.append(f'inventory component without a section on a family page: {n} (#{sl})')
+        continue
+    red = os.path.join(ROOT, 'design-system/docs/components', sl + '.html')
+    if not os.path.exists(red) or f'{SECTIONS[sl]}#{sl}' not in open(red).read():
+        fails.append(f'{n}: components/{sl}.html doesn\'t redirect to {SECTIONS[sl]}#{sl}')
 SOURCES = {f: open(os.path.join(ROOT, f)).read() for f in ('DESIGN.md', 'concept/concept.md', 'concept/references.md')}
 SOURCES['ui/inventory.md'] = re.sub(r'^## Docs map .*?(?=^## |\Z)', '', INV, flags=re.M | re.S)   # the Docs map's words must come from the rest
 VOCAB = MC_WORDS | {norm(w) for t in SOURCES.values() for w in WORD.findall(t)}
@@ -163,4 +175,4 @@ if fails:
     sys.exit(1)
 print(f'check_kit: pass ({len(names)} inventory components mapped, {len(MAP)} map rows with their states, {len(p.words)} specimen words in microcopy.md; '
       f'{len(SCREENS)} screens, the shell and {len(DOC_PAGES)} docs pages on design-system/index.css, every screen class defined; '
-      f'every component with its page; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')
+      f'every component a section on its family page, its old address redirecting there; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')

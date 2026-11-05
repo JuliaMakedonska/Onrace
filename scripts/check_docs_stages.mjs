@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+/* The docs can't lie (Lesson 9, 2026-11-05): every stage on every family page of design-system/docs/ against the same
+   stage on specimens.html, the hand-written source, in headless Chrome over local HTTP. For every element in a stage's
+   frame (frames entered, each loaded and styled first) it compares 23 computed properties: color, type, borders,
+   radius, spacing, shadow, outline, opacity, size, display, gap, backdrop. Four passes: 1280 and 390, dark and light.
+   A stage narrower by layout (the anatomy's on a phone, beside its gutter; the When-not-to sample, half a row on a desk)
+   is compared without its width and height. Any other difference means the documentation's own CSS reached a
+   specimen, and fails. It caught three such leaks while the docs were built (doc.css → Lesson 9 in concept.md).
+   Run from the repo root: node scripts/check_docs_stages.mjs [--quiet]. build_stand.py runs it; exit 1 on a difference,
+   2 if Chrome isn't there. */
+import { spawn } from 'node:child_process'; import { createServer } from 'node:http';
+import { mkdtempSync, readFileSync, readdirSync, rmSync, existsSync } from 'node:fs'; import { tmpdir } from 'node:os'; import { join, normalize, extname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..'), QUIET = process.argv.includes('--quiet');
+const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const T = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif' };
+const srv = createServer((q, r) => { const p = normalize(join(ROOT, decodeURIComponent(new URL(q.url, 'http://x').pathname))); try { const b = readFileSync(p); r.writeHead(200, { 'content-type': T[extname(p)] || 'application/octet-stream' }).end(b); } catch { r.writeHead(404).end(); } });
+await new Promise(r => srv.listen(0, '127.0.0.1', r)); const B = `http://127.0.0.1:${srv.address().port}/design-system/docs/`;
+if (!existsSync(CHROME)) { console.log('check_docs_stages: SKIPPED, Chrome not found'); process.exit(2); }
+const prof = mkdtempSync(join(tmpdir(), 'stc-')); const ch = spawn(CHROME, ['--headless=new', '--disable-gpu', '--remote-debugging-port=0', '--user-data-dir=' + prof, 'about:blank'], { stdio: 'ignore' });
+const sl = ms => new Promise(r => setTimeout(r, ms)); let port; for (let i = 0; i < 100 && !port; i++) { await sl(100); try { port = readFileSync(join(prof, 'DevToolsActivePort'), 'utf8').split('\n')[0]; } catch {} }
+const tg = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json(); const ws = new WebSocket(tg.find(t => t.type === 'page').webSocketDebuggerUrl); await new Promise(r => ws.addEventListener('open', r, { once: true }));
+let id = 0; const pend = new Map(), wait = []; ws.addEventListener('message', e => { const m = JSON.parse(e.data); if (m.id && pend.has(m.id)) { pend.get(m.id)(m); pend.delete(m.id); } else if (m.method) wait.filter(w => w.m === m.method).forEach(w => { w.r(m); wait.splice(wait.indexOf(w), 1); }); });
+const send = (method, params = {}) => new Promise(r => { const i = ++id; pend.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
+const ev = async x => (await send('Runtime.evaluate', { expression: x, returnByValue: true, awaitPromise: true })).result?.result?.value;
+await send('Page.enable');
+await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+const PROPS = ['color', 'background-color', 'font-family', 'font-size', 'font-weight', 'line-height', 'letter-spacing', 'text-transform', 'border-top-left-radius', 'border-top-color', 'border-top-width', 'padding-top', 'padding-left', 'margin-top', 'box-shadow', 'outline-style', 'text-decoration-line', 'opacity', 'width', 'height', 'display', 'gap', 'backdrop-filter'];
+const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
+  for (const f of document.querySelectorAll('iframe')) {   // every frame loaded and styled before anything is read
+    for (let i = 0; i < 100 && !(f.contentDocument && f.contentDocument.readyState === 'complete' && [...f.contentDocument.styleSheets].length); i++) await new Promise(r => setTimeout(r, 50));
+    try { await f.contentDocument.fonts.ready; } catch (e) {}
+  }
+  await new Promise(r => setTimeout(r, 300));
+  const out = {};
+  for (const st of document.querySelectorAll('.kit-state')) {
+    const lab = st.querySelector('.kit-label')?.textContent.trim(); const fr = st.querySelector('.kit-frame'); if (!fr || !lab) continue;
+    const geo = ${geometry} || !((st.closest('.an') && innerWidth < 600) || st.closest('.dc-dont'));   // an anatomy stage on a phone (its gutter) and the When-not-to sample (half a row on a desk) are narrower by layout
+    const rec = []; const walk = (root, doc) => { for (const el of [root, ...root.querySelectorAll('*')]) {
+      if (el.closest('.an-layer')) continue;
+      const cs = doc.defaultView.getComputedStyle(el); const s = {};
+      for (const p of ${JSON.stringify(PROPS)}) if (geo || (p !== 'width' && p !== 'height')) s[p] = cs.getPropertyValue(p);
+      rec.push(el.tagName + '.' + [...el.classList].join('.') + ' ' + JSON.stringify(s));
+      if (el.tagName === 'IFRAME' && el.contentDocument?.body) walk(el.contentDocument.body, el.contentDocument); } };
+    walk(fr, document);
+    (out[lab + (geo ? '' : ' [no geometry]')] ||= []).push(rec.join('\\n'));
+  } return out; })()`;
+async function load(u, geometry) { const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url: u }); await Promise.race([l, sl(8000)]); return ev(COLLECT(geometry)); }
+let pages = 0, stages = 0; const bad = [];
+for (const [WIDTH, THEME] of [[1280, ''], [1280, '?theme=light'], [390, ''], [390, '?theme=light']]) {
+await send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height: 900, deviceScaleFactor: 1, mobile: false });
+const ref = await load(B + 'specimens.html' + THEME, true);
+// the reference without geometry: the same stages with width and height dropped
+const noGeo = {}; for (const [k, v] of Object.entries(ref)) noGeo[k + ' [no geometry]'] = v.map(r => r.replace(/,"width":"[^"]*","height":"[^"]*"/g, ''));
+for (const f of readdirSync(join(ROOT, 'design-system/docs')).filter(f => f.endsWith('.html') && !['index.html', 'why.html', 'specimens.html'].includes(f)).sort()) {
+  const got = await load(B + f + THEME, false); if (THEME === '' && WIDTH === 1280) pages++;
+  for (const [lab, recs] of Object.entries(got)) for (const r of recs) {
+    stages++;
+    const want = ref[lab] || noGeo[lab];
+    if (!want) { bad.push(`${f}: "${lab}" not on specimens.html`); continue; }
+    if (!want.includes(r)) {
+      const tags = x => x.split('\n').map(l => l.split(' ')[0]).join('|');
+      const cand = want.find(w => tags(w) === tags(r)) || want[0];
+      const A = cand.split('\n'), Bl = r.split('\n'); const i = Bl.findIndex((x, k) => x !== A[k]);
+      let diff = '';
+      try { const pa = JSON.parse(A[i].slice(A[i].indexOf(' ') + 1)), pb = JSON.parse(Bl[i].slice(Bl[i].indexOf(' ') + 1));
+        diff = Object.keys(pb).filter(k => pa[k] !== pb[k]).map(k => `${k}: ${pa[k]} → ${pb[k]}`).join('; '); } catch { diff = (A[i] || '∅').slice(0, 120) + ' → ' + (Bl[i] || '∅').slice(0, 120); }
+      bad.push(`${WIDTH} ${THEME ? 'light' : 'dark'} · ${f}: "${lab.slice(0, 50)}" element ${i} ${(Bl[i] || '').split(' ')[0]}: ${diff}`); }
+  }
+}
+}
+ws.close(); srv.close(); ch.kill(); try { rmSync(prof, { recursive: true, force: true }); } catch {}
+if (bad.length) { console.log(`check_docs_stages: FAIL, ${bad.length} of ${stages} stage-passes differ from specimens.html (the docs' CSS reached a specimen)`); bad.slice(0, 20).forEach(b => console.log('  ' + b)); process.exit(1); }
+console.log(QUIET ? `check_docs_stages: pass (${stages} stage-passes on ${pages} family pages)` : `check_docs_stages: pass, ${stages} stage-passes (${pages} family pages × 1280 and 390 × dark and light), each identical to specimens.html`);

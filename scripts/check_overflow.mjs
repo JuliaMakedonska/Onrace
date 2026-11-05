@@ -73,12 +73,13 @@ for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.h
 states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
 // the pages about the kit (2026-10-26): the showcase and the lesson overviews, also at 1440 (desk); not phone screens
-const DOCS = ['../design-system/docs/index', '../design-system/docs/why', '../public/concept-overview', '../public/ui-overview', '../public/tokens-overview', '../ui/shell', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
+const DOCS = ['../design-system/docs/index', '../design-system/docs/why', '../design-system/docs/specimens', '../public/concept-overview', '../public/ui-overview', '../public/tokens-overview', '../ui/shell', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
 DOCS.forEach(d => states.push({ name: d, q: '', act: '', label: d.split('/').pop(), doc: true }));
 states.push({ name: '../public/tokens-overview', q: '', act: 'open', label: 'tokens-overview, every fold open (the token reference)', doc: true });   // 2026-11-01: the reference's tables and ladders are measured open
-// the component pages (Lesson 9, step 2, 2026-11-04): every page in design-system/docs/components/, also at 1440
-for (const f of readdirSync(join(ROOT, 'design-system/docs/components')).filter(f => f.endsWith('.html')).sort())
-  states.push({ name: '../design-system/docs/components/' + f.replace('.html', ''), q: '', act: '', label: 'docs/' + f.replace('.html', ''), doc: true });
+// the family pages (Lesson 9, 2026-11-05): every page of design-system/docs/ the list above doesn't name, also at 1440;
+// the old per-component addresses in components/ only redirect to a family page, so they aren't measured themselves
+for (const f of readdirSync(join(ROOT, 'design-system/docs')).filter(f => f.endsWith('.html') && !['index.html', 'why.html', 'specimens.html'].includes(f)).sort())
+  states.push({ name: '../design-system/docs/' + f.replace('.html', ''), q: '', act: '', label: 'docs/' + f.replace('.html', ''), doc: true });
 const ONLY = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1].split(',') : null;   // a quick run on some states: --only docs/,race-browse
 if (ONLY) states.splice(0, states.length, ...states.filter(s => ONLY.some(o => s.label.includes(o))));
 

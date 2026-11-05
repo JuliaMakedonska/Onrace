@@ -99,10 +99,10 @@ for l in IS['Showcase map (2026-10-26)'].split('\n'):
 inventory_body = f'''{LP.fold('How the inventory reads', md(inv_intro))}
 <div class="tbl-wrap"><table><thead><tr><th>Role</th><th>Components</th></tr></thead><tbody>{"".join(f"<tr><td>{r}</td><td>{n}</td></tr>" for r, n in role_counts.items())}</tbody></table></div>
 <p class="note">Roles as <code>ui/inventory.md</code> → Showcase map groups them; the kit showcase's nav follows it.</p>
-<p><a class="btn" href="{GH}ui/inventory.md">Open the inventory →</a> <a class="btn" href="design-system/docs/index.html">The showcase →</a></p>'''
+<p><a class="btn" href="{GH}ui/inventory.md">Open the inventory →</a> <a class="btn" href="design-system/docs/specimens.html">The showcase →</a></p>'''
 kit_body = f'''<p>The showcase, live: every component in its states, with its role nav working inside the panel. Beside it, the shell every top-level screen shares.</p>
 <div class="embeds">
-  {LP.embed('design-system/docs/index.html', 'The kit · <code>design-system/docs/index.html</code>')}
+  {LP.embed('design-system/docs/specimens.html', 'The kit · <code>design-system/docs/specimens.html</code>')}
   {LP.embed('ui/shell.html', 'The shell · <code>ui/shell.html</code>', 'phone')}
 </div>
 {LP.fold('Where the kit lives', md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0]), 'design-system/tokens/, design-system/components/, design-system/map-data.css, ui/shell.html, ui/kit.html, ui/inventory.md')}
@@ -246,7 +246,7 @@ checks_list = ('<ol class="checks">' + ''.join(f'<li>{inline(c)}</li>' for c in 
 look_switch = look_body[look_body.index('<div class="look">'):]
 SECTIONS = ''.join([
     LP.section('kit', 'Made', 'tag-m', 'The kit, live', '<p class="lede">Every component in its states, from <code>design-system/tokens/tokens.css</code> and <code>design-system/components/</code> alone. Its role nav works inside the panel; the shell is in it too.</p>'
-               + LP.embed('design-system/docs/index.html', 'The kit · <code>design-system/docs/index.html</code>')),
+               + LP.embed('design-system/docs/specimens.html', 'The kit · <code>design-system/docs/specimens.html</code>')),
     LP.section('screens', 'See it', 'tag-p', 'The screens', '<p class="lede">Every screen and state, as the frozen Lesson 5 wireframe or as it is now. Pick one and switch.</p>' + look_switch),
     LP.section('system', 'How it works', 'tag-d', 'Where each change goes in', flow_only
                + LP.fold(f'{len(ST["checks"])} checks stop the build', checks_list, 'color rules, contrast, signed tokens, overflow at 390 / 320 / 200%, fonts, scripts, the showcase')),

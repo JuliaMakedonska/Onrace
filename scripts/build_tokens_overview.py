@@ -136,7 +136,7 @@ findings = AS['Findings']
 checks_list = ('<ol class="checks">' + ''.join(f'<li>{inline(c)}</li>' for c in ST['checks']) + '</ol>'
                '<p class="note">Listed in <code>CLAUDE.md</code> → UI assembly; run by <code>scripts/concept/build_stand.py</code>. The token rules they enforce: <code>CLAUDE.md</code> → Tokens.</p>')
 REVIEWS = [('ui/review-theme.html', 'Step 5 · every state in both themes'), ('concept/concept.html', 'The stand · every token signed, contrast in both themes'),
-           ('design-system/docs/index.html', 'The showcase · on tokens and components')]
+           ('design-system/docs/specimens.html', 'The showcase · on tokens and components')]
 reviews_body = '<div class="card-grid">' + ''.join(
     f'<a class="card-link" href="{h}"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">{esc(t)}</span><span class="si-desc">{h} →</span></a>' for h, t in REVIEWS) + '</div>'
 RECORD = [(t, GH + 'design-system/tokens/tokens-audit.md#' + re.sub(r'[^a-z0-9 -]', '', t.lower()).replace(' ', '-'), '') for t in AS if re.match(r'Step \d record', t)]

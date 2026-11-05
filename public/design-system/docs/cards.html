@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cards · Onrace design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="doc.css">
+<script src="../tokens/theme.js"></script>
+</head>
+<!-- GENERATED (scripts/docs_shell.py and the script that writes this page). Do not edit. -->
+<body class="onrace kit-doc ds-body">
+<a class="ds-skip" href="#main">Skip to content</a>
+<header class="ds-head">
+  <button type="button" class="ds-menu" aria-expanded="false" aria-controls="ds-nav">Menu</button>
+  <a class="ds-brand" href="index.html">Onrace design system</a>
+  <div class="ds-theme" role="group" aria-label="Theme"><button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button></div>
+</header>
+<div class="ds ds--toc">
+<aside class="ds-nav" id="ds-nav" aria-label="Components">
+  <label class="ds-filter-l" for="ds-filter">Filter</label>
+  <input type="search" id="ds-filter" class="ds-filter" placeholder="Filter components" autocomplete="off">
+  <nav class="ds-tree" aria-label="Design system"><ul class="ds-top"><li><a href="index.html">Start</a></li><li><a href="why.html">Why it looks like this</a></li><li><a href="specimens.html">Every specimen</a></li></ul><p class="ds-role">Navigation</p><ul class="ds-fams"><li class="ds-fam"><a class="ds-fam-a" href="bars-and-navigation.html" data-names="bars and navigation">Bars and navigation</a><ul class="ds-comps"><li><a href="bars-and-navigation.html#tab-bar" data-names="tab bar">Tab bar</a></li><li><a href="bars-and-navigation.html#large-title-header" data-names="large title header">Large title header</a></li><li><a href="bars-and-navigation.html#top-bar" data-names="top bar">Top bar</a></li><li><a href="bars-and-navigation.html#gate-layout" data-names="gate layout">Gate layout</a></li><li><a href="bars-and-navigation.html#sticky-action-bar" data-names="sticky action bar">Sticky action bar</a></li><li><a href="bars-and-navigation.html#segmented-control" data-names="segmented control">Segmented control</a></li><li><a href="bars-and-navigation.html#controls-bar" data-names="controls bar">Controls bar</a></li></ul></li><li class="ds-fam"><a class="ds-fam-a" href="sheets-and-alerts.html" data-names="sheets and alerts">Sheets and alerts</a><ul class="ds-comps"><li><a href="sheets-and-alerts.html#modal-sheet" data-names="modal sheet">Modal sheet</a></li><li><a href="sheets-and-alerts.html#action-sheet" data-names="action sheet">Action sheet</a></li><li><a href="sheets-and-alerts.html#confirm-alert" data-names="confirm alert">Confirm alert</a></li><li><a href="sheets-and-alerts.html#sheet-screen" data-names="sheet screen">Sheet screen</a></li></ul></li></ul><p class="ds-role">Content</p><ul class="ds-fams"><li class="ds-fam is-current"><a class="ds-fam-a" href="cards.html" aria-current="page" data-names="cards">Cards</a><ul class="ds-comps"><li><a href="cards.html#race-card" data-names="race card">Race card</a></li><li><a href="cards.html#race-photo" data-names="race photo">Race photo</a></li><li><a href="cards.html#result-row" data-names="result row">Result row</a></li><li><a href="cards.html#finish-time" data-names="finish time">Finish time</a></li><li><a href="cards.html#proof-line" data-names="proof line">Proof line</a></li><li><a href="cards.html#linked-race-card" data-names="linked race card">Linked race card</a></li></ul></li><li class="ds-fam"><a class="ds-fam-a" href="lists-and-rows.html" data-names="lists and rows">Lists and rows</a><ul class="ds-comps"><li><a href="lists-and-rows.html#results-row" data-names="results row">Results row</a></li><li><a href="lists-and-rows.html#order-label" data-names="order label">Order label</a></li><li><a href="lists-and-rows.html#list-intro" data-names="list intro">List intro</a></li><li><a href="lists-and-rows.html#catalog-row" data-names="catalog row">Catalog row</a></li><li><a href="lists-and-rows.html#sport-type-rows" data-names="sport-type rows">Sport-type rows</a></li><li><a href="lists-and-rows.html#grouped-settings-rows" data-names="grouped settings rows">Grouped settings rows</a></li></ul></li><li class="ds-fam"><a class="ds-fam-a" href="detail-screens.html" data-names="detail screens">Detail screens</a><ul class="ds-comps"><li><a href="detail-screens.html#detail-header-and-facts" data-names="detail header and facts">Detail header and facts</a></li><li><a href="detail-screens.html#detail-section" data-names="detail section">Detail section</a></li><li><a href="detail-screens.html#race-photo-detail" data-names="race photo, detail">Race photo, detail</a></li><li><a href="detail-screens.html#official-race-website-link" data-names="official race website link">Official race website link</a></li><li><a href="detail-screens.html#proof-url-and-note" data-names="proof url and note">Proof URL and note</a></li><li><a href="detail-screens.html#identity-block" data-names="identity block">Identity block</a></li></ul></li><li class="ds-fam"><a class="ds-fam-a" href="chips.html" data-names="chips">Chips</a><ul class="ds-comps"><li><a href="chips.html#format-chip" data-names="format chip">Format chip</a></li><li><a href="chips.html#active-filter-chips-row" data-names="active filter chips row">Active filter chips row</a></li></ul></li><li class="ds-fam"><a class="ds-fam-a" href="map.html" data-names="map">Map</a><ul class="ds-comps"><li><a href="map.html#static-map" data-names="static map">Static map</a></li></ul></li></ul><p class="ds-role">Input</p><ul class="ds-fams"><li class="ds-fam"><a class="ds-fam-a" href="buttons-and-links.html" data-names="buttons and links">Buttons and links</a><ul class="ds-comps"><li><a href="buttons-and-links.html#primary-button" data-names="primary button">Primary button</a></li><li><a href="buttons-and-links.html#secondary-button" data-names="secondary button">Secondary button</a></li><li><a href="buttons-and-links.html#filters-trigger-with-count" data-names="filters trigger with count">Filters trigger with count</a></li><li><a href="buttons-and-links.html#sort-button" data-names="sort button">Sort button</a></li><li><a href="buttons-and-links.html#text-link" data-names="text link">Text link</a></li><li><a href="buttons-and-links.html#forgot-password-link" data-names="forgot password? link">Forgot password? link</a></li><li><a href="buttons-and-links.html#sign-out-button" data-names="sign out button">Sign out button</a></li></ul></li><li class="ds-fam"><a class="ds-fam-a" href="forms.html" data-names="forms">Forms</a><ul class="ds-comps"><li><a href="forms.html#search-field" data-names="search field">Search field</a></li><li><a href="forms.html#text-field" data-names="text field">Text field</a></li><li><a href="forms.html#field-hint" data-names="field hint">Field hint</a></li><li><a href="forms.html#field-error" data-names="field error">Field error</a></li><li><a href="forms.html#pop-up-select" data-names="pop-up select">Pop-up select</a></li><li><a href="forms.html#date-field" data-names="date field">Date field</a></li><li><a href="forms.html#form-intro" data-names="form intro">Form intro</a></li><li><a href="forms.html#form-note" data-names="form note">Form note</a></li><li><a href="forms.html#gate-intro" data-names="gate intro">Gate intro</a></li></ul></li></ul><p class="ds-role">Feedback</p><ul class="ds-fams"><li class="ds-fam"><a class="ds-fam-a" href="empty-error-and-status.html" data-names="empty, error and status">Empty, error and status</a><ul class="ds-comps"><li><a href="empty-error-and-status.html#state-message" data-names="state message">State message</a></li><li><a href="empty-error-and-status.html#inline-error" data-names="inline error">Inline error</a></li><li><a href="empty-error-and-status.html#form-alert" data-names="form alert">Form alert</a></li><li><a href="empty-error-and-status.html#expired-link-message" data-names="expired-link message">Expired-link message</a></li><li><a href="empty-error-and-status.html#full-screen-gate-error" data-names="full-screen gate error">Full-screen gate error</a></li><li><a href="empty-error-and-status.html#status-line" data-names="status line">Status line</a></li><li><a href="empty-error-and-status.html#check-inbox-block" data-names="check-inbox block">Check-inbox block</a></li></ul></li><li class="ds-fam"><a class="ds-fam-a" href="loading.html" data-names="loading">Loading</a><ul class="ds-comps"><li><a href="loading.html#skeleton" data-names="skeleton">Skeleton</a></li><li><a href="loading.html#locked-form" data-names="locked form">Locked form</a></li></ul></li></ul></nav>
+  <p class="ds-empty" hidden>No component matches.</p>
+</aside>
+<main class="ds-main" id="main">
+<p class="ds-crumb">Content</p><h1>Cards</h1><p class="ds-lede">A race or a result as one unit you can tap.</p>
+<section class="dc" id="race-card" aria-labelledby="race-card-h">
+<h2 id="race-card-h">Race card</h2>
+<p class="dc-for">A race in the catalog, as one link.</p>
+<div class="dc-spec kit-states"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/ocr-wall-1-684.avif 684w, ../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/ocr-wall-1-684.webp 684w, ../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/ocr-wall-1-1026.jpg" srcset="../../visuals/ocr-wall-1-684.jpg 684w, ../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div>
+<div class="dc-dos"><div class="dc-do"><p class="dc-k">When to use</p><p>A race in the catalog: its date, name, format and place.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#race-browse">Race browse ↗</a></p></div><div class="dc-dont"><p class="dc-k">When not to · use <a href="cards.html#result-row">Result row</a></p><p>A race you ran is a result row, led by its finish time.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#results-list">Results list ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
+        </div></div></div></div>
+<h3 id="race-card-anatomy">Anatomy</h3>
+<div class="dc-anatomy"><div class="an" data-anatomy="[[&quot;.race-card&quot;, &quot;Race card, one link&quot;], [&quot;.photo&quot;, &quot;Race photo, 3:1&quot;], [&quot;.card-meta time&quot;, &quot;Date&quot;], [&quot;.card-link h2&quot;, &quot;Race name&quot;], [&quot;.sport-tag&quot;, &quot;Format chip&quot;], [&quot;.card-location&quot;, &quot;Location&quot;]]"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/ocr-wall-1-684.avif 684w, ../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/ocr-wall-1-684.webp 684w, ../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/ocr-wall-1-1026.jpg" srcset="../../visuals/ocr-wall-1-684.jpg 684w, ../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div><ol class="an-legend"><li data-part="0" tabindex="0"><span class="an-n">1</span> Race card, one link <code>.race-card</code></li><li data-part="1" tabindex="0"><span class="an-n">2</span> Race photo, 3:1 <code>.photo</code></li><li data-part="2" tabindex="0"><span class="an-n">3</span> Date <code>.card-meta time</code></li><li data-part="3" tabindex="0"><span class="an-n">4</span> Race name <code>.card-link h2</code></li><li data-part="4" tabindex="0"><span class="an-n">5</span> Format chip <code>.sport-tag</code></li><li data-part="5" tabindex="0"><span class="an-n">6</span> Location <code>.card-location</code></li></ol></div>
+<h3 id="race-card-variants">Variants <span>2 more</span></h3>
+<div class="kit-states"><div class="kit-state"><p class="kit-label">Pressed (G23)</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card is-pressed">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li></ul></div>
+        </div><div class="kit-state"><p class="kit-label">Race picker, no photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card"><a class="card-link" href="#"><h2>Berlin Marathon</h2><p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2025-09-21"><span class="day">21</span> Sep 2025</time></p><p class="card-location">Berlin, Germany</p></a></article>
+          </li><li>
+            <article class="race-card"><a class="card-link" href="#" aria-current="true"><h2>DEKA STRONG Chicago</h2><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14"><span class="day">14</span> Mar 2026</time></p><p class="card-location">Chicago, USA</p></a></article>
+          </li></ul></div>
+        </div></div>
+<h3 id="race-card-states">States</h3>
+<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body"><div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.race-card</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../../wireframes/index.html#race-browse">Race browse</a>, <a href="../../wireframes/index.html#race-picker">Race picker</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a></p><p class="kd-line"><span class="kd-k">Screens</span> Race browse (<code>race-browse</code>); Race picker (<code>race-picker</code>)</p><p class="kd-line"><span class="kd-k">States</span> Base; hover ring (Race browse, Podium); filtered subsets (<code>?sport=</code> on Race browse, <code>?q=</code> on Race picker)</p><p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#race-card">Race card</a>, with every state beside it</p></div><h4>From DESIGN.md</h4><blockquote class="dc-quote"><p><strong>Race card:</strong> <code>--surface</code>, 6px radius, 8px padding, flat. The whole card is one link, photo included. Inside it: a black-and-white photo (<code>grayscale(1) contrast(1.12) brightness(0.85)</code>) at 3:1 with a 4px radius, the file itself pre-cropped to its 3:1 band (684 and 1026 px wide, AVIF / WebP / JPEG, <code>srcset</code>; step 7, <code>visuals/README.md</code> → Export); then the date tile (68px wide, <code>--raised</code>, 4px radius, <code>12px 4px</code> padding, the day in Schibsted 30px <code>--text-primary</code> over the month and year in 13px <code>--text-secondary</code>); then the race name (17px / 600), the format chip, and the location (14px <code>--text-secondary</code> with a 15px Solar map-point icon).</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Cards / Containers</footer></blockquote><h4>The words it carries</h4><p class="dc-note">It carries no line of its own from <code>microcopy.md</code>: it shows catalog data, user data or another component's words.</p></div></details>
+</section>
+<section class="dc" id="race-photo" aria-labelledby="race-photo-h">
+<h2 id="race-photo-h">Race photo</h2>
+<p class="dc-for">The black-and-white photo that leads a race card.</p>
+<div class="dc-spec kit-states"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/ocr-wall-1-684.avif 684w, ../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/ocr-wall-1-684.webp 684w, ../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/ocr-wall-1-1026.jpg" srcset="../../visuals/ocr-wall-1-684.jpg 684w, ../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div>
+<div class="dc-dos"><div class="dc-do"><p class="dc-k">When to use</p><p>Every race card on Race browse leads with its photo.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#race-browse">Race browse ↗</a></p></div><div class="dc-dont"><p class="dc-k">When not to · use <a href="loading.html#skeleton">Skeleton</a></p><p>While loading, the photo band is a skeleton bar, never an empty photo.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#race-browse-loading">Race browse · loading ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Race browse: race card with its photo band</p>
+          <div class="kit-frame"><ul class="race-list" aria-hidden="true"><li><div class="skeleton-card"><div class="bar photo"></div><div class="bar title"></div><div class="skel-meta"><div class="bar tag"></div><div class="bar date"></div></div><div class="bar location"></div></div></li></ul></div>
+        </div></div></div></div>
+<h3 id="race-photo-anatomy">Anatomy</h3>
+<div class="dc-anatomy"><div class="an" data-anatomy="[[&quot;.photo&quot;, &quot;Race photo, black and white, 3:1&quot;]]"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/ocr-wall-1-684.avif 684w, ../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/ocr-wall-1-684.webp 684w, ../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/ocr-wall-1-1026.jpg" srcset="../../visuals/ocr-wall-1-684.jpg 684w, ../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div><ol class="an-legend"><li data-part="0" tabindex="0"><span class="an-n">1</span> Race photo, black and white, 3:1 <code>.photo</code></li></ol></div>
+<h3 id="race-photo-states">States</h3>
+<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body"><div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.photo</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../../wireframes/index.html#race-browse-loading">Race browse</a>, <a href="../../wireframes/index.html#race-detail-error">Race detail</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">In the inventory</span> <strong>Race photo</strong> (<code>picture &gt; img.photo</code>, pre-cropped 3:1 files at 684 and 1026 px, AVIF / WebP / JPEG with <code>srcset</code>, since step 7; the <code>.photo--*</code> focus classes are gone). Photo: yes.</p><p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#race-card">Race card</a>, with every state beside it</p></div><h4>From DESIGN.md</h4><blockquote class="dc-quote"><p><strong>Do</strong> show every photo in black and white (<code>--photo-filter</code>), inset at 3:1 with a 4px radius.</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Do:</footer></blockquote><h4>The words it carries</h4><p class="dc-note">It carries no line of its own from <code>microcopy.md</code>: it shows catalog data, user data or another component's words.</p></div></details>
+</section>
+<section class="dc" id="result-row" aria-labelledby="result-row-h">
+<h2 id="result-row-h">Result row</h2>
+<p class="dc-for">One result in the archive, led by its finish time.</p>
+<div class="dc-spec kit-states"><div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
+        </div></div>
+<div class="dc-dos"><div class="dc-do"><p class="dc-k">When to use</p><p>One result in the archive, its finish time the loudest thing on the row.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#results-list">Results list ↗</a></p></div><div class="dc-dont"><p class="dc-k">When not to · use <a href="cards.html#race-card">Race card</a></p><p>A race still to come is a race card, led by its date.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#race-browse">Race browse ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/ocr-wall-1-684.avif 684w, ../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/ocr-wall-1-684.webp 684w, ../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/ocr-wall-1-1026.jpg" srcset="../../visuals/ocr-wall-1-684.jpg 684w, ../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div></div></div>
+<h3 id="result-row-anatomy">Anatomy</h3>
+<div class="dc-anatomy"><div class="an" data-anatomy="[[&quot;.result-card&quot;, &quot;Result row&quot;], [&quot;.card-top h2&quot;, &quot;Race name&quot;], [&quot;.finish-time&quot;, &quot;Finish time&quot;], [&quot;.sport-tag&quot;, &quot;Format chip&quot;], [&quot;.card-meta time&quot;, &quot;Date&quot;], [&quot;.proof-label&quot;, &quot;Proof line&quot;]]"><div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
+        </div></div><ol class="an-legend"><li data-part="0" tabindex="0"><span class="an-n">1</span> Result row <code>.result-card</code></li><li data-part="1" tabindex="0"><span class="an-n">2</span> Race name <code>.card-top h2</code></li><li data-part="2" tabindex="0"><span class="an-n">3</span> Finish time <code>.finish-time</code></li><li data-part="3" tabindex="0"><span class="an-n">4</span> Format chip <code>.sport-tag</code></li><li data-part="4" tabindex="0"><span class="an-n">5</span> Date <code>.card-meta time</code></li><li data-part="5" tabindex="0"><span class="an-n">6</span> Proof line <code>.proof-label</code></li></ol></div>
+<h3 id="result-row-states">States</h3>
+<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body"><div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.result-card</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../../wireframes/index.html#results-list">Results list</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a></p><p class="kd-line"><span class="kd-k">In the inventory</span> <strong>Result row</strong> (<code>article.result-card</code>: name, finish time, format chip, date, proof line). Native: <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables</a>. Gaps: G22 K, G23 K.</p><p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#finish-time">Finish time · Proof line</a>, with every state beside it</p></div><h4>From DESIGN.md</h4><blockquote class="dc-quote"><p><strong>Result row:</strong> <code>--surface</code>, 6px radius, <code>12px 16px 16px</code> padding, 8px gaps. A 15px Solar alt-arrow-right in <code>--text-secondary</code> ends the meta row, under the finish time's right edge: the row drills into Result detail (G22). The finish time and the proof line keep the row's full width, so the time sits where it always did and no proof line wraps. Race cards are a collection, so they have none. The race name on the left and the finish time (Schibsted 32px) on the right, sharing a baseline; then the format chip and the date (15px <code>--text-secondary</code>, C3); then the proof line (13px <code>--text-secondary</code>, one 15px Solar link icon, wraps anywhere).</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Cards / Containers</footer></blockquote><h4>The words it carries</h4><div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>Self-reported · via athlinks.com</td><td>body text (in tappable row)</td><td>Results list, Result detail</td></tr><tr><td>Self-reported · via valenciaciudaddelrunning.com</td><td>body text (in tappable row)</td><td>Results list, Result detail</td></tr></tbody></table></div></div></details>
+</section>
+<section class="dc" id="finish-time" aria-labelledby="finish-time-h">
+<h2 id="finish-time-h">Finish time</h2>
+<p class="dc-for">The time a person ran, the loudest thing on a result.</p>
+<div class="dc-spec kit-states"><div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
+        </div></div>
+<div class="dc-dos"><div class="dc-do"><p class="dc-k">When to use</p><p>The time a person ran: on every result row, and leading Result detail.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#results-list">Results list ↗</a></p></div><div class="dc-dont"><p class="dc-k">When not to · use <a href="cards.html#race-card">Race card</a></p><p>A race date leads the race card; the display face goes to the finish time only on a result.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#race-browse">Race browse ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/ocr-wall-1-684.avif 684w, ../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/ocr-wall-1-684.webp 684w, ../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/ocr-wall-1-1026.jpg" srcset="../../visuals/ocr-wall-1-684.jpg 684w, ../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div></div></div>
+<h3 id="finish-time-anatomy">Anatomy</h3>
+<div class="dc-anatomy"><div class="an" data-anatomy="[[&quot;.finish-time&quot;, &quot;Finish time, the display face&quot;]]"><div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
+        </div></div><ol class="an-legend"><li data-part="0" tabindex="0"><span class="an-n">1</span> Finish time, the display face <code>.finish-time</code></li></ol></div>
+<h3 id="finish-time-variants">Variants <span>1 more</span></h3>
+<div class="kit-states"><div class="kit-state"><p class="kit-label">Result detail: the finish time and the proof section are under Detail above</p></div></div>
+<h3 id="finish-time-states">States</h3>
+<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body"><div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.finish-time</code> <code>.finish</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../../wireframes/index.html#results-list">Results list</a>, <a href="../../wireframes/index.html#result-detail-error">Result detail</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">Screens</span> Results list (<code>results-list</code>); Result detail (<code>result-detail</code>, <code>-error?cause=link</code>)</p><p class="kd-line"><span class="kd-k">States</span> Base; skeleton bar on both <code>-loading</code> pages</p><p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#finish-time">Finish time · Proof line</a>, with every state beside it</p></div><h4>From DESIGN.md</h4><blockquote class="dc-quote"><p><strong>Do</strong> make the finish time the loudest thing on a result row, through Schibsted 800 at 32px in <code>--text-primary</code>, not through color.</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Do:</footer></blockquote><h4>The words it carries</h4><p class="dc-note">It carries no line of its own from <code>microcopy.md</code>: it shows catalog data, user data or another component's words.</p></div></details>
+</section>
+<section class="dc" id="proof-line" aria-labelledby="proof-line-h">
+<h2 id="proof-line-h">Proof line</h2>
+<p class="dc-for">Where a result comes from: self-reported, and the site that holds it.</p>
+<div class="dc-spec kit-states"><div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
+        </div></div>
+<div class="dc-dos"><div class="dc-do"><p class="dc-k">When to use</p><p>Under each result: self-reported, and the site that holds it.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#results-list">Results list ↗</a></p></div><div class="dc-dont"><p class="dc-k">When not to · use <a href="detail-screens.html#official-race-website-link">Official race website link</a></p><p>A race&#x27;s own site is a link in its section, not a proof line.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#race-detail">Race detail ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Race detail</p>
+          <div class="kit-frame kit-frame--flush"><article class="race" aria-labelledby="k-race-h-proof-line-alt">
+            <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+            <h1 id="k-race-h-proof-line-alt">HYROX London</h1>
+            <dl class="facts"><dt>Sport type</dt><dd>HYROX</dd><dt>Race date</dt><dd><time datetime="2026-12-06">6 December 2026</time></dd><dt>Location</dt><dd>London, England, United Kingdom</dd></dl>
+            <section class="about" aria-labelledby="k-about-proof-line-alt"><h2 id="k-about-proof-line-alt">About this race</h2><p>Indoor HYROX event combining 8 × 1&nbsp;km runs with functional stations, held at ExCeL London.</p></section>
+            <section class="official" aria-labelledby="k-official-proof-line-alt"><h2 id="k-official-proof-line-alt">Official race website</h2><p><a href="#">hyrox.com</a></p></section>
+          </article></div>
+        </div></div></div></div>
+<h3 id="proof-line-anatomy">Anatomy</h3>
+<div class="dc-anatomy"><div class="an" data-anatomy="[[&quot;.proof-label&quot;, &quot;Proof line, one link icon&quot;]]"><div class="kit-state"><p class="kit-label">Results list: the result row</p>
+          <div class="kit-frame"><ul class="result-list">
+            <li><article class="result-card"><a class="card-link" href="#"><div class="card-top"><h2>DEKA STRONG Chicago</h2><span class="finish-time">24:36</span></div><p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p><p class="proof-label">Self-reported · via athlinks.com</p></a></article></li>
+            <li><article class="result-card"><a class="card-link is-pressed" href="#"><div class="card-top"><h2>Valencia Half Marathon</h2><span class="finish-time">1:28:05</span></div><p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p><p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p></a></article></li>
+          </ul></div>
+        </div></div><ol class="an-legend"><li data-part="0" tabindex="0"><span class="an-n">1</span> Proof line, one link icon <code>.proof-label</code></li></ol></div>
+<h3 id="proof-line-states">States</h3>
+<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body"><div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.proof-label</code></p><p class="kd-line"><span class="kd-k">Used on 2 screens</span> <a href="../../wireframes/index.html#results-list">Results list</a>, <a href="../../wireframes/index.html#result-detail-error">Result detail</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">Screens</span> Results list (<code>results-list</code>); Result detail (<code>result-detail</code>, <code>-error?cause=link</code>)</p><p class="kd-line"><span class="kd-k">States</span> Base; skeleton bar on <code>results-list-loading</code></p><p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#finish-time">Finish time · Proof line</a>, with every state beside it</p></div><h4>From DESIGN.md</h4><blockquote class="dc-quote"><p><strong>Do</strong> state proof as its own 13px <code>--text-secondary</code> line with one link icon: "Self-reported · via &lt;domain&gt;".</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → Do:</footer></blockquote><h4>The words it carries</h4><div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>Self-reported · via athlinks.com</td><td>body text (in tappable row)</td><td>Results list, Result detail</td></tr><tr><td>Self-reported · via valenciaciudaddelrunning.com</td><td>body text (in tappable row)</td><td>Results list, Result detail</td></tr></tbody></table></div></div></details>
+</section>
+<section class="dc" id="linked-race-card" aria-labelledby="linked-race-card-h">
+<h2 id="linked-race-card-h">Linked race card</h2>
+<p class="dc-for">A race from the catalog, linked to the result being logged.</p>
+<div class="dc-spec kit-states"><div class="kit-state"><p class="kit-label">A race linked from the catalog</p>
+          <div class="kit-frame"><section class="linked-race" aria-labelledby="k-linked-linked-race-card"><p class="linked-source">From the race catalog</p><h3 id="k-linked-linked-race-card">Berlin Marathon</h3><p class="linked-fact"><time datetime="2025-09-21">21 Sep 2025</time></p><p class="linked-fact">Marathon</p><p class="linked-fact place">Berlin, Germany</p><button type="button" class="unlink-btn">Unlink race</button></section></div>
+        </div></div>
+<div class="dc-dos"><div class="dc-do"><p class="dc-k">When to use</p><p>A race linked from the catalog, in place of its fields.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#log-result?catalog=spartan-beast-killington-2025">Log result ↗</a></p></div><div class="dc-dont"><p class="dc-k">When not to · use <a href="cards.html#race-card">Race card</a></p><p>In the catalog list the same race is a race card you tap.</p><p class="dc-see">See it: <a href="../../wireframes/index.html#race-picker">Race picker ↗</a></p><div class="kit-states"><div class="kit-state"><p class="kit-label">Race browse, with photo</p>
+          <div class="kit-frame"><ul class="race-list"><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/hyrox-sled-hall-1-684.avif 684w, ../../visuals/hyrox-sled-hall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/hyrox-sled-hall-1-684.webp 684w, ../../visuals/hyrox-sled-hall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/hyrox-sled-hall-1-1026.jpg" srcset="../../visuals/hyrox-sled-hall-1-684.jpg 684w, ../../visuals/hyrox-sled-hall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>HYROX London</h2><p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2026-12-06"><span class="day">6</span> Dec 2026</time></p><p class="card-location">London, UK</p></a>
+            </article>
+          </li><li>
+            <article class="race-card">
+              <picture><source type="image/avif" srcset="../../visuals/ocr-wall-1-684.avif 684w, ../../visuals/ocr-wall-1-1026.avif 1026w" sizes="calc(100vw - 32px)"><source type="image/webp" srcset="../../visuals/ocr-wall-1-684.webp 684w, ../../visuals/ocr-wall-1-1026.webp 1026w" sizes="calc(100vw - 32px)"><img class="photo" src="../../visuals/ocr-wall-1-1026.jpg" srcset="../../visuals/ocr-wall-1-684.jpg 684w, ../../visuals/ocr-wall-1-1026.jpg 1026w" sizes="calc(100vw - 32px)" alt="" width="1026" height="342" loading="lazy"></picture>
+              <a class="card-link" href="#"><h2>Spartan Race Beast — Killington</h2><p class="card-meta"><span class="sport-tag">OCR</span> <time datetime="2027-07-11"><span class="day">11</span> Jul 2027</time></p><p class="card-location">Killington, USA</p></a>
+            </article>
+          </li></ul></div>
+        </div></div></div></div>
+<h3 id="linked-race-card-anatomy">Anatomy</h3>
+<div class="dc-anatomy"><div class="an" data-anatomy="[[&quot;.linked-race&quot;, &quot;Linked race card&quot;], [&quot;.linked-source&quot;, &quot;From the race catalog&quot;], [&quot;.unlink-btn&quot;, &quot;Unlink race&quot;]]"><div class="kit-state"><p class="kit-label">A race linked from the catalog</p>
+          <div class="kit-frame"><section class="linked-race" aria-labelledby="k-linked-linked-race-card-an"><p class="linked-source">From the race catalog</p><h3 id="k-linked-linked-race-card-an">Berlin Marathon</h3><p class="linked-fact"><time datetime="2025-09-21">21 Sep 2025</time></p><p class="linked-fact">Marathon</p><p class="linked-fact place">Berlin, Germany</p><button type="button" class="unlink-btn">Unlink race</button></section></div>
+        </div></div><ol class="an-legend"><li data-part="0" tabindex="0"><span class="an-n">1</span> Linked race card <code>.linked-race</code></li><li data-part="1" tabindex="0"><span class="an-n">2</span> From the race catalog <code>.linked-source</code></li><li data-part="2" tabindex="0"><span class="an-n">3</span> Unlink race <code>.unlink-btn</code></li></ol></div>
+<h3 id="linked-race-card-states">States</h3>
+<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>
+<details class="dc-tech"><summary>Technical details</summary><div class="dc-tech-body"><div class="kd-meta"><p class="kd-line"><span class="kd-k">Classes</span> <code>.linked-race</code></p><p class="kd-line"><span class="kd-k">Used on 1 screen</span> <a href="../../wireframes/index.html#log-result-error">Log result</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> none</p><p class="kd-line"><span class="kd-k">In the inventory</span> <strong>Linked race card</strong> (<code>section.linked-race</code>: "From the race catalog", name, date, sport type, place, <code>.unlink-btn</code> "Unlink race"; shown with <code>?catalog=</code>).</p><p class="kd-line"><span class="kd-k">Specimen</span> <a href="specimens.html#log-result-parts">Log result · form intro, catalog row, linked race</a>, with every state beside it</p></div><h4>From DESIGN.md</h4><blockquote class="dc-quote"><p><strong>Log result:</strong> a modal sheet over Results (round 2, G40): the sheet glass at the large detent, Results receded under the scrim; Cancel (Text 1) on the leading edge of its bar, "Log result", <strong>Save in amber text</strong> (the one primary). Saving: the spinner alone in Save's place. A grouped form (see Form rows): the catalog row, the race facts (or the linked race's card), the finish time, the official result link, each with its footer. Cancel with anything entered opens the <strong>action sheet</strong>: two glass blocks at the bottom, 34px corners [?], a 13px Text 2 message ("This result isn’t saved yet."), <strong>Discard result</strong> in coral, and <strong>Keep editing</strong> apart below it, 600.</p><footer><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/DESIGN.md">DESIGN.md</a> → The other screens (step 5, 2026-10-22)</footer></blockquote><h4>The words it carries</h4><div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Line</th><th>Type</th><th>Screens</th></tr></thead><tbody><tr><td>From the race catalog</td><td>body text</td><td>Log result</td></tr><tr><td>Unlink race</td><td>button</td><td>Log result</td></tr></tbody></table></div></div></details>
+</section>
+</main>
+<aside class="ds-toc" aria-labelledby="ds-toc-h"><p class="ds-toc-h" id="ds-toc-h">On this page</p><ul><li><a href="#race-card">Race card</a></li><li><a href="#race-photo">Race photo</a></li><li><a href="#result-row">Result row</a></li><li><a href="#finish-time">Finish time</a></li><li><a href="#proof-line">Proof line</a></li><li><a href="#linked-race-card">Linked race card</a></li></ul></aside>
+</div>
+<script>
+  // Segmented controls are live: pressing one releases the other (as on the screens)
+  document.querySelectorAll('.view-toggle').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.view-btn'); if (!btn || btn.disabled) return;
+      group.querySelectorAll('.view-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    });
+  });
+</script>
+<script>
+/* Date pills (step 6, #26; step 7, #3): the date as the chips and cards write it ("23 Sep 2026") on the pill, which is
+   one button: one Tab stop, a focus ring, and a tap opens the system's picker (showPicker). The native input beside it
+   holds the value for the form, out of the tab order and hidden from assistive tech; the button takes its label,
+   its error and its invalid state. Empty, the pill says "Choose a date". Runs after the page's own scripts. */
+(function () {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.querySelectorAll('.date-pill').forEach(function (pill) {
+    var input = pill.querySelector('input[type="date"]'), btn = pill.querySelector('.date-value');
+    var label = document.querySelector('label[for="' + input.id + '"]');
+    if (label) label.htmlFor = btn.id;
+    function show() {
+      var v = input.value, text;
+      pill.classList.toggle('is-empty', !v);
+      if (!v) text = 'Choose a date';
+      else { var d = v.split('-'); text = (+d[2]) + ' ' + M[+d[1] - 1] + ' ' + d[0]; }
+      btn.textContent = text;
+      btn.setAttribute('aria-label', text + (label ? ', ' + label.textContent.trim().toLowerCase() : ''));   // starts with the visible text (WCAG 2.5.3)
+      ['aria-invalid', 'aria-describedby'].forEach(function (a) { if (input.hasAttribute(a)) btn.setAttribute(a, input.getAttribute(a)); else btn.removeAttribute(a); });
+    }
+    btn.disabled = input.disabled;
+    btn.addEventListener('click', function () {
+      try { input.showPicker(); } catch (e) { input.focus(); }
+    });
+    input.addEventListener('input', show);
+    input.addEventListener('change', show);
+    show();
+    new MutationObserver(show).observe(input, { attributes: true, attributeFilter: ['aria-invalid', 'aria-describedby'] });
+  });
+})();
+</script>
+<script src="doc.js"></script>
+</body>
+</html>
