@@ -162,11 +162,17 @@ class Doc(HTMLParser):   # every word a reader sees on a docs page (scripts and 
         if tag in ('script', 'style', 'code'): self.skip -= 1
     def handle_data(self, d):
         if not self.skip and d.strip(): self.words += [(w, d.strip()) for w in WORD.findall(d)]
-doc_words, doc_missing = 0, {}
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from docs_clean import PROCESS   # no course-process text on a docs page (2026-11-05): steps, lessons, rounds, gap codes
+doc_words, doc_missing, doc_process = 0, {}, {}
 for dp in DOC_PAGES:
     d = Doc(); d.feed(open(dp).read()); doc_words += len(d.words)
     for w, ctx in d.words:
         if norm(w) not in VOCAB: doc_missing.setdefault(norm(w), f'{os.path.relpath(dp, ROOT)}: "{ctx[:60]}"')
+    for ctx in dict.fromkeys(c for _, c in d.words):
+        for m in PROCESS.finditer(ctx): doc_process.setdefault(m.group(0).lower(), f'{os.path.relpath(dp, ROOT)}: "{ctx[max(0, m.start() - 40):m.end() + 20]}"')
+for w, where in sorted(doc_process.items()):
+    fails.append(f'course-process text on a docs page ("{w}"): {where} (it belongs in concept/concept.md)')
 for w, where in sorted(doc_missing.items()):
     fails.append(f'word on a docs page, in neither microcopy.md nor the source docs: "{w}" ({where})')
 

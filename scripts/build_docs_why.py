@@ -8,6 +8,7 @@ section keeps its source heading and links back to it. Re-run after editing eith
 import os, re, sys, html as H
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from docs_md import md, sections, GH
+from docs_clean import clean   # no course-process text on a docs page (2026-11-05)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = open(os.path.join(ROOT, 'concept/concept.md')).read()
 R = open(os.path.join(ROOT, 'concept/references.md')).read()
@@ -28,15 +29,16 @@ import docs_shell as DS
 body = []
 for src, secs, head, id_ in PARTS:
     assert head in secs, f'{src}: no section "## {head}"'
-    body.append(f'''<section class="dc-why" id="{id_}" aria-labelledby="{id_}-h"><h2 id="{id_}-h">{H.escape(head)}</h2>
+    shown = clean(re.sub(r'^\d+\.\s*', '', head))   # the heading as the docs show it: no number, no process note
+    body.append(f'''<section class="dc-why" id="{id_}" aria-labelledby="{id_}-h"><h2 id="{id_}-h">{H.escape(shown)}</h2>
 <div class="dp-why">
-{md(secs[head], src)}
+{md(clean(secs[head]), src)}
 </div>
-<p class="dp-src">From <a href="{GH}{src}#{anchor(head)}">{src} → {H.escape(head)}</a></p>
+<p class="dp-src">From <a href="{GH}{src}#{anchor(head)}">{src} → {H.escape(shown)}</a></p>
 </section>''')
 main = (f'<h1>Why the system looks like this</h1><p class="ds-lede">The visual language behind every component, from <a href="{GH}concept/references.md">concept/references.md</a> '
         f'(the references and techniques) and <a href="{GH}concept/concept.md">concept/concept.md</a> (the designer\'s taste, the attributes, the hierarchy rules, '
         f'the chosen direction and why), as those files say it.</p>\n' + '\n'.join(body))
-page = DS.page('Why the system looks like this · Onrace design system', 'why', main, [(id_, head) for _, _, head, id_ in PARTS])
+page = DS.page('Why the system looks like this · Onrace design system', 'why', main, [(id_, clean(re.sub(r'^\d+\.\s*', '', head))) for _, _, head, id_ in PARTS])
 open(os.path.join(ROOT, 'design-system/docs/why.html'), 'w').write(page)
 print('why.html:', len(PARTS), 'sections from concept/references.md and concept/concept.md,', len(page), 'bytes')

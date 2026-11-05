@@ -210,6 +210,7 @@ def section(md, title):
     return m.group(1) if m else ''
 def cells(line):
     return [c.strip() for c in re.split(r'(?<!\\)\|', line.strip().strip('|'))]
+from docs_clean import clean   # no course-process text on a docs page (2026-11-05)
 from docs_md import inline, GH   # markdown inline → HTML, a relative link to GitHub (shared with why.html)
 
 # ---------------------------------------------------------------- the inventory row: where it is and what states it shows
@@ -329,7 +330,7 @@ def tech(row, vs):   # technical details, folded: classes, the screens that use 
     hits = used_on(classes)
     screens = ', '.join(f'<a href="{VIEWER}#{pages[0]}">{SCREEN[s]}</a>' for s, pages in sorted(hits.items(), key=lambda kv: list(SCREEN).index(kv[0])))
     ios = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1 ↗</a>', row['ios']) if row['ios'] != 'none' else 'none'
-    quotes = ''.join(f'<blockquote class="dc-quote"><p>{inline(q, "DESIGN.md")}</p><footer><a href="{GH}DESIGN.md">DESIGN.md</a> → {H.escape(t)}</footer></blockquote>'
+    quotes = ''.join(f'<blockquote class="dc-quote"><p>{inline(clean(q), "DESIGN.md")}</p><footer><a href="{GH}DESIGN.md">DESIGN.md</a> → {H.escape(clean(t))}</footer></blockquote>'
                      for t, q in (design_quote(x) for x in DMAP[row['name']]['design']))
     words = {}
     for _, h in vs:
@@ -343,7 +344,6 @@ def tech(row, vs):   # technical details, folded: classes, the screens that use 
             (f'Used on {len(hits)} screen{"s" if len(hits) != 1 else ""}' if hits else 'Used on', screens or 'the showcase only'),
             ('Native iOS', ios),
             ('Specimen', f'<a href="specimens.html#{row["spec"]}">{H.escape(title_of(row["spec"]))}</a>, with every state beside it')]
-    rows += [(k, inline(v, 'ui/inventory.md')) for k, v in inv_row(row['name'])]
     return ('<details class="dc-tech"><summary>Technical details <span class="fold-sub">classes, screens, iOS</span></summary><div class="dc-tech-body">'
             '<dl>' + ''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in rows) + '</dl>'
             + (f'<h4>From DESIGN.md</h4>{quotes}' if quotes else '') + (f'<h4>The words it carries</h4>{mc}' if mc else '') + '</div></details>')
@@ -383,14 +383,13 @@ def component(row):
         out += [f'<h3 class="dc-h" id="{sl}-variants">Variants</h3>',
                 '<div class="dc-variants">' + ''.join(f'<figure class="dc-variant">{stage(h, f"-{sl}-v{i}", sels, lab)}<figcaption>{H.escape(lab)}</figcaption></figure>'
                                                     for i, (lab, h) in enumerate(others)) + '</div>']
-    out += [f'<h3 class="dc-h" id="{sl}-states">States</h3>', '<p class="dc-note">Hover, pressed, focus, disabled and the rest, each shown on its own: step 3.</p>',
-            tech(row, vs), '</section>']
+    out += [tech(row, vs), '</section>']   # a States section comes when there are real states to show
     return '\n'.join(out), 'map-placeholder' in vs[top_i][1] + ''.join(h for _, h in others)
 
 def retired(row):
     sl = slug_c(row['name'])
     why = MAPROW[row['name']]['states'][0]
-    inv = ''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(v, "ui/inventory.md")}</p>' for k, v in inv_row(row['name']))
+    inv = ''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(clean(v), "ui/inventory.md")}</p>' for k, v in inv_row(row['name']))
     return (f'<section class="dc dc--retired" id="{sl}" aria-labelledby="{sl}-h"><h2 id="{sl}-h">{H.escape(row["name"])} <span class="dc-tag">Retired</span></h2>'
             f'<p class="dc-for">{H.escape(why[0].upper() + why[1:])}.</p><div class="kd-meta">{inv}</div></section>')
 

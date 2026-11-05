@@ -1230,3 +1230,21 @@ The model is Apple HIG and Primer.
 - **What happened.** The first ship of this change stopped on `check_docs_stages`: 88 stages differed. The differences were on the reference side. `specimens.html` had been read before its tab bar frames were styled (Times, black) and before its fonts had arrived, and two runs of the check alone passed. Ship was right to stop, but a flake read as a leak.
 - **The fix.** The check now forces the product's three faces to load and checks that every frame is styled before it reads a page. A page that isn't settled loads again, up to three times. One that never settles exits 3 ("not measured", like fonts unreachable: `ship.sh` retries once), never 1. So exit 1 always means a leak measured on settled pages.
 - **Shown both ways:** fonts blocked (`ONRACE_BLOCK_FONTS=1`) gave 3; a planted 1px letter-spacing gave 1 (16 stages).
+
+### No placeholders, no course-process text in the docs (designer, 2026-11-05)
+
+**The decision.** The docs say what a component is and how to use it, not how the course got there. Facts about the process stay here, in `concept.md`.
+
+**What changed (the docs layer only).**
+- **One divider between components.** The Technical details fold is just its row with the chevron, with no lines of its own.
+- **No States placeholder.** A States section appears only when there are real states to show.
+- **No course-process text on any docs page:** no steps, lessons, rounds, markup passes, gap codes (G23) or finding numbers (#9). `scripts/docs_clean.py` takes them out of what the docs quote: `DESIGN.md` passages, `why.html` (from `concept.md` and `references.md`), and the retired component's inventory line. The sources keep them.
+  - In a parenthetical, only the parts that name the process go (split at ";"); if nothing is left, it goes.
+  - A leading process label goes ("Markup pass (2026-10-23):").
+  - A phrase like "since step 7" goes.
+  - A sentence that still names the process goes, and so does a list item or heading left empty.
+- **The specimen sheet** (`specimens.html`, the hand-written docs page) had its 36 labels, notes and intros cleaned in place. One loss: a parenthetical such as "(C1, G1, G2)" went whole, so a few C1–C7 references left the notes. `DESIGN.md` keeps them.
+- **The inventory's raw notes left the Technical details.** They were mostly gap triage; the fold holds classes, screens and the native counterpart.
+- **Tighter vertical spacing.** At 1440 × 900, the whole section fits one screen for 44 of 56 components (29 before). Heading to the end of the rules fits for 54; Static map and Modal sheet, with their 600px stages, run 11 and 47px over. The median whole section is 617px (828 before).
+
+**The check.** `scripts/check_kit.py` fails the build on any process reference in the visible text of a docs page (`docs_clean.PROCESS`), alongside the words check. It caught the pattern's own false hits first: hex colors read as finding numbers; finding numbers are one or two digits now.
