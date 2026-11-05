@@ -46,20 +46,22 @@
 .kit-map { flex: 1; display: flex; flex-direction: column; padding: var(--space-4); }   /* the map's own panel, as #map-view on Race browse */
 
 .kit-doc {
-  /* light, like Apple HIG (designer, 2026-11-05): the dark product specimens stand out as windows without frames.
-     One accent, used rarely (the current nav item's line, the outline a legend item draws); green and coral only as the
-     two rules' bars. Text pairs on --d-bg: --d-text 16.8:1, --d-dim 10.3:1, --d-faint 5.0:1 (AA). */
-  --d-bg: #ffffff;
-  --d-elev: #f5f5f7;
-  --d-elev-2: #e8e8ed;
-  --d-border: #d2d2d7;
-  --d-text: #1d1d1f;
-  --d-dim: #424245;
-  --d-faint: #6e6e73;
-  --d-accent: #0071e3;
+  /* dark and quiet (designer, 2026-11-05; light for a few hours the same day, reverted): the artifact pages' near-black,
+     gray text; the specimens keep the product's page ground, a step lighter, so they read as the product without a frame.
+     One accent, rarely: the current nav item's thin line. Green and coral only as the two rules' bars; everything else
+     neutral (focus and a legend item's outline in --d-text). Text pairs on --d-bg: --d-text 17.6:1, --d-dim 7.5:1,
+     --d-faint 6.1:1 (AA). */
+  --d-bg: #0b0c0e;
+  --d-elev: #141518;
+  --d-elev-2: #1b1d21;
+  --d-border: #26282d;
+  --d-text: #eef0f2;
+  --d-dim: #a3a9b0;
+  --d-faint: #878d96;
+  --d-accent: #ff4d2e;
   --d-accent-dim: transparent;
-  --d-do: #1f883d;
-  --d-dont: #e5534b;
+  --d-do: #3fb950;
+  --d-dont: #f47067;
   --d-radius: 10px;
   --d-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --d-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -153,7 +155,7 @@
 @media (prefers-reduced-motion: reduce) { .kit-doc * { scroll-behavior: auto; } }
 
 /* =================================================================
-   The docs shell and the family pages (Lesson 9, 2026-11-05; quiet, light, like Apple HIG, the same day): every page of
+   The docs shell and the family pages (Lesson 9, 2026-11-05; quiet the same day; dark, as every artifact page): every page of
    design-system/docs/ but specimens.html, framed by scripts/docs_shell.py. The documentation's own values, as above; the
    stages keep the product's (scripts/check_docs_stages.mjs checks that nothing here reaches them).
    ================================================================= */
@@ -166,8 +168,8 @@
 .ds-theme { margin-left: auto; display: inline-flex; padding: 2px; border-radius: 999px; background: var(--d-elev); }
 .ds-theme button { position: relative; min-height: 30px; min-width: 52px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: var(--d-faint); font: 500 12px var(--d-font); cursor: pointer; }
 .ds-theme button::after { content: ""; position: absolute; inset: -7px 0; }   /* a 44px tap area round a small switch */
-.ds-theme button[aria-pressed="true"] { background: var(--d-bg); color: var(--d-text); box-shadow: 0 1px 2px rgb(0 0 0 / .12); }
-:is(.ds-head, .ds-nav, .ds-toc, .ds-main > :not(.dc), .dc > :not(.dc-spec):not(.dc-variants)) :focus-visible, .ds-menu:focus-visible { outline: 2px solid var(--d-accent); outline-offset: 2px; }
+.ds-theme button[aria-pressed="true"] { background: var(--d-elev-2); color: var(--d-text); }
+:is(.ds-head, .ds-nav, .ds-toc, .ds-main > :not(.dc), .dc > :not(.dc-spec):not(.dc-variants)) :focus-visible, .ds-menu:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
 
 .ds { display: grid; grid-template-columns: 260px minmax(0, 1fr); }
 .ds--toc { grid-template-columns: 260px minmax(0, 1fr) 220px; }
@@ -211,7 +213,7 @@
 .ds-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 16px; }
 .ds-card { display: grid; gap: 6px; align-content: start; padding: 20px; border-radius: 12px; background: var(--d-elev); color: var(--d-dim); text-decoration: none; font-size: 15px; }
 .ds-card:hover { background: var(--d-elev-2); }
-.ds-card:focus-visible { outline: 2px solid var(--d-accent); outline-offset: 2px; }
+.ds-card:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
 .ds-card-t { color: var(--d-text); font-weight: 600; font-size: 17px; }
 .ds-card-n { color: var(--d-faint); font-size: 13px; }
 
@@ -232,13 +234,13 @@
 .an-window.is-cropped { overflow: hidden; }
 .an-window.is-cropped > .an-pan > .kit-frame { border-radius: 0; }
 .an-layer { position: absolute; inset: 0; z-index: 30; pointer-events: none; }
-.an-box { position: absolute; box-shadow: 0 0 0 2px var(--d-accent), 0 0 0 4px rgb(255 255 255 / .6); border-radius: 4px; }
+.an-box { position: absolute; box-shadow: 0 0 0 2px var(--d-text), 0 0 0 4px rgb(0 0 0 / .5); border-radius: 4px; }
 /* the parts legend, directly under the specimen: each part's name and class; hover, focus or a tap outlines the part */
 .an-legend { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 24px; max-width: 720px; }
 .an-part { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-height: 36px; padding: 6px 0; border: 0; background: none; color: var(--d-dim); font: 14px var(--d-font); text-align: left; cursor: pointer; }
 .an-part:hover, .an-part[aria-pressed="true"] { color: var(--d-text); }
 .an-part[aria-pressed="true"] code { color: var(--d-text); }
-.an-part:focus-visible { outline: 2px solid var(--d-accent); outline-offset: 2px; border-radius: 4px; }
+.an-part:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; border-radius: 4px; }
 
 /* When to use / When not to: text only, a thin bar on the left */
 .dc-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px 40px; margin-top: 48px; max-width: 900px; }

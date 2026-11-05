@@ -1191,3 +1191,17 @@ The model is Apple HIG and Primer.
 **Still unknown.**
 - **A variant without the component's parts isn't cropped.** Sign out's "Sign out" state is the confirm alert, where the button isn't, so it shows the whole dialog stage.
 - **The 60% share is a judgment:** a component just above it shows its whole stage.
+
+### The docs back to dark, still quiet (designer, 2026-11-05)
+
+**The decision.** No light docs page.
+- **Kept from the quiet rework:** one specimen per component with its legend under it, text-only rules with links instead of embedded components, neutral headings, no code chips, the fixed scroll highlight, the dividers and the spacing.
+- **Dark:** the artifact pages' near-black (`#0b0c0e`) with gray text (17.6, 7.5 and 6.1:1).
+- **Specimens:** each sits on the product's own page ground, a step lighter, with no border.
+- **Color:** one accent (`#ff4d2e`, as on the artifact pages), only as the current nav item's thin line (the nav, the specimen sheet's sidebar, "On this page"). The rules' green and coral bars are the only other color. Focus rings and a legend item's outline are `--d-text`.
+- **The light layer** was live for a few hours (`acf1738`); `ui/review-docs-3.html` shows it beside the dark one.
+
+**Found on the way: a missing weight isn't a network failure.**
+- **What happened.** The light rework's headings (weight 700) took the product's display face, which loads at 800 only, so all 52 docs states failed their font check on every run.
+- **The flaw it exposed.** The ship rule counted that as "Google Fonts unreachable", retried, and stopped. Safe, but a page bug got a network retry.
+- **The fix.** The docs' headings take the docs' own face. `check_overflow` now counts a failure as fonts only when no font loaded at all on the page (exit 3, a retry). A weight that's missing while the others loaded is exit 1, a real failure. Shown both ways: blocked fonts gave 3; the headings fix taken out gave 1.

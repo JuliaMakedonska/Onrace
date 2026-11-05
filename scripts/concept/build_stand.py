@@ -1069,6 +1069,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-overviews'), os.path.join(ROOT, 'p
 shutil.copyfile(os.path.join(ROOT, 'ui/review-overviews.html'), os.path.join(ROOT, 'public/ui/review-overviews.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-kit-sheet'), os.path.join(ROOT, 'public/ui/review-kit-sheet'), dirs_exist_ok=True)   # the kit as a component sheet (2026-10-26)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-kit-sheet.html'), os.path.join(ROOT, 'public/ui/review-kit-sheet.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-docs-3'), os.path.join(ROOT, 'public/ui/review-docs-3'), dirs_exist_ok=True)   # the docs back to dark, still quiet (2026-11-05)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-docs-3.html'), os.path.join(ROOT, 'public/ui/review-docs-3.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-docs-2'), os.path.join(ROOT, 'public/ui/review-docs-2'), dirs_exist_ok=True)   # the docs made quiet (2026-11-05)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-docs-2.html'), os.path.join(ROOT, 'public/ui/review-docs-2.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-docs'), os.path.join(ROOT, 'public/ui/review-docs'), dirs_exist_ok=True)   # the docs restructured (Lesson 9, 2026-11-05)
