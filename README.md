@@ -8,10 +8,14 @@ Full product brief: [`CLAUDE.md`](./CLAUDE.md). Live app: https://juliamakedonsk
 
 | What | Where | Changed by |
 |---|---|---|
-| **Look** (values and components) | [`design-system/`](./design-system/README.md): [`tokens/tokens.css`](./design-system/tokens/tokens.css) (values: primitives and semantic color roles) + [`components/`](./design-system/components/README.md) (one file per component), bundled into `design-system/index.css`, the one file the pages link; shown in [`ui/kit.html`](https://juliamakedonska.github.io/Onrace/ui/kit.html) | the "keep it" rule ([`CLAUDE.md`](./CLAUDE.md) → UI assembly) |
+| **Look** (values and components) | [`design-system/`](./design-system/README.md): [`tokens/tokens.css`](./design-system/tokens/tokens.css) (values: primitives and semantic color roles) + [`components/`](./design-system/components/README.md) (one file per component), bundled into `design-system/index.css`, the one file the pages link; shown in [`ui/kit.html`](https://juliamakedonska.github.io/Onrace/ui/kit.html) | the "keep it" rule and [`design-system/CONTRIBUTING.md`](./design-system/CONTRIBUTING.md) |
 | **Words** (every product line) | [`microcopy.md`](./microcopy.md), rendered in [`voice.html`](https://juliamakedonska.github.io/Onrace/voice.html) | `microcopy.md` first, then `scripts/build_voice_html.py` |
 | **Structure** (screens and states) | [`wireframes/*.html`](./wireframes/) | the page itself, carried to every screen that shares the component |
 | **Decisions** (and why) | [`concept/concept.md`](./concept/concept.md) | a dated entry per decision |
+
+## Contributing
+
+Anything new appears first in `design-system/`, then on a screen, never the other way round. The checklist: [`design-system/CONTRIBUTING.md`](./design-system/CONTRIBUTING.md). Everything ships through `scripts/ship.sh`.
 
 ## Start here: the workspace
 

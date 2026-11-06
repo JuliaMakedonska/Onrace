@@ -20,6 +20,7 @@ build_stand.py runs it on every build. It fails when:
   placeholder, title) appears neither in microcopy.md nor in the source docs: DESIGN.md, concept/concept.md,
   concept/references.md and ui/inventory.md, but not the inventory's own Docs map, whose words must come from the rest.
 """
+import html as H
 import os, re, sys
 from html.parser import HTMLParser
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -111,7 +112,8 @@ ENTRY, MAPDATA = os.path.join(ROOT, 'design-system/index.css'), os.path.join(ROO
 DOC_PAGES = sorted(glob.glob(os.path.join(ROOT, 'design-system/docs/*.html')) + glob.glob(os.path.join(ROOT, 'design-system/docs/components/*.html')))
 REDIRECTS = [p for p in DOC_PAGES if 'http-equiv="refresh"' in open(p).read()]   # the old per-component addresses: no stylesheet, by design
 PATTERN_FILES = sorted(glob.glob(os.path.join(ROOT, 'design-system/patterns/*.html')))   # Lesson 9 step 4: compositions of existing components only
-for sp in SCREENS + [os.path.join(ROOT, 'ui/shell.html')] + PATTERN_FILES + [p for p in DOC_PAGES if p not in REDIRECTS]:
+# ui/shell.html redirects to the Tab screen pattern since 2026-11-06, so it isn't checked as a page of its own
+for sp in SCREENS + PATTERN_FILES +  [p for p in DOC_PAGES if p not in REDIRECTS]:
     h, name = open(sp).read(), os.path.relpath(sp, ROOT)
     head = h[:h.index('</head>')]
     links = [os.path.normpath(os.path.join(os.path.dirname(sp), l)) for l in re.findall(r'href="([\w./-]+?\.css)(?:\?v=[0-9a-f]+)?"', head)]
@@ -136,6 +138,18 @@ for sp in SCREENS + [os.path.join(ROOT, 'ui/shell.html')] + PATTERN_FILES + [p f
         # :focus-visible; a screen shows a state only when it happens
         for c in sorted(used & {'is-hover', 'is-pressed', 'is-focus'}):
             fails.append(f'{name}: uses the docs-only state stand-in .{c}')
+
+# ---------------------------------------------------------------- design-system first (Lesson 9 step 5, 2026-11-06)
+# design-system/CONTRIBUTING.md: anything new appears first in design-system/, then on a screen. A screen can't use a class
+# the components don't define (above); and every class a component defines is shown on specimens.html or in a pattern,
+# so a new component can't skip its specimen, and through it its Showcase map row, its Docs map row and its docs section.
+# Not shown there by design: the scroll states the screens' scripts set (.is-scrolled on a drill-down's top bar, .is-at-end
+# on the sticky action bar), and Race browse's .view-area, the container its List / Map panels switch in.
+_SHOWN_ELSEWHERE = {'is-scrolled', 'is-at-end', 'view-area'}
+_spec = H.unescape(open(os.path.join(ROOT, 'design-system/docs/specimens.html')).read()) + ''.join(open(f).read() for f in glob.glob(os.path.join(ROOT, 'design-system/patterns/*.html')))
+_shown = {c for a in re.findall(r'class="([^"]*)"', _spec) for c in a.split()} | set(re.findall(r"classList\.(?:add|toggle|remove)\('([\w-]+)'", _spec))
+for c in sorted(DEFINED - _shown - _SHOWN_ELSEWHERE):
+    fails.append(f'class .{c} is defined in design-system/components/ but shown on no specimen or pattern (a new component goes into the docs first: design-system/CONTRIBUTING.md)')
 
 # ---------------------------------------------------------------- the docs pages (Lesson 9 step 2, 2026-11-04)
 slug_c = lambda n: re.sub(r'[^a-z0-9]+', '-', n.lower()).strip('-')
@@ -190,5 +204,5 @@ if fails:
     print(f'check_kit: FAIL ({len(fails)})\n  ' + '\n  '.join(fails))
     sys.exit(1)
 print(f'check_kit: pass ({len(names)} inventory components mapped, {len(MAP)} map rows with their states, {len(p.words)} specimen words in microcopy.md; '
-      f'{len(SCREENS)} screens, the shell and {len(DOC_PAGES)} docs pages on design-system/index.css, every screen class defined; '
+      f'{len(SCREENS)} screens and {len(DOC_PAGES)} docs pages on design-system/index.css, every screen class defined; '
       f'{len(PATTERN_FILES)} patterns on existing components only; every component a section on its family page, its old address redirecting there; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')

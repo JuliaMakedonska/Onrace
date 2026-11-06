@@ -120,12 +120,12 @@ head = KIT[:KIT.index('<body')]
 head = re.sub(r'\n<link rel="stylesheet" href="doc\.css[^"]*">', '', head)
 head = re.sub(r'(<link rel="stylesheet" href="\.\./index\.css[^"]*">)', r'\1\n<link rel="stylesheet" href="doc.css">', head, count=1)   # after the design system (Lesson 8, step 3; one file since Lesson 9, step 1); build_stand.py stamps it
 assert 'href="doc.css"' in head, 'design-system/docs/specimens.html: no design-system/index.css link to put doc.css after'
-shell = re.search(r'  <section class="kit-section" id="shell".*?\n  </section>\n', KIT, re.S).group(0)
+# the Shell section went in Lesson 9 step 5 (2026-11-06): ui/shell.html redirects to the Tab screen pattern, the one source,
+# shown in the Patterns section below (specimens.html#shell lands there)
 tail_from = KIT.index('<!-- /kd -->') + len('<!-- /kd -->') if '<!-- /kd -->' in KIT else KIT.index('</main>') + len('</main>')
 tail = re.sub(r'\n<script>\n/\* kd:js.*?</script>', '', KIT[tail_from:], flags=re.S)
 tail = re.sub(r'\n<script src="doc\.js"></script>', '', tail)
 SPEC_JS = ''.join(m.group(0) + '\n' for m in re.finditer(r'<script>.*?</script>', tail, flags=re.S))   # the specimens' own behaviour (live segments, date pills), carried to every component page
-shell = shell.replace('<h2 id="shell-h">Shell</h2>', '<h3 id="shell-h">Shell</h3>')
 
 # ---------------------------------------------------------------- one card per specimen
 def title_of(spec):
@@ -201,8 +201,7 @@ side = ['<aside class="kd-side" aria-label="Components">',
         '  <div class="kd-nav" id="kd-nav">',
         '    <label class="kd-filter-l" for="kd-filter">Filter components</label>',
         '    <input type="search" id="kd-filter" class="kd-filter" placeholder="Filter by name" autocomplete="off">',
-        '    <nav aria-label="Components by role">',
-        '      <p class="kd-role">Shell</p><ul><li><a href="#shell" data-names="shell tab bar large title">Shell</a></li></ul>']
+        '    <nav aria-label="Components by role">']
 for r in ROLES:
     side.append(f'      <p class="kd-role"><a href="#{slug(r)}">{r}</a> <span>{len(specs_by_role[r])}</span></p><ul>'
                 + ''.join(f'<li><a href="#{s}" data-names="{H.escape(" ".join([title_of(s)] + [x["name"] for x in rows_of[s]]).lower())}">{H.escape(title_of(s))}</a></li>' for s in specs_by_role[r]) + '</ul>')
@@ -218,7 +217,7 @@ intro = (f'<p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: {len
 THEME = ('<div class="kd-theme" role="group" aria-label="Theme"><span class="kd-theme-l">Theme</span>'
          '<button type="button" data-kd-theme="dark" aria-pressed="true">Dark</button><button type="button" data-kd-theme="light" aria-pressed="false">Light</button>'
          '<span class="kd-theme-note">Light is the stress test of the semantic roles; Onrace ships dark only.</span></div>')
-main = ['<main class="kd-main">', '  ' + intro, '  ' + THEME, '', '  <div class="kit-item kd-shell" id="shell-card" data-names="shell tab bar large title">', shell.replace('  <section', '  <section', 1), '  </div>']
+main = ['<main class="kd-main">', '  ' + intro, '  ' + THEME, '']
 for r in ROLES:
     main.append(f'\n  <!-- ================================================================ {r} -->\n'
                 f'  <section class="kit-section" id="{slug(r)}" aria-labelledby="{slug(r)}-h">\n    <h2 id="{slug(r)}-h">{r} <span>{len(specs_by_role[r])}</span></h2>\n\n'
@@ -230,7 +229,7 @@ def _pcard(pt):
             f'<p class="kd-line"><span class="kd-k">In the docs</span> <a href="patterns.html#{pt["file"]}">Patterns</a></p></div>\n'
             f'      <div class="kit-states">{PSTAGE(pt)}</div>\n    </div>')
 main.append('\n  <!-- ================================================================ Patterns (ui/inventory.md → Patterns map) -->\n'
-            f'  <section class="kit-section" id="role-patterns" aria-labelledby="role-patterns-h">\n    <h2 id="role-patterns-h">Patterns <span>{len(PATTERNS)}</span></h2>\n\n'
+            f'  <section class="kit-section" id="role-patterns" aria-labelledby="role-patterns-h"><span id="shell"></span>\n    <h2 id="role-patterns-h">Patterns <span>{len(PATTERNS)}</span></h2>\n\n'
             + '\n\n'.join(_pcard(pt) for pt in PATTERNS) + '\n  </section>')
 main.append('</main>')
 JS = '''<script>

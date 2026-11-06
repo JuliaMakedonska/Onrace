@@ -563,6 +563,10 @@
         "Base"
        ],
        [
+        "results-list?add=spartan-beast-killington-2025",
+        "Add official result link"
+       ],
+       [
         "results-list-empty",
         "Empty"
        ],
@@ -601,7 +605,7 @@
       "job": "Related Job 3, log a result with source proof.",
       "jobQuote": "<strong>When</strong> I finish a race, <strong>I want to</strong> log the result along with where it came from, <strong>so that</strong> I have proof ready without having to redo the work later.",
       "persona": "Secondary — The Qualifying-Time Archivist (+ Primary, weak/general — see matrix)",
-      "flow": "opened from Results list's <strong>Log result</strong> action. The form's checks run in order: <code>official_result_url filled in?</code>, then <code>race_name/date/sport_type/finish_time all filled in?</code> <code>[?]</code>, then <code>Loading: saving result</code>, then <code>Submission succeeded?</code>."
+      "flow": "opened from Results list's <strong>Log result</strong> action. The form's checks run in order: <code>official_result_url filled in and not a link?</code> (the link is optional since 2026-11-06), then <code>race_name/date/sport_type/finish_time all filled in?</code> <code>[?]</code>, then <code>Loading: saving result</code>, then <code>Submission succeeded?</code>."
      },
      {
       "slug": "race-picker",
@@ -638,6 +642,14 @@
        [
         "result-detail",
         "Base"
+       ],
+       [
+        "result-detail?result=spartan-beast-killington-2025",
+        "No official result link yet"
+       ],
+       [
+        "result-detail?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+        "Add official result link"
        ],
        [
         "result-detail-error",
@@ -831,9 +843,15 @@
     'results-list.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Base state.', zones: [
       ['Header', 'iOS large title "Results" with the Log result action, the entry to Related Job 3. The action belongs to the header, not the list, so it works in every state (flows.md).'],
       ['Saved confirmation', 'Shown only when Log result\'s success lands here with ?saved=<race name>: "Saved: <race name>". Otherwise hidden.'],
-      ['Results row', 'The archive\'s size ("4 results · Newest first"), in the same place as Race browse\'s count. Newest first because proof is usually needed for a recent qualifying window.'],
+      ['Results row', 'The archive\'s size ("5 results · Newest first"), in the same place as Race browse\'s count. Newest first because proof is usually needed for a recent qualifying window.'],
       ['Logged results', 'One card per result; the whole card opens Result detail through its loading state (flows.md: "taps a logged entry"). It shows race name, finish time, a short sport tag, date, and "Self-reported · via <domain>", never "verified" (sitemap.md → Entities 4).'],
+      ['A result with no official result link yet', 'The fifth, Spartan Race Beast — Killington, was logged without a link (optional since 2026-11-06). Its proof line says "Self-reported · no official result link yet" and wraps if it must; "Add official result link" under the row opens the one-field sheet.'],
       ['Global nav', '3 tabs: Discover / Results (current) / Profile (sitemap.md → Navigation § 1). Results and Profile go through the sign-in gate when signed out.'] ] },
+    'results-list.html?add=spartan-beast-killington-2025': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Add official result link: a sheet over Results list (flows.md → Flow 3, the no-link branch).', zones: [
+      ['Results, behind', 'The list stays under the scrim; the sheet is for the one result without a link.'],
+      ['The sheet\'s bar', 'Cancel leaves with nothing kept; the title "Official result link"; Save, dimmed until the field has text, named "Save official result link".'],
+      ['One field', 'The official result link, with its helper: where to paste it from. Only a link that isn\'t one is an error, a coral footnote in the helper\'s place (try it: &try=athlinks).'],
+      ['After Save', 'Back on Results list with "Saved: <race name>", the row now "Self-reported · via <domain>", its add action gone.'] ] },
     'results-list-empty.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Empty: no results logged yet.', zones: [
       ['Header', 'Same large title and Log result action as the base state, still working here.'],
       ['Empty state', 'flows.md Empty2. "No results logged yet" and one line: "Keep your official race results here." "Log your first result" opens Log result. Why the official result link matters is explained on Log result, where it applies. There\'s no count row above: it only repeated the heading. A data state, so no retry; giving up is just leaving by a tab.'],
@@ -851,6 +869,13 @@
       ['The way back', '"‹ Results" is the only navigation, with no tab bar. It\'s also every give-up exit on the screen (DeadEnd4, DeadEnd5).'],
       ['One result, with its proof', 'Race name, a prominent finish time, date and full sport type. The proof section shows the official_result_url, "Self-reported · via <domain>" (never "verified"), and a line saying the official timing page is the evidence.'],
       ['Open the official result', '"Open official result on <domain>" runs flows.md\'s "Source link still opens?" as a real check: a new tab opening is Success3, otherwise LinkError.'] ] },
+    'result-detail.html?result=spartan-beast-killington-2025': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). A result with no official result link yet (optional since 2026-11-06).', zones: [
+      ['The way back', '"‹ Results", as on every result.'],
+      ['The result, with no proof yet', 'The proof section says "Self-reported · no official result link yet" and "Without the official result link, this result has no evidence." No link and no Copy link: there\'s nothing to copy.'],
+      ['Add official result link', 'The primary, in Open official result\'s place, with "Paste it from the official timing site." It opens the sheet (flows.md → Flow 3: no link → the sheet, not Success3).'] ] },
+    'result-detail.html?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Add official result link: the same sheet, over Result detail.', zones: [
+      ['The sheet', 'One field, Cancel and Save, as on Results list. Only an invalid link is an error.'],
+      ['After Save', 'The result shows its link, Copy link and "Self-reported · via <domain>", and the action bar is Open official result again: Flow 3 goes on to "Official result opens in a new tab?".'] ] },
     'result-detail-error.html': { job: 'Related Job 4 — retrieve proof (research/jtbd.md). Error: could not load result details (DetailError2).', zones: [
       ['The way back', 'Retry → no (DeadEnd4), so the error message doesn\'t repeat it.'],
       ['A state instead of the result', '"Couldn\'t load this result" and Try again, which re-fetches the same result through the loading page.'],
@@ -871,23 +896,23 @@
       ['Form', 'Email kept, password cleared. Retrying is just submitting again, to the same destination.'] ] },
     'log-result.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Base state: the blank form.', zones: [
       ['Top bar', '"‹ Results" on the left is the only navigation, and every error\'s give-up exit (DeadEnd3). The title is centred in the bar; Save sits on the right, because a bottom bar would collide with the keyboard (_conventions.md § 1, Forms).'],
-      ['Intro', 'One line saying every field is needed. That the four non-link fields are required is flagged [?] in flows.md.'],
+      ['Intro', '"Every field but the official result link is needed to save a result." That the four non-link fields are required is flagged [?] in flows.md.'],
       ['Find in race catalog', 'Optional row that opens Race picker, carrying every value typed so far in the URL (flows.md Flow 2, catalog branch).'],
       ['Linked race', 'Only with catalog=<slug>: a read-only card (name, date, full sport type, city/country, "From the race catalog") replaces the three race facts. "Unlink race" makes them editable again, pre-filled.'],
       ['Race facts and finish time', 'Race name, date and sport type, typed when no race is linked. Finish time is always typed.'],
-      ['Official result link', 'The one field CLAUDE.md marks required. Helper text says why: it\'s the proof elite races ask for, Onrace doesn\'t check it, and the result shows as self-reported.'] ] },
+      ['Official result link', 'Optional since 2026-11-06 (CLAUDE.md → Result trust model): its helper opens "Optional: you can add it later." and still says why it matters: it\'s the proof elite races ask for, Onrace doesn\'t check it, and the result shows as self-reported. Saved without it, the result has no evidence until a link is added.'] ] },
     'log-result-loading.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Loading: saving result.', zones: [
       ['Top bar', 'Save becomes a plain "Saving…" in the same slot, with nothing to tap. "‹ Results" stays usable.'],
       ['The form, locked', 'Filled in from the URL (a linked race shows as its card) and disabled while the save runs, Find in race catalog and "Unlink race" included (flows.md: Submitting).'],
       ['Where it goes next', 'Success lands on Results list, which says what was saved. Offline or &fail=1 goes to the save error with your values and catalog link kept.'] ] },
-    'log-result-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: source link is required.', zones: [
+    'log-result-error.html': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: the official result link isn\'t a link.', zones: [
       ['Top bar', '"‹ Results" is the give-up exit (DeadEnd3), so it isn\'t repeated as a button. Save runs the same checks again.'],
       ['The form, as you left it', 'Filled in from the URL, a linked race included, so nothing is lost. Fixing it and tapping Save is "Fix and resubmit".'],
-      ['Official result link — missing', 'An inline error under the field says the link is the proof (flows.md: HasLink → no). It\'s checked first, before the other fields.'] ] },
+      ['Official result link — not a link', 'A coral footnote under the field, in its helper\'s place: "That isn\'t a link. Paste the full address, starting with https://" (flows.md: link filled in and not a URL?). An empty link isn\'t an error any more (2026-11-06). It\'s checked first, before the other fields.'] ] },
     'log-result-error.html?cause=fields': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: required field missing [?].', zones: [
       ['Top bar', '"‹ Results" is the give-up exit (DeadEnd3). Save runs the same checks again.'],
       ['Race facts — missing', 'Each empty field gets its own inline error (flows.md: OtherFieldError). With a catalog race linked, only finish time can be missing. Whether these are really required is flagged [?].'],
-      ['Official result link', 'Already filled in, so no error here.'] ] },
+      ['Official result link', 'Filled in, and a link, so no error here (it could be empty too: it\'s optional).'] ] },
     'log-result-error.html?cause=submit': { job: 'Related Job 3 — log a result with proof (research/jtbd.md). Error: couldn\'t save the result.', zones: [
       ['Top bar', 'Save is still there: tapping it is Retry. "‹ Results" is giving up (DeadEnd3).'],
       ['Save error', '"Couldn\'t save your result", framed as a connection problem, at the top of the form under the bar that holds Save. It never claims the link was checked (flows.md SubmitError, reworded 2026-09-25).'],
@@ -1171,6 +1196,7 @@
   }
   function notesKey(key) {
     var base = key.split('?')[0] + '.html';
+    if (key.indexOf('?') > -1 && NOTES[base + '?' + key.split('?')[1]]) return base + '?' + key.split('?')[1];   // a state named by its whole query (the add sheet, the no-link result)
     var cause = /[?&]cause=([a-z]+)/.exec(key);
     return cause && NOTES[base + '?cause=' + cause[1]] ? base + '?cause=' + cause[1] : base;
   }

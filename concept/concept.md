@@ -906,7 +906,7 @@ Every working screen (35 pages, every state) checked against the kit and DESIGN.
 
 ### The official result link becomes optional (designer, 2026-10-30; for after Lesson 8)
 
-**Recorded only: nothing changes now.** One pass after Lesson 8, with the list below as its checklist. Short entry: `tokens/tokens-audit.md` → After the lesson.
+**Recorded only: nothing changes now.** One pass after Lesson 8, with the list below as its checklist. **Done 2026-11-06** (Lesson 9 step 5, as the proof of the contribution rule): see "Step 5: contribution rules, and the optional link as their proof" below. Short entry: `tokens/tokens-audit.md` → After the lesson.
 
 **The decision:**
 1. **The link is optional.** The official result link becomes optional on Log result. An empty link is not an error; only an invalid link (not a URL) is.
@@ -1301,3 +1301,34 @@ Five follow-ups to step 3, each through the tokens and components, in both theme
 **In the docs:** `design-system/docs/patterns.html`, in the docs shell (Patterns in the top of the nav): each pattern live from its file in a frame, what it's for, "Use the pattern" and "Use the components" in the rules' green and coral bars, the components it's composed of as links, the screens and pages it stands on, its file; then Not patterns with why. The same frames are a generated Patterns section of `specimens.html`, so the stage check (18) compares each pattern on both pages, dark and light, at 1280 and 390; the overflow check measures each pattern file at 390, 320 and 200% text. The words come from `DESIGN.md` → Patterns (the Patterns map, like the Docs map, isn't a source of words).
 
 **Open:** `ui/shell.html` (Lesson 7) is the same composition as Tab screen without content; it stays where the specimens and the viewer link it. The patterns are drawn as static pages: the large title's collapse into the bar and Log result's form scripts aren't in them.
+
+### Step 4 decision: the shell is the Tab screen pattern (designer, 2026-11-06)
+
+`ui/shell.html` (Lesson 7) was the same composition as the Tab screen pattern without content. It's now a redirect to `design-system/patterns/tab-screen.html`, keeping the query, so the pattern is the one source and old links still work. The specimens' Shell section went (the Patterns section shows the composition; `specimens.html#shell` lands there), the Lesson 07 overview embeds the pattern, and the build no longer checks the shell as a page of its own.
+
+### Step 5: contribution rules, and the optional link as their proof (designer brief, 2026-11-06)
+
+**The rule:** anything new appears first in `design-system/`, then on a screen, never the other way round. Written down in `design-system/CONTRIBUTING.md` (the checklist: what goes where, in which order, which check enforces it, and what the build can't check), `DESIGN.md` → Contributing to the system and `CLAUDE.md` → Contributing to the system, linked from both READMEs, so a new developer or a new session reads it from the repo. The "keep it" rule now says the same for a change: a value change goes into a token, a component change into `components/` and its docs section, a new composition into `patterns/`.
+
+**A new check (21):** every class a component defines is shown on a specimen or in a pattern (`check_kit.py`). With check 12 (a screen uses no undefined class) the wrong order fails both ways: a screen can't use what the system lacks, and a component can't skip its specimen, which carries its inventory rows and docs section. Three classes are listed as shown on the screens only, with why: `.is-scrolled` and `.is-at-end` (set by the screens' scroll scripts) and Race browse's `.view-area`.
+
+**The proof: the official result link becomes optional** (the decision above, 2026-10-30 and 2026-11-01). Done in the rule's order:
+1. **The words first:** `microcopy.md` rows 231, 258, 259, 386, 387 changed and 566–582 added, then `voice.md` (Required vs optional, the Error example, a Dictionary action "Add official result link") and `voice.html`.
+2. **The system:** `result-row.css` (a text link under the row's link, on the same surface), `modal-sheet.css` (`.sheet--fit`, a sheet at its own height); new specimen stages for the result row, the proof line, the detail section and its proof, the action bar ("no official result link yet") and the sheet ("Add official result link: one field, at its own height"); their states in `ui/inventory.md` → Showcase map, so the family pages show them. No new token: the proof line already wraps, the sheet reuses the sheet's values, the field error is step 3's.
+3. **The screens:** Results list (the fifth sample result and the sheet), Result detail (the no-link page, its primary, the sheet), Log result's three pages (optional link, its intro and helper, an invalid link the only link error), Sign in / Sign up's two intros, and the loading and error pages' slug lists.
+4. **The viewer and the docs:** `wireframes/index.html` (three new states, their notes), `_screens.md`, `flows.md` (Flow 2's check and Success, Flow 3's no-link branch and a new dead end), `sitemap.md`, `research/jtbd.md`, `CLAUDE.md` (Result trust model, Data model, MVP-core job 2, Core features).
+
+**Answers this pass had to take** (not in the record above; taken from its rules):
+- **The fifth sample result, not one of the four losing its link:** Spartan Race Beast — Killington (13 Sep 2025, OCR, 4:05:37), already in the catalog. The four keep their proof lines, so nothing that was right changes.
+- **The "Optional" mark** is the helper's first words ("Optional: you can add it later."), as Find in race catalog's helper does: no new tag component.
+- **The intro:** "Every field but the official result link is needed to save a result."
+- **The invalid-link error:** "That isn’t a link. Paste the full address, starting with https://" (the record's example, kept).
+- **The sheet:** titled "Official result link" (what its one field holds); Save named "Save official result link" (WCAG 2.5.3); Save dimmed until the field has text; Cancel and Escape leave with nothing kept. After Save, Results list says "Saved: \<race name\>" (the existing confirmation) and the row names its domain; Result detail shows the link, Copy link and Open official result.
+- **Result detail without a link:** the note "Without the official result link, this result has no evidence."; the action bar's caption "Paste it from the official timing site."
+- **Sign in / Sign up:** "each result with its official result link" was no longer true: "Sign in to see your results archive and the official result links you’ve added." and "Create an account to start your results archive. Add each result’s official result link now or later."
+- **A reviewer's switch** for the sheet's error: `&try=<text>` types it in and taps Save (`_conventions.md` § 2), so the state has a URL for the viewer and the overflow check.
+
+**The patterns check caught it:** the first build of this pass stopped on check 20. The add sheet is a grouped form (a labelled row with its hint as the group's footnote), so the Grouped form pattern now stands on Results list and Result detail too, and the Patterns map didn't say so. The map, `DESIGN.md` → Patterns and the pattern's README now list six screens.
+
+**Still open:** the wireframes keep no data between pages, so a link added on Results list isn't on Result detail when you open it (and the reverse); a stale link still can't be replaced (`flows.md` → DeadEnd5, the accepted MVP gap); the empty state's line "Keep your official race results here." was reviewed and kept.
+

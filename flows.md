@@ -1,5 +1,7 @@
 # User flows
 
+**Revised 2026-11-06 (designer; `concept/concept.md` → The official result link becomes optional):** the official result link is optional. Flow 2's first check is now "link filled in and not a link?" (an empty link isn't an error, only an invalid one), and its Success no longer requires the link: a result saved without one stays self-reported with no evidence until one is added. Flow 3 gets a branch before "Official result opens in a new tab?": "Result has an official result link?", where no → the **Add official result link** sheet (also opened from a row on Results list), not Success. Job 2 reads "log a result, add the proof now or later". Flow 2's title keeps "Source Proof": the proof is still what the job is for, now or later.
+
 **Revised 2026-10-24 (designer):** Race picker is a screen pushed inside Log result's navigation, not a modal sheet: its way out is "‹ Log result" (the flow edge "cancels — form unchanged" now reads "goes back — form unchanged"); picking a race still returns to the form with it filled in.
 
 **Renamed 2026-10-23 (markup pass, designer):** the tab and screen called "My Results" are now "Results" (one word on the tab, HIG Tab bars). The rename applies from this note onward: the current content says "Results"; revision notes and superseded sections keep the wording of their time ("My Results").
@@ -195,12 +197,12 @@ flowchart TD
     PickerMatches -->|"yes"| Picker
     Picker -->|"selects a race — race name, date, sport type filled and locked"| LogForm
     Picker -->|"goes back — form unchanged"| LogForm
-    LogForm -->|"taps Save"| HasLink{"official_result_url filled in?"}
-    HasLink -->|"no"| ValidationError("Error: source link is required")
+    LogForm -->|"taps Save"| HasLink{"official_result_url filled in and not a link? (optional since 2026-11-06)"}
+    HasLink -->|"yes — not a link"| ValidationError("Error: the official result link isn't a link")
     ValidationError --> ValidationRetry{"Fix and resubmit?"}
     ValidationRetry -->|"yes"| LogForm
     ValidationRetry -->|"no"| DeadEnd3(("Dead end: no result saved, proof lost for later"))
-    HasLink -->|"yes"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?] (the first three come from the listing when a catalog race is linked)"}
+    HasLink -->|"no — a link, or empty"| HasOtherRequired{"race_name/date/sport_type/finish_time all filled in? [?] (the first three come from the listing when a catalog race is linked)"}
     HasOtherRequired -->|"no"| OtherFieldError("Error: required field missing (race_name / date / sport_type / finish_time) [?]")
     OtherFieldError --> OtherFieldRetry{"Fix and resubmit?"}
     OtherFieldRetry -->|"yes"| LogForm
@@ -211,7 +213,7 @@ flowchart TD
     SubmitError --> SubmitRetry{"Retry?"}
     SubmitRetry -->|"yes"| LogForm
     SubmitRetry -->|"no"| DeadEnd3
-    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated (required); catalog race linked if one was picked"))
+    SubmitOK -->|"yes"| Success2(("Success: results row saved for this user — official_result_url populated if one was given (optional; without it the result is self-reported with no evidence until one is added, Flow 3); catalog race linked if one was picked"))
 ```
 
 **Decisions:**
@@ -219,9 +221,9 @@ flowchart TD
 - *Sign-in succeeded?* has a third edge since 2026-09-25: "no — email not confirmed yet" routes into Flow 4's check-your-inbox step, not to the generic sign-in error. That's Supabase's distinct "Email not confirmed" response, and "try again" can't fix it: confirming the email can.
 - *Finds and taps Log result?* `[?]` — added 2026-09-24 with the 2-tab nav. The form is now one in-page action away from Results list (header button, or the empty state's call to action), not a tab. Flagged: that people look for logging inside Results is `sitemap.md` → Navigation § 1's unvalidated hypothesis. The action must not depend on the list having loaded (see the 2026-09-24 revision note).
 - *Retry?* (after a failed sign-in) — previously just an edge label; now an explicit diamond, same as every other error in this flow.
-- *official_result_url filled in?* — enforces the required-source-link trust model (`../CLAUDE.md` → Result trust model) before the form can be submitted at all. This is the one field `../CLAUDE.md`'s data model explicitly marks "(required)."
+- *official_result_url filled in and not a link?* (was "official_result_url filled in?" until 2026-11-06) — the link is optional now (`../CLAUDE.md` → Result trust model, reworded: the link is the proof; a result without it stays self-reported with no evidence until one is added). An empty link passes; only text that isn't an http(s) link is an error, checked first, before the other fields.
 - *race_name/date/sport_type/finish_time all filled in?* `[?]` — added as a second, separate check, deliberately flagged. Unlike `official_result_url`, `../CLAUDE.md`'s data model doesn't actually say these fields are required — it just lists them (`race_name/date/sport_type ..., finish_time, official_result_url (required)`). Modeled here as an assumed requirement (a result with no finish time or date is hard to imagine as useful) and flagged `[?]`, per this document set's own convention for assumed-not-sourced parts (see `sitemap.md`'s Entities section), not presented as settled fact. Previously this had no modeled validation at all — a blank `finish_time` would have silently surfaced as "link unreachable" via `SubmitError`, which was never accurate.
-- *Fix and resubmit?* (after the source-link validation fails) — previously this error only looped back to the form with no give-up path at all; now it's a real choice, same as the other errors in this flow.
+- *Fix and resubmit?* (after the link turns out not to be a link) — previously this error only looped back to the form with no give-up path at all; now it's a real choice, same as the other errors in this flow.
 - *Fix and resubmit?* (after the other-required-fields validation fails) `[?]` — same retry-or-give-up choice, one level down; inherits the same `[?]` status as the check above it.
 - *Submission succeeded?*
 - *Retry?* (after a failed submission)
@@ -231,8 +233,8 @@ flowchart TD
 **States:**
 - Loading: signing in (previously missing — sign-in was drawn as instant even though form submission, an equivalent network call, already had its own loading state).
 - Error: sign-in failed.
-- Error: source link is required (client-side validation, before submission).
-- Error: required field missing (race_name / date / sport_type / finish_time) `[?]` (client-side validation, before submission — flagged, since these aren't explicitly marked required in `../CLAUDE.md`'s data model the way `official_result_url` is).
+- Error: the official result link isn't a link (client-side validation, before submission; was "source link is required" until 2026-11-06, when an empty link stopped being an error).
+- Error: required field missing (race_name / date / sport_type / finish_time) `[?]` (client-side validation, before submission — flagged, since these aren't explicitly marked required in `../CLAUDE.md`'s data model; `official_result_url`, the one field it marked required, is optional since 2026-11-06).
 - Loading: saving result.
 - Error: couldn't save the result (was "link unreachable / submission failed" until 2026-09-25: a client-side app can't check that an arbitrary timing site is reachable, so it can only know the save failed).
 - Loading: fetching past catalog races (Race picker, on opening it and on each search).
@@ -240,10 +242,10 @@ flowchart TD
 - Error: could not load the race catalog (Race picker).
 
 **Endpoints:**
-- **Success:** tightened from "lands in Results list" (a screen, not a condition) to the actual verifiable state: a new row now exists in `results`, owned by this user via RLS, with `official_result_url` populated — the one field `../CLAUDE.md`'s data model explicitly requires — and, per this flow's `[?]`-flagged validation, `race_name`, `date`, `sport_type`, and `finish_time` populated too (though that requirement is only assumed here, not confirmed at the schema level — see the `[?]` on `HasOtherRequired` above). That row is what now appears on Results list ("my archive") and is what the next flow below retrieves.
+- **Success:** tightened from "lands in Results list" (a screen, not a condition) to the actual verifiable state: a new row now exists in `results`, owned by this user via RLS, with `official_result_url` populated if one was given (optional since 2026-11-06: a result saved without it is self-reported with no evidence until one is added in Flow 3) and, per this flow's `[?]`-flagged validation, `race_name`, `date`, `sport_type`, and `finish_time` populated too (though that requirement is only assumed here, not confirmed at the schema level — see the `[?]` on `HasOtherRequired` above). That row is what now appears on Results list ("my archive") and is what the next flow below retrieves.
 - **Dead ends:** three, kept distinct on purpose.
   - *Leaves without logging the result* — reachable from a failed sign-in (after exhausting retries) or from closing the Sign in / Sign up screen without attempting at all (added — previously the only modeled exit from that screen was through a failed attempt). Root cause: never got signed in.
-  - *No result saved, proof lost for later* — reachable from the source-link validation failing, the other-required-fields validation failing `[?]`, or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
+  - *No result saved, proof lost for later* — reachable from the link validation failing (a link that isn't one), the other-required-fields validation failing `[?]`, or the save itself failing. Root cause: a forms/data problem, once already past sign-in. These two were considered for merging into one "nothing happened" dead end but kept apart because they point at different real fixes (fix auth vs. fix the submission path), unlike the validation/submission pair inside the second node, which really is the same failure surfaced at two different moments.
   - *Reached Results, never found Log result* `[?]` (added 2026-09-24) — signed in fine, on the right screen, but never took the in-page action. Root cause: the action wasn't findable enough. Real fix: its placement/prominence on Results list. That's a different fix from both dead ends above, so it isn't merged into either. Flagged because whether this happens at all is untested.
 
 ---
@@ -286,7 +288,14 @@ flowchart TD
     DetailError2 --> DetailRetry2{"Retry?"}
     DetailRetry2 -->|"yes"| DetailLoading2
     DetailRetry2 -->|"no"| DeadEnd4
-    ResultDetail --> LinkWorks{"Official result opens in a new tab? (official_result_url well-formed, new tab not blocked)"}
+    ResultDetail --> HasProof{"Result has an official result link? (optional since 2026-11-06)"}
+    HasProof -->|"no"| AddSheet["Add official result link (sheet)"]
+    ResultsList2 -->|"taps Add official result link on a row without one"| AddSheet
+    AddSheet -->|"saves a link that isn't one"| AddError("Error: the official result link isn't a link")
+    AddError -->|"fixes it"| AddSheet
+    AddSheet -->|"saves a link"| ResultDetail
+    AddSheet -->|"cancels"| DeadEnd8(("Dead end: no proof yet — the result has no official result link"))
+    HasProof -->|"yes"| LinkWorks{"Official result opens in a new tab? (official_result_url well-formed, new tab not blocked)"}
     LinkWorks -->|"yes"| Success3(("Success: a new tab opened on this results row's official_result_url — whether the timing site then loads is outside Onrace's view"))
     LinkWorks -->|"no"| LinkError("Error: couldn't open the source link")
     LinkError --> LinkRetry{"Try again?"}
@@ -301,6 +310,7 @@ flowchart TD
 - *Retry?* (after a failed fetch of the logged-results list — added; this was the one network fetch in the whole document that previously had no paired failure branch, unlike every other fetch here).
 - *Any results logged yet?* — branches between the archive and an empty state.
 - *Retry?* (after a failed fetch of a specific result's details — previously this step wasn't modeled at all; opening a result was drawn as instant).
+- *Result has an official result link?* (added 2026-11-06) — the link is optional, so a result can reach Result detail with nothing to open. Then the screen's primary is **Add official result link**, which opens a one-field sheet (also opened from that result's row on Results list); Copy link is hidden. A saved link brings the result back as any linked result, and the flow goes on to "Official result opens in a new tab?". The no-link branch ends in the sheet, never in Success.
 - *Official result opens in a new tab?* (was "Source link still opens?" until 2026-09-25) — the moment the "the link is the evidence" trust model (`../CLAUDE.md` → Result trust model) gets used. Reworded, like Flow 1's registration check, to what a browser can verify: the URL is well-formed and the new tab wasn't blocked. Whether the timing site then loads happens in that other tab, outside Onrace's view, so the error copy must not claim the site is down.
 - *Try again?* (after the source link fails to open) — previously this dead-ended immediately with no retry attempt, even though the failure could be transient (a flaky timing-site server, not necessarily a truly dead link).
 
@@ -313,13 +323,15 @@ flowchart TD
 - Loading: fetching result details (previously missing — a specific result's detail fetch was collapsed into an instant transition).
 - Error: could not load result details.
 - Error: couldn't open the source link (was "source link unreachable" until 2026-09-25; see the decision above).
+- Add official result link (a modal sheet over Results list or Result detail, 2026-11-06), with its error: the official result link isn't a link.
 
 **Endpoints:**
 - **Success:** tightened from "ready to submit to the elite race" — not something Onrace can actually verify, since whether a specific application accepts the proof isn't knowable from here — to the condition the flow itself confirms: the selected `results` row's `official_result_url`, the required proof link per `../CLAUDE.md`'s Result trust model, opened successfully in this session. What happens after that — whether the race accepts it — is outside Onrace's scope by design: Onrace's job ends at confirming the link is live, since the product's trust model is "self-reported, source-linked," not "Onrace verifies" (`research.md` → CONCLUSIONS gap 4).
-- **Dead ends:** two, kept distinct on purpose.
+- **Dead ends:** three, kept distinct on purpose.
+  - *No proof yet — the result has no official result link* (added 2026-11-06): the result was logged without a link and the sheet was cancelled. Root cause: the link was never added. Real fix: adding it (the sheet), not a retry, so it isn't merged into the two below.
   - *Leaves without proof, application deadline at risk* — one merged outcome reachable from five causes: a failed sign-in, closing the Sign in / Sign up screen without attempting at all (added), an empty archive (nothing was ever logged), a failed fetch of the logged-results list (added), or a failed fetch of a specific result's details. All five share the same downstream reality — no proof in hand, right when it's needed — so they're one node, not five.
   - *Proof inaccessible, nothing in-app to correct it* — kept separate from the node above on purpose. This one is reached only after everything else worked (signed in, archive has entries, the specific result loaded fine) and the source link itself turns out to be dead even after a retry. That's a materially different, more specific problem — the evidence itself has rotted — pointing at a real, currently-missing product gap (an edit/re-link flow for a logged result), which ties directly to the Navigation section's honest "Deep: none yet" note.
-    - **Decision (2026-09-17): left as a known, accepted MVP gap.** Closing it (an edit/re-link capability for a logged result) would be new scope not backed by any job in `jtbd.md` — no job asks to *correct* a logged result, only to log one (Related Job 3) and retrieve one (Related Job 4). Tracked here as a post-MVP backlog item rather than built speculatively; revisit if a "fix a stale result" job is ever sourced.
+    - **Decision (2026-09-17): left as a known, accepted MVP gap.** (2026-11-06: "Add official result link" adds a link only to a result that has none; replacing a stale link is still this gap.) Closing it (an edit/re-link capability for a logged result) would be new scope not backed by any job in `jtbd.md` — no job asks to *correct* a logged result, only to log one (Related Job 3) and retrieve one (Related Job 4). Tracked here as a post-MVP backlog item rather than built speculatively; revisit if a "fix a stale result" job is ever sourced.
 
 ---
 

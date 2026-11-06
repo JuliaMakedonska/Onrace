@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=06a7dbda">
+<link rel="stylesheet" href="../design-system/index.css?v=c9e423bf">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -166,7 +166,7 @@
 <script>
 (function () {
   var params = new URLSearchParams(window.location.search);
-  var SLUGS = ['deka-strong-chicago-2026', 'hyrox-london-2025', 'valencia-half-2025', 'berlin-marathon-2025'];
+  var SLUGS = ['deka-strong-chicago-2026', 'hyrox-london-2025', 'valencia-half-2025', 'berlin-marathon-2025', 'spartan-beast-killington-2025'];   // the fifth has no link, so only its load can fail here (cause=detail)
   var slug = SLUGS.indexOf(params.get('result')) > -1 ? params.get('result') : 'berlin-marathon-2025';
   var cause = params.get('cause') === 'link' ? 'link' : 'detail';
   var linkAlert = document.getElementById('link-alert');

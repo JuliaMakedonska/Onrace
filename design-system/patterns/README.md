@@ -6,7 +6,7 @@ Lesson 9 step 4 (2026-11-06). A pattern is a composition of existing components 
 |---|---|---|---|
 | `tab-screen.html` | Tab screen | Race browse, Results list, Profile | Large title header, Tab bar, the screen's content (drawn as Results list) |
 | `empty-or-error-state.html` | Empty or error state | Race browse, Results list, Race picker, Race detail, Result detail, Profile | State message, Primary button (drawn as Results list, empty) |
-| `grouped-form.html` | Grouped form | Log result, Sign in / Sign up, New password, Profile | Text field, Field hint, Field error; Grouped settings rows on Profile, Gate layout on the sign-in screens (drawn as New password, the passwords not matching) |
+| `grouped-form.html` | Grouped form | Log result, Sign in / Sign up, New password, Profile; Results list and Result detail (the Add official result link sheet, since 2026-11-06) | Text field, Field hint, Field error; Grouped settings rows on Profile, Gate layout on the sign-in screens (drawn as New password, the passwords not matching) |
 | `pushed-screen.html` | Pushed screen | Race detail, Result detail, Race picker, Reset password, New password | Top bar, the screen's content (drawn as Race picker) |
 
 **Not patterns:** the detail screen with a bottom action bar (Race detail and Result detail: two screens, so it stays the Top bar and the Sticky action bar); the top bar over a page of grouped rows (three screens, but already one component, Gate layout).

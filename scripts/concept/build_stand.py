@@ -1141,6 +1141,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'publ
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states-2.html'), os.path.join(ROOT, 'public/ui/review-states-2.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-optional-link'), os.path.join(ROOT, 'public/ui/review-optional-link'), dirs_exist_ok=True)   # Lesson 9 step 5: the optional official result link, before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-optional-link.html'), os.path.join(ROOT, 'public/ui/review-optional-link.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots

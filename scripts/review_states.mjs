@@ -99,10 +99,10 @@ const SCREENS = process.argv[5] ? JSON.parse(readFileSync(process.argv[5], 'utf8
   ['New password -error, too short', 'wireframes/new-password-error.html?cause=short'], ['New password -error, no match', 'wireframes/new-password-error.html?cause=mismatch'],
   ['Profile -error, a row didn’t save', 'wireframes/profile-error.html?cause=save&field=country&prev=Italy&value=Spain'], ['Sign in', 'wireframes/sign-in-sign-up.html'],
   ['Log result -loading, the locked form', 'wireframes/log-result-loading.html'], ['Race browse -loading, Sort disabled', 'wireframes/race-browse-loading.html']];
-for (const [name, path] of SCREENS) for (const theme of ['dark', 'light']) for (const side of ['before', 'after']) {
-  await go(base(side) + path + (path.includes('?') ? '&' : '?') + 'theme=' + theme, 390, 844);
+for (const [name, path, H = 844] of SCREENS) for (const theme of ['dark', 'light']) for (const side of ['before', 'after']) {   // [name, path, height]: a taller screen shows what's below the fold
+  await go(base(side) + path + (path.includes('?') ? '&' : '?') + 'theme=' + theme, 390, H);
   const key = 'screen-' + slug(name);
-  const b64 = await shot(key, theme, side, { x: 0, y: 0, width: 390, height: 844 });
+  const b64 = await shot(key, theme, side, { x: 0, y: 0, width: 390, height: H });
   (data[key] ||= { component: name, state: 'Screen', kind: 'screen', path })[`${theme}-${side}`] = createHash('sha1').update(b64).digest('hex');
 }
 // a screen changed: decoded in Chrome and compared pixel by pixel; a pixel counts when a channel moves more than 24 of 255,

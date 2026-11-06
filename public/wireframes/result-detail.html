@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=06a7dbda">
+<link rel="stylesheet" href="../design-system/index.css?v=c9e423bf">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -111,6 +111,24 @@
         </section>
       </article>
 
+      <!-- the fifth sample result, logged without an official result link (2026-11-06; concept.md → The official
+           result link becomes optional): the proof section says so, with no URL and no Copy link (the script adds both
+           once a link is added, ?linked=), and its note says what's missing. -->
+      <article class="result" data-result="spartan-beast-killington-2025" data-no-link="spartan-beast-killington-2025" aria-labelledby="result-spartan-beast-killington-2025" hidden>
+        <h1 id="result-spartan-beast-killington-2025">Spartan Race Beast — Killington</h1>
+        <dl class="finish">
+          <dt>Finish time</dt><dd>4:05:37</dd>
+        </dl>
+        <dl class="facts">
+          <dt>Race date</dt><dd><time datetime="2025-09-13">13 September 2025</time></dd>
+          <dt>Sport type</dt><dd>OCR</dd>
+        </dl>
+        <section class="proof" aria-labelledby="proof-spartan-beast-killington-2025">
+          <h2 id="proof-spartan-beast-killington-2025">Official result link</h2>
+          <p class="proof-label">Self-reported · no official result link yet</p>
+          <p class="proof-note">Without the official result link, this result has no evidence.</p>
+        </section>
+      </article>
     </main>
 
 
@@ -137,13 +155,104 @@
     <a class="open-btn" href="https://berlin.r.mikatiming.com/2025/" target="_blank" rel="noopener" aria-label="Open official result on berlin.r.mikatiming.com">Open official result</a>
     <p class="action-caption">Opens the official timing site.</p>
   </div>
+  <!-- with no official result link yet (2026-11-06): the primary is "Add official result link", in Open official
+       result's place, and opens the one-field sheet below (flows.md → Flow 3: no link → the sheet, not Success3) -->
+  <div class="action-bar" data-result="spartan-beast-killington-2025" hidden>
+    <a class="open-btn" href="result-detail.html?result=spartan-beast-killington-2025&amp;add=spartan-beast-killington-2025" data-add>Add official result link</a>
+    <p class="action-caption">Paste it from the official timing site.</p>
+  </div>
 
   </div><!-- /.phone-screen -->
 
+  <!-- ZONE: Add official result link sheet (2026-11-06; concept.md → The official result link becomes optional;
+       flows.md → Flow 3, the no-link branch; sitemap.md → a modal state of Result detail). ?add=<slug> opens it over the
+       screen for a result logged without a link. One field, at its own height (.sheet--fit): Cancel leaves it with
+       nothing kept, Save is dimmed until the field has text, and only an invalid link is an error (the coral footnote,
+       in the helper's place). A valid link saves and comes back with &linked=<slug>&url=<link>. -->
+  <div class="sheet-backdrop" id="add-link-backdrop" hidden></div>
+  <div class="sheet sheet--fit" id="add-link-sheet" role="dialog" aria-modal="true" aria-labelledby="add-link-title" data-back="result-detail.html?result=spartan-beast-killington-2025" hidden>
+    <header class="top-bar">
+      <a class="close" href="result-detail.html?result=spartan-beast-killington-2025" data-add-cancel>Cancel</a>
+      <h2 class="bar-title" id="add-link-title">Official result link</h2>
+      <button type="submit" form="add-link-form" class="bar-action" aria-disabled="true">Save<span class="visually-hidden"> official result link</span></button>
+    </header>
+    <form id="add-link-form" class="form-rows" novalidate>
+      <div class="group">
+        <ul class="rows">
+          <li><div class="row row--stacked"><label for="add_url">Official result link</label><input type="url" id="add_url" name="url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off" aria-describedby="add_url-hint"></div><p class="field-error" id="add_url-error" hidden>That isn’t a link. Paste the full address, starting with https://</p></li>
+        </ul>
+        <p class="group-footer" id="add_url-hint">Paste the link to this result from the official timing site.</p>
+      </div>
+    </form>
+  </div>
+
+<script>
+/* Add official result link (2026-11-06; flows.md → Flow 3, the no-link branch). Shared by Results list and Result detail.
+   - ?linked=<slug>&url=<link>: the result just took its link, so the page shows it as any linked result: the proof line
+     names the domain, the add action goes, and on Result detail the link, Copy link and Open official result show.
+   - ?add=<slug>: the one-field sheet opens over the screen for a result with no link (a result that has one can't take
+     another). Focus moves into it and back to the page's add action on Cancel or Escape; Save is dimmed until there's
+     text; an invalid link gets the field error, which replaces the helper (aria-invalid, aria-describedby); a valid one
+     goes back to the screen with &linked= and &url= (and, on Results list, ?saved=<race name>). &try=<text> is the
+     reviewer's switch for the error: it types the text in and taps Save. */
+(function () {
+  var params = new URLSearchParams(location.search);
+  var host = function (u) { return new URL(u).hostname.replace(/^www\./, ''); };
+  var linked = params.get('linked'), url = params.get('url');
+  var okUrl = function (v) { try { return /^https?:$/.test(new URL(v).protocol); } catch (e) { return false; } };
+  var row = linked && okUrl(url) && document.querySelector('[data-no-link="' + linked + '"]');
+  if (row) {
+    row.removeAttribute('data-no-link');
+    row.querySelectorAll('.proof-label').forEach(function (p) { p.textContent = 'Self-reported · via ' + host(url); });
+    row.querySelectorAll('.result-card > .text-link').forEach(function (a) { a.remove(); });
+    var proof = row.querySelector('.proof');
+    if (proof) {   // Result detail: the link and Copy link, before the proof line, as on every linked result
+      var label = proof.querySelector('.proof-label');
+      var pu = document.createElement('p'); pu.className = 'proof-url'; pu.textContent = url;
+      var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'copy-link'; copy.setAttribute('data-copy', ''); copy.setAttribute('aria-live', 'polite'); copy.textContent = 'Copy link';
+      proof.insertBefore(pu, label); proof.insertBefore(copy, label);
+      row.querySelector('.proof-note').textContent = 'Onrace doesn’t verify results. The official result is the evidence.';
+      var bar = document.querySelector('.action-bar[data-result="' + linked + '"] .open-btn');
+      bar.removeAttribute('data-add'); bar.href = url; bar.textContent = 'Open official result';
+      bar.target = '_blank'; bar.rel = 'noopener'; bar.setAttribute('aria-label', 'Open official result on ' + host(url));
+      bar.parentNode.querySelector('.action-caption').textContent = 'Opens the official timing site.';
+    }
+  }
+  var sheet = document.getElementById('add-link-sheet'), backdrop = document.getElementById('add-link-backdrop');
+  var slug = params.get('add');
+  var target = slug && document.querySelector('[data-no-link="' + slug + '"]');
+  if (!sheet || !target) return;
+  var form = document.getElementById('add-link-form'), input = document.getElementById('add_url');
+  var err = document.getElementById('add_url-error'), hint = document.getElementById('add_url-hint');
+  var save = sheet.querySelector('.bar-action'), back = sheet.getAttribute('data-back');
+  var name = (target.querySelector('h1, h2') || {}).textContent || '';
+  function dim() { save.setAttribute('aria-disabled', input.value.trim() ? 'false' : 'true'); }
+  function clear() { err.hidden = true; hint.hidden = false; input.removeAttribute('aria-invalid'); input.setAttribute('aria-describedby', 'add_url-hint'); }
+  backdrop.hidden = false; sheet.hidden = false;
+  requestAnimationFrame(function () { backdrop.classList.add('open'); sheet.classList.add('open'); input.focus({ preventScroll: true }); });
+  dim();
+  input.addEventListener('input', function () { dim(); if (!err.hidden) clear(); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = input.value.trim();
+    if (!v) return;
+    if (!okUrl(v)) {
+      input.setAttribute('aria-invalid', 'true'); input.setAttribute('aria-describedby', 'add_url-error');
+      hint.hidden = true; err.hidden = false; input.focus({ preventScroll: true });
+      return;
+    }
+    var q = back.indexOf('?') > -1 ? '&' : '?';
+    location.href = back + q + (back.indexOf('results-list') === 0 ? 'saved=' + encodeURIComponent(name.trim()) + '&' : '') + 'linked=' + slug + '&url=' + encodeURIComponent(v);
+  });
+  sheet.addEventListener('keydown', function (e) { if (e.key === 'Escape') location.href = back; });
+  // a reviewer's switch (_conventions.md § 2): &try=<text> types it in and taps Save, so the invalid-link error has a URL
+  if (params.get('try') !== null) { input.value = params.get('try'); dim(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true })); }
+})();
+</script>
 <script>
 (function () {
   var params = new URLSearchParams(window.location.search);
-  var SLUGS = ['deka-strong-chicago-2026', 'hyrox-london-2025', 'valencia-half-2025', 'berlin-marathon-2025'];
+  var SLUGS = ['deka-strong-chicago-2026', 'hyrox-london-2025', 'valencia-half-2025', 'berlin-marathon-2025', 'spartan-beast-killington-2025'];
   var slug = SLUGS.indexOf(params.get('result')) > -1 ? params.get('result') : 'berlin-marathon-2025';
   document.querySelectorAll('[data-result]').forEach(function (el) {
     el.hidden = el.getAttribute('data-result') !== slug;
@@ -161,6 +270,7 @@
       btn.closest('[data-result]').getAttribute('data-result');
   }
   document.querySelectorAll('.open-btn').forEach(function (btn) {
+    if (btn.hasAttribute('data-add')) return;   // Add official result link opens the sheet: an ordinary link
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       openProof(btn);

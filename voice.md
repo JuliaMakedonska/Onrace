@@ -155,6 +155,7 @@ One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1�
 | Enter a race, on the organiser's site | **Register** ("Register on hyrox.com"), and **registration** | ~~sign-up~~, ~~sign up~~ | `CLAUDE.md` → `registration_url`, and "Race registration/payment handling" is out of scope. Registering is the organiser's word for entering a race. "Sign-up and payment happen there" becomes "Registration and payment happen there". Then "sign up" never means two things. | A2 |
 | Sign in / out | **Sign in**, **Sign out** | ~~Log in~~, ~~Log out~~, ~~Login~~ | Already consistent. "Log" is reserved for results ("Log result"), so it never means signing in. | — |
 | Record a new result | **Log result** / "Log your first result" | ~~Add result~~, ~~Submit~~ | `jtbd.md` → Related Job 3: "log the result along with where it came from". | — |
+| Add the proof to a result logged without it (2026-11-06) | **Add official result link** (on the result row, and Result detail's primary); the sheet's Save is named **Save official result link** | ~~Add link~~, ~~Add proof~~, ~~Edit~~ | The Button rule: it names what the tap does, in full, so the visible label is the accessible name (WCAG 2.5.3). "Link" alone is the forbidden short form of official result link. | — |
 | Leave a task or modal without changing anything | **Cancel** | ~~Close~~ | iOS convention (not research): Cancel means "nothing I started here is kept". It covers the Sign in modal, Race picker, Filters sheet and sign-out alert. "Close" goes. | A3 |
 | Hide a message you've read | **Dismiss** | ~~Close~~, ~~OK~~ | The inline alerts (registration link, official result link) aren't tasks, so Cancel would be wrong. One word for "I've seen this". | A3 |
 | Go back one screen | **‹ \<parent screen's title\>** — "‹ Discover", "‹ Results", "‹ Sign in" | ~~Back to races~~, ~~Back to Results~~ | iOS convention: the back button names where it goes, using the same word as that screen's title or tab, so the label always matches where you land. Replaces the two-rule compromise in `wireframes/_conventions.md` § 1 (the rule changes in the rewrite pass). | A4 |
@@ -168,7 +169,7 @@ One concept, one word. Every discrepancy flagged in `microcopy.md` (T1–T6, A1�
 |---|---|---|---|
 | Expiry wording | One sentence, everywhere a link can expire: **"Each link works once and expires after a while."** An expired-link heading is "This link has expired", naming the link type if needed ("This reset link has expired"). What the screen reader hears matches what's shown: "Sent. Check your inbox again." in both. | Three wordings of one fact read as three different rules. `flows.md` Flows 4 and 6 state the rule once ("expire and work once"). | C2 |
 | Apostrophes | **Curly ’** in all product copy. | Typographic, not research: it's the platform's own text style, and it takes one decision to end 13 vs 32 inconsistent lines. | C3 |
-| Required vs optional | **Mark what's optional, not what's required.** Every Log result field is needed, so none gets a "Required" tag. The one optional control, "Find in race catalog", keeps its "Optional" note, and the official result link's helper says *why* it's needed. | Drops the self-contradiction (a "Required" tag on one field under "Every field is needed"). The link keeps its weight through its explanation, which is what `research.md` → BENCHMARK mechanism #1 cares about: the link is mandatory, and people understand why. | C4 |
+| Required vs optional | **Mark what's optional, not what's required.** Required fields get no "Required" tag. The optional ones open their helper with "Optional": "Find in race catalog", and since 2026-11-06 the official result link ("Optional: you can add it later."), whose helper still says *why* it matters. The intro says "Every field but the official result link is needed to save a result." | Drops the self-contradiction (a "Required" tag on one field under "Every field is needed"). The link keeps its weight through its explanation, which is what `research.md` → BENCHMARK mechanism #1 cares about: the link is mandatory, and people understand why. | C4 |
 
 ### Allowed and not allowed at a glance
 
@@ -239,7 +240,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 | Error | "Add your finish time, e.g. 3:12:48." · "Use at least 8 characters." | ~~Invalid input~~ · ~~This field is required~~ · ~~You forgot the finish time~~ |
 | Placeholder | "e.g. 3:12:48" · "e.g. Berlin Marathon" · "e.g. you@example.com" | ~~https://berlin.r.mikatiming.com/2025/~~ (reads as filled in, flag P2) · ~~you@example.com~~ (an example without "e.g.") |
 
-- **Required vs optional:** mark only what's optional ("Optional", on Find in race catalog). Required fields carry no tag, and the hint explains why a field matters (Dictionary, C4).
+- **Required vs optional:** mark only what's optional: the helper opens with "Optional" (Find in race catalog; the official result link since 2026-11-06). Required fields carry no tag, and the hint explains why a field matters (Dictionary, C4).
 - **Check:**
   - The labels come from the Dictionary (official result link, race date, finish time).
   - The hint and error say *why* the link is needed, which is principle 2's "let the source vouch".
@@ -269,7 +270,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 | "**Couldn’t open the link.** It didn’t open in a new tab; your browser may have blocked it. Try again, or come back to this race later." | ~~The timing site is down.~~ (a claim Onrace can’t check) |
 | "**Couldn’t sign you in.** The email or password didn’t match, or the connection dropped. Check your email and password, then try again." | ~~You entered the wrong password.~~ · ~~Invalid credentials.~~ |
 | "**Too many requests.** Onrace limits how often a reset link can be sent. Wait a minute, then send a new link." | ~~Oops! Something went wrong.~~ · ~~Error 429~~ |
-| Field-level: "Add the official result link. It’s the proof this result is yours." | ~~You didn’t add a link!~~ |
+| Field-level, a coral footnote under the field that replaces its helper: "That isn’t a link. Paste the full address, starting with https://" (since 2026-11-06 an empty official result link isn’t an error; only an invalid one is) | ~~You didn’t add a link!~~ · ~~Invalid URL~~ |
 
 - **Check:**
   - Principle 1 decides what goes in the "why" part. `flows.md`'s link checks were reworded for the same reason, and the "may" framing is the honest form when there are several possible causes.

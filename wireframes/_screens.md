@@ -77,7 +77,7 @@ Scope: every `../sitemap.md` screen Pass 1 left out. The states come from `../fl
 
 ### Shared sample archive
 
-Every archive screen uses the same four logged results, newest first, so Results list rows, Result detail pages and `?result=<slug>` links all agree. They're one Qualifying-Time Archivist's season. Berlin 3:12:48 is the Boston-qualifier-style proof that Related Job 4 is about. The races are real, with plausible past dates.
+Every archive screen uses the same five logged results, newest first, so Results list rows, Result detail pages and `?result=<slug>` links all agree. They're one Qualifying-Time Archivist's season. The fifth (2026-11-06) was logged without its official result link, which is optional since then (`../concept/concept.md` → The official result link becomes optional): it's the no-link state of Results list and Result detail. Berlin 3:12:48 is the Boston-qualifier-style proof that Related Job 4 is about. The races are real, with plausible past dates.
 
 | slug | race_name | date | sport_type | finish_time | official_result_url (domain shown in the proof label) |
 |---|---|---|---|---|---|
@@ -85,8 +85,9 @@ Every archive screen uses the same four logged results, newest first, so Results
 | `hyrox-london-2025` | HYROX London | 6 Dec 2025 | HYROX | 1:18:42 | `https://results.hyrox.com/season-8/london` (results.hyrox.com) |
 | `valencia-half-2025` | Valencia Half Marathon | 26 Oct 2025 | Half marathon | 1:28:05 | `https://www.valenciaciudaddelrunning.com/en/half/results-2025/` (valenciaciudaddelrunning.com) |
 | `berlin-marathon-2025` | Berlin Marathon | 21 Sep 2025 | Marathon | 3:12:48 | `https://berlin.r.mikatiming.com/2025/` (berlin.r.mikatiming.com) |
+| `spartan-beast-killington-2025` | Spartan Race Beast — Killington | 13 Sep 2025 | OCR | 4:05:37 | none yet: "Self-reported · no official result link yet", with **Add official result link** |
 
-Every result shows its proof label as **"Self-reported · via <domain>"**, never "verified" or a checkmark (`../sitemap.md` → Entities → 4. Source-link proof).
+Every result with a link shows its proof label as **"Self-reported · via <domain>"**, never "verified" or a checkmark (`../sitemap.md` → Entities → 4. Source-link proof).
 
 ---
 
@@ -104,8 +105,9 @@ Every result shows its proof label as **"Self-reported · via <domain>"**, never
 | Error | ✓ | `Loading2` → "connection fails" → `FetchError2`, with `Retry?`: "yes" re-runs the fetch, "no" is `DeadEnd4`. |
 | Loading | ✓ | `Loading2: fetching logged results`, on entry. |
 | Success | — | No distinct endpoint. A populated list is normal browsing of the archive. |
+| No official result link yet (2026-11-06) | ✓ | A row for a result logged without its link: "Self-reported · no official result link yet" and **Add official result link**, which opens the add sheet (`?add=<slug>`, a modal state; `&try=<text>` shows its invalid-link error). Save comes back with `?saved=<race name>&linked=<slug>&url=<link>`. Part of the base page (the fifth sample result). |
 
-Files: `results-list.html`, `-empty`, `-error`, `-loading`.
+Files: `results-list.html` (also `?add=spartan-beast-killington-2025`), `-empty`, `-error`, `-loading`.
 
 ---
 
@@ -113,7 +115,7 @@ Files: `results-list.html`, `-empty`, `-error`, `-loading`.
 
 **Job it closes:** Related Job 3, log a result with source proof.
 
-**Where it sits in the flow:** opened from Results list's **Log result** action. The form's checks run in order: `official_result_url filled in?`, then `race_name/date/sport_type/finish_time all filled in?` `[?]`, then `Loading: saving result`, then `Submission succeeded?`. Success means a `results` row is saved, and the person lands back on Results list.
+**Where it sits in the flow:** opened from Results list's **Log result** action. The form's checks run in order: `official_result_url filled in and not a link?` (optional since 2026-11-06), then `race_name/date/sport_type/finish_time all filled in?` `[?]`, then `Loading: saving result`, then `Submission succeeded?`. Success means a `results` row is saved, and the person lands back on Results list.
 
 **Chrome:** a drill-down form, with no tab bar. The top bar has a back button on the left, the title **Log result** centred, and **Save** on the right (`_conventions.md` § 1, Forms). Revised 2026-09-25: the large title below the bar was dropped to save height at 390px. With a title in the bar, the back label is the parent's title, "‹ My Results", as iOS does, because "Back to My Results" won't fit beside a centred title (`_conventions.md` § 1, Back navigation).
 
@@ -122,7 +124,7 @@ Files: `results-list.html`, `-empty`, `-error`, `-loading`.
 | State | Real? | Why |
 |---|:---:|---|
 | Empty | — | The blank form *is* the base page (`log-result.html`), the default view you arrive at. There's no empty-data state: nothing is fetched. |
-| Error | ✓ | Three causes on one page (`_conventions.md` § 5): `?cause=link`, "source link is required" (the one field `../CLAUDE.md` marks required); `?cause=fields`, "required field missing" `[?]`; `?cause=submit`, "couldn't save the result" (was "link unreachable" until 2026-09-25; a client-side app can't check a timing site). Each has "fix and resubmit" (stay on the form) or giving up (`DeadEnd3`, back). |
+| Error | ✓ | Three causes on one page (`_conventions.md` § 5): `?cause=link`, "the official result link isn't a link" (an empty link isn't an error since 2026-11-06; the page opens on its own with an invalid sample link); `?cause=fields`, "required field missing" `[?]`; `?cause=submit`, "couldn't save the result" (was "link unreachable" until 2026-09-25; a client-side app can't check a timing site). Each has "fix and resubmit" (stay on the form) or giving up (`DeadEnd3`, back). |
 | Loading | ✓ | `Submitting: saving result`. The form is visible but locked, and Save shows progress. |
 | Success | — | The success is a data condition (the row exists), not a screen. The flow lands on Results list, which says what was saved. No `-success.html` (§ 5). |
 
@@ -180,8 +182,9 @@ Files: `race-picker.html` (`?q=` filters the list), `-empty`, `-error`, `-loadin
 | Error | ✓ | Two causes on one page: by default `DetailError2`, "could not load result details" (`Retry?`: yes reloads, no is `DeadEnd4`); with `?cause=link`, `LinkError`, "couldn't open the source link" (reworded 2026-09-25: Onrace only knows the tab didn't open, not why) (`Try again?`: yes goes back to the detail, no is `DeadEnd5`). Same shape as Race detail's DetailError / RegLinkError. |
 | Loading | ✓ | `DetailLoading2: fetching result details`. |
 | Success | ✓ | `Success3`: the row's `official_result_url` opened, just now. This is the base page (§ 5). |
+| No official result link yet (2026-11-06) | ✓ | `?result=spartan-beast-killington-2025`: the proof section says so, no link and no Copy link; the action bar's primary is **Add official result link**, which opens the same sheet as Results list (`&add=<slug>`). Flow 3's no-link branch ends in the sheet, not in Success3. |
 
-Files: `result-detail.html` (`?result=<slug>`, one of the four above), `-error`, `-loading`.
+Files: `result-detail.html` (`?result=<slug>`, one of the five above), `-error`, `-loading`.
 
 ---
 
@@ -271,10 +274,10 @@ Files: `profile.html`, `-error`, `-loading`.
 
 | Screen | Empty | Error | Loading | Success | Files |
 |---|:---:|:---:|:---:|:---:|---|
-| Results list | ✓ | ✓ | ✓ | — | 4 |
+| Results list | ✓ | ✓ | ✓ | — | 4 (+ the add sheet, a URL state) |
 | Race picker | ✓ (no match) | ✓ | ✓ | — (returns to the form) | 4 |
 | Log result | — (blank form = base) | ✓ ×3 causes | ✓ | — (lands on Results list) | 3 |
-| Result detail | — | ✓ ×2 causes | ✓ | ✓ (base) | 3 |
+| Result detail | — | ✓ ×2 causes | ✓ | ✓ (base; no link yet, a URL state) | 3 |
 | Sign in / Sign up | — (blank form = base) | ✓ ×3 causes | ✓ | — (lands on `next`); + Check inbox | 4 |
 | Reset password | — (blank form = base) | ✓ ×2 causes | ✓ | — (flow succeeds on New password); + Check inbox | 4 |
 | New password | — (blank form = base) | ✓ ×5 causes | ✓ | — (lands on Sign in) | 3 |

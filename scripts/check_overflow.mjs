@@ -49,10 +49,10 @@ const FILTERS = {
 };
 const CAUSES = {   // the URL switches each state page reads (as the screenshot runs use them)
   'race-detail': ['', 'race=utmb'], 'race-detail-error': ['', 'cause=registration&race=utmb'],
-  'results-list': ['', 'saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington'],
+  'results-list': ['', 'saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington', 'add=spartan-beast-killington-2025', 'add=spartan-beast-killington-2025&try=athlinks', 'saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults'],   // 2026-11-06: the add sheet, its error, a link just saved
   'log-result': ['', 'catalog=spartan-beast-killington-2025'], 'log-result-error': ['cause=fields', 'cause=link', 'cause=submit'],
   'race-picker': ['', 'q=hyrox', 'catalog=utmb-2026'], 'race-picker-empty': ['q=a%20very%20long%20race%20name%20nobody%20has%20heard%20of'],
-  'result-detail': ['', 'result=valencia-half-2025'], 'result-detail-error': ['', 'cause=link&result=valencia-half-2025'],
+  'result-detail': ['', 'result=valencia-half-2025', 'result=spartan-beast-killington-2025', 'result=spartan-beast-killington-2025&add=spartan-beast-killington-2025', 'result=spartan-beast-killington-2025&add=spartan-beast-killington-2025&try=athlinks', 'result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults'], 'result-detail-error': ['', 'cause=link&result=valencia-half-2025'],
   'sign-in-sign-up': ['', 'mode=signup', 'reset=done'], 'sign-in-sign-up-check-inbox': ['', 'reason=unconfirmed'],
   'sign-in-sign-up-error': ['cause=signin', 'cause=signup&mode=signup', 'cause=confirm'], 'sign-in-sign-up-loading': ['', 'mode=signup'],
   'reset-password-error': ['', 'cause=rate'],
@@ -74,7 +74,7 @@ for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.h
 states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
 // the pages about the kit (2026-10-26): the showcase and the lesson overviews, also at 1440 (desk); not phone screens
-const DOCS = ['../design-system/docs/index', '../design-system/docs/why', '../design-system/docs/specimens', '../public/concept-overview', '../public/ui-overview', '../public/tokens-overview', '../ui/shell', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
+const DOCS = ['../design-system/docs/index', '../design-system/docs/why', '../design-system/docs/specimens', '../public/concept-overview', '../public/ui-overview', '../public/tokens-overview', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
 DOCS.forEach(d => states.push({ name: d, q: '', act: '', label: d.split('/').pop(), doc: true }));
 states.push({ name: '../public/tokens-overview', q: '', act: 'open', label: 'tokens-overview, every fold open (the token reference)', doc: true });   // 2026-11-01: the reference's tables and ladders are measured open
 // the family pages (Lesson 9, 2026-11-05): every page of design-system/docs/ the list above doesn't name, also at 1440;

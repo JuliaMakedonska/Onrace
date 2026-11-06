@@ -47,3 +47,8 @@
   -webkit-mask: var(--icon-disclosure) center / contain no-repeat;
   mask: var(--icon-disclosure) center / contain no-repeat;
 }
+/* a result without an official result link (2026-11-06, concept.md → The official result link becomes optional): the
+   row keeps its one link into Result detail, and "Add official result link" sits under it on the same surface, a text
+   link of its own, since a link can't hold another. The proof line above it says the link is missing and wraps if it must */
+.result-card:has(> .text-link) > .card-link { border-radius: var(--radius-2) var(--radius-2) 0 0; padding-bottom: var(--space-2); }
+.result-card > .text-link { margin: 0; padding: 0 var(--space-4) var(--space-2); border-radius: 0 0 var(--radius-2) var(--radius-2); background: var(--surface); }

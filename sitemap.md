@@ -61,13 +61,13 @@ A personal, owner-only archive entry recording a race a person has actually comp
 - sport_type
 - optional link to a Race listing: wired up 2026-09-25 through **Race picker** (Screens, below). Linking fills race_name, date and sport_type from the listing; unlinking hands them back to be typed. The race's facts then come from curated catalog data rather than memory.
 - finish_time
-- official_result_url (**required** — not optional)
+- official_result_url (**optional** since 2026-11-06; was required. The link is the proof: a result without it stays self-reported, with no evidence, until one is added through **Add official result link**, below. `concept/concept.md` → The official result link becomes optional)
 
 **Job:** Related Job 3 — "When I finish a race, I want to log the result along with where it came from, so that I have proof ready without having to redo the work later" (toward Main Job 2 — Results archiving). Sourced to the Qualifying-Time Archivist persona specifically, not the primary persona (`jtbd.md` matrix: Related Job 3 scores 3 for the Archivist, only a caveated 2, general/non-specific, for the primary persona).
 
 **Connects to:**
 - **Race listing** — optional link
-- **Source-link proof** — the required official_result_url is what makes this entry usable as evidence (see below)
+- **Source-link proof** — the official_result_url, optional since 2026-11-06, is what makes this entry usable as evidence (see below); without it the entry is self-reported with no evidence until one is added
 - the archive owner (see Athlete account, under question) via row-level ownership — no separate "archive" entity exists beyond "logged results filtered to one owner"
 
 ---
@@ -77,8 +77,8 @@ A personal, owner-only archive entry recording a race a person has actually comp
 The external evidence attached to a logged result — called out as its own entity here (rather than folded silently into Logged result's field list) because `research.md` treats it as the product's core trust mechanism, not an incidental field.
 
 **Fields/parts:**
-- official_result_url (the mandatory link itself — same field as on Logged result; this entity is that field plus its *display treatment*, not a separately stored object)
-- display label showing the source, e.g. "self-reported, via [domain of official_result_url]" — never a checkmark or "verified" badge (`research.md` → BENCHMARK, mechanism #2: "Structurally label every result as self-reported + source-linked, never as 'verified'")
+- official_result_url (the link itself — same field as on Logged result, optional since 2026-11-06; this entity is that field plus its *display treatment*, not a separately stored object)
+- display label showing the source, e.g. "self-reported, via [domain of official_result_url]" — never a checkmark or "verified" badge. With no link yet: "Self-reported · no official result link yet", with **Add official result link** (2026-11-06) (`research.md` → BENCHMARK, mechanism #2: "Structurally label every result as self-reported + source-linked, never as 'verified'")
 
 **Job:** Related Job 3 (logging with proof) and Related Job 4 — "When an elite race asks me to prove a past result, I want to pull that proof up quickly, so that I can apply without scrambling to find it." Both trace to the Qualifying-Time Archivist persona and to `research.md` → Proof-of-result findings (Boston Marathon's accepted-proof types).
 
@@ -157,6 +157,8 @@ Onrace (app — not a separate screen or job-closing destination; Race browse is
     │     (jtbd.md); + Main Job 2 (caveated, see Screens section intro note above).
     │     Persona: Secondary — Archivist (core, Related Job 4 scores a clean 3).
     │     Primary: weak/caveated only (Main Job 2 = 2 for Primary).
+    │     States (2026-11-06): a row with no official result link yet, and the
+    │     Add official result link sheet (a modal state, below).
     │
     ├── Log result
     │     Job: Related Job 3 — "log the result along with where it came from,
@@ -166,9 +168,9 @@ Onrace (app — not a separate screen or job-closing destination; Race browse is
     │     only — jtbd.md's matrix explicitly labels the Primary-persona cell here
     │     "2 (weak/general)," i.e. generic trust-mechanism reasoning, not
     │     persona-specific evidence.
-    │     States (not separate screens): empty form · source-link-required
-    │     validation error (official_result_url — the one field `../CLAUDE.md`'s
-    │     data model explicitly marks required) · other-required-field
+    │     States (not separate screens): empty form · invalid-link
+    │     validation error (official_result_url, optional since 2026-11-06:
+    │     empty is fine, only text that isn't a link is an error) · other-required-field
     │     validation error (race_name/date/sport_type/finish_time `[?]` —
     │     assumed required, not explicitly marked so in the data model; see
     │     flows.md, Flow "Related Job 3") · submit error (couldn't save —
@@ -196,6 +198,14 @@ Onrace (app — not a separate screen or job-closing destination; Race browse is
           is placement-based, not proof-of-time. Do not design this screen
           around the Primary persona's framing (see personas.md/jtbd.md's own
           design-implication note).
+          States (2026-11-06): no official result link yet (the primary is
+          "Add official result link", Copy link hidden) · the sheet below.
+
+    Add official result link  (a modal state, added 2026-11-06)
+          A one-field sheet (Cancel, Save) over Results list or Result detail,
+          for a result logged without its official result link. Not a screen:
+          a state of the two screens that open it. Only an invalid link is an
+          error. flows.md → Flow 3, the no-link branch.
 
 Sign in / Sign up  [INFRASTRUCTURE]
   No job in jtbd.md calls for account creation or login. Exists because

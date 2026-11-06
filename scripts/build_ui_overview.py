@@ -103,7 +103,7 @@ inventory_body = f'''{LP.fold('How the inventory reads', md(inv_intro), 'from ui
 kit_body = f'''<p>The showcase, live: every component in its states, with its role nav working inside the panel. Beside it, the shell every top-level screen shares.</p>
 <div class="embeds">
   {LP.embed('design-system/docs/specimens.html', 'The kit · <code>design-system/docs/specimens.html</code>')}
-  {LP.embed('ui/shell.html', 'The shell · <code>ui/shell.html</code>', 'phone')}
+  {LP.embed('design-system/patterns/tab-screen.html', 'The shell, now the Tab screen pattern · <code>design-system/patterns/tab-screen.html</code>', 'phone')}
 </div>
 {LP.fold('Where the kit lives', md(ASSEMBLY.split(chr(10) + chr(10), 1)[1].split('**Visuals', 1)[0]), 'design-system/tokens/, design-system/components/, design-system/map-data.css, ui/shell.html, ui/kit.html, ui/inventory.md')}
 {LP.fold('The rules', md('**The rules:**' + ASSEMBLY.split('**The rules:**', 1)[1].split('**Checks that stop the build', 1)[0].split(chr(10), 1)[1]), 'every screen links the kit, "keep it", native iOS')}'''

@@ -1,0 +1,123 @@
+[
+ {
+  "key": "screen-results-list-the-whole-archive",
+  "component": "Results list, the whole archive",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-results-list-add-official-result-link",
+  "component": "Results list, Add official result link",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html?add=spartan-beast-killington-2025",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-results-list-the-sheet-s-error",
+  "component": "Results list, the sheet's error",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html?add=spartan-beast-killington-2025&try=athlinks",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-results-list-a-link-just-added",
+  "component": "Results list, a link just added",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-result-detail-no-official-result-link-yet",
+  "component": "Result detail, no official result link yet",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/result-detail.html?result=spartan-beast-killington-2025",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-result-detail-add-official-result-link",
+  "component": "Result detail, Add official result link",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/result-detail.html?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result-the-form",
+  "component": "Log result, the form",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result-error-not-a-link",
+  "component": "Log result -error, not a link",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result-error.html?cause=link",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result-error-fields-missing",
+  "component": "Log result -error, fields missing",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result-error.html?cause=fields",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-sign-in",
+  "component": "Sign in",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/sign-in-sign-up.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-create-account",
+  "component": "Create account",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/sign-in-sign-up.html?mode=signup",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ }
+]

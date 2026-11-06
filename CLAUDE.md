@@ -20,7 +20,7 @@ A **hybrid-athlete race calendar**, not a single race format. Catalog whatever r
 ## Core features (MVP)
 
 1. **Interactive map of races** — filterable by region, date, and sport type, plus a search by race name or city (added 2026-09-30, for finding a race you already know; `research/jtbd.md` → Hypothesis 7 `[?]`).
-2. **Personal archive of official race results** — each entry links back to the official source (timing site) as proof.
+2. **Personal archive of official race results** — each entry links back to the official source (timing site) as proof, added when the result is logged or later (optional since 2026-11-06).
 
 ## Target users
 
@@ -38,7 +38,7 @@ Both recreational and competitive/elite hybrid athletes, roughly equally.
 
 **Top-3 MVP-core jobs** (only #1 is cleanly "important to the primary persona"; #2–3 rest on market whitespace + a strongly-evidenced secondary persona instead — see `research/jtbd.md` → JTBD × Persona matrix for why):
 1. Discovery (above).
-2. Log a race result with required source-link proof, **and retrieve it later for an elite-race application.** These are one committed job, not two: logging a result you can never pull back up isn't a functioning feature, so retrieval was always implied by committing to logging — the original list just didn't name the retrieval half explicitly. (Corrected 2026-09-17 to match `sitemap.md`/`flows.md`, which had already fully designed retrieval as its own screen and flow — the design docs were right, this summary list was incomplete.)
+2. Log a race result, **add the proof (its official result link) now or later**, and retrieve it later for an elite-race application. (Reworded 2026-11-06: the link became optional; it was "with required source-link proof".) These are one committed job, not two: logging a result you can never pull back up isn't a functioning feature, so retrieval was always implied by committing to logging — the original list just didn't name the retrieval half explicitly. (Corrected 2026-09-17 to match `sitemap.md`/`flows.md`, which had already fully designed retrieval as its own screen and flow — the design docs were right, this summary list was incomplete.)
 3. Results archiving combined with discovery, across formats.
 
 Much of this is still `[?]`-flagged hypothesis, not confirmed by real users — see `research/personas.md` and `research/jtbd.md` for exactly which parts.
@@ -49,7 +49,7 @@ Global from day one — races seeded from multiple countries/continents, filters
 
 ## Result trust model
 
-Self-reported with a **required source link**. The user enters their own result and pastes a link to the official timing site as proof; Onrace does not verify it — the link itself is the evidence, mirroring what elite races already require of applicants.
+Self-reported, with the **official result link as the proof** (reworded 2026-11-06, designer; until then "with a required source link"). The user enters their own result and pastes a link to the official timing site as proof, now or later; Onrace does not verify it — the link itself is the evidence, mirroring what elite races already require of applicants. A result without the link stays self-reported, with no evidence, until one is added: it says so ("Self-reported · no official result link yet") and offers "Add official result link" (`concept/concept.md` → The official result link becomes optional).
 
 ## Business model
 
@@ -81,7 +81,7 @@ MVP by **2026-11-01** (2 months from brief date, 2026-09-01).
 ## Data model (high-level)
 
 - `races` (public catalog): name, sport_type, event_date, city/region/country, lat/lng, official_url, registration_url, description. One row per *edition*; past editions stay (Race browse shows upcoming ones, Log result's Race picker shows past ones for linking a result).
-- `results` (personal per-user archive, owner-only via RLS): race_name/date/sport_type (optionally linked to a catalog race), finish_time, official_result_url (required).
+- `results` (personal per-user archive, owner-only via RLS): race_name/date/sport_type (optionally linked to a catalog race), finish_time, official_result_url (optional since 2026-11-06; was required).
   - `category` and `notes` — removed — no job maps to this; reconsider if the archiving job proves more central after validation.
 - `profiles` (one per account, owner-only via RLS; infrastructure, not job-sourced — added 2026-09-25): name, country, language `[?]` (stored preference only; no localization planned). Email comes from Supabase Auth. Photo deferred (would need Supabase Storage, not in the stack yet); initials shown instead. No bio/stats/public fields.
 
@@ -163,7 +163,7 @@ Lesson 7 (2026-10-18 to 2026-10-25): every screen assembled from one kit, in nat
 **Where the kit lives (`design-system/`, `ui/`, mirrored to `public/` by `build_stand.py`):**
 - **`design-system/tokens/tokens.css` + `design-system/components/`:** the one source of truth since Lesson 8 step 4 (2026-10-28; until then `ui/kit.css`, deleted, git keeps it). Every value in `design-system/tokens/tokens.css`, in two levels (primitives named by hue and L*, and semantic color roles), and every component class in its own file in `design-system/components/`, bundled in cascade order into `design-system/components/index.css` (`design-system/components/README.md`) and, after the tokens, into `design-system/index.css`, the one file a page links (`design-system/README.md`), with no raw values in the classes and no color primitive read by a component. Each component is defined once and nothing in it goes unused by the screens. Hex values live only in `design-system/tokens/tokens.css`: `DESIGN.md`'s frontmatter values and `.impeccable/design.json` are generated from it by `scripts/build_design_sidecar.py` (run by the build).
 - **`design-system/map-data.css`:** the static map's generated data: the Natural Earth masks, `--map-ratio` and each pin's place keyed on `data-pin` (its colors and sizes are tokens). Linked by the Race browse pages (not render-blocking) and the showcase.
-- **`ui/shell.html`:** the shell, the large-title header and the floating tab bar.
+- **`ui/shell.html`:** a redirect to `design-system/patterns/tab-screen.html` (designer, 2026-11-06): the Tab screen pattern is the one source of the shell (the large-title header and the floating tab bar); old links still land.
 - **`design-system/docs/specimens.html`:** the showcase (`ui/kit.html` until Lesson 9 step 2, `docs/index.html` until 2026-11-05; both addresses forward to it), every inventory component in its states, with the screens' own text (live: https://juliamakedonska.github.io/Onrace/design-system/docs/). The specimens are hand-written; `scripts/build_kit_showcase.py` (run by the build) lays the page out as a component sheet (2026-10-26): a sticky sidebar with a filter and every specimen under its role (a menu on a phone), one intro line, and a card per specimen with its facts (classes, the screens that use it, its native iOS counterpart, where it's live) from `ui/inventory.md` → Showcase map, then every state on its own stage. The documentation around the stages is `design-system/docs/doc.css` (`ui/kit-doc.css` until Lesson 9 step 2), in the artifact pages' style. The stage classes (`.kit-frame`, `.kit-stage`, `.kit-shell`, `.kit-tabbar`) moved there too (2026-10-27, Lesson 8 step 2) because only the showcase uses them; what they hold is product, styled by `design-system/index.css`.
 - **`ui/inventory.md`:** every component of the 10 screens, with its screens, states, photo, HIG link and gaps.
 - **Stand-only values** live outside the kit: `concept/specimens.css` (the `.btn` family, status messages, the success and warning tokens), `concept/stand.css` (also the docs layer's tokens: `--stand-max`, `--stand-col-min`, `--radius-3`, `--font-mono`, read by the stand and the review pages), `concept/first-screen.css`.
@@ -172,7 +172,7 @@ Lesson 7 (2026-10-18 to 2026-10-25): every screen assembled from one kit, in nat
 
 **The rules:**
 - **Every screen links the kit** (`design-system/index.css`, plus `design-system/map-data.css` on Race browse) and has no style block, no inline style and no class the kit doesn't define. **Nothing new on a screen:** a new component or variant goes into the kit and the showcase first.
-- **"Keep it" rule (2026-10-25; revised 2026-10-30, Lesson 8 step 5):** when I say "keep it" (залишаємо) about a visual change: a **value** change goes into the token of the right level in `design-system/tokens/tokens.css`, a primitive (a raw value, named by hue and L*) or a semantic role (what a value is for; components read only roles), never into a component; a **markup** change goes into the showcase `design-system/docs/specimens.html` and to every screen where the component stands. Sign the reason in `DESIGN.md` either way.
+- **"Keep it" rule (2026-10-25; revised 2026-10-30, Lesson 8 step 5; revised 2026-11-06, Lesson 9 step 5):** when I say "keep it" (залишаємо) about a visual change: a **value** change goes into the token of the right level in `design-system/tokens/tokens.css`, a primitive (a raw value, named by hue and L*) or a semantic role (what a value is for; components read only roles; both themes for a role), never into a component; a **component** change goes into its file in `design-system/components/` and its docs section (the specimen in `design-system/docs/specimens.html` and its rows in `ui/inventory.md`), then to every screen where the component stands; a **new composition** goes into `design-system/patterns/`, only when it stands on three or more screens. Sign the reason in `DESIGN.md` either way. The whole checklist: `design-system/CONTRIBUTING.md` (Contributing to the system, below).
 - **Native iOS rule (designer, 2026-10-18):** every element with a native iOS counterpart follows Apple's [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) for anatomy, metrics and behavior; Podium supplies only the look. The component-to-HIG table (e.g. [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars), [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets), [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts), [Segmented controls](https://developer.apple.com/design/human-interface-guidelines/segmented-controls), [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables)) and the decided conflicts C1–C7 are in `DESIGN.md` → Native iOS. Glass, sheet and alert radii are **provisional [?]** (Apple's iOS 26 kit wasn't read).
 - **The build checks** (`python3 scripts/concept/build_stand.py`), listed below; any failure stops the build.
 
@@ -197,6 +197,7 @@ Lesson 7 (2026-10-18 to 2026-10-25): every screen assembled from one kit, in nat
 18. The docs can't lie (2026-11-05): every stage on every family page computes as the same stage on `specimens.html`, 23 properties of every element, at 1280 and 390, dark and light (`scripts/check_docs_stages.mjs`). A difference means the docs' own CSS reached a specimen.
 19. States (Lesson 9 step 3): every state role in `design-system/tokens/tokens.css` has a dark and a light value (`build_components.py`); every state ladder (rest, hover, pressed) moves one way, each step at least 1.5 L*, in both themes, except the amber, which dims when pressed (darker than rest by a step; follow-ups, 2026-11-06) (`build_stand.py`); focus holds 3:1 on every ground it sits on; no screen uses the docs-only stand-ins `.is-hover`, `.is-pressed`, `.is-focus` (`check_kit.py`).
 20. Patterns (Lesson 9 step 4): every pattern stands on exactly the screens its row lists, at least three, found from `wireframes/` by its classes (`build_kit_showcase.py`); a pattern file links `design-system/index.css` only, with no style block, inline style or undefined class, and its words are in `microcopy.md` (`check_kit.py`); its stage on `patterns.html` computes as on `specimens.html` (check 18); the pressed amber clears HYROX yellow under rule 3b on its own, and every amber dims when pressed (`build_stand.py`).
+21. Design system first (Lesson 9 step 5): every class a component defines is shown on a specimen in `design-system/docs/specimens.html` or in a pattern, so a new component can't reach a screen without its specimen and, through it, its inventory rows and docs section (`check_kit.py`; the screens' scroll states `.is-scrolled` and `.is-at-end` and Race browse's `.view-area` are listed as shown on the screens only).
 16. Counts of a primitive are named (Lesson 8, 2026-11-01): `calc(var(--x) * n)` or `calc(n * var(--x))` is allowed only in `design-system/tokens/tokens.css`, as the whole definition of a named primitive with its reason in a comment on the same line (`--bar-title-inset: calc(var(--target) * 3);  /* … */`), so the value follows the primitive it counts. In `design-system/components/`, the map data and the docs layer, and inside a longer expression in `design-system/tokens/tokens.css`, a count stops the build. A sign (`* -1`) and a division (halves for capsules and centering) aren't counts (`build_stand.py`).
 
 - **Accessible names start with the visible label** (WCAG 2.5.3); text changes go through `microcopy.md` first, then `scripts/build_voice_html.py`.
@@ -237,7 +238,7 @@ Lesson 8 (2026-10-27 to 2026-10-30): the kit's values as two levels of design to
 - `check_links.py`: no page links a missing file.
 - **Counts are named:** a value like three targets is a named primitive defined in `design-system/tokens/tokens.css` as `--bar-title-inset: calc(var(--target) * 3)` with its reason, so it follows `--target`; a component reads `var(--bar-title-inset)` and never writes the count itself.
 
-**The "keep it" rule** (UI assembly): a value change goes into the token of the right level, a primitive or a role, never into a component; a markup change goes into the showcase and every screen where the component stands.
+**The "keep it" rule** (UI assembly; revised 2026-11-06): a value change goes into the token of the right level, a primitive or a role (both themes for a role), never into a component; a component change goes into `design-system/components/` and its docs section, then every screen where it stands; a new composition goes into `design-system/patterns/`. See Contributing to the system.
 
 **No styling framework (designer, 2026-11-01):** plain CSS by hand, the values in `design-system/tokens/tokens.css` and one file per component in `design-system/components/`; no Tailwind, CSS-in-JS, preprocessor or token pipeline. The point is to understand how tokens, components and themes work (`concept/concept.md` → No styling framework). For Lesson 12, to consider and not decided: common namespaces (`--color-*`, `--space-*`, `--radius-*`, `--typescale-*`) for handoff and Figma variables.
 
@@ -273,6 +274,19 @@ A failed build never commits or deploys. Changes leave this machine only through
 - **Fonts:** if the build fails only because Google Fonts couldn't be reached (`check_overflow` exit 3: on every failing state no font loaded at all), it is retried once; a second failure stops everything, and the designer is told. A weight no face provides while the others loaded is a page bug: exit 1, no retry. The same for `check_docs_stages` (exit 3 when a page never settled: its fonts or frames didn't load after three loads).
 - **The stamp:** the build writes `.build-ok` (git-ignored), the tree hash of the working copy, only when every check passed and none was skipped.
 - **The hooks** (`scripts/hooks/`, installed with `git config core.hooksPath scripts/hooks`): `pre-commit` refuses any commit whose tree isn't the stamped one, `pre-push` any push whose HEAD isn't. No `--no-verify`.
+
+## Contributing to the system
+
+Decided by the designer on 2026-11-06 (Lesson 9 step 5). Written here so that a new developer, or Claude in a new session, gets the rules from the repo and not from a chat. The checklist is `design-system/CONTRIBUTING.md`. Read it before any change to the look or the screens.
+
+**One rule: anything new appears first in `design-system/`, then on a screen, never the other way round.** A screen only puts together what the system already has. If a screen needs something new, it goes into the system first, with its docs, and then onto the screen.
+
+- **A new value** goes into `design-system/tokens/tokens.css` at the right level. A raw value is a primitive, named by hue and L* or by its scale. What a value is for is a semantic role, a `var()` of a primitive. A role has a value in both themes. Every token is signed on the stand.
+- **A new component** goes into `design-system/components/`, one file, values only through tokens. It comes with its docs section: rows in `ui/inventory.md` (Showcase map, Docs map with when to use and when not to and its parts, Docs families) and its specimen with every variant in `design-system/docs/specimens.html`. If you act on it, it also gets a States map row: At rest, Hover, Pressed, Focus and Disabled, and Invalid where it has one, from state roles in both themes.
+- **A new composition** goes into `design-system/patterns/`, and only when it already stands on three or more screens. It's one page of existing components with no style of its own, plus its row in the Patterns map.
+- **The words** go into `microcopy.md` first. **The decision** goes into `concept/concept.md` first, dated.
+- **Everything ships through `scripts/ship.sh`.** The build checks enforce the rule: 12 (a screen uses no class the components don't define), 10 and 17 (every inventory component has a specimen, its states and a docs section), 21 (every component class is on a specimen or a pattern), 20 (a pattern stands on exactly its three or more screens), 5, 14, 15, 16 and 19 (tokens signed, no raw value in a component, both themes, counts named, state roles). A failed build never commits.
+- **The "keep it" rule** is the same rule applied to a change (UI assembly above): a value change goes into a token, a component change into `components/` and its docs section, a new composition into `patterns/`.
 
 ## Status
 

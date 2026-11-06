@@ -60,3 +60,6 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 /* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,
    so it is the sheet's own glass, not a second layer */
 .sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* a sheet at its own height (2026-11-06): one field, Cancel and Save, for "Add official result link" on Results list and
+   Result detail. It rests as tall as its content, under the large detent, as iOS sizes a sheet to what it holds */
+.sheet--fit { height: auto; max-height: var(--sheet-large); }
