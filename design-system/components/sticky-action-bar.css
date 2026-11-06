@@ -15,7 +15,7 @@
 /* a drill-down's bars at the scroll edge (step 6, #27; iOS 26 scroll edge effect): transparent and rimless until content
    runs under them, as the tab screens' top bar is at rest; the page script sets .is-scrolled and .is-at-end */
 .top-bar[data-collapse]:not(.top-bar--large):not(.is-scrolled), .action-bar.is-at-end { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: transparent; }
-.action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-bar-control); }   /* C7: a control inside a bar is a capsule */
+.action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-capsule); }   /* C7: a control inside a bar is a capsule */
 
 /* order 0780 */
 .action-caption { margin: var(--space-2) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-secondary); text-wrap: balance; }   /* no one-word last line (step 6, #28) */

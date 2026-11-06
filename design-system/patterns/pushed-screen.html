@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pushed screen · Onrace pattern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../index.css?v=06a7dbda">
+<script src="../tokens/theme.js"></script>
+</head>
+<!-- PATTERN: Pushed screen (design-system/patterns/README.md). Composed only of existing components: this page links
+     design-system/index.css and nothing else, has no style block, no inline style and no class the components don't
+     define (scripts/check_kit.py stops the build otherwise).
+     Stands on: Race detail, Result detail, Race picker, Reset password, New password: a .top-bar whose .back names
+     the screen it returns to, the screen's content under it, and no tab bar. Composed of: Top bar, and the screen's
+     own content. Drawn here as Race picker.
+     Shown live on design-system/docs/patterns.html and specimens.html → Patterns, in a frame that loads this file. -->
+<body class="onrace">
+  <div class="phone-screen">
+    <header class="top-bar">
+      <a class="back" href="../../wireframes/log-result.html"><span>Log result</span></a>
+      <h1 class="bar-title">Find a race</h1>
+    </header>
+    <form class="search" role="search" action="../../wireframes/race-picker-loading.html" method="get">
+      <label for="q" class="visually-hidden">Search races by name or city</label>
+      <input type="search" id="q" name="q" placeholder="Race name or city" enterkeyhint="search" autocomplete="off">
+    </form>
+    <main>
+      <p class="list-intro">Past races in the race catalog</p>
+      <ul class="race-list" aria-label="Past races in the race catalog">
+        <li>
+          <article class="race-card">
+            <a class="card-link" href="../../wireframes/log-result.html?catalog=utmb-2026">
+              <h2>UTMB — Ultra-Trail du Mont-Blanc</h2>
+              <p class="card-meta"><span class="sport-tag">Ultra</span> <time datetime="2026-08-28"><span class="day">28</span> Aug 2026</time></p>
+              <p class="card-location">Chamonix, France</p>
+            </a>
+          </article>
+        </li>
+        <li>
+          <article class="race-card">
+            <a class="card-link" href="../../wireframes/log-result.html?catalog=boston-marathon-2026">
+              <h2>Boston Marathon</h2>
+              <p class="card-meta"><span class="sport-tag">Marathon</span> <time datetime="2026-04-20"><span class="day">20</span> Apr 2026</time></p>
+              <p class="card-location">Boston, USA</p>
+            </a>
+          </article>
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

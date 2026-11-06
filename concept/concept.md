@@ -1270,3 +1270,34 @@ Every component you act on got Hover, Pressed, Focus and Disabled, and a field g
 
 **Checked:** the build (every check, both themes): 135 contrast pairs, the state ladders, rule 1 with the new accent states, the overflow check (389 states at 390, 320 and 200% text), 1,548 docs stage-passes. The before/after was rendered from the commit before this step and from the working copy, with Chrome DevTools forcing `:hover`, `:active` and `:focus-visible` (`scripts/review_states.mjs`, `scripts/build_review_states.py`): 69 component states and 7 screens changed, 60 states unchanged (every Focus, and the hovers that already were one level up).
 
+
+### Step 3 follow-ups (designer brief, 2026-11-06)
+
+Five follow-ups to step 3, each through the tokens and components, in both themes. Before/after of every changed state: `ui/review-states-2.html` (21 component states, 2 screens; against `d811d69`).
+
+1. **A fill inside a card moves up with it.** The date tile and the format chip rest one level above their card (`--raised` on `--surface`), so under one rule for fills the card's hover (`--surface-hover`, the same level) swallowed them. They now take `--raised-hover` / `--raised-pressed` while the card is hovered or pressed (`race-card.css`, `result-row.css`). The brief named the date tile; the format chip had the same defect, so it moves too.
+2. **The pressed amber dims (iOS dims a pressed control).** `--amber-87` (lighter, closer to HYROX yellow) is replaced by `--amber-69` `#DF9A46`: L* 69, a step darker than the amber, hue 7° warmer, so it clears rule 3b on its own (26.6°, ΔE 25.8; the override covers `#F5B649` only). It is `--accent-pressed` in both themes and the dark `--accent-ink-pressed`; dark text on it holds 7.7:1. Hover stays one step lighter (`--amber-83`), so the amber is the one exception to "one way": the ladder check now has a dims rule for it (pressed darker than rest by at least 1.5 L*, hover a step from both), and the pressed amber failing 3b stops the build. The light ink pressed stays `--amber-26` (already darker).
+3. **Tab icons by `data-tab`**, not by the link target: the shell and the specimens already carried `data-tab`, but `tab-bar.css` chose the icon by `href*=`, so the specimens (linking `#tab-bar`) drew squares. Now the icon follows `data-tab="discover|results|profile"`, added to every tab on the eleven tab-screen pages.
+4. **One capsule rule.** `--radius-bar-control`, `--radius-filter-chip` and `--radius-tabbar` (each half its control's nominal height) are retired; the search field, Filters, the action bar's Register / Open, the active filter chips, the tab bar and its tabs take `--radius-capsule`, so each stays a capsule at 200% text. No pixel changes at the nominal size.
+5. **A field error replaces only its own field's helper**, the hint that field is described by. On New password with the passwords not matching, "At least 8 characters." (New password's helper) stays; on Profile, the group note "Changes save as you make them…" stays beside a save error; on Log result each field's hint goes only while that field is flagged.
+
+### Step 4: patterns (designer brief, 2026-11-06)
+
+**The rule:** a pattern is a composition of existing components that already stands on three or more screens, and we can name them. Each goes into `design-system/patterns/` as one page, composed only of existing components (it links `design-system/index.css` only; no style block, inline style or undefined class; its words in `microcopy.md`, all checked by `check_kit.py`). Nothing invented.
+
+**How the evidence was found and is kept:** every `wireframes/*.html` page (35 pages, 10 screens) read for its structure. Each pattern's row in `ui/inventory.md` → Patterns map names the classes a page must carry; `build_kit_showcase.py` finds the screens that carry them and stops the build unless the set is exactly the one listed, at least three. So a screen that drops the composition, or a new one that takes it, breaks the build until the map is updated.
+
+| Candidate | Verdict | Evidence (classes · screens) |
+|---|---|---|
+| Tab header with a large title | **Pattern: Tab screen** | `.top-bar--large` + `.bottom-nav` · Race browse, Results list, Profile (every state of each) |
+| Empty / error state with its action | **Pattern: Empty or error state** | `.state-message` + `.state-actions` + `.state-action` · Race browse (empty, error), Results list (empty, error), Race picker (empty, error), Race detail (error), Result detail (error), Profile (error). New password's expired link is a different composition (`.state-msg` and a submit button), so it isn't counted |
+| Grouped form with footnotes | **Pattern: Grouped form** | `.group` + `.rows` + `.group-footer` · Log result, Sign in / Sign up, New password, Profile. Reset password has a group but no footnote |
+| Pushed screen with a back bar | **Pattern: Pushed screen** | `.top-bar` + `.back`, no `.bottom-nav` · Race detail, Result detail, Race picker, Reset password, New password. Log result and Sign in take Cancel (`.close`), not back |
+| Detail screen with a bottom action bar | **Rejected** | `.action-bar` · Race detail, Result detail: two screens |
+| Top bar over a page of grouped rows | **Not a pattern** | `.gate` + `.top-bar` · Sign in / Sign up, Reset password, New password: three screens, but already one component (Gate layout) |
+
+**Drawn from real screens:** Tab screen as Results list; Empty or error state as Results list, empty; Grouped form as New password with the passwords not matching (it shows the field error and the helper that stays, follow-up 5); Pushed screen as Race picker.
+
+**In the docs:** `design-system/docs/patterns.html`, in the docs shell (Patterns in the top of the nav): each pattern live from its file in a frame, what it's for, "Use the pattern" and "Use the components" in the rules' green and coral bars, the components it's composed of as links, the screens and pages it stands on, its file; then Not patterns with why. The same frames are a generated Patterns section of `specimens.html`, so the stage check (18) compares each pattern on both pages, dark and light, at 1280 and 390; the overflow check measures each pattern file at 390, 320 and 200% text. The words come from `DESIGN.md` → Patterns (the Patterns map, like the Docs map, isn't a source of words).
+
+**Open:** `ui/shell.html` (Lesson 7) is the same composition as Tab screen without content; it stays where the specimens and the viewer link it. The patterns are drawn as static pages: the large title's collapse into the bar and Log result's form scripts aren't in them.

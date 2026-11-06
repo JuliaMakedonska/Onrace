@@ -61,7 +61,7 @@
 .bar.link { width: var(--skel-proof-w); height: var(--skel-line); }
 .bar.label { width: var(--skel-tag-w); height: var(--skel-line); margin-bottom: var(--space-2); }
 .bar.finish-bar { width: var(--skel-time-w); height: var(--skel-time-h); margin-bottom: var(--space-4); }
-.action-bar .bar.button { height: var(--target); border-radius: var(--radius-bar-control); }   /* C7: the capsule it stands in for */
+.action-bar .bar.button { height: var(--target); border-radius: var(--radius-capsule); }   /* C7: the capsule it stands in for */
 .action-bar .bar.caption { width: var(--skel-title-w); height: var(--skel-line); margin: var(--space-2) auto 0; }
 .initials.skel { background: var(--raised); }
 .bar.name { width: var(--skel-row-title-w); height: var(--skel-title); margin-bottom: var(--space-2); }

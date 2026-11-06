@@ -12,7 +12,7 @@
   min-height: var(--filter-chip-height);
   padding: 0 var(--space-2) 0 var(--space-3);   /* the remove mark sits closer to the trailing curve */
   border: 0;
-  border-radius: var(--radius-filter-chip);
+  border-radius: var(--radius-capsule);
   background: var(--raised);
   color: var(--text-primary);
   font-family: var(--font-text);

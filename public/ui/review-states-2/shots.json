@@ -1,0 +1,1358 @@
+[
+ {
+  "key": "tab-bar-at-rest",
+  "component": "Tab bar",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "tab-bar-hover",
+  "component": "Tab bar",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "tab-bar-pressed",
+  "component": "Tab bar",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "tab-bar-focus",
+  "component": "Tab bar",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "tab-bar-disabled",
+  "component": "Tab bar",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "top-bar-at-rest",
+  "component": "Top bar",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "top-bar-hover",
+  "component": "Top bar",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "top-bar-pressed",
+  "component": "Top bar",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": false
+  }
+ },
+ {
+  "key": "top-bar-focus",
+  "component": "Top bar",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "top-bar-disabled",
+  "component": "Top bar",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "segmented-control-at-rest",
+  "component": "Segmented control",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "segmented-control-hover",
+  "component": "Segmented control",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "segmented-control-pressed",
+  "component": "Segmented control",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "segmented-control-focus",
+  "component": "Segmented control",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "segmented-control-disabled",
+  "component": "Segmented control",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "search-field-at-rest",
+  "component": "Search field",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "search-field-hover",
+  "component": "Search field",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "search-field-pressed",
+  "component": "Search field",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "search-field-focus",
+  "component": "Search field",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "search-field-disabled",
+  "component": "Search field",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "sport-type-rows-at-rest",
+  "component": "Sport-type rows",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sport-type-rows-hover",
+  "component": "Sport-type rows",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sport-type-rows-pressed",
+  "component": "Sport-type rows",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sport-type-rows-focus",
+  "component": "Sport-type rows",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sport-type-rows-disabled",
+  "component": "Sport-type rows",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "race-card-at-rest",
+  "component": "Race card",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "race-card-hover",
+  "component": "Race card",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "race-card-pressed",
+  "component": "Race card",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "race-card-focus",
+  "component": "Race card",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "race-card-disabled",
+  "component": "Race card",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sort-button-at-rest",
+  "component": "Sort button",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sort-button-hover",
+  "component": "Sort button",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sort-button-pressed",
+  "component": "Sort button",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sort-button-focus",
+  "component": "Sort button",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sort-button-disabled",
+  "component": "Sort button",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "result-row-at-rest",
+  "component": "Result row",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "result-row-hover",
+  "component": "Result row",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "result-row-pressed",
+  "component": "Result row",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "result-row-focus",
+  "component": "Result row",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "result-row-disabled",
+  "component": "Result row",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "static-map-at-rest",
+  "component": "Static map",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "static-map-hover",
+  "component": "Static map",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "static-map-pressed",
+  "component": "Static map",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "static-map-focus",
+  "component": "Static map",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "static-map-disabled",
+  "component": "Static map",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "official-race-website-link-at-rest",
+  "component": "Official race website link",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "official-race-website-link-hover",
+  "component": "Official race website link",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "official-race-website-link-pressed",
+  "component": "Official race website link",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "official-race-website-link-focus",
+  "component": "Official race website link",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "official-race-website-link-disabled",
+  "component": "Official race website link",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "primary-button-at-rest",
+  "component": "Primary button",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "primary-button-hover",
+  "component": "Primary button",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "primary-button-pressed",
+  "component": "Primary button",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "primary-button-focus",
+  "component": "Primary button",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "primary-button-disabled",
+  "component": "Primary button",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "secondary-button-at-rest",
+  "component": "Secondary button",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "secondary-button-hover",
+  "component": "Secondary button",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "secondary-button-pressed",
+  "component": "Secondary button",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "secondary-button-focus",
+  "component": "Secondary button",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "secondary-button-disabled",
+  "component": "Secondary button",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "filters-trigger-with-count-at-rest",
+  "component": "Filters trigger with count",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "filters-trigger-with-count-hover",
+  "component": "Filters trigger with count",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "filters-trigger-with-count-pressed",
+  "component": "Filters trigger with count",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "filters-trigger-with-count-focus",
+  "component": "Filters trigger with count",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "filters-trigger-with-count-disabled",
+  "component": "Filters trigger with count",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-link-at-rest",
+  "component": "Text link",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-link-hover",
+  "component": "Text link",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-link-pressed",
+  "component": "Text link",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-link-focus",
+  "component": "Text link",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-link-disabled",
+  "component": "Text link",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-field-at-rest",
+  "component": "Text field",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-field-hover",
+  "component": "Text field",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-field-pressed",
+  "component": "Text field",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-field-focus",
+  "component": "Text field",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-field-disabled",
+  "component": "Text field",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "text-field-invalid",
+  "component": "Text field",
+  "state": "Invalid",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "pop-up-select-at-rest",
+  "component": "Pop-up select",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "pop-up-select-hover",
+  "component": "Pop-up select",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "pop-up-select-pressed",
+  "component": "Pop-up select",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "pop-up-select-focus",
+  "component": "Pop-up select",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "pop-up-select-disabled",
+  "component": "Pop-up select",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "pop-up-select-invalid",
+  "component": "Pop-up select",
+  "state": "Invalid",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "date-field-at-rest",
+  "component": "Date field",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "date-field-hover",
+  "component": "Date field",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "date-field-pressed",
+  "component": "Date field",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "date-field-focus",
+  "component": "Date field",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "date-field-disabled",
+  "component": "Date field",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "date-field-invalid",
+  "component": "Date field",
+  "state": "Invalid",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "catalog-row-at-rest",
+  "component": "Catalog row",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "catalog-row-hover",
+  "component": "Catalog row",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "catalog-row-pressed",
+  "component": "Catalog row",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "catalog-row-focus",
+  "component": "Catalog row",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "catalog-row-disabled",
+  "component": "Catalog row",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "linked-race-card-at-rest",
+  "component": "Linked race card",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "linked-race-card-hover",
+  "component": "Linked race card",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "linked-race-card-pressed",
+  "component": "Linked race card",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "linked-race-card-focus",
+  "component": "Linked race card",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "linked-race-card-disabled",
+  "component": "Linked race card",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "forgot-password-link-at-rest",
+  "component": "Forgot password? link",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "forgot-password-link-hover",
+  "component": "Forgot password? link",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "forgot-password-link-pressed",
+  "component": "Forgot password? link",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "forgot-password-link-focus",
+  "component": "Forgot password? link",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "forgot-password-link-disabled",
+  "component": "Forgot password? link",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "action-sheet-at-rest",
+  "component": "Action sheet",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "action-sheet-hover",
+  "component": "Action sheet",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "action-sheet-pressed",
+  "component": "Action sheet",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "action-sheet-focus",
+  "component": "Action sheet",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "action-sheet-disabled",
+  "component": "Action sheet",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "active-filter-chips-row-at-rest",
+  "component": "Active filter chips row",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "active-filter-chips-row-hover",
+  "component": "Active filter chips row",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "active-filter-chips-row-pressed",
+  "component": "Active filter chips row",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "active-filter-chips-row-focus",
+  "component": "Active filter chips row",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "active-filter-chips-row-disabled",
+  "component": "Active filter chips row",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "grouped-settings-rows-at-rest",
+  "component": "Grouped settings rows",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "grouped-settings-rows-hover",
+  "component": "Grouped settings rows",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "grouped-settings-rows-pressed",
+  "component": "Grouped settings rows",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "grouped-settings-rows-focus",
+  "component": "Grouped settings rows",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "grouped-settings-rows-disabled",
+  "component": "Grouped settings rows",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "grouped-settings-rows-invalid",
+  "component": "Grouped settings rows",
+  "state": "Invalid",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sign-out-button-at-rest",
+  "component": "Sign out button",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sign-out-button-hover",
+  "component": "Sign out button",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sign-out-button-pressed",
+  "component": "Sign out button",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sign-out-button-focus",
+  "component": "Sign out button",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "sign-out-button-disabled",
+  "component": "Sign out button",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "confirm-alert-at-rest",
+  "component": "Confirm alert",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "confirm-alert-hover",
+  "component": "Confirm alert",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "confirm-alert-pressed",
+  "component": "Confirm alert",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "confirm-alert-focus",
+  "component": "Confirm alert",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "confirm-alert-disabled",
+  "component": "Confirm alert",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "screen-new-password-error-no-match",
+  "component": "New password -error, no match",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/new-password-error.html?cause=mismatch",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile-error-a-row-didn-t-save",
+  "component": "Profile -error, a row didn’t save",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile-error.html?cause=save&field=country&prev=Italy&value=Spain",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result-error-the-link-missing",
+  "component": "Log result -error, the link missing",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result-error.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "screen-race-browse",
+  "component": "Race browse",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/race-browse.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "screen-results-list",
+  "component": "Results list",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "screen-race-detail",
+  "component": "Race detail",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/race-detail.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ }
+]

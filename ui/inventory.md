@@ -366,6 +366,24 @@ What each component's States shows on its family page in `design-system/docs/` (
 
 ---
 
+## Patterns map (Lesson 9, step 4, 2026-11-06)
+
+A pattern is a composition of existing components that already stands on three or more screens. `scripts/build_kit_showcase.py` reads this table, finds the screens whose pages carry every class in **Signature** (and none marked `!`), and stops the build unless that set is exactly **Stands on** and has at least three screens; then it writes `design-system/docs/patterns.html` and the Patterns section of `specimens.html`, each pattern live from its file in `design-system/patterns/`. Like the Docs map, the words here must come from the source docs (`DESIGN.md` → Patterns).
+
+| Pattern | File | For | Signature | Stands on | Composed of | Use the pattern | Use the components |
+|---|---|---|---|---|---|---|---|
+| **Tab screen** | `tab-screen` | A top-level screen: its large title over its own content, the tab bar floating at the bottom. | `top-bar--large` `bottom-nav` | race-browse; results-list; profile | Large title header; Tab bar; Results row | For a destination you reach from the tab bar: Discover, Results, Profile. The title names the tab, and the bar action, if there is one, is the screen's one primary action. | A screen below the top level has no large title and no tab bar: it takes the Top bar on its own, as a pushed screen. |
+| **Empty or error state** | `empty-or-error-state` | What a list or a screen shows when it has nothing to show or couldn't load: a heading, one line, one action. | `state-message` `state-actions` `state-action` | race-browse; results-list; race-picker; race-detail; result-detail; profile | State message; Primary button | When the whole content area is empty or failed to load: no results, no match, the connection dropped. The action is the one way on: Try again, or the task that fills it. | An error about one field or one save stays where it happened: a Field error under the field, a Form alert at the top of the form, a Status line on the row. |
+| **Grouped form** | `grouped-form` | Fields a person fills in, grouped as iOS: labelled rows, the hint under the group, an error under the field it belongs to. | `group` `rows` `group-footer` | log-result; sign-in-sign-up; new-password; profile | Text field; Field hint; Field error; Grouped settings rows; Gate layout | For a form of more than one field, and for settings that save as you make them. An error replaces only its own field's helper; a group note stays. | One field on its own, such as the search, is a Search field, not a group. |
+| **Pushed screen** | `pushed-screen` | A screen one level down: the top bar with back, named for the screen it returns to, over the screen's content, with no tab bar. | `top-bar` `back` `!bottom-nav` | race-detail; result-detail; race-picker; reset-password; new-password | Top bar; List intro; Race card | For a detail, or a step inside a task: Race detail, Result detail, Race picker, Reset password, New password. Back always names the parent. | A task you leave with Cancel, such as Log result or Sign in, is a sheet or a gate: its Top bar takes Cancel, not back. |
+
+**Not patterns** (checked the same way; each stays its components):
+
+| Candidate | Signature | Stands on | Why not |
+|---|---|---|---|
+| **Detail screen with a bottom action bar** | `action-bar` | race-detail; result-detail | Two screens only. It stays two components: the Top bar and the Sticky action bar. |
+| **Top bar over a page of grouped rows** | `gate` `top-bar` | sign-in-sign-up; reset-password; new-password | Three screens, but already one component: Gate layout. |
+
 ## Docs families (Lesson 9, 2026-11-05)
 
 How `design-system/docs/` is organised, read by `scripts/build_kit_showcase.py`: the left nav's roles, the family pages in each, and the components in each family, in order. Every component of the Showcase map sits in exactly one family, or the build stops. Like the Docs map, its words must come from the other source docs.

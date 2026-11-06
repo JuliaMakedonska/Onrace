@@ -137,7 +137,7 @@
   min-height: var(--filter-chip-height);
   padding: 0 var(--space-2) 0 var(--space-3);   /* the remove mark sits closer to the trailing curve */
   border: 0;
-  border-radius: var(--radius-filter-chip);
+  border-radius: var(--radius-capsule);
   background: var(--raised);
   color: var(--text-primary);
   font-family: var(--font-text);
@@ -185,7 +185,7 @@
   min-height: var(--target);
   padding: 0 var(--space-4) 0 calc(var(--space-4) + var(--icon-m) + var(--space-2));
   border: 0;
-  border-radius: var(--radius-bar-control);   /* C7 (designer, 2026-10-19): the search field is a bar control, a full capsule (iOS 26) */
+  border-radius: var(--radius-capsule);   /* C7 (designer, 2026-10-19): the search field is a bar control, a full capsule (iOS 26) */
   background: var(--surface);
   box-shadow: inset 0 0 0 var(--border) var(--boundary);
   color: var(--text-primary);
@@ -363,7 +363,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 .view-btn::after { content: ""; position: absolute; inset: calc(var(--space-1) * -1) 0; }  /* 44px tap area */
 
 /* ---- design-system/components/filters-trigger-with-count.css · order 0170 ---- */
-:is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-bar-control); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
+:is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-capsule); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
 
 /* ---- design-system/components/tab-bar.css · order 0180 ---- */
 /* ---------- tab bar: current tab is the screen's one accent on Race browse ---------- */
@@ -584,6 +584,10 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 /* hover one level up, pressed two (Lesson 9 step 3; the hover ring went: one rule for every fill). G23: the pressed highlight on tap */
 @media (hover: hover) { .race-card:has(.card-link:is(:hover, .is-hover)) { background: var(--surface-hover); } }
 .race-card:is(.is-pressed, :has(.card-link:is(:active, .is-pressed))) { background: var(--surface-pressed); }
+/* the date tile and the format chip stay one level above their card and move up with it (Step 3 follow-ups, 2026-11-06):
+   they never merge into the card's hover */
+@media (hover: hover) { .race-card:has(.card-link:is(:hover, .is-hover)) :is(time, .sport-tag) { background: var(--raised-hover); } }
+.race-card:is(.is-pressed, :has(.card-link:is(:active, .is-pressed))) :is(time, .sport-tag) { background: var(--raised-pressed); }
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
 .race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-l) + var(--space-3)); }   /* G47: room for the checkmark */
 .race-card:has(.card-link[aria-current="true"])::after {   /* G47: the linked race in Race picker, the filter rows' neutral checkmark (C4) */
@@ -613,7 +617,7 @@ body > .bottom-nav {   /* G1/G2: floats above content, in from the edges, above 
   display: grid;
   align-items: center;
   border: 0;
-  border-radius: var(--radius-tabbar);
+  border-radius: var(--radius-capsule);
   box-shadow: inset 0 0 0 var(--border) var(--glass-rim), var(--float-shadow);
 }
 body > .bottom-nav a::before {
@@ -624,9 +628,11 @@ body > .bottom-nav a::before {
   -webkit-mask: var(--tab-icon) center / contain no-repeat;
   mask: var(--tab-icon) center / contain no-repeat;
 }
-.bottom-nav a[href*="race-browse"] { --tab-icon: var(--icon-compass); }
-.bottom-nav a[href*="results-list"] { --tab-icon: var(--icon-stopwatch); }
-.bottom-nav a[href*="profile"] { --tab-icon: var(--icon-user); }
+/* the icon is chosen by the tab, not by where it links (Step 3 follow-ups, 2026-11-06): a link target changes with state and
+   the docs' specimens link to their own page, so the icon follows data-tab */
+.bottom-nav a[data-tab="discover"] { --tab-icon: var(--icon-compass); }
+.bottom-nav a[data-tab="results"] { --tab-icon: var(--icon-stopwatch); }
+.bottom-nav a[data-tab="profile"] { --tab-icon: var(--icon-user); }
 
 /* ---- design-system/components/static-map.css · order 0390 ---- */
 /* map view: static Natural Earth background (designer decision); the interactive Map stays deferred */
@@ -729,6 +735,8 @@ body > .bottom-nav a::before {
 .result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
 @media (hover: hover) { .result-card .card-link:is(:hover, .is-hover) { background: var(--surface-hover); } }   /* the race card's states */
 .result-card .card-link:is(:active, .is-pressed) { background: var(--surface-pressed); }   /* G23: pressed highlight on tap */
+@media (hover: hover) { .result-card .card-link:is(:hover, .is-hover) .sport-tag { background: var(--raised-hover); } }   /* the format chip moves up with its row (Step 3 follow-ups) */
+.result-card .card-link:is(:active, .is-pressed) .sport-tag { background: var(--raised-pressed); }
 .result-card .card-meta::after {   /* G22: the row drills into Result detail, so it shows a disclosure indicator (Solar, C2).
      It ends the short meta row, under the finish time's right edge: the time and the proof line keep the full width */
   content: "";
@@ -898,7 +906,8 @@ fieldset:disabled .row--nav { pointer-events: none; }
 /* ---- design-system/components/field-error.css · order 0520 ---- */
 /* the field error, iOS style (Lesson 9 step 3; designer, 2026-10-30): no ring and no line on the field. A coral footnote
    line with the small error icon, under its row in a group of several fields, or under its group in the hint's place,
-   which it replaces while it shows (the page's script hides the hint and points aria-describedby at the error) */
+   which it replaces while it shows. It replaces only its own field's helper (the hint that field is described by: the
+   page's script hides it and points aria-describedby at the error); a group note no one field owns stays (Step 3 follow-ups) */
 .rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-2); }
 
 /* ---- design-system/components/catalog-row.css · order 0530 ---- */
@@ -1125,7 +1134,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* a drill-down's bars at the scroll edge (step 6, #27; iOS 26 scroll edge effect): transparent and rimless until content
    runs under them, as the tab screens' top bar is at rest; the page script sets .is-scrolled and .is-at-end */
 .top-bar[data-collapse]:not(.top-bar--large):not(.is-scrolled), .action-bar.is-at-end { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: transparent; }
-.action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-bar-control); }   /* C7: a control inside a bar is a capsule */
+.action-bar :is(.register-btn, .open-btn) { border-radius: var(--radius-capsule); }   /* C7: a control inside a bar is a capsule */
 
 /* ---- design-system/components/primary-button.css · order 0770 ---- */
 .register-btn, .open-btn, .submit-btn {   /* the screen's one primary */
@@ -1513,7 +1522,7 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .bar.link { width: var(--skel-proof-w); height: var(--skel-line); }
 .bar.label { width: var(--skel-tag-w); height: var(--skel-line); margin-bottom: var(--space-2); }
 .bar.finish-bar { width: var(--skel-time-w); height: var(--skel-time-h); margin-bottom: var(--space-4); }
-.action-bar .bar.button { height: var(--target); border-radius: var(--radius-bar-control); }   /* C7: the capsule it stands in for */
+.action-bar .bar.button { height: var(--target); border-radius: var(--radius-capsule); }   /* C7: the capsule it stands in for */
 .action-bar .bar.caption { width: var(--skel-title-w); height: var(--skel-line); margin: var(--space-2) auto 0; }
 .initials.skel { background: var(--raised); }
 .bar.name { width: var(--skel-row-title-w); height: var(--skel-title); margin-bottom: var(--space-2); }

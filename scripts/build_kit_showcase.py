@@ -65,6 +65,42 @@ def used_on(classes):
             hits.setdefault(screen_of(page), []).append(page)
     return hits
 
+# ---------------------------------------------------------------- the patterns (Lesson 9 step 4, 2026-11-06): ui/inventory.md → Patterns map
+# A pattern is a composition of existing components that already stands on three or more screens. Each row names the
+# classes a screen's page must carry (and, with !, must not); the screens found that way must be exactly the ones the
+# row lists, at least three, or the build stops. Each pattern is one file in design-system/patterns/.
+_PSEC = re.search(r'^## Patterns map [^\n]*\n(.*?)(?=^## |\Z)', INV, flags=re.M | re.S).group(1)
+def _prow(l): return [x.strip() for x in re.split(r'(?<!\\)\|', l.strip().strip('|'))]
+def _found(sig):
+    need = [c for c in sig if not c.startswith('!')]; no = [c[1:] for c in sig if c.startswith('!')]
+    hits = {}
+    for page, (tokens, _) in PAGES.items():
+        if all(c in tokens for c in need) and not any(c in tokens for c in no):
+            hits.setdefault(screen_of(page), []).append(page)
+    return {k: sorted(v, key=lambda x: (len(x), x)) for k, v in hits.items()}
+PATTERNS, NOT_PATTERNS = [], []
+_ptab, _ntab = _PSEC.split('**Not patterns**')
+for l in _ptab.split('\n'):
+    if not l.startswith('| **'): continue
+    c = _prow(l)
+    PATTERNS.append({'name': c[0].strip('*'), 'file': c[1].strip('`'), 'for': c[2], 'sig': re.findall(r'`([^`]+)`', c[3]),
+                     'on': [x.strip() for x in c[4].split(';')], 'comps': [x.strip() for x in c[5].split(';')], 'use': c[6], 'not': c[7]})
+for l in _ntab.split('\n'):
+    if not l.startswith('| **'): continue
+    c = _prow(l)
+    NOT_PATTERNS.append({'name': c[0].strip('*'), 'sig': re.findall(r'`([^`]+)`', c[1]), 'on': [x.strip() for x in c[2].split(';')], 'why': c[3]})
+for _p in PATTERNS + NOT_PATTERNS:
+    _p['found'] = _found(_p['sig'])
+    assert sorted(_p['found']) == sorted(_p['on']), ('ui/inventory.md → Patterns map: the screens carrying ' + ' '.join(_p['sig']) + ' are not the ones listed', _p['name'], sorted(_p['found']), sorted(_p['on']))
+for _p in PATTERNS:
+    assert len(_p['on']) >= 3, ('a pattern stands on three or more screens', _p['name'], _p['on'])
+    assert os.path.exists(os.path.join(ROOT, 'design-system/patterns', _p['file'] + '.html')), ('no pattern file', _p['file'])
+def PSTAGE(pt, label=True):   # the live composition: the pattern's own file in a frame; specimens.html labels it, the Patterns page keys it by data-label
+    lab = f'{pt["name"]} pattern'
+    attr = '' if label else ' data-label="' + H.escape(lab) + '"'
+    return (f'<div class="kit-state"{attr}>' + (f'<p class="kit-label">{H.escape(lab)}</p>' if label else '')
+            + f'<div class="kit-frame kit-frame--flush"><iframe class="kit-shell" src="../patterns/{pt["file"]}.html" title="{H.escape(lab)}"></iframe></div></div>')
+
 # ---------------------------------------------------------------- cut the page into its parts
 def element_end(s, start, tag='div'):
     depth, i = 0, start
@@ -170,6 +206,8 @@ side = ['<aside class="kd-side" aria-label="Components">',
 for r in ROLES:
     side.append(f'      <p class="kd-role"><a href="#{slug(r)}">{r}</a> <span>{len(specs_by_role[r])}</span></p><ul>'
                 + ''.join(f'<li><a href="#{s}" data-names="{H.escape(" ".join([title_of(s)] + [x["name"] for x in rows_of[s]]).lower())}">{H.escape(title_of(s))}</a></li>' for s in specs_by_role[r]) + '</ul>')
+side.append('      <p class="kd-role"><a href="#role-patterns">Patterns</a> <span>' + str(len(PATTERNS)) + '</span></p><ul>'
+            + ''.join(f'<li><a href="#pattern-{pt["file"]}" data-names="{H.escape(pt["name"].lower())} pattern">{H.escape(pt["name"])}</a></li>' for pt in PATTERNS) + '</ul>')
 side += ['    </nav>', '    <p class="kd-empty" hidden>No component matches.</p>', '  </div>', '</aside>']
 intro = (f'<p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: {len(items)} specimens for {N_COMPONENTS} inventory components, '
          f'every state shown on its own, from <a href="../index.css"><code>design-system/index.css</code></a> alone. '
@@ -185,6 +223,15 @@ for r in ROLES:
     main.append(f'\n  <!-- ================================================================ {r} -->\n'
                 f'  <section class="kit-section" id="{slug(r)}" aria-labelledby="{slug(r)}-h">\n    <h2 id="{slug(r)}-h">{r} <span>{len(specs_by_role[r])}</span></h2>\n\n'
                 + '\n\n'.join(card(s) for s in specs_by_role[r]) + '\n  </section>')
+def _pcard(pt):
+    on = ', '.join(f'<a href="{VIEWER}#{pt["found"][k][0]}">{SCREEN[k]}</a>' for k in pt['on'])
+    return (f'    <div class="kit-item kd-pattern" id="pattern-{pt["file"]}" data-names="{H.escape(pt["name"].lower())} pattern">\n      <h3>{H.escape(pt["name"])}</h3>\n'
+            f'      <div class="kd-meta"><p class="kd-line">{H.escape(pt["for"])}</p><p class="kd-line"><span class="kd-k">Stands on {len(pt["on"])} screens</span> {on}</p>'
+            f'<p class="kd-line"><span class="kd-k">In the docs</span> <a href="patterns.html#{pt["file"]}">Patterns</a></p></div>\n'
+            f'      <div class="kit-states">{PSTAGE(pt)}</div>\n    </div>')
+main.append('\n  <!-- ================================================================ Patterns (ui/inventory.md → Patterns map) -->\n'
+            f'  <section class="kit-section" id="role-patterns" aria-labelledby="role-patterns-h">\n    <h2 id="role-patterns-h">Patterns <span>{len(PATTERNS)}</span></h2>\n\n'
+            + '\n\n'.join(_pcard(pt) for pt in PATTERNS) + '\n  </section>')
 main.append('</main>')
 JS = '''<script>
 /* kd:js (scripts/build_kit_showcase.py): the sidebar highlights the card on screen, filters by name, and folds into a menu on a phone */
@@ -443,6 +490,30 @@ for f in DS.FAMILIES:
     write(f['page'] + '.html', DS.page(f'{f["name"]} · Onrace design system', f['page'], main, [(slug_c(n), n) for n in f['comps']],
                                        DS.MAP_DATA if needs_map else '', SPEC_JS))
 
+# the Patterns page (Lesson 9 step 4, 2026-11-06): each pattern live from its file, the screens it stands on, when to use it
+def pattern(pt):
+    sl = pt['file']
+    rows = ''.join(f'<tr><td>{viewer(pt["found"][k][0])}</td><td>' + ' '.join(f'<code>{H.escape(x)}</code>' for x in pt['found'][k]) + '</td></tr>' for k in pt['on'])
+    comps = ', '.join(f'<a href="{DS.section_url(n)}">{H.escape(n)}</a>' for n in pt['comps'])
+    cls = ' '.join(f'<code>{"not " if c.startswith("!") else ""}.{H.escape(c.lstrip("!"))}</code>' for c in pt['sig'])
+    return '\n'.join([f'<section class="dc" id="{sl}" aria-labelledby="{sl}-h">', f'<h2 id="{sl}-h">{H.escape(pt["name"])}</h2>',
+        f'<p class="dc-for">{H.escape(pt["for"])}</p>',
+        f'<div class="dc-spec">{PSTAGE(pt, label=False)}</div>',
+        '<div class="dc-rules">'
+        f'<div class="dc-do"><h3>Use the pattern</h3><p>{H.escape(pt["use"])}</p></div>'
+        f'<div class="dc-dont"><h3>Use the components</h3><p>{H.escape(pt["not"])}</p><p class="dc-see">Composed of {comps}</p></div></div>',
+        f'<h3 class="dc-h" id="{sl}-on">Stands on {len(pt["on"])} screens</h3>',
+        f'<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Screen</th><th>Pages that carry {cls}</th></tr></thead><tbody>{rows}</tbody></table></div>',
+        f'<p class="dc-see">The file: <code>design-system/patterns/{sl}.html</code></p>', '</section>'])
+_np = ''.join(f'<tr><td>{H.escape(n["name"])}</td><td>' + ', '.join(viewer(n['found'][k][0]) for k in n['on']) + f'</td><td>{H.escape(n["why"])}</td></tr>' for n in NOT_PATTERNS)
+_pmain = ('<p class="ds-crumb">Patterns</p><h1>Patterns</h1><p class="ds-lede">A pattern is a composition of existing components that already stands on three or more screens. '
+          'Each is one file in <code>design-system/patterns/</code>, with no style of its own.</p>\n'
+          + '\n'.join(pattern(pt) for pt in PATTERNS)
+          + '\n<section class="dc" id="not-patterns" aria-labelledby="not-patterns-h"><h2 id="not-patterns-h">Not patterns</h2>'
+          '<p class="dc-for">Each stays its components.</p>'
+          f'<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Candidate</th><th>Stands on</th><th>Why not</th></tr></thead><tbody>{_np}</tbody></table></div></section>')
+write('patterns.html', DS.page('Patterns · Onrace design system', 'patterns', _pmain, [(pt['file'], pt['name']) for pt in PATTERNS] + [('not-patterns', 'Not patterns')], '', SPEC_JS))
+
 # the start page: what the system is, how it's organised, the families, why.html
 cards = []
 for role in DS.ROLES:
@@ -451,7 +522,7 @@ for role in DS.ROLES:
                            f'<span class="ds-card-n">{len(f["comps"])} component{"s" if len(f["comps"]) != 1 else ""}</span></a>' for f in DS.FAMILIES if f['role'] == role)
                  + '</div></section>')
 start = (f'<h1>Onrace design system</h1><p class="ds-lede">{inline(DS.START, "ui/inventory.md")}</p>'
-         '<p class="ds-links"><a href="why.html">Why the system looks like this</a> · <a href="specimens.html">Every specimen on one page</a> · '
+         '<p class="ds-links"><a href="why.html">Why the system looks like this</a> · <a href="patterns.html">Patterns</a> · <a href="specimens.html">Every specimen on one page</a> · '
          f'<a href="{GH}DESIGN.md">DESIGN.md</a> · <a href="{GH}design-system/README.md">The folder on GitHub</a></p>' + ''.join(cards))
 # yesterday's start page was the specimen sheet: an old link to one of its cards (index.html#race-card) goes there
 OLD = json.dumps(sorted(set(RAW) | {'shell'}))

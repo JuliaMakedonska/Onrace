@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=2980b37d">
+<link rel="stylesheet" href="../design-system/index.css?v=06a7dbda">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace" data-state="loading">
@@ -73,9 +73,9 @@
        "no" edge out of ProfileError's Retry? (DeadEnd10). -->
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
-      <li><a href="race-browse.html"><span>Discover</span></a></li>
-      <li><a href="results-list-loading.html?run=1" data-requires-auth><span>Results</span></a></li>
-      <li><a href="profile-loading.html?run=1" aria-current="page" data-requires-auth><span>Profile</span></a></li>
+      <li><a href="race-browse.html" data-tab="discover"><span>Discover</span></a></li>
+      <li><a href="results-list-loading.html?run=1" data-requires-auth data-tab="results"><span>Results</span></a></li>
+      <li><a href="profile-loading.html?run=1" aria-current="page" data-requires-auth data-tab="profile"><span>Profile</span></a></li>
     </ul>
   </nav>
 

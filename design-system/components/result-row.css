@@ -34,6 +34,8 @@
 .result-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
 @media (hover: hover) { .result-card .card-link:is(:hover, .is-hover) { background: var(--surface-hover); } }   /* the race card's states */
 .result-card .card-link:is(:active, .is-pressed) { background: var(--surface-pressed); }   /* G23: pressed highlight on tap */
+@media (hover: hover) { .result-card .card-link:is(:hover, .is-hover) .sport-tag { background: var(--raised-hover); } }   /* the format chip moves up with its row (Step 3 follow-ups) */
+.result-card .card-link:is(:active, .is-pressed) .sport-tag { background: var(--raised-pressed); }
 .result-card .card-meta::after {   /* G22: the row drills into Result detail, so it shows a disclosure indicator (Solar, C2).
      It ends the short meta row, under the finish time's right edge: the time and the proof line keep the full width */
   content: "";

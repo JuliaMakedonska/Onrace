@@ -7,10 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=2980b37d">
+<link rel="stylesheet" href="../design-system/index.css?v=06a7dbda">
 <script src="../design-system/tokens/theme.js"></script>
-<link rel="preload" as="style" href="../design-system/map-data.css?v=2980b37d" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=2980b37d"></noscript>
+<link rel="preload" as="style" href="../design-system/map-data.css?v=06a7dbda" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=06a7dbda"></noscript>
 </head>
 <body class="onrace">
 
@@ -140,12 +140,12 @@
        My Results bar. -->
   <nav class="bottom-nav" aria-label="Global navigation">
     <ul>
-      <li><a href="race-browse.html" aria-current="page"><span>Discover</span></a></li>
+      <li><a href="race-browse.html" aria-current="page" data-tab="discover"><span>Discover</span></a></li>
       <!-- My Results and Profile are owner-only: data-requires-auth sends a
            signed-out person to the Sign in / Sign up gate first (flows.md
            "Signed in?"; the snippet at the end of this file). -->
-      <li><a href="results-list-loading.html?run=1" data-requires-auth><span>Results</span></a></li>
-      <li><a href="profile-loading.html?run=1" data-requires-auth><span>Profile</span></a></li>
+      <li><a href="results-list-loading.html?run=1" data-requires-auth data-tab="results"><span>Results</span></a></li>
+      <li><a href="profile-loading.html?run=1" data-requires-auth data-tab="profile"><span>Profile</span></a></li>
     </ul>
   </nav>
 

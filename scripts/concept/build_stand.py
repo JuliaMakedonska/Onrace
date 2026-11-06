@@ -358,6 +358,7 @@ STAMPED += [f'wireframes/{p}.html' for p in (   # step 5, Archive and Infrastruc
     'sign-in-sign-up', 'sign-in-sign-up-check-inbox', 'sign-in-sign-up-error', 'sign-in-sign-up-loading',
     'reset-password', 'reset-password-check-inbox', 'reset-password-error', 'reset-password-loading',
     'new-password', 'new-password-error', 'new-password-loading', 'profile', 'profile-error', 'profile-loading')]
+STAMPED += sorted('design-system/patterns/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/patterns')) if f.endswith('.html'))   # Lesson 9 step 4: the patterns, mirrored with the screens
 import subprocess
 # the showcase: arranged by role, each specimen's facts from ui/inventory.md → Showcase map (2026-10-26), before stamping
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_kit_showcase.py')], check=True)
@@ -402,7 +403,7 @@ ACCENT_OK = [r'^\.btn--primary' + STATE + '$', r'^\.state-action:not\(\.secondar
              r'^\.swatch--(accent-(fill|ink|hover|ink-hover|pressed|ink-pressed)|amber-\d+)$']   # the stand's swatches, one per token
 # the accent roles (--accent-fill, --accent-ink, --accent-hover, since Lesson 8 step 4) and their amber primitives, so a
 # class can't reach the amber around its roles (tokens/tokens.css's :root is not a class and isn't read here)
-accent_sel = selectors_using('accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'accent-pressed', 'accent-ink-pressed', 'amber-78', 'amber-83', 'amber-87', 'amber-40', 'amber-33', 'amber-26')
+accent_sel = selectors_using('accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'accent-pressed', 'accent-ink-pressed', 'amber-78', 'amber-83', 'amber-69', 'amber-40', 'amber-33', 'amber-26')
 accent_bad = [x for x in accent_sel if not any(re.match(p, x) for p in ACCENT_OK)]
 assert not accent_bad, ('Color rule 1: accent on a disallowed selector', accent_bad)
 
@@ -444,8 +445,11 @@ assert not line_fill, ('Color rule 3a: a hairline token used as a fill', [x.stri
 # (lighter in dark; darker in light for the graphite fills; the amber lighter in both; a text control dimmer; a boundary
 # stronger), each step at least STEP_MIN in L*, in both themes. A state that skipped or reversed a step stops the build.
 LADDERS = [('surface', 'surface-hover', 'surface-pressed'), ('raised', 'raised-hover', 'raised-pressed'), ('group', 'group-hover', 'group-pressed'),
-           ('glass-sheet', 'sheet-hover', 'sheet-pressed'), ('glass-bar', 'bar-hover', 'bar-pressed'), ('accent-fill', 'accent-hover', 'accent-pressed'),
-           ('accent-ink', 'accent-ink-hover', 'accent-ink-pressed'), ('text-primary', 'text-hover', 'text-pressed'), ('boundary', 'boundary-hover', 'boundary-pressed')]
+           ('glass-sheet', 'sheet-hover', 'sheet-pressed'), ('glass-bar', 'bar-hover', 'bar-pressed'),
+           ('text-primary', 'text-hover', 'text-pressed'), ('boundary', 'boundary-hover', 'boundary-pressed')]
+# The amber dims when pressed (Step 3 follow-ups, 2026-11-06: iOS dims a pressed control): pressed is darker than rest by at
+# least a step, and hover (one step lighter on the fill and the dark ink, darker on the light ink) is a step from both.
+DIMS = [('accent-fill', 'accent-hover', 'accent-pressed'), ('accent-ink', 'accent-ink-hover', 'accent-ink-pressed')]
 def _solid(name, t): v = tok(name, t); return glass_parts(name, t)[0] if v.startswith('color-mix') else v
 STATE_LADDER = []
 for _t in THEMES:
@@ -454,7 +458,12 @@ for _t in THEMES:
         d1, d2 = Ls[1] - Ls[0], Ls[2] - Ls[1]
         assert abs(d1) >= STEP_MIN and abs(d2) >= STEP_MIN and d1 * d2 > 0, ('One rule for fills: a state skips or reverses a step', _t, rest, [round(x, 2) for x in Ls])
         STATE_LADDER.append((_t, rest, [round(x, 2) for x in Ls]))
-print('States: one rule for fills,', len(LADDERS), 'ladders × 2 themes, every step one way and at least', STEP_MIN, 'L*')
+for _t in THEMES:
+    for rest, hov, prs in DIMS:
+        Ls = [lab(_solid(n, _t))[0] for n in (rest, hov, prs)]
+        assert Ls[0] - Ls[2] >= STEP_MIN and abs(Ls[1] - Ls[0]) >= STEP_MIN and abs(Ls[1] - Ls[2]) >= STEP_MIN, ('The amber dims when pressed: a state is lighter or too close', _t, rest, [round(x, 2) for x in Ls])
+        STATE_LADDER.append((_t, rest, [round(x, 2) for x in Ls]))
+print('States: one rule for fills,', len(LADDERS), 'ladders × 2 themes, every step one way and at least', STEP_MIN, 'L*; the amber dims when pressed,', len(DIMS), 'ladders × 2 themes')
 
 # Rule 3b: amber, not HYROX yellow (reported, not blocking: the designer keeps the amber knowingly)
 HYROX_REFS = [('RoxFit', '#FFEC00', 'roxfit-how-it-works.png, 5,786 px'), ('RoxMatchUp', '#F5E401', 'roxmatchup-home.png, 2,770 px')]
@@ -471,6 +480,10 @@ for _t in THEMES:
     for _r in ('accent-fill', 'accent-ink'):
         _c = tok(_r, _t).upper()
         RULE_3B_THEMES.append((_t, _r, _c, 'pass' if _3b(_c) else 'accepted by designer' if _c == '#F5B649' else 'FAIL'))
+    for _r in ('accent-pressed', 'accent-ink-pressed'):   # Step 3 follow-ups: the pressed amber clears HYROX yellow on its own; no override covers it, so this one stops the build
+        _c = tok(_r, _t).upper()
+        assert _3b(_c), ('Color rule 3b: the pressed amber is too close to HYROX yellow', _t, _r, _c)
+        RULE_3B_THEMES.append((_t, _r, _c, 'pass'))
 hyrox_rows = [(n, c, src, hue_dist(ACCENT, c), de2000(ACCENT, c)) for n, c, src in HYROX_REFS]
 HYROX_PASS = all(h >= HUE_MIN and d >= DE_MIN for _, _, _, h, d in hyrox_rows)
 # Designer override (concept.md → Color rules → 3b), valid only for this exact accent
@@ -647,8 +660,8 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('sheet-pressed', 'Sheet, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
     ('bar-hover', 'Bar, hover', 'A tab on the tab bar’s glass under the pointer, a capsule inside the bar.', 'At rest; anywhere but the tab bar.', 'One rule for fills · HIG Tab bars, iOS 26: a tab shows its press'),
     ('bar-pressed', 'Bar, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
-    ('accent-pressed', 'Accent, pressed', 'The primary fill pressed, two steps up from the fill.', 'At rest; as text.', 'One rule for fills · Lesson 9: the 1px press is gone, a state never moves an element'),
-    ('accent-ink-pressed', 'Accent ink, pressed', 'The bar action pressed (Save, Log result, Apply filters).', 'At rest; as a fill.', 'One rule for fills, on the ink’s own ladder (darker in light)'),
+    ('accent-pressed', 'Accent, pressed', 'The primary fill pressed: dimmed, darker than rest, its hue a little warmer.', 'At rest; as text.', 'Step 3 follow-ups (designer, 2026-11-06): iOS dims a pressed control; clear of HYROX yellow under rule 3b on its own (no override). Lesson 9: the 1px press is gone, a state never moves an element'),
+    ('accent-ink-pressed', 'Accent ink, pressed', 'The bar action pressed (Save, Log result, Apply filters): dimmed, darker than rest.', 'At rest; as a fill.', 'Step 3 follow-ups: iOS dims a pressed control, in both themes; clear of HYROX yellow under rule 3b'),
     ('text-hover', 'Text, hover', 'A text control in Text primary under the pointer: links, Clear all filters, Copy link, Sort, Unlink, the bar’s back and Cancel. One step dimmer.', 'On text that isn’t a control.', 'One rule, for text: color only, a step at a time'),
     ('text-pressed', 'Text, pressed', 'The same, pressed: two steps dimmer, still AA.', 'At rest.', 'One rule, for text · WCAG 1.4.3'),
     ('boundary-hover', 'Boundary, hover', 'An input’s boundary under the pointer: the search field. One step stronger.', 'At rest.', 'One rule, for borders'),
@@ -735,7 +748,6 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('tabbar-h', 'Tab bar capsule height on the screen pages', '44px targets + 26px icon + label', 'Wireframe conventions: iOS chrome · Critique fix: 44px targets'),
            ('tabbar-inset', 'Floating tab bar: in from the screen edges', 'The 16px gutter (HIG gives no number)', 'G1: on iOS the tab bar floats above content'),
            ('tabbar-gap', 'Floating tab bar: above the bottom safe area', '8px', 'G1, G2'),
-           ('radius-tabbar', 'Floating tab bar corners', 'Half its height: a capsule', 'G1 · C7: shapes in the bar chrome are concentric capsules'),
            ('tabbar-clear', 'Scroll padding under the content', 'Bar + gap + safe area: content runs under the glass, the last item still scrolls clear', 'G1: content shows through beneath the tab bar'),
            ('safe-top', 'Top safe area (status bar, Dynamic Island)', 'env(safe-area-inset-top), 0 inside the viewer', 'G6: respect the top safe area'),
            ('safe-bottom', 'Home-indicator inset under the tab bar and the sheet’s buttons', 'env(safe-area-inset-bottom), 0 inside the viewer', 'G2: buttons stay above the home indicator'),
@@ -812,9 +824,7 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-2</code></td><td>{tok("radius-2")}</td><td>Outer shapes: cards, buttons, the search field.</td><td>Taste: "no radius looks like a wireframe" · one small value, not pills</td></tr>
 <tr><td><code>--radius-3</code></td><td>{tok("radius-3")}</td><td>Stand panels only, never in the product. (The Filters sheet had it until step 3b; it now takes <code>--radius-sheet</code>.)</td><td>Keeps the product's shapes at 4 and 6</td></tr>
 <tr><td><code>--radius-sheet</code></td><td>{tok("radius-sheet")}</td><td>The Filters sheet's (and Race picker's) top corners. {P}.</td><td>G16 · Native sheet anatomy (designer, 2026-10-18): the system's sheet radius, not a Podium radius</td></tr>
-<tr><td><code>--radius-bar-control</code></td><td>{tok("radius-bar-control")} = 22px</td><td>A control inside a bar: the Filters button and the segmented track in the controls bar (Filters added by the designer, 2026-10-19); the search field once it pins to a bar (G8).</td><td>C7: concentric only inside bars; content keeps 4/6</td></tr>
-<tr><td><code>--radius-capsule</code></td><td>{tok("radius-capsule")}</td><td>A full capsule at any height: the segmented control's track and segments, in a bar or in content, also at 200% text; a tab's state fill.</td><td>C7 (designer, 2026-10-30): capsules for every system control · Lesson 9: the List/Map track stays a full capsule at large text</td></tr>
-<tr><td><code>--radius-filter-chip</code></td><td>{tok("radius-filter-chip")} = 16px</td><td>Active filter chips in the controls bar: a capsule, half the 32px chip height.</td><td>C7: a control inside a bar is a capsule (designer, 2026-10-22). Format chips on cards keep 4px</td></tr>
+<tr><td><code>--radius-capsule</code></td><td>{tok("radius-capsule")}</td><td>Every capsule, at any height and also at 200% text: the segmented control's track and segments, the search field, Filters, the action bar's Register and Open, the active filter chip, the floating tab bar and a tab's state fill.</td><td>C7 (designer, 2026-10-30): capsules for every system control · Lesson 9 step 3 and its follow-ups: one full-capsule rule, the half-height radii retired</td></tr>
 <tr><td><code>--radius-alert</code></td><td>{tok("radius-alert")}</td><td>The confirm alert (Profile, Sign out). {P}.</td><td>G67 (designer, 2026-10-23): the alert as iOS 26 alerts, glass and a larger radius, provisional like the sheet's</td></tr>
 <tr><td><code>--radius-circle</code></td><td>{tok("radius-circle")}</td><td>The one circle: Profile initials, the busy spinner's ring and the map pin's dot (renamed from <code>--radius-avatar</code>, Lesson 8 step 6).</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
@@ -1129,6 +1139,8 @@ shutil.rmtree(os.path.join(ROOT, 'public/design-system/docs'), ignore_errors=Tru
 shutil.copytree(os.path.join(ROOT, 'design-system/docs'), os.path.join(ROOT, 'public/design-system/docs'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-states-2.html'), os.path.join(ROOT, 'public/ui/review-states-2.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots

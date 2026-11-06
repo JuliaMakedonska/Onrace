@@ -6,12 +6,12 @@
    real pointer does; :focus and :focus-visible on the focus target), or with the real disabled attribute, never the
    docs' stand-ins, so the before is the old CSS's own answer. Then the changed screen states at 390×844. Dark and light.
    Writes ui/review-states/<shot>-<theme>-<before|after>.webp and ui/review-states/shots.json (which pairs differ).
-   Run from the repo root: node scripts/review_states.mjs <before-tree> <states-map.json>. Not part of the build. */
+   Run from the repo root: node scripts/review_states.mjs <before-tree> <states-map.json> [out-dir] [screens.json]. Not part of the build. */
 import { spawn } from 'node:child_process'; import { createServer } from 'node:http';
 import { mkdtempSync, readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs'; import { tmpdir } from 'node:os'; import { join, normalize, extname } from 'node:path';
 import { fileURLToPath } from 'node:url'; import { createHash } from 'node:crypto';
 const AFTER = join(fileURLToPath(new URL('.', import.meta.url)), '..'), BEFORE = process.argv[2], MAP = JSON.parse(readFileSync(process.argv[3], 'utf8'));
-const OUT = join(AFTER, 'ui/review-states'); mkdirSync(OUT, { recursive: true });
+const OUT = join(AFTER, process.argv[4] || 'ui/review-states'); mkdirSync(OUT, { recursive: true });   // [out dir] [screens.json]: the Step 3 follow-ups write ui/review-states-2
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const T = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif' };
 const serve = root => new Promise(r => { const s = createServer((q, res) => { const p = normalize(join(root, decodeURIComponent(new URL(q.url, 'http://x').pathname))); try { const b = readFileSync(p); res.writeHead(200, { 'content-type': T[extname(p)] || 'application/octet-stream', 'cache-control': 'no-store' }).end(b); } catch { res.writeHead(404).end(); } }); s.listen(0, '127.0.0.1', () => r(s)); });
@@ -95,7 +95,7 @@ for (const theme of ['dark', 'light']) for (const side of ['before', 'after']) {
   }
 }
 // the screens whose field error, segmented control or disabled state changed
-const SCREENS = [['Log result -error, three fields missing', 'wireframes/log-result-error.html?cause=fields'], ['Log result -error, the link missing', 'wireframes/log-result-error.html'],
+const SCREENS = process.argv[5] ? JSON.parse(readFileSync(process.argv[5], 'utf8')) : [['Log result -error, three fields missing', 'wireframes/log-result-error.html?cause=fields'], ['Log result -error, the link missing', 'wireframes/log-result-error.html'],
   ['New password -error, too short', 'wireframes/new-password-error.html?cause=short'], ['New password -error, no match', 'wireframes/new-password-error.html?cause=mismatch'],
   ['Profile -error, a row didn’t save', 'wireframes/profile-error.html?cause=save&field=country&prev=Italy&value=Spain'], ['Sign in', 'wireframes/sign-in-sign-up.html'],
   ['Log result -loading, the locked form', 'wireframes/log-result-loading.html'], ['Race browse -loading, Sort disabled', 'wireframes/race-browse-loading.html']];

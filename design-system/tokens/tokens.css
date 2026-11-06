@@ -47,7 +47,7 @@
   /* ---------- color: amber and coral ---------- */
   --amber-78: #F5B649;      /* L* 78.08 · "Sodium Amber". Rule 3b's designer override (2026-10-14) is bound to this exact hex */
   --amber-83: #FFC46A;      /* L* 82.80 · "Amber, hover" */
-  --amber-87: #FFD28A;      /* L* 86.60 · "Amber, pressed": the fill and the dark ink two steps up (Lesson 9 step 3) */
+  --amber-69: #DF9A46;      /* L* 69.00 · "Amber, pressed": the fill (both themes) and the dark ink pressed, dimmed as iOS dims a pressed control, its hue turned 7° warmer so it clears HYROX yellow under rule 3b on its own (hue 26.6°, ΔE 25.8, Step 3 follow-ups, 2026-11-06). Amber-78 is the one hex the override covers */
   --coral-68: #EE8B84;      /* L* 68.25 · "Soft Coral" */
   --coral-21: #3A2F31;      /* L* 20.65 · "Coral Wash" (coral at 14% on graphite-12) */
 
@@ -116,16 +116,11 @@
   --radius-sheet: 38px;     /* the native sheet's top corners (G16) [?] */
   --radius-alert: 34px;     /* the alert's and the action sheet's corners (G67) [?] */
   --radius-circle: 50%;     /* the one circle: Profile initials, the busy spinner, the map pin's dot. Renamed from --radius-avatar in step 6 (2026-10-30): the dot wrote 50% itself, and the spinner only borrowed the avatar's name */
-  --radius-bar-control: calc(var(--target) / 2);   /* C7: a control inside a bar is a capsule, concentric with the bar */
-  --radius-filter-chip: calc(var(--filter-chip-height) / 2);   /* C7: the active filter chip is a capsule */
-  --radius-tabbar: calc(var(--tabbar-h) / 2);   /* G1: the floating tab bar is a capsule */
-  --radius-capsule: 999px;  /* C7 (Lesson 9 step 3): a full capsule at any height, larger than any control is tall, so the corners stay half the box's own height (the browser clamps it). The segmented control's track and segments, everywhere, also at 200% text */
-  /* Not merged (tried in this step): one capsule radius for the three (calc(infinity * 1px), clamped to half of each box's
-     own height) changes pixels. At 200% text the List/Map track (.view-toggle) is 47px tall and keeps 22px today, so it
-     isn't a full capsule there; one formula would round it to 23.5px. The three stay "half the nominal height".
-     Designer, 2026-10-27: it stays as today through the refactor; a full capsule at large text is a "keep it" change for
-     after Lesson 8 (tokens/tokens-audit.md → After the lesson). Done in Lesson 9 step 3 for the segmented control:
-     --radius-capsule. The other three keep half the nominal height. */
+  --radius-capsule: 999px;  /* C7: a full capsule at any height, larger than any control is tall, so the corners stay half the box's own height (the browser clamps it). Every capsule: the segmented control (Lesson 9 step 3), and since the Step 3 follow-ups (2026-11-06) every bar capsule too: the search field, Filters, the action bar's button, the active filter chip, the tab bar and its tabs, also at 200% text */
+  /* One capsule radius (Step 3 follow-ups, 2026-11-06): --radius-bar-control, --radius-filter-chip and --radius-tabbar,
+     each half its control's nominal height, are retired. At 200% text a bar control grows taller than its nominal height
+     and kept the smaller corner; --radius-capsule stays half of the box's own height at any size. Before: Lesson 8
+     kept the three ("not merged", tokens/tokens-audit.md → After the lesson). */
   --border: 1px;
   --focus-ring: 2px;        /* the focus outline's width and offset; its color is the semantic --focus */
   --spinner-stroke: 2px;    /* split: the busy spinner's stroke, which borrowed --focus-ring (found in this step; not in the audit). Same value */
@@ -292,8 +287,8 @@
   --sheet-pressed: var(--graphite-23);
   --bar-hover: var(--graphite-12);       /* a tab on the tab bar's glass (graphite-5 in dark): one level up is the surface, two the raised level */
   --bar-pressed: var(--graphite-17);
-  --accent-pressed: var(--amber-87);     /* the primary fill pressed, two steps up from --accent-fill (hover is --accent-hover, one) */
-  --accent-ink-pressed: var(--amber-87); /* the bar action pressed (.top-bar .save-btn, .bar-action) */
+  --accent-pressed: var(--amber-69);     /* the primary fill pressed: dimmed, darker than rest, as iOS dims a pressed control (Step 3 follow-ups; hover stays --accent-hover, one step lighter) */
+  --accent-ink-pressed: var(--amber-69); /* the bar action pressed (.top-bar .save-btn, .bar-action): dimmed, darker than rest */
   --text-hover: var(--graphite-79);      /* a text control in Text primary under the pointer: links, Clear all filters, Copy link, Sort, the bar's back and Cancel. One step dimmer */
   --text-pressed: var(--graphite-69);    /* the same pressed: two steps dimmer */
   --boundary-hover: var(--graphite-69);  /* an input's boundary under the pointer: the search field. One step stronger than --boundary */
@@ -369,7 +364,7 @@
   --sheet-pressed: var(--graphite-89);
   --bar-hover: var(--graphite-93);
   --bar-pressed: var(--graphite-89);
-  --accent-pressed: var(--amber-87);     /* a fill with dark text: the same as dark */
+  --accent-pressed: var(--amber-69);     /* a fill with dark text: the same as dark */
   --accent-ink-pressed: var(--amber-26);
   --text-hover: var(--graphite-27);
   --text-pressed: var(--graphite-39);
@@ -426,8 +421,8 @@
   --sheet-pressed: var(--graphite-23);
   --bar-hover: var(--graphite-12);
   --bar-pressed: var(--graphite-17);
-  --accent-pressed: var(--amber-87);
-  --accent-ink-pressed: var(--amber-87);
+  --accent-pressed: var(--amber-69);
+  --accent-ink-pressed: var(--amber-69);
   --text-hover: var(--graphite-79);
   --text-pressed: var(--graphite-69);
   --boundary-hover: var(--graphite-69);
@@ -485,7 +480,7 @@
    --text-primary on --group-pressed                                      dark 10.04  light 13.68  needs 4.5  text
    --text-secondary on --group-pressed                                    dark  4.62  light  5.04  needs 4.5  text
    --error on --group                                                     dark  5.48  light  6.54  needs 4.5  text
-   --on-accent-fill on --accent-pressed                                   dark 12.92  light 12.92  needs 4.5  text
+   --on-accent-fill on --accent-pressed                                   dark  7.71  light  7.71  needs 4.5  text
    --text-hover on --page                                                 dark 10.42  light  9.58  needs 4.5  text
    --text-hover on --surface                                              dark  9.32  light 10.46  needs 4.5  text
    --text-pressed on --page                                               dark  7.72  light  6.17  needs 4.5  text
@@ -514,8 +509,8 @@
    --text-secondary on --glass-sheet over the worst case                  dark  5.59  light  5.65  needs 4.5  text
    --accent-ink on --glass-sheet over the worst case                      dark  7.36  light  5.44  needs 4.5  text
    --error on --glass-sheet over the worst case                           dark  5.46  light  5.49  needs 4.5  text
-   --accent-ink-pressed on --glass-ground over the worst case             dark  8.45  light  8.17  needs 4.5  text
-   --accent-ink-pressed on --glass-sheet over the worst case              dark  9.36  light  8.97  needs 4.5  text
+   --accent-ink-pressed on --glass-ground over the worst case             dark  5.04  light  8.17  needs 4.5  text
+   --accent-ink-pressed on --glass-sheet over the worst case              dark  5.58  light  8.97  needs 4.5  text
    --text-hover on --glass-ground over the worst case                     dark  6.81  light  7.99  needs 4.5  text
    --text-pressed on --glass-ground over the worst case                   dark  5.04  light  5.15  needs 4.5  text
    --text-pressed on --glass-sheet over the worst case                    dark  5.59  light  5.65  needs 4.5  text

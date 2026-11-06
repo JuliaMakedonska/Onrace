@@ -87,6 +87,10 @@
 /* hover one level up, pressed two (Lesson 9 step 3; the hover ring went: one rule for every fill). G23: the pressed highlight on tap */
 @media (hover: hover) { .race-card:has(.card-link:is(:hover, .is-hover)) { background: var(--surface-hover); } }
 .race-card:is(.is-pressed, :has(.card-link:is(:active, .is-pressed))) { background: var(--surface-pressed); }
+/* the date tile and the format chip stay one level above their card and move up with it (Step 3 follow-ups, 2026-11-06):
+   they never merge into the card's hover */
+@media (hover: hover) { .race-card:has(.card-link:is(:hover, .is-hover)) :is(time, .sport-tag) { background: var(--raised-hover); } }
+.race-card:is(.is-pressed, :has(.card-link:is(:active, .is-pressed))) :is(time, .sport-tag) { background: var(--raised-pressed); }
 .race-card:not(:has(.photo)) .card-link { padding-top: 0; }   /* a race card without a photo (Race picker) */
 .race-card:has(.card-link[aria-current="true"]) .card-link { padding-right: calc(var(--icon-l) + var(--space-3)); }   /* G47: room for the checkmark */
 .race-card:has(.card-link[aria-current="true"])::after {   /* G47: the linked race in Race picker, the filter rows' neutral checkmark (C4) */

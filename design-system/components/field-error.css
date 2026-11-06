@@ -5,7 +5,8 @@
 /* order 0520 */
 /* the field error, iOS style (Lesson 9 step 3; designer, 2026-10-30): no ring and no line on the field. A coral footnote
    line with the small error icon, under its row in a group of several fields, or under its group in the hint's place,
-   which it replaces while it shows (the page's script hides the hint and points aria-describedby at the error) */
+   which it replaces while it shows. It replaces only its own field's helper (the hint that field is described by: the
+   page's script hides it and points aria-describedby at the error); a group note no one field owns stays (Step 3 follow-ups) */
 .rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-2); }
 
 /* order 0860 */

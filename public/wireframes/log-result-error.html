@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=2980b37d">
+<link rel="stylesheet" href="../design-system/index.css?v=06a7dbda">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -267,18 +267,17 @@ var CATALOG = [
   // form (only visible ones: a linked race's facts count as filled), so
   // each gets its own inline error. aria-invalid + aria-describedby tie
   // each error to its control. The error is a coral footnote that replaces
-  // its group's hint while it shows (Lesson 9 step 3): the hint is hidden
-  // and the field is described by the error alone.
+  // only its own field's helper while it shows (the hint the field is
+  // described by; Step 3 follow-ups): that hint is hidden and the field is
+  // described by the error. A group note no field owns stays visible.
   var cause = ['fields', 'submit'].indexOf(params.get('cause')) > -1 ? params.get('cause') : 'link';
   function flag(f) {
     var el = form.elements[f];
     var err = document.getElementById(f + '-error');
-    var hint = err.closest('.group').querySelector('.group-footer');
+    var own = (el.getAttribute('aria-describedby') || '').split(' ').filter(Boolean);   // the field's own helpers
     el.setAttribute('aria-invalid', 'true');
-    var ids = (el.getAttribute('aria-describedby') || '').split(' ').filter(function (id) { return id && !(hint && id === hint.id); });
-    ids.unshift(f + '-error');
-    el.setAttribute('aria-describedby', ids.join(' '));
-    if (hint) hint.hidden = true;
+    el.setAttribute('aria-describedby', f + '-error');
+    own.forEach(function (id) { document.getElementById(id).hidden = true; });
     err.hidden = false;
   }
   if (cause === 'link') flag('official_result_url');

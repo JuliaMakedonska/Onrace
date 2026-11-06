@@ -38,8 +38,8 @@ colors:
   sheet-pressed: "#33383E"
   bar-hover: "#1D2024"
   bar-pressed: "#272B30"
-  accent-pressed: "#FFD28A"
-  accent-ink-pressed: "#FFD28A"
+  accent-pressed: "#DF9A46"
+  accent-ink-pressed: "#DF9A46"
   text-hover: "#BFC4CA"
   text-pressed: "#A3A9B0"
   boundary-hover: "#A3A9B0"
@@ -105,12 +105,9 @@ rounded:
   radius-2: "6px"
   radius-3: "12px"
   radius-sheet: "38px"
-  radius-bar-control: "22px"
   radius-capsule: "999px"
   radius-circle: "50%"
-  radius-filter-chip: "16px"
   radius-alert: "34px"
-  radius-tabbar: "32px"
 spacing:
   space-1: "4px"
   space-2: "8px"
@@ -168,7 +165,7 @@ components:
     backgroundColor: "{colors.raised}"
     textColor: "{colors.text-primary}"
     typography: "{typography.proof}"
-    rounded: "{rounded.radius-filter-chip}"
+    rounded: "{rounded.radius-capsule}"
     padding: "0 8px 0 12px"
     height: "32px"
   filter-chip-hover:
@@ -183,13 +180,13 @@ components:
     backgroundColor: "{colors.accent-fill}"
     textColor: "{colors.on-accent-fill}"
     typography: "{typography.button}"
-    rounded: "{rounded.radius-bar-control}"
+    rounded: "{rounded.radius-capsule}"
     height: "44px"
   search-field:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.text-primary}"
     typography: "{typography.body}"
-    rounded: "{rounded.radius-2}"
+    rounded: "{rounded.radius-capsule}"
     padding: "0 12px 0 42px"
     height: "44px"
   sheet-field:
@@ -241,7 +238,7 @@ components:
     padding: "12px 16px"
   tab-bar:
     backgroundColor: "{colors.glass-bar}"
-    rounded: "{rounded.radius-tabbar}"
+    rounded: "{rounded.radius-capsule}"
     textColor: "{colors.text-secondary}"
     typography: "{typography.tab-label}"
     height: "64px"
@@ -435,11 +432,11 @@ Flat by default. Depth comes from tonal layering: the tab bar (`--graphite-5`) u
 Slightly rounded in content, never sharp. Pills only in bar chrome (C7).
 - **4px** (`--radius-1`), inner shapes: the photo inside a card, the date tile, format chips, List/Map segments, skeleton bars, map pin labels.
 - **6px** (`--radius-2`), outer shapes: cards, result rows, the Race detail photo (it sits on the page), buttons outside bars, the date pills, the Sign in segmented track, the saved confirmation, the map frame.
-- **Bar chrome (step 3b; designer decision 2026-10-19, C7):** bar controls are all full capsules, iOS 26 style: radius = half the height. The floating tab bar (`--radius-tabbar`, 32px); the search field, the Filters button and the List/Map track (`--radius-bar-control`, 22px); the action bar's Register / Open button (22px, step 5); the active filter chips (`--radius-filter-chip`, 16px = half of 32; designer 2026-10-22). Content (cards, format chips, tiles, buttons outside bars) keeps 4/6px.
-- **The segmented control (Lesson 9 step 3; designer, 2026-10-30):** a capsule everywhere, in a bar or in content, at any text size: the track and each segment take `--radius-capsule` (999px, clamped by the browser to half the box's own height), so the List/Map track stays a full capsule at 200% text (47px tall, 23.5px corners) and Sign in / Create account is a capsule too. The other bar capsules keep half their nominal height.
+- **Bar chrome (step 3b; designer decision 2026-10-19, C7):** bar controls are all full capsules, iOS 26 style: radius = half the height. Since the Step 3 follow-ups (2026-11-06) every one of them takes the one full-capsule rule, `--radius-capsule` (999px, clamped by the browser to half the box's own height), so each stays a capsule at 200% text: the floating tab bar and its tabs' state fill, the search field, the Filters button, the List/Map track, the action bar's Register / Open button and the active filter chips. The three half-height radii (`--radius-tabbar`, `--radius-bar-control`, `--radius-filter-chip`) are retired. Content (cards, format chips, tiles, buttons outside bars) keeps 4/6px.
+- **The segmented control (Lesson 9 step 3; designer, 2026-10-30):** a capsule everywhere, in a bar or in content, at any text size: the track and each segment take `--radius-capsule` (999px, clamped by the browser to half the box's own height), so the List/Map track stays a full capsule at 200% text (47px tall, 23.5px corners) and Sign in / Create account is a capsule too. The other bar capsules followed in the Step 3 follow-ups (above).
 - **Sheet** (`--radius-sheet`, 38px [?]): the top corners of the Filters sheet and the Log result sheet, the native sheet radius (Race picker is a pushed screen with square corners since 2026-10-24); also the receded edge of Results behind the Log result sheet. Replaces the 12px they had until step 3b. `--radius-3` (12px) is now stand panels only.
 - **Confirm alert** (`--radius-alert`, 34px [?]): as iOS 26 alerts (G67, designer 2026-10-23), provisional like the sheet radius. Its last row of buttons follows the corners, so the inset focus ring and the hover fill do too (step 6).
-- **Tab bar** (`--radius-tabbar`, 32px = half its 64px height): the floating capsule.
+- **Tab bar** (`--radius-capsule`, 32px at its 64px height): the floating capsule.
 - **Circles:** the map pin dot, the busy spinner, and **Profile initials** (`--radius-avatar`, 50%): the one exception to "no circles in content", because iOS avatars are circular (designer, 2026-10-19).
 - **Borders** are drawn as 1px inset box-shadows (`--border`), so they never change a box's size.
 
@@ -507,14 +504,25 @@ A frame in `--map-water` with a 1px `--boundary` boundary and a 6px radius. Natu
 
 Lesson 9 step 3 (2026-11-05). Every component you act on has four states besides rest: **Hover**, **Pressed**, **Focus** and **Disabled**, and a field has **Invalid**. Each comes from a semantic role in `design-system/tokens/tokens.css` with a value in the dark `:root` and in the light block; a state role with a value in one theme only stops the build.
 
-- **One rule for fills:** hover goes one level up, pressed two levels up, for every component, cards included. A fill's levels start where it rests, so each resting level has its pair: `--surface-hover` / `--surface-pressed` (the race card, the result row, rows on the page, Sign out), `--raised-hover` / `--raised-pressed` (secondary buttons, Filters, the filter chip, the date pill, an unselected segment, a map pin's label), `--group-hover` / `--group-pressed` (rows on a sheet), `--sheet-hover` / `--sheet-pressed` (the alert's and the action sheet's buttons), `--bar-hover` / `--bar-pressed` (a tab). Up is lighter in dark; in light a state goes darker, as iOS. The amber fill goes `--accent-hover`, then `--accent-pressed`. This resolves the Lesson 8 hover drift, where a row went one level up and a card two (`design-system/tokens/tokens-audit.md` → Drift 1).
+- **One rule for fills:** hover goes one level up, pressed two levels up, for every component, cards included. A fill's levels start where it rests, so each resting level has its pair: `--surface-hover` / `--surface-pressed` (the race card, the result row, rows on the page, Sign out), `--raised-hover` / `--raised-pressed` (secondary buttons, Filters, the filter chip, the date pill, an unselected segment, a map pin's label), `--group-hover` / `--group-pressed` (rows on a sheet), `--sheet-hover` / `--sheet-pressed` (the alert's and the action sheet's buttons), `--bar-hover` / `--bar-pressed` (a tab). Up is lighter in dark; in light a state goes darker, as iOS. A fill inside a card that rests one level above it, the date tile and the format chip, moves up with the card (`--raised-hover` / `--raised-pressed` while the card is hovered or pressed), so it never merges into the card's state (Step 3 follow-ups, 2026-11-06). This resolves the Lesson 8 hover drift, where a row went one level up and a card two (`design-system/tokens/tokens-audit.md` → Drift 1).
 - **Text and borders, the same rule:** a text control in Text primary (links, Clear all filters, Copy link, Sort, Unlink, the bar's back and Cancel) goes one step dimmer under the pointer (`--text-hover`) and two pressed (`--text-pressed`), still at AA; the bar action's amber ink goes `--accent-ink-hover`, then `--accent-ink-pressed`; an input's boundary goes `--boundary-hover`, then `--boundary-pressed`. The build checks that every ladder moves one way, each step at least 1.5 L*, in both themes.
 - **Hover only where there's a pointer:** every hover sits under `@media (hover: hover)`. On touch, pressed is the state that matters (iOS).
 - **A state never moves an element or changes its size:** only fill, color or border. The 1px press is gone, and so is the card's hover ring.
 - **Focus:** `--focus`, a 2px ring outside the control (inside, where the control is clipped: alert buttons, check rows): white in dark (C4, neutral), dark in light, never the accent. It is at least 3:1 on every background it sits on, in both themes, hover fills included.
 - **Disabled:** the whole control at `--opacity-disabled` (40% in dark, 38% in light: each keeps the contrast the retired Text disabled had, 3.6:1 and 2.4:1, which WCAG 1.4.3 exempts) and no pointer events. Never recolored by hand. A busy control isn't disabled.
-- **Invalid:** a field's error is the coral footnote under it (Inputs / Fields above), never a ring.
+- **The amber dims when pressed (Step 3 follow-ups, designer 2026-11-06):** the amber fill and the bar action's ink go one step lighter on hover (`--accent-hover`, `--accent-ink-hover`; in light the ink goes darker) and, pressed, darker than rest, as iOS dims a pressed control: `--accent-pressed` and the dark `--accent-ink-pressed` are `--amber-69` (`#DF9A46`, L* 69, its hue 7° warmer than the amber), which clears HYROX yellow under rule 3b on its own (hue 26.6°, ΔE 25.8). The build stops if it doesn't: the designer's 3b override covers `#F5B649` only. The light ink pressed stays `--amber-26`.
+- **Invalid:** a field's error is the coral footnote under it (Inputs / Fields above), never a ring. It replaces only its own field's helper (the hint that field is described by), and a group note no one field owns stays: Profile's "Changes save as you make them…" shows beside a save error (Step 3 follow-ups).
 - **In the docs:** each component's States shows At rest, Hover, Pressed, Focus and Disabled side by side, in Dark and Light, and Invalid where it has one. `.is-hover`, `.is-pressed` and `.is-focus` are the docs' still stand-ins, written into the same selectors as `:hover`, `:active` and `:focus-visible`; no screen uses them.
+
+## Patterns
+
+Lesson 9 step 4 (2026-11-06). A pattern is a composition of existing components that already stands on three or more screens; each is one file in `design-system/patterns/`, a page that links `design-system/index.css` and nothing else, with no style of its own and no class the components don't define. The build finds the screens that carry each pattern's classes and stops unless they are exactly the ones listed here (`ui/inventory.md` → Patterns map). Each is live on `design-system/docs/patterns.html`.
+
+- **Tab screen** (Race browse, Results list, Profile): a top-level screen: its large title over its own content, the tab bar floating at the bottom. Large title header + Tab bar + the screen's content (Results row and the list on Results list). For a destination you reach from the tab bar: Discover, Results, Profile. The title names the tab, and the bar action, if there is one, is the screen's one primary action. A screen below the top level has no large title and no tab bar: it takes the Top bar on its own, as a pushed screen.
+- **Empty or error state** (Race browse, Results list, Race picker, Race detail, Result detail, Profile): what a list or a screen shows when it has nothing to show or couldn't load: a heading, one line, one action. State message + Primary button. When the whole content area is empty or failed to load: no results, no match, the connection dropped. The action is the one way on: Try again, or the task that fills it. An error about one field or one save stays where it happened: a Field error under the field, a Form alert at the top of the form, a Status line on the row.
+- **Grouped form** (Log result, Sign in / Sign up, New password, Profile): fields a person fills in, grouped as iOS: labelled rows, the hint under the group, an error under the field it belongs to. Text field + Field hint + Field error (Grouped settings rows on Profile; Gate layout on the sign-in screens). For a form of more than one field, and for settings that save as you make them. An error replaces only its own field's helper; a group note stays. One field on its own, such as the search, is a Search field, not a group.
+- **Pushed screen** (Race detail, Result detail, Race picker, Reset password, New password): a screen one level down: the top bar with back, named for the screen it returns to, over the screen's content, with no tab bar. Top bar + the screen's content. For a detail, or a step inside a task. Back always names the parent. A task you leave with Cancel, such as Log result or Sign in, is a sheet or a gate: its Top bar takes Cancel, not back.
+- **Not patterns:** the detail screen with a bottom action bar stands on two screens only (Race detail, Result detail), so it stays two components, the Top bar and the Sticky action bar. The top bar over a page of grouped rows stands on three (Sign in / Sign up, Reset password, New password) but is already one component, Gate layout. Each pattern is drawn from one screen's real content: Results list (the tab screen, and empty), New password with the passwords not matching (the grouped form), Race picker (the pushed screen).
 
 ## Do's and Don'ts
 

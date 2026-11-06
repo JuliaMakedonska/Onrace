@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empty or error state · Onrace pattern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../index.css?v=06a7dbda">
+<script src="../tokens/theme.js"></script>
+</head>
+<!-- PATTERN: Empty or error state (design-system/patterns/README.md). Composed only of existing components: this page links
+     design-system/index.css and nothing else, has no style block, no inline style and no class the components don't
+     define (scripts/check_kit.py stops the build otherwise).
+     Stands on: Race browse (empty, error), Results list (empty, error), Race picker (empty, error), Race detail (error),
+     Result detail (error), Profile (error): a .state-message with its heading, one line, and .state-actions holding
+     one .state-action. Composed of: State message, Primary button. Drawn here as Results list, empty.
+     Shown live on design-system/docs/patterns.html and specimens.html → Patterns, in a frame that loads this file. -->
+<body class="onrace">
+  <div class="phone-screen">
+    <header class="top-bar top-bar--large" data-collapse>
+      <span class="bar-title" aria-hidden="true">Results</span>
+    </header>
+    <main>
+      <header>
+        <h1>Results</h1>
+      </header>
+      <section aria-label="Results archive">
+        <div class="state-message state-message--archive" role="status">
+          <h2>No results logged yet</h2>
+          <p>Keep your official race results here.</p>
+          <div class="state-actions">
+            <a class="state-action" href="../../wireframes/log-result.html">Log your first result</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="../../wireframes/race-browse.html" data-tab="discover"><span>Discover</span></a></li>
+      <li><a href="../../wireframes/results-list.html" data-tab="results" aria-current="page"><span>Results</span></a></li>
+      <li><a href="../../wireframes/profile.html" data-tab="profile"><span>Profile</span></a></li>
+    </ul>
+  </nav>
+</body>
+</html>

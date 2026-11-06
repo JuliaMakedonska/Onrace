@@ -3,7 +3,7 @@
    components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
 
 /* order 0170 */
-:is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-bar-control); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
+:is(.controls, .top-bar) .filters-trigger { border-radius: var(--radius-capsule); }   /* C7 (designer, 2026-10-19): a button in a bar is a capsule too, matching List/Map beside it */
 
 /* order 0210 */
 .control-row .filters-trigger { flex: 1 1 0; min-width: min-content; white-space: nowrap; }   /* takes what List/Map leaves, shrinks, but never below its own label */

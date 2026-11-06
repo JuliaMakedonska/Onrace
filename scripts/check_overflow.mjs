@@ -81,6 +81,9 @@ states.push({ name: '../public/tokens-overview', q: '', act: 'open', label: 'tok
 // the old per-component addresses in components/ only redirect to a family page, so they aren't measured themselves
 for (const f of readdirSync(join(ROOT, 'design-system/docs')).filter(f => f.endsWith('.html') && !['index.html', 'why.html', 'specimens.html'].includes(f)).sort())
   states.push({ name: '../design-system/docs/' + f.replace('.html', ''), q: '', act: '', label: 'docs/' + f.replace('.html', ''), doc: true });
+// the patterns (Lesson 9 step 4, 2026-11-06): each a phone page of existing components, measured like a screen
+for (const f of readdirSync(join(ROOT, 'design-system/patterns')).filter(f => f.endsWith('.html')).sort())
+  states.push({ name: '../design-system/patterns/' + f.replace('.html', ''), q: '', act: '', label: 'patterns/' + f.replace('.html', '') });
 const ONLY = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1].split(',') : null;   // a quick run on some states: --only docs/,race-browse
 if (ONLY) states.splice(0, states.length, ...states.filter(s => ONLY.some(o => s.label.includes(o))));
 

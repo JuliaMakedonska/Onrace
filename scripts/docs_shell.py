@@ -39,7 +39,7 @@ def nav(current):
     CUR = ' aria-current="page"'
     out = ['<nav class="ds-tree" aria-label="Design system">',
            '<ul class="ds-top">' + ''.join(f'<li><a href="{p}.html"{CUR if current == p else ""}>{t}</a></li>'
-                                           for p, t in (('index', 'Start'), ('why', 'Why it looks like this'), ('specimens', 'Every specimen'))) + '</ul>']
+                                           for p, t in (('index', 'Start'), ('why', 'Why it looks like this'), ('patterns', 'Patterns'), ('specimens', 'Every specimen'))) + '</ul>']
     for role in ROLES:
         out.append(f'<p class="ds-role">{H.escape(role)}</p><ul class="ds-fams">')
         for f in [f for f in FAMILIES if f['role'] == role]:

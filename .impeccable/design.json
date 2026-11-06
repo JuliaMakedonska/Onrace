@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-05T22:45:47+00:00",
+  "generatedAt": "2026-11-06T17:18:01+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -528,33 +528,33 @@
       "accent-pressed": {
         "role": "primary",
         "displayName": "Accent Pressed",
-        "canonical": "#FFD28A",
-        "oklch": "oklch(88.7% 0.103 78.6)",
+        "canonical": "#DF9A46",
+        "oklch": "oklch(73.9% 0.129 68.6)",
         "tonalRamp": [
-          "#120900",
-          "#332100",
-          "#583C03",
-          "#805904",
-          "#A47A31",
-          "#C89D56",
-          "#EEC17A",
-          "#FFECCF"
+          "#140800",
+          "#371F01",
+          "#5E3800",
+          "#885402",
+          "#B4710F",
+          "#D99540",
+          "#FEBA6A",
+          "#FFEBD6"
         ]
       },
       "accent-ink-pressed": {
         "role": "primary",
         "displayName": "Accent Ink Pressed",
-        "canonical": "#FFD28A",
-        "oklch": "oklch(88.7% 0.103 78.6)",
+        "canonical": "#DF9A46",
+        "oklch": "oklch(73.9% 0.129 68.6)",
         "tonalRamp": [
-          "#120900",
-          "#332100",
-          "#583C03",
-          "#805904",
-          "#A47A31",
-          "#C89D56",
-          "#EEC17A",
-          "#FFECCF"
+          "#140800",
+          "#371F01",
+          "#5E3800",
+          "#885402",
+          "#B4710F",
+          "#D99540",
+          "#FEBA6A",
+          "#FFEBD6"
         ]
       },
       "text-hover": {
