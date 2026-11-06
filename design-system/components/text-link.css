@@ -22,7 +22,7 @@
 /* states: .text-link's, below */
 
 /* order 0670 */
-.official a, .row-note a, .alert-link, .forgot a {
+.official a, .row-note a, .field-error a, .alert-link, .forgot a {
   color: var(--text-primary);
   text-decoration: underline;
   text-decoration-thickness: var(--border);
@@ -62,5 +62,5 @@
   text-underline-offset: var(--space-1);
 }
 /* every text link and text action: color only, one step dimmer under the pointer, two pressed (Lesson 9 step 3) */
-@media (hover: hover) { :is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
-:is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }
+@media (hover: hover) { :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }

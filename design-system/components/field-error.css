@@ -3,13 +3,15 @@
    components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
 
 /* order 0520 */
-/* the field error, iOS style (Lesson 9 step 3; designer, 2026-10-30): no ring and no line on the field. A coral footnote
-   line with the small error icon, under its row in a group of several fields, or under its group in the hint's place,
-   which it replaces while it shows. It replaces only its own field's helper (the hint that field is described by: the
-   page's script hides it and points aria-describedby at the error); a group note no one field owns stays (Step 3 follow-ups) */
-.rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-2); }
+/* the field error, iOS style (designer, 2026-10-30; its place decided 2026-11-06): no ring and no line on the field. A
+   coral footnote with the small error icon, under its group, outside the group's surface, never inside a row: a small
+   gap above it and the body's line height, in the hint's place and size. In a group of several fields each field that
+   needs fixing gets its own footnote, in the fields' order. It replaces only its own field's helper (the hint that field
+   is described by: the page's script hides it and points aria-describedby at the error); a group note no one field owns
+   stays. Profile's "Couldn't save" is the same footnote, with its Try again link. */
 
 /* order 0860 */
-.field-error { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); font-weight: var(--weight-regular); color: var(--error); }   /* under a group: the footer's place and size (field-hint.css) */
+.field-error { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); font-weight: var(--weight-regular); line-height: var(--leading-body); color: var(--error); }
 .field-error[hidden] { display: none; }
-.field-error::before, .row-note.is-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+.field-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+.field-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }   /* Profile's Try again, after the line */

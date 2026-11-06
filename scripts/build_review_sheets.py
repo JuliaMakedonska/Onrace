@@ -9,13 +9,16 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 D = os.path.join(ROOT, 'ui/review-sheets')
 shots = [s for s in json.load(open(os.path.join(D, 'shots.json'))) if s['kind'] == 'screen']
 NOTE = {
-  'Filters sheet': 'Before: the form 8px under the bar, rows 44–52px. After: 24px under the bar, every row 52px (a menu fills its row), 32px between groups.',
-  'Log result': 'Before: the intro touched the bar (0px), text-field rows 60px beside 44–52px ones. After: 24px under the bar, every row 52px, the stacked link row 8px above and below.',
-  'Log result -error, fields missing': 'The same spacing with the field errors under their rows.',
-  'Log result -loading': 'The locked form, the same spacing.',
+  'Filters sheet': 'Before: the form 8px under the bar, rows 44px. After: 24px under the bar, every row 52px (a menu fills its row), 32px between groups.',
+  'Log result': 'Before: the intro touched the bar (0px), text-field rows 60px beside 44px ones. After: 24px under the bar, every row 52px, the stacked link row 8px above and below.',
+  'Log result -error, fields missing': 'Before: each error inside its row. After: under the group, outside its surface, one footnote per field in the fields\' order, 8px below the group.',
+  'Log result -error, not a link': 'The link\'s error was already under its group; the sheet spacing around it.',
   'Add official result link, on Results list': 'Before: "Official result link" as title and as the field\'s label, the field 8px under the bar. After: the title alone names it; the field shows "https://…" (its label stays as its accessible name); 24px under the bar, sized to its content.',
-  'Add official result link, an invalid link': 'The coral footnote in the helper\'s place, the same spacing.',
+  'Add official result link, an invalid link': 'Before: the error inside the row. After: under the group, in the helper\'s place.',
   'Add official result link, on Result detail': 'The same sheet over Result detail.',
+  'New password -error, too short': 'Before: the error inside the row. After: under the group, in its own helper\'s place.',
+  'New password -error, no match': 'Before: the error inside Confirm new password\'s row. After: under the group; New password\'s "At least 8 characters." stays below it.',
+  'Profile -error, a row didn’t save': 'Before: a row note inside the row. After: the same field error footnote under the group, with Try again; the group note stays.',
 }
 def fig(k, t, side):
     return f'<figure><img src="review-sheets/{k}-{t}-{side}.webp" alt="{H.escape(side)}, {t}" loading="lazy"><figcaption><b>{t.capitalize()}</b> · {side}</figcaption></figure>'
@@ -29,7 +32,7 @@ page = f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sheet spacing</title>
+<title>Sheets and fields</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
@@ -53,14 +56,13 @@ page = f'''<!doctype html>
 <body class="onrace">
 <main class="rv">
   <header class="rv-head">
-    <h1>Sheets · spacing, every sheet</h1>
-    <p>2026-11-06. Sheets had too little vertical space: content stuck to the top bar and rows felt cramped. Fixed once in the system, for every sheet and every state of it, with tokens in <code>design-system/tokens/tokens.css</code> read by <code>modal-sheet.css</code>. Before (the commit before this change) and after, dark and light, at 390 wide.</p>
+    <h1>Sheets and field errors</h1>
+    <p>2026-11-06. Sheets were too tight and the field typography crowded. Fixed once in the system, for every sheet and every field: tokens in <code>design-system/tokens/tokens.css</code> read by <code>modal-sheet.css</code>, and the field error in <code>field-error.css</code>. Before (<code>856c97d</code>, before this work) and after, dark and light, at 390 wide.</p>
     <ol>
-      <li><b>Under the bar:</b> <code>--sheet-content-top</code>, 24px before the first group or line.</li>
-      <li><b>Between groups:</b> <code>--sheet-group-gap</code>, 32px, as iOS sections.</li>
-      <li><b>Rows:</b> <code>--sheet-row-min</code>, 52px for every row (the 44pt target plus 8); a field or menu fills its row; a stacked field keeps <code>--sheet-row-pad</code>, 8px, above and below.</li>
-      <li><b>Below:</b> <code>--sheet-content-bottom</code>, 32px, then the bottom safe area. The last group drops its gap, and a one-field sheet sizes to its content.</li>
-      <li><b>Add official result link:</b> the title alone says "Official result link"; the field shows "https://…", its label kept as its accessible name.</li>
+      <li><b>Sheet spacing:</b> 24px under the bar (<code>--sheet-content-top</code>), 32px between groups (<code>--sheet-group-gap</code>), every row 52px (<code>--sheet-row-min</code>; a field or menu fills its row; a stacked field keeps <code>--sheet-row-pad</code>, 8px), 32px below the last group (<code>--sheet-content-bottom</code>), then the bottom safe area.</li>
+      <li><b>A one-field sheet</b> sizes to its content: no empty band below.</li>
+      <li><b>Field anatomy:</b> where the title names the field, the row holds only the field, "https://…", its label kept as its accessible name.</li>
+      <li><b>Field errors:</b> the coral footnote with the small error icon under the group, outside its surface, 8px below it at the body's line height, never inside a row: Log result, New password, Profile, the sheet.</li>
     </ol>
   </header>
   {rows}

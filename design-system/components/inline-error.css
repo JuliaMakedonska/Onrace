@@ -20,7 +20,7 @@
   line-height: var(--leading-item);
   color: var(--text-primary);
 }
-.inline-error h2::before, .form-alert h2::before, .field-error::before, .row-note.is-error::before {   /* one error icon, in the error color */
+.inline-error h2::before, .form-alert h2::before, .field-error::before {   /* one error icon, in the error color */
   content: "";
   display: inline-block;
   width: var(--icon-m);

@@ -26,18 +26,18 @@
   "component": "Log result -error, fields missing",
   "state": "Screen",
   "kind": "screen",
-  "path": "wireframes/log-result-error.html?cause=fields",
+  "path": "wireframes/log-result-error.html?cause=fields&finish_time=3%3A12%3A48",
   "changed": {
    "dark": true,
    "light": true
   }
  },
  {
-  "key": "screen-log-result-loading",
-  "component": "Log result -loading",
+  "key": "screen-log-result-error-not-a-link",
+  "component": "Log result -error, not a link",
   "state": "Screen",
   "kind": "screen",
-  "path": "wireframes/log-result-loading.html",
+  "path": "wireframes/log-result-error.html?cause=link",
   "changed": {
    "dark": true,
    "light": true
@@ -71,6 +71,39 @@
   "state": "Screen",
   "kind": "screen",
   "path": "wireframes/result-detail.html?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-new-password-error-too-short",
+  "component": "New password -error, too short",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/new-password-error.html?cause=short",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-new-password-error-no-match",
+  "component": "New password -error, no match",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/new-password-error.html?cause=mismatch",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile-error-a-row-didn-t-save",
+  "component": "Profile -error, a row didn’t save",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile-error.html?cause=save&field=country&prev=Italy&value=Spain",
   "changed": {
    "dark": true,
    "light": true

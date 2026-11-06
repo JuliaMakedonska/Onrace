@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=76beae9c">
+<link rel="stylesheet" href="../design-system/index.css?v=3f11db76">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -131,8 +131,8 @@
              filled, so only finish time can be flagged. -->
         <div class="group" data-facts>
           <ul class="rows">
-            <li><div class="row"><label for="race_name">Race name</label><input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required></div><p class="field-error" id="race_name-error" data-cause="fields" data-field="race_name" hidden>Add the race name.</p></li>
-            <li><div class="row"><label for="date">Race date</label><span class="date-pill"><button type="button" class="date-value" id="date-pick"></button><input type="date" id="date" tabindex="-1" aria-hidden="true" name="date" required></span></div><p class="field-error" id="date-error" data-cause="fields" data-field="date" hidden>Add the date you raced.</p></li>
+            <li><div class="row"><label for="race_name">Race name</label><input type="text" id="race_name" name="race_name" placeholder="e.g. Berlin Marathon" autocomplete="off" required></div></li>
+            <li><div class="row"><label for="date">Race date</label><span class="date-pill"><button type="button" class="date-value" id="date-pick"></button><input type="date" id="date" tabindex="-1" aria-hidden="true" name="date" required></span></div></li>
             <li><div class="row"><label for="sport_type">Sport type</label><select id="sport_type" name="sport_type" required>
             <option value="" selected>Choose a sport type</option>
             <option value="hyrox">HYROX</option>
@@ -142,8 +142,11 @@
             <option value="triathlon">Triathlon</option>
             <option value="ultra">Ultra</option>
             <option value="ocr">OCR</option>
-          </select></div><p class="field-error" id="sport_type-error" data-cause="fields" data-field="sport_type" hidden>Choose a sport type.</p></li>
+          </select></div></li>
           </ul>
+          <p class="field-error" id="race_name-error" data-cause="fields" data-field="race_name" hidden>Add the race name.</p>
+          <p class="field-error" id="date-error" data-cause="fields" data-field="date" hidden>Add the date you raced.</p>
+          <p class="field-error" id="sport_type-error" data-cause="fields" data-field="sport_type" hidden>Choose a sport type.</p>
         </div>
 
         <!-- ZONE: finish time — always typed, linked race or not: the

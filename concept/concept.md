@@ -1344,3 +1344,13 @@ Five follow-ups to step 3, each through the tokens and components, in both theme
 - **Docs:** the Modal sheet's notes give the spacing; a new stage "Add official result link: an invalid link", so its states are the Filters sheet open, the one-field sheet, and its error. `DESIGN.md` → Shapes (Sheet) records the values.
 
 Before/after: `ui/review-sheets.html`.
+
+### Field errors under the group, never in a row (designer, 2026-11-06)
+
+**The rule, as decided:** a field error is the coral footnote with the small error icon, under its group, outside the group's surface, with a small gap (8px, `--space-2`) and the body's line height (1.45); never inside the row. In a group of several fields each field that needs fixing gets its own footnote, in the fields' order. It still replaces only its own field's helper.
+
+**Checked on every field error, and moved where it was inside a row:** Log result (race name, race date, sport type: they were inside their rows; finish time and the official result link were already under their groups), New password (too short, the same password, not matching: inside their rows), Profile (a row that didn't save: inside its row as `.row-note.is-error`; now the same `.field-error` footnote, with its Try again link, so one component looks the same everywhere and `.row-note.is-error` is retired), the Add official result link sheet (inside its row), the Grouped form pattern and every specimen that shows one (`specimens.html`, 14). The States map keeps the whole group (`.group, form`) in its cells, so Invalid shows the footnote under the group.
+
+**The sheet and the field** (the same brief, already in "Sheet spacing, every sheet" above): the spacing tokens, a one-field sheet sized to its content, and a field whose title names it showing only "https://…", with its label as its accessible name.
+
+Before/after of all four, from before the sheet work: `ui/review-sheets.html`.

@@ -54,6 +54,7 @@ def out(n):
 SEL = re.compile(r'^([a-z][a-z0-9]*)?((?:\.[\w-]+|\[[\w-]+(?:="[^"]*")?\]|#[\w-]+)*)$')
 def matches(n, sel):
     if n.tag in (None, '#root'): return False
+    if ',' in sel: return any(matches(n, x.strip()) for x in sel.split(','))   # a selector list (2026-11-06: keep the group, or the form, so the error under it stays in the cell)
     m = SEL.match(sel); assert m, f'States map: a selector the docs can\'t read: {sel}'
     if m.group(1) and n.tag != m.group(1): return False
     cl = (n.get('class') or '').split()

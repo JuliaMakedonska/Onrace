@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../index.css?v=76beae9c">
+<link rel="stylesheet" href="../index.css?v=3f11db76">
 <script src="../tokens/theme.js"></script>
 </head>
 <!-- PATTERN: Grouped form (design-system/patterns/README.md). Composed only of existing components: this page links
@@ -17,8 +17,8 @@
      Result detail (the Add official result link sheet): .group > .rows of labelled
      fields, with .group-footer under the group for the hint, and a .field-error under a field that needs fixing.
      Composed of: Text field, Field hint, Field error (on Profile, Grouped settings rows); on the sign-in screens, Gate layout. Drawn here as New password with the
-     passwords not matching: the error sits under Confirm new password and replaces only that field's helper, so
-     New password's "At least 8 characters." stays.
+     passwords not matching: the error sits under the group, outside its surface, and replaces only Confirm new
+     password's helper, so New password's "At least 8 characters." stays.
      Shown live on design-system/docs/patterns.html and specimens.html → Patterns, in a frame that loads this file. -->
 <body class="onrace">
   <header class="top-bar">
@@ -34,8 +34,9 @@
           <div class="group">
             <ul class="rows">
               <li><div class="row"><label for="new_password">New password</label><input type="password" id="new_password" name="new_password" autocomplete="new-password" aria-describedby="new_password-hint" required placeholder="Required"></div></li>
-              <li><div class="row"><label for="confirm_password">Confirm new password</label><input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" required placeholder="Required" aria-invalid="true" aria-describedby="confirm_password-error-mismatch"></div><p class="field-error" id="confirm_password-error-mismatch">The passwords don’t match. Enter the same password in both fields.</p></li>
+              <li><div class="row"><label for="confirm_password">Confirm new password</label><input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" required placeholder="Required" aria-invalid="true" aria-describedby="confirm_password-error-mismatch"></div></li>
             </ul>
+            <p class="field-error" id="confirm_password-error-mismatch">The passwords don’t match. Enter the same password in both fields.</p>
             <p class="group-footer" id="new_password-hint">At least 8 characters.</p>
           </div>
         </fieldset>

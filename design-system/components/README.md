@@ -46,7 +46,7 @@ There are 56 files. Each is named after its component in `ui/inventory.md` (keba
 **Where a rule names more than one component,** it went to the file whose look it defines. The shared part of a few looks sits in one file:
 - the buttons' common base is in `primary-button.css`;
 - the text-link look shared by `.official a`, `.row-note a`, `.alert-link` and `.forgot a` is in `text-link.css`;
-- the error icon shared by `.inline-error`, `.field-error` and `.row-note.is-error` is in `inline-error.css`.
+- the error icon shared by `.inline-error`, `.form-alert` and `.field-error` (Profile's save error too, since 2026-11-06) is in `inline-error.css`.
 
 **Not here:**
 - **The map's data** (Natural Earth masks, the map's ratio, each pin's place) is in `../map-data.css` (`ui/map-data.css` until Lesson 9 step 1), written by `scripts/concept/build_map.py`; the map's six design tokens (dot, label height and gap, water, land, lines) are in `tokens.css`. Only the pages that show the static map link it.

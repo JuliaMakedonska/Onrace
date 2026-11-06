@@ -913,11 +913,12 @@ fieldset:disabled .row--nav { pointer-events: none; }
 .rows .row--stacked input { padding-block: var(--space-1); }
 
 /* ---- design-system/components/field-error.css · order 0520 ---- */
-/* the field error, iOS style (Lesson 9 step 3; designer, 2026-10-30): no ring and no line on the field. A coral footnote
-   line with the small error icon, under its row in a group of several fields, or under its group in the hint's place,
-   which it replaces while it shows. It replaces only its own field's helper (the hint that field is described by: the
-   page's script hides it and points aria-describedby at the error); a group note no one field owns stays (Step 3 follow-ups) */
-.rows .field-error { margin: 0; padding: 0 var(--space-4) var(--space-2); }
+/* the field error, iOS style (designer, 2026-10-30; its place decided 2026-11-06): no ring and no line on the field. A
+   coral footnote with the small error icon, under its group, outside the group's surface, never inside a row: a small
+   gap above it and the body's line height, in the hint's place and size. In a group of several fields each field that
+   needs fixing gets its own footnote, in the fields' order. It replaces only its own field's helper (the hint that field
+   is described by: the page's script hides it and points aria-describedby at the error); a group note no one field owns
+   stays. Profile's "Couldn't save" is the same footnote, with its Try again link. */
 
 /* ---- design-system/components/catalog-row.css · order 0530 ---- */
 .row--nav { justify-content: space-between; color: var(--text-primary); font-size: var(--size-body); text-decoration: none; }   /* a row that opens another screen (Find in race catalog) */
@@ -1076,7 +1077,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .official p { margin: calc((var(--target) - var(--size-body) * var(--leading-box)) / -2) 0 var(--space-6); font-size: var(--size-body); }   /* the 44pt link keeps the line where it was */
 
 /* ---- design-system/components/text-link.css · order 0670 ---- */
-.official a, .row-note a, .alert-link, .forgot a {
+.official a, .row-note a, .field-error a, .alert-link, .forgot a {
   color: var(--text-primary);
   text-decoration: underline;
   text-decoration-thickness: var(--border);
@@ -1091,7 +1092,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .forgot a { padding-block: calc((var(--target) - var(--size-meta)) / 2); }   /* inline: vertical padding never moves the line */
 
 /* ---- design-system/components/status-line.css · order 0700 ---- */
-.row-note a { padding-block: calc((var(--target) - var(--size-proof)) / 2); }
+.row-note a, .field-error a { padding-block: calc((var(--target) - var(--size-proof)) / 2); }
 
 /* ---- design-system/components/race-photo-detail.css · order 0710 ---- */
 .race > picture > .photo {   /* Race detail: the race's photo, the card's band at full content width: the same pre-cropped 3:1 file as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
@@ -1217,8 +1218,8 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   text-underline-offset: var(--space-1);
 }
 /* every text link and text action: color only, one step dimmer under the pointer, two pressed (Lesson 9 step 3) */
-@media (hover: hover) { :is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
-:is(.text-link, .official a, .row-note a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }
+@media (hover: hover) { :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }
 
 /* ---- design-system/components/inline-error.css · order 0810 ---- */
 /* ---------- inline error and form alert: icon + text, color second ---------- */
@@ -1238,7 +1239,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   line-height: var(--leading-item);
   color: var(--text-primary);
 }
-.inline-error h2::before, .form-alert h2::before, .field-error::before, .row-note.is-error::before {   /* one error icon, in the error color */
+.inline-error h2::before, .form-alert h2::before, .field-error::before {   /* one error icon, in the error color */
   content: "";
   display: inline-block;
   width: var(--icon-m);
@@ -1280,9 +1281,10 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .gate fieldset, fieldset.locked { margin: 0; padding: 0; border: 0; min-width: 0; }
 
 /* ---- design-system/components/field-error.css · order 0860 ---- */
-.field-error { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); font-weight: var(--weight-regular); color: var(--error); }   /* under a group: the footer's place and size (field-hint.css) */
+.field-error { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); font-weight: var(--weight-regular); line-height: var(--leading-body); color: var(--error); }
 .field-error[hidden] { display: none; }
-.field-error::before, .row-note.is-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+.field-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
+.field-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }   /* Profile's Try again, after the line */
 
 /* ---- design-system/components/linked-race-card.css · order 0870 ---- */
 /* ---------- Log result: the linked race (the catalog row is a .row--nav since round 2) ---------- */
@@ -1426,8 +1428,6 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* ---- design-system/components/status-line.css · order 1020 ---- */
 .row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-secondary); }
 .row-note[hidden] { display: none; }
-.row-note.is-error { text-align: left; font-size: var(--size-proof); font-weight: var(--weight-regular); color: var(--error); }   /* one look for "this row failed": the field error's coral footnote (step 6, #13; Lesson 9 step 3) */
-.row-note.is-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }
 
 /* ---- design-system/components/field-hint.css · order 1030 ---- */
 .group-footer { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); color: var(--text-secondary); }

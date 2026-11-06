@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=76beae9c">
+<link rel="stylesheet" href="../design-system/index.css?v=3f11db76">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -179,8 +179,9 @@
     <form id="add-link-form" class="form-rows" novalidate>
       <div class="group">
         <ul class="rows">
-          <li><div class="row"><label for="add_url" class="visually-hidden">Official result link</label><input type="url" id="add_url" name="url" inputmode="url" placeholder="https://…" autocomplete="off" aria-describedby="add_url-hint"></div><p class="field-error" id="add_url-error" hidden>That isn’t a link. Paste the full address, starting with https://</p></li>
+          <li><div class="row"><label for="add_url" class="visually-hidden">Official result link</label><input type="url" id="add_url" name="url" inputmode="url" placeholder="https://…" autocomplete="off" aria-describedby="add_url-hint"></div></li>
         </ul>
+          <p class="field-error" id="add_url-error" hidden>That isn’t a link. Paste the full address, starting with https://</p>
         <p class="group-footer" id="add_url-hint">Paste the link to this result from the official timing site.</p>
       </div>
     </form>
