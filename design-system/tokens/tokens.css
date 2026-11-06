@@ -196,6 +196,13 @@
   --tabbar-clear: calc(var(--tabbar-h) + var(--tabbar-gap) + var(--safe-bottom));
   --sheet-gap-top: var(--space-3);
   --sheet-large: calc(100% - var(--safe-top) - var(--sheet-gap-top));
+  /* a sheet's own spacing (designer, 2026-11-06), as an iOS inset grouped list in a sheet: read by modal-sheet.css for
+     every sheet (Filters, Log result, Add official result link) */
+  --sheet-content-top: var(--space-6);     /* between the sheet's top bar and its first group or line: iOS leaves 20–35pt there */
+  --sheet-group-gap: var(--space-7);       /* between two groups, as iOS spaces its sections (about 35pt) */
+  --sheet-row-min: calc(var(--target) + var(--space-2));   /* a row's height in a sheet: the 44pt target and room round it, so text, a date pill, a menu and a checkmark row are all one height */
+  --sheet-row-pad: var(--space-2);         /* a row's vertical padding in a sheet: content taller than one line (a stacked field) keeps room above and below */
+  --sheet-content-bottom: var(--space-7);  /* below the last group, before the bottom safe area */
   --glass-blur: 20px;       /* [?] not from Apple's kit */
   --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
   --picker-search-icon-x: calc(var(--space-4) * 2);   /* Race picker: the search icon's left edge, the form's 16px gutter plus the field's own 16px inset, so it follows the spacing step (named 2026-11-01; was a count in components/search-field.css) */

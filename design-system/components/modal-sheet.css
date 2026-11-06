@@ -46,14 +46,18 @@ body:has(> .sheet > .phone-screen)::before {
 }
 body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
 .sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; }
-.sheet > .phone-screen > main { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
+.sheet > .phone-screen > main { padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* the sheet's spacing (2026-11-06): clear of the bar, the bottom safe area kept */
 .sheet, .phone-screen { scrollbar-color: var(--boundary) transparent; scrollbar-width: thin; }
 /* the Filters sheet (markup pass, 2026-10-23): Cancel, the title and Apply filters in a top bar (G12); options as grouped
    rows (G20), as Profile's: Region a native menu (G17), the dates native compact pickers (G18), sport types rows with a
    neutral checkmark (G19, C4). No grabber: the sheet rests at one detent, so it isn't resizable (HIG Sheets) */
 .sheet:has(> .top-bar) { padding: 0; overflow: hidden; }
-.sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--space-2) var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }
-.sheet .group { margin: 0 0 var(--space-6); padding: 0; border: 0; min-width: 0; }
+.sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }
+.sheet .group { margin: 0 0 var(--sheet-group-gap); padding: 0; border: 0; min-width: 0; }
+.sheet .group:not(:has(~ .group)) { margin-bottom: 0; }   /* the last group: the content's bottom padding is the space below it, so a short sheet has no empty band */
+.sheet .rows .row { min-height: var(--sheet-row-min); padding-block: var(--sheet-row-pad); }   /* every row one height, with room above and below its content (iOS) */
+.sheet .rows .row:not(.row--stacked):has(> :is(select, input:not([type="checkbox"]))) { padding-block: 0; }   /* a field row: the field fills the row (a menu opens from all of it, a text field takes the tap anywhere) */
+.sheet .rows .row:not(.row--stacked) > :is(select, input:not([type="checkbox"])) { min-height: var(--sheet-row-min); }
 .sheet .rows { background: var(--group); --row-hover: var(--group-hover); --row-pressed: var(--group-pressed); }   /* one level above the sheet, as the picker's cards; its rows' states follow */
 
 /* order 0580 */
@@ -62,4 +66,5 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* a sheet at its own height (2026-11-06): one field, Cancel and Save, for "Add official result link" on Results list and
    Result detail. It rests as tall as its content, under the large detent, as iOS sizes a sheet to what it holds */
-.sheet--fit { height: auto; max-height: var(--sheet-large); }
+.sheet--fit { height: auto; max-height: var(--sheet-large); }   /* sized to its content, a custom detent: a one-field sheet sits well under the medium one */
+.sheet--fit > form { flex: none; }   /* it holds its content, nothing grows it */

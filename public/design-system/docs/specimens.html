@@ -203,7 +203,7 @@
       <h3>Modal sheet</h3>
       <!-- kit:meta (scripts/build_kit_showcase.py) --><div class="kd-meta"><p class="kd-line kd-comps">Modal sheet, Sport-type rows</p><p class="kd-line"><code>.sheet</code> <code>.row--check</code></p><p class="kd-line"><span class="kd-k">Used on 4 screens</span> <a href="../../wireframes/index.html#race-browse-empty">Race browse</a>, <a href="../../wireframes/index.html#results-list">Results list</a>, <a href="../../wireframes/index.html#log-result-error">Log result</a>, <a href="../../wireframes/index.html#result-detail">Result detail</a></p><p class="kd-line"><span class="kd-k">Native iOS</span> <a href="https://developer.apple.com/design/human-interface-guidelines/sheets">Sheets ↗</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/lists-and-tables">Lists and tables ↗</a></p><p class="kd-line"><span class="kd-k">In the docs</span> <a href="sheets-and-alerts.html#modal-sheet">Modal sheet</a>, <a href="lists-and-rows.html#sport-type-rows">Sport-type rows</a></p><p class="kd-line"><span class="kd-k kd-live">Live</span> hover, Tab focus and press work on the specimens below</p></div><!-- /kit:meta -->
       <details class="kd-notes"><summary>Notes <span class="fold-sub">what it shows and why</span></summary>
-      <p><code>.sheet</code> · the Filters sheet on Race browse, and Log result, a whole screen in a sheet over Results. Race picker is not a sheet since 2026-10-24: it's pushed inside Log result's navigation (see Top bar). The Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge; its options are grouped rows on the level above the sheet: Region a native menu showing its value, the race dates native compact pickers on a pill, sport types rows with a neutral checkmark at the trailing edge. No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters. A native sheet: glass on the raised level (C1, C4), the system sheet radius, resting at the large detent only. Boundaries on it use Field line on the sheet.</p></details><!-- /kd-notes -->
+      <p><code>.sheet</code> · the Filters sheet on Race browse, and Log result, a whole screen in a sheet over Results. Race picker is not a sheet since 2026-10-24: it's pushed inside Log result's navigation (see Top bar). The Filters sheet has a top bar, Cancel on the leading edge, the title, Apply filters (the sheet's one primary, amber text) on the trailing edge; its options are grouped rows on the level above the sheet: Region a native menu showing its value, the race dates native compact pickers on a pill, sport types rows with a neutral checkmark at the trailing edge. No grabber: it rests at one detent, so it isn't resizable (HIG Sheets). Focus moves into it on open, Escape closes it, and focus goes back to Filters. A native sheet: glass on the raised level (C1, C4), the system sheet radius, resting at the large detent only. Boundaries on it use Field line on the sheet. Every sheet takes the same spacing (2026-11-06): 24px between its bar and the first group, 32px between groups, rows 52px, 32px below the last group and the bottom safe area. A sheet that holds one field, Add official result link, sizes to its content: the title names the field, so the field shows only its placeholder.</p></details><!-- /kd-notes -->
       <div class="kit-states">
         <div class="kit-state"><p class="kit-label">Filters sheet, open</p>
           <div class="kit-frame kit-stage">
@@ -236,8 +236,21 @@
               <header class="top-bar"><button type="button">Cancel</button><h2 id="k-add-h" class="bar-title">Official result link</h2><button type="submit" class="bar-action" form="k-add">Save<span class="visually-hidden"> official result link</span></button></header>
               <form id="k-add" class="form-rows" onsubmit="return false;" novalidate>
                 <div class="group"><ul class="rows">
-                  <li><div class="row row--stacked"><label for="k-add-url">Official result link</label><input type="url" id="k-add-url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off" aria-describedby="k-add-hint"></div></li>
+                  <li><div class="row"><label for="k-add-url" class="visually-hidden">Official result link</label><input type="url" id="k-add-url" inputmode="url" placeholder="https://…" autocomplete="off" aria-describedby="k-add-hint"></div></li>
                 </ul><p class="group-footer" id="k-add-hint">Paste the link to this result from the official timing site.</p></div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="kit-state"><p class="kit-label">Add official result link: an invalid link</p>
+          <div class="kit-frame kit-stage">
+            <div class="sheet-backdrop open"></div>
+            <div class="sheet sheet--fit open" role="dialog" aria-modal="false" aria-labelledby="k-adde-h">
+              <header class="top-bar"><button type="button">Cancel</button><h2 id="k-adde-h" class="bar-title">Official result link</h2><button type="submit" class="bar-action" form="k-adde">Save<span class="visually-hidden"> official result link</span></button></header>
+              <form id="k-adde" class="form-rows" onsubmit="return false;" novalidate>
+                <div class="group"><ul class="rows">
+                  <li><div class="row"><label for="k-adde-url" class="visually-hidden">Official result link</label><input type="url" id="k-adde-url" inputmode="url" placeholder="https://…" autocomplete="off" value="athlinks" aria-invalid="true" aria-describedby="k-adde-err"></div><p class="field-error" id="k-adde-err">That isn’t a link. Paste the full address, starting with https://</p></li>
+                </ul><p class="group-footer" id="k-adde-hint" hidden>Paste the link to this result from the official timing site.</p></div>
               </form>
             </div>
           </div>

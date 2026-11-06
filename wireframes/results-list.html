@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=c9e423bf">
+<link rel="stylesheet" href="../design-system/index.css?v=76beae9c">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -167,7 +167,8 @@
        flows.md → Flow 3, the no-link branch; sitemap.md → a modal state of Results list). ?add=<slug> opens it over the
        screen for a result logged without a link. One field, at its own height (.sheet--fit): Cancel leaves it with
        nothing kept, Save is dimmed until the field has text, and only an invalid link is an error (the coral footnote,
-       in the helper's place). A valid link saves and comes back with &linked=<slug>&url=<link>. -->
+       in the helper's place). A valid link saves and comes back with &linked=<slug>&url=<link>. The title names the
+       field, so the field shows only its placeholder "https://…"; its label stays, visually hidden, as its name. -->
   <div class="sheet-backdrop" id="add-link-backdrop" hidden></div>
   <div class="sheet sheet--fit" id="add-link-sheet" role="dialog" aria-modal="true" aria-labelledby="add-link-title" data-back="results-list.html" hidden>
     <header class="top-bar">
@@ -178,7 +179,7 @@
     <form id="add-link-form" class="form-rows" novalidate>
       <div class="group">
         <ul class="rows">
-          <li><div class="row row--stacked"><label for="add_url">Official result link</label><input type="url" id="add_url" name="url" inputmode="url" placeholder="e.g. https://berlin.r.mikatiming.com/2025/" autocomplete="off" aria-describedby="add_url-hint"></div><p class="field-error" id="add_url-error" hidden>That isn’t a link. Paste the full address, starting with https://</p></li>
+          <li><div class="row"><label for="add_url" class="visually-hidden">Official result link</label><input type="url" id="add_url" name="url" inputmode="url" placeholder="https://…" autocomplete="off" aria-describedby="add_url-hint"></div><p class="field-error" id="add_url-error" hidden>That isn’t a link. Paste the full address, starting with https://</p></li>
         </ul>
         <p class="group-footer" id="add_url-hint">Paste the link to this result from the official timing site.</p>
       </div>

@@ -238,7 +238,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 | Label | **Official result link** · **Finish time** · **Race date** | ~~Source link~~ · ~~Time~~ · ~~Date~~ |
 | Hint | "Paste the link from the official timing site. Elite races ask for exactly this." · "Hours:minutes:seconds, exactly as the official results show it." | ~~Enter a valid URL~~ · ~~Required~~ |
 | Error | "Add your finish time, e.g. 3:12:48." · "Use at least 8 characters." | ~~Invalid input~~ · ~~This field is required~~ · ~~You forgot the finish time~~ |
-| Placeholder | "e.g. 3:12:48" · "e.g. Berlin Marathon" · "e.g. you@example.com" | ~~https://berlin.r.mikatiming.com/2025/~~ (reads as filled in, flag P2) · ~~you@example.com~~ (an example without "e.g.") |
+| Placeholder | "e.g. 3:12:48" · "e.g. Berlin Marathon" · "e.g. you@example.com" · "https://…" (only where the title already names the field, the Add official result link sheet, 2026-11-06: an address to complete, the ellipsis says it isn't filled in; the label stays as its accessible name) | ~~https://berlin.r.mikatiming.com/2025/~~ (reads as filled in, flag P2) · ~~you@example.com~~ (an example without "e.g.") |
 
 - **Required vs optional:** mark only what's optional: the helper opens with "Optional" (Find in race catalog; the official result link since 2026-11-06). Required fields carry no tag, and the hint explains why a field matters (Dictionary, C4).
 - **Check:**

@@ -1332,3 +1332,15 @@ Five follow-ups to step 3, each through the tokens and components, in both theme
 
 **Still open:** the wireframes keep no data between pages, so a link added on Results list isn't on Result detail when you open it (and the reverse); a stale link still can't be replaced (`flows.md` → DeadEnd5, the accepted MVP gap); the empty state's line "Keep your official race results here." was reviewed and kept.
 
+
+### Sheet spacing, every sheet (designer, 2026-11-06)
+
+**What was wrong:** sheets had too little vertical space. The content stuck to the top bar (the Filters sheet's form started 8px under it, Log result's 0px), rows had only their 44pt minimum (a text field's own padding made some 60px, others 44–52), and the one-field Add official result link sheet repeated "Official result link" as its title and its field label.
+
+**Fixed once, in the system:**
+- **Tokens** (`design-system/tokens/tokens.css`, signed on the stand), as an iOS inset grouped list in a sheet: `--sheet-content-top` 24px (between the bar and the first group or line), `--sheet-group-gap` 32px (between groups, as iOS sections, about 35pt), `--sheet-row-min` 52px (the 44pt target plus 8: every row one height, text, date pill, menu and checkmark rows alike), `--sheet-row-pad` 8px (above and below a row taller than one line, the stacked field), `--sheet-content-bottom` 32px (below the last group, before the bottom safe area, which is still added).
+- **`modal-sheet.css`** reads them for every sheet: the Filters sheet, Log result, Add official result link. A field or menu fills its row (no padding of its own on top), so a whole row opens the menu or takes the tap. The last group drops its gap, so a short sheet has no empty band; `.sheet--fit` holds its content and grows no further (a custom detent, well under the medium one for one field).
+- **The one-field sheet:** the title stays "Official result link"; the field shows only its placeholder "https://…", and its label stays, visually hidden, as its accessible name (`microcopy.md` row 574; `voice.md` → Placeholder: an address to complete, the ellipsis says it isn't filled in, only where the title names the field).
+- **Docs:** the Modal sheet's notes give the spacing; a new stage "Add official result link: an invalid link", so its states are the Filters sheet open, the one-field sheet, and its error. `DESIGN.md` → Shapes (Sheet) records the values.
+
+Before/after: `ui/review-sheets.html`.
