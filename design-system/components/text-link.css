@@ -53,6 +53,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;   /* left, with the check-inbox heading and body (step 6, #30) */
+  width: fit-content;   /* as wide as its words, so its focus halo wraps them (2026-11-07) */
   min-height: var(--target);
   margin: var(--space-5) 0 0;
   color: var(--text-primary);
@@ -64,3 +65,15 @@
 /* every text link and text action: color only, one step dimmer under the pointer, two pressed (Lesson 9 step 3) */
 @media (hover: hover) { :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
 :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }
+/* focus (2026-11-07): a rounded halo round the words, a little room round them (--focus-text-pad), never the 44pt
+   target's box: drawn by ::before, centred on the line, the element's own outline off */
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:focus-visible, .is-focus) { position: relative; outline: none; }
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:focus-visible, .is-focus)::before {
+  content: "";
+  position: absolute;
+  inset-inline: calc(var(--focus-text-pad) * -1);
+  inset-block: calc((100% - 1lh) / 2 - var(--focus-text-pad));
+  border-radius: var(--radius-1);
+  outline: var(--focus-ring) solid var(--focus);
+  pointer-events: none;
+}

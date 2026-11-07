@@ -25,3 +25,6 @@
 @media (hover: hover) { .sort-toggle:is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: color only */
 .sort-toggle:is(:active, .is-pressed) { color: var(--text-pressed); }
 .sort-toggle[hidden] { display: none; }
+/* focus (2026-11-07): a rounded halo round the words and the icon, as a text link's (text-link.css) */
+.sort-toggle:is(:focus-visible, .is-focus) { outline: none; }
+.sort-toggle:is(:focus-visible, .is-focus)::before { content: ""; position: absolute; inset-inline: calc(var(--focus-text-pad) * -1); inset-block: calc((100% - 1lh) / 2 - var(--focus-text-pad)); border-radius: var(--radius-1); outline: var(--focus-ring) solid var(--focus); pointer-events: none; }

@@ -18,7 +18,7 @@
 .onrace ::selection { background: var(--text-primary); color: var(--page); }
 /* states (Lesson 9 step 3): .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and
    :focus-visible, written into the same selector so a stand-in can't drift from its state; no screen uses them */
-.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* the keyboard ring: --focus, 3:1 on every ground in both themes */
+.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }   /* the keyboard halo (2026-11-07, iOS Full Keyboard Access): --focus, the accent, 2px, a 2px gap of the ground behind, following the element's own radius (an outline follows border-radius, so a capsule stays a capsule); only on :focus-visible, never after a tap; 3:1 on every ground in both themes */
 /* disabled: one treatment for every control, the whole control at --opacity-disabled with no pointer events, never
    recolored by hand. A busy control isn't disabled. A disabled field's label fades with it. The date pill and a check row fade as one (their inner control
    doesn't fade again); a race card fades whole (its link doesn't fade again) */

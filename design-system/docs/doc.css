@@ -255,10 +255,15 @@
 .dc-variant figcaption { font-size: 13.5px; color: var(--d-faint); }
 
 /* States (Lesson 9 step 3): a row per theme, a cell per state, each stage cut to its control and cropped round it;
-   the theme is the stage's own (data-theme-scope), so Dark and Light sit side by side whatever the page's theme */
+   the theme is the stage's own (data-theme-scope); the row of the page's theme shows (2026-11-07) */
+.dc-used { margin: 12px 0 0; max-width: 72ch; font-size: 14.5px; color: var(--d-dim); }   /* where a component is used, in words only (Instances map, 2026-11-07) */
+.dc-used-k { margin-right: 6px; font-weight: 600; color: var(--d-text); }
 .dc-states { display: grid; gap: 20px; margin-top: 12px; }
 .dc-states-theme { display: grid; gap: 8px; }
-.dc-states-t { margin: 0; font-size: 13.5px; font-weight: 600; color: var(--d-dim); }
+/* the States follow the docs' theme switch (designer, 2026-11-07): Dark shows the dark row, Light the light one. Both rows
+   are built, each scoped to its theme, and the stage check computes both in both page themes */
+:root:not([data-theme="light"]) .dc-states-theme[data-st-theme="light"],
+:root[data-theme="light"] .dc-states-theme[data-st-theme="dark"] { display: none; }
 .dc-states-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
 .dc-state { margin: 0; display: grid; gap: 8px; width: min(330px, 100%); }
 .dc-states[data-w="s"] .dc-state { width: min(160px, 100%); }

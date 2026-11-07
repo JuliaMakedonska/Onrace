@@ -393,6 +393,14 @@ for l in section(INV, 'Docs map (Lesson 9, step 2, 2026-11-04)').split('\n'):
         'design': [x.strip() for x in c[4].split(' + ') if x.strip() and x.strip() != '—'],
         'rule': re.match(r'`([^`]+)` (.*)', c[5]).groups(), 'anti': m.groups() if m else None}
 
+# ui/inventory.md → Instances map (designer, 2026-11-07): a variant differs in look or structure; stages that differ only in
+# their words are left out of Variants, and the section lists where the component is used as one line of text
+IMAP = {}
+for l in section(INV, 'Instances map (designer, 2026-11-07)').split('\n'):
+    if not l.startswith('| **'): continue
+    c = cells(l)
+    IMAP[c[0].strip('*')] = {'skip': [x.strip().lower() for x in c[1].split(';') if x.strip() and x.strip() != '—'], 'used': [x.strip() for x in c[2].split(';') if x.strip()]}
+assert all(n in by_name for n in IMAP), ('Instances map: not a component', [n for n in IMAP if n not in by_name])
 assert all(r['name'] in DMAP for r in COMP_ROWS), ('components with no Docs map row', [r['name'] for r in COMP_ROWS if r['name'] not in DMAP])
 
 def viewer(key):
@@ -442,7 +450,10 @@ def component(row):
     assert vs, f'{name}: no stage matches its States'
     top_i = next((i for i, (lab, _) in enumerate(vs) if d['stage'] and d['stage'].lower() in lab.lower()), 0)
     sels = [sel for sel, _ in d['parts']]
-    others = [(lab, h) for i, (lab, h) in enumerate(vs) if i != top_i]
+    im = IMAP.get(name, {'skip': [], 'used': []})
+    for s in im['skip']:   # a words-only stage must name a real variant, or the map has gone stale
+        assert any(lab.lower().startswith(s) for lab, _ in vs), f'{name}: Instances map names no stage starting "{s}"'
+    others = [(lab, h) for i, (lab, h) in enumerate(vs) if i != top_i and not any(lab.lower().startswith(s) for s in im['skip'])]
     legend = ''.join(f'<li><button type="button" class="an-part" data-part="{n}" aria-pressed="false"><span>{H.escape(label)}</span> <code>{H.escape(sel)}</code></button></li>'
                      for n, (sel, label) in enumerate(d['parts']))
     rkey, rtext = d['rule']
@@ -456,6 +467,8 @@ def component(row):
            f'<div class="dc-do"><h3>When to use</h3><p>{H.escape(rtext)}</p><p class="dc-see">See it: {viewer(rkey)}</p></div>'
            f'<div class="dc-dont"><h3>When not to</h3><p>{H.escape(atext)} Use <a href="{DS.section_url(other)}">{H.escape(other)}</a>.</p><p class="dc-see">See it: {viewer(akey)}</p></div>'
            '</div>']
+    if im['used']:   # instances in other words: one line, not a stage each
+        out += [f'<p class="dc-used"><span class="dc-used-k">Used as</span> {H.escape("; ".join(im["used"]))}.</p>']
     if others:
         out += [f'<h3 class="dc-h" id="{sl}-variants">Variants</h3>',
                 '<div class="dc-variants">' + ''.join(f'<figure class="dc-variant">{stage(h, f"-{sl}-v{i}", sels, lab)}<figcaption>{H.escape(lab)}</figcaption></figure>'

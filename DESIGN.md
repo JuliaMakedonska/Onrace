@@ -44,7 +44,7 @@ colors:
   text-pressed: "#A3A9B0"
   boundary-hover: "#A3A9B0"
   boundary-pressed: "#BFC4CA"
-  focus: "#F4F5F6"
+  focus: "#F5B649"
 typography:
   title:
     fontFamily: "Schibsted Grotesk, Hanken Grotesk, sans-serif"
@@ -362,7 +362,7 @@ A graphite ramp, two text grays, one amber, and a soft coral for errors only.
 Onrace is dark-only (C5). To prove the roles hold a second appearance, `design-system/tokens/tokens.css` has a `:root[data-theme="light"]` block that overrides semantic roles only, on `?theme=light`. It follows iOS light: the page `--graphite-96`, white surfaces and rows, `--graphite-93` raised and `--graphite-89` pressed fills, secondary text `--graphite-39`. Podium stays: the amber fill is the same `#F5B649` with dark text; the ink is `--amber-40` (`#875206`), darker and about 8° warmer, so amber text holds AA on light bars and passes rule 3b without the override; the coral darkens to `--coral-40` (`#A33A32`); photos stay black and white; chips stay neutral. Glass is light and translucent (90–92%), checked over black, the darkest thing that can scroll under it. **Decided (designer, 2026-10-30):** the product stays dark-only. Light stays only as proof of the semantic layer: it isn't offered to users and won't be polished. The viewer's Light / Dark control stays for the course, and the build keeps checking light (contrast, glass, color rules 1 and 2, the 3b report), so a component that reads a color primitive is caught (`concept/concept.md` → The light theme stays a proof, not a feature). Every state in both themes: `ui/review-theme.html`.
 
 ### Named Rules
-**The Two Lights Rule.** The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--pressed`, a checked checkbox is `--text-primary` (Text 1, C4), the focus ring is `--text-primary`.
+**The Two Lights Rule.** The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--pressed`, a checked checkbox is `--text-primary` (Text 1, C4). The keyboard focus halo is amber (`--focus`, since 2026-11-07): it marks where you are (Color rule 1) and shows only while a keyboard moves focus, so it is transient and doesn't count toward the two.
 
 **The Stated, Not Stamped Rule.** No green, no check icon and no "verified" mark on any result or anywhere on Results list. The saved confirmation is `--surface` with a gray save glyph.
 
@@ -469,7 +469,7 @@ Exactly one filled button per screen.
 - **Date pill** (step 6, 2026-10-25; one button since step 7): the date written as the chips and cards write it ("23 Sep 2026"), 15px Text 1 on a `--raised` pill (6px radius). The pill is one button (one Tab stop, one focus ring; its name "23 Sep 2026, race date") that opens the system's calendar (`showPicker()`); the native date input beside it holds the value, out of the tab order. At large text sizes the pill goes under its label. No glyph and no browser locale mask: empty, it says "Choose a date" in Text 2. Filters sheet (From, To), Log result (Race date).
 - **Checkmark row:** a sport type is a row; checked, a 26px Solar check in `--text-primary` (the control tint, C4) at its trailing edge (the glyph about 17px wide, as HIG's list checkmark; step 6), nothing when off. Race picker's linked race carries the same checkmark. Never the accent. Every system-drawn control takes the same tint (`accent-color`, C4).
 - **Sort button:** one button that flips the order, showing the current one: "Soonest first" in `--text-primary` 15px / 600, then the 15px Solar sort icon (G21; markup pass, 2026-10-23). Its name starts with its label: "Soonest first, sort order". Disabled while loading (`--opacity-disabled`); a 44pt target inside the row's text height. It never shrinks and never wraps: the count beside it takes the remaining width and wraps there instead (2026-10-25; checked at 320 by `scripts/check_overflow.mjs`).
-- **Focus (everything):** a 2px `--text-primary` outline, 2px offset. Never the accent.
+- **Focus (everything):** the amber halo (`--focus`), 2px, 2px from the element, following its shape (Component states).
 
 ### Navigation
 - **Tab bar:** a floating 64px capsule of tab-bar glass with a faint rim and the float shadow, three tabs (Discover, Results, Profile). Each has a 26px Solar icon (compass, stopwatch, user) over an 11px / 600 label. Inactive: `--text-secondary`. Current: `--accent-ink`, icon and label. A tab under the pointer takes `--bar-hover` behind it, pressed `--bar-pressed`, a capsule inside the bar.
@@ -508,11 +508,11 @@ Lesson 9 step 3 (2026-11-05). Every component you act on has four states besides
 - **Text and borders, the same rule:** a text control in Text primary (links, Clear all filters, Copy link, Sort, Unlink, the bar's back and Cancel) goes one step dimmer under the pointer (`--text-hover`) and two pressed (`--text-pressed`), still at AA; the bar action's amber ink goes `--accent-ink-hover`, then `--accent-ink-pressed`; an input's boundary goes `--boundary-hover`, then `--boundary-pressed`. The build checks that every ladder moves one way, each step at least 1.5 L*, in both themes.
 - **Hover only where there's a pointer:** every hover sits under `@media (hover: hover)`. On touch, pressed is the state that matters (iOS).
 - **A state never moves an element or changes its size:** only fill, color or border. The 1px press is gone, and so is the card's hover ring.
-- **Focus:** `--focus`, a 2px ring outside the control (inside, where the control is clipped: alert buttons, check rows): white in dark (C4, neutral), dark in light, never the accent. It is at least 3:1 on every background it sits on, in both themes, hover fills included.
+- **Focus (redesigned 2026-11-07, iOS Full Keyboard Access):** a halo in the accent, `--focus` (amber `#F5B649` in dark; in light the accent ink `#875206`, since the fill's amber doesn't reach 3:1 on light grounds), 2px wide (`--focus-ring`), 2px from the element (`--focus-gap`), the ground behind showing through the gap, and following the element's own shape: a capsule stays a capsule, a card keeps its radius. A grouped row's halo sits inside it (the group clips anything outside), and the first and last rows take the group's corners, so the halo keeps them; a field or menu in a row rings the whole row; alert and action-sheet buttons likewise. A text control (Text link, Forgot password?, Sort button, Copy link, Clear all filters, a link in a line) gets a rounded halo round its words with a little room (`--focus-text-pad`, 4px), never the 44pt target's box. Only on `:focus-visible` (a keyboard), never after a tap. At least 3:1 on every background it sits on, in both themes, hover fills and glass included (build check 4). Color rule 1 allows it ("where you are"); it doesn't count toward the two-amber limit, because it's transient.
 - **Disabled:** the whole control at `--opacity-disabled` (40% in dark, 38% in light: each keeps the contrast the retired Text disabled had, 3.6:1 and 2.4:1, which WCAG 1.4.3 exempts) and no pointer events. Never recolored by hand. A busy control isn't disabled.
 - **The amber dims when pressed (Step 3 follow-ups, designer 2026-11-06):** the amber fill and the bar action's ink go one step lighter on hover (`--accent-hover`, `--accent-ink-hover`; in light the ink goes darker) and, pressed, darker than rest, as iOS dims a pressed control: `--accent-pressed` and the dark `--accent-ink-pressed` are `--amber-69` (`#DF9A46`, L* 69, its hue 7° warmer than the amber), which clears HYROX yellow under rule 3b on its own (hue 26.6°, ΔE 25.8). The build stops if it doesn't: the designer's 3b override covers `#F5B649` only. The light ink pressed stays `--amber-26`.
 - **Invalid:** a field's error is the coral footnote under its group, outside the group's surface, never inside a row (Inputs / Fields above; designer, 2026-11-06), never a ring. It replaces only its own field's helper (the hint that field is described by), and a group note no one field owns stays: Profile's "Changes save as you make them…" shows beside a save error (Step 3 follow-ups).
-- **In the docs:** each component's States shows At rest, Hover, Pressed, Focus and Disabled side by side, in Dark and Light, and Invalid where it has one. `.is-hover`, `.is-pressed` and `.is-focus` are the docs' still stand-ins, written into the same selectors as `:hover`, `:active` and `:focus-visible`; no screen uses them.
+- **In the docs:** each component's States shows At rest, Hover, Pressed, Focus and Disabled side by side, and Invalid where it has one, in the docs' theme: Dark shows the dark states, Light the light ones (designer, 2026-11-07; both rows side by side until then). Both are built and checked in both themes. `.is-hover`, `.is-pressed` and `.is-focus` are the docs' still stand-ins, written into the same selectors as `:hover`, `:active` and `:focus-visible`; no screen uses them.
 
 ## Patterns
 
@@ -545,11 +545,11 @@ Lesson 9 step 5 (designer, 2026-11-06). **One rule: anything new appears first i
 - **Do** step a secondary action up or down so the screen keeps exactly one filled button.
 - **Do** take every value from `design-system/tokens/tokens.css`, and give components semantic roles, never color primitives. Pages and the components hold no raw values.
 - **Do** draw icons as Solar Bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar. The small UI glyphs (back, chevrons, disclosure, the search magnifier) are Solar Linear (designer exception, step 6).
-- **Do** keep 44px targets, a 2px `--focus` ring (white in dark, dark in light), and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).
+- **Do** keep 44px targets, the 2px amber `--focus` halo 2px from the element (only on `:focus-visible`), and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).
 - **Do** check text on glass against the worst case behind it, not against the glass's own tint.
 
 ### Don't:
-- **Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, a focus ring, an icon in content, a status, or the map.
+- **Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, an icon in content, a status, or the map. The keyboard focus halo is the one transient exception.
 - **Don't** use green, a check icon or the word "verified" on a result or on Results list.
 - **Don't** give formats their own colors. Every format chip is the same neutral chip.
 - **Don't** use pure `#000`, `#0B0C0E`, the `#ff4d2e` family, `src/style.css` or the wireframe grays.
@@ -558,7 +558,7 @@ Lesson 9 step 5 (designer, 2026-11-06). **One rule: anything new appears first i
 - **Don't** drop the radius to 0, or round content into pills (pills belong to bar chrome only).
 - **Don't** give cards a shadow, a border at rest, or glass.
 - **Don't** use `--hairline` or `--boundary` as a fill.
-- **Don't** let an error and a focus look alike: a coral footnote under the field for an error, the ring outside for focus. Never a ring or a line on an invalid field.
+- **Don't** let an error and a focus look alike: a coral footnote under the group for an error, the amber halo for focus. Never a ring or a line on an invalid field.
 - **Don't** use tabular figures on finish times: Schibsted spaces the colons wide ("24 : 36").
 
 ## Native iOS

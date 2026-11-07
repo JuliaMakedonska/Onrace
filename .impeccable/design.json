@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-07T20:48:11+00:00",
+  "generatedAt": "2026-11-07T21:34:49+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -624,17 +624,17 @@
       "focus": {
         "role": "neutral",
         "displayName": "Focus",
-        "canonical": "#F4F5F6",
-        "oklch": "oklch(97.0% 0.002 247.8)",
+        "canonical": "#F5B649",
+        "oklch": "oklch(81.6% 0.142 77.8)",
         "tonalRamp": [
-          "#0B0B0C",
-          "#242526",
-          "#414243",
-          "#606162",
-          "#818283",
-          "#A4A5A6",
-          "#C8C9CA",
-          "#EDEEEF"
+          "#120900",
+          "#332101",
+          "#593C01",
+          "#815802",
+          "#AB7702",
+          "#D59821",
+          "#FCBC50",
+          "#FFECD0"
         ]
       }
     },
@@ -782,7 +782,7 @@
       "refersTo": "segmented-track",
       "description": "A capsule track with capsule segments of equal width, in a bar or in content (C7, G11); the selected segment is the selected level with a boundary outline; an unselected one goes one level up on hover, two pressed.",
       "html": "<div class=\"ds-seg\" role=\"group\" aria-label=\"View\"><button aria-pressed=\"true\">List</button><button aria-pressed=\"false\">Map</button></div>",
-      "css": ".ds-seg { display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; padding:4px; border-radius:var(--radius-capsule, 999px); background:var(--raised, #272B30); } .ds-seg button { min-height:36px; padding:0 16px; border:0; border-radius:var(--radius-capsule, 999px); background:transparent; color:var(--text-secondary, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } @media (hover: hover) { .ds-seg button[aria-pressed=\"false\"]:hover { background:var(--raised-hover, #2C3035); } } .ds-seg button[aria-pressed=\"false\"]:active { background:var(--raised-pressed, #33383E); } .ds-seg button[aria-pressed=\"true\"] { background:var(--selected, #2C3035); color:var(--text-primary, #F4F5F6); box-shadow:inset 0 0 0 1px var(--boundary, #686E75); } .ds-seg button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+      "css": ".ds-seg { display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; padding:4px; border-radius:var(--radius-capsule, 999px); background:var(--raised, #272B30); } .ds-seg button { min-height:36px; padding:0 16px; border:0; border-radius:var(--radius-capsule, 999px); background:transparent; color:var(--text-secondary, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } @media (hover: hover) { .ds-seg button[aria-pressed=\"false\"]:hover { background:var(--raised-hover, #2C3035); } } .ds-seg button[aria-pressed=\"false\"]:active { background:var(--raised-pressed, #33383E); } .ds-seg button[aria-pressed=\"true\"] { background:var(--selected, #2C3035); color:var(--text-primary, #F4F5F6); box-shadow:inset 0 0 0 1px var(--boundary, #686E75); } .ds-seg button:focus-visible { outline:2px solid var(--focus, #F5B649); outline-offset:2px; }"
     },
     {
       "name": "Result Row",
@@ -790,7 +790,7 @@
       "refersTo": "result-row",
       "description": "Signature: the finish time is the loudest thing on the row; proof stated, not stamped. The disclosure indicator ends the meta row (G22), so the time and the proof keep the full width.",
       "html": "<a class=\"ds-result\" href=\"#\"><span class=\"ds-result-top\"><span class=\"ds-result-name\">HYROX London</span><span class=\"ds-result-time\">1:18:42</span></span><span class=\"ds-result-meta\"><span class=\"ds-result-chip\">HYROX</span> 6 Dec 2025<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M15.8351 11.6296L9.20467 5.1999C8.79094 4.79869 8 5.04189 8 5.5703L8 18.4297C8 18.9581 8.79094 19.2013 9.20467 18.8001L15.8351 12.3704C16.055 12.1573 16.0549 11.8427 15.8351 11.6296Z\"/></svg></span><span class=\"ds-result-proof\">Self-reported · via results.hyrox.com</span></a>",
-      "css": ".ds-result { display:grid; gap:8px; padding:12px 16px 16px; border-radius:var(--radius-2, 6px); background:var(--surface, #1D2024); color:var(--text-primary, #F4F5F6); text-decoration:none; font-family:\"Hanken Grotesk\", sans-serif; } @media (hover: hover) { .ds-result:hover { background:var(--surface-hover, #272B30); } } .ds-result:active { background:var(--surface-pressed, #2C3035); } .ds-result:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; } .ds-result-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; } .ds-result-name { font-size:17px; font-weight:600; line-height:1.2; } .ds-result-time { font-family:\"Schibsted Grotesk\", \"Hanken Grotesk\", sans-serif; font-size:32px; font-weight:800; line-height:1; letter-spacing:-0.03em; white-space:nowrap; } .ds-result-meta { display:flex; align-items:center; gap:12px; font-size:15px; color:var(--text-secondary, #A3A9B0); } .ds-result-meta svg { margin-left:auto; flex:none; } .ds-result-chip { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:var(--radius-1, 4px); background:var(--raised, #272B30); color:var(--chip-text, #BFC4CA); font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; } .ds-result-proof { font-size:13px; color:var(--text-secondary, #A3A9B0); }"
+      "css": ".ds-result { display:grid; gap:8px; padding:12px 16px 16px; border-radius:var(--radius-2, 6px); background:var(--surface, #1D2024); color:var(--text-primary, #F4F5F6); text-decoration:none; font-family:\"Hanken Grotesk\", sans-serif; } @media (hover: hover) { .ds-result:hover { background:var(--surface-hover, #272B30); } } .ds-result:active { background:var(--surface-pressed, #2C3035); } .ds-result:focus-visible { outline:2px solid var(--focus, #F5B649); outline-offset:2px; } .ds-result-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; } .ds-result-name { font-size:17px; font-weight:600; line-height:1.2; } .ds-result-time { font-family:\"Schibsted Grotesk\", \"Hanken Grotesk\", sans-serif; font-size:32px; font-weight:800; line-height:1; letter-spacing:-0.03em; white-space:nowrap; } .ds-result-meta { display:flex; align-items:center; gap:12px; font-size:15px; color:var(--text-secondary, #A3A9B0); } .ds-result-meta svg { margin-left:auto; flex:none; } .ds-result-chip { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:var(--radius-1, 4px); background:var(--raised, #272B30); color:var(--chip-text, #BFC4CA); font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; } .ds-result-proof { font-size:13px; color:var(--text-secondary, #A3A9B0); }"
     },
     {
       "name": "Tab Bar",
@@ -798,7 +798,7 @@
       "refersTo": "tab-bar",
       "description": "Three destinations; the current tab is the screen's amber. Floats above content as a glass capsule (C1, G1, G2).",
       "html": "<nav class=\"ds-tabs\" aria-label=\"Global navigation\"><a href=\"#\" aria-current=\"page\">Discover</a><a href=\"#\">My Results</a><a href=\"#\">Profile</a></nav>",
-      "css": ".ds-tabs { display:grid; grid-template-columns:repeat(3, 1fr); height:64px; align-items:center; margin:0 16px; padding:4px 8px; border-radius:32px; background:color-mix(in srgb, var(--graphite-5, #0F1114) 85%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px var(--glass-rim, color-mix(in srgb, #F4F5F6 8%, transparent)), var(--float-shadow, 0 12px 32px -12px color-mix(in srgb, #000000 60%, transparent)); } .ds-tabs a { display:grid; justify-items:center; min-height:44px; align-content:center; color:var(--text-secondary, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:11px; font-weight:600; text-decoration:none; } .ds-tabs a[aria-current=\"page\"] { color:var(--accent-ink, #F5B649); } .ds-tabs a:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+      "css": ".ds-tabs { display:grid; grid-template-columns:repeat(3, 1fr); height:64px; align-items:center; margin:0 16px; padding:4px 8px; border-radius:32px; background:color-mix(in srgb, var(--graphite-5, #0F1114) 85%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px var(--glass-rim, color-mix(in srgb, #F4F5F6 8%, transparent)), var(--float-shadow, 0 12px 32px -12px color-mix(in srgb, #000000 60%, transparent)); } .ds-tabs a { display:grid; justify-items:center; min-height:44px; align-content:center; color:var(--text-secondary, #A3A9B0); font-family:\"Hanken Grotesk\", sans-serif; font-size:11px; font-weight:600; text-decoration:none; } .ds-tabs a[aria-current=\"page\"] { color:var(--accent-ink, #F5B649); } .ds-tabs a:focus-visible { outline:2px solid var(--focus, #F5B649); outline-offset:2px; }"
     },
     {
       "name": "Filters Sheet",
@@ -806,7 +806,7 @@
       "refersTo": "filters-sheet",
       "description": "Signature: a native sheet on raised glass (C1, C4), 38px corners [?], the large detent only; Cancel outlined, Apply filters the one primary.",
       "html": "<div class=\"ds-sheet\" role=\"dialog\" aria-label=\"Filters\"><div class=\"ds-sheet-grab\"></div><p class=\"ds-sheet-h\">Filters</p><label class=\"ds-sheet-check\"><input type=\"checkbox\" checked> HYROX</label><div class=\"ds-sheet-actions\"><button type=\"button\">Cancel</button><button type=\"submit\">Apply filters</button></div></div>",
-      "css": ".ds-sheet { display:grid; gap:12px; padding:8px 16px 12px; border-radius:38px 38px 0 0; background:color-mix(in srgb, var(--graphite-17, #272B30) 90%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 1px 0 var(--glass-rim, color-mix(in srgb, #F4F5F6 8%, transparent)), var(--float-shadow, 0 12px 32px -12px color-mix(in srgb, #000000 60%, transparent)); color:var(--text-primary, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; } .ds-sheet-grab { width:32px; height:4px; margin:0 auto; border-radius:4px; background:var(--boundary, #686E75); } .ds-sheet-h { margin:0; font-size:17px; font-weight:600; } .ds-sheet-check { display:flex; align-items:center; gap:12px; min-height:44px; font-size:15px; accent-color:var(--text-primary, #F4F5F6); } .ds-sheet-actions { display:flex; gap:12px; } .ds-sheet-actions button { flex:1; min-height:44px; border:0; border-radius:var(--radius-2, 6px); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } .ds-sheet-actions button[type=\"button\"] { background:transparent; color:var(--text-primary, #F4F5F6); box-shadow:inset 0 0 0 1px var(--boundary, #686E75); } .ds-sheet-actions button[type=\"submit\"] { background:var(--accent-fill, #F5B649); color:var(--on-accent-fill, #131518); } .ds-sheet-actions button[type=\"submit\"]:hover { background:var(--accent-hover, #FFC46A); } .ds-sheet-actions button:focus-visible { outline:2px solid var(--focus, #F4F5F6); outline-offset:2px; }"
+      "css": ".ds-sheet { display:grid; gap:12px; padding:8px 16px 12px; border-radius:38px 38px 0 0; background:color-mix(in srgb, var(--graphite-17, #272B30) 90%, transparent); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); box-shadow:inset 0 1px 0 var(--glass-rim, color-mix(in srgb, #F4F5F6 8%, transparent)), var(--float-shadow, 0 12px 32px -12px color-mix(in srgb, #000000 60%, transparent)); color:var(--text-primary, #F4F5F6); font-family:\"Hanken Grotesk\", sans-serif; } .ds-sheet-grab { width:32px; height:4px; margin:0 auto; border-radius:4px; background:var(--boundary, #686E75); } .ds-sheet-h { margin:0; font-size:17px; font-weight:600; } .ds-sheet-check { display:flex; align-items:center; gap:12px; min-height:44px; font-size:15px; accent-color:var(--text-primary, #F4F5F6); } .ds-sheet-actions { display:flex; gap:12px; } .ds-sheet-actions button { flex:1; min-height:44px; border:0; border-radius:var(--radius-2, 6px); font-family:\"Hanken Grotesk\", sans-serif; font-size:15px; font-weight:600; cursor:pointer; } .ds-sheet-actions button[type=\"button\"] { background:transparent; color:var(--text-primary, #F4F5F6); box-shadow:inset 0 0 0 1px var(--boundary, #686E75); } .ds-sheet-actions button[type=\"submit\"] { background:var(--accent-fill, #F5B649); color:var(--on-accent-fill, #131518); } .ds-sheet-actions button[type=\"submit\"]:hover { background:var(--accent-hover, #FFC46A); } .ds-sheet-actions button:focus-visible { outline:2px solid var(--focus, #F5B649); outline-offset:2px; }"
     }
   ],
   "narrative": {
@@ -825,7 +825,7 @@
     "rules": [
       {
         "name": "The Two Lights Rule",
-        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--pressed`, a checked checkbox is `--text-primary` (Text 1, C4), the focus ring is `--text-primary`.",
+        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--pressed`, a checked checkbox is `--text-primary` (Text 1, C4). The keyboard focus halo is amber (`--focus`, since 2026-11-07): it marks where you are (Color rule 1) and shows only while a keyboard moves focus, so it is transient and doesn't count toward the two.",
         "section": "colors"
       },
       {
@@ -868,11 +868,11 @@
       "**Do** step a secondary action up or down so the screen keeps exactly one filled button.",
       "**Do** take every value from `design-system/tokens/tokens.css`, and give components semantic roles, never color primitives. Pages and the components hold no raw values.",
       "**Do** draw icons as Solar Bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar. The small UI glyphs (back, chevrons, disclosure, the search magnifier) are Solar Linear (designer exception, step 6).",
-      "**Do** keep 44px targets, a 2px `--focus` ring (white in dark, dark in light), and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).",
+      "**Do** keep 44px targets, the 2px amber `--focus` halo 2px from the element (only on `:focus-visible`), and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).",
       "**Do** check text on glass against the worst case behind it, not against the glass's own tint."
     ],
     "donts": [
-      "**Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, a focus ring, an icon in content, a status, or the map.",
+      "**Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, an icon in content, a status, or the map. The keyboard focus halo is the one transient exception.",
       "**Don't** use green, a check icon or the word \"verified\" on a result or on Results list.",
       "**Don't** give formats their own colors. Every format chip is the same neutral chip.",
       "**Don't** use pure `#000`, `#0B0C0E`, the `#ff4d2e` family, `src/style.css` or the wireframe grays.",
@@ -881,7 +881,7 @@
       "**Don't** drop the radius to 0, or round content into pills (pills belong to bar chrome only).",
       "**Don't** give cards a shadow, a border at rest, or glass.",
       "**Don't** use `--hairline` or `--boundary` as a fill.",
-      "**Don't** let an error and a focus look alike: a coral footnote under the field for an error, the ring outside for focus. Never a ring or a line on an invalid field.",
+      "**Don't** let an error and a focus look alike: a coral footnote under the group for an error, the amber halo for focus. Never a ring or a line on an invalid field.",
       "**Don't** use tabular figures on finish times: Schibsted spaces the colons wide (\"24 : 36\")."
     ]
   }

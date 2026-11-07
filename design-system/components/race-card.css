@@ -12,7 +12,7 @@
 }
 .race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
 .race-card .card-link:is(:focus-visible, .is-focus) { outline: none; }
-.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
 
 /* order 0110 */
 .race-card .card-link {

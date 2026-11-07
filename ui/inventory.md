@@ -221,7 +221,7 @@ How the showcase (`design-system/docs/specimens.html`; `ui/kit.html` until Lesso
 | Cards and lists | **Static map** | `#map` | `map-placeholder` | none | Seven races; No races match; Couldn't load; Loading |
 | Cards and lists | **List intro** | `#picker-intro` | `list-intro` | none | Without a search; With a search |
 | Forms | **Primary button** | `#primary` | `state-action`, `submit-btn`, `register-btn`, `open-btn`, `bar-action`, `save-btn` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | In a state message; Full width; Busy |
-| Forms | **Secondary button** | `#secondary` | `filters-trigger`, `secondary-btn`, `unlink-btn` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Filters; State actions; Unlink |
+| Forms | **Secondary button** | `#secondary` | `filters-trigger`, `secondary-btn`, `unlink-btn` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Filters; Check inbox; Unlink |
 | Forms | **Filters trigger with count** | `#secondary` | `filters-trigger` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | with a count |
 | Forms | **Text link** | `#text-link` | `clear-all`, `text-link`, `forgot`, `alert-link`, `copy-link` | [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) | Clear all filters; Use a different email; Forgot password |
 | Forms | **Text field** | `#text-field` | `form-rows` | [Text fields](https://developer.apple.com/design/human-interface-guidelines/text-fields) | with hints; Errors under their group; Locked; Sign in |
@@ -324,6 +324,31 @@ What each component's section on its family page in `design-system/docs/` says b
 | **Sign out button** | Sign out, apart from everything else on Profile: a grouped row of its own. | Profile | `.rows` Its own group; `.signout` Sign out, a grouped row, coral, centred | Navigation › Confirm alert | `profile` A destructive action, apart from the rows. | **Text link** `profile-error?cause=save&field=country&value=France&prev=Italy` Try again on a row is a text link. |
 | **Confirm alert** | One question before a destructive action, in the middle of the screen. | Sign out | `.alert` Confirm alert, the sheet's glass; `.alert h2` Title; `.alert-actions` Actions | Navigation › Confirm alert | `profile` Sign out of Onrace? One question before a destructive action. | **Action sheet** `log-result` Cancel with a result entered asks with an action sheet at the bottom. |
 
+## Instances map (designer, 2026-11-07)
+
+A docs section shows a variant only when it differs in look or structure: width, size, an icon, a busy state, a layout. Instances that differ only in their words are not variants: the section lists where the component is used as one line of text instead (`scripts/build_kit_showcase.py`). **Words-only stages** are the specimen stages (by the start of their label) left out of that component's Variants; they stay on `specimens.html`, the full sheet. **Used as** is the line the section shows.
+
+| Component | Words-only stages | Used as |
+|---|---|---|
+| **Tab bar** | Results current; Profile current | Discover current on Race browse; Results current on Results list; Profile current on Profile |
+| **Top bar** | Cancel, "Account" and the bar action; Back and title (Reset password | Cancel, title and Save on Log result; Cancel, Account and Sign in or Create account on Sign in / Sign up; Back and title on Race picker, Reset password and New password |
+| **Segmented control** | Map selected | List or Map selected on Race browse; Sign in or Create account on Sign in / Sign up |
+| **Sticky action bar** | Result detail | Register on hyrox.com on Race detail; Open official result on Result detail; Add official result link on Result detail, no official result link yet |
+| **Results row** | Race browse, filtered | 7 upcoming races on Race browse; 4 races match your filters on Race browse, filtered; 4 results on Results list |
+| **Finish time** | Results list: a result row with no official result link yet | 3:12:48 on Results list and Result detail |
+| **Detail header and facts** | Result detail, no official result link yet | HYROX London on Race detail; Berlin Marathon on Result detail |
+| **Detail section** | Result detail, no official result link yet | About this race on Race detail; Official result link on Result detail |
+| **List intro** | With a search | Past races in the race catalog on Race picker; Past races in the race catalog matching “Berlin” with a search |
+| **State message** | Race browse -empty, with a search; Results list -error; Race picker -empty; Race detail -error | No races match your current filters and No races match “kona” on Race browse -empty; Couldn’t load races, Couldn’t load your results, Couldn’t load race details, Couldn’t load this result and Couldn’t load your account on -error; No results logged yet on Results list -empty; No past races match “kona” on Race picker -empty |
+| **Status line** | Sign in ?reset=done | Saved: Valencia Half Marathon on Results list; Password changed. Sign in with your new password. on Sign in; Sent. Check your inbox again. on Check inbox |
+| **Check-inbox block** | Reset password: if an account exists | Confirm your email on Sign up; Reset your password on Reset password |
+| **Text link** | Use a different email | Clear all filters on Race browse; Use a different email on Check inbox; Copy link on Result detail |
+| **Gate intro** | Create account; Reset password · New password | Sign in to see your results archive. on Sign in; Create an account to start your results archive. on Create account; the intros of Reset password and New password |
+| **Primary button** | — | Change filters, Try again and Log your first result in a state message; Register on hyrox.com on Race detail, Open official result on Result detail, Reset password again and Send a new link on the expired links, full width |
+| **Secondary button** | — | Type it in instead on Race picker; Send a new link on Check inbox |
+| **Inline error** | — | Couldn’t sign you in on Sign in -error; Too many requests on Reset password -error |
+| **Form alert** | — | Couldn’t save your result on Log result -error; Couldn’t save your new password on New password -error |
+
 ## States map (Lesson 9, step 3, 2026-11-05)
 
 What each component's States shows on its family page in `design-system/docs/` (and under its specimen on `specimens.html`), read by `scripts/build_kit_showcase.py`. Every component you act on has a row; a component that is only content, a container or a state of another (the field error is the text field's Invalid) has none. The build cuts the named stage of the component's specimen down to the **Keep** part and its ancestors, then shows it At rest, Hover, Pressed, Focus and Disabled, in Dark and in Light (`data-theme-scope`), and Invalid where a stage is named. The states come from the product's own selectors through the stand-ins `.is-hover`, `.is-pressed` and `.is-focus`; Disabled sets `disabled` (or `aria-disabled="true"` on an element that has none).
@@ -349,7 +374,7 @@ What each component's States shows on its family page in `design-system/docs/` (
 | **Static map** | Seven races | `.map-placeholder` | `.map-pin` | — | — | control | l | — |
 | **Official race website link** | Race detail | `.official` | `a` | — | — | control | m | — |
 | **Primary button** | In a state message | — | `.state-action` | — | — | keep | m | — |
-| **Secondary button** | State actions and Check inbox | — | `.secondary-btn` | — | — | keep | m | — |
+| **Secondary button** | Check inbox: a new link | — | `.secondary-btn` | — | — | keep | m | — |
 | **Filters trigger with count** | Filters: rest, with a count, open | `.control-row` | `.filters-trigger` | — | — | control | m | — |
 | **Text link** | Use a different email | — | `.text-link` | — | — | keep | m | — |
 | **Text field** | Sign in: email and password | `.group, form` | `.row` | `input` | `input` | keep | l | Errors under their group |

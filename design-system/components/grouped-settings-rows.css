@@ -43,3 +43,10 @@
 .rows .row { min-height: var(--grouped-row-min); padding-block: var(--grouped-row-pad); }
 .rows .row:not(.row--stacked):has(> :is(select, input:not([type="checkbox"]), .row-value)) { padding-block: 0; }   /* a field row: the field fills the row (a menu opens from all of it, a text field takes the tap anywhere); a read-only value centres in it */
 .rows .row:not(.row--stacked) > :is(select, input:not([type="checkbox"])) { min-height: var(--grouped-row-min); }
+/* focus (2026-11-07): a row's halo sits inside it, since the group clips anything outside; the first and last rows take
+   the group's corners, so the halo follows them (an outline follows border-radius, inset by its offset). A field or menu
+   in a row rings the whole row */
+.rows > li:first-child > .row, .rows > .row:first-child { border-top-left-radius: var(--radius-2); border-top-right-radius: var(--radius-2); }
+.rows > li:last-child > .row, .rows > .row:last-child { border-bottom-left-radius: var(--radius-2); border-bottom-right-radius: var(--radius-2); }
+.rows .row:is(a, button):is(:focus-visible, .is-focus),
+.row:has(> :is(input, select):is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: calc(var(--focus-ring) * -1); }

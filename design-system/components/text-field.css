@@ -19,4 +19,4 @@
 .rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]):not([readonly]):not(:disabled) { color: var(--text-primary); }   /* editable text in Text 1, read-only values (Email) and menu values in Text 2, as iOS Settings (designer, step 6, #21) */
 
 /* order 1010 */
-.row :is(input, select):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-primary); }
+.row :is(input, select):is(:focus-visible, .is-focus) { outline: none; color: var(--text-primary); }   /* the halo is the row's (grouped-settings-rows.css), so it keeps the group's corners (2026-11-07) */

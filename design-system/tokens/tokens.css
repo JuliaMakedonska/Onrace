@@ -122,7 +122,9 @@
      and kept the smaller corner; --radius-capsule stays half of the box's own height at any size. Before: Lesson 8
      kept the three ("not merged", tokens/tokens-audit.md → After the lesson). */
   --border: 1px;
-  --focus-ring: 2px;        /* the focus outline's width and offset; its color is the semantic --focus */
+  --focus-ring: 2px;        /* the focus halo's width (2026-11-07: the iOS Full Keyboard Access ring); its color is the semantic --focus */
+  --focus-gap: 2px;         /* between an element and its focus halo: the ground behind shows through (the page color), so the halo never touches a fill (2026-11-07) */
+  --focus-text-pad: var(--space-1);   /* a text control's halo (Text link, Forgot password?, Sort button): room round the text, so the halo is a rounded shape round the words, never a tight box or the 44pt target (2026-11-07) */
   --spinner-stroke: 2px;    /* split: the busy spinner's stroke, which borrowed --focus-ring (found in this step; not in the audit). Same value */
   --target: 44px;           /* minimum touch target */
   --measure: 65ch;          /* longest line of running text */
@@ -303,7 +305,7 @@
   --text-pressed: var(--graphite-69);    /* the same pressed: two steps dimmer */
   --boundary-hover: var(--graphite-69);  /* an input's boundary under the pointer: the search field. One step stronger than --boundary */
   --boundary-pressed: var(--graphite-79);
-  --focus: var(--graphite-96);           /* the keyboard focus ring: white in dark (C4, neutral, never the accent); at least 3:1 on every background it sits on, in both themes */
+  --focus: var(--amber-78);              /* the keyboard focus halo, in the accent (designer, 2026-11-07; iOS Full Keyboard Access; was white, C4): Color rule 1's "where you are", transient, so it doesn't count toward the two-amber limit; at least 3:1 on every background it sits on, in both themes */
   --opacity-disabled: var(--alpha-40);   /* a disabled control: the whole control at this opacity, no pointer events; never recolored by hand. Replaced --text-disabled */
 }
 
@@ -380,7 +382,7 @@
   --text-pressed: var(--graphite-39);
   --boundary-hover: var(--graphite-39);
   --boundary-pressed: var(--graphite-27);
-  --focus: var(--graphite-7);            /* dark on light */
+  --focus: var(--amber-40);              /* light: the accent ink, dark enough for 3:1 on every light ground (the fill's amber-78 isn't) */
   --opacity-disabled: var(--alpha-38);
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -437,7 +439,7 @@
   --text-pressed: var(--graphite-69);
   --boundary-hover: var(--graphite-69);
   --boundary-pressed: var(--graphite-79);
-  --focus: var(--graphite-96);
+  --focus: var(--amber-78);
   --opacity-disabled: var(--alpha-40);
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -499,16 +501,16 @@
    --boundary-hover on --surface                                          dark  6.90  light  6.74  needs 3  non-text
    --boundary-pressed on --surface                                        dark  9.32  light 10.46  needs 3  non-text
    --boundary-hover on --page                                             dark  7.72  light  6.17  needs 3  non-text
-   --focus on --page                                                      dark 16.76  light 16.76  needs 3  non-text
-   --focus on --surface                                                   dark 14.98  light 18.29  needs 3  non-text
-   --focus on --raised                                                    dark 13.05  light 15.31  needs 3  non-text
-   --focus on --raised-hover                                              dark 12.17  light 13.68  needs 3  non-text
-   --focus on --group                                                     dark 12.17  light 18.29  needs 3  non-text
-   --focus on --group-hover                                               dark 10.83  light 15.31  needs 3  non-text
-   --focus on --surface-hover                                             dark 13.05  light 15.31  needs 3  non-text
-   --focus on --error-surface                                             dark 11.80  light 15.60  needs 3  non-text
-   --focus on --map-water                                                 dark 17.32  light 12.39  needs 3  non-text
-   --focus on --map-land                                                  dark 14.98  light 16.76  needs 3  non-text
+   --focus on --page                                                      dark 10.16  light  5.94  needs 3  non-text
+   --focus on --surface                                                   dark  9.09  light  6.48  needs 3  non-text
+   --focus on --raised                                                    dark  7.91  light  5.43  needs 3  non-text
+   --focus on --raised-hover                                              dark  7.38  light  4.85  needs 3  non-text
+   --focus on --group                                                     dark  7.38  light  6.48  needs 3  non-text
+   --focus on --group-hover                                               dark  6.57  light  5.43  needs 3  non-text
+   --focus on --surface-hover                                             dark  7.91  light  5.43  needs 3  non-text
+   --focus on --error-surface                                             dark  7.16  light  5.53  needs 3  non-text
+   --focus on --map-water                                                 dark 10.51  light  4.39  needs 3  non-text
+   --focus on --map-land                                                  dark  9.09  light  5.94  needs 3  non-text
    --text-secondary on --glass-bar over the worst case                    dark  5.35  light  5.11  needs 4.5  text
    --accent-ink on --glass-bar over the worst case                        dark  7.04  light  4.91  needs 4.5  text
    --text-primary on --glass-ground over the worst case                   dark 10.95  light 13.97  needs 4.5  text
@@ -524,7 +526,7 @@
    --text-hover on --glass-ground over the worst case                     dark  6.81  light  7.99  needs 4.5  text
    --text-pressed on --glass-ground over the worst case                   dark  5.04  light  5.15  needs 4.5  text
    --text-pressed on --glass-sheet over the worst case                    dark  5.59  light  5.65  needs 4.5  text
-   --focus on --glass-bar over the worst case                             dark 11.61  light 13.86  needs 3  non-text
-   --focus on --glass-ground over the worst case                          dark 10.95  light 13.97  needs 3  non-text
-   --focus on --glass-sheet over the worst case                           dark 12.13  light 15.34  needs 3  non-text
+   --focus on --glass-bar over the worst case                             dark  7.04  light  4.91  needs 3  non-text
+   --focus on --glass-ground over the worst case                          dark  6.64  light  4.95  needs 3  non-text
+   --focus on --glass-sheet over the worst case                           dark  7.36  light  5.44  needs 3  non-text
    contrast:end */

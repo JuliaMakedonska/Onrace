@@ -123,7 +123,7 @@ def apply(ctl, keep, m, state):
             else: x.set('aria-disabled', 'true')
 
 def grid(name, m, stages, element_end, stage, unid, sfx):
-    """The States block: a row per theme, a cell per state. stages: (label, html) of the specimen's stages."""
+    """The States block: a row per theme (only the docs' current theme's shows; both are built and checked), a cell per state. stages: (label, html) of the specimen's stages."""
     def frame_of(label_part):
         hit = next(((lab, h) for lab, h in stages if label_part.lower() in lab.lower()), None)
         assert hit, f'States map: {name} has no stage labelled "{label_part}"'
@@ -141,5 +141,5 @@ def grid(name, m, stages, element_end, stage, unid, sfx):
             got = stage(k, f"{sfx}-{theme[0].lower()}{STATES.index(st) if st in STATES else 9}", ['[data-st-crop]'], label)
             got = got.replace('<div class="kit-state" data-label=', '<div class="kit-state" data-nogeo data-label=', 1)
             cells.append(f'<figure class="dc-state">{got}<figcaption>{st}</figcaption></figure>')
-        rows.append(f'<div class="dc-states-theme"><p class="dc-states-t">{theme}</p><div class="dc-states-row">' + ''.join(cells) + '</div></div>')
+        rows.append(f'<div class="dc-states-theme" data-st-theme="{theme.lower()}"><div class="dc-states-row">' + ''.join(cells) + '</div></div>')   # one row per theme; the docs' theme switch shows its own (doc.css, 2026-11-07)
     return f'<div class="dc-states" data-w="{m["w"]}">' + ''.join(rows) + '</div>'

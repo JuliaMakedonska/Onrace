@@ -125,7 +125,9 @@
      and kept the smaller corner; --radius-capsule stays half of the box's own height at any size. Before: Lesson 8
      kept the three ("not merged", tokens/tokens-audit.md → After the lesson). */
   --border: 1px;
-  --focus-ring: 2px;        /* the focus outline's width and offset; its color is the semantic --focus */
+  --focus-ring: 2px;        /* the focus halo's width (2026-11-07: the iOS Full Keyboard Access ring); its color is the semantic --focus */
+  --focus-gap: 2px;         /* between an element and its focus halo: the ground behind shows through (the page color), so the halo never touches a fill (2026-11-07) */
+  --focus-text-pad: var(--space-1);   /* a text control's halo (Text link, Forgot password?, Sort button): room round the text, so the halo is a rounded shape round the words, never a tight box or the 44pt target (2026-11-07) */
   --spinner-stroke: 2px;    /* split: the busy spinner's stroke, which borrowed --focus-ring (found in this step; not in the audit). Same value */
   --target: 44px;           /* minimum touch target */
   --measure: 65ch;          /* longest line of running text */
@@ -306,7 +308,7 @@
   --text-pressed: var(--graphite-69);    /* the same pressed: two steps dimmer */
   --boundary-hover: var(--graphite-69);  /* an input's boundary under the pointer: the search field. One step stronger than --boundary */
   --boundary-pressed: var(--graphite-79);
-  --focus: var(--graphite-96);           /* the keyboard focus ring: white in dark (C4, neutral, never the accent); at least 3:1 on every background it sits on, in both themes */
+  --focus: var(--amber-78);              /* the keyboard focus halo, in the accent (designer, 2026-11-07; iOS Full Keyboard Access; was white, C4): Color rule 1's "where you are", transient, so it doesn't count toward the two-amber limit; at least 3:1 on every background it sits on, in both themes */
   --opacity-disabled: var(--alpha-40);   /* a disabled control: the whole control at this opacity, no pointer events; never recolored by hand. Replaced --text-disabled */
 }
 
@@ -383,7 +385,7 @@
   --text-pressed: var(--graphite-39);
   --boundary-hover: var(--graphite-39);
   --boundary-pressed: var(--graphite-27);
-  --focus: var(--graphite-7);            /* dark on light */
+  --focus: var(--amber-40);              /* light: the accent ink, dark enough for 3:1 on every light ground (the fill's amber-78 isn't) */
   --opacity-disabled: var(--alpha-38);
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -440,7 +442,7 @@
   --text-pressed: var(--graphite-69);
   --boundary-hover: var(--graphite-69);
   --boundary-pressed: var(--graphite-79);
-  --focus: var(--graphite-96);
+  --focus: var(--amber-78);
   --opacity-disabled: var(--alpha-40);
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -502,16 +504,16 @@
    --boundary-hover on --surface                                          dark  6.90  light  6.74  needs 3  non-text
    --boundary-pressed on --surface                                        dark  9.32  light 10.46  needs 3  non-text
    --boundary-hover on --page                                             dark  7.72  light  6.17  needs 3  non-text
-   --focus on --page                                                      dark 16.76  light 16.76  needs 3  non-text
-   --focus on --surface                                                   dark 14.98  light 18.29  needs 3  non-text
-   --focus on --raised                                                    dark 13.05  light 15.31  needs 3  non-text
-   --focus on --raised-hover                                              dark 12.17  light 13.68  needs 3  non-text
-   --focus on --group                                                     dark 12.17  light 18.29  needs 3  non-text
-   --focus on --group-hover                                               dark 10.83  light 15.31  needs 3  non-text
-   --focus on --surface-hover                                             dark 13.05  light 15.31  needs 3  non-text
-   --focus on --error-surface                                             dark 11.80  light 15.60  needs 3  non-text
-   --focus on --map-water                                                 dark 17.32  light 12.39  needs 3  non-text
-   --focus on --map-land                                                  dark 14.98  light 16.76  needs 3  non-text
+   --focus on --page                                                      dark 10.16  light  5.94  needs 3  non-text
+   --focus on --surface                                                   dark  9.09  light  6.48  needs 3  non-text
+   --focus on --raised                                                    dark  7.91  light  5.43  needs 3  non-text
+   --focus on --raised-hover                                              dark  7.38  light  4.85  needs 3  non-text
+   --focus on --group                                                     dark  7.38  light  6.48  needs 3  non-text
+   --focus on --group-hover                                               dark  6.57  light  5.43  needs 3  non-text
+   --focus on --surface-hover                                             dark  7.91  light  5.43  needs 3  non-text
+   --focus on --error-surface                                             dark  7.16  light  5.53  needs 3  non-text
+   --focus on --map-water                                                 dark 10.51  light  4.39  needs 3  non-text
+   --focus on --map-land                                                  dark  9.09  light  5.94  needs 3  non-text
    --text-secondary on --glass-bar over the worst case                    dark  5.35  light  5.11  needs 4.5  text
    --accent-ink on --glass-bar over the worst case                        dark  7.04  light  4.91  needs 4.5  text
    --text-primary on --glass-ground over the worst case                   dark 10.95  light 13.97  needs 4.5  text
@@ -527,9 +529,9 @@
    --text-hover on --glass-ground over the worst case                     dark  6.81  light  7.99  needs 4.5  text
    --text-pressed on --glass-ground over the worst case                   dark  5.04  light  5.15  needs 4.5  text
    --text-pressed on --glass-sheet over the worst case                    dark  5.59  light  5.65  needs 4.5  text
-   --focus on --glass-bar over the worst case                             dark 11.61  light 13.86  needs 3  non-text
-   --focus on --glass-ground over the worst case                          dark 10.95  light 13.97  needs 3  non-text
-   --focus on --glass-sheet over the worst case                           dark 12.13  light 15.34  needs 3  non-text
+   --focus on --glass-bar over the worst case                             dark  7.04  light  4.91  needs 3  non-text
+   --focus on --glass-ground over the worst case                          dark  6.64  light  4.95  needs 3  non-text
+   --focus on --glass-sheet over the worst case                           dark  7.36  light  5.44  needs 3  non-text
    contrast:end */
 
 /* design-system/components/index.css: GENERATED by scripts/build_components.py from design-system/components/*.css. Do not edit.
@@ -552,7 +554,7 @@
 .onrace ::selection { background: var(--text-primary); color: var(--page); }
 /* states (Lesson 9 step 3): .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and
    :focus-visible, written into the same selector so a stand-in can't drift from its state; no screen uses them */
-.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* the keyboard ring: --focus, 3:1 on every ground in both themes */
+.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }   /* the keyboard halo (2026-11-07, iOS Full Keyboard Access): --focus, the accent, 2px, a 2px gap of the ground behind, following the element's own radius (an outline follows border-radius, so a capsule stays a capsule); only on :focus-visible, never after a tap; 3:1 on every ground in both themes */
 /* disabled: one treatment for every control, the whole control at --opacity-disabled with no pointer events, never
    recolored by hand. A busy control isn't disabled. A disabled field's label fades with it. The date pill and a check row fade as one (their inner control
    doesn't fade again); a race card fades whole (its link doesn't fade again) */
@@ -731,7 +733,7 @@
 .race-search input::placeholder, .phone-screen > form.search input[type="search"]::placeholder { color: var(--text-secondary); opacity: 1; }
 @media (hover: hover) { :is(.race-search input, .phone-screen > form.search input[type="search"]):is(:hover, .is-hover) { box-shadow: inset 0 0 0 var(--border) var(--boundary-hover); } }   /* an input: its boundary, one step stronger, two pressed */
 :is(.race-search input, .phone-screen > form.search input[type="search"]):is(:active, .is-pressed) { box-shadow: inset 0 0 0 var(--border) var(--boundary-pressed); }
-:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); box-shadow: none; }
 .race-search input::-webkit-search-cancel-button, .phone-screen > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
 
 /* ---- design-system/components/race-card.css · order 0090 ---- */
@@ -744,7 +746,7 @@
 }
 .race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
 .race-card .card-link:is(:focus-visible, .is-focus) { outline: none; }
-.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
 
 /* ---- design-system/components/race-photo.css · order 0100 ---- */
 picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper takes no box: the img stays the card's and the page's item (step 7, #5) */
@@ -986,6 +988,9 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 @media (hover: hover) { .sort-toggle:is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: color only */
 .sort-toggle:is(:active, .is-pressed) { color: var(--text-pressed); }
 .sort-toggle[hidden] { display: none; }
+/* focus (2026-11-07): a rounded halo round the words and the icon, as a text link's (text-link.css) */
+.sort-toggle:is(:focus-visible, .is-focus) { outline: none; }
+.sort-toggle:is(:focus-visible, .is-focus)::before { content: ""; position: absolute; inset-inline: calc(var(--focus-text-pad) * -1); inset-block: calc((100% - 1lh) / 2 - var(--focus-text-pad)); border-radius: var(--radius-1); outline: var(--focus-ring) solid var(--focus); pointer-events: none; }
 
 /* ---- design-system/components/race-card.css · order 0270 ---- */
 /* ---------- loading: skeleton race card (wireframe markup; photo band drawn by CSS) ---------- */
@@ -1394,7 +1399,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .date-value { margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
 .date-value::after { content: ""; position: absolute; inset: calc((var(--target) - 100%) / -2) 0; border-radius: inherit; }   /* the whole pill is the button's target, extended above and below to the 44pt target like the filter chips' (Lesson 8 step 6: it was the pill's own 30pt) */
 .date-value:is(:focus-visible, .is-focus) { outline: none; }
-.date-pill:has(.date-value:is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* one Tab stop, one ring (WCAG 2.4.7) */
+.date-pill:has(.date-value:is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }   /* one Tab stop, one ring (WCAG 2.4.7) */
 @media (hover: hover) { .date-pill:has(.date-value:is(:hover, .is-hover)) { background: var(--raised-hover); } }   /* it rests on --raised */
 .date-pill:has(.date-value:is(:active, .is-pressed)) { background: var(--raised-pressed); }
 
@@ -1741,6 +1746,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   display: flex;
   align-items: center;
   justify-content: flex-start;   /* left, with the check-inbox heading and body (step 6, #30) */
+  width: fit-content;   /* as wide as its words, so its focus halo wraps them (2026-11-07) */
   min-height: var(--target);
   margin: var(--space-5) 0 0;
   color: var(--text-primary);
@@ -1752,6 +1758,18 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* every text link and text action: color only, one step dimmer under the pointer, two pressed (Lesson 9 step 3) */
 @media (hover: hover) { :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
 :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }
+/* focus (2026-11-07): a rounded halo round the words, a little room round them (--focus-text-pad), never the 44pt
+   target's box: drawn by ::before, centred on the line, the element's own outline off */
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:focus-visible, .is-focus) { position: relative; outline: none; }
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:focus-visible, .is-focus)::before {
+  content: "";
+  position: absolute;
+  inset-inline: calc(var(--focus-text-pad) * -1);
+  inset-block: calc((100% - 1lh) / 2 - var(--focus-text-pad));
+  border-radius: var(--radius-1);
+  outline: var(--focus-ring) solid var(--focus);
+  pointer-events: none;
+}
 
 /* ---- design-system/components/inline-error.css · order 0810 ---- */
 /* ---------- inline error and form alert: icon + text, color second ---------- */
@@ -1942,6 +1960,13 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .rows .row { min-height: var(--grouped-row-min); padding-block: var(--grouped-row-pad); }
 .rows .row:not(.row--stacked):has(> :is(select, input:not([type="checkbox"]), .row-value)) { padding-block: 0; }   /* a field row: the field fills the row (a menu opens from all of it, a text field takes the tap anywhere); a read-only value centres in it */
 .rows .row:not(.row--stacked) > :is(select, input:not([type="checkbox"])) { min-height: var(--grouped-row-min); }
+/* focus (2026-11-07): a row's halo sits inside it, since the group clips anything outside; the first and last rows take
+   the group's corners, so the halo follows them (an outline follows border-radius, inset by its offset). A field or menu
+   in a row rings the whole row */
+.rows > li:first-child > .row, .rows > .row:first-child { border-top-left-radius: var(--radius-2); border-top-right-radius: var(--radius-2); }
+.rows > li:last-child > .row, .rows > .row:last-child { border-bottom-left-radius: var(--radius-2); border-bottom-right-radius: var(--radius-2); }
+.rows .row:is(a, button):is(:focus-visible, .is-focus),
+.row:has(> :is(input, select):is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: calc(var(--focus-ring) * -1); }
 
 /* ---- design-system/components/text-field.css · order 0990 ---- */
 .rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]):not([readonly]):not(:disabled) { color: var(--text-primary); }   /* editable text in Text 1, read-only values (Email) and menu values in Text 2, as iOS Settings (designer, step 6, #21) */
@@ -1961,7 +1986,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 }
 
 /* ---- design-system/components/text-field.css · order 1010 ---- */
-.row :is(input, select):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-primary); }
+.row :is(input, select):is(:focus-visible, .is-focus) { outline: none; color: var(--text-primary); }   /* the halo is the row's (grouped-settings-rows.css), so it keeps the group's corners (2026-11-07) */
 
 /* ---- design-system/components/status-line.css · order 1020 ---- */
 .row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-secondary); }

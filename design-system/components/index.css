@@ -18,7 +18,7 @@
 .onrace ::selection { background: var(--text-primary); color: var(--page); }
 /* states (Lesson 9 step 3): .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and
    :focus-visible, written into the same selector so a stand-in can't drift from its state; no screen uses them */
-.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* the keyboard ring: --focus, 3:1 on every ground in both themes */
+.onrace :is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }   /* the keyboard halo (2026-11-07, iOS Full Keyboard Access): --focus, the accent, 2px, a 2px gap of the ground behind, following the element's own radius (an outline follows border-radius, so a capsule stays a capsule); only on :focus-visible, never after a tap; 3:1 on every ground in both themes */
 /* disabled: one treatment for every control, the whole control at --opacity-disabled with no pointer events, never
    recolored by hand. A busy control isn't disabled. A disabled field's label fades with it. The date pill and a check row fade as one (their inner control
    doesn't fade again); a race card fades whole (its link doesn't fade again) */
@@ -197,7 +197,7 @@
 .race-search input::placeholder, .phone-screen > form.search input[type="search"]::placeholder { color: var(--text-secondary); opacity: 1; }
 @media (hover: hover) { :is(.race-search input, .phone-screen > form.search input[type="search"]):is(:hover, .is-hover) { box-shadow: inset 0 0 0 var(--border) var(--boundary-hover); } }   /* an input: its boundary, one step stronger, two pressed */
 :is(.race-search input, .phone-screen > form.search input[type="search"]):is(:active, .is-pressed) { box-shadow: inset 0 0 0 var(--border) var(--boundary-pressed); }
-:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; box-shadow: none; }
+:is(.race-search input, .phone-screen > form.search input[type="search"]):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); box-shadow: none; }
 .race-search input::-webkit-search-cancel-button, .phone-screen > form.search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; appearance: auto; margin-left: var(--space-2); cursor: pointer; }   /* G10: the browser's own Clear button, shown (system-drawn, C2) */
 
 /* ---- design-system/components/race-card.css · order 0090 ---- */
@@ -210,7 +210,7 @@
 }
 .race-card .card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-2); } /* the photo is part of the tap target */
 .race-card .card-link:is(:focus-visible, .is-focus) { outline: none; }
-.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }
+.race-card .card-link:is(:focus-visible, .is-focus)::after { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
 
 /* ---- design-system/components/race-photo.css · order 0100 ---- */
 picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper takes no box: the img stays the card's and the page's item (step 7, #5) */
@@ -452,6 +452,9 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 @media (hover: hover) { .sort-toggle:is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: color only */
 .sort-toggle:is(:active, .is-pressed) { color: var(--text-pressed); }
 .sort-toggle[hidden] { display: none; }
+/* focus (2026-11-07): a rounded halo round the words and the icon, as a text link's (text-link.css) */
+.sort-toggle:is(:focus-visible, .is-focus) { outline: none; }
+.sort-toggle:is(:focus-visible, .is-focus)::before { content: ""; position: absolute; inset-inline: calc(var(--focus-text-pad) * -1); inset-block: calc((100% - 1lh) / 2 - var(--focus-text-pad)); border-radius: var(--radius-1); outline: var(--focus-ring) solid var(--focus); pointer-events: none; }
 
 /* ---- design-system/components/race-card.css · order 0270 ---- */
 /* ---------- loading: skeleton race card (wireframe markup; photo band drawn by CSS) ---------- */
@@ -860,7 +863,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .date-value { margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
 .date-value::after { content: ""; position: absolute; inset: calc((var(--target) - 100%) / -2) 0; border-radius: inherit; }   /* the whole pill is the button's target, extended above and below to the 44pt target like the filter chips' (Lesson 8 step 6: it was the pill's own 30pt) */
 .date-value:is(:focus-visible, .is-focus) { outline: none; }
-.date-pill:has(.date-value:is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-ring); }   /* one Tab stop, one ring (WCAG 2.4.7) */
+.date-pill:has(.date-value:is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }   /* one Tab stop, one ring (WCAG 2.4.7) */
 @media (hover: hover) { .date-pill:has(.date-value:is(:hover, .is-hover)) { background: var(--raised-hover); } }   /* it rests on --raised */
 .date-pill:has(.date-value:is(:active, .is-pressed)) { background: var(--raised-pressed); }
 
@@ -1207,6 +1210,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   display: flex;
   align-items: center;
   justify-content: flex-start;   /* left, with the check-inbox heading and body (step 6, #30) */
+  width: fit-content;   /* as wide as its words, so its focus halo wraps them (2026-11-07) */
   min-height: var(--target);
   margin: var(--space-5) 0 0;
   color: var(--text-primary);
@@ -1218,6 +1222,18 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* every text link and text action: color only, one step dimmer under the pointer, two pressed (Lesson 9 step 3) */
 @media (hover: hover) { :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:hover, .is-hover) { color: var(--text-hover); } }
 :is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:active, .is-pressed) { color: var(--text-pressed); }
+/* focus (2026-11-07): a rounded halo round the words, a little room round them (--focus-text-pad), never the 44pt
+   target's box: drawn by ::before, centred on the line, the element's own outline off */
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:focus-visible, .is-focus) { position: relative; outline: none; }
+:is(.text-link, .official a, .row-note a, .field-error a, .alert-link, .forgot a, .clear-all, .copy-link):is(:focus-visible, .is-focus)::before {
+  content: "";
+  position: absolute;
+  inset-inline: calc(var(--focus-text-pad) * -1);
+  inset-block: calc((100% - 1lh) / 2 - var(--focus-text-pad));
+  border-radius: var(--radius-1);
+  outline: var(--focus-ring) solid var(--focus);
+  pointer-events: none;
+}
 
 /* ---- design-system/components/inline-error.css · order 0810 ---- */
 /* ---------- inline error and form alert: icon + text, color second ---------- */
@@ -1408,6 +1424,13 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .rows .row { min-height: var(--grouped-row-min); padding-block: var(--grouped-row-pad); }
 .rows .row:not(.row--stacked):has(> :is(select, input:not([type="checkbox"]), .row-value)) { padding-block: 0; }   /* a field row: the field fills the row (a menu opens from all of it, a text field takes the tap anywhere); a read-only value centres in it */
 .rows .row:not(.row--stacked) > :is(select, input:not([type="checkbox"])) { min-height: var(--grouped-row-min); }
+/* focus (2026-11-07): a row's halo sits inside it, since the group clips anything outside; the first and last rows take
+   the group's corners, so the halo follows them (an outline follows border-radius, inset by its offset). A field or menu
+   in a row rings the whole row */
+.rows > li:first-child > .row, .rows > .row:first-child { border-top-left-radius: var(--radius-2); border-top-right-radius: var(--radius-2); }
+.rows > li:last-child > .row, .rows > .row:last-child { border-bottom-left-radius: var(--radius-2); border-bottom-right-radius: var(--radius-2); }
+.rows .row:is(a, button):is(:focus-visible, .is-focus),
+.row:has(> :is(input, select):is(:focus-visible, .is-focus)) { outline: var(--focus-ring) solid var(--focus); outline-offset: calc(var(--focus-ring) * -1); }
 
 /* ---- design-system/components/text-field.css · order 0990 ---- */
 .rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]):not([readonly]):not(:disabled) { color: var(--text-primary); }   /* editable text in Text 1, read-only values (Email) and menu values in Text 2, as iOS Settings (designer, step 6, #21) */
@@ -1427,7 +1450,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 }
 
 /* ---- design-system/components/text-field.css · order 1010 ---- */
-.row :is(input, select):is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: 0; color: var(--text-primary); }
+.row :is(input, select):is(:focus-visible, .is-focus) { outline: none; color: var(--text-primary); }   /* the halo is the row's (grouped-settings-rows.css), so it keeps the group's corners (2026-11-07) */
 
 /* ---- design-system/components/status-line.css · order 1020 ---- */
 .row-note { margin: 0; padding: 0 var(--space-4) var(--space-2); text-align: right; font-size: var(--size-proof); color: var(--text-secondary); }

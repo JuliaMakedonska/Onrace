@@ -417,7 +417,7 @@ assert not success_bad, ('Color rule 2: success color outside the stand specimen
 # values. In each theme, only the accent roles may resolve to an amber primitive, and no role may resolve to a success color.
 ROLES = [n for n in re.findall(r'^\s*--([a-z0-9-]+):', TOKENS.split('     2. SEMANTIC: color roles\n')[1].split('\n}')[0], flags=re.M)]
 AMBERS = {tok(n).upper() for n in re.findall(r'--(amber-\d+):', TOKENS)}
-ACCENT_ROLES = {'accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'accent-pressed', 'accent-ink-pressed'}
+ACCENT_ROLES = {'accent-fill', 'accent-ink', 'accent-hover', 'accent-ink-hover', 'accent-pressed', 'accent-ink-pressed', 'focus'}   # focus: the keyboard halo, where you are (designer, 2026-11-07)
 SUCCESS = {tok('success').upper(), tok('success-bg').upper()}
 for _t in THEMES:
     _amber = sorted(r for r in ROLES if tok(r, _t).upper() in AMBERS)
@@ -643,7 +643,7 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('text-primary', 'Text primary', 'Screen titles, item titles, finish times, body. Also the control tint (checked boxes, checkmarks, <code>accent-color</code>), which was <code>--control-tint</code> until Lesson 8. The focus ring is its own role again since Lesson 9, <code>--focus</code>.', 'Not for meta (date month, location, proof). The control tint is never amber, never green.', 'Hierarchy rule 4: three levels · C4 (designer, 2026-10-18): control tint is neutral · Color rule 1'),
     ('text-secondary', 'Text secondary', 'Meta: month and year, location, proof line, counts, inactive tab.', 'Not for titles or the finish time.', 'Attribute d: proof stated, not stamped (a quiet line)'),
     ('chip-text', 'Chip text', 'The format chip label only.', 'Not on filter chips (those are Text primary).', 'Hierarchy rule 2: chips are metadata'),
-    ('accent-fill', 'Accent fill (sodium amber)', 'The primary button fill (Log result, Register on &lt;domain&gt;). With the ink, at most two amber uses per screen.', 'Not on finish times, chips, filter chips, links, focus rings, icons in content, or state messages.', 'Hierarchy rule 1: accent is scarce · Taste: a high-contrast accent (round 1 Direction 3)'),
+    ('accent-fill', 'Accent fill (sodium amber)', 'The primary button fill (Log result, Register on &lt;domain&gt;). With the ink, at most two amber uses per screen.', 'Not on finish times, chips, filter chips, links, icons in content, or state messages. The focus halo is its own role, <code>--focus</code>, transient, outside the two-amber count.', 'Hierarchy rule 1: accent is scarce · Taste: a high-contrast accent (round 1 Direction 3)'),
     ('accent-ink', 'Accent ink', 'Amber as text and icon on a bar: the bar action (Save, Log result, Apply filters) and the current tab.', 'Anywhere in content.', 'Hierarchy rule 1 · Lesson 8: amber text on a light bar would need a darker amber than the fill, so the ink is its own role'),
     ('accent-hover', 'Accent, hover', 'The fill under the pointer.', 'Anywhere at rest; never as text (that is the ink’s hover).', 'Hierarchy rule 3: one primary, with a hover state'),
     ('accent-ink-hover', 'Accent ink, hover', 'The bar action (Save, Log result) under the pointer.', 'Anywhere at rest; never as a fill.', 'Step 5, the theme test: split from Accent, hover. In light the fill’s hover keeps dark text while the ink’s hover is text on a light bar, so one value couldn’t serve both'),
@@ -666,7 +666,7 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('text-pressed', 'Text, pressed', 'The same, pressed: two steps dimmer, still AA.', 'At rest.', 'One rule, for text · WCAG 1.4.3'),
     ('boundary-hover', 'Boundary, hover', 'An input’s boundary under the pointer: the search field. One step stronger.', 'At rest.', 'One rule, for borders'),
     ('boundary-pressed', 'Boundary, pressed', 'The same, pressed.', 'At rest.', 'One rule, for borders'),
-    ('focus', 'Focus', 'The keyboard focus ring, 2px: white in dark, dark in light, at least 3:1 on every background it sits on.', 'Never the accent; never on a click (only :focus-visible).', 'C4: neutral · WCAG 2.4.7 and 1.4.11 · Lesson 9: a role again, apart from Text primary'),
+    ('focus', 'Focus', 'The keyboard focus halo, 2px, 2px from its element, in the accent: amber in dark, the light accent ink in light, at least 3:1 on every background it sits on (designer, 2026-11-07; white until then).', 'Never on a tap (only :focus-visible). Transient, so it does not count toward the two-amber limit.', 'Color rule 1: where you are · iOS Full Keyboard Access · WCAG 2.4.7 and 1.4.11'),
     ('opacity-disabled', 'Disabled opacity', 'A disabled control: the whole control at this opacity, with no pointer events. 40% in dark, 38% in light.', 'Never on content someone must read; never a color by hand.', 'WCAG 1.4.3 exempts disabled controls · Lesson 9: replaced Text disabled; each value keeps that color’s contrast in its theme (3.6:1 dark, 2.4:1 light)'),
     ('success', 'Success', 'The status specimen on this stand only. No product screen uses it: the saved confirmation is neutral (Color rule 2).', 'Not on a result, not on Results list at all, not for "verified" or any claim about a result.', 'Voice principle 1: claim only what Onrace can know'),
     ('success-bg', 'Success tint', 'The status specimen on this stand only.', 'Not behind results, proof lines or the saved confirmation.', 'Voice principle 1: no verified look'),
@@ -833,7 +833,9 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-alert</code></td><td>{tok("radius-alert")}</td><td>The confirm alert (Profile, Sign out). {P}.</td><td>G67 (designer, 2026-10-23): the alert as iOS 26 alerts, glass and a larger radius, provisional like the sheet's</td></tr>
 <tr><td><code>--radius-circle</code></td><td>{tok("radius-circle")}</td><td>The one circle: Profile initials, the busy spinner's ring and the map pin's dot (renamed from <code>--radius-avatar</code>, Lesson 8 step 6).</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
-<tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus: its width and offset. Its color is the role <code>--focus</code>, never the accent.</td><td>Hierarchy rule 1: focus is not an accent use</td></tr>
+<tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus: the halo's width. Its color is the role <code>--focus</code>, the accent (2026-11-07).</td><td>iOS Full Keyboard Access · Color rule 1: where you are</td></tr>
+<tr><td><code>--focus-gap</code></td><td>{tok("focus-gap")}</td><td>Keyboard focus: the gap between an element and its halo, the ground behind showing through, so the halo never touches a fill.</td><td>Designer, 2026-11-07 · iOS Full Keyboard Access</td></tr>
+<tr><td><code>--focus-text-pad</code></td><td>4px</td><td>Keyboard focus on a text control (Text link, Forgot password?, Sort button): room round the words inside the rounded halo, never the 44pt target's box.</td><td>Designer, 2026-11-07</td></tr>
 <tr><td><code>--float-shadow</code></td><td>{tok("float-shadow")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
 <tr><td><code>--target</code></td><td>{tok("target")}</td><td>Minimum height of every control or its tap area.</td><td>Critique fix (round 2): touch targets</td></tr>
 </tbody></table></div>
@@ -975,7 +977,7 @@ page = f'''<!doctype html>
       <div class="stand-panel">
         <h3>Primary button, with its secondary and tertiary siblings</h3>
         {BUTTONS}
-        <p class="stand-label">States: hover on each, Tab for focus (2px Text 1 ring), then disabled and loading.</p>
+        <p class="stand-label">States: hover on each, Tab for focus (the 2px amber halo), then disabled and loading.</p>
         <div class="stand-row">
           <button type="button" class="btn btn--primary" disabled>Log result</button>
           <button type="button" class="btn btn--primary" aria-busy="true" aria-disabled="true">Saving…</button>
@@ -992,7 +994,7 @@ page = f'''<!doctype html>
       <div class="stand-panel">
         <h3>Search field</h3>
         {SEARCH}
-        <p class="stand-label">Try it: hover shows a stronger outline; focus shows the 2px Text 1 ring. The outline is Boundary ({cr(tok('boundary'), tok('surface')):.2f}:1 on the field), the placeholder Text secondary ({cr(tok('text-secondary'), tok('surface')):.2f}:1).</p>
+        <p class="stand-label">Try it: hover shows a stronger outline; focus shows the 2px amber halo. The outline is Boundary ({cr(tok('boundary'), tok('surface')):.2f}:1 on the field), the placeholder Text secondary ({cr(tok('text-secondary'), tok('surface')):.2f}:1).</p>
         {why("Hierarchy rule 3: not a button, so it sits on the surface, not raised", "jtbd.md → Hypothesis 7 [?]: search by race name or city")}
       </div>
     </div>
@@ -1154,6 +1156,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-rows'), os.path.join(ROOT, 'public
 shutil.copyfile(os.path.join(ROOT, 'ui/review-rows.html'), os.path.join(ROOT, 'public/ui/review-rows.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-signout'), os.path.join(ROOT, 'public/ui/review-signout'), dirs_exist_ok=True)   # Sign out as a grouped row, before/after (2026-11-07)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-signout.html'), os.path.join(ROOT, 'public/ui/review-signout.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-focus'), os.path.join(ROOT, 'public/ui/review-focus'), dirs_exist_ok=True)   # the focus halo, variants and states by theme, before/after (2026-11-07)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-focus.html'), os.path.join(ROOT, 'public/ui/review-focus.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots
