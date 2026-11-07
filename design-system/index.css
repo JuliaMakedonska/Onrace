@@ -1971,7 +1971,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .group-footer { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); color: var(--text-secondary); }
 
 /* ---- design-system/components/sign-out-button.css · order 1040 ---- */
-/* Sign out is a grouped row (designer, 2026-11-07; as iOS Settings): its own group, one row in .rows, so it takes the
+/* Sign out is a grouped row (designer, 2026-11-07; as iOS Settings): its own group, one row in a div.rows (not a list: one action, so screen readers don't hear a list of one), so it takes the
    rows' surface, the one grouped-row height and padding (--grouped-row-min, --grouped-row-pad: grouped-settings-rows.css)
    and their hairline-free single-row corners; the text centred, coral */
 .signout {
@@ -1983,7 +1983,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   color: var(--error);   /* G68 (designer, 2026-10-23): a destructive action, coral in the row too, as in Settings */
   font-family: var(--font-text);
   font-size: var(--size-body);
-  font-weight: var(--weight-strong);
+  font-weight: var(--weight-regular);   /* as the other grouped rows and iOS Settings: the coral marks it (2026-11-07) */
   text-align: center;
   cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out);

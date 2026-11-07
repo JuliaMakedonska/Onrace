@@ -1377,3 +1377,5 @@ Before/after: `ui/review-rows.html`.
 **Built:** `button.row.signout` inside its own `.rows` (`sign-out-button.css`): the group gives it the surface and the corners, `.rows .row` the height and padding; the button is transparent, centred, coral, and takes the rows' states (hover `--row-hover`, pressed `--row-pressed`, one and two levels up from the group). Its focus ring is drawn inside the row, since the group clips its corners. The confirm alert ("Sign out of Onrace?", Cancel and Sign out in coral) is unchanged. Profile -loading's placeholder is the same 52px. The States map cell now keeps the group, so its states show on the rows' surface.
 
 Before/after: `ui/review-signout.html`.
+
+**Follow-up (designer, 2026-11-07):** Sign out takes the regular weight, like the other grouped rows and iOS Settings; the coral already marks it (it was semibold). Its group is no longer a list or a named region: a `div.group` > `div.rows` > the button, so a screen reader hears one button, "Sign out", not "list, 1 item" or a "Sign out" region around a "Sign out" button. The look is unchanged apart from the weight: `.rows` and `.rows .row` style any element, not only a list.

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=942894f3">
+<link rel="stylesheet" href="../design-system/index.css?v=0f66eb9d">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -121,10 +121,11 @@
            Tapping it opens the confirm alert below (flows.md Flow 5:
            "taps Sign out" → Confirm dialog), not a separate page.
            A grouped row (2026-11-07, as iOS Settings): one row in its own
-           group, the rows' 52px, the text centred in coral. -->
-      <section class="group" aria-label="Sign out">
-        <ul class="rows"><li><button type="button" class="row signout" id="sign-out" aria-haspopup="dialog">Sign out</button></li></ul>
-      </section>
+           group, the rows' 52px, the text centred in coral, regular weight;
+           its group is a div, not a list: one action, not a list of one. -->
+      <div class="group">
+        <div class="rows"><button type="button" class="row signout" id="sign-out" aria-haspopup="dialog">Sign out</button></div>
+      </div>
 
     </main>
 
