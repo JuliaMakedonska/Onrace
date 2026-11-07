@@ -1369,3 +1369,11 @@ Before/after of all four, from before the sheet work: `ui/review-sheets.html`.
 **Checked:** every row measured at 390 before and after: Sign in, Create account, Sign in -error, Reset password and its error, New password and its error, Profile and Profile -loading go from 44 to 52 (Profile's Email from 45.8); Log result's rows stay 52 and its stacked link row 65.8. The first screen of Race browse, Results list and their empty states: every visible element's box identical before and after (66, 76, 44 and 23 boxes). The review shots of Log result, the Filters sheet and both first screens are pixel-identical.
 
 Before/after: `ui/review-rows.html`.
+
+### Sign out is a grouped row (designer, 2026-11-07)
+
+**Decided:** Sign out on Profile is a grouped row, as in iOS Settings: one row in its own group, the same 52px height and padding as every grouped row (`--grouped-row-min`, `--grouped-row-pad`), the text centred in coral. Until now it was a full-width button of its own, 44px, which stood short beside the 52px Account rows.
+
+**Built:** `button.row.signout` inside its own `.rows` (`sign-out-button.css`): the group gives it the surface and the corners, `.rows .row` the height and padding; the button is transparent, centred, coral, and takes the rows' states (hover `--row-hover`, pressed `--row-pressed`, one and two levels up from the group). Its focus ring is drawn inside the row, since the group clips its corners. The confirm alert ("Sign out of Onrace?", Cancel and Sign out in coral) is unchanged. Profile -loading's placeholder is the same 52px. The States map cell now keeps the group, so its states show on the rows' surface.
+
+Before/after: `ui/review-signout.html`.

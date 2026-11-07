@@ -69,4 +69,4 @@
 .bar.heading { width: var(--skel-tag-w); height: var(--skel-line); margin: 0 0 var(--space-2) var(--space-4); }
 .row .bar.label { margin: 0; }
 .row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
-.skel-signout .bar { height: var(--target); border-radius: var(--radius-2); }
+.skel-signout .bar { height: var(--grouped-row-min); border-radius: var(--radius-2); }   /* Sign out's grouped row (2026-11-07) */

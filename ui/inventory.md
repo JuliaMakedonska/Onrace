@@ -119,7 +119,7 @@ Single-screen blocks, by screen.
 **Profile**
 - **Identity block** (`.identity`: initials `MR`, name, email). Photo: no (deferred; initials instead).
 - **Grouped settings rows** (`.group`, `.group-heading` "Account", `.rows` with Name, Country, Language, Email read-only; `.group-footer`). Every row `--grouped-row-min` (52px; designer, 2026-11-07), the same height as a sheet's and the sign-in screens' rows. Native: [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables).
-- **Sign out button** (`.signout`, its own group). Coral text, a destructive action (G68, designer 2026-10-23).
+- **Sign out button** (`.signout`, its own group). Coral text, a destructive action (G68, designer 2026-10-23). **A grouped row since 2026-11-07** (designer, as iOS Settings): `button.row.signout`, the one row of its own `.rows` group, so it takes the rows' surface, 52px height and padding (`--grouped-row-min`, `--grouped-row-pad`) and their states (hover one level up, pressed two); the text centred, coral; its confirm alert unchanged.
 - **Confirm alert** (`dialog.alert`: "Sign out of Onrace?", Cancel, Sign out; the same component is Race detail's and Result detail's link error since the markup pass). Native: [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts). Step 5: Cancel's focus ring drawn inside the button (the alert clips its edge). Gaps: G67 K, closed 2026-10-23 (designer): the sheet glass over the scrim, the rim, `--radius-alert` 34px [?], as iOS 26 alerts.
 - **On the kit (step 5, 2026-10-22, Infrastructure):** all three pages link `ui/kit.css`; the shell (large title + floating tab bar, Profile current) already matched `results-list.html`, so no markup change; the old drawn `svg.tab-icon`s stay, hidden (Deferred to Lesson 7). Country and Language rows show a Solar chevron after the value (G65 K); rows are 44pt to the edge; "Saving…" takes the spinner (G66 K); `-error` cause=load is centered between the title and the tab bar. Amber: the current tab only; plus Try again on `-error` cause=load. Gaps: G4 M applies (large title doesn't collapse), G68 K, closed 2026-10-23 (designer): the Sign out row is coral too.
 
@@ -321,7 +321,7 @@ What each component's section on its family page in `design-system/docs/` says b
 | **Gate intro** | Why an account is needed, at the top of a gate. | — | `.context` Gate intro | The other screens › Sign in / Sign up | `sign-in-sign-up` Why an account is needed, from where the person was heading. | **Form note** `sign-in-sign-up?mode=signup` What comes after Create account is a form note under the form. |
 | **Identity block** | Who is signed in: initials, name and email. | — | `.identity` Identity block; `.initials` Initials; `.identity h2` Name; `.identity p` Email | The other screens › Profile | `profile` Who is signed in: initials, name and email. | **Grouped settings rows** `profile` What a person can change sits in the rows below. |
 | **Grouped settings rows** | Profile's Account rows: name, country, language and email, each 52px, the one grouped-row height. | Profile | `.group-heading` Group heading; `.rows .row` Row; `select` Menu value and chevron; `.row-value` Read-only value; `.group-footer` Footer | The other screens › Profile | `profile` Account: name, country, language and email. | **Detail header and facts** `race-detail` Facts a person can't change are a list of facts. |
-| **Sign out button** | Sign out, apart from everything else on Profile. | Profile | `.signout` Sign out, coral, in its own group | Navigation › Confirm alert | `profile` A destructive action, apart from the rows. | **Text link** `profile-error?cause=save&field=country&value=France&prev=Italy` Try again on a row is a text link. |
+| **Sign out button** | Sign out, apart from everything else on Profile: a grouped row of its own. | Profile | `.rows` Its own group; `.signout` Sign out, a grouped row, coral, centred | Navigation › Confirm alert | `profile` A destructive action, apart from the rows. | **Text link** `profile-error?cause=save&field=country&value=France&prev=Italy` Try again on a row is a text link. |
 | **Confirm alert** | One question before a destructive action, in the middle of the screen. | Sign out | `.alert` Confirm alert, the sheet's glass; `.alert h2` Title; `.alert-actions` Actions | Navigation › Confirm alert | `profile` Sign out of Onrace? One question before a destructive action. | **Action sheet** `log-result` Cancel with a result entered asks with an action sheet at the bottom. |
 
 ## States map (Lesson 9, step 3, 2026-11-05)
@@ -361,7 +361,7 @@ What each component's States shows on its family page in `design-system/docs/` (
 | **Action sheet** | Cancel with a result entered | `dialog` | `.is-destructive` | — | — | keep | l | — |
 | **Active filter chips row** | Two filters | `.chips-row` | `.chip` | — | — | control | l | — |
 | **Grouped settings rows** | Profile | `.group, form` | `.row` | `input` | `input` | keep | l | a row didn't save |
-| **Sign out button** | Profile | — | `.signout` | — | — | keep | l | — |
+| **Sign out button** | Profile | `.rows` | `.signout` | — | — | keep | l | — |
 | **Confirm alert** | Sign out: the confirm alert | `dialog` | `.is-destructive` | — | — | keep | l | — |
 
 ---

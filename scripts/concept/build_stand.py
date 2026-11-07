@@ -1152,6 +1152,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-sheets'), os.path.join(ROOT, 'publ
 shutil.copyfile(os.path.join(ROOT, 'ui/review-sheets.html'), os.path.join(ROOT, 'public/ui/review-sheets.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-rows'), os.path.join(ROOT, 'public/ui/review-rows'), dirs_exist_ok=True)   # one grouped row height, before/after (2026-11-07)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-rows.html'), os.path.join(ROOT, 'public/ui/review-rows.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-signout'), os.path.join(ROOT, 'public/ui/review-signout'), dirs_exist_ok=True)   # Sign out as a grouped row, before/after (2026-11-07)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-signout.html'), os.path.join(ROOT, 'public/ui/review-signout.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots

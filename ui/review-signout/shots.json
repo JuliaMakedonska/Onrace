@@ -1,0 +1,96 @@
+[
+ {
+  "key": "sign-out-button-at-rest",
+  "component": "Sign out button",
+  "state": "At rest",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "sign-out-button-hover",
+  "component": "Sign out button",
+  "state": "Hover",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "sign-out-button-pressed",
+  "component": "Sign out button",
+  "state": "Pressed",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "sign-out-button-focus",
+  "component": "Sign out button",
+  "state": "Focus",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "sign-out-button-disabled",
+  "component": "Sign out button",
+  "state": "Disabled",
+  "kind": "component",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile",
+  "component": "Profile",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile-sign-out-s-confirm-alert",
+  "component": "Profile, Sign out’s confirm alert",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile-error-a-row-didn-t-save",
+  "component": "Profile -error, a row didn’t save",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile-error.html?cause=save&field=country&prev=Italy&value=Spain",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile-loading",
+  "component": "Profile -loading",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile-loading.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ }
+]

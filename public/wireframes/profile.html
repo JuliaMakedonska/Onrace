@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=16330a37">
+<link rel="stylesheet" href="../design-system/index.css?v=942894f3">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -119,9 +119,11 @@
            the account's only sign-out point (sitemap.md → Navigation § 2:
            launch → Sign out is 3 taps, Profile tab → Sign out → confirm).
            Tapping it opens the confirm alert below (flows.md Flow 5:
-           "taps Sign out" → Confirm dialog), not a separate page. -->
+           "taps Sign out" → Confirm dialog), not a separate page.
+           A grouped row (2026-11-07, as iOS Settings): one row in its own
+           group, the rows' 52px, the text centred in coral. -->
       <section class="group" aria-label="Sign out">
-        <button type="button" class="signout" id="sign-out" aria-haspopup="dialog">Sign out</button>
+        <ul class="rows"><li><button type="button" class="row signout" id="sign-out" aria-haspopup="dialog">Sign out</button></li></ul>
       </section>
 
     </main>

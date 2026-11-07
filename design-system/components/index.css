@@ -1437,22 +1437,26 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .group-footer { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); color: var(--text-secondary); }
 
 /* ---- design-system/components/sign-out-button.css · order 1040 ---- */
+/* Sign out is a grouped row (designer, 2026-11-07; as iOS Settings): its own group, one row in .rows, so it takes the
+   rows' surface, the one grouped-row height and padding (--grouped-row-min, --grouped-row-pad: grouped-settings-rows.css)
+   and their hairline-free single-row corners; the text centred, coral */
 .signout {
-  display: block;
   width: 100%;
-  min-height: var(--target);
+  justify-content: center;
+  margin: 0;
   border: 0;
-  border-radius: var(--radius-2);
-  background: var(--surface);
+  background: transparent;
   color: var(--error);   /* G68 (designer, 2026-10-23): a destructive action, coral in the row too, as in Settings */
   font-family: var(--font-text);
   font-size: var(--size-body);
   font-weight: var(--weight-strong);
+  text-align: center;
   cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
-@media (hover: hover) { .signout:is(:hover, .is-hover) { background: var(--surface-hover); } }   /* it rests on --surface: one level up, two pressed */
-.signout:is(:active, .is-pressed) { background: var(--surface-pressed); }
+@media (hover: hover) { .signout:is(:hover, .is-hover) { background: var(--row-hover); } }   /* a row's states: one level up from the group it rests on, two pressed */
+.signout:is(:active, .is-pressed) { background: var(--row-pressed); }
+.signout:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }   /* inside the row: the group clips anything outside its corners */
 
 /* ---- design-system/components/confirm-alert.css · order 1050 ---- */
 dialog.alert {   /* the confirm alert floats like a sheet: the sheet's glass over the scrim, its rim and shadow (G67, designer 2026-10-23: as iOS 26 alerts) */
@@ -1547,4 +1551,4 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .bar.heading { width: var(--skel-tag-w); height: var(--skel-line); margin: 0 0 var(--space-2) var(--space-4); }
 .row .bar.label { margin: 0; }
 .row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
-.skel-signout .bar { height: var(--target); border-radius: var(--radius-2); }
+.skel-signout .bar { height: var(--grouped-row-min); border-radius: var(--radius-2); }   /* Sign out's grouped row (2026-11-07) */
