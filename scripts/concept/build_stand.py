@@ -763,8 +763,8 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('sheet-large', 'Filters sheet height: the large detent only', 'Full height less the top safe area and the gap', 'G13 · designer, 2026-10-19: large detent only'),
            ('sheet-content-top', 'Every sheet: the gap between its top bar and the first group or line', '24px', 'Designer, 2026-11-06: content stuck to the bar · HIG Sheets, inset grouped lists leave 20–35pt'),
            ('sheet-group-gap', 'Every sheet: the gap between two groups', '32px', 'Designer, 2026-11-06 · iOS sections, about 35pt apart'),
-           ('sheet-row-min', 'Every sheet: a row’s height', 'The 44pt target plus 8px: 52px', 'Designer, 2026-11-06: rows felt cramped · HIG: rows at least 44pt'),
-           ('sheet-row-pad', 'Every sheet: a row’s vertical padding', '8px above and below, for a row taller than one line', 'Designer, 2026-11-06 · iOS rows keep about 11pt round their text'),
+           ('grouped-row-min', 'Every grouped row (a sheet, Sign in / Sign up, Reset password, New password, Profile): its height', 'The 44pt target plus 8px: 52px', 'Designer, 2026-11-06 (sheets: rows felt cramped), every group 2026-11-07 (one height everywhere) · HIG: rows at least 44pt'),
+           ('grouped-row-pad', 'Every grouped row: its vertical padding', '8px above and below, for a row taller than one line', 'Designer, 2026-11-06, every group 2026-11-07 · iOS rows keep about 11pt round their text'),
            ('sheet-content-bottom', 'Every sheet: below the last group, before the bottom safe area', '32px + the safe area', 'Designer, 2026-11-06 · G2: nothing under the home indicator'),
            ('alpha-85', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge); was --glass-opacity', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
            ('alpha-90', 'Glass fill on the Filters sheet; was --glass-opacity-sheet', f'Lowest that passes AA over the scrim and the worst case: {GLASS_MIN["sheet"]}%; set with margin · {P}', 'C1, C4: the sheet on the raised level'),
@@ -1150,6 +1150,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-optional-link'), os.path.join(ROOT
 shutil.copyfile(os.path.join(ROOT, 'ui/review-optional-link.html'), os.path.join(ROOT, 'public/ui/review-optional-link.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-sheets'), os.path.join(ROOT, 'public/ui/review-sheets'), dirs_exist_ok=True)   # the sheets' spacing, before/after (2026-11-06)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-sheets.html'), os.path.join(ROOT, 'public/ui/review-sheets.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-rows'), os.path.join(ROOT, 'public/ui/review-rows'), dirs_exist_ok=True)   # one grouped row height, before/after (2026-11-07)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-rows.html'), os.path.join(ROOT, 'public/ui/review-rows.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots

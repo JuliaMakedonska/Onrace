@@ -199,12 +199,15 @@
   --tabbar-clear: calc(var(--tabbar-h) + var(--tabbar-gap) + var(--safe-bottom));
   --sheet-gap-top: var(--space-3);
   --sheet-large: calc(100% - var(--safe-top) - var(--sheet-gap-top));
+  /* a grouped row's height, everywhere grouped rows stand (designer, 2026-11-07; from the sheets' --sheet-row-min and
+     --sheet-row-pad of 2026-11-06): read by grouped-settings-rows.css, so a sheet, Sign in, Reset password, New password
+     and Profile have one row height */
+  --grouped-row-min: calc(var(--target) + var(--space-2));   /* a grouped row's height: the 44pt target and room round it, so text, a date pill, a menu, a read-only value and a checkmark row are all one height */
+  --grouped-row-pad: var(--space-2);         /* a grouped row's vertical padding: content taller than one line (a stacked field) keeps room above and below */
   /* a sheet's own spacing (designer, 2026-11-06), as an iOS inset grouped list in a sheet: read by modal-sheet.css for
      every sheet (Filters, Log result, Add official result link) */
   --sheet-content-top: var(--space-6);     /* between the sheet's top bar and its first group or line: iOS leaves 20–35pt there */
   --sheet-group-gap: var(--space-7);       /* between two groups, as iOS spaces its sections (about 35pt) */
-  --sheet-row-min: calc(var(--target) + var(--space-2));   /* a row's height in a sheet: the 44pt target and room round it, so text, a date pill, a menu and a checkmark row are all one height */
-  --sheet-row-pad: var(--space-2);         /* a row's vertical padding in a sheet: content taller than one line (a stacked field) keeps room above and below */
   --sheet-content-bottom: var(--space-7);  /* below the last group, before the bottom safe area */
   --glass-blur: 20px;       /* [?] not from Apple's kit */
   --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
@@ -1366,9 +1369,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 .sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }
 .sheet .group { margin: 0 0 var(--sheet-group-gap); padding: 0; border: 0; min-width: 0; }
 .sheet .group:not(:has(~ .group)) { margin-bottom: 0; }   /* the last group: the content's bottom padding is the space below it, so a short sheet has no empty band */
-.sheet .rows .row { min-height: var(--sheet-row-min); padding-block: var(--sheet-row-pad); }   /* every row one height, with room above and below its content (iOS) */
-.sheet .rows .row:not(.row--stacked):has(> :is(select, input:not([type="checkbox"]))) { padding-block: 0; }   /* a field row: the field fills the row (a menu opens from all of it, a text field takes the tap anywhere) */
-.sheet .rows .row:not(.row--stacked) > :is(select, input:not([type="checkbox"])) { min-height: var(--sheet-row-min); }
+/* a sheet's rows: the grouped rows' one height (grouped-settings-rows.css, --grouped-row-min; 2026-11-07) */
 .sheet .rows { background: var(--group); --row-hover: var(--group-hover); --row-pressed: var(--group-pressed); }   /* one level above the sheet, as the picker's cards; its rows' states follow */
 
 /* ---- design-system/components/date-field.css · order 0450 ---- */
@@ -1420,7 +1421,7 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 
 /* ---- design-system/components/text-field.css · order 0470 ---- */
 /* forms as grouped rows (round 2: Log result G42, the sign-in screens G61): a label and its control in a row; hints
-   are the group's footer; an error is a coral footnote under its row, or under its group in the hint's place (Lesson 9 step 3: no ring) */
+   are the group's footer; an error is a coral footnote under its group, outside its surface, in the hint's place (2026-11-06; no ring) */
 .form-rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]) { text-align: left; text-align-last: left; color: var(--text-primary); }
 
 /* ---- design-system/components/pop-up-select.css · order 0480 ---- */
@@ -1439,7 +1440,7 @@ fieldset:disabled .row--nav { pointer-events: none; }
 .top-bar .close[aria-disabled="true"] { cursor: default; }   /* the bar's Cancel while the form is locked: base.css fades it with the form */
 
 /* ---- design-system/components/text-field.css · order 0510 ---- */
-.rows .row--stacked { flex-direction: column; align-items: stretch; gap: 0; padding-block: var(--space-2); }   /* .rows: outranks .row, defined later */
+.rows .row--stacked { flex-direction: column; align-items: stretch; gap: 0; padding-block: var(--grouped-row-pad); }   /* .rows: outranks .row, defined later */
 /* a long value (a link): the label above, the field the row's full width */
 .rows .row--stacked input { padding-block: var(--space-1); }
 
@@ -1935,6 +1936,12 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   -webkit-appearance: none;
   appearance: none;
 }
+/* one row height wherever grouped rows stand (designer, 2026-11-07; the sheets' rule of 2026-11-06, now every group):
+   a sheet, Sign in / Sign up, Reset password, New password, Profile. Every row --grouped-row-min (52px), with room above
+   and below content taller than one line (iOS) */
+.rows .row { min-height: var(--grouped-row-min); padding-block: var(--grouped-row-pad); }
+.rows .row:not(.row--stacked):has(> :is(select, input:not([type="checkbox"]), .row-value)) { padding-block: 0; }   /* a field row: the field fills the row (a menu opens from all of it, a text field takes the tap anywhere); a read-only value centres in it */
+.rows .row:not(.row--stacked) > :is(select, input:not([type="checkbox"])) { min-height: var(--grouped-row-min); }
 
 /* ---- design-system/components/text-field.css · order 0990 ---- */
 .rows .row input:is([type="text"], [type="email"], [type="password"], [type="url"]):not([readonly]):not(:disabled) { color: var(--text-primary); }   /* editable text in Text 1, read-only values (Email) and menu values in Text 2, as iOS Settings (designer, step 6, #21) */

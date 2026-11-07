@@ -37,3 +37,9 @@
   -webkit-appearance: none;
   appearance: none;
 }
+/* one row height wherever grouped rows stand (designer, 2026-11-07; the sheets' rule of 2026-11-06, now every group):
+   a sheet, Sign in / Sign up, Reset password, New password, Profile. Every row --grouped-row-min (52px), with room above
+   and below content taller than one line (iOS) */
+.rows .row { min-height: var(--grouped-row-min); padding-block: var(--grouped-row-pad); }
+.rows .row:not(.row--stacked):has(> :is(select, input:not([type="checkbox"]), .row-value)) { padding-block: 0; }   /* a field row: the field fills the row (a menu opens from all of it, a text field takes the tap anywhere); a read-only value centres in it */
+.rows .row:not(.row--stacked) > :is(select, input:not([type="checkbox"])) { min-height: var(--grouped-row-min); }

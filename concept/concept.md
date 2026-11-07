@@ -1354,3 +1354,18 @@ Before/after: `ui/review-sheets.html`.
 **The sheet and the field** (the same brief, already in "Sheet spacing, every sheet" above): the spacing tokens, a one-field sheet sized to its content, and a field whose title names it showing only "https://…", with its label as its accessible name.
 
 Before/after of all four, from before the sheet work: `ui/review-sheets.html`.
+
+### Grouped rows one height everywhere (designer, 2026-11-07)
+
+**What was wrong:** the sheets' rows were 52px (2026-11-06), but the grouped forms outside a sheet kept 44px: Sign in / Sign up, Reset password, New password and Profile (whose read-only Email row was 45.8px). One kind of row, two heights.
+
+**Fixed once, in the system:**
+- **Tokens:** `--sheet-row-min` and `--sheet-row-pad` are renamed `--grouped-row-min` (52px, the 44pt target plus 8) and `--grouped-row-pad` (8px), since they no longer belong to a sheet. Signed on the stand. The sheet's own spacing (`--sheet-content-top`, `--sheet-group-gap`, `--sheet-content-bottom`) stays the sheet's.
+- **`grouped-settings-rows.css`** now holds the rule `modal-sheet.css` had: every `.rows .row` is `--grouped-row-min`, a field or menu fills its row (a tap anywhere on it reaches the field), a read-only value centres in it, a stacked field keeps `--grouped-row-pad` above and below. `modal-sheet.css` keeps only the sheet's spacing and its rows' level.
+- **Field anatomy and errors, the same as in sheets:** one line, the label and its field (or the field alone where the title names it); a field error is the coral footnote under the group, outside its surface. New password and Profile already followed it (2026-11-06). Sign in / Sign up and Reset password have no field errors: their errors are about the whole form (the sign-in failed, the link wasn't sent), so they stay the inline error at the top of the form, above the fields.
+- **Profile keeps its values right-aligned,** as iOS Settings (designer, step 6): the row height and the error placement are the same; the alignment of a settings row and a form row was a decision of its own, not changed here.
+- **The Grouped form pattern and docs:** the pattern's notes, `DESIGN.md` (Form rows, Profile, Patterns, the frontmatter's `sheet-row` and `form-row` at 52px), `ui/inventory.md` (Text field, Grouped settings rows, the Patterns map) and the specimens' notes.
+
+**Checked:** every row measured at 390 before and after: Sign in, Create account, Sign in -error, Reset password and its error, New password and its error, Profile and Profile -loading go from 44 to 52 (Profile's Email from 45.8); Log result's rows stay 52 and its stacked link row 65.8. The first screen of Race browse, Results list and their empty states: every visible element's box identical before and after (66, 76, 44 and 23 boxes). The review shots of Log result, the Filters sheet and both first screens are pixel-identical.
+
+Before/after: `ui/review-rows.html`.

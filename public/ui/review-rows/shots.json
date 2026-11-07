@@ -1,0 +1,178 @@
+[
+ {
+  "key": "screen-sign-in",
+  "component": "Sign in",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/sign-in-sign-up.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-create-account",
+  "component": "Create account",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/sign-in-sign-up.html?mode=signup",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-sign-in-error",
+  "component": "Sign in -error",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/sign-in-sign-up-error.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-sign-in-loading",
+  "component": "Sign in -loading",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/sign-in-sign-up-loading.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-reset-password",
+  "component": "Reset password",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/reset-password.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-reset-password-error",
+  "component": "Reset password -error",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/reset-password-error.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-new-password",
+  "component": "New password",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/new-password.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-new-password-error-too-short",
+  "component": "New password -error, too short",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/new-password-error.html?cause=short",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-new-password-error-no-match",
+  "component": "New password -error, no match",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/new-password-error.html?cause=mismatch",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile",
+  "component": "Profile",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile-error-a-row-didn-t-save",
+  "component": "Profile -error, a row didn’t save",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile-error.html?cause=save&field=country&prev=Italy&value=Spain",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-profile-loading",
+  "component": "Profile -loading",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/profile-loading.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result-a-sheet-for-comparison",
+  "component": "Log result (a sheet, for comparison)",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "screen-filters-sheet-for-comparison",
+  "component": "Filters sheet (for comparison)",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/race-browse.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "screen-race-browse-first-screen",
+  "component": "Race browse, first screen",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/race-browse.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ },
+ {
+  "key": "screen-results-list-first-screen",
+  "component": "Results list, first screen",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html",
+  "changed": {
+   "dark": false,
+   "light": false
+  }
+ }
+]
