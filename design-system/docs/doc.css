@@ -291,6 +291,7 @@
    are built, each scoped to its theme, and the stage check computes both in both page themes */
 :root:not([data-theme="light"]) .dc-states-theme[data-st-theme="light"],
 :root[data-theme="light"] .dc-states-theme[data-st-theme="dark"] { display: none; }
+.dc-states-k { margin: 12px 0 0; font-size: 13.5px; font-weight: 600; color: var(--d-text); }   /* the keyboard focus row (2026-11-08) */
 .dc-states-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
 .dc-state { margin: 0; display: grid; gap: 8px; width: min(330px, 100%); }
 .dc-states[data-w="s"] .dc-state { width: min(160px, 100%); }
@@ -310,6 +311,8 @@
 .dc-quote { margin: 0; padding-left: 14px; box-shadow: inset 2px 0 0 var(--d-border); color: var(--d-dim); font-size: 14px; }
 .dc-quote p { margin: 0; }
 .dc-quote strong { color: var(--d-text); }
+.ds-fquote { margin-top: 24px; max-width: 760px; display: grid; gap: 10px; font-size: 15px; line-height: 1.55; }   /* a Foundations page's DESIGN.md text (2026-11-08) */
+.ds-fquote ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; } .ds-fquote p { margin: 0; } .ds-fquote a { color: var(--d-text); }
 .dc-quote footer { margin-top: 6px; font-size: 13px; color: var(--d-faint); }
 .tbl-wrap { overflow-x: auto; max-width: 100%; }
 .dc-mc { border-collapse: collapse; font-size: 13.5px; min-width: 100%; }

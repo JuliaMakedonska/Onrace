@@ -274,7 +274,7 @@ What each component's section on its family page in `design-system/docs/` says b
 | **Segmented control** | A choice between two options, side by side. | — | `.view-toggle` Track; `.view-btn[aria-pressed="true"]` Selected segment; `.view-btn[aria-pressed="false"]` Segment | Navigation › List / Map segmented control | `race-browse` The same races two ways: as a list or on the map. | **Sort button** `race-browse` Soonest first and Latest first are one Sort button that flips, not two segments. |
 | **Search field** | Find a race by its name or city. | — | `.race-search input` Search field, a full capsule | Inputs / Fields › Search field | `race-browse` Find a race you already know by its name or city. | **Filters trigger with count** `race-browse` Region, race date and sport type are filters in the sheet, not words in the search. |
 | **Sticky action bar** | The one action of a detail screen, at the bottom, always in reach. | — | `.action-bar` Action bar, tab-bar glass; `.register-btn` Primary button, a capsule; `.action-caption` Caption | Navigation › Action bar | `race-detail` The one way out of a detail screen: Register on the race's own site. | **Primary button** `results-list-empty` On a top-level screen the action sits in the state message, not in a bar. |
-| **Modal sheet** | A task over a screen, with Cancel and its one primary. | — | `.sheet-backdrop` Scrim; `.sheet > .top-bar` The sheet's bar, inset from the corner; `.sheet > .top-bar > button:first-child` Cancel, a neutral capsule; `.sheet .bar-title` Title, centred, truncated; `.sheet .bar-action` Apply, the confirming capsule in amber; `.sheet .group` Grouped rows | Filters sheet (signature) | `race-browse` Filters: a task over Race browse, with Cancel and Apply filters. | **Top bar** `race-picker` Race picker is a screen pushed inside Log result, with a back button, not a sheet. |
+| **Modal sheet** | A task over a screen, with Cancel and its one primary. | — | `.sheet-backdrop` Scrim; `.sheet > .top-bar` The sheet's bar, inset from the corner; `.sheet > .top-bar > button:first-child` Cancel, neutral text; `.sheet .bar-title` Title, centred, truncated; `.sheet .bar-action` Apply, the confirming action in amber text; `.sheet .group` Grouped rows | Filters sheet (signature) | `race-browse` Filters: a task over Race browse, with Cancel and Apply filters. | **Top bar** `race-picker` Race picker is a screen pushed inside Log result, with a back button, not a sheet. |
 | **Sport-type rows** | Rows in the Filters sheet that take a checkmark when chosen. | — | `.group-heading` Group heading; `.row--check` Checkmark row | Inputs / Fields › Checkmark row | `race-browse` Choose one or more sport types in the Filters sheet. | **Format chip** `race-browse` On a card the format is a chip: it names the race's format, it isn't a choice. |
 | **Race card** | A race in the catalog, as one link. | — | `.race-card` Race card, one link; `.photo` Race photo, 3:1; `.card-meta time` Date; `.card-link h2` Race name; `.sport-tag` Format chip; `.card-location` Location | Cards / Containers › Race card | `race-browse` A race in the catalog: its date, name, format and place. | **Result row** `results-list` A race you ran is a result row, led by its finish time. |
 | **Race photo** | The black-and-white photo that leads a race card. | — | `.photo` Race photo, black and white, 3:1 | Do: › black and white | `race-browse` Every race card on Race browse leads with its photo. | **Skeleton** `race-browse-loading` While loading, the photo band is a skeleton bar, never an empty photo. |
@@ -422,20 +422,26 @@ How `design-system/docs/` is organised, read by `scripts/docs_shell.py` and `scr
 |---|---|---|
 | `index` | Overview | the start page line above, and the sections below |
 | `why` | Why it looks like this | `concept/references.md` and `concept/concept.md` (`scripts/build_docs_why.py`) |
+
+**Reference** (designer, 2026-11-08: Contributing and Backlog moved here from Getting started)
+
+| Page | Title | Rendered from |
+|---|---|---|
 | `contributing` | Contributing | `design-system/CONTRIBUTING.md` |
 | `backlog` | Backlog | `design-system/backlog.md` |
+| `specimens` | Every specimen | the hand-written specimens |
 
-**Foundations** (moved from the Lesson 08 token reference, `scripts/tokens_reference.py`, and from `DESIGN.md`; each page is the `DESIGN.md` text and the tokens of its groups in `design-system/tokens/tokens.css`)
+**Foundations** (moved from the Lesson 08 token reference, `scripts/tokens_reference.py`, and from `DESIGN.md`). Each page in one order (designer, 2026-11-08): the `DESIGN.md` text as a quote, never a heading of the page; the tokens of its groups in `design-system/tokens/tokens.css` (`group › token, token` takes only those tokens of a group); a live example, a specimen stage (`#specimen` and the start of its label).
 
-| Page | Title | DESIGN.md | Token groups |
-|---|---|---|---|
-| `color` | Color | Colors | color; alpha; the semantic roles; the contrast pairs |
-| `typography` | Typography | Typography | type |
-| `spacing-and-layout` | Spacing and layout | Layout | spacing scale; the screen, its bars and sheets; stacking; skeleton; the static map |
-| `shape` | Shape | Shapes; Elevation & Depth | shape |
-| `motion` | Motion | Do: › 0ms motion; HIG vs Podium: decided › C6 | motion |
-| `icons` | Icons | Overview › Solar Bold icons; Do: › draw icons | icons |
-| `photos` | Photos | Overview › Black-and-white photos; Do: › show every photo | race card and photos |
+| Page | Title | DESIGN.md | Token groups | Example |
+|---|---|---|---|---|
+| `color` | Color | Colors | color; alpha; the semantic roles; the contrast pairs | `#state-message` Race browse -error |
+| `typography` | Typography | Typography | type | `#finish-time` Results list: the result row |
+| `spacing-and-layout` | Spacing and layout | Layout | spacing scale; the screen, its bars and sheets; stacking; skeleton; the static map; race card and photos › date-col | `#race-card` Race browse, with photo |
+| `shape` | Shape | Shapes; Elevation & Depth | shape | `#controls` Two filters |
+| `motion` | Motion | Do: › 0ms motion; HIG vs Podium: decided › C6 | motion | `#skeleton` Race browse; `#primary` Busy in a bar |
+| `icons` | Icons | Overview › Solar Bold icons; Do: › draw icons | icons | `#tab-bar` Discover current |
+| `photos` | Photos | Overview › Black-and-white photos; Do: › show every photo | race card and photos › photo-ratio, photo-filter | `#race-card` Race browse, with photo |
 
 **Components** (`components.html` is the index; the groups are HIG's categories of components, in HIG's order of the categories this system uses; inside a group, alphabetical)
 
@@ -464,7 +470,7 @@ How `design-system/docs/` is organised, read by `scripts/docs_shell.py` and `scr
 | Full-screen gate error | State message | a state message on a gate, `.state-msg` |
 | Sheet screen | Modal sheet | retired: Race picker is a pushed screen since 2026-10-24 |
 
-**Reference:** Every specimen (`specimens.html`). **Patterns:** `patterns.html`, each pattern by its anchor.
+**Patterns:** `patterns.html`, each pattern by its anchor.
 
 **The family pages** (2026-11-05 to 2026-11-08) each redirect to the component a link names, or to the Components index: `bars-and-navigation`, `sheets-and-alerts`, `cards`, `lists-and-rows`, `detail-screens`, `chips`, `map`, `buttons-and-links`, `forms`, `empty-error-and-status`, `loading`.
 

@@ -559,7 +559,11 @@ write('patterns.html', DS.page('Patterns · Onrace design system', 'patterns', _
 
 # ---------------------------------------------------------------- Getting started and Foundations (scripts/docs_foundations.py)
 import docs_foundations as DF
-for rel, html_ in DF.pages():
+def example(spec, lab):   # a Foundations page's live example: the specimen's stage, as on its component page
+    hit = next(((l, h) for l, h in stages_of(spec) if l.startswith(lab)), None)
+    assert hit, f'ui/inventory.md → Foundations: #{spec} has no stage starting "{lab}"'
+    return stage(hit[1], f'-f-{spec}-{slug_c(lab)}', [], hit[0]), 'map-placeholder' in hit[1]
+for rel, html_ in DF.pages(example):
     write(rel, html_)
 
 # ---------------------------------------------------------------- the Overview: what the system is, and the sections

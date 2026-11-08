@@ -171,13 +171,6 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('States · a row on a sheet, pressed: menu value', 'text-secondary', 'group-pressed', 'text'),
     ('States · a field error under its row on a sheet (Log result)', 'error', 'group', 'text'),
     ('States · the primary button pressed', 'on-accent-fill', 'accent-pressed', 'text'),
-    ('Sheet bar · Cancel on its capsule (2026-11-07)', 'text-primary', 'sheet-button', 'text'),
-    ('Sheet bar · Cancel on its capsule, hover', 'text-primary', 'sheet-button-hover', 'text'),
-    ('Sheet bar · Cancel on its capsule, pressed', 'text-primary', 'sheet-button-pressed', 'text'),
-    ('Sheet bar · Save, Apply filters: amber ink on its capsule', 'accent-ink', 'sheet-button', 'text'),
-    ('Sheet bar · the confirming capsule, hover', 'accent-ink-hover', 'sheet-button-hover', 'text'),
-    ('Sheet bar · the confirming capsule, pressed', 'accent-ink-pressed', 'sheet-button-pressed', 'text'),
-    ('Sheet bar · the busy spinner on the confirming capsule (non-text, 3:1)', 'text-secondary', 'sheet-button', 'ui'),
     ('States · a text control under the pointer, on the page', 'text-hover', 'page', 'text'),
     ('States · a text control under the pointer, on a card or row', 'text-hover', 'surface', 'text'),
     ('States · a text control pressed, on the page', 'text-pressed', 'page', 'text'),
@@ -241,6 +234,8 @@ GLASS_PAIRS = [   # label, text token, glass, kind
     ('States · back link, Cancel under the pointer', 'text-hover', 'ground', 'text'),
     ('States · back link, Cancel pressed', 'text-pressed', 'ground', 'text'),
     ('States · Cancel on a sheet, pressed', 'text-pressed', 'sheet', 'text'),
+    ('States · Cancel on a sheet under the pointer (text only since 2026-11-08)', 'text-hover', 'sheet', 'text'),
+    ('States · Save, Apply on a sheet under the pointer', 'accent-ink-hover', 'sheet', 'text'),
     ('Focus ring on the tab bar (non-text, 3:1)', 'focus', 'bar', 'ui'),
     ('Focus ring in a top bar or the controls bar (non-text, 3:1)', 'focus', 'ground', 'ui'),
     ('Focus ring on a sheet, an alert, the action sheet (non-text, 3:1)', 'focus', 'sheet', 'ui'),
@@ -452,7 +447,7 @@ assert not line_fill, ('Color rule 3a: a hairline token used as a fill', [x.stri
 # (lighter in dark; darker in light for the graphite fills; the amber lighter in both; a text control dimmer; a boundary
 # stronger), each step at least STEP_MIN in L*, in both themes. A state that skipped or reversed a step stops the build.
 LADDERS = [('surface', 'surface-hover', 'surface-pressed'), ('raised', 'raised-hover', 'raised-pressed'), ('group', 'group-hover', 'group-pressed'),
-           ('glass-sheet', 'sheet-hover', 'sheet-pressed'), ('sheet-button', 'sheet-button-hover', 'sheet-button-pressed'), ('glass-bar', 'bar-hover', 'bar-pressed'),
+           ('glass-sheet', 'sheet-hover', 'sheet-pressed'), ('glass-bar', 'bar-hover', 'bar-pressed'),
            ('text-primary', 'text-hover', 'text-pressed'), ('boundary', 'boundary-hover', 'boundary-pressed')]
 # The amber dims when pressed (Step 3 follow-ups, 2026-11-06: iOS dims a pressed control): pressed is darker than rest by at
 # least a step, and hover (one step lighter on the fill and the dark ink, darker on the light ink) is a step from both.
@@ -663,9 +658,6 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('raised-pressed', 'Raised, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
     ('group-hover', 'Group, hover', 'A row on a sheet’s group under the pointer: the Filters sheet, Log result.', 'At rest.', 'One rule for fills: the group rests a level above the sheet, so its states start there'),
     ('group-pressed', 'Group, pressed', 'The same, pressed. The last dark step that keeps Text secondary at AA.', 'At rest.', 'One rule for fills · WCAG 1.4.3'),
-    ('sheet-button', 'Sheet bar button', 'The capsule fill of a sheet’s bar buttons, Cancel and the confirming action (Save, Apply filters): one level above the sheet’s glass; in light a gray capsule on the white sheet.', 'Not a row: a sheet’s rows rest on Group.', 'Designer, 2026-11-07 · HIG Sheets · C7: a button in a bar is a capsule'),
-    ('sheet-button-hover', 'Sheet bar button, hover', 'A sheet’s bar capsule under the pointer.', 'At rest.', 'One rule for fills: one level up'),
-    ('sheet-button-pressed', 'Sheet bar button, pressed', 'A sheet’s bar capsule pressed.', 'At rest.', 'One rule for fills: two levels up'),
     ('sheet-hover', 'Sheet, hover', 'A button on the sheet glass under the pointer: the confirm alert’s and the action sheet’s buttons.', 'At rest.', 'One rule for fills: the glass is the raised level in dark and white in light, so its states are their own pair'),
     ('sheet-pressed', 'Sheet, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
     ('bar-hover', 'Bar, hover', 'A tab on the tab bar’s glass under the pointer, a capsule inside the bar.', 'At rest; anywhere but the tab bar.', 'One rule for fills · HIG Tab bars, iOS 26: a tab shows its press'),
@@ -849,8 +841,8 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--radius-circle</code></td><td>{tok("radius-circle")}</td><td>The one circle: Profile initials, the busy spinner's ring and the map pin's dot (renamed from <code>--radius-avatar</code>, Lesson 8 step 6).</td><td>Kit feedback (designer, 2026-10-19): iOS avatars are circular. The one circle in content (DESIGN.md → Shapes)</td></tr>
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
 <tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus: the halo's width. Its color is the role <code>--focus</code>, the accent (2026-11-07).</td><td>iOS Full Keyboard Access · Color rule 1: where you are</td></tr>
-<tr><td><code>--focus-gap</code></td><td>{tok("focus-gap")}</td><td>Keyboard focus: the gap between an element and its halo, the ground behind showing through, so the halo never touches a fill.</td><td>Designer, 2026-11-07 · iOS Full Keyboard Access</td></tr>
-<tr><td><code>--focus-reach</code></td><td>4px</td><td>Keyboard focus: how far a halo reaches past its element (the ring and the gap), written out because overflow-clip-margin takes no calc() in Chrome; a pinned map clips this far out while a pin has focus.</td><td>Designer, 2026-11-08</td></tr>
+<tr><td><code>--focus-gap</code></td><td>{tok("focus-gap")}</td><td>Keyboard focus: the gap between an element and its ring, none since 2026-11-08: the ring sits directly on the element’s edge, as iOS draws it.</td><td>Designer, 2026-11-08 · iOS Full Keyboard Access</td></tr>
+<tr><td><code>--focus-reach</code></td><td>2px</td><td>Keyboard focus: how far a ring reaches past its element (the ring, since the gap is none), written out because overflow-clip-margin takes no calc() in Chrome; a pinned map clips this far out while a pin has focus.</td><td>Designer, 2026-11-08</td></tr>
 <tr><td><code>--focus-text-pad</code></td><td>4px</td><td>Keyboard focus on a text control (Text link, Forgot password?, Sort button): room round the words inside the rounded halo, never the 44pt target's box.</td><td>Designer, 2026-11-07</td></tr>
 <tr><td><code>--float-shadow</code></td><td>{tok("float-shadow")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
 <tr><td><code>--target</code></td><td>{tok("target")}</td><td>Minimum height of every control or its tap area.</td><td>Critique fix (round 2): touch targets</td></tr>
@@ -1178,6 +1170,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-sheet-bar'), os.path.join(ROOT, 'p
 shutil.copyfile(os.path.join(ROOT, 'ui/review-sheet-bar.html'), os.path.join(ROOT, 'public/ui/review-sheet-bar.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-docs-nav'), os.path.join(ROOT, 'public/ui/review-docs-nav'), dirs_exist_ok=True)   # the docs by navigation and the focus check, before/after (2026-11-08)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-docs-nav.html'), os.path.join(ROOT, 'public/ui/review-docs-nav.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-docs-fixes'), os.path.join(ROOT, 'public/ui/review-docs-fixes'), dirs_exist_ok=True)   # the docs fixes, the focus ring, the sheet bar, before/after (2026-11-08)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-docs-fixes.html'), os.path.join(ROOT, 'public/ui/review-docs-fixes.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots

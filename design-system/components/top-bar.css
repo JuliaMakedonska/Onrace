@@ -63,8 +63,8 @@
    shape round the words and the back chevron with a little room (--focus-text-pad), never the 44pt target's box, which
    met the screen's top edge where there is no top safe area (a browser, the viewer) and lost its top line. ::after,
    since the back chevron and the busy spinner take ::before. The sheet's capsules keep a capsule's halo (modal-sheet.css) */
-.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus) { outline: none; }
-.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus)::after {
+.top-bar :is(a, button):is(:focus-visible, .is-focus) { outline: none; }
+.top-bar :is(a, button):is(:focus-visible, .is-focus)::after {
   content: "";
   position: absolute;
   inset-inline: calc(var(--space-2) - var(--focus-text-pad));   /* the button's own side padding, less the room */

@@ -998,8 +998,8 @@ fieldset:disabled .row--nav { pointer-events: none; }
    shape round the words and the back chevron with a little room (--focus-text-pad), never the 44pt target's box, which
    met the screen's top edge where there is no top safe area (a browser, the viewer) and lost its top line. ::after,
    since the back chevron and the busy spinner take ::before. The sheet's capsules keep a capsule's halo (modal-sheet.css) */
-.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus) { outline: none; }
-.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus)::after {
+.top-bar :is(a, button):is(:focus-visible, .is-focus) { outline: none; }
+.top-bar :is(a, button):is(:focus-visible, .is-focus)::after {
   content: "";
   position: absolute;
   inset-inline: calc(var(--space-2) - var(--focus-text-pad));   /* the button's own side padding, less the room */
@@ -1039,17 +1039,14 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
    so it is the sheet's own glass, not a second layer. Its text grows with the system size up to --size-bar-max and no
    further (designer, 2026-11-08), as iOS bars stop growing: Cancel, the title and the action fit a 320 sheet at 200% text */
 .sheet > .top-bar { position: relative; flex: none; gap: var(--space-2); font-size: min(var(--size-item), var(--size-bar-max)); min-height: calc(var(--sheet-bar-top) + var(--sheet-bar-h)); padding: var(--sheet-bar-top) var(--sheet-bar-side) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
-/* the sheet's bar buttons (designer, 2026-11-07; HIG Sheets): Cancel on the leading edge, the confirming action on the
-   trailing edge, each a capsule (C7) 44pt tall, a 44pt target, inset from the corner by the bar's padding. Cancel neutral;
-   the confirming action keeps the amber ink (Color rule 1). A state lifts the fill one level, two pressed; Cancel's text
-   stays Text 1, the action's ink follows its own ladder (lighter under the pointer, dimmed pressed: top-bar.css) */
-.sheet > .top-bar > :is(a, button) { flex: none; min-height: var(--sheet-bar-h); padding: 0 var(--space-4); border-radius: var(--radius-capsule); background: var(--sheet-button); white-space: nowrap; }
-@media (hover: hover) { .sheet > .top-bar > :is(a, button):is(:hover, .is-hover) { background: var(--sheet-button-hover); } }
-.sheet > .top-bar > :is(a, button):is(:active, .is-pressed) { background: var(--sheet-button-pressed); }
-@media (hover: hover) { .sheet > .top-bar > :is(a, button):not(.save-btn, .bar-action):is(:hover, .is-hover) { color: var(--text-primary); } }
-.sheet > .top-bar > :is(a, button):not(.save-btn, .bar-action):is(:active, .is-pressed) { color: var(--text-primary); }
+/* the sheet's bar buttons (designer, 2026-11-08; HIG Sheets, as a native sheet header): Cancel on the leading edge, the
+   confirming action on the trailing edge, text only, no fill. Each keeps an invisible 44pt tap target (at least 44pt wide
+   and tall), inset from the corner by the bar's padding. Cancel neutral (Text 1), the confirming action in the amber ink
+   (Color rule 1); hover and pressed change only the text color, as every bar text control (top-bar.css). Until
+   2026-11-08 each was a gray capsule (2026-11-07) */
+.sheet > .top-bar > :is(a, button) { flex: none; min-height: var(--sheet-bar-h); min-width: var(--target); justify-content: center; white-space: nowrap; }
 .sheet > .top-bar > :is(.save-btn, .bar-action)[aria-busy="true"] { color: var(--text-secondary); }   /* busy: the spinner alone, as today */
-/* the title: centred between the two capsules, truncated rather than colliding */
+/* the title: centred between Cancel and the action, truncated rather than colliding */
 .sheet > .top-bar > .bar-title { position: static; flex: 1 1 0; min-width: 0; font-size: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* a sheet at its own height (2026-11-06): one field, Cancel and Save, for "Add official result link" on Results list and
    Result detail. It rests as tall as its content, under the large detent, as iOS sizes a sheet to what it holds */

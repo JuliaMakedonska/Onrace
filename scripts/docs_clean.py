@@ -14,8 +14,11 @@ import re
 PROCESS = re.compile(r"\b(?:steps?|lessons?|rounds?)[\s-]+\d+\w*|\bmarkup pass(?:es)?\b|\bG\d{1,2}\b|(?<![\w&~])#\d{1,2}\b|\bkit fix\b|\boverflow fix\b"
                      r"|\bgap triage\b|\bdeferred to lesson\b", re.I)
 
+# a part that only says who decided and when, "designer, 2026-10-18" or "2026-11-08" (2026-11-08: the dates go as the steps do)
+DATED = re.compile(r'^(?:(?:designer|decided|updated|added|found|since|until|from)\b[\s,]*)*\d{4}-\d{2}-\d{2}(?:[\s,]*(?:designer|decided))*$', re.I)
+
 def _paren(m):   # m: the space before it, then its text; a kept one keeps its own spacing
-    keep = [seg for seg in re.split(r';\s*', m.group(2)) if not PROCESS.search(seg)]
+    keep = [seg for seg in re.split(r';\s*', m.group(2)) if not PROCESS.search(seg) and not DATED.match(seg.strip())]
     keep = [k for k in (x.strip() for x in keep) if k]
     return f'{m.group(1)}\u27e8{"; ".join(keep)}\u27e9' if keep else ''   # parked, so the parenthesis round it is judged next
 

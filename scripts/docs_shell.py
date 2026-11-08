@@ -4,7 +4,7 @@ designer, 2026-11-08, modeled on Apple HIG's components and shadcn/ui).
 page(title, current, main, toc, head_extra, scripts, depth) wraps a page's content in:
 - a header: a skip link, the menu button (a phone), the brand back to the start page, a small Light / Dark switch;
 - a sticky left nav in two levels, read from ui/inventory.md → Docs navigation: a section (Getting started,
-  Foundations, Components, Patterns, Reference), then its pages; the components under their HIG group, alphabetical;
+  Foundations, Components, Patterns, Reference: Contributing, Backlog, Every specimen), then its pages; the components under their HIG group, alphabetical;
   a filter (an entry shown on another component's page finds that page) and the current page marked; on a phone it
   folds into the menu;
 - a right "On this page" list (the page's sections), on a desk only;
@@ -35,8 +35,10 @@ def _table(after):
             rows.append([x.strip() for x in re.split(r'(?<!\\)\|', l.strip().strip('|'))])
     return rows[1:]   # without the header
 GETTING = [{'page': r[0].strip('`'), 'title': r[1]} for r in _table('**Getting started**')]
+REFERENCE = [{'page': r[0].strip('`'), 'title': r[1]} for r in _table('**Reference**')]
 FOUNDATIONS = [{'page': r[0].strip('`'), 'title': r[1], 'design': [x.strip() for x in r[2].split(';') if x.strip()],
-                'groups': [x.strip() for x in r[3].split(';') if x.strip()]} for r in _table('**Foundations**')]
+                'groups': [x.strip() for x in r[3].split(';') if x.strip()],
+                'example': [(m.group(1), m.group(2).strip()) for m in re.finditer(r'`#([\w-]+)` ([^;]+)', r[4])]} for r in _table('**Foundations**')]
 GROUPS = [{'name': r[0], 'comps': [x.strip() for x in r[1].split(';') if x.strip()]} for r in _table('**Components**')]
 MERGED = {r[0]: r[1] for r in _table("**Shown on another component's page**")}
 OLD_FAMILIES = re.findall(r'`([a-z-]+)`', re.search(r'^\*\*The family pages\*\*.*$', _NAV, flags=re.M).group(0))
@@ -63,7 +65,7 @@ NAV = ([('Getting started', None, g['page'], g['title'], g['title']) for g in GE
        + [('Components', GROUP_OF[n], page_of(n)[:-5], n, ' '.join([n] + SHOWN_HERE[n])) for n in COMPONENTS]
        + [('Patterns', None, 'patterns', 'All patterns', 'all patterns')]
        + [('Patterns', None, f'patterns#{f}', n, n + ' pattern') for f, n in PATTERN_ROWS]
-       + [('Reference', None, 'specimens', 'Every specimen', 'every specimen')])
+       + [('Reference', None, g['page'], g['title'], g['title']) for g in REFERENCE])
 ORDER = list(dict.fromkeys(p for _, _, p, _, _ in NAV if '#' not in p))   # Previous / Next walks the pages, not the anchors
 TITLE = {p: t for _, _, p, t, _ in NAV if '#' not in p}
 

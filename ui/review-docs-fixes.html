@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs fixes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../design-system/index.css">
+<link rel="stylesheet" href="../concept/stand.css">
+<style>
+  /* review page only: tokens from design-system/tokens/tokens.css and the docs layer (concept/stand.css), no values of its own */
+  .rv { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-8); }
+  .rv-head { display: grid; gap: var(--space-3); }
+  .rv-head p, .rv-head li, .rv-pair > p { margin: 0; max-width: var(--measure); color: var(--text-secondary); }
+  .rv-head ul { margin: 0; padding-left: var(--space-5); display: grid; gap: var(--space-2); }
+  .rv a { color: var(--text-primary); text-underline-offset: var(--space-1); }
+  .rv-pair { display: grid; gap: var(--space-4); padding-top: var(--space-6); border-top: var(--border) solid var(--hairline); }
+  .rv-pair h2 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+  .rv-shots { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-start; }
+  .rv-shots figure { margin: 0; display: grid; gap: var(--space-1); max-width: 100%; }
+  .rv-shots figcaption { font-size: var(--size-proof); color: var(--text-secondary); }
+  .rv-shots img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-2); }
+  .rv-shots.desk figure { flex: 1 1 var(--stand-col-min); }
+</style>
+</head>
+<body class="onrace">
+<main class="rv">
+  <header class="rv-head">
+    <h1>Docs fixes, the focus ring and the sheet bar</h1>
+    <p>2026-11-08. Before (<code>866c4f9</code>) and after. Record: <code>concept/concept.md</code> → Docs and two components: the ring on the edge, text-only sheet buttons, Foundations as quote, tokens, example.</p>
+  </header>
+<section class="rv-pair" aria-labelledby="s1"><h2 id="s1">Color: a swatch beside every role</h2><p>Before: the role cells had no visible swatch (the size came from the lesson pages). After: each role shows its dark and light swatches beside its name, and the Dark and Light cells draw theirs.</p><div class="rv-shots desk"><figure><img src="review-docs-fixes/roles-before.png" alt="Before: Color: a swatch beside every role" loading="lazy"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-fixes/roles-after.png" alt="After: Color: a swatch beside every role" loading="lazy"><figcaption><b>After</b></figcaption></figure></div></section>
+<section class="rv-pair" aria-labelledby="s2"><h2 id="s2">Motion: what each token is for</h2><p>Each motion token now carries its source comment in tokens.css. The page is the DESIGN.md quote, the tokens, then a live example.</p><div class="rv-shots desk"><figure><img src="review-docs-fixes/motion-before.png" alt="Before: Motion: what each token is for" loading="lazy"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-fixes/motion-after.png" alt="After: Motion: what each token is for" loading="lazy"><figcaption><b>After</b></figcaption></figure></div></section>
+<section class="rv-pair" aria-labelledby="s3"><h2 id="s3">Photos</h2><p>Before: --date-col sat with the photo tokens and DESIGN.md headings were the page headings. After: the quote, --photo-ratio and --photo-filter, and a race card with its photo at 3:1.</p><div class="rv-shots desk"><figure><img src="review-docs-fixes/photos-before.png" alt="Before: Photos" loading="lazy"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-fixes/photos-after.png" alt="After: Photos" loading="lazy"><figcaption><b>After</b></figcaption></figure></div></section>
+<section class="rv-pair" aria-labelledby="s4"><h2 id="s4">States: keyboard focus in its own row</h2><p>Focus leaves the tap states and shows in a labelled row, Keyboard focus (iPad keyboard, Full Keyboard Access). The ring sits on the edge: on the amber button it meets the fill.</p><div class="rv-shots desk"><figure><img src="review-docs-fixes/states-before.png" alt="Before: States: keyboard focus in its own row" loading="lazy"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-fixes/states-after.png" alt="After: States: keyboard focus in its own row" loading="lazy"><figcaption><b>After</b></figcaption></figure></div></section>
+<section class="rv-pair" aria-labelledby="s5"><h2 id="s5">The sheet's bar</h2><p>Before: Cancel and Save on gray capsules. After: text only, Cancel neutral, Save in the amber ink, each a 44pt target inset from the corner.</p><div class="rv-shots"><figure><img src="review-docs-fixes/sheet-before.png" alt="Before: The sheet's bar" loading="lazy" width="390"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-fixes/sheet-after.png" alt="After: The sheet's bar" loading="lazy" width="390"><figcaption><b>After</b></figcaption></figure></div></section>
+<section class="rv-pair" aria-labelledby="s6"><h2 id="s6">The sheet's bar, Save focused</h2><p>Before: the capsule ring with a gap. After: the text control ring round the word, on its edge.</p><div class="rv-shots"><figure><img src="review-docs-fixes/sheetfocus-before.png" alt="Before: The sheet's bar, Save focused" loading="lazy" width="390"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-fixes/sheetfocus-after.png" alt="After: The sheet's bar, Save focused" loading="lazy" width="390"><figcaption><b>After</b></figcaption></figure></div></section>
+<section class="rv-pair" aria-labelledby="s7"><h2 id="s7">The primary button focused, from a keyboard</h2><p>Before: the ring 2px out, the ground showing through. After: the ring directly on the edge; amber meets amber, so it reads as the button 2px larger.</p><div class="rv-shots"><figure><img src="review-docs-fixes/btnfocus-before.png" alt="Before: The primary button focused, from a keyboard" loading="lazy" width="390"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-fixes/btnfocus-after.png" alt="After: The primary button focused, from a keyboard" loading="lazy" width="390"><figcaption><b>After</b></figcaption></figure></div></section>
+</main>
+</body>
+</html>

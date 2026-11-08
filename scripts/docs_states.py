@@ -131,8 +131,9 @@ def grid(name, m, stages, element_end, stage, unid, sfx):
     base = frame_of(m['stage'])
     inv = frame_of(m['invalid']) if m['invalid'] else None
     rows = []
+    FOCUS_ROW = 'Keyboard focus (iPad keyboard, Full Keyboard Access)'   # designer, 2026-11-08: focus shows only from a keyboard, never after a tap, so it isn't a state of the tap row
     for theme in ('Dark', 'Light'):
-        cells = []
+        cells, focus = [], []
         for st in STATES + (['Invalid'] if inv else []):
             fr = build(inv if st == 'Invalid' else base, m, 'At rest' if st == 'Invalid' else st, theme)
             label = f'{name} · {st} · {theme}'
@@ -140,6 +141,7 @@ def grid(name, m, stages, element_end, stage, unid, sfx):
             k = k.replace('<div class="kit-state" data-nogeo>', '<div class="kit-state">', 1)
             got = stage(k, f"{sfx}-{theme[0].lower()}{STATES.index(st) if st in STATES else 9}", ['[data-st-crop]'], label)
             got = got.replace('<div class="kit-state" data-label=', '<div class="kit-state" data-nogeo data-label=', 1)
-            cells.append(f'<figure class="dc-state">{got}<figcaption>{st}</figcaption></figure>')
-        rows.append(f'<div class="dc-states-theme" data-st-theme="{theme.lower()}"><div class="dc-states-row">' + ''.join(cells) + '</div></div>')   # one row per theme; the docs' theme switch shows its own (doc.css, 2026-11-07)
+            (focus if st == 'Focus' else cells).append(f'<figure class="dc-state">{got}<figcaption>{st}</figcaption></figure>')
+        rows.append(f'<div class="dc-states-theme" data-st-theme="{theme.lower()}"><div class="dc-states-row">' + ''.join(cells) + '</div>'
+                    f'<p class="dc-states-k">{FOCUS_ROW}</p><div class="dc-states-row">' + ''.join(focus) + '</div></div>')   # one block per theme; the docs' theme switch shows its own (doc.css, 2026-11-07)
     return f'<div class="dc-states" data-w="{m["w"]}">' + ''.join(rows) + '</div>'
