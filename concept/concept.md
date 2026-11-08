@@ -1396,3 +1396,15 @@ Before/after: `ui/review-signout.html`.
 - **Search field:** its halo moved from flush (offset 0) to the 2px gap like everything else.
 
 Before/after of every focus state and every changed docs section: `ui/review-focus.html`.
+
+### The sheet's bar: capsules inset from the corner (designer, 2026-11-07)
+
+**What was wrong:** on every sheet (Filters, Log result, Add official result link) Cancel and the confirming action sat against the sheet's top edge, inside the 38px corner curve, and were bare text, so their tap area was only the text's height.
+
+**Fixed once, in the system, following HIG Sheets:** Cancel on the leading edge, the confirming action on the trailing edge, as rounded buttons inset from the corner.
+- **Tokens** (`tokens.css`, signed on the stand): `--sheet-bar-top` 12px and `--sheet-bar-side` 16px (the bar's insets), `--sheet-bar-h` 44pt (the buttons). **Apple gives no numbers** for a sheet's bar buttons or their insets, so all three are provisional [?], like the sheet radius. The geometry: a 44pt capsule 12px down and 16px in has its corner circle 4px from the 38px curve's centre, so its edge is at most 26px from it, inside the curve.
+- **Roles:** `--sheet-button` (dark `--graphite-20`, one level above the sheet's glass; light `--graphite-89`, a gray capsule on the white sheet glass, since `--group` is white in light and `--graphite-93` barely parted from the glass), `--sheet-button-hover` and `--sheet-button-pressed` (one and two levels up, both themes: dark 23 and 26 L*, light 87 and 85 L*; a state ladder the build checks). Contrast pairs added for Cancel and the amber ink on each step and the busy spinner.
+- **`modal-sheet.css`:** `.sheet > .top-bar` takes the insets; its buttons are capsules (C7) on `--sheet-button`, 44pt tall; a state lifts the fill; Cancel's text stays Text 1, and the action's amber ink follows its own ladder as before (lighter under the pointer, dimmed pressed), which also keeps it at AA on the pressed fill in light (the rest ink there was 4.39:1, caught by the build). The title is a flex item between the two, centred between them, truncating with an ellipsis. Disabled and busy are unchanged.
+- **Docs:** the Modal sheet section's anatomy names Cancel, the title and the confirming capsule; three new stages (the bar on Log result, saving, Save waiting for the link); a States row for the sheet's confirming capsule. The Top bar's two Log result stages moved to the sheet, since Log result's bar is a sheet's bar; the Top bar's states now show the gate's bar action (Sign in). A docs stage class shows a sheet's top edge and bar alone (`.kit-frame--sheet-bar`).
+
+Before/after of every sheet in both themes: `ui/review-sheet-bar.html`.

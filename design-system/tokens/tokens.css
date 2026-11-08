@@ -208,6 +208,12 @@
   --sheet-content-top: var(--space-6);     /* between the sheet's top bar and its first group or line: iOS leaves 20–35pt there */
   --sheet-group-gap: var(--space-7);       /* between two groups, as iOS spaces its sections (about 35pt) */
   --sheet-content-bottom: var(--space-7);  /* below the last group, before the bottom safe area */
+  /* the sheet's bar (designer, 2026-11-07; HIG Sheets: Cancel leading, the confirming action trailing, as rounded buttons
+     inset from the corner). Apple gives no numbers for these, so they are provisional [?]: the capsules stay clear of the
+     38px corner curve (a 44pt capsule 12px down and 16px in sits 26px from the curve's centre, inside its 38px) */
+  --sheet-bar-top: var(--space-3);         /* [?] the bar's inset from the sheet's top edge */
+  --sheet-bar-side: var(--space-4);        /* [?] the bar's inset from the sheet's side edges, so Cancel and the action stay out of the corner curve */
+  --sheet-bar-h: var(--target);            /* [?] the bar's buttons: 44pt tall, a 44pt target, capsules (C7) */
   --glass-blur: 20px;       /* [?] not from Apple's kit */
   --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
   --picker-search-icon-x: calc(var(--space-4) * 2);   /* Race picker: the search icon's left edge, the form's 16px gutter plus the field's own 16px inset, so it follows the spacing step (named 2026-11-01; was a count in components/search-field.css) */
@@ -252,6 +258,7 @@
   --surface: var(--graphite-12);     /* cards and row groups: .race-card, .result-card .card-link, .rows, .skeleton-card, the search field, .saved-status, .signout, the receded Results edge */
   --raised: var(--graphite-17);      /* a fill on a surface: secondary buttons, .sport-tag, .chip, the date tile, the List/Map track, skeleton .bar, pin labels, .initials */
   --selected: var(--graphite-20);    /* a control that is on: the selected List/Map segment, Filters while its sheet is open. Renamed from --pressed in Lesson 9 step 3, when hover and press got their own roles below */
+  --sheet-button: var(--graphite-20);   /* a capsule button in a sheet's bar (Cancel, Save, Apply filters; 2026-11-07): one level above the sheet's glass (graphite-17), as the bar controls' tonal fill */
   --group: var(--graphite-20);       /* split from --pressed (now --selected): a group of rows one level above its container (.sheet .rows, .linked-race). In a light appearance a group rises lighter while a press goes darker */
 
   /* ---------- glass, scrim, shadow (C1): mixes of primitives ---------- */
@@ -297,6 +304,8 @@
   --group-pressed: var(--graphite-26);
   --sheet-hover: var(--graphite-20);     /* a button on the sheet glass: the confirm alert's and the action sheet's buttons. Its own pair: the glass is the raised level in dark and white in light */
   --sheet-pressed: var(--graphite-23);
+  --sheet-button-hover: var(--graphite-23);     /* a sheet's bar capsule under the pointer: one level up */
+  --sheet-button-pressed: var(--graphite-26);   /* pressed: two levels up */
   --bar-hover: var(--graphite-12);       /* a tab on the tab bar's glass (graphite-5 in dark): one level up is the surface, two the raised level */
   --bar-pressed: var(--graphite-17);
   --accent-pressed: var(--amber-69);     /* the primary fill pressed: dimmed, darker than rest, as iOS dims a pressed control (Step 3 follow-ups; hover stays --accent-hover, one step lighter) */
@@ -344,6 +353,7 @@
   --surface: var(--white);
   --raised: var(--graphite-93);
   --selected: var(--graphite-89);
+  --sheet-button: var(--graphite-89);    /* light: a gray capsule on the white sheet glass, as iOS's light bar buttons (graphite-93 barely parted from the glass) */
   --group: var(--white);                 /* a group rises lighter in light while a press goes darker: the two roles part here */
   --glass-bar: color-mix(in srgb, var(--graphite-98) var(--alpha-90), transparent);
   --glass-ground: color-mix(in srgb, var(--graphite-96) var(--alpha-92), transparent);
@@ -370,6 +380,8 @@
   --surface-pressed: var(--graphite-89);
   --raised-hover: var(--graphite-89);
   --raised-pressed: var(--graphite-85);
+  --sheet-button-hover: var(--graphite-87);
+  --sheet-button-pressed: var(--graphite-85);   /* the pressed ink (--accent-ink-pressed) holds AA on it */
   --group-hover: var(--graphite-93);
   --group-pressed: var(--graphite-89);
   --sheet-hover: var(--graphite-93);
@@ -401,6 +413,7 @@
   --surface: var(--graphite-12);
   --raised: var(--graphite-17);
   --selected: var(--graphite-20);
+  --sheet-button: var(--graphite-20);
   --group: var(--graphite-20);
   --glass-bar: color-mix(in srgb, var(--graphite-5) var(--alpha-85), transparent);
   --glass-ground: color-mix(in srgb, var(--graphite-7) var(--alpha-85), transparent);
@@ -431,6 +444,8 @@
   --group-pressed: var(--graphite-26);
   --sheet-hover: var(--graphite-20);
   --sheet-pressed: var(--graphite-23);
+  --sheet-button-hover: var(--graphite-23);
+  --sheet-button-pressed: var(--graphite-26);
   --bar-hover: var(--graphite-12);
   --bar-pressed: var(--graphite-17);
   --accent-pressed: var(--amber-69);
@@ -454,7 +469,7 @@
 /* contrast:start (generated by scripts/concept/build_stand.py; do not edit by hand)
    Every semantic text/background pair the build checks, in both themes (WCAG 2 ratios). Glass is measured over its
    worst case: dark, Text primary behind; light, black behind (a photo's shadows); the sheet also under its scrim.
-   74 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
+   81 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
    --text-primary on --page                                               dark 16.76  light 16.76  needs 4.5  text
    --text-primary on --surface                                            dark 14.98  light 18.29  needs 4.5  text
    --text-primary on --raised                                             dark 13.05  light 15.31  needs 4.5  text
@@ -493,6 +508,13 @@
    --text-secondary on --group-pressed                                    dark  4.62  light  5.04  needs 4.5  text
    --error on --group                                                     dark  5.48  light  6.54  needs 4.5  text
    --on-accent-fill on --accent-pressed                                   dark  7.71  light  7.71  needs 4.5  text
+   --text-primary on --sheet-button                                       dark 12.17  light 13.68  needs 4.5  text
+   --text-primary on --sheet-button-hover                                 dark 10.83  light 13.01  needs 4.5  text
+   --text-primary on --sheet-button-pressed                               dark 10.04  light 12.39  needs 4.5  text
+   --accent-ink on --sheet-button                                         dark  7.38  light  4.85  needs 4.5  text
+   --accent-ink-hover on --sheet-button-hover                             dark  7.52  light  6.02  needs 4.5  text
+   --accent-ink-pressed on --sheet-button-pressed                         dark  4.62  light  7.24  needs 4.5  text
+   --text-secondary on --sheet-button                                     dark  5.60  light  5.04  needs 3  non-text
    --text-hover on --page                                                 dark 10.42  light  9.58  needs 4.5  text
    --text-hover on --surface                                              dark  9.32  light 10.46  needs 4.5  text
    --text-pressed on --page                                               dark  7.72  light  6.17  needs 4.5  text

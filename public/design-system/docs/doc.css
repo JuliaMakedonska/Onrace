@@ -40,6 +40,8 @@
 .kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .kit-stack { display: grid; gap: var(--space-3); }
 .kit-shell { display: block; width: 100%; max-width: var(--screen-w); height: var(--kit-stage-h); border: 0; border-radius: var(--radius-3); box-shadow: inset 0 0 0 var(--border) var(--hairline); background: var(--page); }
+.kit-frame--sheet-bar { overflow: hidden; }   /* a sheet's top edge and its bar alone (2026-11-07): the sheet in the flow, not at the stage's foot */
+.kit-frame--sheet-bar > .sheet { position: relative; inset: auto; height: auto; transform: none; }
 .kit-stage dialog.alert { position: absolute; inset: 0; z-index: var(--z-sheet); margin: auto; height: max-content; }
 .kit-stage dialog.action-sheet { position: absolute; z-index: var(--z-sheet); inset: auto var(--space-2) var(--space-2); }
 .kit-frame .phone-screen { height: auto; overflow: visible; padding-bottom: 0; }   /* a strip of a screen, not the whole scrolling page */

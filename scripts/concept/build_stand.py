@@ -171,6 +171,13 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('States · a row on a sheet, pressed: menu value', 'text-secondary', 'group-pressed', 'text'),
     ('States · a field error under its row on a sheet (Log result)', 'error', 'group', 'text'),
     ('States · the primary button pressed', 'on-accent-fill', 'accent-pressed', 'text'),
+    ('Sheet bar · Cancel on its capsule (2026-11-07)', 'text-primary', 'sheet-button', 'text'),
+    ('Sheet bar · Cancel on its capsule, hover', 'text-primary', 'sheet-button-hover', 'text'),
+    ('Sheet bar · Cancel on its capsule, pressed', 'text-primary', 'sheet-button-pressed', 'text'),
+    ('Sheet bar · Save, Apply filters: amber ink on its capsule', 'accent-ink', 'sheet-button', 'text'),
+    ('Sheet bar · the confirming capsule, hover', 'accent-ink-hover', 'sheet-button-hover', 'text'),
+    ('Sheet bar · the confirming capsule, pressed', 'accent-ink-pressed', 'sheet-button-pressed', 'text'),
+    ('Sheet bar · the busy spinner on the confirming capsule (non-text, 3:1)', 'text-secondary', 'sheet-button', 'ui'),
     ('States · a text control under the pointer, on the page', 'text-hover', 'page', 'text'),
     ('States · a text control under the pointer, on a card or row', 'text-hover', 'surface', 'text'),
     ('States · a text control pressed, on the page', 'text-pressed', 'page', 'text'),
@@ -445,7 +452,7 @@ assert not line_fill, ('Color rule 3a: a hairline token used as a fill', [x.stri
 # (lighter in dark; darker in light for the graphite fills; the amber lighter in both; a text control dimmer; a boundary
 # stronger), each step at least STEP_MIN in L*, in both themes. A state that skipped or reversed a step stops the build.
 LADDERS = [('surface', 'surface-hover', 'surface-pressed'), ('raised', 'raised-hover', 'raised-pressed'), ('group', 'group-hover', 'group-pressed'),
-           ('glass-sheet', 'sheet-hover', 'sheet-pressed'), ('glass-bar', 'bar-hover', 'bar-pressed'),
+           ('glass-sheet', 'sheet-hover', 'sheet-pressed'), ('sheet-button', 'sheet-button-hover', 'sheet-button-pressed'), ('glass-bar', 'bar-hover', 'bar-pressed'),
            ('text-primary', 'text-hover', 'text-pressed'), ('boundary', 'boundary-hover', 'boundary-pressed')]
 # The amber dims when pressed (Step 3 follow-ups, 2026-11-06: iOS dims a pressed control): pressed is darker than rest by at
 # least a step, and hover (one step lighter on the fill and the dark ink, darker on the light ink) is a step from both.
@@ -656,6 +663,9 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('raised-pressed', 'Raised, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
     ('group-hover', 'Group, hover', 'A row on a sheet’s group under the pointer: the Filters sheet, Log result.', 'At rest.', 'One rule for fills: the group rests a level above the sheet, so its states start there'),
     ('group-pressed', 'Group, pressed', 'The same, pressed. The last dark step that keeps Text secondary at AA.', 'At rest.', 'One rule for fills · WCAG 1.4.3'),
+    ('sheet-button', 'Sheet bar button', 'The capsule fill of a sheet’s bar buttons, Cancel and the confirming action (Save, Apply filters): one level above the sheet’s glass; in light a gray capsule on the white sheet.', 'Not a row: a sheet’s rows rest on Group.', 'Designer, 2026-11-07 · HIG Sheets · C7: a button in a bar is a capsule'),
+    ('sheet-button-hover', 'Sheet bar button, hover', 'A sheet’s bar capsule under the pointer.', 'At rest.', 'One rule for fills: one level up'),
+    ('sheet-button-pressed', 'Sheet bar button, pressed', 'A sheet’s bar capsule pressed.', 'At rest.', 'One rule for fills: two levels up'),
     ('sheet-hover', 'Sheet, hover', 'A button on the sheet glass under the pointer: the confirm alert’s and the action sheet’s buttons.', 'At rest.', 'One rule for fills: the glass is the raised level in dark and white in light, so its states are their own pair'),
     ('sheet-pressed', 'Sheet, pressed', 'The same, pressed.', 'At rest.', 'One rule for fills'),
     ('bar-hover', 'Bar, hover', 'A tab on the tab bar’s glass under the pointer, a capsule inside the bar.', 'At rest; anywhere but the tab bar.', 'One rule for fills · HIG Tab bars, iOS 26: a tab shows its press'),
@@ -765,6 +775,9 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('sheet-group-gap', 'Every sheet: the gap between two groups', '32px', 'Designer, 2026-11-06 · iOS sections, about 35pt apart'),
            ('grouped-row-min', 'Every grouped row (a sheet, Sign in / Sign up, Reset password, New password, Profile): its height', 'The 44pt target plus 8px: 52px', 'Designer, 2026-11-06 (sheets: rows felt cramped), every group 2026-11-07 (one height everywhere) · HIG: rows at least 44pt'),
            ('grouped-row-pad', 'Every grouped row: its vertical padding', '8px above and below, for a row taller than one line', 'Designer, 2026-11-06, every group 2026-11-07 · iOS rows keep about 11pt round their text'),
+           ('sheet-bar-top', 'Every sheet: its bar’s inset from the top edge', '12px [?]', 'Designer, 2026-11-07 · HIG Sheets gives no number: the capsules stay out of the 38px corner curve'),
+           ('sheet-bar-side', 'Every sheet: its bar’s inset from the side edges', '16px [?]', 'Designer, 2026-11-07 · HIG Sheets gives no number: Cancel and the action inset from the corner'),
+           ('sheet-bar-h', 'Every sheet: its bar buttons’ height', 'The 44pt target [?]', 'Designer, 2026-11-07 · HIG: 44pt targets · C7 capsules'),
            ('sheet-content-bottom', 'Every sheet: below the last group, before the bottom safe area', '32px + the safe area', 'Designer, 2026-11-06 · G2: nothing under the home indicator'),
            ('alpha-85', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge); was --glass-opacity', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
            ('alpha-90', 'Glass fill on the Filters sheet; was --glass-opacity-sheet', f'Lowest that passes AA over the scrim and the worst case: {GLASS_MIN["sheet"]}%; set with margin · {P}', 'C1, C4: the sheet on the raised level'),
@@ -1158,6 +1171,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-signout'), os.path.join(ROOT, 'pub
 shutil.copyfile(os.path.join(ROOT, 'ui/review-signout.html'), os.path.join(ROOT, 'public/ui/review-signout.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-focus'), os.path.join(ROOT, 'public/ui/review-focus'), dirs_exist_ok=True)   # the focus halo, variants and states by theme, before/after (2026-11-07)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-focus.html'), os.path.join(ROOT, 'public/ui/review-focus.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-sheet-bar'), os.path.join(ROOT, 'public/ui/review-sheet-bar'), dirs_exist_ok=True)   # the sheet's bar, before/after (2026-11-07)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-sheet-bar.html'), os.path.join(ROOT, 'public/ui/review-sheet-bar.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots

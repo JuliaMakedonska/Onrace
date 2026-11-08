@@ -61,7 +61,19 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 /* order 0580 */
 /* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,
    so it is the sheet's own glass, not a second layer */
-.sheet > .top-bar { position: relative; flex: none; min-height: var(--target); padding-top: 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.sheet > .top-bar { position: relative; flex: none; gap: var(--space-2); min-height: calc(var(--sheet-bar-top) + var(--sheet-bar-h)); padding: var(--sheet-bar-top) var(--sheet-bar-side) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* the sheet's bar buttons (designer, 2026-11-07; HIG Sheets): Cancel on the leading edge, the confirming action on the
+   trailing edge, each a capsule (C7) 44pt tall, a 44pt target, inset from the corner by the bar's padding. Cancel neutral;
+   the confirming action keeps the amber ink (Color rule 1). A state lifts the fill one level, two pressed; Cancel's text
+   stays Text 1, the action's ink follows its own ladder (lighter under the pointer, dimmed pressed: top-bar.css) */
+.sheet > .top-bar > :is(a, button) { flex: none; min-height: var(--sheet-bar-h); padding: 0 var(--space-4); border-radius: var(--radius-capsule); background: var(--sheet-button); white-space: nowrap; }
+@media (hover: hover) { .sheet > .top-bar > :is(a, button):is(:hover, .is-hover) { background: var(--sheet-button-hover); } }
+.sheet > .top-bar > :is(a, button):is(:active, .is-pressed) { background: var(--sheet-button-pressed); }
+@media (hover: hover) { .sheet > .top-bar > :is(a, button):not(.save-btn, .bar-action):is(:hover, .is-hover) { color: var(--text-primary); } }
+.sheet > .top-bar > :is(a, button):not(.save-btn, .bar-action):is(:active, .is-pressed) { color: var(--text-primary); }
+.sheet > .top-bar > :is(.save-btn, .bar-action)[aria-busy="true"] { color: var(--text-secondary); }   /* busy: the spinner alone, as today */
+/* the title: centred between the two capsules, truncated rather than colliding */
+.sheet > .top-bar > .bar-title { position: static; flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* a sheet at its own height (2026-11-06): one field, Cancel and Save, for "Add official result link" on Results list and
    Result detail. It rests as tall as its content, under the large detent, as iOS sizes a sheet to what it holds */
 .sheet--fit { height: auto; max-height: var(--sheet-large); }   /* sized to its content, a custom detent: a one-field sheet sits well under the medium one */

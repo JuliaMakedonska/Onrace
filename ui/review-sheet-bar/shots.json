@@ -1,0 +1,79 @@
+[
+ {
+  "key": "screen-filters-sheet",
+  "component": "Filters sheet",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/race-browse.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result",
+  "component": "Log result",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result-loading-saving",
+  "component": "Log result -loading, saving",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result-loading.html",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-log-result-error",
+  "component": "Log result -error",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/log-result-error.html?cause=fields",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-add-official-result-link-on-results-list-save-waits",
+  "component": "Add official result link, on Results list (Save waits)",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html?add=spartan-beast-killington-2025",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-add-official-result-link-an-invalid-link",
+  "component": "Add official result link, an invalid link",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/results-list.html?add=spartan-beast-killington-2025&try=athlinks",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ },
+ {
+  "key": "screen-add-official-result-link-on-result-detail",
+  "component": "Add official result link, on Result detail",
+  "state": "Screen",
+  "kind": "screen",
+  "path": "wireframes/result-detail.html?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "changed": {
+   "dark": true,
+   "light": true
+  }
+ }
+]
