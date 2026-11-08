@@ -376,12 +376,13 @@ for line in section(INV, 'Showcase map (2026-10-26)').split('\n'):
     c = cells(line) if line.startswith('| ') and not line.startswith('| Role') and not line.startswith('|---') else None
     if c and len(c) == 6: MAPROW[c[1].strip('*')] = {'states': [x.strip() for x in c[5].split(';') if x.strip()]}
 
-# ---------------------------------------------------------------- the pages (the family restructure, 2026-11-05)
+# ---------------------------------------------------------------- the pages (the navigation restructure, designer, 2026-11-08)
 COMP_ROWS = [r for r in MAP if r['spec']]
 by_name = {r['name']: r for r in MAP}
-in_fams = [n for f in DS.FAMILIES for n in f['comps']]
-assert sorted(in_fams) == sorted(r['name'] for r in MAP), ('ui/inventory.md → Docs families must hold every Showcase map component once',
-    sorted(set(r['name'] for r in MAP) ^ set(in_fams)), [n for n in in_fams if in_fams.count(n) > 1])
+placed = DS.COMPONENTS + list(DS.MERGED)
+assert sorted(placed) == sorted(r['name'] for r in MAP), ('ui/inventory.md → Docs navigation must place every Showcase map component once, in a group or on another component\'s page',
+    sorted(set(r['name'] for r in MAP) ^ set(placed)), [n for n in placed if placed.count(n) > 1])
+assert all(by_name[n]['spec'] for n in DS.COMPONENTS), ('a component with a page of its own has a specimen', [n for n in DS.COMPONENTS if not by_name[n]['spec']])
 # ui/inventory.md → Docs map: what each section says that can't be read from the files
 DMAP = {}
 for l in section(INV, 'Docs map (Lesson 9, step 2, 2026-11-04)').split('\n'):
@@ -409,7 +410,7 @@ def viewer(key):
     return f'<a href="{VIEWER}#{H.escape(key)}">{H.escape(SCREEN[scr])}{" · " + H.escape(state) if state else ""} ↗</a>'
 def label_of(h):
     return re.sub(r'<[^>]+>', '', re.search(r'<p class="kit-label">(.*?)</p>', h, re.S).group(1))
-def tech(row, vs):   # technical details, folded: classes, the screens that use it, the native counterpart, then the sources
+def tech(row, vs, fold=True):   # technical details, folded (an entry shown on another page) or open (the page's own section): classes, the screens that use it, the native counterpart, then the sources
     classes = row['classes']
     code = ' '.join(f'<code>{"&lt;" + c[1:] if c.startswith("<") else "." + c}</code>' for c in classes)
     hits = used_on(classes)
@@ -429,9 +430,9 @@ def tech(row, vs):   # technical details, folded: classes, the screens that use 
             (f'Used on {len(hits)} screen{"s" if len(hits) != 1 else ""}' if hits else 'Used on', screens or 'the showcase only'),
             ('Native iOS', ios),
             ('Specimen', f'<a href="specimens.html#{row["spec"]}">{H.escape(title_of(row["spec"]))}</a>, with every state beside it')]
-    return ('<details class="dc-tech"><summary>Technical details <span class="fold-sub">classes, screens, iOS</span></summary><div class="dc-tech-body">'
-            '<dl>' + ''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in rows) + '</dl>'
-            + (f'<h4>From DESIGN.md</h4>{quotes}' if quotes else '') + (f'<h4>The words it carries</h4>{mc}' if mc else '') + '</div></details>')
+    body = ('<div class="dc-tech-body"><dl>' + ''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in rows) + '</dl>'
+            + (f'<h4>From DESIGN.md</h4>{quotes}' if quotes else '') + (f'<h4>The words it carries</h4>{mc}' if mc else '') + '</div>')
+    return ('<details class="dc-tech"><summary>Technical details <span class="fold-sub">classes, screens, iOS</span></summary>' + body + '</details>') if fold else body
 
 def stage(h, sfx, sels, label):
     """One stage for a section: its ids suffixed, its label kept as data (the stage check keys on it), and its frame in a
@@ -443,7 +444,10 @@ def stage(h, sfx, sels, label):
     h = re.sub(r'\s*<p class="kit-label">.*?</p>', '', h, count=1, flags=re.S)
     return h.replace('<div class="kit-state">', f'<div class="kit-state" data-label="{H.escape(label)}">', 1)
 
-def component(row):
+
+def parts(row):
+    """A component's parts for a page, from the files: the specimen with its parts legend, When to use / When not to,
+    Used as, the other variants, the States grids and the technical details. The ids on its stages take its slug."""
     name, d = row['name'], DMAP[row['name']]
     sl = slug_c(name)
     vs = variants(row)
@@ -451,58 +455,85 @@ def component(row):
     top_i = next((i for i, (lab, _) in enumerate(vs) if d['stage'] and d['stage'].lower() in lab.lower()), 0)
     sels = [sel for sel, _ in d['parts']]
     im = IMAP.get(name, {'skip': [], 'used': []})
-    for s in im['skip']:   # a words-only stage must name a real variant, or the map has gone stale
-        assert any(lab.lower().startswith(s) for lab, _ in vs), f'{name}: Instances map names no stage starting "{s}"'
-    others = [(lab, h) for i, (lab, h) in enumerate(vs) if i != top_i and not any(lab.lower().startswith(s) for s in im['skip'])]
+    for s_ in im['skip']:   # a words-only stage must name a real variant, or the map has gone stale
+        assert any(lab.lower().startswith(s_) for lab, _ in vs), f'{name}: Instances map names no stage starting "{s_}"'
+    others = [(lab, h) for i, (lab, h) in enumerate(vs) if i != top_i and not any(lab.lower().startswith(s_) for s_ in im['skip'])]
     legend = ''.join(f'<li><button type="button" class="an-part" data-part="{n}" aria-pressed="false"><span>{H.escape(label)}</span> <code>{H.escape(sel)}</code></button></li>'
                      for n, (sel, label) in enumerate(d['parts']))
     rkey, rtext = d['rule']
     other, akey, atext = d['anti']
-    out = [f'<section class="dc" id="{sl}" aria-labelledby="{sl}-h">',
-           f'<h2 id="{sl}-h">{H.escape(name)}</h2>',
-           f'<p class="dc-for">{H.escape(d["for"])}</p>',
-           f'<div class="dc-spec" data-anatomy="{H.escape(json.dumps(d["parts"]))}">{stage(vs[top_i][1], "-" + sl, sels, vs[top_i][0])}</div>',
-           f'<ul class="an-legend" aria-label="Parts of the {H.escape(name.lower())}">{legend}</ul>',
-           '<div class="dc-rules">'
-           f'<div class="dc-do"><h3>When to use</h3><p>{H.escape(rtext)}</p><p class="dc-see">See it: {viewer(rkey)}</p></div>'
-           f'<div class="dc-dont"><h3>When not to</h3><p>{H.escape(atext)} Use <a href="{DS.section_url(other)}">{H.escape(other)}</a>.</p><p class="dc-see">See it: {viewer(akey)}</p></div>'
-           '</div>']
-    if im['used']:   # instances in other words: one line, not a stage each
-        out += [f'<p class="dc-used"><span class="dc-used-k">Used as</span> {H.escape("; ".join(im["used"]))}.</p>']
-    if others:
-        out += [f'<h3 class="dc-h" id="{sl}-variants">Variants</h3>',
-                '<div class="dc-variants">' + ''.join(f'<figure class="dc-variant">{stage(h, f"-{sl}-v{i}", sels, lab)}<figcaption>{H.escape(lab)}</figcaption></figure>'
-                                                    for i, (lab, h) in enumerate(others)) + '</div>']
-    st = ''
-    if name in SMAP:   # every component you act on (ui/inventory.md → States map)
-        st = states_grid(name, row['spec'], '-' + sl + '-st')
-        out += [f'<h3 class="dc-h" id="{sl}-states">States</h3>', st]
-    out += [tech(row, vs), '</section>']
-    return '\n'.join(out), 'map-placeholder' in vs[top_i][1] + ''.join(h for _, h in others) + st
+    P = {'for': d['for'], 'tech_row': row, 'vs': vs}
+    P['spec'] = (f'<div class="dc-spec" data-anatomy="{H.escape(json.dumps(d["parts"]))}">{stage(vs[top_i][1], "-" + sl, sels, vs[top_i][0])}</div>'
+                 f'<ul class="an-legend" aria-label="Parts of the {H.escape(name.lower())}">{legend}</ul>')
+    P['rules'] = ('<div class="dc-rules">'
+                  f'<div class="dc-do"><h3>When to use</h3><p>{H.escape(rtext)}</p><p class="dc-see">See it: {viewer(rkey)}</p></div>'
+                  f'<div class="dc-dont"><h3>When not to</h3><p>{H.escape(atext)} Use <a href="{DS.section_url(other)}">{H.escape(other)}</a>.</p><p class="dc-see">See it: {viewer(akey)}</p></div>'
+                  '</div>')
+    P['used'] = f'<p class="dc-used"><span class="dc-used-k">Used as</span> {H.escape("; ".join(im["used"]))}.</p>' if im['used'] else ''
+    P['variants'] = ('<div class="dc-variants">' + ''.join(f'<figure class="dc-variant">{stage(h, f"-{sl}-v{i}", sels, lab)}<figcaption>{H.escape(lab)}</figcaption></figure>'
+                                                          for i, (lab, h) in enumerate(others)) + '</div>') if others else ''
+    P['states'] = states_grid(name, row['spec'], '-' + sl + '-st') if name in SMAP else ''   # every component you act on (ui/inventory.md → States map)
+    P['map'] = 'map-placeholder' in vs[top_i][1] + ''.join(h for _, h in others) + P['states']
+    return P
 
 def retired(row):
     sl = slug_c(row['name'])
     why = MAPROW[row['name']]['states'][0]
     inv = ''.join(f'<p class="kd-line"><span class="kd-k">{k}</span> {inline(clean(v), "ui/inventory.md")}</p>' for k, v in inv_row(row['name']))
-    return (f'<section class="dc dc--retired" id="{sl}" aria-labelledby="{sl}-h"><h2 id="{sl}-h">{H.escape(row["name"])} <span class="dc-tag">Retired</span></h2>'
+    return (f'<section class="dc-entry dc--retired" id="{sl}" aria-labelledby="{sl}-h"><h3 class="dc-h" id="{sl}-h">{H.escape(row["name"])} <span class="dc-tag">Retired</span></h3>'
             f'<p class="dc-for">{H.escape(why[0].upper() + why[1:])}.</p><div class="kd-meta">{inv}</div></section>')
+
+def entry(name):   # an instance or a variant of the page's component, under its Variants, with its own anchor
+    row = by_name[name]
+    if not row['spec']: return retired(row), False
+    sl, E = slug_c(name), parts(row)
+    out = [f'<section class="dc-entry" id="{sl}" aria-labelledby="{sl}-h">', f'<h3 class="dc-h" id="{sl}-h">{H.escape(name)}</h3>',
+           f'<p class="dc-for">{H.escape(E["for"])}</p>', E['spec'], E['rules'], E['used'], E['variants']]
+    if E['states']: out += [f'<h4 class="dc-h4" id="{sl}-states">{H.escape(name)} · States</h4>', E['states']]
+    out += [tech(row, E['vs']), '</section>']
+    return '\n'.join(out), E['map']
+
+def part(id_, title, body):
+    return f'<section class="dc dc--part" id="{id_}" aria-labelledby="{id_}-h"><h2 id="{id_}-h">{title}</h2>\n{body}\n</section>'
 
 written = set()
 def write(rel, html_):
     open(os.path.join(ROOT, DOCS, rel), 'w').write(html_); written.add(rel)
-for f in DS.FAMILIES:
-    parts, needs_map = [], False
-    for n in f['comps']:
-        row = by_name[n]
-        if row['spec']:
-            h, m = component(row); parts.append(h); needs_map = needs_map or m
-        else:
-            parts.append(retired(row))
-    main = (f'<p class="ds-crumb">{H.escape(f["role"])}</p><h1>{H.escape(f["name"])}</h1><p class="ds-lede">{H.escape(f["line"])}</p>\n' + '\n'.join(parts))
-    write(f['page'] + '.html', DS.page(f'{f["name"]} · Onrace design system', f['page'], main, [(slug_c(n), n) for n in f['comps']],
-                                       DS.MAP_DATA if needs_map else '', SPEC_JS))
+COMP = os.path.join(ROOT, DOCS, 'components')
+os.makedirs(COMP, exist_ok=True)
 
-# the Patterns page (Lesson 9 step 4, 2026-11-06): each pattern live from its file, the screens it stands on, when to use it
+# ---------------------------------------------------------------- a page per component, every one in the same order
+for name in DS.COMPONENTS:
+    row = by_name[name]
+    P, sl = parts(row), slug_c(name)
+    secs = [('example', 'Example', P['spec']), ('usage', 'Usage', P['rules'] + P['used'])]
+    ents = [entry(e) for e in DS.SHOWN_HERE[name]]
+    needs_map = P['map'] or any(m for _, m in ents)
+    if P['variants'] or ents: secs.append(('variants', 'Variants', P['variants'] + ''.join(h for h, _ in ents)))
+    if P['states']: secs.append(('states', 'States', P['states']))
+    secs.append(('technical-details', 'Technical details', tech(row, P['vs'], fold=False)))
+    toc = []
+    for i, t, _ in secs:
+        toc.append((i, t))
+        if i == 'variants': toc += [(slug_c(e), e, True) for e in DS.SHOWN_HERE[name]]
+    main = (f'<p class="ds-crumb"><a href="components.html">Components</a> · {H.escape(DS.GROUP_OF[name])}</p><h1>{H.escape(name)}</h1><p class="ds-lede">{H.escape(P["for"])}</p>\n'
+            + '\n'.join(part(*x) for x in secs))
+    main = rebase(main, DOCS, DOCS + '/components')   # written from the docs folder, served one folder down
+    write(f'components/{sl}.html', DS.page(f'{name} · Onrace design system', f'components/{sl}', main, toc,
+                                           DS.map_data(1) if needs_map else '', SPEC_JS, depth=1))
+
+# ---------------------------------------------------------------- the Components index: a grid of every component, then the grouped list
+_cards = ''.join(f'<a class="ds-card" href="{DS.page_of(n)}"><span class="ds-card-t">{H.escape(n)}</span><span class="ds-card-l">{H.escape(DMAP[n]["for"])}</span>'
+                 f'<span class="ds-card-n">{H.escape(DS.GROUP_OF[n])}</span></a>' for n in sorted(DS.COMPONENTS, key=str.lower))
+_groups = ''.join(f'<section class="ds-group" id="{slug_c(g["name"])}" aria-labelledby="{slug_c(g["name"])}-h"><h2 id="{slug_c(g["name"])}-h">{H.escape(g["name"])}</h2><ul class="ds-glist">'
+                  + ''.join(f'<li><a href="{DS.page_of(n)}">{H.escape(n)}</a>' + (' <span class="ds-also">· ' + ', '.join(f'<a href="{DS.section_url(e)}">{H.escape(e)}</a>' for e in DS.SHOWN_HERE[n]) + '</span>' if DS.SHOWN_HERE[n] else '') + '</li>' for n in g['comps'])
+                  + '</ul></section>' for g in DS.GROUPS)
+_cmain = (f'<p class="ds-crumb">Components</p><h1>Components</h1><p class="ds-lede">{len(DS.COMPONENTS)} components in {len(DS.GROUPS)} groups, HIG\'s categories of components.</p>\n'
+          f'<section class="ds-group" id="every-component" aria-labelledby="every-component-h"><h2 id="every-component-h">Every component</h2><div class="ds-cards">{_cards}</div></section>\n'
+          f'<section class="ds-group" id="by-group" aria-labelledby="by-group-h"><h2 id="by-group-h">By group</h2>{_groups}</section>')
+write('components.html', DS.page('Components · Onrace design system', 'components', _cmain, [('every-component', 'Every component'), ('by-group', 'By group')] + [(slug_c(g['name']), g['name'], True) for g in DS.GROUPS]))
+
+# ---------------------------------------------------------------- the Patterns page (Lesson 9 step 4, 2026-11-06): each pattern live from its file
 def pattern(pt):
     sl = pt['file']
     rows = ''.join(f'<tr><td>{viewer(pt["found"][k][0])}</td><td>' + ' '.join(f'<code>{H.escape(x)}</code>' for x in pt['found'][k]) + '</td></tr>' for k in pt['on'])
@@ -526,44 +557,60 @@ _pmain = ('<p class="ds-crumb">Patterns</p><h1>Patterns</h1><p class="ds-lede">A
           f'<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Candidate</th><th>Stands on</th><th>Why not</th></tr></thead><tbody>{_np}</tbody></table></div></section>')
 write('patterns.html', DS.page('Patterns · Onrace design system', 'patterns', _pmain, [(pt['file'], pt['name']) for pt in PATTERNS] + [('not-patterns', 'Not patterns')], '', SPEC_JS))
 
-# the start page: what the system is, how it's organised, the families, why.html
-cards = []
-for role in DS.ROLES:
-    cards.append(f'<section class="ds-group" aria-labelledby="g-{slug_c(role)}"><h2 id="g-{slug_c(role)}">{H.escape(role)}</h2><div class="ds-cards">'
-                 + ''.join(f'<a class="ds-card" href="{f["page"]}.html"><span class="ds-card-t">{H.escape(f["name"])}</span><span class="ds-card-l">{H.escape(f["line"])}</span>'
-                           f'<span class="ds-card-n">{len(f["comps"])} component{"s" if len(f["comps"]) != 1 else ""}</span></a>' for f in DS.FAMILIES if f['role'] == role)
-                 + '</div></section>')
+# ---------------------------------------------------------------- Getting started and Foundations (scripts/docs_foundations.py)
+import docs_foundations as DF
+for rel, html_ in DF.pages():
+    write(rel, html_)
+
+# ---------------------------------------------------------------- the Overview: what the system is, and the sections
+def _card(href, t, n): return f'<a class="ds-card" href="{href}"><span class="ds-card-t">{H.escape(t)}</span><span class="ds-card-n">{H.escape(n)}</span></a>'
+_plural = lambda k, w: f'{k} {w}{"s" if k != 1 else ""}'
 start = (f'<h1>Onrace design system</h1><p class="ds-lede">{inline(DS.START, "ui/inventory.md")}</p>'
-         '<p class="ds-links"><a href="why.html">Why the system looks like this</a> · <a href="patterns.html">Patterns</a> · <a href="specimens.html">Every specimen on one page</a> · '
-         f'<a href="{GH}DESIGN.md">DESIGN.md</a> · <a href="{GH}design-system/README.md">The folder on GitHub</a></p>' + ''.join(cards))
-# yesterday's start page was the specimen sheet: an old link to one of its cards (index.html#race-card) goes there
+         '<p class="ds-links"><a href="why.html">Why it looks like this</a> · <a href="contributing.html">Contributing</a> · <a href="backlog.html">Backlog</a> · '
+         f'<a href="{GH}DESIGN.md">DESIGN.md</a> · <a href="{GH}design-system/README.md">The folder on GitHub</a></p>'
+         '<section class="ds-group" aria-labelledby="g-foundations"><h2 id="g-foundations">Foundations</h2><div class="ds-cards">'
+         + ''.join(_card(f['page'] + '.html', f['title'], _plural(DF.count(f), 'token')) for f in DS.FOUNDATIONS) + '</div></section>'
+         '<section class="ds-group" aria-labelledby="g-components"><h2 id="g-components">Components</h2><div class="ds-cards">'
+         + _card('components.html', 'All components', _plural(len(DS.COMPONENTS), 'component'))
+         + ''.join(_card(f'components.html#{slug_c(g["name"])}', g['name'], _plural(len(g['comps']), 'component')) for g in DS.GROUPS) + '</div></section>'
+         '<section class="ds-group" aria-labelledby="g-patterns"><h2 id="g-patterns">Patterns and reference</h2><div class="ds-cards">'
+         + _card('patterns.html', 'Patterns', _plural(len(PATTERNS), 'pattern')) + _card('specimens.html', 'Every specimen', _plural(len(items), 'specimen')) + '</div></section>')
+# the specimen sheet was the start page until 2026-11-05: an old link to one of its cards (index.html#race-card) goes there
 OLD = json.dumps(sorted(set(RAW) | {'shell'}))
 write('index.html', DS.page('Onrace design system', 'index', start,
       scripts=f'<script>(function () {{ var id = location.hash.slice(1); if ({OLD}.indexOf(id) > -1) location.replace("specimens.html" + location.search + location.hash); }})();</script>\n'))
 
-# the per-component pages of step 2: each now redirects to its section, keeping the query (?theme=light)
-os.makedirs(os.path.join(ROOT, DOCS, 'components'), exist_ok=True)
-for row in MAP:
-    to = '../' + DS.section_url(row['name'])
-    url, frag = to.split('#')
-    write(f'components/{slug_c(row["name"])}.html', f"""<!DOCTYPE html>
+# ---------------------------------------------------------------- redirects: the family pages and the entries shown on another page
+def redirect(title, js, to, note):
+    return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{H.escape(row['name'])} · Onrace design system</title>
-<!-- GENERATED by scripts/build_kit_showcase.py: the component's page until 2026-11-05, now its section of a family page. -->
-<script>location.replace('{url}' + location.search + '#{frag}');</script>
+<title>{H.escape(title)} · Onrace design system</title>
+<!-- GENERATED by scripts/build_kit_showcase.py: {note} -->
+<script>{js}</script>
 <meta http-equiv="refresh" content="0; url={to}">
 <link rel="canonical" href="{to}">
 </head>
 <body>
-<p><a href="{to}">{H.escape(row['name'])}</a></p>
+<p><a href="{to}">{H.escape(title)}</a></p>
 </body>
 </html>
-""")
-for f in glob.glob(os.path.join(ROOT, DOCS, '*.html')) + glob.glob(os.path.join(ROOT, DOCS, 'components', '*.html')):   # pages no family names any more
+"""
+# a family page (2026-11-05 to 2026-11-08) → the component its anchor names, or the Components index; the query (?theme=light) kept
+_TO = {slug_c(r['name']): DS.section_url(r['name']).split('#') + [''] for r in MAP}
+_TO = {k: v[:2] for k, v in _TO.items()}
+for fam in DS.OLD_FAMILIES:
+    write(f'{fam}.html', redirect('Components', f"(function () {{ var t = {json.dumps(_TO)}[location.hash.slice(1)] || ['components.html', '']; location.replace(t[0] + location.search + (t[1] ? '#' + t[1] : location.hash)); }})();",
+                                  'components.html', 'a family page from 2026-11-05 to 2026-11-08; each component has its own page since.'))
+for e, host in DS.MERGED.items():   # an entry's old address (a page of its own in 2026-11-04's docs) → its anchor on the page it is shown on
+    to = DS.page_of(host).split('/')[-1] + '#' + slug_c(e)
+    write(f'components/{slug_c(e)}.html', redirect(e, f"location.replace('{to.split('#')[0]}' + location.search + '#{slug_c(e)}');", to, f"shown on {host}'s page since 2026-11-08."))
+
+for f in glob.glob(os.path.join(ROOT, DOCS, '*.html')) + glob.glob(os.path.join(ROOT, DOCS, 'components', '*.html')):   # pages nothing names any more
     rel = os.path.relpath(f, os.path.join(ROOT, DOCS))
     if rel not in written and rel not in ('specimens.html', 'why.html'): os.remove(f)
-print('docs:', len(DS.FAMILIES), 'family pages,', len(COMP_ROWS), 'components (and', len(MAP) - len(COMP_ROWS), 'retired), the start page,', len(MAP), 'redirects')
+print('docs:', len(DS.COMPONENTS), 'component pages (', len(DS.MERGED), 'entries shown on another), the Components index,', len(DS.FOUNDATIONS), 'foundations,',
+      len(DS.OLD_FAMILIES), 'family redirects,', len(DS.MERGED), 'entry redirects')
 print('kit showcase:', ', '.join(f'{r} {len(specs_by_role[r])}' for r in ROLES), '·', len(items), 'specimens,', N_COMPONENTS, 'components')

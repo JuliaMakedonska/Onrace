@@ -3,8 +3,8 @@
    1. the Light / Dark switch ([data-kd-theme]): <html data-theme="light"> here and in every same-origin frame (the tab
       bar stages are srcdoc frames); kept for the tab as design-system/tokens/theme.js keeps it, and in the URL. Light is
       the stress test of the semantic roles; Onrace ships dark only (C5).
-   2. the shell (scripts/docs_shell.py): the menu on a phone, the nav's filter, and the section on screen marked in the
-      nav and in "On this page".
+   2. the shell (scripts/docs_shell.py): the menu on a phone, the nav's filter, and the section on screen marked in
+      "On this page" (the nav marks the page itself).
    3. the specimen: cropped to the component when it is a small part of its stage, and the parts legend under it; a
       legend item outlines its part while hovered, focused or pressed. A selector that finds nothing throws, so
       scripts/check_overflow.mjs fails the build. */
@@ -44,28 +44,30 @@
       if (e.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') { menu.setAttribute('aria-expanded', 'false'); nav.classList.remove('is-open'); menu.focus(); }
     });
   }
+  // the filter (the navigation restructure, 2026-11-08): a page stays when its names hold the words (a component's names
+  // include the entries shown on its page); a section heading or a group's sub-heading stays while one of its pages does
   var filter = document.getElementById('ds-filter'), empty = document.querySelector('.ds-empty');
   if (filter && nav) filter.addEventListener('input', function () {
     var q = filter.value.trim().toLowerCase(), shown = 0;
     nav.classList.toggle('is-filtering', !!q);
-    $$('.ds-fam', nav).forEach(function (fam) {
-      var famHit = !q || fam.querySelector('.ds-fam-a').getAttribute('data-names').indexOf(q) > -1, any = false;
-      $$('.ds-comps li', fam).forEach(function (li) {
-        var hit = famHit || li.firstChild.getAttribute('data-names').indexOf(q) > -1;
-        li.hidden = !hit; if (hit) { any = true; shown++; }
-      });
-      fam.hidden = !(famHit || any);
+    $$('.ds-list > li:not(.ds-sub)', nav).forEach(function (li) {
+      var hit = !q || li.firstChild.getAttribute('data-names').indexOf(q) > -1;
+      li.hidden = !hit; if (hit) shown++;
     });
-    $$('.ds-fams', nav).forEach(function (ul) { var role = ul.previousElementSibling; var vis = !!ul.querySelector('.ds-fam:not([hidden])'); ul.hidden = !vis; if (role) role.hidden = !vis; });
-    $$('.ds-top', nav).forEach(function (ul) { ul.hidden = !!q; });
+    $$('.ds-sub', nav).forEach(function (sub) {   // a group's sub-heading: shown while a page after it, before the next one, is
+      var n = sub.nextElementSibling, any = false;
+      while (n && !n.classList.contains('ds-sub')) { if (!n.hidden) any = true; n = n.nextElementSibling; }
+      sub.hidden = !any;
+    });
+    $$('.ds-list', nav).forEach(function (ul) { var vis = !!ul.querySelector('li:not(.ds-sub):not([hidden])'); ul.hidden = !vis; if (ul.previousElementSibling) ul.previousElementSibling.hidden = !vis; });
     if (empty) empty.hidden = !q || shown > 0;
   });
   // the section in view: the last one whose heading has passed just under the sticky header (or the last section once the
   // page can't scroll further), marked in "On this page" and in the current family's list in the nav. Read on every
   // scroll frame: an observer that fires only when a section enters a band lags a section behind (fixed 2026-11-05).
-  var sections = $$('.ds-main .dc[id], .ds-main .dc-why[id]');
+  var sections = $$('.ds-main .dc[id], .ds-main .dc-why[id], .ds-main .dc-entry[id], .ds-main .ds-group[id]');
   if (sections.length) {
-    var marks = $$('.ds-toc a, .ds-fam.is-current .ds-comps a');
+    var marks = $$('.ds-toc a');
     var shown = null;
     var mark = function () {
       var line = (document.querySelector('.ds-head') || { offsetHeight: 0 }).offsetHeight + 48, cur = sections[0];

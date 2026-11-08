@@ -94,10 +94,11 @@
    the map lets the halo paint past its edge, so a pin by the edge (Berlin at 320) keeps its whole halo */
 .map-pin:is(:focus-visible, .is-focus) { outline: none; }
 .map-pin:is(:focus-visible, .is-focus) > span { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
-.map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: calc(var(--focus-ring) + var(--focus-gap)); }
+.map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: var(--focus-reach); }   /* a plain length: Chrome drops a calc() here (2026-11-08) */
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
 .map-placeholder:has(> .state-message) { background: none; box-shadow: none; }
 .map-placeholder:has(> .state-message)::before, .map-placeholder:has(> .state-message)::after { content: none; }
 .map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
 .map-placeholder .state-actions { justify-content: center; }
+.map-placeholder .state-message :is(a, button) { scroll-margin-block: var(--focus-reach); }   /* at 200% text the message is taller than the map: focus scrolls the action in with its halo, not to the edge (2026-11-08) */

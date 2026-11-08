@@ -182,12 +182,10 @@
 .ds-tree a { display: flex; align-items: center; min-height: 32px; padding: 4px 12px; color: var(--d-dim); font-size: 14px; text-decoration: none; }
 .ds-tree a:hover { color: var(--d-text); }
 .ds-tree a[aria-current="page"], .ds-tree a[aria-current="true"] { color: var(--d-text); box-shadow: inset 2px 0 0 var(--d-accent); }   /* the one place the accent sits at rest */
-.ds-top { margin: 16px 0 0 !important; }
-.ds-role { margin: 28px 12px 6px; font-size: 12px; font-weight: 600; color: var(--d-faint); }
-.ds-fam-a { color: var(--d-text) !important; font-weight: 600; }
-.ds-comps { display: none; margin: 2px 0 8px 12px !important; border-left: 1px solid var(--d-border); }
-.ds-comps a { min-height: 30px; font-size: 13.5px; }
-.ds-fam.is-current .ds-comps, .ds-nav.is-filtering .ds-comps { display: block; }
+.ds-role { margin: 28px 12px 6px; font-size: 12px; font-weight: 600; color: var(--d-text); }   /* a section of the nav (2026-11-08: two levels, a section, then its pages) */
+.ds-role:first-child { margin-top: 20px; }
+.ds-sub { margin: 12px 12px 2px; font-size: 12px; color: var(--d-faint); }   /* a component group (HIG's category): a quiet label among the pages */
+.ds-list a { min-height: 30px; font-size: 13.5px; }
 .ds-tree [hidden] { display: none !important; }
 .ds-empty { margin: 14px 12px; color: var(--d-faint); font-size: 14px; }
 
@@ -217,6 +215,33 @@
 .ds-card:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
 .ds-card-t { color: var(--d-text); font-weight: 600; font-size: 17px; }
 .ds-card-n { color: var(--d-faint); font-size: 13px; }
+
+/* the Components index (2026-11-08): the grid's cards say what each component is for; the grouped list under it */
+.ds-card-l { font-size: 14px; line-height: 1.45; }
+.ds-glist { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.ds-glist a { display: inline-flex; align-items: center; min-height: 36px; color: var(--d-text); text-decoration-color: var(--d-border); text-underline-offset: 3px; font-size: 15px; }
+.ds-also { color: var(--d-faint); font-size: 14px; }
+.ds-also a { min-height: 0; font-size: 14px; color: var(--d-dim); }
+.ds-group .ds-group { margin-top: 32px; }
+.ds-group .ds-group > h2 { font-size: 17px; }
+.ds-crumb a { color: inherit; text-underline-offset: 3px; }
+/* Previous / Next at the bottom of every page, in the nav's order */
+.ds-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--d-border); }
+.ds-pager a { display: grid; gap: 2px; padding: 12px 16px; border-radius: 10px; background: var(--d-elev); color: var(--d-text); text-decoration: none; }
+.ds-pager a:hover { background: var(--d-elev-2); }
+.ds-pager a:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
+.ds-pager-next { grid-column: 2; text-align: right; }
+.ds-pager-k { font-size: 13px; color: var(--d-faint); }
+.ds-pager-t { font-size: 15px; font-weight: 600; }
+.ds-toc-sub a { padding-left: 24px; font-size: 13px; }
+
+/* a component page (2026-11-08): its parts are sections in one order, Example, Usage, Variants, States, Technical
+   details; an entry shown on the page sits under Variants with its own anchor */
+.dc.dc--part > h2 { font-size: 22px; font-weight: 600; }
+.dc-entry { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 40px; scroll-margin-top: 72px; }
+.dc-entry > .dc-h { margin-top: 0; }
+.dc-h4 { margin: 24px 0 0; font-family: var(--d-font); font-size: 15px; font-weight: 600; color: var(--d-text); }
+.ds-lead { margin-top: 16px; }
 
 /* a component: one section, always in this order (2026-11-05) */
 .dc { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--d-border); scroll-margin-top: 57px; }   /* the one divider between components */
@@ -318,7 +343,7 @@
   .ds-nav { display: none; position: fixed; top: 57px; left: 0; right: 0; bottom: 0; z-index: 35; height: auto; border-right: 0; }
   .ds-nav.is-open { display: block; }
   .ds-main { padding: 28px 0 80px; }
-  .ds-main > :not(.dc):not(.ds-group):not(.dc-why), .ds-group > h2, .ds-cards, .dc > :not(.dc-spec):not(.dc-variants), .dc-variant figcaption { margin-inline: 16px; }
+  .ds-main > :not(.dc):not(.ds-group):not(.dc-why):not(.ds-pager), .ds-group > h2, .ds-cards, .ds-glist, .dc > :not(.dc-spec):not(.dc-variants):not(.dc-entry), .dc-entry > :not(.dc-spec):not(.dc-variants), .dc-variant figcaption, .ds-pager { margin-inline: 16px; }
   .dc-states-row { gap: 16px; }
   .ds-main > .dc-why > * { margin-inline: 16px; }
   .dc { margin-top: 40px; padding-top: 40px; }
@@ -334,14 +359,14 @@
    the end, down when closed and up when open; a pointer, a quiet hover fill, a rounded focus ring that hugs the row.
    Native <details>: Enter and Space toggle it. The docs layer's values only.
    ================================================================= */
-:is(.dc-tech, .kd-notes) > summary { list-style: none; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 0; width: fit-content; max-width: 100%; box-sizing: border-box; min-height: 44px; margin-inline: -10px; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; color: var(--d-text); }
-:is(.dc-tech, .kd-notes) > summary::-webkit-details-marker { display: none; }
-:is(.dc-tech, .kd-notes) > summary::after { content: ""; flex: none; width: 16px; height: 16px; margin-left: 8px; background: var(--d-faint); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform 200ms ease; }
-:is(.dc-tech, .kd-notes)[open] > summary::after { transform: rotate(180deg); }
-:is(.dc-tech, .kd-notes) > summary:hover { background: var(--d-elev); }
-:is(.dc-tech, .kd-notes) > summary:hover::after { background: var(--d-text); }
-:is(.dc-tech, .kd-notes) > summary:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
+:is(.dc-tech, .kd-notes, .ref-fold) > summary { list-style: none; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 0; width: fit-content; max-width: 100%; box-sizing: border-box; min-height: 44px; margin-inline: -10px; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; color: var(--d-text); }
+:is(.dc-tech, .kd-notes, .ref-fold) > summary::-webkit-details-marker { display: none; }
+:is(.dc-tech, .kd-notes, .ref-fold) > summary::after { content: ""; flex: none; width: 16px; height: 16px; margin-left: 8px; background: var(--d-faint); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform 200ms ease; }
+:is(.dc-tech, .kd-notes, .ref-fold)[open] > summary::after { transform: rotate(180deg); }
+:is(.dc-tech, .kd-notes, .ref-fold) > summary:hover { background: var(--d-elev); }
+:is(.dc-tech, .kd-notes, .ref-fold) > summary:hover::after { background: var(--d-text); }
+:is(.dc-tech, .kd-notes, .ref-fold) > summary:focus-visible { outline: 2px solid var(--d-text); outline-offset: 2px; }
 .fold-sub { font-weight: 400; color: var(--d-faint); }
 .fold-sub::before { content: "·"; margin: 0 6px; }
 .kd-notes > summary { font-size: 13px; min-height: 36px; }
-@media (prefers-reduced-motion: reduce) { :is(.dc-tech, .kd-notes) > summary::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { :is(.dc-tech, .kd-notes, .ref-fold) > summary::after { transition: none; } }

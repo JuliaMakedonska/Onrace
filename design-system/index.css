@@ -127,6 +127,7 @@
   --border: 1px;
   --focus-ring: 2px;        /* the focus halo's width (2026-11-07: the iOS Full Keyboard Access ring); its color is the semantic --focus */
   --focus-gap: 2px;         /* between an element and its focus halo: the ground behind shows through (the page color), so the halo never touches a fill (2026-11-07) */
+  --focus-reach: 4px;       /* how far a halo reaches past its element: --focus-ring + --focus-gap written out (2026-11-08), because overflow-clip-margin takes no calc() in Chrome; read where a box must leave the halo room (a pinned map's clip, an action's scroll margin) */
   --focus-text-pad: var(--space-1);   /* a text control's halo (Text link, Forgot password?, Sort button): room round the text, so the halo is a rounded shape round the words, never a tight box or the 44pt target (2026-11-07) */
   --spinner-stroke: 2px;    /* split: the busy spinner's stroke, which borrowed --focus-ring (found in this step; not in the audit). Same value */
   --target: 44px;           /* minimum touch target */
@@ -217,6 +218,7 @@
   --sheet-bar-top: var(--space-3);         /* [?] the bar's inset from the sheet's top edge */
   --sheet-bar-side: var(--space-4);        /* [?] the bar's inset from the sheet's side edges, so Cancel and the action stay out of the corner curve */
   --sheet-bar-h: var(--target);            /* [?] the bar's buttons: 44pt tall, a 44pt target, capsules (C7) */
+  --size-tab-max: 13px;                    /* [?] the tab bar's labels stop growing here (2026-11-08): the bar keeps its 64px, as iOS tab bar labels don't grow with text size (the Large Content Viewer shows them); at 200% text a label at 22px made each tab taller than the bar and cut its focus halo at the screen's bottom edge */
   --size-bar-max: 23px;                    /* [?] a sheet's bar text stops growing here (designer, 2026-11-08): HIG Body at xxxLarge, the largest size before the accessibility sizes, where iOS bars hand their items to the Large Content Viewer instead of growing; so Cancel, the title and the action fit a 320 sheet at 200% text */
   --glass-blur: 20px;       /* [?] not from Apple's kit */
   --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
@@ -936,7 +938,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
   padding: var(--space-1) 0;
   color: var(--text-secondary);
   font-family: var(--font-text);
-  font-size: var(--size-label);
+  font-size: min(var(--size-label), var(--size-tab-max));   /* the label stops growing so the tab stays inside the bar (2026-11-08) */
   font-weight: var(--weight-strong);
   text-decoration: none;
 }
@@ -1290,13 +1292,14 @@ body > .bottom-nav a::before {
    the map lets the halo paint past its edge, so a pin by the edge (Berlin at 320) keeps its whole halo */
 .map-pin:is(:focus-visible, .is-focus) { outline: none; }
 .map-pin:is(:focus-visible, .is-focus) > span { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
-.map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: calc(var(--focus-ring) + var(--focus-gap)); }
+.map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: var(--focus-reach); }   /* a plain length: Chrome drops a calc() here (2026-11-08) */
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
 .map-placeholder:has(> .state-message) { background: none; box-shadow: none; }
 .map-placeholder:has(> .state-message)::before, .map-placeholder:has(> .state-message)::after { content: none; }
 .map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
 .map-placeholder .state-actions { justify-content: center; }
+.map-placeholder .state-message :is(a, button) { scroll-margin-block: var(--focus-reach); }   /* at 200% text the message is taller than the map: focus scrolls the action in with its halo, not to the edge (2026-11-08) */
 
 /* ---- design-system/components/result-row.css · order 0400 ---- */
 /* ---------- Results list screen (wireframes/results-list*.html) ---------- */

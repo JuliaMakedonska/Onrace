@@ -24,8 +24,8 @@ A screen (`wireframes/*.html`) only assembles what the system already has. If a 
 ### A new component, variant or state: `components/` and its docs section
 
 - [ ] **The CSS:** one file per component in `components/`, with an `order` block (`components/README.md`). Values only through tokens: no hex, px, font name or color primitive.
-- [ ] **The inventory:** a row in `ui/inventory.md` (its screens, states, HIG link), a Showcase map row (its specimen and states), a Docs map row (what it's for, its parts, when to use it, when not to, with real screens), and its family in Docs families.
-- [ ] **The specimen:** every variant on its own stage in `docs/specimens.html`, with the screens' own words. The family page is generated from it. **A variant differs in look or structure** (width, size, an icon, a busy state, a layout); an instance that differs only in its words is not a variant: list it in `ui/inventory.md` → Instances map (Used as), not as a stage.
+- [ ] **The inventory:** a row in `ui/inventory.md` (its screens, states, HIG link), a Showcase map row (its specimen and states), a Docs map row (what it's for, its parts, when to use it, when not to, with real screens), and its group in Docs navigation (or, if it is only an instance or a variant of another component, the component whose page shows it).
+- [ ] **The specimen:** every variant on its own stage in `docs/specimens.html`, with the screens' own words. Its page in `docs/components/` is generated from it. **A variant differs in look or structure** (width, size, an icon, a busy state, a layout); an instance that differs only in its words is not a variant: list it in `ui/inventory.md` → Instances map (Used as), not as a stage.
 - [ ] **States, if you act on it:** a States map row in `ui/inventory.md`: At rest, Hover, Pressed, Focus and Disabled (and Invalid if it has one) come from state roles, shown side by side in the docs' theme (Dark or Light, by the switch), each built and checked in both. Hover sits under `@media (hover: hover)`; a state changes only fill, color or border; disabled is `--opacity-disabled`.
 - [ ] **Native iOS:** if it has a native counterpart, it follows Apple's HIG for anatomy, metrics and behavior; Podium supplies the look (`DESIGN.md` → Native iOS).
 - [ ] **Then** use it on the screens, the same markup everywhere it stands.
@@ -48,9 +48,9 @@ A screen (`wireframes/*.html`) only assembles what the system already has. If a 
 ### A screen change: `wireframes/`
 
 - [ ] Only components and patterns that exist. No style block, no inline style.
-- [ ] Every state the screen has is a page or a URL state (`wireframes/_conventions.md`), listed in `wireframes/_screens.md`, in the viewer's notes (`wireframes/index.html`) and, if it's a new cause, in `scripts/check_overflow.mjs`'s `CAUSES`.
+- [ ] Every state the screen has is a page or a URL state (`wireframes/_conventions.md`), listed in `wireframes/_screens.md`, in the viewer's notes (`wireframes/index.html`) and, if it's a new cause, in `scripts/screen_states.mjs`'s `CAUSES` (read by the overflow and focus checks).
 - [ ] Flows in `flows.md`, entities and states in `sitemap.md`.
-- Checked by: 6–9 (overflow, one line, fonts, scripts and styles), 12, 13 (links).
+- Checked by: 6–9 (overflow, one line, fonts, scripts and styles), 12, 13 (links), 22 (every focus halo whole and every sheet bar apart, at 320 and at 390 with 200% text).
 
 ## Shipping
 

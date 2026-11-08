@@ -30,6 +30,7 @@ import { mkdtempSync, readFileSync, existsSync, rmSync, readdirSync } from 'node
 import { tmpdir } from 'node:os';
 import { join, dirname, normalize, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { screenStates } from './screen_states.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const W = join(ROOT, 'wireframes');
@@ -37,53 +38,17 @@ const QUIET = process.argv.includes('--quiet');
 const CHROME = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(existsSync);
 if (!CHROME) { console.error('check_overflow: Google Chrome not found'); process.exit(2); }
 
-// ---------------------------------------------------------------- the states
-// Filter sets for Race browse: 0, 1, 2, 3 and 5 active filters, the longest chip texts (microcopy.md: regions,
-// sport types, a date range across two years), plus a search chip.
-const FILTERS = {
-  0: '',
-  1: 'sport=deka',
-  2: 'region=North%20America&sport=deka',
-  3: 'region=North%20America&sport=deka&from=2026-12-28&to=2027-01-03',
-  5: 'region=North%20America&sport=deka&sport=half-marathon&sport=triathlon&from=2026-12-28&to=2027-01-03&q=Killington',
-};
-const CAUSES = {   // the URL switches each state page reads (as the screenshot runs use them)
-  'race-detail': ['', 'race=utmb'], 'race-detail-error': ['', 'cause=registration&race=utmb'],
-  'results-list': ['', 'saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington', 'add=spartan-beast-killington-2025', 'add=spartan-beast-killington-2025&try=athlinks', 'saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults'],   // 2026-11-06: the add sheet, its error, a link just saved
-  'log-result': ['', 'catalog=spartan-beast-killington-2025'], 'log-result-error': ['cause=fields', 'cause=link', 'cause=submit'],
-  'race-picker': ['', 'q=hyrox', 'catalog=utmb-2026'], 'race-picker-empty': ['q=a%20very%20long%20race%20name%20nobody%20has%20heard%20of'],
-  'result-detail': ['', 'result=valencia-half-2025', 'result=spartan-beast-killington-2025', 'result=spartan-beast-killington-2025&add=spartan-beast-killington-2025', 'result=spartan-beast-killington-2025&add=spartan-beast-killington-2025&try=athlinks', 'result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults'], 'result-detail-error': ['', 'cause=link&result=valencia-half-2025'],
-  'sign-in-sign-up': ['', 'mode=signup', 'reset=done'], 'sign-in-sign-up-check-inbox': ['', 'reason=unconfirmed'],
-  'sign-in-sign-up-error': ['cause=signin', 'cause=signup&mode=signup', 'cause=confirm'], 'sign-in-sign-up-loading': ['', 'mode=signup'],
-  'reset-password-error': ['', 'cause=rate'],
-  'new-password-error': ['cause=submit', 'cause=short', 'cause=same', 'cause=mismatch', 'cause=expired'],
-  'profile-error': ['', 'cause=save&field=country&value=France&prev=Italy'],
-};
-const states = [];
-for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.html').sort()) {
-  const name = f.replace('.html', '');
-  if (name.startsWith('race-browse')) {
-    for (const [n, q] of Object.entries(FILTERS)) {
-      if (name === 'race-browse-error' && n !== '0') continue;   // the error page keeps its filters out of view
-      for (const act of ['', 'map', 'sheet']) states.push({ name, q, act, label: `${name} · ${n} filters${act ? ' · ' + act : ''}` });
-    }
-  } else {
-    for (const q of CAUSES[name] || ['']) states.push({ name, q, act: '', label: name + (q ? '?' + q : '') });
-  }
-}
-states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
-states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
+// ---------------------------------------------------------------- the states (scripts/screen_states.mjs, shared with check_focus.mjs)
+const states = screenStates(ROOT);   // the screens, their states and the patterns; the docs pages follow
 // the pages about the kit (2026-10-26): the showcase and the lesson overviews, also at 1440 (desk); not phone screens
 const DOCS = ['../design-system/docs/index', '../design-system/docs/why', '../design-system/docs/specimens', '../public/concept-overview', '../public/ui-overview', '../public/tokens-overview', '../concept/first-screen'];   // + the shell and the first screen (Lesson 8 step 4: they moved to tokens + components too). Not the stand: a desk page whose 320px columns and 24px padding overflow a phone, as before the switch
 DOCS.forEach(d => states.push({ name: d, q: '', act: '', label: d.split('/').pop(), doc: true }));
 states.push({ name: '../public/tokens-overview', q: '', act: 'open', label: 'tokens-overview, every fold open (the token reference)', doc: true });   // 2026-11-01: the reference's tables and ladders are measured open
-// the family pages (Lesson 9, 2026-11-05): every page of design-system/docs/ the list above doesn't name, also at 1440;
-// the old per-component addresses in components/ only redirect to a family page, so they aren't measured themselves
-for (const f of readdirSync(join(ROOT, 'design-system/docs')).filter(f => f.endsWith('.html') && !['index.html', 'why.html', 'specimens.html'].includes(f)).sort())
-  states.push({ name: '../design-system/docs/' + f.replace('.html', ''), q: '', act: '', label: 'docs/' + f.replace('.html', ''), doc: true });
-// the patterns (Lesson 9 step 4, 2026-11-06): each a phone page of existing components, measured like a screen
-for (const f of readdirSync(join(ROOT, 'design-system/patterns')).filter(f => f.endsWith('.html')).sort())
-  states.push({ name: '../design-system/patterns/' + f.replace('.html', ''), q: '', act: '', label: 'patterns/' + f.replace('.html', '') });
+// every other page of design-system/docs/ (Lesson 9; a page per component in components/ since 2026-11-08), also at
+// 1440; a redirect (an old family page, an entry's old address) is skipped: it only sends the reader on
+{ const D = join(ROOT, 'design-system/docs');
+  for (const f of [...readdirSync(D).filter(f => f.endsWith('.html') && !['index.html', 'why.html', 'specimens.html'].includes(f)), ...readdirSync(join(D, 'components')).filter(f => f.endsWith('.html')).map(f => 'components/' + f)].sort())
+    if (!readFileSync(join(D, f), 'utf8').includes('http-equiv="refresh"')) states.push({ name: '../design-system/docs/' + f.replace('.html', ''), q: '', act: '', label: 'docs/' + f.replace('.html', ''), doc: true }); }
 const ONLY = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1].split(',') : null;   // a quick run on some states: --only docs/,race-browse
 if (ONLY) states.splice(0, states.length, ...states.filter(s => ONLY.some(o => s.label.includes(o))));
 

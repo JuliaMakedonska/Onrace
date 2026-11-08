@@ -123,7 +123,7 @@ for sp in SCREENS + PATTERN_FILES +  [p for p in DOC_PAGES if p not in REDIRECTS
         fails.append(f'{name}: links design-system/index.css once? found {shown}')
     if any(re.search(r'/design-system/(?:tokens|components)/[\w-]+\.css$', l) for l in links):
         fails.append(f'{name}: links tokens.css or a components file directly (link design-system/index.css): {shown}')
-    if ('race-browse' in name or 'map-placeholder' in h) and MAPDATA not in links:
+    if ('race-browse' in name or re.search(r'class="[^"]*\bmap-placeholder\b', H.unescape(h))) and MAPDATA not in links:   # the map on the page, not a token's comment naming it
         fails.append(f'{name}: shows the static map but doesn\'t link design-system/map-data.css')
     if re.search(r'(?:kit|/map)\.css', head):
         fails.append(f'{name}: still links ui/kit.css or ui/map.css')
@@ -153,20 +153,35 @@ for c in sorted(DEFINED - _shown - _SHOWN_ELSEWHERE):
 
 # ---------------------------------------------------------------- the docs pages (Lesson 9 step 2, 2026-11-04)
 slug_c = lambda n: re.sub(r'[^a-z0-9]+', '-', n.lower()).strip('-')
-# since the family restructure (2026-11-05): a section with its own anchor on a family page, and its old address redirecting there
-SECTIONS = {}
-for dp in DOC_PAGES:
-    for sid in re.findall(r'<section class="dc[^"]*" id="([^"]+)"', open(dp).read()):
-        SECTIONS[sid] = os.path.basename(dp)
+# since the navigation restructure (designer, 2026-11-08): a component has its own page in components/; an entry shown on
+# another component's page has its anchor there and its old address redirects to it (ui/inventory.md → Docs navigation)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import docs_shell as DS
+_DOCS = os.path.join(ROOT, 'design-system/docs')
+def _read(rel):
+    f = os.path.join(_DOCS, rel)
+    return open(f).read() if os.path.exists(f) else ''
 for n in names:
-    sl = slug_c(n.rstrip(':'))
-    if sl not in SECTIONS:
-        fails.append(f'inventory component without a section on a family page: {n} (#{sl})')
-        continue
-    red = os.path.join(ROOT, 'design-system/docs/components', sl + '.html')
-    if not os.path.exists(red) or f'{SECTIONS[sl]}#{sl}' not in open(red).read():
-        fails.append(f'{n}: components/{sl}.html doesn\'t redirect to {SECTIONS[sl]}#{sl}')
-SOURCES = {f: open(os.path.join(ROOT, f)).read() for f in ('DESIGN.md', 'concept/concept.md', 'concept/references.md')}
+    nm = n.rstrip(':'); sl = slug_c(nm)
+    if nm in DS.GROUP_OF:
+        h = _read(f'components/{sl}.html')
+        if not h or 'http-equiv="refresh"' in h or f'<h1>{H.escape(nm)}</h1>' not in h:
+            fails.append(f'inventory component without its page: {nm} (components/{sl}.html)')
+        elif [m for m in re.findall(r'<section class="dc dc--part" id="([^"]+)"', h)] != [x for x in ('example', 'usage', 'variants', 'states', 'technical-details') if f'id="{x}"' in h]:
+            fails.append(f'{nm}: its page\'s sections are not in the one order (Example, Usage, Variants, States, Technical details)')
+    elif nm in DS.MERGED:
+        host = DS.page_of(DS.MERGED[nm])
+        if f'<section class="dc-entry' not in _read(host) or f'id="{sl}"' not in _read(host):
+            fails.append(f'{nm}: no section on {host} (ui/inventory.md → Docs navigation)')
+        if f"{host.split('/')[-1]}#{sl}" not in _read(f'components/{sl}.html'):
+            fails.append(f'{nm}: components/{sl}.html doesn\'t redirect to {host}#{sl}')
+    else:
+        fails.append(f'inventory component in no group and on no other component\'s page: {nm} (ui/inventory.md → Docs navigation)')
+for fam in DS.OLD_FAMILIES:   # the family pages of 2026-11-05 to 2026-11-08: each redirects
+    if 'components.html' not in _read(f'{fam}.html'):
+        fails.append(f'{fam}.html: the old family page doesn\'t redirect')
+SOURCES = {f: open(os.path.join(ROOT, f)).read() for f in ('DESIGN.md', 'concept/concept.md', 'concept/references.md',
+           'design-system/tokens/tokens.css', 'design-system/CONTRIBUTING.md', 'design-system/backlog.md')}   # the last three since 2026-11-08: the Foundations, Contributing and Backlog pages render them
 SOURCES['ui/inventory.md'] = re.sub(r'^## Docs map .*?(?=^## |\Z)', '', INV, flags=re.M | re.S)   # the Docs map's words must come from the rest
 VOCAB = MC_WORDS | {norm(w) for t in SOURCES.values() for w in WORD.findall(t)}
 class Doc(HTMLParser):   # every word a reader sees on a docs page (scripts and styles aside)
@@ -188,7 +203,7 @@ for dp in DOC_PAGES:
     d = Doc(); d.feed(open(dp).read()); doc_words += len(d.words)
     for w, ctx in d.words:
         if norm(w) not in VOCAB: doc_missing.setdefault(norm(w), f'{os.path.relpath(dp, ROOT)}: "{ctx[:60]}"')
-    for ctx in dict.fromkeys(c for _, c in d.words):
+    for ctx in dict.fromkeys(c for _, c in d.words) if not dp.endswith('/backlog.html') else ():   # the backlog is ordered by the lessons that take each item
         for m in PROCESS.finditer(ctx): doc_process.setdefault(m.group(0).lower(), f'{os.path.relpath(dp, ROOT)}: "{ctx[max(0, m.start() - 40):m.end() + 20]}"')
 # the patterns' words are product words: each in microcopy.md, as on the screens (Lesson 9 step 4)
 for pf in PATTERN_FILES:
@@ -205,4 +220,4 @@ if fails:
     sys.exit(1)
 print(f'check_kit: pass ({len(names)} inventory components mapped, {len(MAP)} map rows with their states, {len(p.words)} specimen words in microcopy.md; '
       f'{len(SCREENS)} screens and {len(DOC_PAGES)} docs pages on design-system/index.css, every screen class defined; '
-      f'{len(PATTERN_FILES)} patterns on existing components only; every component a section on its family page, its old address redirecting there; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')
+      f'{len(PATTERN_FILES)} patterns on existing components only; every component its own page, every entry shown on its host page and redirecting there; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')

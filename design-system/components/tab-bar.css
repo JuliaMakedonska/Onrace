@@ -14,7 +14,7 @@
   padding: var(--space-1) 0;
   color: var(--text-secondary);
   font-family: var(--font-text);
-  font-size: var(--size-label);
+  font-size: min(var(--size-label), var(--size-tab-max));   /* the label stops growing so the tab stays inside the bar (2026-11-08) */
   font-weight: var(--weight-strong);
   text-decoration: none;
 }

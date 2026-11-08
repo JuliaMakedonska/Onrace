@@ -372,7 +372,7 @@ subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_kit_showcase.p
 # the design-system docs (Lesson 9, step 2, 2026-11-04): why.html from concept.md and references.md; the overview and the
 # component pages (written just above) are stamped with the screens
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_docs_why.py')], check=True)
-DOC_PAGES = ['design-system/docs/index.html', 'design-system/docs/why.html'] + sorted(
+DOC_PAGES = sorted('design-system/docs/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/docs')) if f.endswith('.html') and f != 'specimens.html') + sorted(   # every docs page (2026-11-08)
     'design-system/docs/components/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/docs/components')) if f.endswith('.html'))
 for _p in STAMPED + DOC_PAGES:
     _stamp(os.path.join(ROOT, _p))
@@ -778,6 +778,7 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('sheet-bar-top', 'Every sheet: its bar’s inset from the top edge', '12px [?]', 'Designer, 2026-11-07 · HIG Sheets gives no number: the capsules stay out of the 38px corner curve'),
            ('sheet-bar-side', 'Every sheet: its bar’s inset from the side edges', '16px [?]', 'Designer, 2026-11-07 · HIG Sheets gives no number: Cancel and the action inset from the corner'),
            ('sheet-bar-h', 'Every sheet: its bar buttons’ height', 'The 44pt target [?]', 'Designer, 2026-11-07 · HIG: 44pt targets · C7 capsules'),
+           ('size-tab-max', 'Tab bar: the largest its labels grow', '13px, the bar keeps its height [?]', 'Designer, 2026-11-08 · at 200% text each tab ran past the bar and its halo was cut · iOS tab labels don’t grow (Large Content Viewer)'),
            ('size-bar-max', 'Every sheet: the largest its bar text grows (Cancel, the title, the action)', '23px, HIG Body at xxxLarge [?]', 'Designer, 2026-11-08 · at 200% text the Filters bar didn’t fit · iOS bars stop growing and use the Large Content Viewer'),
            ('sheet-content-bottom', 'Every sheet: below the last group, before the bottom safe area', '32px + the safe area', 'Designer, 2026-11-06 · G2: nothing under the home indicator'),
            ('alpha-85', 'Glass fill on bars (tab bar, top bar, controls bar, status-bar edge); was --glass-opacity', f'Lowest that passes AA over the worst case: {max(GLASS_MIN["bar"], GLASS_MIN["ground"])}%; set with margin. Above HIG’s {HIG_DIM}% dimming layer for clear glass over bright content (HIG Materials, the one Apple number) · {P}', 'C1: glass for bars, in Podium tones · contrast checked below'),
@@ -849,6 +850,7 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--border</code></td><td>{tok("border")}</td><td>Hairlines: field outline, dividers.</td><td>Attribute a: the frame stays quiet</td></tr>
 <tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus: the halo's width. Its color is the role <code>--focus</code>, the accent (2026-11-07).</td><td>iOS Full Keyboard Access · Color rule 1: where you are</td></tr>
 <tr><td><code>--focus-gap</code></td><td>{tok("focus-gap")}</td><td>Keyboard focus: the gap between an element and its halo, the ground behind showing through, so the halo never touches a fill.</td><td>Designer, 2026-11-07 · iOS Full Keyboard Access</td></tr>
+<tr><td><code>--focus-reach</code></td><td>4px</td><td>Keyboard focus: how far a halo reaches past its element (the ring and the gap), written out because overflow-clip-margin takes no calc() in Chrome; a pinned map clips this far out while a pin has focus.</td><td>Designer, 2026-11-08</td></tr>
 <tr><td><code>--focus-text-pad</code></td><td>4px</td><td>Keyboard focus on a text control (Text link, Forgot password?, Sort button): room round the words inside the rounded halo, never the 44pt target's box.</td><td>Designer, 2026-11-07</td></tr>
 <tr><td><code>--float-shadow</code></td><td>{tok("float-shadow")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
 <tr><td><code>--target</code></td><td>{tok("target")}</td><td>Minimum height of every control or its tap area.</td><td>Critique fix (round 2): touch targets</td></tr>
@@ -1174,6 +1176,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-focus'), os.path.join(ROOT, 'publi
 shutil.copyfile(os.path.join(ROOT, 'ui/review-focus.html'), os.path.join(ROOT, 'public/ui/review-focus.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-sheet-bar'), os.path.join(ROOT, 'public/ui/review-sheet-bar'), dirs_exist_ok=True)   # the sheet's bar, before/after (2026-11-07)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-sheet-bar.html'), os.path.join(ROOT, 'public/ui/review-sheet-bar.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-docs-nav'), os.path.join(ROOT, 'public/ui/review-docs-nav'), dirs_exist_ok=True)   # the docs by navigation and the focus check, before/after (2026-11-08)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-docs-nav.html'), os.path.join(ROOT, 'public/ui/review-docs-nav.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-3b'), os.path.join(ROOT, 'public/ui/review-3b'), dirs_exist_ok=True)   # step 3b before/after shots
 shutil.copyfile(os.path.join(ROOT, 'ui/review-3b.html'), os.path.join(ROOT, 'public/ui/review-3b.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-step5'), os.path.join(ROOT, 'public/ui/review-step5'), dirs_exist_ok=True)   # step 5 before/after and group shots
@@ -1234,6 +1238,13 @@ else:
     if _r.returncode == 2: print('check_overflow: SKIPPED, Chrome not available'); _skipped.append('check_overflow (no Chrome)')
     elif _r.returncode == 3: print('check_overflow failed only on fonts that did not load (Google Fonts unreachable): the build stops, exit 3'); sys.exit(3)
     elif _r.returncode != 0: sys.exit('check_overflow failed (overflow, a wrapped one-line control, or a font not loaded): the build stops')
+    # the focus halo and the sheet bar (designer, 2026-11-08): every screen state at 320 and at 390 with 200% text, Tab
+    # through every focusable element: each halo whole, every sheet bar's capsules apart and its title truncating
+    _f = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_focus.mjs'), '--quiet'], capture_output=True, text=True)
+    print(_f.stdout.strip() or _f.stderr.strip())
+    if _f.returncode == 2: print('check_focus: SKIPPED, Chrome not available'); _skipped.append('check_focus (no Chrome)')
+    elif _f.returncode == 3: print('check_focus: the fonts did not load (Google Fonts unreachable): the build stops, exit 3'); sys.exit(3)
+    elif _f.returncode != 0: sys.exit('check_focus failed (a focus halo cut, or a sheet bar that collides or doesn\'t truncate): the build stops')
     # the docs can't lie (Lesson 9, 2026-11-05): every stage on a family page computes as the same stage on specimens.html
     _d = subprocess.run([_node, os.path.join(ROOT, 'scripts/check_docs_stages.mjs'), '--quiet'], capture_output=True, text=True)
     print(_d.stdout.strip() or _d.stderr.strip())

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* The docs can't lie (Lesson 9, 2026-11-05): every stage on every family page of design-system/docs/ against the same
+/* The docs can't lie (Lesson 9, 2026-11-05): every stage on every page of design-system/docs/ (a page per component since 2026-11-08) against the same
    stage on specimens.html, the hand-written source, in headless Chrome over local HTTP. For every element in a stage's
    frame (frames entered, each loaded and styled first) it compares 23 computed properties: color, type, borders,
    radius, spacing, shadow, outline, opacity, size, display, gap, backdrop. Four passes: 1280 and 390, dark and light.
@@ -70,7 +70,11 @@ await send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height: 900, de
 const ref = await load(B + 'specimens.html' + THEME, true);
 // the reference without geometry: the same stages with width and height dropped
 const noGeo = {}; for (const [k, v] of Object.entries(ref)) noGeo[k + ' [no geometry]'] = v.map(r => r.replace(/,"width":"[^"]*","height":"[^"]*"/g, ''));
-for (const f of readdirSync(join(ROOT, 'design-system/docs')).filter(f => f.endsWith('.html') && !['index.html', 'why.html', 'specimens.html'].includes(f)).sort()) {
+// the pages with a stage (2026-11-08: a page per component in components/, the Components index, Patterns); not the redirects
+const DOCS_DIR = join(ROOT, 'design-system/docs');
+const PAGES = [...readdirSync(DOCS_DIR).filter(f => f.endsWith('.html') && f !== 'specimens.html'), ...readdirSync(join(DOCS_DIR, 'components')).filter(f => f.endsWith('.html')).map(f => 'components/' + f)]
+  .filter(f => { const h = readFileSync(join(DOCS_DIR, f), 'utf8'); return h.includes('class="kit-state') && !h.includes('http-equiv="refresh"'); }).sort();
+for (const f of PAGES) {
   const got = await load(B + f + THEME, true); if (THEME === '' && WIDTH === 1280) pages++;   // every property, widths and heights included
   for (const [lab, recs] of Object.entries(got)) for (const r of recs) {
     stages++;
@@ -89,4 +93,4 @@ for (const f of readdirSync(join(ROOT, 'design-system/docs')).filter(f => f.ends
 }
 ws.close(); srv.close(); ch.kill(); try { rmSync(prof, { recursive: true, force: true }); } catch {}
 if (bad.length) { console.log(`check_docs_stages: FAIL, ${bad.length} of ${stages} stage-passes differ from specimens.html (the docs' CSS reached a specimen)`); bad.slice(0, 20).forEach(b => console.log('  ' + b)); process.exit(1); }
-console.log(QUIET ? `check_docs_stages: pass (${stages} stage-passes on ${pages} family pages)` : `check_docs_stages: pass, ${stages} stage-passes (${pages} family pages × 1280 and 390 × dark and light), each identical to specimens.html`);
+console.log(QUIET ? `check_docs_stages: pass (${stages} stage-passes on ${pages} docs pages)` : `check_docs_stages: pass, ${stages} stage-passes (${pages} docs pages × 1280 and 390 × dark and light), each identical to specimens.html`);

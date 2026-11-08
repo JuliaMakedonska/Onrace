@@ -410,22 +410,61 @@ A pattern is a composition of existing components that already stands on three o
 | **Detail screen with a bottom action bar** | `action-bar` | race-detail; result-detail | Two screens only. It stays two components: the Top bar and the Sticky action bar. |
 | **Top bar over a page of grouped rows** | `gate` `top-bar` | sign-in-sign-up; reset-password; new-password | Three screens, but already one component: Gate layout. |
 
-## Docs families (Lesson 9, 2026-11-05)
+## Docs navigation (designer, 2026-11-08)
 
-How `design-system/docs/` is organised, read by `scripts/build_kit_showcase.py`: the left nav's roles, the family pages in each, and the components in each family, in order. Every component of the Showcase map sits in exactly one family, or the build stops. Like the Docs map, its words must come from the other source docs.
+How `design-system/docs/` is organised, read by `scripts/docs_shell.py` and `scripts/build_kit_showcase.py`, for navigation only (modeled on Apple HIG's components and shadcn/ui): a two-level sidebar (a section, then its pages), one page per real component in `docs/components/`, a Components index (a grid of every component, then the grouped list), and every component page in one order: Example, Usage, Variants, States, Technical details, with "On this page" on the right and Previous / Next at the bottom. An entry that is only an instance or a variant of another component is shown on that component's page, under Variants, with its own anchor; its old address redirects there. Every component of the Showcase map is in exactly one group or shown on exactly one other component's page, or the build stops. Like the Docs map, its words must come from the other source docs.
 
 **Start page:** Onrace's design system is the look of every screen, written once. Values are tokens, every component is a class, and the screens and these pages link the same one file, so what you see here is what the screens show. Each family page shows its components live, says when to use each one and when another one is right, and names its parts.
 
-| Role | Family | Page | One line | Components (in order, `; ` between) |
-|---|---|---|---|---|
-| Navigation | Bars and navigation | `bars-and-navigation` | How a person moves between screens, and where each screen's title and main action sit. | Tab bar; Large title header; Top bar; Gate layout; Sticky action bar; Segmented control; Controls bar |
-| Navigation | Sheets and alerts | `sheets-and-alerts` | Tasks and questions over a screen, until they are done. | Modal sheet; Action sheet; Confirm alert; Sheet screen |
-| Content | Cards | `cards` | A race or a result as one unit you can tap. | Race card; Race photo; Result row; Finish time; Proof line; Linked race card |
-| Content | Lists and rows | `lists-and-rows` | What holds a list together: its count, its order and its rows. | Results row; Order label; List intro; Catalog row; Sport-type rows; Grouped settings rows |
-| Content | Detail screens | `detail-screens` | The parts of Race detail, Result detail and Profile. | Detail header and facts; Detail section; Race photo, detail; Official race website link; Proof URL and note; Identity block |
-| Content | Chips | `chips` | Small labels: a race's format, or a filter that is on. | Format chip; Active filter chips row |
-| Content | Map | `map` | The races by place. | Static map |
-| Input | Buttons and links | `buttons-and-links` | Every action, from the screen's one primary to a text link. | Primary button; Secondary button; Filters trigger with count; Sort button; Text link; Forgot password? link; Sign out button |
-| Input | Forms | `forms` | Fields a person types in or picks from, with their hints and errors. | Search field; Text field; Field hint; Field error; Pop-up select; Date field; Form intro; Form note; Gate intro |
-| Feedback | Empty, error and status | `empty-error-and-status` | What a screen says when there is nothing to show, when something fails, and when it is done. | State message; Inline error; Form alert; Expired-link message; Full-screen gate error; Status line; Check-inbox block |
-| Feedback | Loading | `loading` | What a screen shows while it waits. | Skeleton; Locked form |
+**Getting started**
+
+| Page | Title | Rendered from |
+|---|---|---|
+| `index` | Overview | the start page line above, and the sections below |
+| `why` | Why it looks like this | `concept/references.md` and `concept/concept.md` (`scripts/build_docs_why.py`) |
+| `contributing` | Contributing | `design-system/CONTRIBUTING.md` |
+| `backlog` | Backlog | `design-system/backlog.md` |
+
+**Foundations** (moved from the Lesson 08 token reference, `scripts/tokens_reference.py`, and from `DESIGN.md`; each page is the `DESIGN.md` text and the tokens of its groups in `design-system/tokens/tokens.css`)
+
+| Page | Title | DESIGN.md | Token groups |
+|---|---|---|---|
+| `color` | Color | Colors | color; alpha; the semantic roles; the contrast pairs |
+| `typography` | Typography | Typography | type |
+| `spacing-and-layout` | Spacing and layout | Layout | spacing scale; the screen, its bars and sheets; stacking; skeleton; the static map |
+| `shape` | Shape | Shapes; Elevation & Depth | shape |
+| `motion` | Motion | Do: › 0ms motion; HIG vs Podium: decided › C6 | motion |
+| `icons` | Icons | Overview › Solar Bold icons; Do: › draw icons | icons |
+| `photos` | Photos | Overview › Black-and-white photos; Do: › show every photo | race card and photos |
+
+**Components** (`components.html` is the index; the groups are HIG's categories of components, in HIG's order of the categories this system uses; inside a group, alphabetical)
+
+| Group | Components (`; ` between) |
+|---|---|
+| Navigation and search | Active filter chips row; Large title header; Search field; Tab bar; Top bar |
+| Presentation | Action sheet; Confirm alert; Modal sheet |
+| Selection and input | Date field; Field error; Field hint; Form intro; Form note; Gate intro; Pop-up select; Segmented control; Sport-type rows; Text field |
+| Menus and actions | Controls bar; Primary button; Secondary button; Sort button; Sticky action bar; Text link |
+| Layout and organization | Catalog row; Detail header and facts; Detail section; Gate layout; Grouped settings rows; Identity block; Linked race card; List intro; Race card; Result row; Results row |
+| Content | Finish time; Format chip; Proof line; Proof URL and note; Race photo; Static map |
+| Status | Check-inbox block; Form alert; Inline error; Skeleton; State message; Status line |
+
+**Shown on another component's page** (an instance or a variant of it, not a component of its own)
+
+| Entry | Shown on | Why |
+|---|---|---|
+| Filters trigger with count | Secondary button | the Filters secondary button, with its count |
+| Forgot password? link | Text link | a text link under the password, with a 44pt tap area |
+| Official race website link | Text link | a text link in Race detail's section, with a 44pt tap area |
+| Race photo, detail | Race photo | the race card's photo, at the top of Race detail |
+| Order label | Results row | the results row of a list that can't be sorted |
+| Locked form | Text field | the text fields while a form saves |
+| Sign out button | Grouped settings rows | a grouped row of its own |
+| Expired-link message | State message | a state message on a gate, `.state-msg` |
+| Full-screen gate error | State message | a state message on a gate, `.state-msg` |
+| Sheet screen | Modal sheet | retired: Race picker is a pushed screen since 2026-10-24 |
+
+**Reference:** Every specimen (`specimens.html`). **Patterns:** `patterns.html`, each pattern by its anchor.
+
+**The family pages** (2026-11-05 to 2026-11-08) each redirect to the component a link names, or to the Components index: `bars-and-navigation`, `sheets-and-alerts`, `cards`, `lists-and-rows`, `detail-screens`, `chips`, `map`, `buttons-and-links`, `forms`, `empty-error-and-status`, `loading`.
+

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs navigation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../design-system/index.css">
+<link rel="stylesheet" href="../concept/stand.css">
+<style>
+  /* review page only: tokens from design-system/tokens/tokens.css and the docs layer (concept/stand.css), no values of its own */
+  .rv { max-width: var(--stand-max); margin: 0 auto; padding: var(--space-8) var(--space-4) var(--space-9); display: grid; gap: var(--space-8); }
+  .rv-head { display: grid; gap: var(--space-3); }
+  .rv-head p, .rv-head li, .rv-pair > p { margin: 0; max-width: var(--measure); color: var(--text-secondary); }
+  .rv-head ul { margin: 0; padding-left: var(--space-5); display: grid; gap: var(--space-2); }
+  .rv a { color: var(--text-primary); text-underline-offset: var(--space-1); }
+  .rv-pair { display: grid; gap: var(--space-4); padding-top: var(--space-6); border-top: var(--border) solid var(--hairline); }
+  .rv-pair h2 { margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
+  .rv-shots { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-start; }
+  .rv-shots figure { margin: 0; display: grid; gap: var(--space-1); max-width: 100%; }
+  .rv-shots figcaption { font-size: var(--size-proof); color: var(--text-secondary); }
+  .rv-shots img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-2); }
+  .rv-shots.desk figure { flex: 1 1 var(--stand-col-min); }
+</style>
+</head>
+<body class="onrace">
+<main class="rv">
+  <header class="rv-head">
+    <h1>Docs navigation, and the focus check</h1>
+    <p>2026-11-08. Before (<code>eb704be</code>) and after. Two changes: the design-system docs reorganised for navigation only (no component and no prose changed), and the focus halo and sheet bar checked by the build at 320 and at 390 with 200% text, with the three breaks that check found fixed. Record: <code>concept/concept.md</code> → The focus and sheet-bar check in the build, and the docs by navigation.</p>
+    <ul>
+      <li>A two-level sidebar: Getting started, Foundations, Components under HIG's categories (alphabetical inside), Patterns, Reference.</li>
+      <li>One page per real component (47, from 57 entries; ten sit on another component's page), in one order: Example, Usage, Variants, States, Technical details; "On this page" on the right, Previous / Next at the bottom.</li>
+      <li>A Components index: a grid of every component, then the grouped list. The family pages redirect to the component a link names.</li>
+    </ul>
+  </header>
+
+  <section class="rv-pair" aria-labelledby="s1"><h2 id="s1">A component's page</h2><p>Before: Top bar was one section of the Bars and navigation family page, under a nav by role and family. After: its own page, the sidebar in sections and HIG groups.</p>
+    <div class="rv-shots desk"><figure><img src="review-docs-nav/nav-before.png" alt="Before: the Bars and navigation family page" loading="lazy"><figcaption><b>Before</b> · bars-and-navigation.html</figcaption></figure><figure><img src="review-docs-nav/nav-after.png" alt="After: the Top bar page" loading="lazy"><figcaption><b>After</b> · components/top-bar.html</figcaption></figure></div></section>
+
+  <section class="rv-pair" aria-labelledby="s2"><h2 id="s2">The start page and the Components index</h2><p>Before: the start page's family cards. After: the Components index, a grid of every component with what it's for and its group, then the list by group.</p>
+    <div class="rv-shots desk"><figure><img src="review-docs-nav/index-before.png" alt="Before: the start page" loading="lazy"><figcaption><b>Before</b> · index.html</figcaption></figure><figure><img src="review-docs-nav/index-after.png" alt="After: the Components index" loading="lazy"><figcaption><b>After</b> · components.html</figcaption></figure></div></section>
+
+  <section class="rv-pair" aria-labelledby="s3"><h2 id="s3">An entry shown on another component's page</h2><p>Forgot password? link is a text link: it moved from its own section on Buttons and links to Text link's Variants, with its own anchor, its rules, states and technical details. Its old address redirects there.</p>
+    <div class="rv-shots desk"><figure><img src="review-docs-nav/merged-before.png" alt="Before: Forgot password? link as its own section" loading="lazy"><figcaption><b>Before</b> · buttons-and-links.html#forgot-password-link</figcaption></figure><figure><img src="review-docs-nav/merged-after.png" alt="After: Forgot password? link under Text link's Variants" loading="lazy"><figcaption><b>After</b> · components/text-link.html#forgot-password-link</figcaption></figure></div></section>
+
+  <section class="rv-pair" aria-labelledby="s4"><h2 id="s4">Foundations</h2><p>Before: the tokens lived in the Lesson 08 overview's reference. After: seven Foundations pages, each the DESIGN.md text and its tokens, drawn by the same renderer.</p>
+    <div class="rv-shots desk"><figure><img src="review-docs-nav/found-before.png" alt="Before: the token reference on the Lesson 08 overview" loading="lazy"><figcaption><b>Before</b> · tokens-overview.html</figcaption></figure><figure><img src="review-docs-nav/found-after.png" alt="After: the Color foundation" loading="lazy"><figcaption><b>After</b> · color.html</figcaption></figure></div></section>
+
+  <section class="rv-pair" aria-labelledby="s5"><h2 id="s5">The nav on a phone</h2><p>The menu open, at 390.</p>
+    <div class="rv-shots"><figure><img src="review-docs-nav/phone-before.png" alt="Before: the phone menu by family" loading="lazy" width="390"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-nav/phone-after.png" alt="After: the phone menu by section and group" loading="lazy" width="390"><figcaption><b>After</b></figcaption></figure></div></section>
+
+  <section class="rv-pair" aria-labelledby="s6"><h2 id="s6">Tab bar at 200% text</h2><p>Before: a tab ran past the 64px bar and its halo was cut by the screen's bottom edge. After: the labels stop growing at <code>--size-tab-max</code> (13px [?]), and the halo sits inside the bar.</p>
+    <div class="rv-shots"><figure><img src="review-docs-nav/tab-before.png" alt="Before: the Results tab focused at 200% text" loading="lazy" width="390"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-nav/tab-after.png" alt="After: the Results tab focused at 200% text" loading="lazy" width="390"><figcaption><b>After</b></figcaption></figure></div></section>
+
+  <section class="rv-pair" aria-labelledby="s7"><h2 id="s7">Map pin at 320</h2><p>Before: Berlin's halo was cut at the frame's right edge: the clip margin was written as a <code>calc()</code>, which Chrome drops. After: <code>--focus-reach</code>, a plain 4px.</p>
+    <div class="rv-shots"><figure><img src="review-docs-nav/pin-before.png" alt="Before: Berlin focused" loading="lazy" width="320"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-nav/pin-after.png" alt="After: Berlin focused" loading="lazy" width="320"><figcaption><b>After</b></figcaption></figure></div></section>
+
+  <section class="rv-pair" aria-labelledby="s8"><h2 id="s8">"Change filters" in the empty map, 200% text</h2><p>Before: focus scrolled the button to the map's bottom edge and its halo was cut. After: it scrolls in with the halo's room.</p>
+    <div class="rv-shots"><figure><img src="review-docs-nav/empty-before.png" alt="Before: Change filters focused" loading="lazy" width="390"><figcaption><b>Before</b></figcaption></figure><figure><img src="review-docs-nav/empty-after.png" alt="After: Change filters focused" loading="lazy" width="390"><figcaption><b>After</b></figcaption></figure></div></section>
+</main>
+</body>
+</html>
