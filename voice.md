@@ -210,7 +210,7 @@ The states these rules cover are the ones `wireframes/_screens.md` scopes for ev
 |---|---|
 | **Register on hyrox.com** · **Log result** · **Send a new link** · **Save new password** · **Find in race catalog** · **Clear all filters** | ~~OK~~ · ~~Next~~ · ~~Submit~~ · ~~Continue~~ · ~~Yes~~ · ~~Click here~~ · ~~Register now~~ |
 
-- **Short visible label, full accessible name:** "Try again" inside "Couldn’t load races" is announced as "Try loading races again". The nav-bar "Save" beside "Log result" is announced as "Save result". "Dismiss" is announced as "Dismiss this message".
+- **Short visible label, full accessible name:** "Try again" inside "Couldn’t load races" is announced as "Try loading races again". The nav-bar "Save" beside "Log result" is announced as "Save result". "Dismiss" is announced as "Dismiss this message". The Filters sheet's "Apply" is announced as "Apply filters" (2026-11-08).
 - **Closed (markup pass, 2026-10-23):** every short button carries its full accessible name (`aria-label`): "Try again" on the six screens (and Result detail's link retry), the nav-bar "Save" ("Save result"), "Dismiss" ("Dismiss this message"). Rows 535–545 in `microcopy.md`. Kept from the voice: the name says the action in full; the visible label stays short. (Known 2026-09-30 gap, now closed.)
 - **Check:**
   - Principle 2: a button that leaves Onrace names its destination ("Register on hyrox.com", "Open official result on berlin.r.mikatiming.com").

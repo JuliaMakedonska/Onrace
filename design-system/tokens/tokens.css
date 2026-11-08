@@ -214,6 +214,7 @@
   --sheet-bar-top: var(--space-3);         /* [?] the bar's inset from the sheet's top edge */
   --sheet-bar-side: var(--space-4);        /* [?] the bar's inset from the sheet's side edges, so Cancel and the action stay out of the corner curve */
   --sheet-bar-h: var(--target);            /* [?] the bar's buttons: 44pt tall, a 44pt target, capsules (C7) */
+  --size-bar-max: 23px;                    /* [?] a sheet's bar text stops growing here (designer, 2026-11-08): HIG Body at xxxLarge, the largest size before the accessibility sizes, where iOS bars hand their items to the Large Content Viewer instead of growing; so Cancel, the title and the action fit a 320 sheet at 200% text */
   --glass-blur: 20px;       /* [?] not from Apple's kit */
   --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
   --picker-search-icon-x: calc(var(--space-4) * 2);   /* Race picker: the search icon's left edge, the form's 16px gutter plus the field's own 16px inset, so it follows the spacing step (named 2026-11-01; was a count in components/search-field.css) */

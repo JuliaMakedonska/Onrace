@@ -59,6 +59,20 @@
 }
 @media (hover: hover) { .top-bar :is(a, button):is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: one step dimmer, two pressed */
 .top-bar :is(a, button):is(:active, .is-pressed) { color: var(--text-pressed); }
+/* focus (2026-11-08): the bar's buttons are text controls, so their halo is a text control's (text-link.css): a rounded
+   shape round the words and the back chevron with a little room (--focus-text-pad), never the 44pt target's box, which
+   met the screen's top edge where there is no top safe area (a browser, the viewer) and lost its top line. ::after,
+   since the back chevron and the busy spinner take ::before. The sheet's capsules keep a capsule's halo (modal-sheet.css) */
+.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus) { outline: none; }
+.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus)::after {
+  content: "";
+  position: absolute;
+  inset-inline: calc(var(--space-2) - var(--focus-text-pad));   /* the button's own side padding, less the room */
+  inset-block: max(calc((100% - 1lh) / 2 - var(--focus-text-pad)), var(--focus-ring));   /* at large text the line outgrows the 44pt target: the halo then stays inside the button, so it never crosses the screen's top edge */
+  border-radius: var(--radius-1);
+  outline: var(--focus-ring) solid var(--focus);
+  pointer-events: none;
+}
 /* the bar action: the screen's one primary in its bar, amber text like a native bar button (Color rule 1): Save on
    Log result, Log result on Results list (G5), Apply filters on the Filters sheet (G12) */
 .top-bar .save-btn, .top-bar .bar-action { margin-left: auto; font-weight: var(--weight-strong); color: var(--accent-ink); }

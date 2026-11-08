@@ -6,11 +6,13 @@
 html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
 body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
 .phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
+.phone-screen:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }   /* a screen with nothing to focus takes the focus itself, to scroll by keyboard (a loading state): its halo sits inside it, since outside is off the screen (2026-11-08) */
 /* .screen-main: a specimen screen's main in the showcase, which has one page main of its own (step 7) */
 .phone-screen :is(main, .screen-main) { display: flex; flex-direction: column; min-height: 100%; }
 /* drill-downs and modals (every screen without a tab bar) */
 body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
+.phone-screen:has(> .top-bar:not(.top-bar--large)) > .top-bar { flex: none; }   /* the bar keeps its height when the page is taller than the screen: at 200% text it was squeezed to its 44pt minimum and its back link ran past its top edge (2026-11-08) */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) > :is(main, .screen-main) { flex: 1 0 auto; min-height: 0; }
 /* with an action bar (Race detail, Result detail): the bar is the scroll area's last child, sticky at its bottom, so
    content runs under its glass and still scrolls clear of it at the end, whatever the bar's height (G35, G54) */

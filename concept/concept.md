@@ -1408,3 +1408,22 @@ Before/after of every focus state and every changed docs section: `ui/review-foc
 - **Docs:** the Modal sheet section's anatomy names Cancel, the title and the confirming capsule; three new stages (the bar on Log result, saving, Save waiting for the link); a States row for the sheet's confirming capsule. The Top bar's two Log result stages moved to the sheet, since Log result's bar is a sheet's bar; the Top bar's states now show the gate's bar action (Sign in). A docs stage class shows a sheet's top edge and bar alone (`.kit-frame--sheet-bar`).
 
 Before/after of every sheet in both themes: `ui/review-sheet-bar.html`.
+
+### Large text and keyboard focus: the sheet bar at 200%, halos that were cut (designer, 2026-11-08)
+
+**Checked:** every screen state and pattern at 320, at 390 with 200% text and at 320 with 200% text: every sheet's bar (does the title truncate, do the capsules collide or leave the bar) and every focusable element reached by Tab (is its halo whole, or cut by the screen edge or a clipping parent).
+
+**The sheet bar (designer's decision: both of the options offered).** At 200% text the Filters bar needed 404px for Cancel, Apply filters and its insets: at 390 Apply filters ran 13px into the corner curve and its halo was cut; at 320 84px of it was cut off by the sheet's edge; the title shrank to nothing. Log result and Add official result link fitted everywhere (the title truncating).
+- **The label:** "Apply filters" becomes **Apply**, its accessible name "Apply filters" (WCAG 2.5.3; `microcopy.md` rows 54 and 583, `voice.md` → Button).
+- **The cap:** a sheet's bar text grows with the system size up to `--size-bar-max` (23px [?], HIG Body at xxxLarge, the largest size before the accessibility sizes) and no further, as iOS bars stop growing and use the Large Content Viewer instead. A new primitive, signed on the stand; `modal-sheet.css` reads `min(var(--size-item), var(--size-bar-max))` for the bar and its title. The other bars still grow.
+- **Result:** at 320 with 200% text the Filters title keeps 76px, Log result's truncates ("Log re…"), and no capsule leaves the bar.
+
+**The halos that were cut.**
+- **Top bar buttons** (back, Cancel, Save, the bar action): their 44pt-box halo met the screen's top edge where there is no top safe area (a browser, the viewer) and lost its top line. They are text controls, so they take the text control's halo round the words (`top-bar.css`, `::after`, since the back chevron and the busy spinner use `::before`), kept inside the button when the line is taller than the target. The sheet's capsules keep theirs.
+- **Drill-down bars at 200% text:** the screen is a flex column, so a page taller than the screen squeezed the bar to its 44pt minimum and its back link ran 3px past the bar's top. The bar no longer shrinks (`screen.css`).
+- **Active filter chips:** the first and last chip's halo was cut by the scrolling row's edge; the row now has room for it at both ends, with the same negative margin so the chips don't move (`active-filter-chips-row.css`).
+- **Map pins:** the halo rings the label, not the 44pt box round it; a map with pins clips (`overflow: clip`, not hidden, so focusing a pin never scrolls the map off its masks) and lets the halo paint past its edge while a pin has focus (`overflow-clip-margin`; browsers without it still clip).
+- **A screen that takes the focus** (a loading state with nothing else to focus, focusable to scroll by keyboard): its halo went round the whole screen, off every edge; it sits inside now, and inside a sheet follows the sheet's corners.
+- **Tab screen pattern:** its list had no gutter (the `#list-view` id Results list carries was missing), so the card and its halo ran to the screen's edges.
+
+**Open, not fixed (designer: report only):** 320 with 200% text isn't a build target, and breaks there that these checks only brushed: Results list cards reach the screen's right edge; New password's grouped rows clip their labels; the New password and Results list top-bar titles overlap their buttons. At 200% text the map's pin labels run past its frame at both widths (Berlin, Chamonix, Dallas), so their halos are cut with them.

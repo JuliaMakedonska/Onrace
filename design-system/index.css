@@ -217,6 +217,7 @@
   --sheet-bar-top: var(--space-3);         /* [?] the bar's inset from the sheet's top edge */
   --sheet-bar-side: var(--space-4);        /* [?] the bar's inset from the sheet's side edges, so Cancel and the action stay out of the corner curve */
   --sheet-bar-h: var(--target);            /* [?] the bar's buttons: 44pt tall, a 44pt target, capsules (C7) */
+  --size-bar-max: 23px;                    /* [?] a sheet's bar text stops growing here (designer, 2026-11-08): HIG Body at xxxLarge, the largest size before the accessibility sizes, where iOS bars hand their items to the Large Content Viewer instead of growing; so Cancel, the title and the action fit a 320 sheet at 200% text */
   --glass-blur: 20px;       /* [?] not from Apple's kit */
   --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
   --picker-search-icon-x: calc(var(--space-4) * 2);   /* Race picker: the search icon's left edge, the form's 16px gutter plus the field's own 16px inset, so it follows the spacing step (named 2026-11-01; was a count in components/search-field.css) */
@@ -976,7 +977,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 /* ---- design-system/components/active-filter-chips-row.css · order 0240 ---- */
 /* active filter chips + "Clear all filters" (tertiary) */
 .chips-bar { display: flex; align-items: center; gap: var(--space-3); }   /* G27: about 12pt around bezeled elements */
-.chips-row { list-style: none; margin: 0; padding: calc(var(--tap-pad) * -1) 0; display: flex; flex-wrap: nowrap; gap: var(--space-3); flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }   /* the row scrolls, with no scrollbar: its end fades */
+.chips-row { list-style: none; margin: 0 calc((var(--focus-ring) + var(--focus-gap)) * -1); padding: calc(var(--tap-pad) * -1) calc(var(--focus-ring) + var(--focus-gap)); display: flex; flex-wrap: nowrap; gap: var(--space-3); flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: var(--fade-end); mask-image: var(--fade-end); }   /* the row scrolls, with no scrollbar: its end fades */
 .chips-row li { flex: none; }
 .chips-bar .clear-all { flex: none; }
 .chips-bar[hidden] { display: none; }
@@ -1091,11 +1092,13 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
 body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
 .phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
+.phone-screen:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }   /* a screen with nothing to focus takes the focus itself, to scroll by keyboard (a loading state): its halo sits inside it, since outside is off the screen (2026-11-08) */
 /* .screen-main: a specimen screen's main in the showcase, which has one page main of its own (step 7) */
 .phone-screen :is(main, .screen-main) { display: flex; flex-direction: column; min-height: 100%; }
 /* drill-downs and modals (every screen without a tab bar) */
 body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
+.phone-screen:has(> .top-bar:not(.top-bar--large)) > .top-bar { flex: none; }   /* the bar keeps its height when the page is taller than the screen: at 200% text it was squeezed to its 44pt minimum and its back link ran past its top edge (2026-11-08) */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) > :is(main, .screen-main) { flex: 1 0 auto; min-height: 0; }
 /* with an action bar (Race detail, Result detail): the bar is the scroll area's last child, sticky at its bottom, so
    content runs under its glass and still scrolls clear of it at the end, whatever the bar's height (G35, G54) */
@@ -1228,7 +1231,7 @@ body > .bottom-nav a::before {
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
 .map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
 .map-placeholder > * { position: relative; z-index: var(--z-lift); }
-.map-placeholder.has-pins { align-items: flex-end; }
+.map-placeholder.has-pins { align-items: flex-end; overflow: clip; }   /* with pins, clip, not hidden (2026-11-08): not a scroll container, so focusing a pin by the edge never scrolls the map off its masks, and the pin's halo can paint past the edge (below) */
 /* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line. The link is
    a 44pt box centred on the label (step 6, #5: HIG targets); the label is its span; the dot and the leader take no
    taps, so where two dots nearly touch (Boston, Killington) each label is its own target. Each pin's coordinates
@@ -1283,6 +1286,11 @@ body > .bottom-nav a::before {
 @media (hover: hover) { .map-pin:is(:hover, .is-hover) > span { background: var(--raised-hover); } }   /* the label rests on --raised */
 .map-pin:is(:active, .is-pressed) > span { background: var(--raised-pressed); }
 .map-pin[hidden] { display: none; }
+/* focus (2026-11-08): the halo follows the label, the shape you see, not the 44pt box round it; while a pin has focus
+   the map lets the halo paint past its edge, so a pin by the edge (Berlin at 320) keeps its whole halo */
+.map-pin:is(:focus-visible, .is-focus) { outline: none; }
+.map-pin:is(:focus-visible, .is-focus) > span { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
+.map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: calc(var(--focus-ring) + var(--focus-gap)); }
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
 .map-placeholder:has(> .state-message) { background: none; box-shadow: none; }
@@ -1386,7 +1394,7 @@ body:has(> .sheet > .phone-screen)::before {
   background: linear-gradient(var(--scrim), var(--scrim)) var(--surface);
 }
 body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
-.sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; }
+.sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; border-radius: inherit; }   /* its inside halo (screen.css) follows the sheet's corners */
 .sheet > .phone-screen > main { padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* the sheet's spacing (2026-11-06): clear of the bar, the bottom safe area kept */
 .sheet, .phone-screen { scrollbar-color: var(--boundary) transparent; scrollbar-width: thin; }
 /* the Filters sheet (markup pass, 2026-10-23): Cancel, the title and Apply filters in a top bar (G12); options as grouped
@@ -1544,6 +1552,20 @@ fieldset:disabled .row--nav { pointer-events: none; }
 }
 @media (hover: hover) { .top-bar :is(a, button):is(:hover, .is-hover) { color: var(--text-hover); } }   /* a text control: one step dimmer, two pressed */
 .top-bar :is(a, button):is(:active, .is-pressed) { color: var(--text-pressed); }
+/* focus (2026-11-08): the bar's buttons are text controls, so their halo is a text control's (text-link.css): a rounded
+   shape round the words and the back chevron with a little room (--focus-text-pad), never the 44pt target's box, which
+   met the screen's top edge where there is no top safe area (a browser, the viewer) and lost its top line. ::after,
+   since the back chevron and the busy spinner take ::before. The sheet's capsules keep a capsule's halo (modal-sheet.css) */
+.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus) { outline: none; }
+.top-bar :is(a, button):not(.sheet > .top-bar > *):is(:focus-visible, .is-focus)::after {
+  content: "";
+  position: absolute;
+  inset-inline: calc(var(--space-2) - var(--focus-text-pad));   /* the button's own side padding, less the room */
+  inset-block: max(calc((100% - 1lh) / 2 - var(--focus-text-pad)), var(--focus-ring));   /* at large text the line outgrows the 44pt target: the halo then stays inside the button, so it never crosses the screen's top edge */
+  border-radius: var(--radius-1);
+  outline: var(--focus-ring) solid var(--focus);
+  pointer-events: none;
+}
 /* the bar action: the screen's one primary in its bar, amber text like a native bar button (Color rule 1): Save on
    Log result, Log result on Results list (G5), Apply filters on the Filters sheet (G12) */
 .top-bar .save-btn, .top-bar .bar-action { margin-left: auto; font-weight: var(--weight-strong); color: var(--accent-ink); }
@@ -1572,8 +1594,9 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 
 /* ---- design-system/components/modal-sheet.css · order 0580 ---- */
 /* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,
-   so it is the sheet's own glass, not a second layer */
-.sheet > .top-bar { position: relative; flex: none; gap: var(--space-2); min-height: calc(var(--sheet-bar-top) + var(--sheet-bar-h)); padding: var(--sheet-bar-top) var(--sheet-bar-side) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+   so it is the sheet's own glass, not a second layer. Its text grows with the system size up to --size-bar-max and no
+   further (designer, 2026-11-08), as iOS bars stop growing: Cancel, the title and the action fit a 320 sheet at 200% text */
+.sheet > .top-bar { position: relative; flex: none; gap: var(--space-2); font-size: min(var(--size-item), var(--size-bar-max)); min-height: calc(var(--sheet-bar-top) + var(--sheet-bar-h)); padding: var(--sheet-bar-top) var(--sheet-bar-side) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* the sheet's bar buttons (designer, 2026-11-07; HIG Sheets): Cancel on the leading edge, the confirming action on the
    trailing edge, each a capsule (C7) 44pt tall, a 44pt target, inset from the corner by the bar's padding. Cancel neutral;
    the confirming action keeps the amber ink (Color rule 1). A state lifts the fill one level, two pressed; Cancel's text
@@ -1585,7 +1608,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .sheet > .top-bar > :is(a, button):not(.save-btn, .bar-action):is(:active, .is-pressed) { color: var(--text-primary); }
 .sheet > .top-bar > :is(.save-btn, .bar-action)[aria-busy="true"] { color: var(--text-secondary); }   /* busy: the spinner alone, as today */
 /* the title: centred between the two capsules, truncated rather than colliding */
-.sheet > .top-bar > .bar-title { position: static; flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sheet > .top-bar > .bar-title { position: static; flex: 1 1 0; min-width: 0; font-size: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* a sheet at its own height (2026-11-06): one field, Cancel and Save, for "Add official result link" on Results list and
    Result detail. It rests as tall as its content, under the large detent, as iOS sizes a sheet to what it holds */
 .sheet--fit { height: auto; max-height: var(--sheet-large); }   /* sized to its content, a custom detent: a one-field sheet sits well under the medium one */

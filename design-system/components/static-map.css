@@ -35,7 +35,7 @@
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
 .map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
 .map-placeholder > * { position: relative; z-index: var(--z-lift); }
-.map-placeholder.has-pins { align-items: flex-end; }
+.map-placeholder.has-pins { align-items: flex-end; overflow: clip; }   /* with pins, clip, not hidden (2026-11-08): not a scroll container, so focusing a pin by the edge never scrolls the map off its masks, and the pin's halo can paint past the edge (below) */
 /* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line. The link is
    a 44pt box centred on the label (step 6, #5: HIG targets); the label is its span; the dot and the leader take no
    taps, so where two dots nearly touch (Boston, Killington) each label is its own target. Each pin's coordinates
@@ -90,6 +90,11 @@
 @media (hover: hover) { .map-pin:is(:hover, .is-hover) > span { background: var(--raised-hover); } }   /* the label rests on --raised */
 .map-pin:is(:active, .is-pressed) > span { background: var(--raised-pressed); }
 .map-pin[hidden] { display: none; }
+/* focus (2026-11-08): the halo follows the label, the shape you see, not the 44pt box round it; while a pin has focus
+   the map lets the halo paint past its edge, so a pin by the edge (Berlin at 320) keeps its whole halo */
+.map-pin:is(:focus-visible, .is-focus) { outline: none; }
+.map-pin:is(:focus-visible, .is-focus) > span { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
+.map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: calc(var(--focus-ring) + var(--focus-gap)); }
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
 .map-placeholder:has(> .state-message) { background: none; box-shadow: none; }
