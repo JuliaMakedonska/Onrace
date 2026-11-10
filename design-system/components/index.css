@@ -738,7 +738,7 @@ body > .bottom-nav a::before {
 .map-placeholder:has(> .state-message)::before, .map-placeholder:has(> .state-message)::after { content: none; }
 .map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
 .map-placeholder .state-actions { justify-content: center; }
-.map-placeholder .state-message :is(a, button) { scroll-margin-block: var(--focus-reach); }   /* at 200% text the message is taller than the map: focus scrolls the action in with its halo, not to the edge (2026-11-08) */
+.map-placeholder .state-message :is(a, button) { scroll-margin-block: calc(var(--focus-reach) + var(--focus-line)); }   /* the ring's reach, and the dark line an amber fill puts under it (2026-11-10) */   /* at 200% text the message is taller than the map: focus scrolls the action in with its halo, not to the edge (2026-11-08) */
 
 /* ---- design-system/components/result-row.css · order 0400 ---- */
 /* ---------- Results list screen (wireframes/results-list*.html) ---------- */
@@ -1208,6 +1208,11 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 }
 @media (hover: hover) { :is(.register-btn, .open-btn, .submit-btn):is(:hover, .is-hover) { background: var(--accent-hover); } }
 :is(.register-btn, .open-btn, .submit-btn):is(:active, .is-pressed) { background: var(--accent-pressed); }
+
+/* keyboard focus on an amber fill (designer, 2026-11-10): amber ring on amber fill read as the button grown 2px, so a
+   thin dark line (--focus-on-accent, --focus-line) sits between them and the ring moves out by it. Only here: every
+   other control keeps the ring directly on its edge (base.css) */
+:is(.state-action:not(.secondary), .register-btn, .open-btn, .submit-btn):is(:focus-visible, .is-focus) { outline-offset: var(--focus-line); box-shadow: 0 0 0 var(--focus-line) var(--focus-on-accent); }
 
 /* ---- design-system/components/sticky-action-bar.css · order 0780 ---- */
 .action-caption { margin: var(--space-2) 0 0; text-align: center; font-size: var(--size-proof); color: var(--text-secondary); text-wrap: balance; }   /* no one-word last line (step 6, #28) */

@@ -101,4 +101,4 @@
 .map-placeholder:has(> .state-message)::before, .map-placeholder:has(> .state-message)::after { content: none; }
 .map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
 .map-placeholder .state-actions { justify-content: center; }
-.map-placeholder .state-message :is(a, button) { scroll-margin-block: var(--focus-reach); }   /* at 200% text the message is taller than the map: focus scrolls the action in with its halo, not to the edge (2026-11-08) */
+.map-placeholder .state-message :is(a, button) { scroll-margin-block: calc(var(--focus-reach) + var(--focus-line)); }   /* the ring's reach, and the dark line an amber fill puts under it (2026-11-10) */   /* at 200% text the message is taller than the map: focus scrolls the action in with its halo, not to the edge (2026-11-08) */

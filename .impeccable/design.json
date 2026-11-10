@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-08T21:41:55+00:00",
+  "generatedAt": "2026-11-10T17:43:13+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -219,6 +219,22 @@
           "#D59821",
           "#FCBC50",
           "#FFECD0"
+        ]
+      },
+      "focus-on-accent": {
+        "role": "neutral",
+        "displayName": "Focus On Accent",
+        "canonical": "#131518",
+        "oklch": "oklch(19.5% 0.007 258.4)",
+        "tonalRamp": [
+          "#090B0E",
+          "#232528",
+          "#404246",
+          "#5F6165",
+          "#808286",
+          "#A2A5A9",
+          "#C6C9CE",
+          "#ECEFF3"
         ]
       },
       "on-accent-fill": {

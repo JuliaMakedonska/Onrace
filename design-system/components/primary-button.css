@@ -70,5 +70,10 @@
 @media (hover: hover) { :is(.register-btn, .open-btn, .submit-btn):is(:hover, .is-hover) { background: var(--accent-hover); } }
 :is(.register-btn, .open-btn, .submit-btn):is(:active, .is-pressed) { background: var(--accent-pressed); }
 
+/* keyboard focus on an amber fill (designer, 2026-11-10): amber ring on amber fill read as the button grown 2px, so a
+   thin dark line (--focus-on-accent, --focus-line) sits between them and the ring moves out by it. Only here: every
+   other control keeps the ring directly on its edge (base.css) */
+:is(.state-action:not(.secondary), .register-btn, .open-btn, .submit-btn):is(:focus-visible, .is-focus) { outline-offset: var(--focus-line); box-shadow: 0 0 0 var(--focus-line) var(--focus-on-accent); }
+
 /* order 0920 */
 .submit-btn { margin: var(--space-2) 0 0; }

@@ -141,7 +141,10 @@ def grid(name, m, stages, element_end, stage, unid, sfx):
             k = k.replace('<div class="kit-state" data-nogeo>', '<div class="kit-state">', 1)
             got = stage(k, f"{sfx}-{theme[0].lower()}{STATES.index(st) if st in STATES else 9}", ['[data-st-crop]'], label)
             got = got.replace('<div class="kit-state" data-label=', '<div class="kit-state" data-nogeo data-label=', 1)
-            (focus if st == 'Focus' else cells).append(f'<figure class="dc-state">{got}<figcaption>{st}</figcaption></figure>')
+            cap = st
+            if st == 'Focus' and re.search(r'class="[^"]*\b(?:register-btn|open-btn|submit-btn|state-action(?![^"]*\bsecondary\b))\b', fr):
+                cap = 'Focus: a thin dark line between the ring and the amber fill'   # designer, 2026-11-10 (primary-button.css)
+            (focus if st == 'Focus' else cells).append(f'<figure class="dc-state">{got}<figcaption>{cap}</figcaption></figure>')
         rows.append(f'<div class="dc-states-theme" data-st-theme="{theme.lower()}"><div class="dc-states-row">' + ''.join(cells) + '</div>'
                     f'<p class="dc-states-k">{FOCUS_ROW}</p><div class="dc-states-row">' + ''.join(focus) + '</div></div>')   # one block per theme; the docs' theme switch shows its own (doc.css, 2026-11-07)
     return f'<div class="dc-states" data-w="{m["w"]}">' + ''.join(rows) + '</div>'

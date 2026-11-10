@@ -171,6 +171,9 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('States · a row on a sheet, pressed: menu value', 'text-secondary', 'group-pressed', 'text'),
     ('States · a field error under its row on a sheet (Log result)', 'error', 'group', 'text'),
     ('States · the primary button pressed', 'on-accent-fill', 'accent-pressed', 'text'),
+    ('Focus on an amber fill · the dark line on the fill (non-text, 3:1)', 'focus-on-accent', 'accent-fill', 'ui'),
+    ('Focus on an amber fill · the dark line on the fill under the pointer', 'focus-on-accent', 'accent-hover', 'ui'),
+    ('Focus on an amber fill · the dark line on the fill pressed', 'focus-on-accent', 'accent-pressed', 'ui'),
     ('States · a text control under the pointer, on the page', 'text-hover', 'page', 'text'),
     ('States · a text control under the pointer, on a card or row', 'text-hover', 'surface', 'text'),
     ('States · a text control pressed, on the page', 'text-pressed', 'page', 'text'),
@@ -649,6 +652,7 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('accent-ink', 'Accent ink', 'Amber as text and icon on a bar: the bar action (Save, Log result, Apply filters) and the current tab.', 'Anywhere in content.', 'Hierarchy rule 1 · Lesson 8: amber text on a light bar would need a darker amber than the fill, so the ink is its own role'),
     ('accent-hover', 'Accent, hover', 'The fill under the pointer.', 'Anywhere at rest; never as text (that is the ink’s hover).', 'Hierarchy rule 3: one primary, with a hover state'),
     ('accent-ink-hover', 'Accent ink, hover', 'The bar action (Save, Log result) under the pointer.', 'Anywhere at rest; never as a fill.', 'Step 5, the theme test: split from Accent, hover. In light the fill’s hover keeps dark text while the ink’s hover is text on a light bar, so one value couldn’t serve both'),
+    ('focus-on-accent', 'Focus on accent', 'The thin dark line between the focus ring and an amber fill, so the ring reads as a ring (designer, 2026-11-10).', 'On any other control: the ring sits directly on its edge.', f'Contrast: {cr(tok("focus-on-accent"), tok("accent-fill")):.2f}:1 on the accent'),
     ('on-accent-fill', 'On accent fill', 'Text and icons on the accent fill. The same primitive as the page.', 'Anywhere else.', f'Contrast: {cr(tok("on-accent-fill"), tok("accent-fill")):.2f}:1 on the accent'),
     ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races". The field error’s footnote and its small icon, and destructive text (Sign out), which were <code>--invalid</code> and <code>--destructive</code> until Lesson 8.', 'Not for emphasis, never as a fill for a whole card, never a ring or a line on a field (Lesson 9: the field error is a footnote under it).', 'Taste: no aggressive red (not the #FF4D2E family) · Kit feedback (designer, 2026-10-19): invalid and focus never look alike · HIG Alerts: destructive style · Designer, 2026-10-30: the field error, iOS style'),
     ('error-surface', 'Error surface', 'Behind an error message.', 'Not behind a card or a field.', 'States: color second, after icon and text'),
@@ -843,6 +847,7 @@ SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii,
 <tr><td><code>--focus-ring</code></td><td>{tok("focus-ring")}</td><td>Keyboard focus: the halo's width. Its color is the role <code>--focus</code>, the accent (2026-11-07).</td><td>iOS Full Keyboard Access · Color rule 1: where you are</td></tr>
 <tr><td><code>--focus-gap</code></td><td>{tok("focus-gap")}</td><td>Keyboard focus: the gap between an element and its ring, none since 2026-11-08: the ring sits directly on the element’s edge, as iOS draws it.</td><td>Designer, 2026-11-08 · iOS Full Keyboard Access</td></tr>
 <tr><td><code>--focus-reach</code></td><td>2px</td><td>Keyboard focus: how far a ring reaches past its element (the ring, since the gap is none), written out because overflow-clip-margin takes no calc() in Chrome; a pinned map clips this far out while a pin has focus.</td><td>Designer, 2026-11-08</td></tr>
+<tr><td><code>--focus-line</code></td><td>1px</td><td>Keyboard focus on an amber fill only: the dark line between the ring and the fill; the ring moves out by it.</td><td>Designer, 2026-11-10</td></tr>
 <tr><td><code>--focus-text-pad</code></td><td>4px</td><td>Keyboard focus on a text control (Text link, Forgot password?, Sort button): room round the words inside the rounded halo, never the 44pt target's box.</td><td>Designer, 2026-11-07</td></tr>
 <tr><td><code>--float-shadow</code></td><td>{tok("float-shadow")}<div class="shadow-demo">A sheet floats; cards don\'t.</div></td><td>Sheets and menus that float (the Filters sheet). Cards are flat.</td><td>Depth comes from background levels, not shadows · Taste: dark with depth</td></tr>
 <tr><td><code>--target</code></td><td>{tok("target")}</td><td>Minimum height of every control or its tap area.</td><td>Critique fix (round 2): touch targets</td></tr>
