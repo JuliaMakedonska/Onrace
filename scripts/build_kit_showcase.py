@@ -578,7 +578,12 @@ start = (f'<h1>Onrace design system</h1><p class="ds-lede">{inline(DS.START, "ui
          + _card('components.html', 'All components', _plural(len(DS.COMPONENTS), 'component'))
          + ''.join(_card(f'components.html#{slug_c(g["name"])}', g['name'], _plural(len(g['comps']), 'component')) for g in DS.GROUPS) + '</div></section>'
          '<section class="ds-group" aria-labelledby="g-patterns"><h2 id="g-patterns">Patterns and reference</h2><div class="ds-cards">'
-         + _card('patterns.html', 'Patterns', _plural(len(PATTERNS), 'pattern')) + _card('specimens.html', 'Every specimen', _plural(len(items), 'specimen')) + '</div></section>')
+         + _card('patterns.html', 'Patterns', _plural(len(PATTERNS), 'pattern')) + _card('specimens.html', 'Every specimen', _plural(len(items), 'specimen')) + '</div></section>'
+         # the examples (Lesson 9 step 6, 2026-11-10): a screen the product doesn't have, built only from the system; each state its own page
+         '<section class="ds-group" aria-labelledby="g-examples"><h2 id="g-examples">Examples</h2><div class="ds-cards">'
+         + ''.join(f'<a class="ds-card" href="../examples/{p}.html"><span class="ds-card-t">{H.escape(t)}</span><span class="ds-card-n">{H.escape(n)}</span></a>'
+                   for p, t, n in (('saved-races', 'Saved races', 'base'), ('saved-races-empty', 'Saved races', 'empty'), ('saved-races-loading', 'Saved races', 'loading'), ('saved-races-error', 'Saved races', 'error')))
+         + '</div></section>')
 # the specimen sheet was the start page until 2026-11-05: an old link to one of its cards (index.html#race-card) goes there
 OLD = json.dumps(sorted(set(RAW) | {'shell'}))
 write('index.html', DS.page('Onrace design system', 'index', start,

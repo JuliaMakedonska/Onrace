@@ -44,7 +44,7 @@ Onrace's design system in one folder, with one file the product links (Lesson 9,
 | `backlog.md` | What is known to be open, by the lesson that takes it | Yes |
 | `CONTRIBUTING.md` | The contribution rules: what goes where, in which order, and which check enforces it | Yes |
 | `patterns/*.html` | One page per pattern (Lesson 9 step 4): a composition of existing components on three or more screens, no style of its own (`patterns/README.md`) | Yes |
-| `examples/` | Empty for now | |
+| `examples/` | Screens the product doesn't have, built only from the system to test it: Saved races, four states (`examples/README.md`) | Yes |
 
 ## The docs (Lesson 9, step 2)
 

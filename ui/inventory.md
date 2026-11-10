@@ -472,5 +472,7 @@ How `design-system/docs/` is organised, read by `scripts/docs_shell.py` and `scr
 
 **Patterns:** `patterns.html`, each pattern by its anchor.
 
+**Examples** (Lesson 9 step 6, 2026-11-10): `design-system/examples/`, a screen the product doesn't have, built only from the system to test it, linked from the Overview, not from the nav: Saved races, its base, empty, loading and error states. What the system lacked for it is in `design-system/backlog.md`.
+
 **The family pages** (2026-11-05 to 2026-11-08) each redirect to the component a link names, or to the Components index: `bars-and-navigation`, `sheets-and-alerts`, `cards`, `lists-and-rows`, `detail-screens`, `chips`, `map`, `buttons-and-links`, `forms`, `empty-error-and-status`, `loading`.
 

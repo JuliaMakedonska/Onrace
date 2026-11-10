@@ -45,5 +45,8 @@ states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%
 // the patterns (Lesson 9 step 4, 2026-11-06): each a phone page of existing components, measured like a screen
 for (const f of readdirSync(join(ROOT, 'design-system/patterns')).filter(f => f.endsWith('.html')).sort())
   states.push({ name: '../design-system/patterns/' + f.replace('.html', ''), q: '', act: '', label: 'patterns/' + f.replace('.html', '') });
+// the examples (Lesson 9 step 6, 2026-11-10): screens built only from the system, measured like a screen
+for (const f of readdirSync(join(ROOT, 'design-system/examples')).filter(f => f.endsWith('.html')).sort())
+  states.push({ name: '../design-system/examples/' + f.replace('.html', ''), q: '', act: '', label: 'examples/' + f.replace('.html', '') });
 return states;
 }

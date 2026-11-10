@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saved races, empty · Onrace example</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../index.css?v=435b69d6">
+<script src="../tokens/theme.js"></script>
+</head>
+<!-- EXAMPLE: Saved races, empty (design-system/examples/README.md). A test of the system with a screen the product
+     doesn't have (research/jtbd.md → Related job 2, the Multi-Region Season Planner): built only from design-system/,
+     the Pushed screen pattern and the Empty or error state pattern, with no style of its own and every word in microcopy.md (rows 584–594). Not a
+     product screen: not in the tab bar, the viewer or flows.md. What the system lacked for it is left out, not drawn,
+     and listed in design-system/backlog.md → Examples: Saved races. -->
+<body class="onrace">
+  <div class="phone-screen">
+    <header class="top-bar">
+      <a class="back" href="../../wireframes/race-browse.html"><span>Discover</span></a>
+      <h1 class="bar-title">Saved races</h1>
+    </header>
+    <main>
+      <div class="state-message" role="status">
+        <h2>No saved races yet</h2>
+        <p>Races you save show up here, soonest first, with where each one is.</p>
+        <div class="state-actions">
+          <a class="state-action" href="../../wireframes/race-browse.html">Find races</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -364,6 +364,7 @@ STAMPED += [f'wireframes/{p}.html' for p in (   # step 5, Archive and Infrastruc
     'reset-password', 'reset-password-check-inbox', 'reset-password-error', 'reset-password-loading',
     'new-password', 'new-password-error', 'new-password-loading', 'profile', 'profile-error', 'profile-loading')]
 STAMPED += sorted('design-system/patterns/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/patterns')) if f.endswith('.html'))   # Lesson 9 step 4: the patterns, mirrored with the screens
+STAMPED += sorted('design-system/examples/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/examples')) if f.endswith('.html'))   # Lesson 9 step 6 (2026-11-10): the examples, screens built only from the system
 import subprocess
 # the showcase: arranged by role, each specimen's facts from ui/inventory.md → Showcase map (2026-10-26), before stamping
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_kit_showcase.py')], check=True)
@@ -1157,6 +1158,8 @@ for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css',
 # whose component left the inventory leaves public/ too
 shutil.rmtree(os.path.join(ROOT, 'public/design-system/docs'), ignore_errors=True)
 shutil.copytree(os.path.join(ROOT, 'design-system/docs'), os.path.join(ROOT, 'public/design-system/docs'))
+shutil.rmtree(os.path.join(ROOT, 'public/design-system/examples'), ignore_errors=True)   # the examples (2026-11-10), linked from the docs' Overview
+shutil.copytree(os.path.join(ROOT, 'design-system/examples'), os.path.join(ROOT, 'public/design-system/examples'), ignore=shutil.ignore_patterns('*.md'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)

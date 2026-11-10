@@ -111,9 +111,10 @@ SCREENS = sorted(p for p in glob.glob(os.path.join(ROOT, 'wireframes/*.html')) i
 ENTRY, MAPDATA = os.path.join(ROOT, 'design-system/index.css'), os.path.join(ROOT, 'design-system/map-data.css')
 DOC_PAGES = sorted(glob.glob(os.path.join(ROOT, 'design-system/docs/*.html')) + glob.glob(os.path.join(ROOT, 'design-system/docs/components/*.html')))
 REDIRECTS = [p for p in DOC_PAGES if 'http-equiv="refresh"' in open(p).read()]   # the old per-component addresses: no stylesheet, by design
-PATTERN_FILES = sorted(glob.glob(os.path.join(ROOT, 'design-system/patterns/*.html')))   # Lesson 9 step 4: compositions of existing components only
+PATTERN_FILES = sorted(glob.glob(os.path.join(ROOT, 'design-system/patterns/*.html')))
+EXAMPLE_FILES = sorted(glob.glob(os.path.join(ROOT, 'design-system/examples/*.html')))   # Lesson 9 step 6 (2026-11-10): screens built only from the system, held to a pattern's rules   # Lesson 9 step 4: compositions of existing components only
 # ui/shell.html redirects to the Tab screen pattern since 2026-11-06, so it isn't checked as a page of its own
-for sp in SCREENS + PATTERN_FILES +  [p for p in DOC_PAGES if p not in REDIRECTS]:
+for sp in SCREENS + PATTERN_FILES + EXAMPLE_FILES + [p for p in DOC_PAGES if p not in REDIRECTS]:
     h, name = open(sp).read(), os.path.relpath(sp, ROOT)
     head = h[:h.index('</head>')]
     links = [os.path.normpath(os.path.join(os.path.dirname(sp), l)) for l in re.findall(r'href="([\w./-]+?\.css)(?:\?v=[0-9a-f]+)?"', head)]
@@ -127,7 +128,7 @@ for sp in SCREENS + PATTERN_FILES +  [p for p in DOC_PAGES if p not in REDIRECTS
         fails.append(f'{name}: shows the static map but doesn\'t link design-system/map-data.css')
     if re.search(r'(?:kit|/map)\.css', head):
         fails.append(f'{name}: still links ui/kit.css or ui/map.css')
-    if sp in SCREENS or sp in PATTERN_FILES:   # a pattern holds no style of its own either: no block, no attribute, no class the components don't define
+    if sp in SCREENS or sp in PATTERN_FILES or sp in EXAMPLE_FILES:   # a pattern holds no style of its own either: no block, no attribute, no class the components don't define
         if re.search(r'<style\b|\sstyle="', h):
             fails.append(f'{name}: a style block or a style attribute (every value comes from the kit)')
         body = re.sub(r'<script\b.*?</script>', '', h, flags=re.S)
@@ -206,10 +207,10 @@ for dp in DOC_PAGES:
     for ctx in dict.fromkeys(c for _, c in d.words) if not dp.endswith('/backlog.html') else ():   # the backlog is ordered by the lessons that take each item
         for m in PROCESS.finditer(ctx): doc_process.setdefault(m.group(0).lower(), f'{os.path.relpath(dp, ROOT)}: "{ctx[max(0, m.start() - 40):m.end() + 20]}"')
 # the patterns' words are product words: each in microcopy.md, as on the screens (Lesson 9 step 4)
-for pf in PATTERN_FILES:
+for pf in PATTERN_FILES + EXAMPLE_FILES:   # an example's words too (2026-11-10)
     d = Doc(); d.feed(open(pf).read())
     for w, ctx in d.words:
-        if norm(w) not in MC_WORDS: fails.append(f'word in a pattern, not in microcopy.md: "{norm(w)}" ({os.path.relpath(pf, ROOT)}: "{ctx[:60]}")')
+        if norm(w) not in MC_WORDS: fails.append(f'word in a pattern or an example, not in microcopy.md: "{norm(w)}" ({os.path.relpath(pf, ROOT)}: "{ctx[:60]}")')
 for w, where in sorted(doc_process.items()):
     fails.append(f'course-process text on a docs page ("{w}"): {where} (it belongs in concept/concept.md)')
 for w, where in sorted(doc_missing.items()):
@@ -220,4 +221,4 @@ if fails:
     sys.exit(1)
 print(f'check_kit: pass ({len(names)} inventory components mapped, {len(MAP)} map rows with their states, {len(p.words)} specimen words in microcopy.md; '
       f'{len(SCREENS)} screens and {len(DOC_PAGES)} docs pages on design-system/index.css, every screen class defined; '
-      f'{len(PATTERN_FILES)} patterns on existing components only; every component its own page, every entry shown on its host page and redirecting there; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')
+      f'{len(PATTERN_FILES)} patterns and {len(EXAMPLE_FILES)} example pages on existing components only; every component its own page, every entry shown on its host page and redirecting there; {doc_words} words on the docs pages, each in microcopy.md or the source docs)')
