@@ -134,7 +134,7 @@ def grid(name, m, stages, element_end, stage, unid, sfx):
     FOCUS_ROW = 'Keyboard focus (iPad keyboard, Full Keyboard Access)'   # designer, 2026-11-08: focus shows only from a keyboard, never after a tap, so it isn't a state of the tap row
     for theme in ('Dark', 'Light'):
         cells, focus = [], []
-        for st in STATES + (['Invalid'] if inv else []):
+        for st in [x for x in STATES if not (x == 'Disabled' and m['disabled'] == 'omit')] + (['Invalid'] if inv else []):   # Disabled only where a screen disables it (2026-11-10)
             fr = build(inv if st == 'Invalid' else base, m, 'At rest' if st == 'Invalid' else st, theme)
             label = f'{name} · {st} · {theme}'
             k = f'<div class="kit-state" data-nogeo><p class="kit-label">{H.escape(label)}</p>{fr}</div>'

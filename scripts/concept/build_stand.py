@@ -171,9 +171,10 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('States · a row on a sheet, pressed: menu value', 'text-secondary', 'group-pressed', 'text'),
     ('States · a field error under its row on a sheet (Log result)', 'error', 'group', 'text'),
     ('States · the primary button pressed', 'on-accent-fill', 'accent-pressed', 'text'),
-    ('Focus on an amber fill · the dark line on the fill (non-text, 3:1)', 'focus-on-accent', 'accent-fill', 'ui'),
-    ('Focus on an amber fill · the dark line on the fill under the pointer', 'focus-on-accent', 'accent-hover', 'ui'),
-    ('Focus on an amber fill · the dark line on the fill pressed', 'focus-on-accent', 'accent-pressed', 'ui'),
+    ('Focus on an amber fill · the ring on the line (non-text, 3:1)', 'focus', 'focus-on-accent', 'ui'),
+    ('Focus on an amber fill · the line on the fill (non-text, 3:1)', 'focus-on-accent', 'accent-fill', 'ui'),
+    ('Focus on an amber fill · the line on the fill under the pointer', 'focus-on-accent', 'accent-hover', 'ui'),
+    ('Focus on an amber fill · the line on the fill pressed', 'focus-on-accent', 'accent-pressed', 'ui'),
     ('States · a text control under the pointer, on the page', 'text-hover', 'page', 'text'),
     ('States · a text control under the pointer, on a card or row', 'text-hover', 'surface', 'text'),
     ('States · a text control pressed, on the page', 'text-pressed', 'page', 'text'),
@@ -379,6 +380,10 @@ for _p in STAMPED + DOC_PAGES:
 _k = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_kit.py')], capture_output=True, text=True)
 print(_k.stdout.strip())
 if _k.returncode: sys.exit('check_kit failed: the build stops')
+# names that exist (Lesson 9 step 7, 2026-11-10): DESIGN.md, ui/inventory.md and every docs page name only tokens, classes and files that exist
+_n = subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/check_names.py')], capture_output=True, text=True)
+print(_n.stdout.strip())
+if _n.returncode: sys.exit('check_names failed (a renamed or deleted token, class or file is still named): the build stops')
 
 # ---------------------------------------------------------------- color rules (concept.md → Color rules)
 import math
@@ -653,7 +658,7 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('accent-ink', 'Accent ink', 'Amber as text and icon on a bar: the bar action (Save, Log result, Apply filters) and the current tab.', 'Anywhere in content.', 'Hierarchy rule 1 · Lesson 8: amber text on a light bar would need a darker amber than the fill, so the ink is its own role'),
     ('accent-hover', 'Accent, hover', 'The fill under the pointer.', 'Anywhere at rest; never as text (that is the ink’s hover).', 'Hierarchy rule 3: one primary, with a hover state'),
     ('accent-ink-hover', 'Accent ink, hover', 'The bar action (Save, Log result) under the pointer.', 'Anywhere at rest; never as a fill.', 'Step 5, the theme test: split from Accent, hover. In light the fill’s hover keeps dark text while the ink’s hover is text on a light bar, so one value couldn’t serve both'),
-    ('focus-on-accent', 'Focus on accent', 'The thin dark line between the focus ring and an amber fill, so the ring reads as a ring (designer, 2026-11-10).', 'On any other control: the ring sits directly on its edge.', f'Contrast: {cr(tok("focus-on-accent"), tok("accent-fill")):.2f}:1 on the accent'),
+    ('focus-on-accent', 'Focus on accent', 'The thin line between the focus ring and an amber fill, so the ring reads as a ring: the page color in dark, black in light (designer, 2026-11-10).', 'On any other control: the ring sits directly on its edge.', f'Contrast: {cr(tok("focus-on-accent"), tok("accent-fill")):.2f}:1 on the accent'),
     ('on-accent-fill', 'On accent fill', 'Text and icons on the accent fill. The same primitive as the page.', 'Anywhere else.', f'Contrast: {cr(tok("on-accent-fill"), tok("accent-fill")):.2f}:1 on the accent'),
     ('error', 'Error (soft coral)', 'Error titles and icons: "Couldn’t load races". The field error’s footnote and its small icon, and destructive text (Sign out), which were <code>--invalid</code> and <code>--destructive</code> until Lesson 8.', 'Not for emphasis, never as a fill for a whole card, never a ring or a line on a field (Lesson 9: the field error is a footnote under it).', 'Taste: no aggressive red (not the #FF4D2E family) · Kit feedback (designer, 2026-10-19): invalid and focus never look alike · HIG Alerts: destructive style · Designer, 2026-10-30: the field error, iOS style'),
     ('error-surface', 'Error surface', 'Behind an error message.', 'Not behind a card or a field.', 'States: color second, after icon and text'),
@@ -1145,7 +1150,7 @@ print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b,
 import subprocess
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_ui_overview.py')], check=True)
 # the Lesson 08 overview (scripts/build_tokens_overview.py), the workspace rail and every lesson bar: rebuilt with the kit
-for _s in ('scripts/build_tokens_overview.py', 'scripts/lessons_nav.py', 'scripts/build_voice_html.py', 'scripts/build_workspace.py'):
+for _s in ('scripts/build_tokens_overview.py', 'scripts/build_system_overview.py', 'scripts/lessons_nav.py', 'scripts/build_voice_html.py', 'scripts/build_workspace.py'):
     subprocess.run([sys.executable, os.path.join(ROOT, _s)], check=True)
 # mirror to public/ (GitHub Pages serves public/). Before the overflow and link checks (Lesson 9 step 1 follow-up,
 # 2026-11-04): both read public/, so a path change must never leave them reading stale pages

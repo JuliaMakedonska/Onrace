@@ -7,10 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=435b69d6">
+<link rel="stylesheet" href="../design-system/index.css?v=eaa418cd">
 <script src="../design-system/tokens/theme.js"></script>
-<link rel="preload" as="style" href="../design-system/map-data.css?v=435b69d6" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=435b69d6"></noscript>
+<link rel="preload" as="style" href="../design-system/map-data.css?v=eaa418cd" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=eaa418cd"></noscript>
 </head>
 <body class="onrace">
 
@@ -83,7 +83,7 @@
 
       <section class="view-area" aria-label="Map or list view">
 
-        <div id="list-view" class="view-panel">
+        <div id="list-view" class="view-panel list-area">
           <!-- ZONE: empty state (_screens.md → Race browse → Empty; flows.md
                HasResults → "no" → Empty). A legitimate data state, not an
                error — so no retry. Exits are all "adjusts filters" (loops
@@ -110,7 +110,7 @@
         <!-- Map view of the same empty result set: no pins to plot, same
              message and exits as the list, so switching views never hides
              the way out. -->
-        <div id="map-view" class="view-panel" hidden>
+        <div id="map-view" class="view-panel map-area" hidden>
           <div class="map-placeholder">
             <div class="state-message">
               <h2 data-if-filters>No races match your current filters</h2>

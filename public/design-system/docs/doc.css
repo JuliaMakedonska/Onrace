@@ -45,7 +45,6 @@
 .kit-stage dialog.alert { position: absolute; inset: 0; z-index: var(--z-sheet); margin: auto; height: max-content; }
 .kit-stage dialog.action-sheet { position: absolute; z-index: var(--z-sheet); inset: auto var(--space-2) var(--space-2); }
 .kit-frame .phone-screen { height: auto; overflow: visible; padding-bottom: 0; }   /* a strip of a screen, not the whole scrolling page */
-.kit-map { flex: 1; display: flex; flex-direction: column; padding: var(--space-4); }   /* the map's own panel, as #map-view on Race browse */
 
 .kit-doc {
   /* dark and quiet (designer, 2026-11-05; light for a few hours the same day, reverted): the artifact pages' near-black,

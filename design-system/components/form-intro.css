@@ -4,5 +4,5 @@
 
 /* order 0840 */
 /* ---------- forms: grouped rows (round 2), errors under their row ---------- */
-#log-form { padding: var(--space-4) 0 var(--space-7); }   /* in its sheet (round 2, G40): the sheet's main has the gutter */
+.sheet-form { padding: var(--space-4) 0 var(--space-7); }   /* in its sheet (round 2, G40): the sheet's main has the gutter */
 .form-intro { margin: 0 0 var(--space-4); font-size: var(--size-meta); color: var(--text-secondary); }

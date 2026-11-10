@@ -50,7 +50,8 @@ TYPE = {   # style: font, size, weight, line height, tracking (DESIGN.md → Typ
     'label': ('font-text', 'size-label', 'weight-strong', 'leading-tight', 'tracking-label'),
     'tab-label': ('font-text', 'size-label', 'weight-strong', 'leading-body', None),
 }
-ROUNDED = ['radius-1', 'radius-2', 'radius-3', 'radius-sheet', 'radius-capsule', 'radius-circle', 'radius-alert']
+ROUNDED = ['radius-1', 'radius-2', 'radius-sheet',   # --radius-3 left 2026-11-10: a docs-layer token (concept/stand.css), not the product's
+            'radius-capsule', 'radius-circle', 'radius-alert']
 fm_lines = ['colors:'] + [f'  {n}: "{resolve(n)}"' for n in ROLES] + ['typography:']
 for t, (f, z, w, l, tr) in TYPE.items():
     fm_lines += [f'  {t}:', f'    fontFamily: "{resolve(f).replace(chr(34), "")}"', f'    fontSize: "{resolve(z)}"', f'    fontWeight: {resolve(w)}', f'    lineHeight: {resolve(l)}']

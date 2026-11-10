@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-10T18:07:06+00:00",
+  "generatedAt": "2026-11-10T18:51:44+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -841,7 +841,7 @@
     "rules": [
       {
         "name": "The Two Lights Rule",
-        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the pressed segment is `--pressed`, a checked checkbox is `--text-primary` (Text 1, C4). The keyboard focus halo is amber (`--focus`, since 2026-11-07): it marks where you are (Color rule 1) and shows only while a keyboard moves focus, so it is transient and doesn't count toward the two.",
+        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the selected segment is `--selected`, a checked checkbox is `--text-primary` (Text 1, C4). The keyboard focus ring is amber (`--focus`, since 2026-11-07): it marks where you are (Color rule 1) and shows only while a keyboard moves focus, so it is transient and doesn't count toward the two.",
         "section": "colors"
       },
       {
@@ -884,11 +884,11 @@
       "**Do** step a secondary action up or down so the screen keeps exactly one filled button.",
       "**Do** take every value from `design-system/tokens/tokens.css`, and give components semantic roles, never color primitives. Pages and the components hold no raw values.",
       "**Do** draw icons as Solar Bold masks in the color of their text: 15px in meta, 18px in buttons and fields, 26px in the tab bar. The small UI glyphs (back, chevrons, disclosure, the search magnifier) are Solar Linear (designer exception, step 6).",
-      "**Do** keep 44px targets, the 2px amber `--focus` ring directly on the element's edge (only on `:focus-visible`), and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).",
+      "**Do** keep 44px targets, the 2px amber `--focus` ring directly on the element's edge, with a thin line between ring and fill on an amber button (only on `:focus-visible`), and 0ms motion under `prefers-reduced-motion` (skeletons still; only the busy spinner keeps turning).",
       "**Do** check text on glass against the worst case behind it, not against the glass's own tint."
     ],
     "donts": [
-      "**Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, an icon in content, a status, or the map. The keyboard focus halo is the one transient exception.",
+      "**Don't** put the amber on a finish time, a chip, a filter chip, a count, a link, an icon in content, a status, or the map. The keyboard focus ring is the one transient exception.",
       "**Don't** use green, a check icon or the word \"verified\" on a result or on Results list.",
       "**Don't** give formats their own colors. Every format chip is the same neutral chip.",
       "**Don't** use pure `#000`, `#0B0C0E`, the `#ff4d2e` family, `src/style.css` or the wireframe grays.",
@@ -897,7 +897,7 @@
       "**Don't** drop the radius to 0, or round content into pills (pills belong to bar chrome only).",
       "**Don't** give cards a shadow, a border at rest, or glass.",
       "**Don't** use `--hairline` or `--boundary` as a fill.",
-      "**Don't** let an error and a focus look alike: a coral footnote under the group for an error, the amber halo for focus. Never a ring or a line on an invalid field.",
+      "**Don't** let an error and a focus look alike: a coral footnote under the group for an error, the amber ring for focus. Never a ring or a line on an invalid field.",
       "**Don't** use tabular figures on finish times: Schibsted spaces the colons wide (\"24 : 36\")."
     ]
   }

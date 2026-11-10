@@ -146,7 +146,7 @@ for sp in SCREENS + PATTERN_FILES + EXAMPLE_FILES + [p for p in DOC_PAGES if p n
 # so a new component can't skip its specimen, and through it its Showcase map row, its Docs map row and its docs section.
 # Not shown there by design: the scroll states the screens' scripts set (.is-scrolled on a drill-down's top bar, .is-at-end
 # on the sticky action bar), and Race browse's .view-area, the container its List / Map panels switch in.
-_SHOWN_ELSEWHERE = {'is-scrolled', 'is-at-end', 'view-area'}
+_SHOWN_ELSEWHERE = {'view-area'}   # 2026-11-10: .is-scrolled and .is-at-end are on specimens now (the detail screen's top bar scrolled, the action bar at the end of the page)
 _spec = H.unescape(open(os.path.join(ROOT, 'design-system/docs/specimens.html')).read()) + ''.join(open(f).read() for f in glob.glob(os.path.join(ROOT, 'design-system/patterns/*.html')))
 _shown = {c for a in re.findall(r'class="([^"]*)"', _spec) for c in a.split()} | set(re.findall(r"classList\.(?:add|toggle|remove)\('([\w-]+)'", _spec))
 for c in sorted(DEFINED - _shown - _SHOWN_ELSEWHERE):
@@ -182,7 +182,7 @@ for fam in DS.OLD_FAMILIES:   # the family pages of 2026-11-05 to 2026-11-08: ea
     if 'components.html' not in _read(f'{fam}.html'):
         fails.append(f'{fam}.html: the old family page doesn\'t redirect')
 SOURCES = {f: open(os.path.join(ROOT, f)).read() for f in ('DESIGN.md', 'concept/concept.md', 'concept/references.md',
-           'design-system/tokens/tokens.css', 'design-system/CONTRIBUTING.md', 'design-system/backlog.md')}   # the last three since 2026-11-08: the Foundations, Contributing and Backlog pages render them
+           'design-system/tokens/tokens.css', 'design-system/CONTRIBUTING.md', 'design-system/backlog.md', 'design-system/map-data.css')}   # the last three since 2026-11-08: the Foundations, Contributing and Backlog pages render them
 SOURCES['ui/inventory.md'] = re.sub(r'^## Docs map .*?(?=^## |\Z)', '', INV, flags=re.M | re.S)   # the Docs map's words must come from the rest
 VOCAB = MC_WORDS | {norm(w) for t in SOURCES.values() for w in WORD.findall(t)}
 class Doc(HTMLParser):   # every word a reader sees on a docs page (scripts and styles aside)

@@ -503,7 +503,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 .state-message--archive:not([role="alert"], .is-error, :has([data-retry])) { --state-icon: var(--icon-archive); }   /* Results list empty: the results archive */
 .state-message[hidden], .state-msg[hidden] { display: none; }
 /* where a state sits: centered in the free area, directly on the page (designer, 2026-10-22: no frame, surface or outline) */
-#list-view:has(> .state-message) { flex: 1; display: flex; flex-direction: column; justify-content: center; }   /* below the header, above the floating tab bar */
+.list-area:has(> .state-message) { flex: 1; display: flex; flex-direction: column; justify-content: center; }   /* below the header, above the floating tab bar */
 .phone-screen :is(main, .screen-main) > section:not([hidden]):has(> .state-message:only-child) { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-inline: var(--space-4); }   /* Profile -error: the state inside its section */
 .phone-screen :is(main, .screen-main) > .state-message { flex: 1; align-content: center; padding-inline: var(--space-4); }   /* a drill-down: under the top bar */
 .phone-screen > form.search ~ :is(main, .screen-main) { padding: 0 var(--space-4) calc(var(--space-6) + var(--safe-bottom)); }   /* Race picker: the list under the search takes the gutter */
@@ -582,8 +582,8 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 /* ---- design-system/components/screen.css · order 0360 ---- */
 .view-area { display: contents; }
 .view-panel { flex: 1; min-height: 0; }
-#list-view[hidden], #map-view[hidden] { display: none; }
-#list-view { padding: 0 var(--space-4) var(--space-4); }
+.list-area[hidden], .map-area[hidden] { display: none; }   /* layout on classes, ids for the scripts only (designer, 2026-11-10; #list-view and #map-view until then) */
+.list-area { padding: 0 var(--space-4) var(--space-4); }
 
 /* ---- design-system/components/race-card.css · order 0370 ---- */
 /* hover one level up, pressed two (Lesson 9 step 3; the hover ring went: one rule for every fill). G23: the pressed highlight on tap */
@@ -641,7 +641,7 @@ body > .bottom-nav a::before {
 
 /* ---- design-system/components/static-map.css · order 0390 ---- */
 /* map view: static Natural Earth background (designer decision); the interactive Map stays deferred */
-#map-view { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
+.map-area { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
 .map-placeholder {
   position: relative;
   container-type: size;            /* pins compute their height from the map's width (cqw) */
@@ -1325,7 +1325,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 
 /* ---- design-system/components/form-intro.css · order 0840 ---- */
 /* ---------- forms: grouped rows (round 2), errors under their row ---------- */
-#log-form { padding: var(--space-4) 0 var(--space-7); }   /* in its sheet (round 2, G40): the sheet's main has the gutter */
+.sheet-form { padding: var(--space-4) 0 var(--space-7); }   /* in its sheet (round 2, G40): the sheet's main has the gutter */
 .form-intro { margin: 0 0 var(--space-4); font-size: var(--size-meta); color: var(--text-secondary); }
 
 /* ---- design-system/components/locked-form.css · order 0850 ---- */

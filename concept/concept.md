@@ -152,7 +152,7 @@ A race card reads as a date and a place, not as an image or a promotion. The dat
 
 ### 3. Each format by name, not one sport's look
 
-Every card names its format: a small uppercase chip, neutral (Hierarchy rule 2): a subtle `--bg-2` fill with a `--chip-text` label, the same for every format, never the accent. No single sport sets the look. *(Signed 2026-10-13: the designer's neutral chip from Hierarchy rule 2. Written in here on 2026-10-18 in place of "the most visible label on a card … with a high-contrast fill". The chip is metadata; the race name and the date lead the card.)*
+Every card names its format: a small uppercase chip, neutral (Hierarchy rule 2): a subtle `--bg-2` fill with a `--chip-text` label (since renamed `--raised` and `--text-secondary`), the same for every format, never the accent. No single sport sets the look. *(Signed 2026-10-13: the designer's neutral chip from Hierarchy rule 2. Written in here on 2026-10-18 in place of "the most visible label on a card … with a high-contrast fill". The chip is metadata; the race name and the date lead the card.)*
 
 - **Data:**
   - `../research/jtbd.md` → Emotional job: "be recognized as what I actually am — a hybrid athlete — so that the tools I use reflect my training identity instead of forcing me into a single-sport box."
@@ -268,7 +268,7 @@ Round 2, in `directions.html`. All three were built under the Hierarchy rules ab
 **Chosen: Direction A, "Podium".** Why: it keeps the clearest hierarchy, uses the accent scarcely (once or twice per screen), and has the black-and-white photos.
 - Graphite ground `#131518`, sodium amber accent `#F5B649` (round 1 Direction 3's accent, exactly), Schibsted Grotesk (display) + Hanken Grotesk (text), 6px radius, Solar bold icons.
   - **Updated 2026-10-18 (Lesson 7, step 1), to match the screens.** "6px radius" describes the round-2 direction. On the screens, Podium has two product radii: 4px for inner shapes (the photo inside a card, the date tile, chips, List/Map segments, map pin labels, checkboxes) and 6px for outer shapes (cards, result rows, buttons, fields, the List/Map track, the saved confirmation, the map frame). The Filters sheet isn't one of these: it follows the native iOS sheet (designer decision 2026-10-18, see [Native iOS](#native-ios-designer-rule-2026-10-18)), so its current 12px top corners are a gap to close in step 3, not a third Podium radius. *(Closed 2026-10-19, step 3b: the sheet takes `--radius-sheet`, 38px [?]; `--radius-3` (12px) is stand panels only.)*
-- Its values now live in `tokens.css`, its components in `components.css`, and its stand in `concept.html`.
+- Its values were in `tokens.css`, its components in `components.css`, and its stand in `concept.html` (the kit took the first two in Lesson 7).
 - **Settled:** the amber's resemblance to HYROX yellow (Designer's taste → Like 6; attribute 3). Measured against the HYROX-ecosystem yellow in `research/screens/` (RoxFit `#FFEC00`), it is 19.2° of hue and ΔE 18.7 away, below Color rule 3b's threshold (≥ 25° and ΔE ≥ 24). **Decided 2026-10-14:** kept, as a designer override of rule 3b. The reason is recorded under Color rules → 3b.
 
 **Not picked:**
@@ -1460,4 +1460,29 @@ With the ring directly on the edge (2026-11-08), an amber ring on an amber fill 
 **Built only from the system** (`design-system/examples/`): the Pushed screen pattern ("‹ Discover", the title), the results row with its order label ("3 saved races · Soonest first"), three race cards from three regions (London, Dallas, Chamonix) in Results list's `#list-view`; empty and error from the Empty or error state pattern on a pushed screen; loading from Race browse's skeletons. No style, no new class, eleven new lines in `microcopy.md` first (rows 584–594). Not a product screen: no tab, not in the viewer, `sitemap.md` or `flows.md`. Linked from the docs' Overview. The build holds the examples to a pattern's rules (check_kit: index.css only, no style, defined classes, words in microcopy.md) and measures each state like a screen (overflow, focus: `scripts/screen_states.mjs`).
 
 **What it showed.** The screen needs nothing new to look right, but the job needs pieces the system doesn't have, each left out and logged in `design-system/backlog.md` → Examples: a save control (so there is no way in, and the empty state names an action the product lacks), a way to remove a saved race (a card can't hold a second link), a heading to group cards by region (the job's own axis), the map at a fixed height in a scrolling screen, an empty-state icon for "nothing saved" (it shows the search glass), a decision on the word "saved" (already "Saved: <race name>" for a logged result), and where the screen lives. A first build also showed that a race list needs Results list's `#list-view` for its side gutter, the same trap the Tab screen pattern fell into on 2026-11-08: the gutter belongs to an id, not to the list.
+
+### Step 7: the system and the product checked together (designer, 2026-11-10)
+
+**The check.** Drift (every component on every screen against its specimen, computed in Chrome), docs that lie, states in one theme only, patterns or examples with styles of their own, components and tokens without docs, `DESIGN.md` and the Foundations quoting values the code no longer has, and layout tied to a screen's id; plus the impeccable audit. 22 defects; the exceptions recorded apart (the 3b amber, Solar Linear, provisional [?] values, the light theme as proof only, Lesson 10, the Saved races backlog). The designer fixed all 22, with these decisions:
+
+| # | Defect | Fix |
+|---|---|---|
+| 1 | `DESIGN.md` listed Apply as an amber fill | Apply is the amber ink, named under `--accent-ink` |
+| 2, 8 | `DESIGN.md` → Shapes and the inventory still described the sheet bar's capsules on `--sheet-button` | text-only buttons, as built on 2026-11-08 |
+| 3 | `--radius-avatar` named | `--radius-circle` |
+| 4 | `--pressed` named in five rules (quoted on seven docs pages) | each rule's real role: `--selected`, `--raised-hover`, `--raised-pressed`, `--group` |
+| 5 | `ui/map.css` named | `design-system/map-data.css` |
+| 6 | Race card location at 14px | 15px, `--size-meta` |
+| 7 | "Halo" beside the ring on the edge; the amber-fill line only in one paragraph | "ring" throughout; the line named in the Do's |
+| 9, 10 | The Overview and the specimens' intro spoke of family pages | component pages |
+| 11 | The light focus ring at 2.82:1 on the line, the pair unchecked | the line is the page color in dark and black in light (designer's choice of three: a page-colored line sits at 1.4–2.2:1 on the light amber fills, so no ring could make "line on amber ≥ 3:1" pass there); ring-on-line and line-on-amber pairs checked in both themes |
+| 12 | A light `--accent-pressed` equal to dark, called a no-op | **not a defect**: build check 19 needs every state role's light value written out; the line stays, with a comment saying so |
+| 13, 14 | The action bar at the end of the page and the detail screen's top bar at rest, transparent on the screens, absent from the docs | specimen stages and Showcase map states; `.is-at-end` and `.is-scrolled` no longer exempt from check 21. Found with it: the "Scrolled on a detail screen" stage lacked `.is-scrolled` and rendered transparent, the opposite of its label |
+| 15 | Disabled shown for components no screen disables | `omit` in the States map for 14 components (markup and page scripts checked); Disabled stays for the 12 a screen disables |
+| 16–18 | Layout on `#list-view`, `#map-view`, `#log-form` | `.list-area`, `.map-area`, `.sheet-form`; the ids stay for the scripts. Every element's box and style on all 236 screen states compared before and after: 0 changed. Found with it: the map specimen used the docs-only `.kit-map` (now `.map-area`), and the Log result specimen showed an old intro line ("Every field is needed…") outside its form |
+| 19, 20 | The phone screen, `.visually-hidden`, the screen's ring, the map data and solid glass undocumented | `DESIGN.md` → Layout (quoted on Spacing and layout), the map data's tokens on Spacing and layout, solid glass under Reduce Transparency on Color |
+| 21 | `--radius-3` in the product's frontmatter | left the sidecar's radii: a docs-layer token |
+| 22 | "Opens the race website — …" | "Opens the race website: registration and payment happen there." (`microcopy.md` row 171) |
+
+**A new build check** (`scripts/check_names.py`, check 23): `DESIGN.md`, the inventory and every docs page may only name tokens, classes and files that exist; a sentence about what a name was, or a dated record, may name what is gone. It found the stale names the table above lists and seven more in the specimens' notes, the inventory's component rows and two `concept.md` sentences quoted on `why.html`.
 

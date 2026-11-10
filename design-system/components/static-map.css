@@ -4,7 +4,7 @@
 
 /* order 0390 */
 /* map view: static Natural Earth background (designer decision); the interactive Map stays deferred */
-#map-view { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
+.map-area { display: flex; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
 .map-placeholder {
   position: relative;
   container-type: size;            /* pins compute their height from the map's width (cqw) */

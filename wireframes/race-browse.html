@@ -32,10 +32,10 @@ window.RACE_CATALOG = [
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=435b69d6">
+<link rel="stylesheet" href="../design-system/index.css?v=eaa418cd">
 <script src="../design-system/tokens/theme.js"></script>
-<link rel="preload" as="style" href="../design-system/map-data.css?v=435b69d6" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=435b69d6"></noscript>
+<link rel="preload" as="style" href="../design-system/map-data.css?v=eaa418cd" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=eaa418cd"></noscript>
 </head>
 <body class="onrace">
 
@@ -112,7 +112,7 @@ window.RACE_CATALOG = [
 
       <section class="view-area" aria-label="Map or list view">
 
-        <div id="list-view" class="view-panel">
+        <div id="list-view" class="view-panel list-area">
           <!-- Each card is one link into Race detail (the whole card is the
                tap target), via its loading state — flows.md: "taps a race
                card" → DetailLoading → Race detail. Description moved to Race detail; location shown
@@ -217,7 +217,7 @@ window.RACE_CATALOG = [
              DetailLoading. Without them the Map view had no way forward
              (_critique.md #1). Pins hide with the same filter check as the
              cards, so both views always show one result set. -->
-        <div id="map-view" class="view-panel" hidden>
+        <div id="map-view" class="view-panel map-area" hidden>
           <div class="map-placeholder has-pins" role="group" aria-label="Map of the filtered races">
             <a class="map-pin" data-pin="berlin-marathon" href="race-detail-loading.html?race=berlin-marathon" aria-label="Berlin, Berlin Marathon, 27 Sep 2026"><span>Berlin</span></a>
             <a class="map-pin" data-pin="hyrox-london" href="race-detail-loading.html?race=hyrox-london" aria-label="London, HYROX London, 6 Dec 2026"><span>London</span></a>

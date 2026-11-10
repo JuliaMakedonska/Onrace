@@ -36,5 +36,5 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 /* order 0360 */
 .view-area { display: contents; }
 .view-panel { flex: 1; min-height: 0; }
-#list-view[hidden], #map-view[hidden] { display: none; }
-#list-view { padding: 0 var(--space-4) var(--space-4); }
+.list-area[hidden], .map-area[hidden] { display: none; }   /* layout on classes, ids for the scripts only (designer, 2026-11-10; #list-view and #map-view until then) */
+.list-area { padding: 0 var(--space-4) var(--space-4); }

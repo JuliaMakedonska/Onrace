@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onrace — Design system</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root{
+    --bg:#0b0c0e;
+    --bg-elev:#141518;
+    --bg-elev-2:#1b1d21;
+    --border:#2a2c31;
+    --text:#eef0f2;
+    --text-dim:#9aa0a8;
+    --text-faint:#686e77;
+    --accent:#ff4d2e;
+    --accent-dim:#ff4d2e33;
+    --benchmark:#2dd4bf;
+    --benchmark-dim:#2dd4bf26;
+    --patterns:#a78bfa;
+    --patterns-dim:#a78bfa26;
+    --unconfirmed:#e6a23c;
+    --unconfirmed-dim:#e6a23c22;
+    --ok:#4ade80;
+    --ok-dim:#4ade8026;
+    --job-loc:#60a5fa;
+    --job-loc-dim:#60a5fa26;
+    --job-log:#f472b6;
+    --job-log-dim:#f472b626;
+    --job-retrieve:#fbbf24;
+    --job-retrieve-dim:#fbbf2426;
+    --radius:10px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;
+    font-size:16px;
+  }
+  a{color:var(--accent)}
+  a:hover{text-decoration-thickness:2px}
+  code{
+    background:var(--bg-elev-2);
+    padding:.1em .4em;
+    border-radius:4px;
+    font-size:.9em;
+    color:#d7dadf;
+  }
+
+  /* Nav */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,12,14,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .brand{font-weight:800; letter-spacing:.02em; text-transform:uppercase; font-size:14px; color:var(--text)}
+  .brand span{color:var(--accent)}
+  .navlinks{display:flex; gap:4px; margin-left:auto; flex-wrap:wrap}
+  .navlinks a{
+    color:var(--text-dim); text-decoration:none; font-size:13px; font-weight:700;
+    letter-spacing:.04em; text-transform:uppercase; padding:8px 12px; border-radius:6px;
+  }
+  .navlinks a:hover{background:var(--bg-elev-2); color:var(--text)}
+  .navlinks a.active{color:var(--text); background:var(--bg-elev-2)}
+
+  
+  /* Lessons bar (scripts/lessons_nav.py): the same six links on every artifact page */
+  .lessonbar{border-bottom:1px solid var(--border)}
+  .lessonbar-inner{max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
+  .lessonbar-inner::-webkit-scrollbar{display:none}
+  .lessonbar a{flex:none; color:var(--text-faint); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:.04em; padding:8px 10px; border-bottom:2px solid transparent; white-space:nowrap}
+  .lessonbar a:hover{color:var(--text)}
+  .lessonbar a[aria-current="page"]{color:var(--text); border-bottom-color:var(--accent)}
+  .in-shell .lessonbar{display:none}
+  /* Hero (same as ia.html and voice.html) */
+  header.hero{ max-width:var(--maxw); margin:0 auto; padding:64px 24px 40px; }
+  .kicker{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; }
+  header.hero h1{ font-size:clamp(36px,6vw,60px); margin:0 0 14px; font-weight:800; letter-spacing:-.02em; }
+  .hero-desc{color:var(--text-dim); font-size:18px; max-width:720px; margin:0 0 6px; line-height:1.5}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin:24px 0 0}
+  .pill{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim); }
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:28px 0 0}
+  a.card-link{ display:block; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; text-decoration:none; transition:border-color .15s, transform .15s; }
+  a.card-link:hover{border-color:var(--accent); transform:translateY(-1px)}
+  .si-tag{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px}
+  .si-title{color:var(--text); font-weight:700; font-size:15px; display:block; margin-bottom:4px}
+  .si-desc{color:var(--text-dim); font-size:13px; display:block}
+  main{max-width:var(--maxw); margin:0 auto; padding:0 24px 80px}
+  section.block{padding:56px 0; border-top:1px solid var(--border); scroll-margin-top:72px}
+  .section-tag{ display:inline-flex; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:5px 12px; border-radius:999px; margin-bottom:16px; }
+  .tag-p{background:var(--accent-dim); color:var(--accent)}
+  .tag-d{background:var(--patterns-dim); color:var(--patterns)}
+  .tag-f{background:var(--unconfirmed-dim); color:var(--unconfirmed)}
+  .tag-m{background:var(--benchmark-dim); color:var(--benchmark)}
+  .tag-t{background:var(--job-loc-dim); color:var(--job-loc)}
+  .tag-o{background:var(--ok-dim); color:var(--ok)}
+  h2{font-size:28px; margin:0 0 8px; font-weight:800; letter-spacing:-.01em}
+  h3{font-size:19px; margin:34px 0 10px; font-weight:700}
+  h3[id]{scroll-margin-top:72px}
+  .prose p, .prose li{color:var(--text-dim); font-size:15px; max-width:820px}
+  .prose strong{color:var(--text)}
+  .prose ul, .prose ol{padding-left:20px; margin:0 0 14px}
+  .prose li{margin-bottom:6px}
+  .prose li ul{margin-top:6px}
+  .prose p.rule{font-size:16.5px; color:var(--text); background:var(--bg-elev); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:12px 16px}
+  .prose p.note{font-size:13.5px; color:var(--text-faint)}
+  .tbl-wrap{overflow-x:auto; margin:10px 0 20px; border:1px solid var(--border); border-radius:var(--radius)}
+  table{border-collapse:collapse; width:100%; font-size:13.5px}
+  th{text-align:left; background:var(--bg-elev-2); color:var(--text-faint); font-size:11px; text-transform:uppercase; letter-spacing:.05em; padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap}
+  td{padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top; color:var(--text-dim)}
+  tr:last-child td{border-bottom:none}
+  td strong{color:var(--text)}
+  .two-col{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:18px}
+  .two-col h3{margin-top:6px}
+  .panel{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:6px 20px 8px}
+  .tech-grid, .attr-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:14px; margin:14px 0 8px}
+  .tech, .attr{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px}
+  .tech p, .attr p{margin:0 0 8px}
+  .tech-from{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--patterns)}
+  .prose .tech-name, .prose .attr-title{color:var(--text); font-weight:700; font-size:15.5px; margin-top:6px}
+  .prose .tech-meta, .prose .attr-strength{font-size:13px; color:var(--text-faint)}
+  .scope{color:var(--benchmark); font-weight:700}
+  a.btn{display:inline-block; background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-weight:700; font-size:14px; text-decoration:none}
+  a.btn:hover{border-color:var(--accent)}
+  .stat-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:6px 0 18px}
+  .stat{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px}
+  .stat-n{display:block; font-size:36px; font-weight:800; letter-spacing:-.02em; color:var(--text); line-height:1.1}
+  .stat-l{display:block; font-size:13px; color:var(--text-dim); margin-top:6px}
+  .phones{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:28px; margin:18px 0}
+  .phone-fig{margin:0}
+  /* device frame: copied from wireframes/index.html at build time */
+{DEVICE_CSS}
+  .phone-fig .device-slot{margin:0 auto}
+  figcaption{max-width:412px; margin:12px auto 0; font-size:13.5px; color:var(--text-dim)}
+  figcaption strong{color:var(--text)}
+  .states{color:var(--text-faint)}
+  footer{max-width:var(--maxw); margin:0 auto; padding:24px; color:var(--text-faint); font-size:12.5px; border-top:1px solid var(--border)}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} a.card-link{transition:none} a.card-link:hover{transform:none} }
+
+  /* lesson template (scripts/lesson_page.py, 2026-10-26) */
+  .hero-line{color:var(--text-dim); font-size:15px; margin:10px 0 0; line-height:1.6}
+  .hero-line strong{color:var(--text)}
+  .src{white-space:nowrap}
+  .src-more{white-space:normal}  /* a source with two paths (look: tokens + components) may break between them on a phone */
+  .src-k{color:var(--text-faint); font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:.06em}
+  .hero-line a{color:var(--text); text-decoration:none}
+  .hero-line a:hover code{color:var(--accent)}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); gap:12px; margin:28px 0 0}
+  .stats .stat{padding:14px 16px}
+  .stats .stat-n{font-size:30px}
+  .stat-sub{display:block; font-size:12px; color:var(--text-faint); margin-top:4px}
+  .stages{list-style:none; counter-reset:st; margin:24px 0 0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:8px}
+  .stages a{display:flex; gap:10px; align-items:baseline; background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:10px 12px; text-decoration:none; color:var(--text-dim); font-size:13.5px; min-height:44px; box-sizing:border-box}
+  .stages a:hover{border-color:var(--accent); color:var(--text)}
+  .stages .st-k{flex:none; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent)}
+  .stages .st-l{color:var(--text); font-weight:700}
+  .led li strong:first-child{color:var(--text)}
+  .reg{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr)); gap:14px; margin:12px 0}
+  .reg--key{grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}   /* the key cards: wide, so a summary reads in one or two lines */
+  .reg-card{background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; display:grid; gap:6px; align-content:start}
+  .reg-q{margin:0; color:var(--text); font-weight:700; font-size:15px}
+  .reg-a{margin:0; color:var(--text-dim); font-size:14px}
+  .reg-meta{margin:0; font-size:12px; color:var(--text-faint)}
+  .reg-meta a{color:var(--text-faint)}
+  .lesson-tag{display:inline-block; font-size:11px; font-weight:800; letter-spacing:.06em; padding:3px 8px; border-radius:999px; background:var(--accent-dim); color:var(--accent); white-space:nowrap}
+  .prose{overflow-wrap:break-word}   /* long URLs in the rendered text break instead of widening the page */
+  .prose code, .hero-line code{overflow-wrap:anywhere}
+  .nav-inner{flex-wrap:nowrap; gap:16px}
+  .brand{flex:none}
+  .navlinks{flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; min-width:0}   /* one row that scrolls: a lesson has many stages */
+  .navlinks::-webkit-scrollbar{display:none}
+  .navlinks a{white-space:nowrap; flex:none}
+  @media (max-width:560px){ .nav-inner{flex-direction:column; align-items:stretch; gap:6px; padding:10px 16px} .navlinks{margin-left:0} }
+  .embed{border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--bg-elev); margin:14px 0 18px}
+  .embed-bar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 16px; padding:10px 14px; border-bottom:1px solid var(--border)}
+  .embed-t{font-weight:700; color:var(--text); font-size:14px}
+  .embed-t code{font-weight:400}
+  .embed-bar a{display:inline-flex; align-items:center; min-height:44px; color:var(--text); font-weight:700; font-size:13.5px; text-decoration:none}
+  .embed-bar a:hover{color:var(--accent)}
+  .embed iframe{display:block; width:100%; border:0; background:#131518}
+  .embed--tall iframe{height:min(82vh, 980px); min-height:560px}
+  .embed--phone{max-width:392px}
+  .embed--phone iframe{height:760px}
+  .embeds{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,392px); gap:18px; align-items:start}
+  @media (max-width:900px){ .embeds{grid-template-columns:minmax(0,1fr)} }
+  /* the fold (2026-11-05): one disclosure, the same as the design-system docs' (design-system/docs/doc.css): the title, a
+     short hint of what's inside, a Solar Linear chevron at the end (down closed, up open); a pointer, a quiet hover fill,
+     a rounded focus ring that hugs the row. Native <details>: Enter and Space toggle it. */
+  details.fold{border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-elev); margin:12px 0 16px; padding:4px 16px}
+  details.fold > summary{list-style:none; display:inline-flex; flex-wrap:wrap; align-items:center; gap:2px 0; width:fit-content; max-width:100%; box-sizing:border-box; min-height:44px; margin:0 -10px; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600; color:var(--text); font-size:15px}
+  details.fold > summary::-webkit-details-marker{display:none}
+  details.fold > summary::after{content:""; flex:none; width:16px; height:16px; margin-left:8px; background:var(--text-faint); -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9L12 15L5 9'/%3E%3C/svg%3E") center / contain no-repeat; transition:transform 200ms ease}
+  details.fold[open] > summary::after{transform:rotate(180deg)}
+  details.fold > summary:hover{background:var(--bg-elev-2, rgba(255,255,255,.05))}
+  details.fold > summary:hover::after{background:var(--text)}
+  details.fold > summary:focus-visible{outline:2px solid var(--text); outline-offset:2px}
+  .fold-sub{font-weight:400; color:var(--text-faint); font-size:inherit}
+  details.fold .fold-sub::before{content:"·"; margin:0 6px}
+  details.fold > .fold-body{padding:4px 0 12px}
+  @media (prefers-reduced-motion: reduce){ details.fold > summary::after{transition:none} }
+  .strip{list-style:none; padding:0; margin:8px 0; display:grid; gap:2px}
+  .strip li{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; min-height:40px; border-bottom:1px solid var(--border); padding:8px 0}
+  .strip a{color:var(--text); font-weight:700; text-decoration:none}
+  .strip a:hover{color:var(--accent)}
+  .lede{font-size:16px; color:var(--text-dim); max-width:820px; margin:0 0 14px}
+  footer p{margin:0 0 6px}
+  footer a{color:var(--text-dim)}
+  @media (max-width:480px){ header.hero{padding:40px 16px 28px} main{padding:0 16px 64px} .nav-inner{padding:0 16px} }
+
+  .checks{padding-left:22px}
+  .checks li{margin-bottom:8px}
+  .after li{margin-bottom:10px}
+  .after h2{font-size:17px; margin:18px 0 6px}
+
+</style>
+</head>
+<body>
+<!-- lessons:start --><script>if (window.top !== window.self) document.documentElement.classList.add("in-shell");</script><div class="lessonbar"><div class="lessonbar-inner" role="navigation" aria-label="Lessons"><a href="research.html">01 · Research</a><a href="personas.html">02 · Personas &amp; JTBD</a><a href="ia.html">03 · IA</a><a href="wireframes/index.html">04 · Wireframes</a><a href="voice.html">05 · Voice</a><a href="concept-overview.html">06 · Concept</a><a href="ui-overview.html">07 · UI assembly</a><a href="tokens-overview.html">08 · Design tokens</a><a href="system-overview.html" aria-current="page">09 · Design system</a></div></div><!-- lessons:end -->
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="brand" style="text-decoration:none">ON<span>RACE</span> · Design system</a>
+    <div class="navlinks"><a href="#docs">The docs</a><a href="#decisions">Key decisions</a><a href="#backlog">The backlog</a><a href="#more">The record</a></div>
+  </div>
+</nav>
+<a id="top"></a>
+<header class="hero">
+  <p class="kicker">Lesson 9 of 12 · Design system</p>
+  <h1>One design system, documented and checked</h1>
+  <p class="hero-desc">Lesson 9 (2026-11-03 to 2026-11-10): the kit as one folder with one entry point, documented page by page from the same file the screens link, checked against the product, and tested with a screen it doesn't have.</p>
+  <p class="hero-line"><strong>Lesson 9 of 12</strong> · 3–10 Nov 2026 · Sources of truth: <span class="src src-more"><span class="src-k">look:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/design-system/tokens/tokens.css"><code>design-system/tokens/tokens.css</code></a> + <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/design-system/components/"><code>design-system/components/</code></a></span> · <span class="src"><span class="src-k">words:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/microcopy.md"><code>microcopy.md</code></a></span> · <span class="src"><span class="src-k">structure:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/wireframes/"><code>wireframes/</code></a></span> · <span class="src"><span class="src-k">decisions:</span> <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md"><code>concept/concept.md</code></a></span></p>
+  <div class="stats"><div class="stat"><span class="stat-n">47</span><span class="stat-l">component pages</span><span class=stat-sub>and 10 entries shown on another</span></div><div class="stat"><span class="stat-n">7</span><span class="stat-l">foundations</span><span class=stat-sub>from DESIGN.md and the tokens</span></div><div class="stat"><span class="stat-n">4</span><span class="stat-l">patterns</span><span class=stat-sub>each on three or more screens</span></div><div class="stat"><span class="stat-n">61</span><span class="stat-l">docs pages</span><span class=stat-sub>each linking design-system/index.css</span></div><div class="stat"><span class="stat-n">23</span><span class="stat-l">build checks</span><span class=stat-sub>each stops the build</span></div></div>
+  
+  <ol class="stages"><li><a href="#docs"><span class="st-k">Live</span><span><span class="st-l">The docs</span></span></a></li><li><a href="#decisions"><span class="st-k">Decided</span><span><span class="st-l">Key decisions</span></span></a></li><li><a href="#backlog"><span class="st-k">Next</span><span><span class="st-l">The backlog</span></span></a></li><li><a href="#more"><span class="st-k">More</span><span><span class="st-l">The record</span></span></a></li></ol>
+</header>
+<main>
+
+
+<section class="block" id="docs"><span class="section-tag tag-d">Live</span><h2>The docs</h2><div class="prose"><div class="embed embed--tall"><div class="embed-bar"><span class="embed-t">The design system docs</span><a href="design-system/docs/index.html" target="_blank" rel="noopener">Open full screen ↗</a></div><iframe src="design-system/docs/index.html" title="The design system docs, live" loading="lazy"></iframe></div><p class="note">The same pages as <a href="design-system/docs/">design-system/docs/</a>: Getting started, Foundations, 47 component pages under HIG's categories, 4 patterns and every specimen, each linking the file the screens link. The example screen built only from the system: <a href="design-system/examples/saved-races.html">Saved races</a>.</p></div></section>
+<section class="block" id="decisions"><span class="section-tag tag-t">Decided</span><h2>Key decisions</h2><div class="prose"><div class="reg reg--key"><div class="reg-card"><p class="reg-q">One folder, one entry point</p><p class="reg-a">The tokens, the components and the map data live in <code>design-system/</code>, and every page links one generated file, <code>design-system/index.css</code>.</p><p class="reg-meta">2026-11-03 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-1-one-folder-one-entry-point-2026-11-03">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Docs that can't lie</p><p class="reg-a">The docs link the same file the screens do, and the build checks that every stage on a docs page computes exactly as the specimen it copies.</p><p class="reg-meta">2026-11-05 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-docs-restructured-into-families-designer-2026-11-05">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">States from roles, in both themes</p><p class="reg-a">Hover is one level up, pressed two, disabled one opacity, focus a role; every component you act on shows its states in its docs.</p><p class="reg-meta">2026-11-05 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-3-component-states-designer-brief-2026-11-05">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">A pattern stands on three screens</p><p class="reg-a">A composition becomes a pattern only when it already stands on three or more screens; the build finds those screens from the wireframes.</p><p class="reg-meta">2026-11-06 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-4-patterns-designer-brief-2026-11-06">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">The system first</p><p class="reg-a">Anything new appears in <code>design-system/</code> with its docs before it reaches a screen; the build stops a class with no specimen.</p><p class="reg-meta">2026-11-06 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-5-contribution-rules-and-the-optional-link-as-their-proof-designer-brief-2026-11-06">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Docs by navigation</p><p class="reg-a">A page per component under HIG's categories, Foundations from <code>DESIGN.md</code> and the tokens, and the same sections on every page.</p><p class="reg-meta">2026-11-08 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-focus-and-sheet-bar-check-in-the-build-and-the-docs-by-navigation-designer-2026-11-08">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Keyboard focus, iOS-style</p><p class="reg-a">A 2px amber ring directly on the edge, only from a keyboard; on an amber button a thin line between ring and fill so it still reads as a ring.</p><p class="reg-meta">2026-11-10 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#keyboard-focus-on-an-amber-fill-a-thin-dark-line-designer-2026-11-10">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Text-only sheet buttons</p><p class="reg-a">Cancel and Save in a sheet's bar are text with invisible 44pt targets, as a native sheet header, not gray capsules.</p><p class="reg-meta">2026-11-08 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#docs-and-two-components-the-ring-on-the-edge-text-only-sheet-buttons-foundations-as-quote-tokens-example-designer-2026-11-08">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Tested with a screen it doesn't have</p><p class="reg-a">Saved races was built only from the system; what it lacked went into the backlog instead of onto the screen.</p><p class="reg-meta">2026-11-10 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-6-testing-the-system-with-a-screen-it-doesnt-have-saved-races-designer-2026-11-10">Full record ↗</a></p></div><div class="reg-card"><p class="reg-q">Names that exist</p><p class="reg-a">The step 7 check fixed 22 defects, and a new build check stops any doc that names a token, class or file that no longer exists.</p><p class="reg-meta">2026-11-10 · <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-7-the-system-and-the-product-checked-together-designer-2026-11-10">Full record ↗</a></p></div></div></div></section>
+<section class="block" id="backlog"><span class="section-tag tag-f">Next</span><h2>The backlog</h2><div class="prose"><div class="after"><p>What is known to be open in the design system, by the lesson that takes it. Each item names where it was found and how to see it. When an item is done, it leaves this file and its decision goes into <code>concept/concept.md</code>, dated.</p>
+<h3>Lesson 10 (responsive)</h3>
+<p>Found on 2026-11-08 (<code>concept/concept.md</code> → Large text and keyboard focus). The build checks 320 at the default text size and 390 at 200% text (<code>scripts/check_overflow.mjs</code>, <code>scripts/check_focus.mjs</code>); 320 with 200% text isn't a build target yet, so these are recorded, not checked.</p>
+<ul><li><strong>Results list cards reach the screen's right edge</strong> at 320 with 200% text: the cards lose their side gutter.</li><li><strong>New password's rows clip their labels</strong> at 320 with 200% text: "New password" reads "ew password".</li><li><strong>Top-bar titles overlap their buttons:</strong> the New password and Results list top-bar titles run under their buttons at 320 with 200% text. On Results list the small title that replaces the large one on scroll ("Results") also runs under "Log result" at 390 with 200% text.</li><li><strong>Map pin labels run past the map's frame</strong> at 200% text, at 390 and at 320: Berlin, Chamonix and Dallas. The label is cut by the frame, and its focus halo with it. Fixing it means moving where the labels sit. <code>scripts/check_focus.mjs</code> reports these pins apart and doesn't fail on them; a pin whose label fits is checked like everything else.</li></ul>
+<h3>Examples: Saved races (found 2026-11-10)</h3>
+<p>What the system lacked when Saved races (<code>design-system/examples/</code>) was built only from it, for <code>research/jtbd.md</code> → Related job 2 (choose races by where they are; the Multi-Region Season Planner). Nothing here was drawn on the screen: each is left out, and the screen says nothing it can't show.</p>
+<ul><li><strong>A save control (component, states, words).</strong> For: putting a race on the list. Needed on Race detail (and maybe the race card). Nothing in the system saves anything, so the screen has no way in except its own address, and the empty state's line "Races you save show up here" names an action the product doesn't offer yet. It needs a control with saved / not saved, its accessible name, and a word for it.</li><li><strong>A way to remove a saved race (component or variant).</strong> For: taking a race off the list. Needed on each card. A race card is one link and can't hold another (as the result row found, <code>DESIGN.md</code> → Result row), and the system has no swipe action or row action. Left out: the list can't be edited.</li><li><strong>A heading over a group of cards (component).</strong> For: grouping the list by region or country, the axis this job weighs by. Needed above each run of race cards. The only group heading is the grouped settings rows' (<code>.group-heading</code>), made for rows on Profile. Left out: the list is in date order, and each card's place line carries where.</li><li><strong>The static map at a fixed height inside a scrolling screen (variant).</strong> For: seeing the saved races by place at a glance, the job itself. The map only exists as Race browse's Map view, a panel that fills the screen (<code>.view-area</code>, <code>flex: 1</code>) behind the List / Map switch, whose behaviour is Race browse's script. Left out.</li><li><strong>An empty-state icon for "nothing saved yet" (token: an icon mask).</strong> For: the empty state. The state message has two icons: the search glass (nothing matches a search or filter) and the archive (Results list). The empty state shows the default, the search glass, which says "nothing matched" rather than "nothing saved yet". Not drawn by hand; the icon is a known mismatch.</li><li><strong>"Saved" means two things (word).</strong> <code>voice.md</code> → Dictionary is one concept, one word: "Saved: &lt;race name&gt;" already says a result was logged (Results list <code>?saved=</code>). A saved race is a second meaning. Needs a decision in <code>voice.md</code> before the screen is real ("Saved races", "Shortlist", "Watching"…).</li><li><strong>Where the screen lives (structure).</strong> For: getting there. It isn't a tab and isn't in <code>sitemap.md</code> or <code>flows.md</code>; the example's back link goes to Discover only because the pushed screen pattern needs a parent. Placing it (a Profile row, a Discover entry, a fourth tab) is an IA decision.</li><li><strong>Data (not the system's, recorded so it isn't lost).</strong> No <code>saved_races</code> table in the data model (<code>CLAUDE.md</code> → Data model); the three races are Race browse's sample data. Distance or travel from the athlete's home (the job's "worth traveling for") has no data and no component.</li><li><strong>The results row in a pushed screen's loading state.</strong> Used as Race browse's: a skeleton bar for the count, the Sort button left out (the example's order is an order label, as Results list's, which has no loading form of its own). Works; noted because the order label has no loading variant.</li></ul><p class="note">From <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/design-system/backlog.md">design-system/backlog.md</a>, also <a href="design-system/docs/backlog.html">in the docs</a>.</p></div></div></section>
+<section class="block" id="more"><span class="section-tag tag-m">More</span><h2>The rest of the record</h2><div class="prose"><details class="fold"><summary>The final check (step 7): 22 defects in 16 rows <span class=fold-sub>every defect and how it was fixed</span></summary><div class="fold-body"><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Defect</th><th>Fix</th></tr></thead><tbody><tr><td>1</td><td><code>DESIGN.md</code> listed Apply as an amber fill</td><td>Apply is the amber ink, named under <code>--accent-ink</code></td></tr><tr><td>2, 8</td><td><code>DESIGN.md</code> → Shapes and the inventory still described the sheet bar's capsules on <code>--sheet-button</code></td><td>text-only buttons, as built on 2026-11-08</td></tr><tr><td>3</td><td><code>--radius-avatar</code> named</td><td><code>--radius-circle</code></td></tr><tr><td>4</td><td><code>--pressed</code> named in five rules (quoted on seven docs pages)</td><td>each rule's real role: <code>--selected</code>, <code>--raised-hover</code>, <code>--raised-pressed</code>, <code>--group</code></td></tr><tr><td>5</td><td><code>ui/map.css</code> named</td><td><code>design-system/map-data.css</code></td></tr><tr><td>6</td><td>Race card location at 14px</td><td>15px, <code>--size-meta</code></td></tr><tr><td>7</td><td>"Halo" beside the ring on the edge; the amber-fill line only in one paragraph</td><td>"ring" throughout; the line named in the Do's</td></tr><tr><td>9, 10</td><td>The Overview and the specimens' intro spoke of family pages</td><td>component pages</td></tr><tr><td>11</td><td>The light focus ring at 2.82:1 on the line, the pair unchecked</td><td>the line is the page color in dark and black in light (designer's choice of three: a page-colored line sits at 1.4–2.2:1 on the light amber fills, so no ring could make "line on amber ≥ 3:1" pass there); ring-on-line and line-on-amber pairs checked in both themes</td></tr><tr><td>12</td><td>A light <code>--accent-pressed</code> equal to dark, called a no-op</td><td><strong>not a defect</strong>: build check 19 needs every state role's light value written out; the line stays, with a comment saying so</td></tr><tr><td>13, 14</td><td>The action bar at the end of the page and the detail screen's top bar at rest, transparent on the screens, absent from the docs</td><td>specimen stages and Showcase map states; <code>.is-at-end</code> and <code>.is-scrolled</code> no longer exempt from check 21. Found with it: the "Scrolled on a detail screen" stage lacked <code>.is-scrolled</code> and rendered transparent, the opposite of its label</td></tr><tr><td>15</td><td>Disabled shown for components no screen disables</td><td><code>omit</code> in the States map for 14 components (markup and page scripts checked); Disabled stays for the 12 a screen disables</td></tr><tr><td>16–18</td><td>Layout on <code>#list-view</code>, <code>#map-view</code>, <code>#log-form</code></td><td><code>.list-area</code>, <code>.map-area</code>, <code>.sheet-form</code>; the ids stay for the scripts. Every element's box and style on all 236 screen states compared before and after: 0 changed. Found with it: the map specimen used the docs-only <code>.kit-map</code> (now <code>.map-area</code>), and the Log result specimen showed an old intro line ("Every field is needed…") outside its form</td></tr><tr><td>19, 20</td><td>The phone screen, <code>.visually-hidden</code>, the screen's ring, the map data and solid glass undocumented</td><td><code>DESIGN.md</code> → Layout (quoted on Spacing and layout), the map data's tokens on Spacing and layout, solid glass under Reduce Transparency on Color</td></tr><tr><td>21</td><td><code>--radius-3</code> in the product's frontmatter</td><td>left the sidecar's radii: a docs-layer token</td></tr><tr><td>22</td><td>"Opens the race website — …"</td><td>"Opens the race website: registration and payment happen there." (<code>microcopy.md</code> row 171)</td></tr></tbody></table></div><p class="note">From <a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-7-the-system-and-the-product-checked-together-designer-2026-11-10">concept/concept.md → Step 7: the system and the product checked together (designer, 2026-11-10)</a>.</p></div></details><details class="fold"><summary>23 checks stop the build <span class=fold-sub>color, contrast, tokens, overflow, focus, docs, names</span></summary><div class="fold-body"><ol class="checks"><li>Color rule 1: the accent only where you act or where you are (<code>ACCENT_OK</code>).</li><li>Color rule 2: no success color on results; on the stand's markup, no result carries a success mark and the proof line states its source.</li><li>Color rule 3a: the depth of dark, background levels in even steps.</li><li>Contrast: every text pair at WCAG AA, glass against its worst case behind it.</li><li>Signed tokens: every token in <code>design-system/tokens/tokens.css</code>, <code>design-system/map-data.css</code> and the docs layer's files has a row on the stand with its reason.</li><li>Overflow: every wireframe state at 390, at 320 and at 390 with 200% text (Race browse with 0–5 filters, the sheet, the map, the alerts): nothing past the screen edge, nothing scrolling sideways but the chips row.</li><li>One line: Sort, Filters, List/Map, the filter chips and Clear all filters never wrap.</li><li>Fonts: every family and weight a page renders text in has loaded, so the real fonts are measured.</li><li>Scripts and styles: no page script throws, every deferred stylesheet applies, and no file a page requests answers 404.</li><li>The showcase against the inventory: every inventory component has a Showcase map row, a specimen and every state it lists (<code>scripts/check_kit.py</code>).</li><li>The showcase's words: every word in a specimen is in <code>microcopy.md</code> (<code>scripts/check_kit.py</code>).</li><li>The screens on the kit: every screen, the shell and every docs page link <code>design-system/index.css</code> once and never <code>tokens.css</code> or a components file directly (Race browse and the showcase also <code>design-system/map-data.css</code>); no screen has a style block, an inline style or a class <code>design-system/components/index.css</code> doesn't define (<code>scripts/check_kit.py</code>).</li><li>Links: no page links a file that doesn't exist (<code>scripts/check_links.py</code>, every page of <code>public/</code> and of the mirrored source folders; the frozen <code>_wireframe/</code> excepted).</li><li>Components: no component reads a color primitive or writes a hex, px or font name (<code>scripts/build_components.py</code>); since step 5, no named or functional color and no fixed <code>color-scheme</code> either.</li><li>Both themes (step 5): every contrast pair and glass pair (also solid, as under Reduce Transparency) holds in dark and in the light stress-test theme; in each theme only the accent roles take an amber value and no role takes a success color; 3b reports both themes' fill and ink. Rule 3a stays dark-only (<code>build_stand.py</code>).</li><li>The docs (Lesson 9 step 2; a page per component since 2026-11-08): every inventory component has its own page in <code>design-system/docs/components/</code>, its sections in one order, or is shown on another component's page with its anchor and its old address redirecting there (<code>ui/inventory.md</code> → Docs navigation), every anatomy part's selector finds its part on the live stage (<code>doc.js</code> throws otherwise, so check 9 stops the build), and every word on a docs page is in <code>microcopy.md</code> or the source docs (<code>DESIGN.md</code>, <code>concept/concept.md</code>, <code>concept/references.md</code>, <code>ui/inventory.md</code> outside its Docs map) (<code>scripts/check_kit.py</code>). The overflow check (6–9) covers every docs page at 390, 320, 200% text and 1440.</li><li>The docs can't lie (2026-11-05): every stage on every docs page computes as the same stage on <code>specimens.html</code>, 23 properties of every element, at 1280 and 390, dark and light (<code>scripts/check_docs_stages.mjs</code>). A difference means the docs' own CSS reached a specimen.</li><li>States (Lesson 9 step 3): every state role in <code>design-system/tokens/tokens.css</code> has a dark and a light value (<code>build_components.py</code>); every state ladder (rest, hover, pressed) moves one way, each step at least 1.5 L*, in both themes, except the amber, which dims when pressed (darker than rest by a step; follow-ups, 2026-11-06) (<code>build_stand.py</code>); focus holds 3:1 on every ground it sits on; no screen uses the docs-only stand-ins <code>.is-hover</code>, <code>.is-pressed</code>, <code>.is-focus</code> (<code>check_kit.py</code>).</li><li>Patterns (Lesson 9 step 4): every pattern stands on exactly the screens its row lists, at least three, found from <code>wireframes/</code> by its classes (<code>build_kit_showcase.py</code>); a pattern file links <code>design-system/index.css</code> only, with no style block, inline style or undefined class, and its words are in <code>microcopy.md</code> (<code>check_kit.py</code>); its stage on <code>patterns.html</code> computes as on <code>specimens.html</code> (check 18); the pressed amber clears HYROX yellow under rule 3b on its own, and every amber dims when pressed (<code>build_stand.py</code>).</li><li>Design system first (Lesson 9 step 5): every class a component defines is shown on a specimen in <code>design-system/docs/specimens.html</code> or in a pattern, so a new component can't reach a screen without its specimen and, through it, its inventory rows and docs section (<code>check_kit.py</code>; only Race browse's <code>.view-area</code> is listed as shown on the screens only: the scroll states <code>.is-scrolled</code> and <code>.is-at-end</code> are on specimens since step 7, 2026-11-10).</li><li>Focus and the sheet bar (2026-11-08): every screen state at 320 and at 390 with 200% text, Tab through every focusable element: each halo whole, cut by no clipping box or screen edge; every open sheet's bar keeps its capsules inside and apart and its title on one line, truncating (<code>scripts/check_focus.mjs</code>, the states in <code>scripts/screen_states.mjs</code>). Not checked yet, in <code>design-system/backlog.md</code> → Lesson 10: 320 with 200% text, and map pins whose label runs past the frame at 200% text.</li><li>Names that exist (Lesson 9 step 7, 2026-11-10): <code>DESIGN.md</code>, <code>ui/inventory.md</code> and every docs page name only tokens, classes and files that exist, so a renamed or deleted one can't stay in the words; a sentence about what a name was, or a dated record, may name what is gone (<code>scripts/check_names.py</code>). The examples (<code>design-system/examples/</code>) are held to a pattern's rules by check 20's <code>check_kit.py</code> part and measured like screens by checks 6–9 and 22.</li><li>Counts of a primitive are named (Lesson 8, 2026-11-01): <code>calc(var(--x) * n)</code> or <code>calc(n * var(--x))</code> is allowed only in <code>design-system/tokens/tokens.css</code>, as the whole definition of a named primitive with its reason in a comment on the same line (<code>--bar-title-inset: calc(var(--target) * 3);  /* … <em>/</code>), so the value follows the primitive it counts. In <code>design-system/components/</code>, the map data and the docs layer, and inside a longer expression in <code>design-system/tokens/tokens.css</code>, a count stops the build. A sign (<code></em> -1</code>) and a division (halves for capsules and centering) aren't counts (<code>build_stand.py</code>).</li></ol><p class="note">Listed in <code>CLAUDE.md</code> → UI assembly; run by <code>scripts/concept/build_stand.py</code>.</p></div></details><details class="fold"><summary>13 review pages <span class=fold-sub>before and after, step by step</span></summary><div class="fold-body"><div class="card-grid"><a class="card-link" href="ui/review-states.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Step 3 · component states</span><span class="si-desc">ui/review-states.html →</span></a><a class="card-link" href="ui/review-states-2.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Step 3 follow-ups</span><span class="si-desc">ui/review-states-2.html →</span></a><a class="card-link" href="ui/review-optional-link.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Step 5 · the optional official result link</span><span class="si-desc">ui/review-optional-link.html →</span></a><a class="card-link" href="ui/review-sheets.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Sheet spacing</span><span class="si-desc">ui/review-sheets.html →</span></a><a class="card-link" href="ui/review-rows.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Grouped rows, one height</span><span class="si-desc">ui/review-rows.html →</span></a><a class="card-link" href="ui/review-signout.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Sign out, a grouped row</span><span class="si-desc">ui/review-signout.html →</span></a><a class="card-link" href="ui/review-focus.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">The focus ring, variants, states by theme</span><span class="si-desc">ui/review-focus.html →</span></a><a class="card-link" href="ui/review-sheet-bar.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">The sheet's bar</span><span class="si-desc">ui/review-sheet-bar.html →</span></a><a class="card-link" href="ui/review-docs.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">The docs restructured</span><span class="si-desc">ui/review-docs.html →</span></a><a class="card-link" href="ui/review-docs-2.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">The docs, quiet</span><span class="si-desc">ui/review-docs-2.html →</span></a><a class="card-link" href="ui/review-docs-3.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">The docs, dark</span><span class="si-desc">ui/review-docs-3.html →</span></a><a class="card-link" href="ui/review-docs-nav.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Docs by navigation, the focus check</span><span class="si-desc">ui/review-docs-nav.html →</span></a><a class="card-link" href="ui/review-docs-fixes.html"><span class="si-tag" style="color:var(--accent)">Review</span><span class="si-title">Docs fixes, the ring, the sheet bar</span><span class="si-desc">ui/review-docs-fixes.html →</span></a></div></div></details><details class="fold"><summary>The record, step by step <span class=fold-sub>26 entries in concept/concept.md → Lesson 9</span></summary><div class="fold-body"><ul class="strip"><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-1-one-folder-one-entry-point-2026-11-03">Step 1: one folder, one entry point (2026-11-03)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-1-follow-up-designer-2026-11-04">Step 1 follow-up (designer, 2026-11-04)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-2-living-documentation-2026-11-04">Step 2: living documentation (2026-11-04)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-docs-restructured-into-families-designer-2026-11-05">The docs restructured into families (designer, 2026-11-05)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#shipping-a-failed-build-never-commits-designer-2026-11-05">Shipping: a failed build never commits (designer, 2026-11-05)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-docs-made-quiet-designer-2026-11-05">The docs made quiet (designer, 2026-11-05)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-docs-back-to-dark-still-quiet-designer-2026-11-05">The docs back to dark, still quiet (designer, 2026-11-05)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#one-fold-the-same-everywhere-designer-2026-11-05">One fold, the same everywhere (designer, 2026-11-05)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#no-placeholders-no-course-process-text-in-the-docs-designer-2026-11-05">No placeholders, no course-process text in the docs (designer, 2026-11-05)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-3-component-states-designer-brief-2026-11-05">Step 3: component states (designer brief, 2026-11-05)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-3-follow-ups-designer-brief-2026-11-06">Step 3 follow-ups (designer brief, 2026-11-06)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-4-patterns-designer-brief-2026-11-06">Step 4: patterns (designer brief, 2026-11-06)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-4-decision-the-shell-is-the-tab-screen-pattern-designer-2026-11-06">Step 4 decision: the shell is the Tab screen pattern (designer, 2026-11-06)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-5-contribution-rules-and-the-optional-link-as-their-proof-designer-brief-2026-11-06">Step 5: contribution rules, and the optional link as their proof (designer brief, 2026-11-06)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#sheet-spacing-every-sheet-designer-2026-11-06">Sheet spacing, every sheet (designer, 2026-11-06)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#field-errors-under-the-group-never-in-a-row-designer-2026-11-06">Field errors under the group, never in a row (designer, 2026-11-06)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#grouped-rows-one-height-everywhere-designer-2026-11-07">Grouped rows one height everywhere (designer, 2026-11-07)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#sign-out-is-a-grouped-row-designer-2026-11-07">Sign out is a grouped row (designer, 2026-11-07)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#variants-states-by-theme-the-focus-halo-designer-2026-11-07">Variants, states by theme, the focus halo (designer, 2026-11-07)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-sheets-bar-capsules-inset-from-the-corner-designer-2026-11-07">The sheet's bar: capsules inset from the corner (designer, 2026-11-07)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#large-text-and-keyboard-focus-the-sheet-bar-at-200-halos-that-were-cut-designer-2026-11-08">Large text and keyboard focus: the sheet bar at 200%, halos that were cut (designer, 2026-11-08)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#the-focus-and-sheet-bar-check-in-the-build-and-the-docs-by-navigation-designer-2026-11-08">The focus and sheet-bar check in the build, and the docs by navigation (designer, 2026-11-08)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#docs-and-two-components-the-ring-on-the-edge-text-only-sheet-buttons-foundations-as-quote-tokens-example-designer-2026-11-08">Docs and two components: the ring on the edge, text-only sheet buttons, Foundations as quote, tokens, example (designer, 2026-11-08)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#keyboard-focus-on-an-amber-fill-a-thin-dark-line-designer-2026-11-10">Keyboard focus on an amber fill: a thin dark line (designer, 2026-11-10)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-6-testing-the-system-with-a-screen-it-doesnt-have-saved-races-designer-2026-11-10">Step 6: testing the system with a screen it doesn't have, Saved races (designer, 2026-11-10)</a></li><li><a href="https://github.com/JuliaMakedonska/Onrace/blob/main/concept/concept.md#step-7-the-system-and-the-product-checked-together-designer-2026-11-10">Step 7: the system and the product checked together (designer, 2026-11-10)</a></li></ul></div></details></div></section>
+
+
+
+</main>
+<footer>
+  <p>Lesson 9 of 12. This page is built by <code>scripts/build_system_overview.py</code> · <code>scripts/lesson_page.py</code>, from the repo files it names; it is never edited by hand.</p>
+  <p>The kit is built and checked by <code>scripts/concept/build_stand.py</code> (the stand, the color rules, the contrast pairs, the signed tokens), <code>scripts/check_overflow.mjs</code> (every state at 390, 320 and 200% text) and <code>scripts/check_kit.py</code> (the showcase against the inventory and <code>microcopy.md</code>); <code>scripts/build_kit_showcase.py</code> arranges the showcase.</p>
+</footer>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+  var byId = {};
+  links.forEach(function(l){ byId[l.getAttribute('href').slice(1)] = l; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section.block[id]'));
+  if(!('IntersectionObserver' in window) || !sections.length) return;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ links.forEach(function(l){ l.classList.remove('active'); }); var l = byId[e.target.id]; if(l) l.classList.add('active'); }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px'});
+  sections.forEach(function(s){ io.observe(s); });
+})();
+</script>
+</body>
+</html>

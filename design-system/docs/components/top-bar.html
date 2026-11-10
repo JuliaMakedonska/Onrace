@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../../index.css?v=435b69d6">
-<link rel="stylesheet" href="../doc.css?v=435b69d6">
+<link rel="stylesheet" href="../../index.css?v=eaa418cd">
+<link rel="stylesheet" href="../doc.css?v=eaa418cd">
 <script src="../../tokens/theme.js"></script>
 </head>
 <!-- GENERATED (scripts/docs_shell.py and the script that writes this page). Do not edit. -->
@@ -29,8 +29,8 @@
 <main class="ds-main" id="main">
 <p class="ds-crumb"><a href="../components.html">Components</a> · Navigation and search</p><h1>Top bar</h1><p class="ds-lede">The bar at the top of every screen below the top level: back or Cancel, the title, the bar action.</p>
 <section class="dc dc--part" id="example" aria-labelledby="example-h"><h2 id="example-h">Example</h2>
-<div class="dc-spec" data-anatomy="[[&quot;.top-bar&quot;, &quot;Top bar, ground glass&quot;], [&quot;.back&quot;, &quot;Back, with the parent&#x27;s name&quot;]]"><div class="kit-state" data-label="Back only (Race detail; Result detail: ‹ Results)">
-          <div class="an-window" data-crop="[&quot;.top-bar&quot;, &quot;.back&quot;]"><div class="an-pan"><div class="kit-frame kit-frame--flush"><header class="top-bar" aria-label="Back"><a class="back" href="#"><span>Discover</span></a></header></div></div></div>
+<div class="dc-spec" data-anatomy="[[&quot;.top-bar&quot;, &quot;Top bar, ground glass&quot;], [&quot;.back&quot;, &quot;Back, with the parent&#x27;s name&quot;]]"><div class="kit-state" data-label="Back only: a detail screen at rest (Race detail; Result detail: ‹ Results), transparent until the page scrolls">
+          <div class="an-window" data-crop="[&quot;.top-bar&quot;, &quot;.back&quot;]"><div class="an-pan"><div class="kit-frame kit-frame--flush"><header class="top-bar" aria-label="Back" data-collapse><a class="back" href="#"><span>Discover</span></a><span class="bar-title" aria-hidden="true"></span></header></div></div></div>
         </div></div><ul class="an-legend" aria-label="Parts of the top bar"><li><button type="button" class="an-part" data-part="0" aria-pressed="false"><span>Top bar, ground glass</span> <code>.top-bar</code></button></li><li><button type="button" class="an-part" data-part="1" aria-pressed="false"><span>Back, with the parent&#x27;s name</span> <code>.back</code></button></li></ul>
 </section>
 <section class="dc dc--part" id="usage" aria-labelledby="usage-h"><h2 id="usage-h">Usage</h2>
@@ -38,7 +38,7 @@
 </section>
 <section class="dc dc--part" id="variants" aria-labelledby="variants-h"><h2 id="variants-h">Variants</h2>
 <div class="dc-variants"><figure class="dc-variant"><div class="kit-state" data-label="Scrolled on a detail screen: the race name in the bar">
-          <div class="an-window" data-crop="[&quot;.top-bar&quot;, &quot;.back&quot;]"><div class="an-pan"><div class="kit-frame kit-frame--flush"><header class="top-bar is-collapsed" aria-label="Back" data-collapse><a class="back" href="#"><span>Discover</span></a><span class="bar-title" aria-hidden="true">UTMB — Ultra-Trail du Mont-Blanc</span></header></div></div></div>
+          <div class="an-window" data-crop="[&quot;.top-bar&quot;, &quot;.back&quot;]"><div class="an-pan"><div class="kit-frame kit-frame--flush"><header class="top-bar is-collapsed is-scrolled" aria-label="Back" data-collapse><a class="back" href="#"><span>Discover</span></a><span class="bar-title" aria-hidden="true">UTMB — Ultra-Trail du Mont-Blanc</span></header></div></div></div>
         </div><figcaption>Scrolled on a detail screen: the race name in the bar</figcaption></figure><figure class="dc-variant"><div class="kit-state" data-label="Cancel, &quot;Account&quot; and the bar action (Sign in / Sign up)">
           <div class="an-window" data-crop="[&quot;.top-bar&quot;, &quot;.back&quot;]"><div class="an-pan"><div class="kit-frame kit-frame--flush"><header class="top-bar"><a class="close" href="#">Cancel</a><h1 class="bar-title">Account</h1><button type="button" class="bar-action">Sign in</button></header></div></div></div>
         </div><figcaption>Cancel, &quot;Account&quot; and the bar action (Sign in / Sign up)</figcaption></figure><figure class="dc-variant"><div class="kit-state" data-label="The bar action waits for the required fields: Text disabled until they hold a value">

@@ -210,7 +210,7 @@ side.append('      <p class="kd-role"><a href="#role-patterns">Patterns</a> <spa
 side += ['    </nav>', '    <p class="kd-empty" hidden>No component matches.</p>', '  </div>', '</aside>']
 intro = (f'<p class="kd-intro" id="kd-top"><strong>The Onrace kit</strong>: {len(items)} specimens for {N_COMPONENTS} inventory components, '
          f'every state shown on its own, from <a href="../index.css"><code>design-system/index.css</code></a> alone. '
-         f'Every specimen on one page, the source the family pages are built from. <a href="index.html">The docs</a> · <a href="why.html">Why the system looks like this</a> · '
+         f'Every specimen on one page, the source the component pages are built from. <a href="index.html">The docs</a> · <a href="why.html">Why the system looks like this</a> · '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/blob/main/ui/inventory.md">The inventory</a> · '
          f'<a href="https://github.com/JuliaMakedonska/Onrace/tree/main/design-system">design-system/ on GitHub</a></p>')
 # the theme switch (Lesson 8, 2026-11-01): the stress test from step 5 on every specimen at once. Light is a proof only (C5)
