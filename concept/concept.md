@@ -1486,3 +1486,34 @@ With the ring directly on the edge (2026-11-08), an amber ring on an amber fill 
 
 **A new build check** (`scripts/check_names.py`, check 23): `DESIGN.md`, the inventory and every docs page may only name tokens, classes and files that exist; a sentence about what a name was, or a dated record, may name what is gone. It found the stale names the table above lists and seven more in the specimens' notes, the inventory's component rows and two `concept.md` sentences quoted on `why.html`.
 
+
+## Lesson 10: responsive
+
+### Step 1: the width audit, and the decisions on it (designer, 2026-11-15)
+
+`responsive/width-audit.md`: every screen, what the user does there, and what a wider window should do, the way iPad does it, checked against HIG Layout, Split views, Sidebars, Tab bars and Sheets. The designer's decisions on it:
+
+1. **Tablet: two panes.** Race browse shows the list and the map; choosing a race replaces the map with Race detail, with a way back to the map. **Desktop: three panes**, list, detail and map.
+2. **Results list on tablet and desktop:** the list and a detail pane that says "No result selected" until a result is chosen (`microcopy.md` row 595), not the newest result opened by default.
+3. **The second breakpoint is a real behavior change:** desktop gets the three-pane Race browse.
+4. **Navigation:** tablet behaves like iPad, the tab bar at the top (HIG Tab bars, iPadOS: "near the top of the screen"; HIG Sidebars: "Consider using a tab bar first" for three areas). Desktop behaves like macOS, with a sidebar (HIG Layout: "Consider taking advantage of larger spaces to switch from a tab bar to a sidebar"; HIG Sidebars: a sidebar "lets people navigate between areas of your app"). This departs from HIG Layout's "its idiom … remains the same" on purpose: the web on a desktop has no iPad idiom to keep, and the designer chose the Mac's.
+5. **No screen gets "wider layout".** Width goes to panes, not to more card columns: a deliberate deviation from the lesson's card grid. The reason is HIG Split views: "selecting an item in the view's primary pane displays the item's contents in the secondary pane"; beside a phone-width list, the room is worth more as the map or the detail than as more cards. The grid tokens still exist and count panes: `--col-count-tablet: 2`, `--col-count-desktop: 3`.
+6. **A "selected" state for the race card and the result card**, for the panes (HIG Split views: "persistently highlight the current selection"): a new component state, through `design-system/` first, in both themes. Not built in step 2 (no component changes yet): `design-system/backlog.md` → Lesson 10.
+
+### Step 2: the responsive primitives (designer brief, 2026-11-15)
+
+Seven primitives in `design-system/tokens/tokens.css`, each signed on the stand, no component or screen changed:
+
+| Token | Value | Why |
+|---|---|---|
+| `--pane-w` | 24.375rem (390px) | a pane is a phone-width screen, the width every screen is drawn at |
+| `--grid-gap` | `var(--border)` (1px) | panes meet at HIG's thin divider, no gutter |
+| `--col-count-tablet` | 2 | panes, not card columns (decision 5) |
+| `--col-count-desktop` | 3 | panes (decision 3) |
+| `--container-max` | 42rem (672px) [?] | a single-column screen stops growing and centres; UIKit's readable width, Apple's number but not HIG's text |
+| `--bp-tablet` | 48.8125rem (781px) | a second pane fits beside a phone-width list: 2 × pane + divider (audit → Where behavior changes, 1) |
+| `--bp-desktop` | 88.3125rem (1413px) | a third pane plus the sidebar fits: 15rem sidebar [?] + 3 × pane + 3 dividers (audit → Where behavior changes, 2) |
+
+- **In rem, so they move with the text size.** Checked in headless Chrome with the browser's text size at 16 and 32 (`Page.setFontSizes`, as `check_overflow.mjs` does for 200%): the tablet point switches at 781 and 1562, the desktop point at 1413 and 2826, each off one pixel below. A root font-size the page sets itself does not move them: a media query's rem is the browser's size, not the root's.
+- **Found while checking:** a media query can't read a custom property (`(min-width: var(--bp-tablet))` never matched at 2000 wide), so a component's `@media` will repeat the literal; and a token comment must never contain `--name:` (it read as a second definition; reworded before the build).
+- **Why these two points:** `DESIGN.md` → Width.
