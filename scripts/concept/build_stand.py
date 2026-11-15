@@ -779,7 +779,13 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('col-count-desktop', 'Panes at the desktop breakpoint', '3: list + detail + map (Race browse)', 'Designer, 2026-11-15: three panes on desktop'),
            ('container-max', 'A single-column screen stops growing and centres', f'672px at the default text size, UIKit’s readable width · [?] Apple’s number, not HIG’s text', 'HIG Layout: layout guides restrict the width of text'),
            ('bp-tablet', 'Breakpoint 1: a second pane fits beside a phone-width list', '2 × pane + divider = 781px; later at larger text', 'Width audit → Where behavior changes, 1 · HIG Split views: regular width'),
-           ('bp-desktop', 'Breakpoint 2: a third pane plus the sidebar fits', '15rem sidebar [?] + 3 × pane + 3 dividers = 1413px; later at larger text', 'Width audit → Where behavior changes, 2 · designer: desktop is macOS, with a sidebar'),
+           ('bp-desktop', 'Breakpoint 2: the sidebar plus three panes fits', 'Sidebar + list + detail + the map at its minimum + 3 dividers = 1343px; later at larger text', 'Width audit → Where behavior changes, 2 · designer, 2026-11-15: the map flexible, so 13–14" laptops reach it'),
+           ('kit-tablet-w', 'Docs only: a stage as wide as a tablet', '820px, an iPad Air 11-inch in portrait: above --bp-tablet', 'Lesson 10 step 3: the viewer’s Tablet width'),
+           ('kit-desktop-w', 'Docs only: a stage as wide as a desktop window', '1440px, a 13-inch laptop’s default: above --bp-desktop', 'Lesson 10 step 3: the viewer’s Desktop width'),
+           ('map-min', 'The map pane’s narrowest', '320px [?]: the narrowest screen the map is checked at', 'Designer, 2026-11-15: list and detail fixed, the map flexible'),
+           ('sidebar-w', 'The desktop sidebar’s column, its inset included', '240px [?]: HIG gives no width', 'HIG Sidebars · designer, 2026-11-15: desktop is macOS'),
+           ('sidebar-inset', 'The floating sidebar’s room from the window’s edges', 'The tab bar’s gap: a glass bar floats', 'C1: glass bars float'),
+           ('radius-sidebar', 'The floating sidebar’s corners', '20px [?]: HIG gives no number', 'macOS 26: the sidebar floats in its window'),
            ('sheet-content-top', 'Every sheet: the gap between its top bar and the first group or line', '24px', 'Designer, 2026-11-06: content stuck to the bar · HIG Sheets, inset grouped lists leave 20–35pt'),
            ('sheet-group-gap', 'Every sheet: the gap between two groups', '32px', 'Designer, 2026-11-06 · iOS sections, about 35pt apart'),
            ('grouped-row-min', 'Every grouped row (a sheet, Sign in / Sign up, Reset password, New password, Profile): its height', 'The 44pt target plus 8px: 52px', 'Designer, 2026-11-06 (sheets: rows felt cramped), every group 2026-11-07 (one height everywhere) · HIG: rows at least 44pt'),
@@ -1172,6 +1178,8 @@ shutil.rmtree(os.path.join(ROOT, 'public/design-system/docs'), ignore_errors=Tru
 shutil.copytree(os.path.join(ROOT, 'design-system/docs'), os.path.join(ROOT, 'public/design-system/docs'))
 shutil.rmtree(os.path.join(ROOT, 'public/design-system/examples'), ignore_errors=True)   # the examples (2026-11-10), linked from the docs' Overview
 shutil.copytree(os.path.join(ROOT, 'design-system/examples'), os.path.join(ROOT, 'public/design-system/examples'), ignore=shutil.ignore_patterns('*.md'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-shell'), os.path.join(ROOT, 'public/ui/review-shell'), dirs_exist_ok=True)   # Lesson 10 step 3: the adaptive shell, before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-shell.html'), os.path.join(ROOT, 'public/ui/review-shell.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)

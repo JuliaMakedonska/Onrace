@@ -234,14 +234,18 @@
   /* ---------- width: panes and the two breakpoints (Lesson 10 step 2, 2026-11-15; responsive/width-audit.md) ----------
      Width goes to panes, not to more card columns (designer, 2026-11-15; HIG Split views). In rem, so at 200% text a
      pane is twice as wide and each breakpoint switches at twice the width: the panes arrive later, never squeezed.
-     A media query can't read var(): a component's @media repeats the value written here (the token is its source). */
+     A media query can't read var(): a component's @media repeats the value written here (the token is its source), and scripts/build_components.py stops the build if the two differ. */
   --pane-w: 24.375rem;        /* a phone-width pane: 390px at the default text size, the width every screen is drawn at (--screen-w); the list in a split view keeps it */
   --grid-gap: var(--border);  /* between two panes: HIG Split views, "Prefer the thin divider style. The thin divider measures one point"; the panes meet at a 1px divider, no gutter */
   --col-count-tablet: 2;      /* panes from --bp-tablet up, list + map (Race browse; a chosen race's detail in the map's place), list + Result detail (Results list). Counts panes, not card columns */
   --col-count-desktop: 3;     /* panes from --bp-desktop up, list + detail + map (Race browse); the macOS sidebar beside them is navigation, not a pane */
+  --map-min: 20rem;           /* [?] the map pane's narrowest (designer, 2026-11-15): the map takes what the list and the detail leave, never less than 320px, the narrowest screen the map is checked at (check_overflow, 320 wide) */
+  --sidebar-w: 15rem;         /* [?] the desktop sidebar's column, its inset included: 240px (HIG Sidebars gives no width; a macOS sidebar's usual default) */
+  --sidebar-inset: var(--tabbar-gap);   /* the floating sidebar's room from the window's edges, as the tab bar's from the screen's bottom (C1: a glass bar floats) */
+  --radius-sidebar: 20px;     /* [?] the floating sidebar's corners (macOS 26 floats it in its window): HIG gives no number */
   --container-max: 42rem;     /* [?] a single-column screen stops growing here and centres (Profile, a detail opened on its own): 672px, UIKit's readable content width at the default text size (HIG Layout: layout guides "restrict the width of text for optimal readability"); Apple's number, not HIG's text */
   --bp-tablet: 48.8125rem;    /* 781px: a second pane fits beside a phone-width list, 2 × --pane-w + one --grid-gap (width audit → Where behavior changes, 1). Above it: the tab bar at the top, Race browse list + map, Results list list + detail, sheets as form sheets */
-  --bp-desktop: 88.3125rem;   /* 1413px: a third pane plus the sidebar fits, a 15rem [?] sidebar (HIG gives no width) + 3 × --pane-w + three --grid-gap (width audit → Where behavior changes, 2). Above it: the sidebar in place of the tab bar, Race browse list + detail + map */
+  --bp-desktop: 83.9375rem;   /* 1343px (was 88.3125rem, 1413px, until 2026-11-15: three fixed panes left 1366- and 1280-wide laptops on the tablet form): the sidebar plus three panes fits, --sidebar-w + 2 × --pane-w (list, detail) + --map-min (the map, flexible) + three --grid-gap (width audit → Where behavior changes, 2). Above it: the sidebar in place of the tab bar, Race browse list + detail + map */
 
   /* ---------- stacking ---------- */
   --z-under: -1;
@@ -2179,3 +2183,66 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .row .bar.label { margin: 0; }
 .row .bar.value { width: var(--skel-date-w); height: var(--skel-line); margin-left: auto; }
 .skel-signout .bar { height: var(--grouped-row-min); border-radius: var(--radius-2); }   /* Sign out's grouped row (2026-11-07) */
+
+/* ---- design-system/components/tab-bar.css · order 1080 ---- */
+/* The tab bar by width (Lesson 10 step 3, 2026-11-15; responsive/width-audit.md → Decisions, 4): the same three
+   destinations and the same states (current, hover, pressed, keyboard focus, from the same roles on the same glass) in
+   three forms. The numbers are design-system/tokens/tokens.css's --bp-tablet and --bp-desktop, written out because a media
+   query can't read var(); scripts/build_components.py stops the build if they drift apart.
+   Tablet: iPad's tab bar, "near the top of the screen", icon and label "side by side" in regular views (HIG Tab bars):
+   a glass capsule at the top centre, in its own row above the screen's scroll area. */
+@media (min-width: 48.8125rem) {
+  body > .bottom-nav {
+    position: relative;
+    order: -1;
+    flex: none;
+    align-self: center;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    height: auto;
+    margin-top: calc(var(--safe-top) + var(--tabbar-gap));
+    padding: var(--space-1);
+  }
+  .bottom-nav ul { grid-template-columns: repeat(3, auto); gap: var(--space-1); }
+  .bottom-nav a {
+    grid-auto-flow: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-4);
+    font-size: min(var(--size-body), var(--size-bar-max));   /* beside the icon the label has the row's height to itself: the bar's text size, capped as the sheets' bars are */
+  }
+  body > .bottom-nav a::before { width: var(--icon-m); height: var(--icon-m); }
+}
+/* Desktop: a macOS sidebar on the left (HIG Sidebars: "appears on the leading side of a view and lets people navigate
+   between areas of your app"), glass like the other bars (C1), floating in from the window's edges; one row per
+   destination, icon then label, starting at the top. */
+@media (min-width: 83.9375rem) {
+  body > .bottom-nav {
+    align-self: stretch;
+    width: calc(var(--sidebar-w) - var(--sidebar-inset));
+    margin: calc(var(--safe-top) + var(--sidebar-inset)) 0 var(--sidebar-inset) var(--sidebar-inset);
+    padding: var(--space-2);
+    display: block;
+    border-radius: var(--radius-sidebar);
+  }
+  .bottom-nav ul { grid-template-columns: minmax(0, 1fr); }
+  .bottom-nav a { justify-content: start; padding: 0 var(--space-3); }
+}
+
+/* ---- design-system/components/screen.css · order 1090 ---- */
+/* A tab screen by width (Lesson 10 step 3, 2026-11-15): from --bp-tablet the screen fills the window, the tab bar takes a
+   row above the scroll area (and, from --bp-desktop, a column beside it), and the screen's own column stops growing at
+   --container-max and centres, until the panes come (width audit → Decisions). The large title header and its bar
+   narrow to that column, so on desktop they never run under the sidebar. Drill-downs and sheets keep the phone screen
+   for now. The numbers are tokens.css's --bp-tablet and --bp-desktop (a media query can't read var();
+   scripts/build_components.py checks they agree). */
+@media (min-width: 48.8125rem) {
+  body:has(> .bottom-nav) { max-width: none; display: flex; flex-direction: column; }
+  body:has(> .bottom-nav) > .phone-screen { flex: 1; min-height: 0; min-width: 0; height: auto; padding-bottom: 0; }   /* no tab bar to clear at the bottom */
+  body:has(> .bottom-nav) > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
+  body:has(> .bottom-nav) > .phone-screen > .top-bar--large { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar action (Log result) ends where the column ends */
+}
+@media (min-width: 83.9375rem) {
+  body:has(> .bottom-nav) { flex-direction: row; }
+}

@@ -42,11 +42,11 @@ const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
   const out = {};
   for (const st of document.querySelectorAll('.kit-state')) {
     const lab = st.getAttribute('data-label') || st.querySelector('.kit-label')?.textContent.trim(); const fr = st.querySelector('.kit-frame'); if (!fr || !lab || st.closest('[hidden]')) continue;
-    const geo = ${geometry} && !st.hasAttribute('data-nogeo');   // a States cell (Lesson 9 step 3): its width is the page's layout, so widths and heights aren't compared
+    const wide = !!st.querySelector('iframe.kit-wide'), geo = ${geometry} && !st.hasAttribute('data-nogeo') && !wide;   // a States cell (Lesson 9 step 3): its width is the page's layout, so widths and heights aren't compared; nor in a stage as wide as a tablet or a desktop (Lesson 10 step 3), drawn at its column's scale (zoom), which rounds its sizes by a fraction of a pixel
     const rec = []; const walk = (root, doc) => { for (const el of [root, ...root.querySelectorAll('*')]) {
       if (el.closest('.an-layer')) continue;
       const cs = doc.defaultView.getComputedStyle(el); const s = {};
-      for (const p of ${JSON.stringify(PROPS)}) if (geo || (p !== 'width' && p !== 'height')) s[p] = cs.getPropertyValue(p);
+      for (const p of ${JSON.stringify(PROPS)}) if (geo || (p !== 'width' && p !== 'height')) s[p] = wide ? cs.getPropertyValue(p).replace(/(\\d+\\.\\d+)px/g, (m, n) => Math.round(+n) + 'px') : cs.getPropertyValue(p);   // a zoomed stage: whole pixels
       rec.push(el.tagName + '.' + [...el.classList].join('.') + ' ' + JSON.stringify(s));
       if (el.tagName === 'IFRAME' && el.contentDocument?.body) walk(el.contentDocument.body, el.contentDocument); } };
     [...fr.children].forEach(c => walk(c, document));   // the frame is the docs layer (borderless on the family pages); the product starts inside it

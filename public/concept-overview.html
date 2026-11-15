@@ -230,6 +230,25 @@
     padding: var(--bezel);
     transform-origin: top left;
   }
+  /* Phone / Tablet / Desktop (Lesson 10 step 3, 2026-11-15): the same device, wider. Tablet: an iPad Air 11-inch in
+     portrait, 820×1180 pt, above --bp-tablet (781) and below --bp-desktop (1343), with iPad's 24pt status bar and a
+     shorter home strip. Desktop: a 1440×900 browser window (a 13-inch laptop's default), above --bp-desktop, with a
+     window bar instead of a status bar and no home strip. The iframe is the page's viewport, so the page's own media
+     queries pick the form. */
+  .device[data-width="tablet"] { --status-h: 24px; --home-h: 20px; width: calc(820px + 2 * var(--bezel)); height: calc(1180px + 2 * var(--bezel)); }
+  .device[data-width="desktop"] { --bezel: 1px; --status-h: 32px; --home-h: 0px; width: calc(1440px + 2 * var(--bezel)); height: calc(900px + 32px + 2 * var(--bezel)); }
+  .window-dots { display: none; gap: 8px; }
+  .window-dots i { width: 12px; height: 12px; border-radius: 50%; background: currentColor; opacity: .35; }
+  .device[data-width="desktop"] .window-dots { display: inline-flex; }
+  .device[data-width="desktop"] .status-time, .device[data-width="desktop"] .status-icons { display: none; }
+  .device[data-width="desktop"] .status-bar { padding: 0 14px; }
+  .device[data-width="tablet"] .status-bar { padding: 2px 20px 0; font-size: 12px; }
+  .device[data-width="desktop"] .home-indicator { display: none; }
+  .device[data-width="tablet"] .home-indicator { padding-bottom: 6px; }
+  .device[data-width="tablet"] .home-indicator::before { width: 200px; height: 5px; }
+  /* a wide device goes under the screen header, the notes under it */
+  .content-col.is-wide { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "device" "notes"; justify-content: stretch; }
+  .content-col.is-wide .zone-notes { max-width: 760px; }
   .device-body {
     position: absolute;
     inset: 0;
@@ -324,7 +343,8 @@
     <div class="device-slot"><div class="device">
       <svg class="device-body" aria-hidden="true"><path class="body-fill"/><path class="screen-edge"/></svg>
       <div class="device-screen">
-        <div class="status-bar" aria-hidden="true"><span>09:41</span>
+        <div class="status-bar" aria-hidden="true"><span class="window-dots"><i></i><i></i><i></i></span>
+              <span class="status-time">09:41</span>
               <span class="status-icons">
                 <!-- cellular signal: 4 bars, last one outline-only -->
                 <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
@@ -357,7 +377,8 @@
     <div class="device-slot"><div class="device">
       <svg class="device-body" aria-hidden="true"><path class="body-fill"/><path class="screen-edge"/></svg>
       <div class="device-screen">
-        <div class="status-bar" aria-hidden="true"><span>09:41</span>
+        <div class="status-bar" aria-hidden="true"><span class="window-dots"><i></i><i></i><i></i></span>
+              <span class="status-time">09:41</span>
               <span class="status-icons">
                 <!-- cellular signal: 4 bars, last one outline-only -->
                 <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
@@ -441,9 +462,9 @@
 <p><strong>Not picked:</strong></p>
 <ul><li><strong>Direction B, "Telemetry"</strong> (periwinkle <code>#A9B8FF</code> on blue-black, Saira + Sofia Sans, 4px). Its Results list read like a timing board. But its critique found Race browse "could belong to any dark fintech or fitness app": blue on dark drifts toward a generic tech look, and its energy depended on dimming everything that isn't data.</li><li><strong>Direction C, "Bib number"</strong> (orchid <code>#FF9BE6</code> on pine green, Mona Sans wide + Host Grotesk, 10px). It was the rich-color direction, with energy from the format chip. Under Hierarchy rule 2 the chips became neutral metadata, so its color and energy had nowhere left to go. Mona Sans is also flagged by the detector as an overused face, and pink risked reading as lifestyle, not race.</li></ul>
 <p><a class="btn" href="concept/directions.html">Open round 2 · directions.html →</a></p>
-</div></details><details class="fold"><summary>The stand, in numbers, and the color rules <span class=fold-sub>258 tokens, 166 contrast pairs today</span></summary><div class="fold-body">
+</div></details><details class="fold"><summary>The stand, in numbers, and the color rules <span class=fold-sub>262 tokens, 166 contrast pairs today</span></summary><div class="fold-body">
 <div class="stat-row">
-  <div class="stat"><span class="stat-n">258</span><span class="stat-l">tokens in <code>design-system/tokens/tokens.css</code>, <code>design-system/map-data.css</code> and the docs layer, every one signed on the stand with its reason</span></div>
+  <div class="stat"><span class="stat-n">262</span><span class="stat-l">tokens in <code>design-system/tokens/tokens.css</code>, <code>design-system/map-data.css</code> and the docs layer, every one signed on the stand with its reason</span></div>
   <div class="stat"><span class="stat-n">166</span><span class="stat-l">contrast pairs in the build, 162 of them held to WCAG AA (the rest are disabled or decorative)</span></div>
   <div class="stat"><span class="stat-n">3</span><span class="stat-l">color rules checked on every build; 1, 2 and 3a stop it</span></div>
 </div>

@@ -105,7 +105,21 @@
     var r = hit.el.getBoundingClientRect();
     if (!hit.frame) return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
     var f = hit.frame.getBoundingClientRect();
-    return { left: r.left + f.left, top: r.top + f.top, right: r.right + f.left, bottom: r.bottom + f.top };
+    var k = hit.frame.contentWindow && hit.frame.contentWindow.innerWidth ? f.width / hit.frame.contentWindow.innerWidth : 1;   // a frame drawn smaller (zoom) maps its own coordinates by its scale
+    return { left: f.left + r.left * k, top: f.top + r.top * k, right: f.left + r.right * k, bottom: f.top + r.bottom * k };
+  }
+  // A stage as wide as a tablet or a desktop window (.kit-wide, Lesson 10 step 3): its frame keeps that width, so the
+  // product's media queries show that form. In a crop window it stays at full size and the window shows the component;
+  // anywhere else it is drawn smaller to fit its column (zoom keeps the frame's own width, so the form doesn't change).
+  function fitWide(after) {   // before the crop: full size in a crop window, fitted elsewhere; after it: fitted where the window didn't crop
+    $$('iframe.kit-wide').forEach(function (f) {
+      var win = f.closest('.an-window[data-crop]');
+      if (after ? !win || win.classList.contains('is-cropped') : false) return;
+      f.style.zoom = '';
+      if (win && !after) return;
+      var w = f.offsetWidth, col = (win ? win.parentNode : f.closest('.kit-state') || f.parentNode).clientWidth;
+      if (w && col) f.style.zoom = String(Math.min(1, col / w));
+    });
   }
   function crop(win) {
     var pan = win.firstElementChild, sels = JSON.parse(win.getAttribute('data-crop'));
@@ -167,7 +181,7 @@
       });
     });
   });
-  function all() { cropAll(); stages.forEach(outline); }
+  function all() { fitWide(false); cropAll(); fitWide(true); stages.forEach(outline); }
   all();
   window.addEventListener('load', function () { all(); check(); });
   var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(all, 100); });

@@ -38,3 +38,20 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
 .view-panel { flex: 1; min-height: 0; }
 .list-area[hidden], .map-area[hidden] { display: none; }   /* layout on classes, ids for the scripts only (designer, 2026-11-10; #list-view and #map-view until then) */
 .list-area { padding: 0 var(--space-4) var(--space-4); }
+
+/* order 1090 */
+/* A tab screen by width (Lesson 10 step 3, 2026-11-15): from --bp-tablet the screen fills the window, the tab bar takes a
+   row above the scroll area (and, from --bp-desktop, a column beside it), and the screen's own column stops growing at
+   --container-max and centres, until the panes come (width audit → Decisions). The large title header and its bar
+   narrow to that column, so on desktop they never run under the sidebar. Drill-downs and sheets keep the phone screen
+   for now. The numbers are tokens.css's --bp-tablet and --bp-desktop (a media query can't read var();
+   scripts/build_components.py checks they agree). */
+@media (min-width: 48.8125rem) {
+  body:has(> .bottom-nav) { max-width: none; display: flex; flex-direction: column; }
+  body:has(> .bottom-nav) > .phone-screen { flex: 1; min-height: 0; min-width: 0; height: auto; padding-bottom: 0; }   /* no tab bar to clear at the bottom */
+  body:has(> .bottom-nav) > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
+  body:has(> .bottom-nav) > .phone-screen > .top-bar--large { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar action (Log result) ends where the column ends */
+}
+@media (min-width: 83.9375rem) {
+  body:has(> .bottom-nav) { flex-direction: row; }
+}

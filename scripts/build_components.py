@@ -14,6 +14,9 @@ Run from anywhere:  python3 scripts/build_components.py      (build_stand.py run
    - (step 5) writes a named or functional color (black, white, rgb(), hsl()) or a fixed color-scheme: a value the
      theme can't reach;
    - has text outside an order block (other than its header comment), or two blocks share a number.
+   - (Lesson 10 step 3, 2026-11-15) has a width media query whose number isn't a breakpoint token's: a media query can't
+     read var(), so `@media (min-width: …)` writes --bp-tablet's or --bp-desktop's value from tokens.css, and only those;
+     a width query is min-width only (the phone is the base, wider forms are added on top).
 (Until step 4 it also derived design-system/map-data.css from ui/map.css. Since step 4, design-system/map-data.css is the map's own file,
 written by scripts/concept/build_map.py, and ui/map.css is gone.)
 """
@@ -56,6 +59,22 @@ for f in files:
         # step 5: a component never fixes the appearance; color-scheme comes from :root (dark, or light under [data-theme])
         if prop.strip() == 'color-scheme' and val.strip() != 'inherit': fails.append(f'{name}: a fixed color-scheme in "{decl.strip()[:80]}" (inherit it)')
         if re.search(r'(?<![\w-])(black|white|rgba?\(|hsla?\()', val) and prop.strip() not in ('mask', '-webkit-mask'): fails.append(f'{name}: a named or functional color in "{decl.strip()[:80]}" (use a role)')
+# ---------------------------------------------------------------- the breakpoints (Lesson 10 step 3, 2026-11-15)
+# A media query can't read var(--bp-tablet): each width query repeats the number, and it must be the token's, so the two
+# can't drift apart. Only min-width: the phone layout is the base and each wider form is added on top of it.
+BP = {n: v.strip() for n, v in re.findall(r'^\s*--(bp-[a-z]+):\s*([^;]+);', TOK, flags=re.M)}
+assert set(BP) == {'bp-tablet', 'bp-desktop'}, ('tokens.css: exactly two breakpoints, --bp-tablet and --bp-desktop', sorted(BP))
+media_used = {}
+for f in files:
+    code = re.sub(r'/\*.*?\*/', '', open(f).read(), flags=re.S)
+    for q in re.findall(r'@media\s*([^{]+)\{', code):
+        for feat, val in re.findall(r'\(\s*((?:min-|max-)?width)\s*:\s*([^)]+)\)', q):
+            hit = [n for n, v in BP.items() if v == val.strip()]
+            if feat != 'min-width': fails.append(f'{os.path.basename(f)}: a {feat} query "@media {q.strip()}" (width queries are min-width only)')
+            elif not hit: fails.append(f'{os.path.basename(f)}: "@media {q.strip()}" isn\'t a breakpoint token (--bp-tablet {BP["bp-tablet"]}, --bp-desktop {BP["bp-desktop"]})')
+            else: media_used[hit[0]] = media_used.get(hit[0], 0) + 1
+        if re.search(r'\bwidth\s*[<>]', q): fails.append(f'{os.path.basename(f)}: a range query "@media {q.strip()}" (write min-width with the token\'s number)')
+
 # ---------------------------------------------------------------- the state roles (Lesson 9 step 3, 2026-11-05)
 # Every state role (the "states" part of the SEMANTIC level) has a value in the dark :root and in the light block: a state
 # with a value in one theme only is a defect. Then the dark roles' copy for [data-theme-scope="dark"], so one part of a
@@ -112,4 +131,5 @@ open(os.path.join(DS, 'index.css'), 'w').write(
 
 print(f'build_components: {len(STATES)} state roles, each in both themes; the dark scope written ({len(DARK_ROLES)} roles)')
 print(f'build_components: pass · {len(files)} component files, {len(blocks)} blocks bundled into design-system/components/index.css in order, design-system/index.css written; '
-      f'no color primitive ({len(COLOR_PRIM)} checked), hex, px or font name in design-system/components/')
+      f'no color primitive ({len(COLOR_PRIM)} checked), hex, px or font name in design-system/components/; '
+      f'width queries at the breakpoint tokens only (' + ', '.join(f'--{n} {BP[n]} ×{c}' for n, c in sorted(media_used.items())) + ')')

@@ -13,7 +13,7 @@ Taken on this audit; they settle its "Open, for the designer" list and override 
 5. **No screen gets "wider layout".** Width goes to panes, not to more card columns: a **deliberate deviation from the lesson's card grid**. Reason: HIG Split views, "selecting an item in the view's primary pane displays the item's contents in the secondary pane"; beside a phone-width list the room is worth more as the map or the detail. The grid tokens still exist and count panes: `--col-count-tablet: 2`, `--col-count-desktop: 3`.
 6. **A "selected" state for the race card and the result card**, for the panes (HIG Split views: "persistently highlight the current selection"): a new component state, through `design-system/` first, in both themes. Logged in `design-system/backlog.md` → Lesson 10; not built in step 2.
 
-**Step 2 (2026-11-15):** the two points are `--bp-tablet` (48.8125rem, 781px: two `--pane-w` and a divider) and `--bp-desktop` (88.3125rem, 1413px: a 15rem sidebar [?], three panes, three dividers), in `design-system/tokens/tokens.css`; why: `DESIGN.md` → Width.
+**Step 2 (2026-11-15):** the two points are `--bp-tablet` (48.8125rem, 781px: two `--pane-w` and a divider) and `--bp-desktop` (83.9375rem, 1343px since the revision below; was 88.3125rem, 1413px: a 15rem sidebar [?], three panes, three dividers), in `design-system/tokens/tokens.css`; why: `DESIGN.md` → Width.
 
 **Read for it:** `flows.md` (Flows 1–6), `research/jtbd.md`, every `wireframes/*.html` with its states (`wireframes/_screens.md` for the state list), `design-system/backlog.md` → Lesson 10.
 
@@ -130,3 +130,5 @@ Everything else (six screens) does not change at either width; it only needs a r
 3. Three panes on desktop for Race browse, or two panes everywhere and one behavior breakpoint?
 4. Desktop is read as "an iPad app in a bigger window" (HIG → Layout, idiom stays the same). If it should follow macOS instead (sidebar, no tab bar), most of the table changes; nothing in `DESIGN.md` → Native iOS says so today.
 5. Not a product screen, so not in the table: Saved races (`design-system/examples/`) would be a list-and-detail screen too, if it becomes real.
+
+**Revised 2026-11-15 (designer), before step 3:** 1413px left many 13–14-inch laptops on the tablet form. The list and the detail stay `--pane-w`; the map is flexible, never narrower than `--map-min` (20rem [?], 320px, the narrowest screen the map is checked at). `--bp-desktop` = `--sidebar-w` (15rem [?]) + 2 × `--pane-w` + `--map-min` + three dividers = **83.9375rem, 1343px**. A 1440 window and a 1366 one reach it; a 1280 one doesn't. An iPad Pro 13-inch in landscape (1376) now does, so it gets the sidebar (`DESIGN.md` → Width).

@@ -12,6 +12,8 @@
 :root {
   --radius-3: 12px;        /* a stage's corners */
   --kit-stage-h: 600px;    /* stage for the sheet, the map and the alert */
+  --kit-tablet-w: 820px;   /* a stage as wide as a tablet (an iPad Air 11-inch in portrait), above --bp-tablet: the viewer's Tablet width (Lesson 10 step 3) */
+  --kit-desktop-w: 1440px; /* a stage as wide as a desktop window (a 13-inch laptop's default), above --bp-desktop: the viewer's Desktop width */
 }
 .kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
   width: 100%;
@@ -29,6 +31,15 @@
    ground and outline show through, as they did around the bar before. */
 .kit-tabbar > iframe { display: block; width: 100%; height: 100%; border: 0; }
 .onrace.kit-tabbar-doc { background: transparent; }
+/* a stage wider than the page (Lesson 10 step 3, 2026-11-15): a frame as wide as a tablet or a desktop window, so the
+   product's media queries, which read the frame's width, show that form. doc.js draws it smaller to fit the column
+   (zoom), or at full size inside a crop window that shows the component alone. */
+.kit-frame--wide { width: fit-content; max-width: none; }
+.an-pan .kit-frame--wide { width: max-content; }   /* in a crop window the frame keeps the page's whole width, so the window can pan to a part past the column's edge */
+.kit-doc .kit-state:has(> .kit-frame--wide) { flex-basis: 100%; }   /* on the specimens page a wide stage takes the row, drawn as large as the row allows */
+.kit-wide { display: block; height: var(--kit-stage-h); border: 0; background: var(--page); }
+.kit-wide--tablet { width: var(--kit-tablet-w); }
+.kit-wide--desktop { width: var(--kit-desktop-w); }
 .kit-stage {   /* a positioned screen-height stage for sheets, the map and the alert */
   position: relative;
   display: flex;

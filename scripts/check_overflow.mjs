@@ -146,11 +146,22 @@ await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-m
 
 const failures = [];
 let checked = 0;
-for (const [w, h, text, docsOnly] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [1440, 900, 16, true]]) {   // the third pass: 200% text (step 7, #2); the fourth: the docs pages at desk width
+// Lesson 10 step 3 (2026-11-15): the shell's three forms. Each tab screen must show the form its width asks for, at the
+// breakpoints read from design-system/tokens/tokens.css: the tab bar at the bottom, at the top, or a sidebar on the left.
+const TOKS = readFileSync(join(ROOT, 'design-system/tokens/tokens.css'), 'utf8');
+const BP = Object.fromEntries([...TOKS.matchAll(/^\s*--(bp-[a-z]+):\s*([^;]+);/gm)].map(m => [m[1], m[2].trim()]));
+const FORM = `(() => {
+  const nav = document.querySelector('body > .bottom-nav'); if (!nav || !nav.getClientRects().length) return null;
+  const W = innerWidth, H = innerHeight, r = nav.getBoundingClientRect();
+  const want = matchMedia('(min-width: ${BP['bp-desktop']})').matches ? 'sidebar' : matchMedia('(min-width: ${BP['bp-tablet']})').matches ? 'top' : 'bottom';
+  const got = r.height > H / 2 && r.left < 40 ? 'sidebar' : r.top < 80 && Math.abs(r.left + r.width / 2 - W / 2) < 2 ? 'top' : r.bottom > H - 80 && r.width > W / 2 ? 'bottom' : 'nowhere';
+  return got === want ? null : 'the tab bar shows as ' + got + ', the width asks for ' + want;
+})()`;
+for (const [w, h, text, only] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [820, 1180, 16, 'screens'], [1440, 900, 16]]) {   // the third pass: 200% text (step 7, #2); the fourth and fifth: a tablet and a desktop (Lesson 10 step 3: the screens at the viewer's widths, the docs pages at desk width since step 2)
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   await send('Page.setFontSizes', { fontSizes: { standard: text, fixed: Math.round(text * 13 / 16) } });   // the root size: the kit's type unit is 1rem ÷ 16, so every size doubles
   for (const s of states) {
-    if (docsOnly && !s.doc) continue;
+    if (only === 'screens' && s.doc) continue;
     const url = BASE + s.name + '.html' + (s.q ? '?' + s.q : '');
     pageErrors.length = 0;
     const loaded = once('Page.loadEventFired');
@@ -163,6 +174,7 @@ for (const [w, h, text, docsOnly] of [[390, 844, 16], [320, 568, 16], [390, 844,
     if (s.act.startsWith('click:')) await evaluate(`document.querySelector(${JSON.stringify(s.act.slice(6))})?.click()`);
     if (s.act) await sleep(350);
     const bad = (await evaluate(CHECK)) || [];
+    if (!s.doc) { const f = await evaluate(FORM); if (f) bad.push(f); }
     pageErrors.forEach(e => bad.push(e.startsWith('missing file') ? e : 'script error: ' + e));   // a page whose script breaks isn't measured as designed (step 7)
     checked++;
     if (bad && bad.length) failures.push(`${w}px${text !== 16 ? ' · ' + text / 16 * 100 + '% text' : ''} · ${s.label}\n    ${bad.join('\n    ')}`);
@@ -180,5 +192,5 @@ if (failures.length) {
   const fontsOnly = failures.every(f => f.includes('(no font loaded at all)'));
   process.exit(fontsOnly ? 3 : 1);
 }
-if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320 and 390 at 200% text; the kit and lesson pages also at 1440)`);
+if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320 and 390 at 200% text; the screens also at 820 and 1440, each tab screen in the form its width asks for; the kit and lesson pages also at 1440)`);
 else console.log(`check_overflow: pass (${checked} states)`);

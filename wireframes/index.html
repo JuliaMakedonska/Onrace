@@ -290,6 +290,25 @@
     padding: var(--bezel);
     transform-origin: top left;
   }
+  /* Phone / Tablet / Desktop (Lesson 10 step 3, 2026-11-15): the same device, wider. Tablet: an iPad Air 11-inch in
+     portrait, 820×1180 pt, above --bp-tablet (781) and below --bp-desktop (1343), with iPad's 24pt status bar and a
+     shorter home strip. Desktop: a 1440×900 browser window (a 13-inch laptop's default), above --bp-desktop, with a
+     window bar instead of a status bar and no home strip. The iframe is the page's viewport, so the page's own media
+     queries pick the form. */
+  .device[data-width="tablet"] { --status-h: 24px; --home-h: 20px; width: calc(820px + 2 * var(--bezel)); height: calc(1180px + 2 * var(--bezel)); }
+  .device[data-width="desktop"] { --bezel: 1px; --status-h: 32px; --home-h: 0px; width: calc(1440px + 2 * var(--bezel)); height: calc(900px + 32px + 2 * var(--bezel)); }
+  .window-dots { display: none; gap: 8px; }
+  .window-dots i { width: 12px; height: 12px; border-radius: 50%; background: currentColor; opacity: .35; }
+  .device[data-width="desktop"] .window-dots { display: inline-flex; }
+  .device[data-width="desktop"] .status-time, .device[data-width="desktop"] .status-icons { display: none; }
+  .device[data-width="desktop"] .status-bar { padding: 0 14px; }
+  .device[data-width="tablet"] .status-bar { padding: 2px 20px 0; font-size: 12px; }
+  .device[data-width="desktop"] .home-indicator { display: none; }
+  .device[data-width="tablet"] .home-indicator { padding-bottom: 6px; }
+  .device[data-width="tablet"] .home-indicator::before { width: 200px; height: 5px; }
+  /* a wide device goes under the screen header, the notes under it */
+  .content-col.is-wide { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "device" "notes"; justify-content: stretch; }
+  .content-col.is-wide .zone-notes { max-width: 760px; }
   .device-body {
     position: absolute;
     inset: 0;
@@ -424,6 +443,11 @@
           <button type="button" class="mode-btn theme-btn" data-theme="light" aria-pressed="false" title="The light theme stress test (Lesson 8 step 5; Onrace is dark-only, C5)">Light</button>
           <button type="button" class="mode-btn theme-btn" data-theme="dark" aria-pressed="true" title="Onrace's theme">Dark</button>
         </div>
+        <div class="mode-toggle" role="group" aria-label="Width">
+          <button type="button" class="mode-btn width-btn" data-width="phone" aria-pressed="true" title="An iPhone, 390 wide: the phone form">Phone</button>
+          <button type="button" class="mode-btn width-btn" data-width="tablet" aria-pressed="false" title="An iPad Air 11-inch in portrait, 820 wide: above the tablet breakpoint (781), below the desktop one">Tablet</button>
+          <button type="button" class="mode-btn width-btn" data-width="desktop" aria-pressed="false" title="A 13-inch laptop's browser window, 1440 wide: above the desktop breakpoint (1343)">Desktop</button>
+        </div>
         <a class="open-page" id="open-page" href="race-browse.html" target="_blank" rel="noopener">Open as a page ↗</a>
       </div>
       <p class="mode-note" id="mode-note" hidden>Frozen snapshot: the end of Lesson 5 (commit <code>7347c27</code>), grayscale, before any screen was painted. Read-only history; the working screen is Design.</p>
@@ -438,7 +462,8 @@
           </svg>
           <div class="device-screen" id="device-screen">
             <div class="status-bar" id="status-bar" aria-hidden="true">
-              <span>09:41</span>
+              <span class="window-dots"><i></i><i></i><i></i></span>
+              <span class="status-time">09:41</span>
               <span class="status-icons">
                 <!-- cellular signal: 4 bars, last one outline-only -->
                 <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
@@ -1156,16 +1181,22 @@
      The frozen Wireframe snapshot has no theme: there the switch is off. */
   var theme = 'dark';
   var queryTheme = new URLSearchParams(location.search).get('theme');   // index.html?theme=light works as an entry link too
+  /* Phone / Tablet / Desktop (Lesson 10 step 3, 2026-11-15): the frame's width. It rides in the hash like the theme and
+     the mode (#race-browse?width=tablet, in the workspace #04/race-browse?width=tablet); phone, the default, isn't
+     written. It never reaches the page: the frame's own width is what the page's media queries read. */
+  var WIDTHS = { phone: 1, tablet: 1, desktop: 1 };
+  var width = 'phone';
+  var queryWidth = new URLSearchParams(location.search).get('width');
   function splitMode(h) {   // 'log-result-error?cause=link&mode=wireframe&theme=light' → { key: 'log-result-error?cause=link', mode: 'wireframe', theme: 'light' }
-    var q = h.indexOf('?'); if (q < 0) return { key: h, mode: null, theme: null };
-    var p = new URLSearchParams(h.slice(q + 1)), m = p.get('mode'), t = p.get('theme');
-    p.delete('mode'); p.delete('theme');
+    var q = h.indexOf('?'); if (q < 0) return { key: h, mode: null, theme: null, width: null };
+    var p = new URLSearchParams(h.slice(q + 1)), m = p.get('mode'), t = p.get('theme'), w = p.get('width');
+    p.delete('mode'); p.delete('theme'); p.delete('width');
     var rest = p.toString();
-    return { key: h.slice(0, q) + (rest ? '?' + rest : ''), mode: MODES.hasOwnProperty(m) ? m : null, theme: t === 'light' || t === 'dark' ? t : null };
+    return { key: h.slice(0, q) + (rest ? '?' + rest : ''), mode: MODES.hasOwnProperty(m) ? m : null, theme: t === 'light' || t === 'dark' ? t : null, width: WIDTHS.hasOwnProperty(w) ? w : null };
   }
-  function withMode(key, m, t) {
-    t = t || theme;
-    var extra = (m === 'wireframe' ? ['mode=wireframe'] : []).concat(t === 'light' ? ['theme=light'] : []);
+  function withMode(key, m, t, w) {
+    t = t || theme; w = w || width;
+    var extra = (m === 'wireframe' ? ['mode=wireframe'] : []).concat(t === 'light' ? ['theme=light'] : []).concat(w !== 'phone' ? ['width=' + w] : []);
     return extra.length ? key + (key.indexOf('?') >= 0 ? '&' : '?') + extra.join('&') : key;
   }
   function pageUrl(key, m, open) {   // the page the frame (and Open as a page) shows for this key, mode and theme
@@ -1179,6 +1210,7 @@
     var sm = splitMode(h);
     mode = sm.mode || 'design';
     theme = sm.theme || queryTheme || 'dark'; queryTheme = null;
+    width = sm.width || (WIDTHS.hasOwnProperty(queryWidth) ? queryWidth : 'phone'); queryWidth = null;
     return STATES[sm.key.split('?')[0]] ? sm.key : DEFAULT_KEY;
   }
   function frameMode() {
@@ -1223,6 +1255,10 @@
       b.setAttribute('aria-pressed', String(b.getAttribute('data-theme') === theme));
       b.disabled = mode === 'wireframe';   // the frozen snapshot has no theme
     });
+    Array.prototype.forEach.call(document.querySelectorAll('.width-btn'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-width') === width));
+    });
+    if (device.getAttribute('data-width') !== width) applyWidth();
     document.getElementById('mode-note').hidden = mode !== 'wireframe';
     document.getElementById('zone-mode-note').hidden = mode !== 'wireframe';
     Array.prototype.forEach.call(tree.querySelectorAll('.tree-screen'), function (a) {   // tree links keep the mode
@@ -1273,6 +1309,12 @@
       location.hash = withMode(key, mode, t);   // hashchange → show() reloads the same state in the other theme
     });
   });
+  Array.prototype.forEach.call(document.querySelectorAll('.width-btn'), function (b) {
+    b.addEventListener('click', function () {
+      var w = b.getAttribute('data-width'), key = hashKey(); if (w === width) return;
+      location.hash = withMode(key, mode, theme, w);   // hashchange → show() keeps the page and resizes the device
+    });
+  });
   window.addEventListener('hashchange', function () { show(hashKey()); });
   function setTree(open) {
     tree.classList.toggle('is-open', open);
@@ -1316,8 +1358,10 @@
   var slot = document.getElementById('device-slot');
   var screen = document.getElementById('device-screen');
   var SCREEN_R = 47, SMOOTH = 0.6;   // iPhone 12–14 display corner radius, pt
+  var RADIUS = { phone: 47, tablet: 18, desktop: 10 };   // the display's corners: iPhone, iPad Air, a Mac window
 
-  (function drawOutline() {
+  function drawOutline() {
+    SCREEN_R = RADIUS[width] || 47;
     var bezel = parseFloat(getComputedStyle(device).paddingLeft);
     var W = device.offsetWidth, H = device.offsetHeight;
     var sw = W - 2 * bezel, sh = H - 2 * bezel;
@@ -1327,7 +1371,12 @@
     document.getElementById('body-path').setAttribute('d', squircle(0.5, 0.5, W - 1, H - 1, SCREEN_R + bezel, SMOOTH));
     document.getElementById('screen-edge').setAttribute('d', squircle(bezel - 0.5, bezel - 0.5, sw + 1, sh + 1, SCREEN_R + 0.5, SMOOTH));
     screen.style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
-  })();
+  }
+  function applyWidth() {   // the device's size follows the width; the page inside picks its form by its own media queries
+    device.setAttribute('data-width', width);
+    document.querySelector('.content-col').classList.toggle('is-wide', width !== 'phone');
+    drawOutline(); fit();
+  }
 
   // Scale the whole device (never its internals) to fit: the window height
   // beside the header on a wide screen, the column width on a narrow one
@@ -1357,6 +1406,7 @@
     history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + '#' + withMode(key, sm.mode || (MODES.hasOwnProperty(m) ? m : 'design')));
   })();
   show(hashKey());   // also runs fit() through renderNotes
+  applyWidth();
   window.addEventListener('resize', fit);
 })();
 </script>
