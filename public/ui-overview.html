@@ -246,9 +246,12 @@
   .device[data-width="desktop"] .home-indicator { display: none; }
   .device[data-width="tablet"] .home-indicator { padding-bottom: 6px; }
   .device[data-width="tablet"] .home-indicator::before { width: 200px; height: 5px; }
-  /* a wide device goes under the screen header, the notes under it */
-  .content-col.is-wide { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "device" "notes"; justify-content: stretch; }
-  .content-col.is-wide .zone-notes { max-width: 760px; }
+  /* the size changes smoothly when the width switch changes it (the viewer script adds .is-resizing for that moment
+     only); at once under Reduce Motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .device.is-resizing { transition: width .35s ease, height .35s ease, transform .35s ease; }
+    .device-slot.is-resizing { transition: width .35s ease, height .35s ease; }
+  }
   .device-body {
     position: absolute;
     inset: 0;

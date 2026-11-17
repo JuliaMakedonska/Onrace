@@ -139,26 +139,97 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
-  .tree a:focus-visible, .pill:focus-visible, .tree summary:focus-visible, .tree-toggle:focus-visible, .open-page:focus-visible {
+  .tree a:focus-visible, .tree summary:focus-visible, .tree-toggle:focus-visible, .open-page:focus-visible {
     outline: 2px solid var(--text);
     outline-offset: 2px;
   }
 
-  /* --- content: the phone on the left; the screen header and the zone
-     notes on the right. One column when there isn't room for both. --- */
+  /* --- content: the stage (the toolbar over the device) on the left; the
+     screen header and the zone notes on the right. One column when there
+     isn't room for both. The stage keeps its place at every width, so the
+     toolbar never moves under the pointer when the device changes size. --- */
   .content-col {
     display: grid;
-    grid-template-columns: auto minmax(280px, 400px);
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
     grid-template-areas: "device head" "device notes";
     grid-template-rows: auto 1fr;
     justify-content: center;
     align-items: start;
-    gap: 22px 40px;
-    padding: 28px 32px;
+    gap: 22px 32px;
+    padding: 28px 24px;
     min-width: 0;
   }
   .screen-head { grid-area: head; min-width: 0; }
-  .device-col { grid-area: device; min-width: 0; }
+  .device-col { grid-area: device; min-width: 0; width: 100%; display: grid; gap: 14px; justify-items: center; }
+
+  /* --- the toolbar over the device (2026-11-17), like a browser's device toolbar: the screen's states on the left,
+     the width switch centred on the device. When the states don't fit beside it, the two stack, each centred. --- */
+  .device-toolbar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px 16px;
+  }
+  .device-toolbar .state-seg { grid-column: 1; justify-self: start; }
+  .device-toolbar .width-seg { grid-column: 2; }
+  .device-toolbar.is-stacked { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .device-toolbar.is-stacked .state-seg, .device-toolbar.is-stacked .width-seg { grid-column: 1; justify-self: center; }
+  .seg {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    gap: 2px;
+    margin: 0;
+    padding: 2px;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-elev);
+  }
+  .device-toolbar.is-stacked .state-seg { flex-wrap: wrap; justify-content: center; border-radius: 18px; max-width: 100%; }
+  .seg-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-dim);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .seg-item:hover { color: var(--text); background: var(--bg-elev-2); }
+  .seg-item[aria-current="page"], .seg-item[aria-pressed="true"] { background: var(--accent-dim); color: var(--accent); }
+  .seg-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; z-index: 1; }
+  .width-seg .seg-item { width: 40px; padding: 0; }
+  .width-seg svg { display: block; width: 18px; height: 18px; }
+  /* the tooltip: on hover and on keyboard focus, gone on Escape (WCAG 1.4.13); the name is the button's aria-label */
+  .seg-tip {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 5;
+  }
+  .seg-item:hover .seg-tip, .seg-item:focus-visible .seg-tip { opacity: 1; visibility: visible; }
+  .width-seg.tips-off .seg-tip { opacity: 0; visibility: hidden; }
   .zone-notes { grid-area: notes; min-width: 0; }
   .screen-kicker {
     display: flex;
@@ -200,19 +271,6 @@
     color: #d7dadf;
     font-size: 0.9em;
   }
-  .state-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
-  .pill {
-    display: inline-block;
-    padding: 5px 11px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 12.5px;
-    font-weight: 700;
-  }
-  .pill:hover { color: var(--text); border-color: var(--text-faint); }
-  .pill[aria-current="page"] { background: var(--accent-dim); border-color: transparent; color: var(--accent); }
   .state-note { margin: 0 0 10px; font-size: 13px; line-height: 1.5; color: var(--text-dim); }
   .open-page { font-size: 13px; font-weight: 700; color: var(--text-dim); }
   .open-page:hover { color: var(--text); }
@@ -246,6 +304,7 @@
       grid-template-rows: auto;
       justify-items: center;
     }
+    .device-col { max-width: 100%; }
     .screen-head, .zone-notes { width: 100%; max-width: 560px; }
   }
   @media (max-width: 760px) {
@@ -306,9 +365,12 @@
   .device[data-width="desktop"] .home-indicator { display: none; }
   .device[data-width="tablet"] .home-indicator { padding-bottom: 6px; }
   .device[data-width="tablet"] .home-indicator::before { width: 200px; height: 5px; }
-  /* a wide device goes under the screen header, the notes under it */
-  .content-col.is-wide { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "device" "notes"; justify-content: stretch; }
-  .content-col.is-wide .zone-notes { max-width: 760px; }
+  /* the size changes smoothly when the width switch changes it (the viewer script adds .is-resizing for that moment
+     only); at once under Reduce Motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .device.is-resizing { transition: width .35s ease, height .35s ease, transform .35s ease; }
+    .device-slot.is-resizing { transition: width .35s ease, height .35s ease; }
+  }
   .device-body {
     position: absolute;
     inset: 0;
@@ -432,7 +494,6 @@
         <div><dt>Job</dt><dd id="meta-job"></dd></div>
         <div><dt>Flow</dt><dd id="meta-flow"></dd></div>
       </dl>
-      <ul class="state-pills" id="state-pills" aria-label="States"></ul>
       <p class="state-note" id="screen-job"></p>
       <div class="page-actions">
         <div class="mode-toggle" role="group" aria-label="Show the page as">
@@ -443,17 +504,24 @@
           <button type="button" class="mode-btn theme-btn" data-theme="light" aria-pressed="false" title="The light theme stress test (Lesson 8 step 5; Onrace is dark-only, C5)">Light</button>
           <button type="button" class="mode-btn theme-btn" data-theme="dark" aria-pressed="true" title="Onrace's theme">Dark</button>
         </div>
-        <div class="mode-toggle" role="group" aria-label="Width">
-          <button type="button" class="mode-btn width-btn" data-width="phone" aria-pressed="true" title="An iPhone, 390 wide: the phone form">Phone</button>
-          <button type="button" class="mode-btn width-btn" data-width="tablet" aria-pressed="false" title="An iPad Air 11-inch in portrait, 820 wide: above the tablet breakpoint (781), below the desktop one">Tablet</button>
-          <button type="button" class="mode-btn width-btn" data-width="desktop" aria-pressed="false" title="A 13-inch laptop's browser window, 1440 wide: above the desktop breakpoint (1343)">Desktop</button>
-        </div>
         <a class="open-page" id="open-page" href="race-browse.html" target="_blank" rel="noopener">Open as a page ↗</a>
       </div>
       <p class="mode-note" id="mode-note" hidden>Frozen snapshot: the end of Lesson 5 (commit <code>7347c27</code>), grayscale, before any screen was painted. Read-only history; the working screen is Design.</p>
     </header>
 
-    <div class="device-col">
+    <div class="device-col" id="device-col">
+      <!-- The device toolbar: the screen's states (links: each state has its own address) and the width switch
+           (Phone 390×844, Tablet 820×1180 an iPad Air 11-inch in portrait, between --bp-tablet 781 and --bp-desktop
+           1343, Desktop 1440×900 a 13-inch laptop's window; Solar Linear icons). Arrow keys move between the
+           width buttons, Tab and Enter work as on any button. -->
+      <div class="device-toolbar" id="device-toolbar">
+        <ul class="seg state-seg" id="state-seg" aria-label="States"></ul>
+        <div class="seg width-seg" id="width-seg" role="group" aria-label="Width">
+          <button type="button" class="seg-item width-btn" data-width="phone" aria-pressed="true" aria-label="Phone, 390 wide"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M12 22C8.22876 22 6.34315 22 5.17157 20.8284C4 19.6569 4 17.7712 4 14V10C4 6.22876 4 4.34315 5.17157 3.17157C6.34315 2 8.22876 2 12 2C15.7712 2 17.6569 2 18.8284 3.17157C20 4.34315 20 6.22876 20 10V14C20 17.7712 20 19.6569 18.8284 20.8284C17.6569 22 15.7712 22 12 22Z"/><path d="M15 19H9"/></svg><span class="seg-tip" aria-hidden="true">Phone · 390</span></button>
+          <button type="button" class="seg-item width-btn" data-width="tablet" aria-pressed="false" aria-label="Tablet, 820 wide"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><g transform="rotate(90 12 12)"><path d="M22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4L14 4C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12Z"/><path d="M15 17H9"/></g></svg><span class="seg-tip" aria-hidden="true">Tablet · 820</span></button>
+          <button type="button" class="seg-item width-btn" data-width="desktop" aria-pressed="false" aria-label="Desktop, 1440 wide"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M8 17H16C18.8284 17 20.2426 17 21.1213 16.1213C22 15.2426 22 13.8284 22 11V10C22 6.22876 22 4.34315 20.8284 3.17157C19.6569 2 17.7712 2 14 2H10C6.22876 2 4.34315 2 3.17157 3.17157C2 4.34315 2 6.22876 2 10V11C2 13.8284 2 15.2426 2.87868 16.1213C3.75736 17 5.17157 17 8 17Z"/><path d="M16 22H8"/><path d="M12 17L12 22"/><path d="M22 13H2"/></svg><span class="seg-tip" aria-hidden="true">Desktop · 1440</span></button>
+        </div>
+      </div>
       <div class="device-slot" id="device-slot">
         <div class="device" id="device">
           <svg class="device-body" id="device-body" aria-hidden="true">
@@ -1241,12 +1309,13 @@
     document.getElementById('meta-persona').innerHTML = s.persona;
     document.getElementById('meta-job').innerHTML = s.job + (s.jobQuote ? '<span class="quote">' + s.jobQuote + '</span>' : '');
     document.getElementById('meta-flow').innerHTML = s.flow;
-    var pills = document.getElementById('state-pills'); pills.textContent = '';
+    var seg = document.getElementById('state-seg'); seg.textContent = '';
     s.states.forEach(function (x) {
-      var li = el('li'), a = el('a', 'pill', x[1]); a.href = '#' + withMode(x[0], mode);
+      var li = el('li'), a = el('a', 'seg-item', x[1]); a.href = '#' + withMode(x[0], mode);
       if (x[0] === sk) a.setAttribute('aria-current', 'page');
-      li.appendChild(a); pills.appendChild(li);
+      li.appendChild(a); seg.appendChild(li);
     });
+    layoutToolbar();
     document.getElementById('open-page').href = pageUrl(key, mode, true);
     Array.prototype.forEach.call(document.querySelectorAll('.mode-btn[data-mode]'), function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === mode));
@@ -1309,12 +1378,34 @@
       location.hash = withMode(key, mode, t);   // hashchange → show() reloads the same state in the other theme
     });
   });
-  Array.prototype.forEach.call(document.querySelectorAll('.width-btn'), function (b) {
+  var widthBtns = Array.prototype.slice.call(document.querySelectorAll('.width-btn'));
+  var widthSeg = document.getElementById('width-seg');
+  widthBtns.forEach(function (b, i) {
     b.addEventListener('click', function () {
       var w = b.getAttribute('data-width'), key = hashKey(); if (w === width) return;
+      animateNext = true;
       location.hash = withMode(key, mode, theme, w);   // hashchange → show() keeps the page and resizes the device
     });
+    b.addEventListener('keydown', function (e) {   // arrows (and Home / End) move between the three; Enter or Space picks
+      var j = { ArrowLeft: i - 1, ArrowUp: i - 1, ArrowRight: i + 1, ArrowDown: i + 1, Home: 0, End: widthBtns.length - 1 }[e.key];
+      if (e.key === 'Escape') { widthSeg.classList.add('tips-off'); return; }
+      if (j === undefined) return;
+      e.preventDefault();
+      widthBtns[(j + widthBtns.length) % widthBtns.length].focus();
+    });
+    b.addEventListener('focus', function () { widthSeg.classList.remove('tips-off'); });
+    b.addEventListener('mouseenter', function () { widthSeg.classList.remove('tips-off'); });
   });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') widthSeg.classList.add('tips-off'); });
+
+  /* The states sit left of the width switch while they fit in the space left of it; otherwise the two stack */
+  var toolbar = document.getElementById('device-toolbar');
+  function layoutToolbar() {
+    var st = document.getElementById('state-seg');
+    toolbar.classList.remove('is-stacked');
+    var room = (toolbar.clientWidth - widthSeg.offsetWidth) / 2 - 16;
+    toolbar.classList.toggle('is-stacked', st.scrollWidth > room);
+  }
   window.addEventListener('hashchange', function () { show(hashKey()); });
   function setTree(open) {
     tree.classList.toggle('is-open', open);
@@ -1359,6 +1450,11 @@
   var screen = document.getElementById('device-screen');
   var SCREEN_R = 47, SMOOTH = 0.6;   // iPhone 12–14 display corner radius, pt
   var RADIUS = { phone: 47, tablet: 18, desktop: 10 };   // the display's corners: iPhone, iPad Air, a Mac window
+  // The device's outer size at each width, as the .device rules above draw it (screen + 2 × bezel, + the window bar
+  // on desktop). fit() scales from these, not from the box, which is mid-transition while the size changes.
+  var OUTER = { phone: [412, 866], tablet: [842, 1202], desktop: [1442, 934] };
+  var RESIZE_MS = 350, animateNext = false;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   function drawOutline() {
     SCREEN_R = RADIUS[width] || 47;
@@ -1373,27 +1469,36 @@
     screen.style.clipPath = "path('" + squircle(0, 0, sw, sh, SCREEN_R, SMOOTH) + "')";
   }
   function applyWidth() {   // the device's size follows the width; the page inside picks its form by its own media queries
+    var animate = animateNext && !reduceMotion.matches && device.hasAttribute('data-width');
+    animateNext = false;
+    device.classList.toggle('is-resizing', animate); slot.classList.toggle('is-resizing', animate);
     device.setAttribute('data-width', width);
-    document.querySelector('.content-col').classList.toggle('is-wide', width !== 'phone');
-    drawOutline(); fit();
+    fit();
+    if (!animate) { drawOutline(); return; }
+    var end = performance.now() + RESIZE_MS + 60;   // the outline and the screen's clip follow the box every frame
+    (function step() {
+      drawOutline();
+      if (performance.now() < end) requestAnimationFrame(step);
+      else { device.classList.remove('is-resizing'); slot.classList.remove('is-resizing'); drawOutline(); }
+    })();
   }
 
   // Scale the whole device (never its internals) to fit: the window height
   // beside the header on a wide screen, the column width on a narrow one
   // (there the page scrolls, so height doesn't limit it).
+  // Scale the whole device to fit its stage: never wider than the stage (so a tablet or desktop frame shrinks on a
+  // small window instead of scrolling sideways), and on a wide window also the window's height.
   function fit() {
-    var W = device.offsetWidth, H = device.offsetHeight;
-    var col = document.querySelector('.content-col'), cs = getComputedStyle(col);   // the column the device sits in, not its own wrapper
+    var size = OUTER[width] || OUTER.phone, W = size[0], H = size[1];
+    var availW = document.getElementById('device-col').clientWidth;
     var narrow = window.matchMedia('(max-width: 760px)').matches;
-    for (var i = 0; i < 2; i++) {
-      var availW = col.getBoundingClientRect().width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-      var top = slot.getBoundingClientRect().top + window.scrollY;
-      var availH = window.innerHeight - top - 32;
-      var scale = narrow ? Math.min(1, availW / W) : Math.min(1, Math.max(0.55, availH / H), availW / W);
-      device.style.transform = 'scale(' + scale + ')';
-      slot.style.width = (W * scale) + 'px';
-      slot.style.height = (H * scale) + 'px';
-    }
+    var top = slot.getBoundingClientRect().top + window.scrollY;
+    var availH = window.innerHeight - top - 32;
+    var scale = narrow ? Math.min(1, availW / W) : Math.min(1, Math.max(0.55, availH / H), availW / W);
+    device.style.transform = 'scale(' + scale + ')';
+    slot.style.width = (W * scale) + 'px';
+    slot.style.height = (H * scale) + 'px';
+    layoutToolbar();
   }
   (function () {   // an entry link index.html?mode=wireframe#… : the mode moves into the hash, the one place it lives
     var sp = new URLSearchParams(location.search), m = sp.get('mode');
@@ -1408,6 +1513,10 @@
   show(hashKey());   // also runs fit() through renderNotes
   applyWidth();
   window.addEventListener('resize', fit);
+  var stageW = 0;   // the stage's width also moves with the tree rail and the 1100 / 760 layouts; refit on width only
+  if (window.ResizeObserver) new ResizeObserver(function (en) {
+    var w = Math.round(en[0].contentRect.width); if (w === stageW) return; stageW = w; fit();
+  }).observe(document.getElementById('device-col'));
 })();
 </script>
 
