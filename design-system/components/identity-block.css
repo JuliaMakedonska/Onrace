@@ -20,4 +20,4 @@
   font-weight: var(--weight-strong);
 }
 .identity h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
-.identity p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); }
+.identity p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); overflow-wrap: anywhere; }   /* the email wraps at 200% text on a 320 screen (Lesson 10 step 4) */

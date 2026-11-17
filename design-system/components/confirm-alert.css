@@ -20,7 +20,7 @@ dialog.alert {   /* the confirm alert floats like a sheet: the sheet's glass ove
 dialog.alert::backdrop { background: var(--scrim); }
 .alert-body { padding: var(--space-5) var(--space-4) var(--space-4); }
 dialog.alert h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
-dialog.alert p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); }
+dialog.alert p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); overflow-wrap: anywhere; }   /* a long domain (valenciaciudaddelrunning.com) wraps at 200% text (Lesson 10 step 4) */
 dialog.alert .alert-actions { display: flex; border-top: var(--border) solid var(--hairline); }
 dialog.alert .alert-actions button {
   flex: 1;

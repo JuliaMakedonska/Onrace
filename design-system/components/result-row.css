@@ -26,7 +26,7 @@
 }
 
 /* order 0140 */
-.result-card .card-meta { margin: 0; display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-meta); color: var(--text-secondary); }
+.result-card .card-meta { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); font-size: var(--size-meta); color: var(--text-secondary); }
 
 /* order 0400 */
 /* ---------- Results list screen (wireframes/results-list*.html) ---------- */
@@ -52,3 +52,11 @@
    link of its own, since a link can't hold another. The proof line above it says the link is missing and wraps if it must */
 .result-card:has(> .text-link) > .card-link { border-radius: var(--radius-2) var(--radius-2) 0 0; padding-bottom: var(--space-2); }
 .result-card > .text-link { margin: 0; padding: 0 var(--space-4) var(--space-2); border-radius: 0 0 var(--radius-2) var(--radius-2); background: var(--surface); }
+
+/* order 1120 */
+/* Selected (Lesson 10 step 4, 2026-11-17): the race card's selected state (race-card.css), on the row whose result shows
+   in the pane beside the list: aria-current="page" on its link, the --selected fill on the whole row (its "Add official
+   result link" part too) and a hairline --text-secondary edge round it; hover and press leave it as it is. */
+.result-card:has(> .card-link[aria-current="page"]) { border-radius: var(--radius-2); outline: var(--border) solid var(--text-secondary); outline-offset: calc(var(--border) * -1); }
+.result-card:has(> .card-link[aria-current="page"]) > :is(.card-link, .text-link) { background: var(--selected); }
+.result-card:has(> .card-link[aria-current="page"]) .sport-tag { background: var(--raised-pressed); }

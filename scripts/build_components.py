@@ -75,6 +75,18 @@ for f in files:
             else: media_used[hit[0]] = media_used.get(hit[0], 0) + 1
         if re.search(r'\bwidth\s*[<>]', q): fails.append(f'{os.path.basename(f)}: a range query "@media {q.strip()}" (write min-width with the token\'s number)')
 
+# A component adapts to its own width with a container query (Lesson 10 step 4, 2026-11-17), never the window's: below
+# --stack-w it stacks its parts. The query can't read var() either, so it repeats --stack-w's number, as `width <` it.
+STACK = re.search(r'^\s*--stack-w:\s*([^;]+);', TOK, flags=re.M).group(1).strip()
+container_used = 0
+for f in files:
+    code = re.sub(r'/\*.*?\*/', '', open(f).read(), flags=re.S)
+    for q in re.findall(r'@container\s*([^{]+)\{', code):
+        m = re.fullmatch(r'\s*\(\s*width\s*<\s*([^)]+?)\s*\)\s*', q)
+        if not m: fails.append(f'{os.path.basename(f)}: "@container {q.strip()}" (a container query is (width < --stack-w), the one width a component stacks below)')
+        elif m.group(1) != STACK: fails.append(f'{os.path.basename(f)}: "@container {q.strip()}" isn\'t --stack-w ({STACK})')
+        else: container_used += 1
+
 # ---------------------------------------------------------------- the state roles (Lesson 9 step 3, 2026-11-05)
 # Every state role (the "states" part of the SEMANTIC level) has a value in the dark :root and in the light block: a state
 # with a value in one theme only is a defect. Then the dark roles' copy for [data-theme-scope="dark"], so one part of a
@@ -132,4 +144,4 @@ open(os.path.join(DS, 'index.css'), 'w').write(
 print(f'build_components: {len(STATES)} state roles, each in both themes; the dark scope written ({len(DARK_ROLES)} roles)')
 print(f'build_components: pass · {len(files)} component files, {len(blocks)} blocks bundled into design-system/components/index.css in order, design-system/index.css written; '
       f'no color primitive ({len(COLOR_PRIM)} checked), hex, px or font name in design-system/components/; '
-      f'width queries at the breakpoint tokens only (' + ', '.join(f'--{n} {BP[n]} ×{c}' for n, c in sorted(media_used.items())) + ')')
+      f'width queries at the breakpoint tokens only (' + ', '.join(f'--{n} {BP[n]} ×{c}' for n, c in sorted(media_used.items())) + f'), container queries at --stack-w {STACK} only (×{container_used})')

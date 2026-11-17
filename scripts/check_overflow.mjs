@@ -10,6 +10,8 @@
    - any element scrolls sideways (scrollWidth > clientWidth) that isn't built to: the one sideways scroller by design
      is the active filter chips row (.chips-row), and its own box must still fit the screen;
    - a one-line control wraps (ONE_LINE: Sort, Filters, List/Map, the chips, Clear all filters: the controls bar);
+   - (Lesson 10 step 4) a top bar's title runs under one of its buttons, or a piece of text is cut by a box that clips
+     it without its "…" (a row's label: "ew password" on New password at 320 with 200% text);
    - a page script throws, or a deferred stylesheet never applies (step 7);
    - a local file the page requests (a stylesheet, script, image, font or frame) answers 404 (Lesson 8 step 4: a page
      still linking ui/kit.css or ui/map.css after their removal fails here as well as in check_links.py);
@@ -93,9 +95,47 @@ const CHECK = `(async () => {
     if (el.closest('.visually-hidden')) continue;                     // clipped to 1px with it (a busy button's hidden label)
     if (el.closest('.sheet:not(.open)') || el.closest('dialog:not([open])')) continue;   // off-screen until opened
     if (el.closest('.an-window.is-cropped')) continue;   // the docs' crop window hides the rest of a stage on purpose (its own whole stage is measured on specimens.html)
+    if (el.parentElement && el.parentElement.closest('.bar-title')) continue;   // a top bar's title truncates with its "…" (Lesson 10 step 4): the words past it are cut on purpose
     const inScroller = el.parentElement && el.parentElement.closest('.chips-row, .tbl-wrap, .spec-wrap, .lessonbar-inner, .navlinks');
     if (!inScroller && (r.right > W + 0.5 || r.left < -0.5)) bad.push(name(el) + ' spans ' + Math.round(r.left) + '–' + Math.round(r.right) + ' on a ' + W + 'px screen');
     if (el.scrollWidth > el.clientWidth + 1 && /(auto|scroll)/.test(cs.overflowX) && !scrollerX(el)) bad.push(name(el) + ' scrolls sideways (' + el.scrollWidth + ' > ' + el.clientWidth + ')');
+  }
+  // the top bar's title never runs under its buttons (Lesson 10 step 4): its text, where it shows, against each button
+  for (const bar of document.querySelectorAll('.top-bar')) {
+    if (!bar.getClientRects().length || bar.closest('.sheet:not(.open)')) continue;
+    const t = bar.querySelector(':scope > .bar-title');
+    if (!t || !t.textContent.trim()) continue;
+    const r = document.createRange(), tb = t.getBoundingClientRect(); r.selectNodeContents(t);
+    const tr = [...r.getClientRects()].filter(x => x.width > 0).map(x => ({ left: Math.max(x.left, tb.left), right: Math.min(x.right, tb.right), top: x.top, bottom: x.bottom })).filter(x => x.right > x.left);   // a truncated title shows only up to its "…": its text box is cut to the title's
+    for (const b of bar.querySelectorAll(':scope > :is(a, button)')) {
+      if (!b.getClientRects().length || getComputedStyle(b).visibility === 'hidden') continue;
+      const words = [];   // the button's visible words (its screen-reader-only part is 1px, off to the side)
+      for (const w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT); w.nextNode();) {
+        if (!w.currentNode.textContent.trim() || w.currentNode.parentElement.closest('.visually-hidden')) continue;
+        const br = document.createRange(); br.selectNodeContents(w.currentNode); words.push(...[...br.getClientRects()].filter(x => x.width > 0));
+      }
+      if (tr.some(x => words.some(y => x.left < y.right - 0.5 && y.left < x.right - 0.5 && x.top < y.bottom - 0.5 && y.top < x.bottom - 0.5))) bad.push('the top bar title "' + t.textContent.trim() + '" runs under "' + b.textContent.trim().replace(/\\s+/g, ' ') + '"');
+    }
+  }
+  // text cut by a box that clips it (overflow hidden or clip), without an ellipsis: each text node's line boxes inside
+  // every clipping ancestor's padding box (a scroller's content can scroll into view, so a scroller doesn't count)
+  for (const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), _ = 0; ;) {
+    const tn = walk.nextNode(); if (!tn) break;
+    const p = tn.parentElement;
+    if (!tn.textContent.trim() || !p || !p.getClientRects().length || p.closest('.visually-hidden, .sheet:not(.open), dialog:not([open]), [hidden], .an-window.is-cropped, script, style, noscript') || getComputedStyle(p).visibility === 'hidden') continue;
+    if (parseFloat(getComputedStyle(p).fontSize) === 0) continue;
+    const rr = document.createRange(); rr.selectNodeContents(tn);
+    const lines = [...rr.getClientRects()].filter(x => x.width > 0);
+    if (!lines.length) continue;
+    for (let a = p; a && a !== document.body; a = a.parentElement) {
+      const cs = getComputedStyle(a);
+      if (cs.textOverflow === 'ellipsis') break;   // cut on purpose, with its "…"
+      if (/(auto|scroll)/.test(cs.overflowX + cs.overflowY)) break;   // a scroller: the rest scrolls into view
+      if (!/(hidden|clip)/.test(cs.overflowX + cs.overflowY)) continue;
+      const b = a.getBoundingClientRect();
+      if (b.width <= 1 || b.height <= 1) break;
+      if (lines.some(x => x.left < b.left - 1 || x.right > b.right + 1)) { bad.push('text cut by ' + name(a) + ': "' + tn.textContent.trim().slice(0, 40) + '"'); break; }
+    }
   }
   document.querySelectorAll('link[rel="preload"][as="style"]').forEach(l => bad.push('stylesheet never applied: ' + l.getAttribute('href')));   // a deferred sheet must switch to rel=stylesheet on load
   if (document.documentElement.scrollWidth > W + 1) bad.push('the page scrolls sideways (' + document.documentElement.scrollWidth + ' > ' + W + ')');
@@ -157,7 +197,7 @@ const FORM = `(() => {
   const got = r.height > H / 2 && r.left < 40 ? 'sidebar' : r.top < 80 && Math.abs(r.left + r.width / 2 - W / 2) < 2 ? 'top' : r.bottom > H - 80 && r.width > W / 2 ? 'bottom' : 'nowhere';
   return got === want ? null : 'the tab bar shows as ' + got + ', the width asks for ' + want;
 })()`;
-for (const [w, h, text, only] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [820, 1180, 16, 'screens'], [1440, 900, 16]]) {   // the third pass: 200% text (step 7, #2); the fourth and fifth: a tablet and a desktop (Lesson 10 step 3: the screens at the viewer's widths, the docs pages at desk width since step 2)
+for (const [w, h, text, only] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [320, 568, 32, 'screens'], [820, 1180, 16, 'screens'], [1440, 900, 16]]) {   // the third pass: 200% text (step 7, #2); the fourth, 320 with 200% text (Lesson 10 step 4: the backlog's defects, fixed, stay fixed); the fourth and fifth: a tablet and a desktop (Lesson 10 step 3: the screens at the viewer's widths, the docs pages at desk width since step 2)
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   await send('Page.setFontSizes', { fontSizes: { standard: text, fixed: Math.round(text * 13 / 16) } });   // the root size: the kit's type unit is 1rem ÷ 16, so every size doubles
   for (const s of states) {
@@ -192,5 +232,5 @@ if (failures.length) {
   const fontsOnly = failures.every(f => f.includes('(no font loaded at all)'));
   process.exit(fontsOnly ? 3 : 1);
 }
-if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320 and 390 at 200% text; the screens also at 820 and 1440, each tab screen in the form its width asks for; the kit and lesson pages also at 1440)`);
+if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320, 390 at 200% text; the screens also at 320 with 200% text, at 820 and 1440, each tab screen in the form its width asks for; the kit and lesson pages also at 1440)`);
 else console.log(`check_overflow: pass (${checked} states)`);

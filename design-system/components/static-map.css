@@ -35,7 +35,7 @@
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
 .map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
 .map-placeholder > * { position: relative; z-index: var(--z-lift); }
-.map-placeholder.has-pins { align-items: flex-end; overflow: clip; }   /* with pins, clip, not hidden (2026-11-08): not a scroll container, so focusing a pin by the edge never scrolls the map off its masks, and the pin's halo can paint past the edge (below) */
+.map-placeholder.has-pins { align-items: flex-end; overflow: clip; min-height: var(--map-min-h); }   /* never shorter than its labels need (Lesson 10 step 4: Berlin's label left the top at 200% text on a 320×568 screen) */   /* with pins, clip, not hidden (2026-11-08): not a scroll container, so focusing a pin by the edge never scrolls the map off its masks, and the pin's halo can paint past the edge (below) */
 /* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line. The link is
    a 44pt box centred on the label (step 6, #5: HIG targets); the label is its span; the dot and the leader take no
    taps, so where two dots nearly touch (Boston, Killington) each label is its own target. Each pin's coordinates
@@ -43,9 +43,14 @@
 .map-placeholder > .map-pin {
   position: absolute;
   z-index: var(--z-float);
-  left: var(--x);
+  /* the label is centred on its dot unless that would put it past the map's side: then it slides along, stopping
+     --space-2 inside the edge, and the dot and the leader stay on the coordinate (Lesson 10 step 4: Berlin, Chamonix and
+     Dallas ran past the frame at 200% text). --pin-at is the dot's x in the map; -50% and 100% are the label's own width. */
+  --pin-at: calc(var(--xf) * (100cqw + var(--map-pad-inline-total)));
+  --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(100cqw + var(--map-pad-inline-total) - var(--space-2) - var(--pin-at) - 100%));
+  left: var(--pin-at);
   top: calc(50% + (var(--yf) - 0.5) * (100cqw + var(--map-pad-inline-total)) * var(--map-ratio));
-  transform: translate(-50%, calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
+  transform: translate(var(--pin-shift), calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
   min-width: var(--target);
   height: var(--target);
   display: flex;
@@ -68,7 +73,7 @@
 .map-pin::before {   /* the dot, back on the coordinate */
   content: "";
   position: absolute;
-  left: 50%;
+  left: calc(var(--pin-shift) * -1);
   top: calc(50% - var(--dy));
   width: var(--map-pin-dot);
   height: var(--map-pin-dot);
@@ -81,7 +86,7 @@
 .map-pin::after {   /* leader line from the label's edge to the dot */
   content: "";
   position: absolute;
-  left: calc(50% - var(--border) / 2);
+  left: calc(var(--pin-shift) * -1 - var(--border) / 2);
   width: var(--border);
   height: calc(var(--dy-abs) - var(--pin-h) / 2 - var(--map-pin-dot) / 2);
   background: var(--text-secondary);

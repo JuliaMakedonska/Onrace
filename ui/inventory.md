@@ -360,35 +360,36 @@ What each component's States shows on its family page in `design-system/docs/` (
 - **Crop:** what the window shows: `keep` or `control`.
 - **Width:** the stage's width in a cell: `s` 160, `m` 210, `l` 330 (never wider than the page).
 - **Invalid:** the specimen stage that shows the component invalid, by a part of its label (— none).
+- **Selected** (Lesson 10 step 4, 2026-11-17): the element that takes `aria-current="page"` inside the control (— no selected state; the control itself is written `control`). A Selected cell follows Pressed: the race card and the result row, whose detail shows in the pane beside the list.
 
-| Component | Stage | Keep | Control | Focus | Disabled | Crop | Width | Invalid |
-|---|---|---|---|---|---|---|---|---|
-| **Tab bar** | Discover current | `.bottom-nav` | `a[data-tab="results"]` | — | `omit` | keep | l | — |
-| **Top bar** | Cancel, "Account" and the bar action | `.top-bar` | `.bar-action` | — | — | keep | l | — |
-| **Modal sheet** | The sheet's bar: Cancel and Save | `.top-bar` | `.save-btn` | — | — | keep | l | — |
-| **Segmented control** | Sign in / Sign up, full width | `.view-toggle` | `.view-btn[aria-pressed="false"]` | — | `*.view-btn` | keep | m | — |
-| **Search field** | Empty, placeholder | `.race-search` | `input` | — | `omit` | keep | l | — |
-| **Sport-type rows** | Filters sheet, open | `li` | `.row--check` | `input` | `omit` | keep | l | — |
-| **Race card** | Race browse, with photo | `.race-card` | `.card-link` | — | `omit` | keep | l | — |
-| **Sort button** | Race browse, unfiltered | `.results-row` | `.sort-toggle` | — | — | control | m | — |
-| **Result row** | Results list: the result row | `.result-card` | `.card-link` | — | `omit` | keep | l | — |
-| **Static map** | Seven races | `.map-placeholder` | `.map-pin` | — | `omit` | control | l | — |
-| **Official race website link** | Race detail | `.official` | `a` | — | `omit` | control | m | — |
-| **Primary button** | In a state message | — | `.state-action` | — | `omit` | keep | m | — |
-| **Secondary button** | Check inbox: a new link | — | `.secondary-btn` | — | — | keep | m | — |
-| **Filters trigger with count** | Filters: rest, with a count, open | `.control-row` | `.filters-trigger` | — | `omit` | control | m | — |
-| **Text link** | Use a different email | — | `.text-link` | — | `omit` | keep | m | — |
-| **Text field** | Sign in: email and password | `.group, form` | `.row` | `input` | `input` | keep | l | Errors under their group |
-| **Pop-up select** | Log result: Sport type, empty | `.group, form` | `.row` | `select` | `select` | keep | l | Log result -error: missing |
-| **Date field** | Log result: Race date, empty | `.group, form` | `.date-value` | — | — | keep | l | Log result -error: missing |
-| **Catalog row** | Base | `li` | `.row--nav` | — | — | keep | l | — |
-| **Linked race card** | A race linked | `.linked-race` | `.unlink-btn` | — | — | control | m | — |
-| **Forgot password? link** | Forgot password? (44pt | `.forgot` | `a` | — | — | keep | m | — |
-| **Action sheet** | Cancel with a result entered | `dialog` | `.is-destructive` | — | `omit` | keep | l | — |
-| **Active filter chips row** | Two filters | `.chips-row` | `.chip` | — | `omit` | control | l | — |
-| **Grouped settings rows** | Profile | `.group, form` | `.row` | `input` | `input` | keep | l | a row didn't save |
-| **Sign out button** | Profile | `.rows` | `.signout` | — | `omit` | keep | l | — |
-| **Confirm alert** | Sign out: the confirm alert | `dialog` | `.is-destructive` | — | `omit` | keep | l | — |
+| Component | Stage | Keep | Control | Focus | Disabled | Crop | Width | Invalid | Selected |
+|---|---|---|---|---|---|---|---|---|---|
+| **Tab bar** | Discover current | `.bottom-nav` | `a[data-tab="results"]` | — | `omit` | keep | l | — | — |
+| **Top bar** | Cancel, "Account" and the bar action | `.top-bar` | `.bar-action` | — | — | keep | l | — | — |
+| **Modal sheet** | The sheet's bar: Cancel and Save | `.top-bar` | `.save-btn` | — | — | keep | l | — | — |
+| **Segmented control** | Sign in / Sign up, full width | `.view-toggle` | `.view-btn[aria-pressed="false"]` | — | `*.view-btn` | keep | m | — | — |
+| **Search field** | Empty, placeholder | `.race-search` | `input` | — | `omit` | keep | l | — | — |
+| **Sport-type rows** | Filters sheet, open | `li` | `.row--check` | `input` | `omit` | keep | l | — | — |
+| **Race card** | Race browse, with photo | `.race-card` | `.card-link` | — | `omit` | keep | l | — | `.card-link` |
+| **Sort button** | Race browse, unfiltered | `.results-row` | `.sort-toggle` | — | — | control | m | — | — |
+| **Result row** | Results list: the result row | `.result-card` | `.card-link` | — | `omit` | keep | l | — | `.card-link` |
+| **Static map** | Seven races | `.map-placeholder` | `.map-pin` | — | `omit` | control | l | — | — |
+| **Official race website link** | Race detail | `.official` | `a` | — | `omit` | control | m | — | — |
+| **Primary button** | In a state message | — | `.state-action` | — | `omit` | keep | m | — | — |
+| **Secondary button** | Check inbox: a new link | — | `.secondary-btn` | — | — | keep | m | — | — |
+| **Filters trigger with count** | Filters: rest, with a count, open | `.control-row` | `.filters-trigger` | — | `omit` | control | m | — | — |
+| **Text link** | Use a different email | — | `.text-link` | — | `omit` | keep | m | — | — |
+| **Text field** | Sign in: email and password | `.group, form` | `.row` | `input` | `input` | keep | l | Errors under their group | — |
+| **Pop-up select** | Log result: Sport type, empty | `.group, form` | `.row` | `select` | `select` | keep | l | Log result -error: missing | — |
+| **Date field** | Log result: Race date, empty | `.group, form` | `.date-value` | — | — | keep | l | Log result -error: missing | — |
+| **Catalog row** | Base | `li` | `.row--nav` | — | — | keep | l | — | — |
+| **Linked race card** | A race linked | `.linked-race` | `.unlink-btn` | — | — | control | m | — | — |
+| **Forgot password? link** | Forgot password? (44pt | `.forgot` | `a` | — | — | keep | m | — | — |
+| **Action sheet** | Cancel with a result entered | `dialog` | `.is-destructive` | — | `omit` | keep | l | — | — |
+| **Active filter chips row** | Two filters | `.chips-row` | `.chip` | — | `omit` | control | l | — | — |
+| **Grouped settings rows** | Profile | `.group, form` | `.row` | `input` | `input` | keep | l | a row didn't save | — |
+| **Sign out button** | Profile | `.rows` | `.signout` | — | `omit` | keep | l | — | — |
+| **Confirm alert** | Sign out: the confirm alert | `dialog` | `.is-destructive` | — | `omit` | keep | l | — | — |
 
 ---
 

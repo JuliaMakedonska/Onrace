@@ -4,11 +4,17 @@
 
 /* order 0550 */
 /* ---------- top bar: back link, centered title, text actions ---------- */
+/* Three columns (Lesson 10 step 4, 2026-11-17): the leading button, the title, the trailing action. The side columns
+   are at least their button and share what is left equally, so the title is centred whenever it fits; when it doesn't
+   (a long back name, 200% text, 320 wide) it moves off centre and then truncates, and never runs under a button
+   (HIG Navigation bars: the title truncates). Until then the title was laid over the whole bar and inset by three
+   targets, which wasn't enough at large text (backlog, Lesson 10). */
 .top-bar {
   position: sticky;
   top: 0;
   z-index: var(--z-float);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
   align-items: center;
   min-height: calc(var(--target) + var(--safe-top));
   padding: var(--safe-top) var(--space-2) 0;   /* G6 */
@@ -43,12 +49,16 @@
   -webkit-mask: var(--icon-back) center / contain no-repeat;
   mask: var(--icon-back) center / contain no-repeat;
 }
+.top-bar > * { grid-row: 1; grid-column: 1; justify-self: start; }
+.top-bar > .bar-title { grid-column: 2; justify-self: stretch; }
+.top-bar > :is(.save-btn, .bar-action) { grid-column: 3; justify-self: end; }
 .top-bar .bar-title {
-  position: absolute;
-  left: 0;
-  right: 0;
+  min-width: 0;
   margin: 0;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
   font-family: var(--font-text);
   font-size: var(--size-item);
@@ -84,7 +94,7 @@
 @media (hover: hover) { .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:hover, .is-hover) { color: var(--text-hover); } }
 .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:active, .is-pressed) { color: var(--text-pressed); }
 /* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
-.top-bar[data-collapse] .bar-title { padding-inline: var(--bar-title-inset);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
+.top-bar[data-collapse] .bar-title { opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
 
 /* order 0570 */

@@ -7,9 +7,9 @@
    - the focus halo: Tab walks every focusable element; each one must match :focus-visible and draw a halo (an outline
      on itself, a child, or a ::before / ::after), and no ancestor that clips (hidden, clip, a scroller's content box)
      may cut it, nor the screen's edge.
-   Open, not checked (concept/concept.md → Large text and keyboard focus; design-system/backlog.md → Lesson 10): 320 with
-   200% text, and a map pin whose label already runs past the map's frame at 200% text (the label is cut with its halo:
-   moving the labels is Lesson 10's). A pin whose label fits is checked like everything else.
+   Since Lesson 10 step 4 (2026-11-17) also 320×568 with 200% text, and a map pin is checked like everything else: its
+   label slides inside the map's sides and the map keeps room above and below (design-system/components/static-map.css),
+   so a pin whose halo is cut is a failure, no longer reported apart.
    Usage: node scripts/check_focus.mjs [--quiet] [--only race-browse,profile]. build_stand.py runs it; exit 1 on a
    failure, 2 if Chrome can't start, 3 if the fonts didn't load (Google Fonts unreachable: scripts/ship.sh retries). */
 import { spawn } from 'node:child_process';
@@ -24,7 +24,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const QUIET = process.argv.includes('--quiet');
 const CHROME = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(existsSync);
 if (!CHROME) { console.error('check_focus: Google Chrome not found'); process.exit(2); }
-const PASSES = [[320, 568, 16], [390, 844, 32], [820, 1180, 16], [1440, 900, 16]];   // [width, height, default font size]: 32 is 200% text; 820 and 1440, a tablet and a desktop (Lesson 10 step 3: the top tab bar and the sidebar)
+const PASSES = [[320, 568, 16], [390, 844, 32], [320, 568, 32], [820, 1180, 16], [1440, 900, 16]];   // [width, height, default font size]: 32 is 200% text; 820 and 1440, a tablet and a desktop (Lesson 10 step 3: the top tab bar and the sidebar)
 let states = screenStates(ROOT);
 const ONLY = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1].split(',') : null;
 if (ONLY) states = states.filter(s => ONLY.some(o => s.label.includes(o)));
@@ -101,10 +101,7 @@ const HALO = `(() => {
     if (H.t < lim.t - 0.5) cut.push('top ' + (lim.t - H.t).toFixed(1));
     if (H.b > lim.b + 0.5) cut.push('bottom ' + (H.b - lim.b).toFixed(1));
     if (cut.length) {
-      // a map pin whose label already runs past the frame (Lesson 10): the label is cut too, so it is reported apart
-      const hr = host.getBoundingClientRect();
-      if (el.matches('.map-pin') && (hr.left < box.l + cm - 0.5 || hr.right > box.r - cm + 0.5)) labelCut = true;
-      else out.push('cut by ' + a.tagName.toLowerCase() + (a.id ? '#' + a.id : '') + (a.classList.length ? '.' + [...a.classList].join('.') : '') + ' (' + ox + '/' + oy + '): ' + cut.join(', '));
+      out.push('cut by ' + a.tagName.toLowerCase() + (a.id ? '#' + a.id : '') + (a.classList.length ? '.' + [...a.classList].join('.') : '') + ' (' + ox + '/' + oy + '): ' + cut.join(', '));
     }
     if (sx || sy) { underScroller = true; break; }
   }
@@ -179,13 +176,10 @@ for (const [w, h, text] of PASSES) {
       seen.add(r.name); focused++;
       if (!r.fv) bad.push(tag + ' · ' + r.name + ' · focused but not :focus-visible');
       else if (r.problem) bad.push(tag + ' · ' + r.name + ' · halo ' + r.problem);
-      if (r.labelCut) open.push(tag + ' · ' + r.name);
     }
   }
 }
 ws.close(); cleanup();
 if (noFonts && noFonts === bad.length) { console.log(`check_focus: the fonts did not load on ${noFonts} states (Google Fonts unreachable?): not measured, exit 3`); process.exit(3); }
 if (bad.length) { console.log(`check_focus: FAIL (${bad.length})`); bad.forEach(x => console.log('  ' + x)); process.exit(1); }
-const pins = [...new Set(open.map(x => x.split(' · ').pop()))];
-console.log(`check_focus: pass (${walked} states at 320, at 390 with 200% text, at 820 and at 1440: ${focused} focus stops, each halo whole; ${bars} sheet bars, nothing collides)`
-  + (QUIET ? '' : `\n  open (Lesson 10, not checked): map pins whose label runs past the frame at 200% text, ${pins.join(', ') || 'none'}`));
+console.log(`check_focus: pass (${walked} states at 320, at 390 and 320 with 200% text, at 820 and at 1440: ${focused} focus stops, each halo whole, map pins included; ${bars} sheet bars, nothing collides)`);

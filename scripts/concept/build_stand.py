@@ -61,6 +61,9 @@ PAIRS = [  # label, text token, background token, kind: 'text' | 'large' | 'ui' 
     ('Active filter chip label on its tonal capsule (designer, 2026-10-22)', 'text-primary', 'raised', 'text'),
     ('Active filter chip label, hover', 'text-primary', 'raised-hover', 'text'),
     ('Selected List/Map segment, Filters while its sheet is open', 'text-primary', 'selected', 'text'),
+    ('Selected race card or result row: meta (location, date, proof line) (Lesson 10 step 4)', 'text-secondary', 'selected', 'text'),
+    ('Selected race card or result row: its hairline edge (Lesson 10 step 4; --boundary was 2.6:1)', 'text-secondary', 'selected', 'ui'),
+    ('Selected race card or result row: the date tile and chip on it (Lesson 10 step 4)', 'text-secondary', 'raised-pressed', 'text'),
     ('Unselected List/Map segment on hover', 'text-secondary', 'raised-hover', 'text'),
     ('Meta on the page (counts, sort)', 'text-secondary', 'page', 'text'),
     ('Meta on a card (month and year, location, proof line)', 'text-secondary', 'surface', 'text'),
@@ -331,7 +334,7 @@ if _d.returncode: sys.exit('build_design_sidecar failed: the build stops')
 COMPONENTS = _read('design-system/components/index.css')   # re-read: build_components.py just rewrote it
 # Counts of a primitive name their relationship (Lesson 8 step 7, 2026-11-01; reworked the same day): a value like three
 # targets is written as calc(var(--target) * 3) only in design-system/tokens/tokens.css, as the whole definition of a named primitive with
-# its reason in a comment on the same line (--bar-title-inset: calc(var(--target) * 3); /* … */), so it follows --target.
+# its reason in a comment on the same line (--map-pin-ring: calc(var(--border) * 2); /* … */), so it follows --border.
 # Anywhere else (design-system/components/, the map data, the docs layer), and inside a longer expression in tokens.css, a count stops the
 # build. Not a count: a sign (* -1) and a division (halves for capsules and centering).
 _COUNT_FILES = ['design-system/tokens/tokens.css', 'design-system/map-data.css', 'design-system/docs/doc.css', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.css'] + sorted(
@@ -647,7 +650,7 @@ COLOR_ROWS = [   # the semantic roles (design-system/tokens/tokens.css, level 2)
     ('page', 'Page', 'The page behind every screen.', 'Not on cards (cards sit one level up).', 'Attribute e: dark, intense · Taste: not #000'),
     ('surface', 'Surface', 'Race cards, result rows, row groups, the search field, the saved confirmation.', 'Not for controls you press (those are raised).', 'Attribute a: cards stay quiet so the time can lead'),
     ('raised', 'Raised', 'Secondary button, format chip, the date tile, segmented track, skeletons, disabled buttons, pin labels, the initials.', 'Never for the primary action.', 'Hierarchy rule 3: secondary is tonal'),
-    ('selected', 'Selected', 'A control that is on: the selected List/Map segment, Filters while its sheet is open.', 'Never a hover or a press (those are the state roles), never a card.', 'Color rule 3a: the hairline is a line, so a selected fill gets its own level · Lesson 9: renamed from Pressed when hover and press got their own roles'),
+    ('selected', 'Selected', 'A control that is on: the selected List/Map segment, Filters while its sheet is open; and the selected race card or result row, whose detail shows in the pane beside the list (Lesson 10 step 4), with a --text-secondary edge.', 'Never a hover or a press (those are the state roles); never a card that is only pressed.', 'Color rule 3a: the hairline is a line, so a selected fill gets its own level · Lesson 9: renamed from Pressed when hover and press got their own roles'),
     ('group', 'Group', 'A group of rows one level above its container: the rows in the Filters sheet, the linked race on Log result. Same level as Pressed today.', 'Not a state: a press uses Pressed.', 'Lesson 8: in a light appearance a group rises lighter while a press goes darker, so the two roles part'),
     ('hairline', 'Hairline', 'Hairline dividers.', 'Not as a boundary someone must see (fields use Boundary), not as a frame around every card, never a fill.', 'Attribute a: the frame stays quiet'),
     ('boundary', 'Boundary', 'The edge of the search field and other inputs, the pressed segment, the card hover ring, the map frame.', 'Not on cards or chips, never a fill.', 'WCAG 1.4.11: an input boundary needs 3:1 (critique fix)'),
@@ -778,6 +781,7 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('col-count-tablet', 'Panes at the tablet breakpoint', '2: list + map, or list + detail', 'Designer, 2026-11-15: width goes to panes, not card columns'),
            ('col-count-desktop', 'Panes at the desktop breakpoint', '3: list + detail + map (Race browse)', 'Designer, 2026-11-15: three panes on desktop'),
            ('container-max', 'A single-column screen stops growing and centres', f'672px at the default text size, UIKit’s readable width · [?] Apple’s number, not HIG’s text', 'HIG Layout: layout guides restrict the width of text'),
+           ('stack-w', 'A component narrower than this stacks its parts', '288px at the default text size [?]: a 320 screen less its gutters, so nothing stacks at the default size; 576px at 200% text', 'Lesson 10 step 4: components adapt to their pane (a container query), never the window'),
            ('bp-tablet', 'Breakpoint 1: a second pane fits beside a phone-width list', '2 × pane + divider = 781px; later at larger text', 'Width audit → Where behavior changes, 1 · HIG Split views: regular width'),
            ('bp-desktop', 'Breakpoint 2: the sidebar plus three panes fits', 'Sidebar + list + detail + the map at its minimum + 3 dividers = 1343px; later at larger text', 'Width audit → Where behavior changes, 2 · designer, 2026-11-15: the map flexible, so 13–14" laptops reach it'),
            ('kit-tablet-w', 'Docs only: a stage as wide as a tablet', '820px, an iPad Air 11-inch in portrait: above --bp-tablet', 'Lesson 10 step 3: the viewer’s Tablet width'),
@@ -818,7 +822,6 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('shadow-y', 'The float shadow: offset down', 'Its color is the role --float-shadow', 'Depth comes from levels; only what floats has a shadow'),
            ('shadow-blur', 'The float shadow: blur', '32px', 'Same'),
            ('shadow-spread', 'The float shadow: spread', '−12px, so it stays under the floating thing', 'Same'),
-           ('bar-title-inset', 'The collapsed small title: its side inset in the bar', 'Three targets: clears “‹ Discover” at the 17px bar size, so the title never runs under the back link or the bar action', 'G4 · step 6, #25 (found 2026-10-26) · a token since Lesson 8 step 6'),
            ('avatar-size', 'Profile initials', '80px, the iOS profile size, in a circle (<code>--radius-circle</code>)', 'Kit feedback (designer, 2026-10-19): iOS avatars are circular · DESIGN.md → Shapes, the one circle'),
            ('alert-width', 'The Sign out confirm alert', '270px, the iOS alert width', 'Native iOS (HIG Alerts) · kit, 2026-10-18'),
            ('picker-search-icon-x', 'Race picker: the search icon’s left edge', '<code>--space-4</code> × 2: the form’s gutter plus the field’s inset', 'A named count, defined in tokens.css, so it follows the spacing step (check 16, 2026-11-01)'),
@@ -847,12 +850,13 @@ MAP_TRS = ''.join(f'<tr><td><code>--{t}</code> {v}</td><td>{u}</td><td>{w}</td><
     ('map-pin-dot', tok('map-pin-dot'), 'The dot on a race’s coordinate', 'Designer: pins at real coordinates'),
     ('pin-h', tok('pin-h'), 'Pin label height', 'Sized to the 11px label'),
     ('pin-gap', tok('pin-gap'), 'Shortest leader line from label to dot', 'Designer: labels may move, dots don’t'),
+    ('map-min-h', tok('map-min-h'), 'The shortest a map with pins gets', '[?] Room for the highest label (Berlin’s, 97px above the middle) · Lesson 10 step 4: the screen scrolls rather than cut a label'),
     ('map-pin-ring', tok('map-pin-ring'), 'The ring of water round a pin’s dot', '<code>--border</code> × 2 · keeps a dot readable on land · a named count (check 16)'),
     ('map-pad-inline-total', tok('map-pad-inline-total'), 'The map’s padding on both sides, added back to place pins on the full-width mask', '<code>--space-4</code> × 2 · a named count, so it follows the map’s padding (check 16)'),
     ('map-ratio', tok('map-ratio'), 'Map height ÷ width', 'Generated by build_map.py from the Mercator crop'),
     ('map-land-mask', 'SVG mask', 'Land shape', 'Natural Earth 1:110m, public domain · designer: static map'),
     ('map-lines-mask', 'SVG mask', 'Coastline and border shape', 'Same source; colors come from the tokens above')]) + ''.join(
-    f'<tr><td><code>--pin-{slug}-x</code> {tok(f"pin-{slug}-x")}<br><code>--pin-{slug}-yf</code> {tok(f"pin-{slug}-yf")}<br><code>--pin-{slug}-dy</code> {tok(f"pin-{slug}-dy")}</td><td>{city}: x and y from the real latitude and longitude; dy moves the label off its neighbours</td><td>Designer: pins at real coordinates, with leader lines</td></tr>' for slug, city in MAP_PINS)
+    f'<tr><td><code>--pin-{slug}-xf</code> {tok(f"pin-{slug}-xf")}<br><code>--pin-{slug}-yf</code> {tok(f"pin-{slug}-yf")}<br><code>--pin-{slug}-dy</code> {tok(f"pin-{slug}-dy")}</td><td>{city}: x and y from the real latitude and longitude; dy moves the label off its neighbours</td><td>Designer: pins at real coordinates, with leader lines</td></tr>' for slug, city in MAP_PINS)
 METRIC_TRS = ''.join(f'<tr><td><code>--{t}</code> {tok(t)}</td><td>{u}</td><td>{d}</td><td>{w}</td></tr>' for t, u, d, w in METRICS)
 SHAPE = f'''<div class="spec-wrap" tabindex="0" role="region" aria-label="Radii, borders and shadows"><table class="spec"><thead><tr><th>Token</th><th>Value</th><th>Used for</th><th>Why</th></tr></thead><tbody>
 <tr><td><code>--radius-1</code></td><td>{tok("radius-1")}</td><td>Inner shapes: the photo inside a card, chips, segments.</td><td>Taste: slightly rounded, small radius · inner shapes one step tighter than outer (4 inside 6)</td></tr>
@@ -1180,6 +1184,8 @@ shutil.rmtree(os.path.join(ROOT, 'public/design-system/examples'), ignore_errors
 shutil.copytree(os.path.join(ROOT, 'design-system/examples'), os.path.join(ROOT, 'public/design-system/examples'), ignore=shutil.ignore_patterns('*.md'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-shell'), os.path.join(ROOT, 'public/ui/review-shell'), dirs_exist_ok=True)   # Lesson 10 step 3: the adaptive shell, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-shell.html'), os.path.join(ROOT, 'public/ui/review-shell.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-adaptive'), os.path.join(ROOT, 'public/ui/review-adaptive'), dirs_exist_ok=True)   # Lesson 10 step 4: adaptive components, before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-adaptive.html'), os.path.join(ROOT, 'public/ui/review-adaptive.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)

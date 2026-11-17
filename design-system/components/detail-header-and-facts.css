@@ -12,3 +12,13 @@
 }
 .facts dt { color: var(--text-secondary); }
 .facts dd { margin: 0; color: var(--text-primary); }
+
+/* order 1130 */
+/* In a narrow list (Lesson 10 step 4, 2026-11-17): below --stack-w (the list's own width: 200% text in a phone-width
+   pane) each label goes above its value, so a long value ("21 September 2025") keeps its words whole instead of running
+   past the screen. The number is tokens.css's --stack-w (scripts/build_components.py checks it). */
+.facts { container-type: inline-size; }
+@container (width < 18rem) {
+  .facts > :is(dt, dd) { grid-column: 1 / -1; }
+  .facts > dt:not(:first-child) { margin-top: var(--space-2); }
+}

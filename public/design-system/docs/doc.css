@@ -38,6 +38,7 @@
 .an-pan .kit-frame--wide { width: max-content; }   /* in a crop window the frame keeps the page's whole width, so the window can pan to a part past the column's edge */
 .kit-doc .kit-state:has(> .kit-frame--wide) { flex-basis: 100%; }   /* on the specimens page a wide stage takes the row, drawn as large as the row allows */
 .kit-wide { display: block; height: var(--kit-stage-h); border: 0; background: var(--page); }
+.kit-wide--phone { width: var(--screen-w); }   /* Lesson 10 step 4: the phone of the three widths a component is shown at */
 .kit-wide--tablet { width: var(--kit-tablet-w); }
 .kit-wide--desktop { width: var(--kit-desktop-w); }
 .kit-stage {   /* a positioned screen-height stage for sheets, the map and the alert */

@@ -1,0 +1,186 @@
+[
+ {
+  "key": "new-password-320",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "New password"
+ },
+ {
+  "key": "new-password-320",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "New password"
+ },
+ {
+  "key": "results-list-320",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Results list, scrolled"
+ },
+ {
+  "key": "results-list-320",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Results list, scrolled"
+ },
+ {
+  "key": "race-picker-320",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race picker"
+ },
+ {
+  "key": "race-picker-320",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race picker"
+ },
+ {
+  "key": "race-browse-320",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race browse"
+ },
+ {
+  "key": "race-browse-320",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race browse"
+ },
+ {
+  "key": "race-browse-map-320",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race browse, Map"
+ },
+ {
+  "key": "race-browse-map-320",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race browse, Map"
+ },
+ {
+  "key": "result-detail-320",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Result detail"
+ },
+ {
+  "key": "result-detail-320",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Result detail"
+ },
+ {
+  "key": "profile-320",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Profile"
+ },
+ {
+  "key": "profile-320",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Profile"
+ },
+ {
+  "key": "race-detail-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race detail"
+ },
+ {
+  "key": "race-detail-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race detail"
+ },
+ {
+  "key": "new-password-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "New password"
+ },
+ {
+  "key": "new-password-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "New password"
+ },
+ {
+  "key": "result-detail-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Result detail"
+ },
+ {
+  "key": "result-detail-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Result detail"
+ },
+ {
+  "key": "selected-race-card",
+  "side": "dark",
+  "cap": "Race card",
+  "selected": true
+ },
+ {
+  "key": "selected-race-card",
+  "side": "light",
+  "cap": "Race card",
+  "selected": true
+ },
+ {
+  "key": "selected-result-row",
+  "side": "dark",
+  "cap": "Result row",
+  "selected": true
+ },
+ {
+  "key": "selected-result-row",
+  "side": "light",
+  "cap": "Result row",
+  "selected": true
+ }
+]

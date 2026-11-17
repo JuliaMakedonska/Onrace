@@ -4,8 +4,8 @@
 
 /* order 0250 */
 /* ---------- result count + sort ---------- */
-.results-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; font-size: var(--size-meta); color: var(--text-secondary); }
-.results-count { flex: 1 1 auto; min-width: 0; margin: 0; overflow-wrap: anywhere; }   /* takes what Sort leaves and wraps there; a long search word breaks rather than overflow */
+.results-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; font-size: var(--size-meta); color: var(--text-secondary); }
+.results-count { flex: 1 1 0; max-width: 100%; margin: 0; overflow-wrap: break-word; }   /* takes what Sort leaves and wraps there, at word ends; when its longest word and Sort don't fit side by side (200% text at 320, Lesson 10 step 4) Sort goes to the next line instead of the count breaking mid-word; a word longer than the row still breaks rather than overflow */
 .results-count strong { color: var(--text-primary); font-weight: var(--weight-strong); }
 
 /* order 0340 */

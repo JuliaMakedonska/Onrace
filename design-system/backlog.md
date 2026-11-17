@@ -4,13 +4,7 @@ What is known to be open in the design system, by the lesson that takes it. Each
 
 ## Lesson 10 (responsive)
 
-Found on 2026-11-08 (`concept/concept.md` → Large text and keyboard focus). The build checks 320 at the default text size and 390 at 200% text (`scripts/check_overflow.mjs`, `scripts/check_focus.mjs`); 320 with 200% text isn't a build target yet, so these are recorded, not checked.
-
-- **Results list cards reach the screen's right edge** at 320 with 200% text: the cards lose their side gutter.
-- **New password's rows clip their labels** at 320 with 200% text: "New password" reads "ew password".
-- **Top-bar titles overlap their buttons:** the New password and Results list top-bar titles run under their buttons at 320 with 200% text. On Results list the small title that replaces the large one on scroll ("Results") also runs under "Log result" at 390 with 200% text.
-- **A "selected" state for the race card and the result card** (designer, 2026-11-15; `responsive/width-audit.md` → Decisions, 6). For: the panes, where the chosen card stays highlighted while its detail shows beside it (HIG Split views: "persistently highlight the current selection"). A new component state through `design-system/` first: state roles in both themes, the specimen, the States map row, then the screens. `--selected` already exists as a color role; whether it carries this state is part of the work.
-- **Map pin labels run past the map's frame** at 200% text, at 390 and at 320: Berlin, Chamonix and Dallas. The label is cut by the frame, and its focus halo with it. Fixing it means moving where the labels sit. `scripts/check_focus.mjs` reports these pins apart and doesn't fail on them; a pin whose label fits is checked like everything else.
+Nothing open. The five items found on 2026-11-08 and 2026-11-15 (Results list cards at the edge, New password's clipped labels, top-bar titles over their buttons, the selected state for the race card and the result row, map pin labels past the frame) were fixed in Lesson 10 step 4 (2026-11-17, `concept/concept.md` → Step 4: adaptive components), and 320 with 200% text is now a pass of `scripts/check_overflow.mjs` and `scripts/check_focus.mjs`, so they stay fixed.
 
 ## Examples: Saved races (found 2026-11-10)
 

@@ -222,7 +222,6 @@
   --size-tab-max: 13px;                    /* [?] the tab bar's labels stop growing here (2026-11-08): the bar keeps its 64px, as iOS tab bar labels don't grow with text size (the Large Content Viewer shows them); at 200% text a label at 22px made each tab taller than the bar and cut its focus halo at the screen's bottom edge */
   --size-bar-max: 23px;                    /* [?] a sheet's bar text stops growing here (designer, 2026-11-08): HIG Body at xxxLarge, the largest size before the accessibility sizes, where iOS bars hand their items to the Large Content Viewer instead of growing; so Cancel, the title and the action fit a 320 sheet at 200% text */
   --glass-blur: 20px;       /* [?] not from Apple's kit */
-  --bar-title-inset: calc(var(--target) * 3);   /* the collapsed small title's side inset: three targets clear "‹ Discover" at the 17px bar size, so the centred title never runs under the back link or the bar action (step 6, #25; found 2026-10-26; a token since Lesson 8 step 6) */
   --picker-search-icon-x: calc(var(--space-4) * 2);   /* Race picker: the search icon's left edge, the form's 16px gutter plus the field's own 16px inset, so it follows the spacing step (named 2026-11-01; was a count in components/search-field.css) */
   --avatar-size: 80px;
   --alert-width: 270px;
@@ -244,6 +243,7 @@
   --sidebar-inset: var(--tabbar-gap);   /* the floating sidebar's room from the window's edges, as the tab bar's from the screen's bottom (C1: a glass bar floats) */
   --radius-sidebar: 20px;     /* [?] the floating sidebar's corners (macOS 26 floats it in its window): HIG gives no number */
   --container-max: 42rem;     /* [?] a single-column screen stops growing here and centres (Profile, a detail opened on its own): 672px, UIKit's readable content width at the default text size (HIG Layout: layout guides "restrict the width of text for optimal readability"); Apple's number, not HIG's text */
+  --stack-w: 18rem;           /* [?] a component narrower than this stacks its parts (a container query: it reads the component's own width, the pane, never the window; Lesson 10 step 4): 288px at the default text size, a 320 screen less its gutters, so nothing stacks at the default size on any phone; at 200% text 576px, so a phone-width pane stacks and a tablet's column doesn't. A container query can't read var(): scripts/build_components.py checks the components' number */
   --bp-tablet: 48.8125rem;    /* 781px: a second pane fits beside a phone-width list, 2 × --pane-w + one --grid-gap (width audit → Where behavior changes, 1). Above it: the tab bar at the top, Race browse list + map, Results list list + detail, sheets as form sheets */
   --bp-desktop: 83.9375rem;   /* 1343px (was 88.3125rem, 1413px, until 2026-11-15: three fixed panes left 1366- and 1280-wide laptops on the tablet form): the sidebar plus three panes fits, --sidebar-w + 2 × --pane-w (list, detail) + --map-min (the map, flexible) + three --grid-gap (width audit → Where behavior changes, 2). Above it: the sidebar in place of the tab bar, Race browse list + detail + map */
 
@@ -268,6 +268,7 @@
   --map-pin-dot: 10px;
   --pin-h: 22px;            /* pin label height (Drift 2: 22 against the format chip's 24, recorded) */
   --pin-gap: 6px;
+  --map-min-h: 240px;       /* [?] the shortest a map with pins gets (Lesson 10 step 4): the pins sit within 35px of the map's middle at a 320 width and the highest label (Berlin's) reaches 97px above it, so 240 keeps every label and its focus halo inside with room; on a short screen at large text the screen scrolls instead of cutting a label */
   --map-pin-ring: calc(var(--border) * 2);   /* the ring of map water round a pin's dot, two hairlines wide (named 2026-11-01; was a count in components/static-map.css) */
   --map-pad-inline-total: calc(var(--space-4) * 2);   /* the map's padding on both sides (its own --space-4, twice): 100cqw is its content box, so a pin adds this back to reach the mask's full width (named 2026-11-01; was a count inside the pin formula) */
 
@@ -280,7 +281,7 @@
   --page: var(--graphite-7);         /* the page: .onrace (and the showcase stages .kit-frame, .kit-shell); ::selection text */
   --surface: var(--graphite-12);     /* cards and row groups: .race-card, .result-card .card-link, .rows, .skeleton-card, the search field, .saved-status, .signout, the receded Results edge */
   --raised: var(--graphite-17);      /* a fill on a surface: secondary buttons, .sport-tag, .chip, the date tile, the List/Map track, skeleton .bar, pin labels, .initials */
-  --selected: var(--graphite-20);    /* a control that is on: the selected List/Map segment, Filters while its sheet is open. Renamed from --pressed in Lesson 9 step 3, when hover and press got their own roles below */
+  --selected: var(--graphite-20);    /* a control that is on: the selected List/Map segment, Filters while its sheet is open, the selected race card or result row (Lesson 10 step 4, with a --text-secondary edge). Renamed from --pressed in Lesson 9 step 3, when hover and press got their own roles below */
   --group: var(--graphite-20);       /* split from --pressed (now --selected): a group of rows one level above its container (.sheet .rows, .linked-race). In a light appearance a group rises lighter while a press goes darker */
 
   /* ---------- glass, scrim, shadow (C1): mixes of primitives ---------- */
@@ -486,12 +487,14 @@
 /* contrast:start (generated by scripts/concept/build_stand.py; do not edit by hand)
    Every semantic text/background pair the build checks, in both themes (WCAG 2 ratios). Glass is measured over its
    worst case: dark, Text primary behind; light, black behind (a photo's shadows); the sheet also under its scrim.
-   80 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
+   81 pairs; the build stops if one falls below its need in either theme. The last word: text (4.5), large text or non-text (3).
    --text-primary on --page                                               dark 16.76  light 16.76  needs 4.5  text
    --text-primary on --surface                                            dark 14.98  light 18.29  needs 4.5  text
    --text-primary on --raised                                             dark 13.05  light 15.31  needs 4.5  text
    --text-primary on --raised-hover                                       dark 12.17  light 13.68  needs 4.5  text
    --text-primary on --selected                                           dark 12.17  light 13.68  needs 4.5  text
+   --text-secondary on --selected                                         dark  5.60  light  5.04  needs 4.5  text
+   --text-secondary on --raised-pressed                                   dark  4.99  light  4.56  needs 4.5  text
    --text-secondary on --raised-hover                                     dark  5.60  light  5.04  needs 4.5  text
    --text-secondary on --page                                             dark  7.72  light  6.17  needs 4.5  text
    --text-secondary on --surface                                          dark  6.90  light  6.74  needs 4.5  text
@@ -518,7 +521,6 @@
    --error on --surface-hover                                             dark  5.87  light  5.48  needs 4.5  text
    --error on --surface-pressed                                           dark  5.48  light  4.90  needs 4.5  text
    --text-primary on --raised-pressed                                     dark 10.83  light 12.39  needs 4.5  text
-   --text-secondary on --raised-pressed                                   dark  4.99  light  4.56  needs 4.5  text
    --text-primary on --group-hover                                        dark 10.83  light 15.31  needs 4.5  text
    --text-secondary on --group-hover                                      dark  4.99  light  5.64  needs 4.5  text
    --text-primary on --group-pressed                                      dark 10.04  light 13.68  needs 4.5  text
@@ -895,7 +897,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 }
 
 /* ---- design-system/components/result-row.css · order 0140 ---- */
-.result-card .card-meta { margin: 0; display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-meta); color: var(--text-secondary); }
+.result-card .card-meta { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); font-size: var(--size-meta); color: var(--text-secondary); }
 
 /* ---- design-system/components/proof-line.css · order 0150 ---- */
 /* ---------- proof line: one link icon, stated not stamped ---------- */
@@ -996,8 +998,8 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 
 /* ---- design-system/components/results-row.css · order 0250 ---- */
 /* ---------- result count + sort ---------- */
-.results-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; font-size: var(--size-meta); color: var(--text-secondary); }
-.results-count { flex: 1 1 auto; min-width: 0; margin: 0; overflow-wrap: anywhere; }   /* takes what Sort leaves and wraps there; a long search word breaks rather than overflow */
+.results-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) 0; font-size: var(--size-meta); color: var(--text-secondary); }
+.results-count { flex: 1 1 0; max-width: 100%; margin: 0; overflow-wrap: break-word; }   /* takes what Sort leaves and wraps there, at word ends; when its longest word and Sort don't fit side by side (200% text at 320, Lesson 10 step 4) Sort goes to the next line instead of the count breaking mid-word; a word longer than the row still breaks rather than overflow */
 .results-count strong { color: var(--text-primary); font-weight: var(--weight-strong); }
 
 /* ---- design-system/components/sort-button.css · order 0260 ---- */
@@ -1243,7 +1245,7 @@ body > .bottom-nav a::before {
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
 .map-placeholder::after { background: var(--map-lines); -webkit-mask-image: var(--map-lines-mask); mask-image: var(--map-lines-mask); }
 .map-placeholder > * { position: relative; z-index: var(--z-lift); }
-.map-placeholder.has-pins { align-items: flex-end; overflow: clip; }   /* with pins, clip, not hidden (2026-11-08): not a scroll container, so focusing a pin by the edge never scrolls the map off its masks, and the pin's halo can paint past the edge (below) */
+.map-placeholder.has-pins { align-items: flex-end; overflow: clip; min-height: var(--map-min-h); }   /* never shorter than its labels need (Lesson 10 step 4: Berlin's label left the top at 200% text on a 320×568 screen) */   /* with pins, clip, not hidden (2026-11-08): not a scroll container, so focusing a pin by the edge never scrolls the map off its masks, and the pin's halo can paint past the edge (below) */
 /* pins: the dot sits on the race's real coordinates; the label sits above or below it on a leader line. The link is
    a 44pt box centred on the label (step 6, #5: HIG targets); the label is its span; the dot and the leader take no
    taps, so where two dots nearly touch (Boston, Killington) each label is its own target. Each pin's coordinates
@@ -1251,9 +1253,14 @@ body > .bottom-nav a::before {
 .map-placeholder > .map-pin {
   position: absolute;
   z-index: var(--z-float);
-  left: var(--x);
+  /* the label is centred on its dot unless that would put it past the map's side: then it slides along, stopping
+     --space-2 inside the edge, and the dot and the leader stay on the coordinate (Lesson 10 step 4: Berlin, Chamonix and
+     Dallas ran past the frame at 200% text). --pin-at is the dot's x in the map; -50% and 100% are the label's own width. */
+  --pin-at: calc(var(--xf) * (100cqw + var(--map-pad-inline-total)));
+  --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(100cqw + var(--map-pad-inline-total) - var(--space-2) - var(--pin-at) - 100%));
+  left: var(--pin-at);
   top: calc(50% + (var(--yf) - 0.5) * (100cqw + var(--map-pad-inline-total)) * var(--map-ratio));
-  transform: translate(-50%, calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
+  transform: translate(var(--pin-shift), calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
   min-width: var(--target);
   height: var(--target);
   display: flex;
@@ -1276,7 +1283,7 @@ body > .bottom-nav a::before {
 .map-pin::before {   /* the dot, back on the coordinate */
   content: "";
   position: absolute;
-  left: 50%;
+  left: calc(var(--pin-shift) * -1);
   top: calc(50% - var(--dy));
   width: var(--map-pin-dot);
   height: var(--map-pin-dot);
@@ -1289,7 +1296,7 @@ body > .bottom-nav a::before {
 .map-pin::after {   /* leader line from the label's edge to the dot */
   content: "";
   position: absolute;
-  left: calc(50% - var(--border) / 2);
+  left: calc(var(--pin-shift) * -1 - var(--border) / 2);
   width: var(--border);
   height: calc(var(--dy-abs) - var(--pin-h) / 2 - var(--map-pin-dot) / 2);
   background: var(--text-secondary);
@@ -1510,11 +1517,17 @@ fieldset:disabled .row--nav { pointer-events: none; }
 
 /* ---- design-system/components/top-bar.css · order 0550 ---- */
 /* ---------- top bar: back link, centered title, text actions ---------- */
+/* Three columns (Lesson 10 step 4, 2026-11-17): the leading button, the title, the trailing action. The side columns
+   are at least their button and share what is left equally, so the title is centred whenever it fits; when it doesn't
+   (a long back name, 200% text, 320 wide) it moves off centre and then truncates, and never runs under a button
+   (HIG Navigation bars: the title truncates). Until then the title was laid over the whole bar and inset by three
+   targets, which wasn't enough at large text (backlog, Lesson 10). */
 .top-bar {
   position: sticky;
   top: 0;
   z-index: var(--z-float);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
   align-items: center;
   min-height: calc(var(--target) + var(--safe-top));
   padding: var(--safe-top) var(--space-2) 0;   /* G6 */
@@ -1549,12 +1562,16 @@ fieldset:disabled .row--nav { pointer-events: none; }
   -webkit-mask: var(--icon-back) center / contain no-repeat;
   mask: var(--icon-back) center / contain no-repeat;
 }
+.top-bar > * { grid-row: 1; grid-column: 1; justify-self: start; }
+.top-bar > .bar-title { grid-column: 2; justify-self: stretch; }
+.top-bar > :is(.save-btn, .bar-action) { grid-column: 3; justify-self: end; }
 .top-bar .bar-title {
-  position: absolute;
-  left: 0;
-  right: 0;
+  min-width: 0;
   margin: 0;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
   font-family: var(--font-text);
   font-size: var(--size-item);
@@ -1590,7 +1607,7 @@ fieldset:disabled .row--nav { pointer-events: none; }
 @media (hover: hover) { .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:hover, .is-hover) { color: var(--text-hover); } }
 .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:active, .is-pressed) { color: var(--text-pressed); }
 /* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
-.top-bar[data-collapse] .bar-title { padding-inline: var(--bar-title-inset);   /* clears "‹ Discover" at the 17px bar size (it collided since step 6, #25; found 2026-10-26) */ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
+.top-bar[data-collapse] .bar-title { opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
 
 /* ---- design-system/components/large-title-header.css · order 0560 ---- */
@@ -1609,7 +1626,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* on a sheet (Log result, the Filters sheet) the bar spans the sheet: no safe area above it and nothing scrolls under it,
    so it is the sheet's own glass, not a second layer. Its text grows with the system size up to --size-bar-max and no
    further (designer, 2026-11-08), as iOS bars stop growing: Cancel, the title and the action fit a 320 sheet at 200% text */
-.sheet > .top-bar { position: relative; flex: none; gap: var(--space-2); font-size: min(var(--size-item), var(--size-bar-max)); min-height: calc(var(--sheet-bar-top) + var(--sheet-bar-h)); padding: var(--sheet-bar-top) var(--sheet-bar-side) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.sheet > .top-bar { position: relative; display: flex; flex: none; gap: var(--space-2); font-size: min(var(--size-item), var(--size-bar-max)); min-height: calc(var(--sheet-bar-top) + var(--sheet-bar-h)); padding: var(--sheet-bar-top) var(--sheet-bar-side) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* the sheet's bar buttons (designer, 2026-11-08; HIG Sheets, as a native sheet header): Cancel on the leading edge, the
    confirming action on the trailing edge, text only, no fill. Each keeps an invisible 44pt tap target (at least 44pt wide
    and tall), inset from the corner by the bar's padding. Cancel neutral (Text 1), the confirming action in the amber ink
@@ -1989,7 +2006,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   font-weight: var(--weight-strong);
 }
 .identity h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
-.identity p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); }
+.identity p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); overflow-wrap: anywhere; }   /* the email wraps at 200% text on a 320 screen (Lesson 10 step 4) */
 
 /* ---- design-system/components/grouped-settings-rows.css · order 0980 ---- */
 .group { margin: 0 var(--space-4) var(--space-7); }
@@ -2014,6 +2031,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .row input, .row select, .row .row-value {
   flex: 1;
   min-width: 0;
+  overflow-wrap: anywhere;   /* a read-only value (the email) wraps rather than be cut (Lesson 10 step 4: 200% text) */
   margin: 0;
   padding: var(--space-3) 0;
   border: 0;
@@ -2107,7 +2125,7 @@ dialog.alert {   /* the confirm alert floats like a sheet: the sheet's glass ove
 dialog.alert::backdrop { background: var(--scrim); }
 .alert-body { padding: var(--space-5) var(--space-4) var(--space-4); }
 dialog.alert h2 { margin: 0 0 var(--space-1); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
-dialog.alert p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); }
+dialog.alert p { margin: 0; font-size: var(--size-meta); color: var(--text-secondary); overflow-wrap: anywhere; }   /* a long domain (valenciaciudaddelrunning.com) wraps at 200% text (Lesson 10 step 4) */
 dialog.alert .alert-actions { display: flex; border-top: var(--border) solid var(--hairline); }
 dialog.alert .alert-actions button {
   flex: 1;
@@ -2234,15 +2252,68 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 /* A tab screen by width (Lesson 10 step 3, 2026-11-15): from --bp-tablet the screen fills the window, the tab bar takes a
    row above the scroll area (and, from --bp-desktop, a column beside it), and the screen's own column stops growing at
    --container-max and centres, until the panes come (width audit → Decisions). The large title header and its bar
-   narrow to that column, so on desktop they never run under the sidebar. Drill-downs and sheets keep the phone screen
-   for now. The numbers are tokens.css's --bp-tablet and --bp-desktop (a media query can't read var();
-   scripts/build_components.py checks they agree). */
+   narrow to that column, so on desktop they never run under the sidebar. The numbers are tokens.css's --bp-tablet and
+   --bp-desktop (a media query can't read var(); scripts/build_components.py checks they agree).
+   Step 4 (2026-11-17): every single-column screen does the same, the drill-downs (Race detail, Result detail, Race
+   picker) and the sign-in screens too: the screen fills the window, its column stops at --container-max and centres,
+   and its bars (the top bar, the action bar) keep their glass the window's width with their buttons at the column's
+   edges. What sits in the column (cards, rows, the large title) adapts to the column's own width (container queries
+   on --stack-w), never to the window. A sheet keeps the phone's width until the form sheets come. */
 @media (min-width: 48.8125rem) {
-  body:has(> .bottom-nav) { max-width: none; display: flex; flex-direction: column; }
+  body:has(> .phone-screen) { max-width: none; }
+  body:has(> .bottom-nav) { display: flex; flex-direction: column; }
   body:has(> .bottom-nav) > .phone-screen { flex: 1; min-height: 0; min-width: 0; height: auto; padding-bottom: 0; }   /* no tab bar to clear at the bottom */
-  body:has(> .bottom-nav) > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
-  body:has(> .bottom-nav) > .phone-screen > .top-bar--large { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar action (Log result) ends where the column ends */
+  body > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
+  body > .phone-screen > :is(.top-bar, .action-bar), body:has(> .phone-screen) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar's buttons (back, Log result, Save) end where the column ends */
+  body > .phone-screen > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }   /* the action bar's button keeps the column's gutter */
 }
 @media (min-width: 83.9375rem) {
   body:has(> .bottom-nav) { flex-direction: row; }
+}
+
+/* ---- design-system/components/grouped-settings-rows.css · order 1100 ---- */
+/* A field row in a narrow group (Lesson 10 step 4, 2026-11-17): below --stack-w (the group's own width, so at 200% text
+   in a phone-width pane, never at the default size) the label goes above its field, as an iOS form does at the larger
+   accessibility sizes, so neither is cut ("ew password" on New password at 320, backlog). The number is tokens.css's
+   --stack-w (a container query can't read var(); scripts/build_components.py checks it). */
+.rows { container-type: inline-size; }
+@container (width < 18rem) {
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + :is(input:not([type="checkbox"]), select, .row-value)) { flex-direction: column; align-items: stretch; gap: 0; padding-block: var(--grouped-row-pad); }
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + :is(input:not([type="checkbox"]), select, .row-value)) > :is(input:not([type="checkbox"]), select, .row-value) { min-height: 0; padding-block: var(--space-1); text-align: left; text-align-last: left; }
+}
+
+/* ---- design-system/components/race-card.css · order 1110 ---- */
+/* In a narrow card (Lesson 10 step 4, 2026-11-17): below --stack-w (the card's own width: at 200% text in a phone-width
+   pane) the date tile goes above the name instead of beside it, so the name isn't squeezed to a word a line (Race picker
+   at 320, found 2026-11-17). The number is tokens.css's --stack-w (scripts/build_components.py checks it). */
+.race-card { container-type: inline-size; }
+@container (width < 18rem) {
+  .race-card .card-link { grid-template-columns: minmax(0, 1fr); grid-template-areas: "date" "name" "meta" "loc"; }
+  .race-card time { width: auto; justify-self: start; align-self: start; margin-bottom: var(--space-2); padding-inline: var(--space-3); }
+}
+
+/* Selected (Lesson 10 step 4, 2026-11-17; width audit → Decisions, 6): the card whose race shows in the pane beside the
+   list keeps the highlight while it shows (HIG Split views: "persistently highlight the current selection"). Marked by
+   aria-current="page" on its link (its page is the one showing beside the list; "true" stays Race picker's chosen race, with its checkmark and no fill), so a screen reader says "current page" too; drawn as the selected segment is: the
+   --selected fill and a hairline --text-secondary edge (--boundary reached only 2.6:1 on it; a state needs 3:1), so it reads by the edge as well as the fill. Hover and press don't
+   change it (it is where you are), and its date tile and chip sit on --raised-pressed, a step above it, as when pressed. */
+.race-card:has(.card-link[aria-current="page"]) { background: var(--selected); outline: var(--border) solid var(--text-secondary); outline-offset: calc(var(--border) * -1); }
+.race-card:has(.card-link[aria-current="page"]) :is(time, .sport-tag) { background: var(--raised-pressed); }
+
+/* ---- design-system/components/result-row.css · order 1120 ---- */
+/* Selected (Lesson 10 step 4, 2026-11-17): the race card's selected state (race-card.css), on the row whose result shows
+   in the pane beside the list: aria-current="page" on its link, the --selected fill on the whole row (its "Add official
+   result link" part too) and a hairline --text-secondary edge round it; hover and press leave it as it is. */
+.result-card:has(> .card-link[aria-current="page"]) { border-radius: var(--radius-2); outline: var(--border) solid var(--text-secondary); outline-offset: calc(var(--border) * -1); }
+.result-card:has(> .card-link[aria-current="page"]) > :is(.card-link, .text-link) { background: var(--selected); }
+.result-card:has(> .card-link[aria-current="page"]) .sport-tag { background: var(--raised-pressed); }
+
+/* ---- design-system/components/detail-header-and-facts.css · order 1130 ---- */
+/* In a narrow list (Lesson 10 step 4, 2026-11-17): below --stack-w (the list's own width: 200% text in a phone-width
+   pane) each label goes above its value, so a long value ("21 September 2025") keeps its words whole instead of running
+   past the screen. The number is tokens.css's --stack-w (scripts/build_components.py checks it). */
+.facts { container-type: inline-size; }
+@container (width < 18rem) {
+  .facts > :is(dt, dd) { grid-column: 1 / -1; }
+  .facts > dt:not(:first-child) { margin-top: var(--space-2); }
 }

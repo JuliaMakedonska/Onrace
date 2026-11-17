@@ -106,3 +106,21 @@
   mask: var(--icon-check) center / contain no-repeat;
   pointer-events: none;
 }
+
+/* order 1110 */
+/* In a narrow card (Lesson 10 step 4, 2026-11-17): below --stack-w (the card's own width: at 200% text in a phone-width
+   pane) the date tile goes above the name instead of beside it, so the name isn't squeezed to a word a line (Race picker
+   at 320, found 2026-11-17). The number is tokens.css's --stack-w (scripts/build_components.py checks it). */
+.race-card { container-type: inline-size; }
+@container (width < 18rem) {
+  .race-card .card-link { grid-template-columns: minmax(0, 1fr); grid-template-areas: "date" "name" "meta" "loc"; }
+  .race-card time { width: auto; justify-self: start; align-self: start; margin-bottom: var(--space-2); padding-inline: var(--space-3); }
+}
+
+/* Selected (Lesson 10 step 4, 2026-11-17; width audit → Decisions, 6): the card whose race shows in the pane beside the
+   list keeps the highlight while it shows (HIG Split views: "persistently highlight the current selection"). Marked by
+   aria-current="page" on its link (its page is the one showing beside the list; "true" stays Race picker's chosen race, with its checkmark and no fill), so a screen reader says "current page" too; drawn as the selected segment is: the
+   --selected fill and a hairline --text-secondary edge (--boundary reached only 2.6:1 on it; a state needs 3:1), so it reads by the edge as well as the fill. Hover and press don't
+   change it (it is where you are), and its date tile and chip sit on --raised-pressed, a step above it, as when pressed. */
+.race-card:has(.card-link[aria-current="page"]) { background: var(--selected); outline: var(--border) solid var(--text-secondary); outline-offset: calc(var(--border) * -1); }
+.race-card:has(.card-link[aria-current="page"]) :is(time, .sport-tag) { background: var(--raised-pressed); }

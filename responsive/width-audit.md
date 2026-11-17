@@ -132,3 +132,6 @@ Everything else (six screens) does not change at either width; it only needs a r
 5. Not a product screen, so not in the table: Saved races (`design-system/examples/`) would be a list-and-detail screen too, if it becomes real.
 
 **Revised 2026-11-15 (designer), before step 3:** 1413px left many 13–14-inch laptops on the tablet form. The list and the detail stay `--pane-w`; the map is flexible, never narrower than `--map-min` (20rem [?], 320px, the narrowest screen the map is checked at). `--bp-desktop` = `--sidebar-w` (15rem [?]) + 2 × `--pane-w` + `--map-min` + three dividers = **83.9375rem, 1343px**. A 1440 window and a 1366 one reach it; a 1280 one doesn't. An iPad Pro 13-inch in landscape (1376) now does, so it gets the sidebar (`DESIGN.md` → Width).
+
+**Step 4, 2026-11-17:** decision 6 is built: the race card and the result row have a Selected state (`aria-current="page"`, `--selected` with a `--text-secondary` edge), in both themes, with its docs States cell; the panes still to come will set it. The backlog's 320-with-200%-text defects are fixed and that size is now checked. Components adapt to their own width (`--stack-w`), never the window's; every single-column screen centres its column at `--container-max` (`concept/concept.md` → Step 4: adaptive components).
+

@@ -2,7 +2,7 @@
 
 For each component you act on, the named stage of its specimen is cut down to the part it keeps (and the ancestors the
 product's selectors need), then shown At rest, Hover, Pressed, Focus and Disabled, in Dark and in Light, and Invalid where
-the map names a stage. The states come from the product's own CSS: the stand-ins .is-hover, .is-pressed and .is-focus
+the map names a stage, and Selected after Pressed where it names the element that takes aria-current (Lesson 10 step 4). The states come from the product's own CSS: the stand-ins .is-hover, .is-pressed and .is-focus
 sit in the same selectors as :hover, :active and :focus-visible (design-system/components/base.css), Disabled sets the
 real attribute, and each theme is data-theme-scope on the stage's frame (design-system/tokens/tokens.css). Nothing here
 draws a state by hand, so a state shown in the docs is the state the screens get.
@@ -88,7 +88,7 @@ def read_map(inv, cells):
         if not l.startswith('| **'): continue
         c = cells(l); d = lambda x: None if x == '—' else x.strip('`')
         rows[c[0].strip('*')] = {'stage': c[1], 'keep': d(c[2]), 'control': d(c[3]), 'focus': d(c[4]), 'disabled': d(c[5]),
-                                 'crop': c[6], 'w': c[7], 'invalid': d(c[8])}
+                                 'crop': c[6], 'w': c[7], 'invalid': d(c[8]), 'selected': d(c[9])}
     return rows
 
 def build(frame_html, m, state, theme):
@@ -115,6 +115,8 @@ def build(frame_html, m, state, theme):
 def apply(ctl, keep, m, state):
     if state in ('Hover', 'Pressed'): ctl.add_class(STAND_IN[state])
     if state == 'Focus': ((first(ctl, m['focus']) if m['focus'] else None) or ctl).add_class('is-focus')
+    if state == 'Selected':   # Lesson 10 step 4: the real attribute the screens will set, so the docs draw the product's own rule
+        sel = m['selected']; ((ctl if matches(ctl, sel) else first(ctl, sel)) or ctl).set('aria-current', 'page')
     if state == 'Disabled':
         sel = m['disabled']
         targets = [x for x in walk(keep) if matches(x, sel[1:])] if sel and sel.startswith('*') else [((first(ctl, sel) if sel else None) or ctl)]
@@ -134,12 +136,14 @@ def grid(name, m, stages, element_end, stage, unid, sfx):
     FOCUS_ROW = 'Keyboard focus (iPad keyboard, Full Keyboard Access)'   # designer, 2026-11-08: focus shows only from a keyboard, never after a tap, so it isn't a state of the tap row
     for theme in ('Dark', 'Light'):
         cells, focus = [], []
-        for st in [x for x in STATES if not (x == 'Disabled' and m['disabled'] == 'omit')] + (['Invalid'] if inv else []):   # Disabled only where a screen disables it (2026-11-10)
+        sts = [x for x in STATES if not (x == 'Disabled' and m['disabled'] == 'omit')]   # Disabled only where a screen disables it (2026-11-10)
+        if m['selected']: sts.insert(sts.index('Pressed') + 1, 'Selected')   # Lesson 10 step 4: after Pressed
+        for st in sts + (['Invalid'] if inv else []):
             fr = build(inv if st == 'Invalid' else base, m, 'At rest' if st == 'Invalid' else st, theme)
             label = f'{name} · {st} · {theme}'
             k = f'<div class="kit-state" data-nogeo><p class="kit-label">{H.escape(label)}</p>{fr}</div>'
             k = k.replace('<div class="kit-state" data-nogeo>', '<div class="kit-state">', 1)
-            got = stage(k, f"{sfx}-{theme[0].lower()}{STATES.index(st) if st in STATES else 9}", ['[data-st-crop]'], label)
+            got = stage(k, f"{sfx}-{theme[0].lower()}{STATES.index(st) if st in STATES else 8 if st == 'Selected' else 9}", ['[data-st-crop]'], label)
             got = got.replace('<div class="kit-state" data-label=', '<div class="kit-state" data-nogeo data-label=', 1)
             cap = st
             if st == 'Focus' and re.search(r'class="[^"]*\b(?:register-btn|open-btn|submit-btn|state-action(?![^"]*\bsecondary\b))\b', fr):
