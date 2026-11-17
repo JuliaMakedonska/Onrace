@@ -135,3 +135,5 @@ Everything else (six screens) does not change at either width; it only needs a r
 
 **Step 4, 2026-11-17:** decision 6 is built: the race card and the result row have a Selected state (`aria-current="page"`, `--selected` with a `--text-secondary` edge), in both themes, with its docs States cell; the panes still to come will set it. The backlog's 320-with-200%-text defects are fixed and that size is now checked. Components adapt to their own width (`--stack-w`), never the window's; every single-column screen centres its column at `--container-max` (`concept/concept.md` → Step 4: adaptive components).
 
+**Step 5, 2026-11-17:** decisions 1, 2 and 3 are built as the Split view pattern (`design-system/patterns/split-view.html`): Race browse list + map on a tablet (a chosen race's detail in the map's place, "‹ Map" back), list + detail + map on a desktop with "No race selected"; Results list list + detail with "No result selected". The choice rides in the URL and its card is Selected (decision 6).
+

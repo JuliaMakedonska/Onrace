@@ -6,6 +6,12 @@ What is known to be open in the design system, by the lesson that takes it. Each
 
 Nothing open. The five items found on 2026-11-08 and 2026-11-15 (Results list cards at the edge, New password's clipped labels, top-bar titles over their buttons, the selected state for the race card and the result row, map pin labels past the frame) were fixed in Lesson 10 step 4 (2026-11-17, `concept/concept.md` → Step 4: adaptive components), and 320 with 200% text is now a pass of `scripts/check_overflow.mjs` and `scripts/check_focus.mjs`, so they stay fixed.
 
+## Lesson 10 step 5: the Split view (found 2026-11-17)
+
+- **"No race selected" and "No result selected" show the search glass.** The State message's default icon means "nothing matched", not "nothing chosen" (the same mismatch as Saved races' empty state). How to see it: Race browse at 1440, nothing chosen. Needs an icon, or a state message without one, through the system first.
+- **"Add official result link" leaves the pane.** In the detail pane it opens Result detail's own page, where its sheet lives, at the phone's width; the sheet inside the pane would need the sheet as a form sheet (HIG Sheets), not built.
+- **Two `h1`s on a split screen.** The detail pane brings its screen's `h1` beside the list's large title; the pane is a labelled region (`aria-label` Race detail, Result detail), but heading navigation finds two first-level headings.
+
 ## Examples: Saved races (found 2026-11-10)
 
 What the system lacked when Saved races (`design-system/examples/`) was built only from it, for `research/jtbd.md` → Related job 2 (choose races by where they are; the Multi-Region Season Planner). Nothing here was drawn on the screen: each is left out, and the screen says nothing it can't show.

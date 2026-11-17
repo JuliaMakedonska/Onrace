@@ -92,9 +92,24 @@ for l in _ntab.split('\n'):
 for _p in PATTERNS + NOT_PATTERNS:
     _p['found'] = _found(_p['sig'])
     assert sorted(_p['found']) == sorted(_p['on']), ('ui/inventory.md → Patterns map: the screens carrying ' + ' '.join(_p['sig']) + ' are not the ones listed', _p['name'], sorted(_p['found']), sorted(_p['on']))
+TWO_SCREENS_OK = {'Split view'}   # designer, 2026-11-17 (Lesson 10 step 5): the panes the width audit decided for, a pattern on two screens
 for _p in PATTERNS:
-    assert len(_p['on']) >= 3, ('a pattern stands on three or more screens', _p['name'], _p['on'])
+    assert len(_p['on']) >= 3 or (_p['name'] in TWO_SCREENS_OK and len(_p['on']) >= 2), ('a pattern stands on three or more screens', _p['name'], _p['on'])
     assert os.path.exists(os.path.join(ROOT, 'design-system/patterns', _p['file'] + '.html')), ('no pattern file', _p['file'])
+# The Split view at the three widths (Lesson 10 step 5): its own page and Race browse, each in a frame as wide as a
+# phone, a tablet or a desktop window; the page's media queries pick the form. On specimens.html under the pattern, on
+# design-system/docs/split-view.html as figures (check_docs_stages compares the two by label).
+SV_STAGES = [
+    ('Results list, Phone, 390: the list; a row opens Result detail', '../patterns/split-view.html', 'phone', 'Results list on a small screen'),
+    ('Results list, Tablet, 820: the list and the chosen result', '../patterns/split-view.html?result=hyrox-london-2025', 'tablet', 'Results list on a tablet'),
+    ('Results list, Desktop, 1440: beside the sidebar', '../patterns/split-view.html?result=hyrox-london-2025', 'desktop', 'Results list on a desktop'),
+    ('Race browse, Tablet, 820: a chosen race in the map\'s place', '../../wireframes/race-browse.html?race=utmb', 'tablet', 'Race browse on a tablet'),
+    ('Race browse, Desktop, 1440: list, detail and map', '../../wireframes/race-browse.html?race=utmb', 'desktop', 'Race browse on a desktop'),
+    ('Race browse, Desktop, nothing chosen: No race selected', '../../wireframes/race-browse.html', 'desktop', 'Race browse on a desktop, no race'),
+]
+def SVSTAGE(lab, src, w, title, label=True):
+    return ((f'<div class="kit-state"><p class="kit-label">{H.escape(lab)}</p>' if label else f'<div class="kit-state" data-label="{H.escape(lab)}">')
+            + f'<div class="kit-frame kit-frame--flush kit-frame--wide"><iframe class="kit-wide kit-wide--{w}" src="{H.escape(src)}" title="{H.escape(title)}"></iframe></div></div>')
 def PSTAGE(pt, label=True):   # the live composition: the pattern's own file in a frame; specimens.html labels it, the Patterns page keys it by data-label
     lab = f'{pt["name"]} pattern'
     attr = '' if label else ' data-label="' + H.escape(lab) + '"'
@@ -227,7 +242,7 @@ def _pcard(pt):
     return (f'    <div class="kit-item kd-pattern" id="pattern-{pt["file"]}" data-names="{H.escape(pt["name"].lower())} pattern">\n      <h3>{H.escape(pt["name"])}</h3>\n'
             f'      <div class="kd-meta"><p class="kd-line">{H.escape(pt["for"])}</p><p class="kd-line"><span class="kd-k">Stands on {len(pt["on"])} screens</span> {on}</p>'
             f'<p class="kd-line"><span class="kd-k">In the docs</span> <a href="patterns.html#{pt["file"]}">Patterns</a></p></div>\n'
-            f'      <div class="kit-states">{PSTAGE(pt)}</div>\n    </div>')
+            f'      <div class="kit-states">{PSTAGE(pt)}' + (''.join(SVSTAGE(*x) for x in SV_STAGES) if pt['file'] == 'split-view' else '') + '</div>\n    </div>')
 main.append('\n  <!-- ================================================================ Patterns (ui/inventory.md → Patterns map) -->\n'
             f'  <section class="kit-section" id="role-patterns" aria-labelledby="role-patterns-h"><span id="shell"></span>\n    <h2 id="role-patterns-h">Patterns <span>{len(PATTERNS)}</span></h2>\n\n'
             + '\n\n'.join(_pcard(pt) for pt in PATTERNS) + '\n  </section>')
@@ -547,7 +562,7 @@ def pattern(pt):
         f'<div class="dc-dont"><h3>Use the components</h3><p>{H.escape(pt["not"])}</p><p class="dc-see">Composed of {comps}</p></div></div>',
         f'<h3 class="dc-h" id="{sl}-on">Stands on {len(pt["on"])} screens</h3>',
         f'<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Screen</th><th>Pages that carry {cls}</th></tr></thead><tbody>{rows}</tbody></table></div>',
-        f'<p class="dc-see">The file: <code>design-system/patterns/{sl}.html</code></p>', '</section>'])
+        f'<p class="dc-see">The file: <code>design-system/patterns/{sl}.html</code>' + (' · its own page, at the three widths: <a href="split-view.html">Split view</a>' if sl == 'split-view' else '') + '</p>', '</section>'])
 _np = ''.join(f'<tr><td>{H.escape(n["name"])}</td><td>' + ', '.join(viewer(n['found'][k][0]) for k in n['on']) + f'</td><td>{H.escape(n["why"])}</td></tr>' for n in NOT_PATTERNS)
 _pmain = ('<p class="ds-crumb">Patterns</p><h1>Patterns</h1><p class="ds-lede">A pattern is a composition of existing components that already stands on three or more screens. '
           'Each is one file in <code>design-system/patterns/</code>, with no style of its own.</p>\n'
@@ -556,6 +571,36 @@ _pmain = ('<p class="ds-crumb">Patterns</p><h1>Patterns</h1><p class="ds-lede">A
           '<p class="dc-for">Each stays its components.</p>'
           f'<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Candidate</th><th>Stands on</th><th>Why not</th></tr></thead><tbody>{_np}</tbody></table></div></section>')
 write('patterns.html', DS.page('Patterns · Onrace design system', 'patterns', _pmain, [(pt['file'], pt['name']) for pt in PATTERNS] + [('not-patterns', 'Not patterns')], '', SPEC_JS))
+
+# ---------------------------------------------------------------- the Split view's own page (Lesson 10 step 5, 2026-11-17)
+# The live composition at the three widths, and when a screen becomes a split view, read from DESIGN.md → Patterns →
+# Split view (never written here), so its words are the source's.
+def _svmd(t):
+    t = H.escape(t, quote=False)
+    t = re.sub(r'`([^`]+)`', r'<code>\1</code>', t)
+    return re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', t)
+_DM = open(os.path.join(ROOT, 'DESIGN.md'), encoding='utf-8').read()
+_SV = _DM[_DM.index('- **Split view** ('):]
+_SV = _SV[:_SV.index('\n- **', 5)]
+_SVB = {m.group(1): m.group(2) for m in re.finditer(r'^  - \*\*(.+?):\*\* (.*)$', _SV, flags=re.M)}
+_svpt = next(pt for pt in PATTERNS if pt['file'] == 'split-view')
+def _figs(rows): return '<div class="dc-variants">' + ''.join(f'<figure class="dc-variant">{SVSTAGE(lab, src, w, title, label=False)}<figcaption>{H.escape(lab)}</figcaption></figure>' for lab, src, w, title in rows) + '</div>'
+_svrows = ''.join(f'<tr><td>{viewer(_svpt["found"][k][0])}</td><td>' + ' '.join(f'<code>{H.escape(x)}</code>' for x in _svpt['found'][k]) + '</td></tr>' for k in _svpt['on'])
+_svmain = '\n'.join([
+    '<p class="ds-crumb">Patterns</p><h1>Split view</h1>', f'<p class="ds-lede">{H.escape(_svpt["for"])}</p>',
+    '<section class="dc dc--part" id="widths" aria-labelledby="widths-h"><h2 id="widths-h">At three widths</h2>',
+    f'<p class="dc-for">{_svmd(_SVB["By width"])}</p>', '<h3 class="dc-h" id="results-list">Results list, the pattern\'s own page</h3>', _figs(SV_STAGES[:3]),
+    '<h3 class="dc-h" id="race-browse">Race browse</h3>', _figs(SV_STAGES[3:]), '</section>',
+    '<section class="dc dc--part" id="when" aria-labelledby="when-h"><h2 id="when-h">When a screen becomes a split view</h2>',
+    '<div class="dc-rules">' f'<div class="dc-do"><h3>A split view</h3><p>{_svmd(_SVB["When a screen becomes a split view"])}</p></div>'
+    f'<div class="dc-dont"><h3>Single-column</h3><p>{_svmd(_SVB["When it stays single-column"])}</p></div></div>',
+    '<p class="dc-see">HIG: <a href="https://developer.apple.com/design/human-interface-guidelines/split-views">Split views ↗</a></p></section>',
+    '<section class="dc dc--part" id="how" aria-labelledby="how-h"><h2 id="how-h">How it works</h2>',
+    ''.join(f'<p class="dc-for"><strong>{H.escape(k)}:</strong> {_svmd(_SVB[k])}</p>' for k in ('The choice in the URL', 'One source for the detail', 'States')),
+    f'<h3 class="dc-h" id="on">Stands on {len(_svpt["on"])} screens</h3>',
+    f'<div class="tbl-wrap"><table class="dc-mc"><thead><tr><th>Screen</th><th>Pages that carry <code>.split-view</code> <code>.split-detail</code></th></tr></thead><tbody>{_svrows}</tbody></table></div>',
+    '<p class="dc-see">The files: <code>design-system/patterns/split-view.html</code>, <code>design-system/components/split-view.css</code>, <code>design-system/patterns/split-view.js</code></p></section>'])
+write('split-view.html', DS.page('Split view · Onrace design system', 'split-view', _svmain, [('widths', 'At three widths'), ('when', 'When a screen becomes a split view'), ('how', 'How it works')], '', SPEC_JS))
 
 # ---------------------------------------------------------------- Getting started and Foundations (scripts/docs_foundations.py)
 import docs_foundations as DF

@@ -1744,3 +1744,39 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   .facts > :is(dt, dd) { grid-column: 1 / -1; }
   .facts > dt:not(:first-child) { margin-top: var(--space-2); }
 }
+
+/* ---- design-system/components/split-view.css · order 1150 ---- */
+.split-detail { display: none; --split: 0; }   /* phone: no pane; split-view.js reads --split to know whether a card opens a pane or a screen */
+@media (min-width: 48.8125rem) {
+  body > .phone-screen.split-view { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
+  body > .phone-screen.split-view > main {
+    display: grid;
+    grid-template-columns: var(--pane-w) minmax(0, 1fr);
+    grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
+    align-items: start;
+    max-width: none;
+    margin: 0;
+  }
+  .split-view > main > *, .split-view .list-area { grid-column: 1; }
+  body > .phone-screen.split-view > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
+  .split-view .view-toggle { display: none; }   /* both views show at once */
+  .split-view :is(.map-area, .split-detail) { grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); }
+  .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: var(--space-4); }
+  .split-view .map-area .state-message { display: none; }   /* the list pane carries the screen's state (empty, error); the map beside it stays a map */
+  .split-detail { --split: 1; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* tablet, Race browse: the map until a race is chosen */
+  .split-view:has(.card-link[aria-current="page"]) .map-area { display: none; }   /* then the race in the map's place */
+  .split-empty { flex: 1; display: grid; place-items: center; }
+  .split-empty[hidden], .split-content[hidden] { display: none; }
+  .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
+  .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
+  .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
+}
+@media (min-width: 83.9375rem) {
+  body > .phone-screen.split-view:has(.map-area) > main { grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr); }   /* list, detail, map: the map takes the rest, never less than --map-min (--bp-desktop is worked out from it) */
+  .split-view:has(.map-area) .map-area { grid-column: 3; }
+  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: flex; }   /* the detail pane is always there; with nothing chosen it says so */
+  .split-view:has(.card-link[aria-current="page"]) .map-area { display: flex; }
+  .split-detail > .top-bar { display: none; }   /* the map is beside it: no way back needed */
+}

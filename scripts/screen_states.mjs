@@ -40,6 +40,10 @@ for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.h
     for (const q of CAUSES[name] || ['']) states.push({ name, q, act: '', label: name + (q ? '?' + q : '') });
   }
 }
+// the Split view (Lesson 10 step 5, 2026-11-17): a chosen race or result, and one whose detail failed, so the pane is
+// measured filled and in its error ('wait': the pane fills from the detail page after load)
+for (const [name, q] of [['race-browse', 'race=utmb'], ['race-browse', 'race=spartan-beast-killington&fail=1'], ['results-list', 'result=spartan-beast-killington-2025'], ['results-list', 'result=valencia-half-2025&fail=1']])
+  states.push({ name, q, act: 'wait', label: name + ' · split view ?' + q });
 states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
 // the patterns (Lesson 9 step 4, 2026-11-06): each a phone page of existing components, measured like a screen

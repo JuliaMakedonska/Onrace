@@ -7,12 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=cbb50fac">
+<link rel="stylesheet" href="../design-system/index.css?v=c9719b4d">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
 
-  <div class="phone-screen">
+  <div class="phone-screen split-view">
 
     <!-- ZONE: top bar (markup pass, G4): floats over the large title, empty at rest; once the h1 has scrolled away
          it turns to glass and shows the small title. -->
@@ -63,6 +63,14 @@
         </div>
       </section>
 
+          <!-- ZONE: detail pane (Lesson 10 step 5, 2026-11-17; the Split view pattern, design-system/patterns/split-view.html).
+           Not drawn on a phone: a row opens Result detail, its own screen, as before. From the tablet breakpoint the
+           list and the chosen result side by side; with nothing chosen, "No result selected" (microcopy.md row 595). The
+           choice rides in the URL (?result=…), its row Selected; split-view.js fills the pane from result-detail.html. -->
+      <section class="split-detail" aria-label="Result detail" data-split-param="result" data-split-source="result-detail.html" data-split-loading="result-detail-loading.html" data-split-error="result-detail-error.html">
+        <div class="split-empty"><div class="state-message"><h2>No result selected</h2></div></div>
+        <div class="split-content" hidden></div>
+      </section>
     </main>
 
   </div><!-- /.phone-screen -->
@@ -164,5 +172,6 @@
 })();
 </script>
 
+<script src="../design-system/patterns/split-view.js"></script>   <!-- the Split view pattern: fills the detail pane from tablet width up (Lesson 10 step 5) -->
 </body>
 </html>

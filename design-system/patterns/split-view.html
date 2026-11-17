@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Split view · Onrace pattern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
+<link rel="stylesheet" href="../index.css?v=c9719b4d">
+<script src="../tokens/theme.js"></script>
+</head>
+<!-- PATTERN: Split view (design-system/patterns/README.md; Lesson 10 step 5, 2026-11-17). Composed only of existing
+     components: this page links design-system/index.css, the theme script and the pattern's own script, and has no
+     style block, no inline style and no class the components don't define (scripts/check_kit.py).
+     Stands on: Race browse (list, then map; a chosen race's detail in the map's place, and from the desktop breakpoint
+     list, detail and map) and Results list (list and the chosen result), each in every state. Composed of: the Tab
+     screen's list, the Selected state on the chosen card or row, the detail screen's own content in .split-detail
+     (filled by split-view.js from the detail page), and "No race selected" / "No result selected" in .split-empty.
+     The layout is design-system/components/split-view.css. Drawn here as Results list; ?result=hyrox-london-2025 opens
+     one. On a phone it is the Tab screen: a row opens Result detail, its own screen.
+     Shown live on design-system/docs/split-view.html at a phone's, a tablet's and a desktop's width. -->
+<body class="onrace">
+  <div class="phone-screen split-view">
+    <header class="top-bar top-bar--large" data-collapse>
+      <span class="bar-title" aria-hidden="true">Results</span>
+      <a class="bar-action" href="../../wireframes/log-result.html">Log result</a>
+    </header>
+    <main>
+      <header>
+        <h1>Results</h1>
+      </header>
+      <div class="results-row">
+        <p class="results-count"><strong>3</strong> results <span class="results-order">Newest first</span></p>
+      </div>
+      <section id="list-view" class="list-area" aria-label="Results archive">
+        <ul class="result-list">
+          <li>
+            <article class="result-card">
+              <a class="card-link" href="../../wireframes/result-detail-loading.html?result=deka-strong-chicago-2026">
+                <div class="card-top">
+                  <h2>DEKA STRONG Chicago</h2>
+                  <span class="finish-time">24:36</span>
+                </div>
+                <p class="card-meta"><span class="sport-tag">DEKA</span> <time datetime="2026-03-14">14 Mar 2026</time></p>
+                <p class="proof-label">Self-reported · via athlinks.com</p>
+              </a>
+            </article>
+          </li>
+          <li>
+            <article class="result-card">
+              <a class="card-link" href="../../wireframes/result-detail-loading.html?result=hyrox-london-2025">
+                <div class="card-top">
+                  <h2>HYROX London</h2>
+                  <span class="finish-time">1:18:42</span>
+                </div>
+                <p class="card-meta"><span class="sport-tag">HYROX</span> <time datetime="2025-12-06">6 Dec 2025</time></p>
+                <p class="proof-label">Self-reported · via results.hyrox.com</p>
+              </a>
+            </article>
+          </li>
+          <li>
+            <article class="result-card">
+              <a class="card-link" href="../../wireframes/result-detail-loading.html?result=valencia-half-2025">
+                <div class="card-top">
+                  <h2>Valencia Half Marathon</h2>
+                  <span class="finish-time">1:28:05</span>
+                </div>
+                <p class="card-meta"><span class="sport-tag">Half marathon</span> <time datetime="2025-10-26">26 Oct 2025</time></p>
+                <p class="proof-label">Self-reported · via valenciaciudaddelrunning.com</p>
+              </a>
+            </article>
+          </li>
+        </ul>
+      </section>
+      <section class="split-detail" aria-label="Result detail" data-split-param="result" data-split-source="../../wireframes/result-detail.html" data-split-loading="../../wireframes/result-detail-loading.html" data-split-error="../../wireframes/result-detail-error.html">
+        <div class="split-empty"><div class="state-message"><h2>No result selected</h2></div></div>
+        <div class="split-content" hidden></div>
+      </section>
+    </main>
+  </div>
+  <nav class="bottom-nav" aria-label="Global navigation">
+    <ul>
+      <li><a href="../../wireframes/race-browse.html" data-tab="discover"><span>Discover</span></a></li>
+      <li><a href="../../wireframes/results-list.html" data-tab="results" aria-current="page"><span>Results</span></a></li>
+      <li><a href="../../wireframes/profile.html" data-tab="profile"><span>Profile</span></a></li>
+    </ul>
+  </nav>
+<script src="split-view.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 /* The docs can't lie (Lesson 9, 2026-11-05): every stage on every page of design-system/docs/ (a page per component since 2026-11-08) against the same
    stage on specimens.html, the hand-written source, in headless Chrome over local HTTP. For every element in a stage's
    frame (frames entered, each loaded and styled first) it compares 23 computed properties: color, type, borders,
-   radius, spacing, shadow, outline, opacity, size, display, gap, backdrop. Four passes: 1280 and 390, dark and light.
+   radius, spacing, shadow, outline, opacity, size, display, gap, backdrop. Six passes: 1440, 820 and 390, dark and light (1280 and 390 until Lesson 10 step 5, 2026-11-17: the three widths the viewer and the screens are checked at).
    The frame itself is the docs layer (borderless on the family pages since 2026-11-05), so the comparison starts at its
    children, the product; a stage cropped to its component keeps its full width inside the crop window, so widths and
    heights are compared too, except in the States cells ([data-nogeo]), whose width is the cell's. Any difference means the documentation's own CSS reached a specimen, and fails. It caught three such leaks while the docs were built (doc.css → Lesson 9 in concept.md).
@@ -31,13 +31,19 @@ const FACES = ['800 1em "Schibsted Grotesk"', '400 1em "Hanken Grotesk"', '600 1
 const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
   const faces = ${JSON.stringify(FACES)};
   await Promise.all(faces.map(f => document.fonts.load(f).catch(() => null)));
+  let paneLate = false;
   for (const f of document.querySelectorAll('iframe')) {   // every frame loaded and styled before anything is read
     for (let i = 0; i < 100 && !(f.contentDocument && f.contentDocument.readyState === 'complete' && [...f.contentDocument.styleSheets].length); i++) await new Promise(r => setTimeout(r, 50));
     try { await f.contentDocument.fonts.ready; await Promise.all(faces.map(x => f.contentDocument.fonts.load(x).catch(() => null))); } catch (e) {}
+    // a Split view frame fills its detail pane after load (Lesson 10 step 5): read it once the pane is no longer busy
+    // (data-split-state set, not loading), and only a pane whose page asked for no detail may read as empty
+    const want = () => { const d = f.contentDocument, p = d && d.querySelector('.split-detail'); if (!p) return true; const st = p.getAttribute('data-split-state'), q = new URLSearchParams(d.location.search); return st === (q.get('fail') === '1' ? 'error' : [...q.keys()].some(k => k === p.getAttribute('data-split-param')) && d.defaultView.getComputedStyle(p).getPropertyValue('--split').trim() === '1' ? 'shown' : 'empty'); };
+    for (let i = 0; i < 400 && !want(); i++) await new Promise(r => setTimeout(r, 50));   // up to 20s: on a cold page its fetch queues behind every frame's photos
+    if (!want()) paneLate = true;
   }
   // settled: every face loaded here and in every frame, and every frame styled (an unstyled frame reads Times)
   const docs = [document, ...[...document.querySelectorAll('iframe')].map(f => f.contentDocument).filter(Boolean)];
-  const settled = docs.every(d => faces.every(x => d.fonts.check(x)) && (d === document || d.defaultView.getComputedStyle(d.body).fontFamily.includes('Hanken')));
+  const settled = !paneLate && docs.every(d => faces.every(x => d.fonts.check(x)) && (d === document || d.defaultView.getComputedStyle(d.body).fontFamily.includes('Hanken')));
   await new Promise(r => setTimeout(r, 300));
   const out = {};
   for (const st of document.querySelectorAll('.kit-state')) {
@@ -46,7 +52,7 @@ const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
     const rec = []; const walk = (root, doc) => { for (const el of [root, ...root.querySelectorAll('*')]) {
       if (el.closest('.an-layer')) continue;
       const cs = doc.defaultView.getComputedStyle(el); const s = {};
-      for (const p of ${JSON.stringify(PROPS)}) if (geo || (p !== 'width' && p !== 'height')) s[p] = wide ? cs.getPropertyValue(p).replace(/(\\d+\\.\\d+)px/g, (m, n) => Math.round(+n) + 'px') : cs.getPropertyValue(p);   // a zoomed stage: whole pixels
+      for (const p of ${JSON.stringify(PROPS)}) if (geo || (p !== 'width' && p !== 'height')) s[p] = wide ? cs.getPropertyValue(p).replace(/-?\\d+(\\.\\d+)?px/g, 'px') : cs.getPropertyValue(p);   // a zoomed stage (fitted to the page): zoom snaps borders and margins to device pixels (a 1px border reads 2 or 4), so its lengths aren't compared; every other property is (Lesson 10 step 5; until then rounded to whole pixels)
       rec.push(el.tagName + '.' + [...el.classList].join('.') + ' ' + JSON.stringify(s));
       if (el.tagName === 'IFRAME' && el.contentDocument?.body) walk(el.contentDocument.body, el.contentDocument); } };
     [...fr.children].forEach(c => walk(c, document));   // the frame is the docs layer (borderless on the family pages); the product starts inside it
@@ -65,7 +71,7 @@ async function load(u, geometry) {
   ws.close(); srv.close(); ch.kill(); process.exit(3);
 }
 let pages = 0, stages = 0; const bad = [];
-for (const [WIDTH, THEME] of [[1280, ''], [1280, '?theme=light'], [390, ''], [390, '?theme=light']]) {
+for (const [WIDTH, THEME] of [[1440, ''], [1440, '?theme=light'], [820, ''], [820, '?theme=light'], [390, ''], [390, '?theme=light']]) {
 await send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height: 900, deviceScaleFactor: 1, mobile: false });
 const ref = await load(B + 'specimens.html' + THEME, true);
 // the reference without geometry: the same stages with width and height dropped
@@ -75,7 +81,7 @@ const DOCS_DIR = join(ROOT, 'design-system/docs');
 const PAGES = [...readdirSync(DOCS_DIR).filter(f => f.endsWith('.html') && f !== 'specimens.html'), ...readdirSync(join(DOCS_DIR, 'components')).filter(f => f.endsWith('.html')).map(f => 'components/' + f)]
   .filter(f => { const h = readFileSync(join(DOCS_DIR, f), 'utf8'); return h.includes('class="kit-state') && !h.includes('http-equiv="refresh"'); }).sort();
 for (const f of PAGES) {
-  const got = await load(B + f + THEME, true); if (THEME === '' && WIDTH === 1280) pages++;   // every property, widths and heights included
+  const got = await load(B + f + THEME, true); if (THEME === '' && WIDTH === 1440) pages++;   // every property, widths and heights included
   for (const [lab, recs] of Object.entries(got)) for (const r of recs) {
     stages++;
     const want = ref[lab] || noGeo[lab];
@@ -93,4 +99,4 @@ for (const f of PAGES) {
 }
 ws.close(); srv.close(); ch.kill(); try { rmSync(prof, { recursive: true, force: true }); } catch {}
 if (bad.length) { console.log(`check_docs_stages: FAIL, ${bad.length} of ${stages} stage-passes differ from specimens.html (the docs' CSS reached a specimen)`); bad.slice(0, 20).forEach(b => console.log('  ' + b)); process.exit(1); }
-console.log(QUIET ? `check_docs_stages: pass (${stages} stage-passes on ${pages} docs pages)` : `check_docs_stages: pass, ${stages} stage-passes (${pages} docs pages × 1280 and 390 × dark and light), each identical to specimens.html`);
+console.log(QUIET ? `check_docs_stages: pass (${stages} stage-passes on ${pages} docs pages)` : `check_docs_stages: pass, ${stages} stage-passes (${pages} docs pages × 1440, 820 and 390 × dark and light), each identical to specimens.html`);

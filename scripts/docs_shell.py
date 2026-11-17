@@ -64,7 +64,7 @@ NAV = ([('Getting started', None, g['page'], g['title'], g['title']) for g in GE
        + [('Components', None, 'components', 'All components', 'all components')]
        + [('Components', GROUP_OF[n], page_of(n)[:-5], n, ' '.join([n] + SHOWN_HERE[n])) for n in COMPONENTS]
        + [('Patterns', None, 'patterns', 'All patterns', 'all patterns')]
-       + [('Patterns', None, f'patterns#{f}', n, n + ' pattern') for f, n in PATTERN_ROWS]
+       + [('Patterns', None, f if f == 'split-view' else f'patterns#{f}', n, n + ' pattern') for f, n in PATTERN_ROWS]   # the Split view has its own page (Lesson 10 step 5)
        + [('Reference', None, g['page'], g['title'], g['title']) for g in REFERENCE])
 ORDER = list(dict.fromkeys(p for _, _, p, _, _ in NAV if '#' not in p))   # Previous / Next walks the pages, not the anchors
 TITLE = {p: t for _, _, p, t, _ in NAV if '#' not in p}

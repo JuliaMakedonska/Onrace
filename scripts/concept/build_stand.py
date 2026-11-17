@@ -1172,7 +1172,7 @@ for _s in ('scripts/build_tokens_overview.py', 'scripts/build_system_overview.py
 # mirror to public/ (GitHub Pages serves public/). Before the overflow and link checks (Lesson 9 step 1 follow-up,
 # 2026-11-04): both read public/, so a path change must never leave them reading stale pages
 import shutil
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.html', 'ui/shell.html', 'design-system/index.css', 'design-system/tokens/theme.js', 'design-system/map-data.css'] + STAMPED[2:]:
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.html', 'ui/shell.html', 'design-system/index.css', 'design-system/tokens/theme.js', 'design-system/map-data.css', 'design-system/patterns/split-view.js'] + STAMPED[2:]:   # split-view.js: the Split view pattern's script (Lesson 10 step 5)
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
@@ -1186,6 +1186,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-shell'), os.path.join(ROOT, 'publi
 shutil.copyfile(os.path.join(ROOT, 'ui/review-shell.html'), os.path.join(ROOT, 'public/ui/review-shell.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-adaptive'), os.path.join(ROOT, 'public/ui/review-adaptive'), dirs_exist_ok=True)   # Lesson 10 step 4: adaptive components, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-adaptive.html'), os.path.join(ROOT, 'public/ui/review-adaptive.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-split'), os.path.join(ROOT, 'public/ui/review-split'), dirs_exist_ok=True)   # Lesson 10 step 5: the Split view, before/after
+shutil.copyfile(os.path.join(ROOT, 'ui/review-split.html'), os.path.join(ROOT, 'public/ui/review-split.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)

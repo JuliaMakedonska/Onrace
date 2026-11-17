@@ -32,14 +32,14 @@ window.RACE_CATALOG = [
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=cbb50fac">
+<link rel="stylesheet" href="../design-system/index.css?v=c9719b4d">
 <script src="../design-system/tokens/theme.js"></script>
-<link rel="preload" as="style" href="../design-system/map-data.css?v=cbb50fac" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=cbb50fac"></noscript>
+<link rel="preload" as="style" href="../design-system/map-data.css?v=c9719b4d" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=c9719b4d"></noscript>
 </head>
 <body class="onrace">
 
-  <div class="phone-screen">
+  <div class="phone-screen split-view">
 
     <!-- ZONE: top bar (markup pass, G4): floats over the large title, empty at rest; once the h1 has scrolled away
          it turns to glass and shows the small title. -->
@@ -231,6 +231,16 @@ window.RACE_CATALOG = [
 
       </section>
 
+          <!-- ZONE: detail pane (Lesson 10 step 5, 2026-11-17; the Split view pattern, design-system/patterns/split-view.html).
+           Not drawn on a phone: a card opens Race detail, its own screen, as before. From the tablet breakpoint the list
+           and the map sit side by side, and a chosen race's detail takes the map's place, with "‹ Map" back; from the
+           desktop breakpoint list, detail and map, and with nothing chosen this pane says so. The choice rides in the
+           URL (?race=…), its card Selected; split-view.js fills the pane from race-detail.html. -->
+      <section class="split-detail" aria-label="Race detail" data-split-param="race" data-split-source="race-detail.html" data-split-loading="race-detail-loading.html" data-split-error="race-detail-error.html">
+        <header class="top-bar"><a class="back" href="race-browse.html" data-split-close><span>Map</span></a></header>
+        <div class="split-empty"><div class="state-message"><h2>No race selected</h2></div></div>
+        <div class="split-content" hidden></div>
+      </section>
     </main>
 
   </div><!-- /.phone-screen -->
@@ -655,5 +665,6 @@ window.RACE_CATALOG = [
   });
 })();
 </script>
+<script src="../design-system/patterns/split-view.js"></script>   <!-- the Split view pattern: fills the detail pane from tablet width up (Lesson 10 step 5) -->
 </body>
 </html>

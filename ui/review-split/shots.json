@@ -1,0 +1,194 @@
+[
+ {
+  "key": "race-browse-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, nothing chosen"
+ },
+ {
+  "key": "race-browse-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, nothing chosen"
+ },
+ {
+  "key": "race-browse-820-chosen",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, a race chosen"
+ },
+ {
+  "key": "race-browse-820-chosen",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, a race chosen"
+ },
+ {
+  "key": "race-browse-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, nothing chosen"
+ },
+ {
+  "key": "race-browse-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, nothing chosen"
+ },
+ {
+  "key": "race-browse-1440-chosen",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, ?race=utmb"
+ },
+ {
+  "key": "race-browse-1440-chosen",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, ?race=utmb"
+ },
+ {
+  "key": "results-list-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Results list, nothing chosen"
+ },
+ {
+  "key": "results-list-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Results list, nothing chosen"
+ },
+ {
+  "key": "results-list-1440-chosen",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list, ?result=hyrox-london-2025"
+ },
+ {
+  "key": "results-list-1440-chosen",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list, ?result=hyrox-london-2025"
+ },
+ {
+  "key": "race-browse-loading-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "race-browse-loading-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "race-browse-empty-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, empty"
+ },
+ {
+  "key": "race-browse-empty-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, empty"
+ },
+ {
+  "key": "results-list-error-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list, error"
+ },
+ {
+  "key": "results-list-error-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list, error"
+ },
+ {
+  "key": "detail-error-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list, a detail that failed"
+ },
+ {
+  "key": "detail-error-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list, a detail that failed"
+ },
+ {
+  "key": "race-browse-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, phone"
+ },
+ {
+  "key": "race-browse-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, phone"
+ },
+ {
+  "key": "race-browse-320-200",
+  "side": "before",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race browse, 320 with 200% text"
+ },
+ {
+  "key": "race-browse-320-200",
+  "side": "after",
+  "w": 320,
+  "h": 568,
+  "text": 32,
+  "cap": "Race browse, 320 with 200% text"
+ }
+]

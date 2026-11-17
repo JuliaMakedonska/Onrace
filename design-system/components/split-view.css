@@ -1,0 +1,47 @@
+/* Split view (ui/inventory.md → Patterns map: Split view; Lesson 10 step 5, 2026-11-17).
+   Not a component of its own: the layout of the Split view pattern (design-system/patterns/split-view.html), which
+   puts existing components side by side. A screen marks its scroll area .split-view and adds a .split-detail pane;
+   design-system/patterns/split-view.js fills the pane from the detail screen's own page.
+   Phone: nothing changes; the pane isn't drawn and a chosen card opens its own screen.
+   From --bp-tablet: the list is a phone-width pane (--pane-w) on the left, and beside it the map (Race browse) or the
+   detail (Results list); on Race browse a chosen race's detail takes the map's place, with "‹ Map" back.
+   From --bp-desktop: Race browse is three panes, list, detail and map; with nothing chosen the detail pane says so.
+   The panes meet at the thin divider (--grid-gap); the list scrolls with the screen, the map and the detail stay put
+   beside it at the screen's height and the detail scrolls on its own (HIG Split views). The numbers are tokens.css's
+   --bp-tablet and --bp-desktop (a media query can't read var(); scripts/build_components.py checks they agree). */
+
+/* order 1150 */
+.split-detail { display: none; --split: 0; }   /* phone: no pane; split-view.js reads --split to know whether a card opens a pane or a screen */
+@media (min-width: 48.8125rem) {
+  body > .phone-screen.split-view { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
+  body > .phone-screen.split-view > main {
+    display: grid;
+    grid-template-columns: var(--pane-w) minmax(0, 1fr);
+    grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
+    align-items: start;
+    max-width: none;
+    margin: 0;
+  }
+  .split-view > main > *, .split-view .list-area { grid-column: 1; }
+  body > .phone-screen.split-view > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
+  .split-view .view-toggle { display: none; }   /* both views show at once */
+  .split-view :is(.map-area, .split-detail) { grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); }
+  .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: var(--space-4); }
+  .split-view .map-area .state-message { display: none; }   /* the list pane carries the screen's state (empty, error); the map beside it stays a map */
+  .split-detail { --split: 1; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* tablet, Race browse: the map until a race is chosen */
+  .split-view:has(.card-link[aria-current="page"]) .map-area { display: none; }   /* then the race in the map's place */
+  .split-empty { flex: 1; display: grid; place-items: center; }
+  .split-empty[hidden], .split-content[hidden] { display: none; }
+  .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
+  .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
+  .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
+}
+@media (min-width: 83.9375rem) {
+  body > .phone-screen.split-view:has(.map-area) > main { grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr); }   /* list, detail, map: the map takes the rest, never less than --map-min (--bp-desktop is worked out from it) */
+  .split-view:has(.map-area) .map-area { grid-column: 3; }
+  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: flex; }   /* the detail pane is always there; with nothing chosen it says so */
+  .split-view:has(.card-link[aria-current="page"]) .map-area { display: flex; }
+  .split-detail > .top-bar { display: none; }   /* the map is beside it: no way back needed */
+}
