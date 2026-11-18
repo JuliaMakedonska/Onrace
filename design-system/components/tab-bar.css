@@ -84,16 +84,21 @@ body > .bottom-nav a::before {
   body > .bottom-nav a::before { width: var(--icon-m); height: var(--icon-m); }
 }
 /* Desktop: a macOS sidebar on the left (HIG Sidebars: "appears on the leading side of a view and lets people navigate
-   between areas of your app"), glass like the other bars (C1), floating in from the window's edges; one row per
-   destination, icon then label, starting at the top. */
+   between areas of your app"), one row per destination, icon then label, starting at the top. Layout pass (2026-11-18,
+   DESIGN.md → Width → The wide layout): it stands edge to edge, the window's full height, and meets the first pane at
+   the thin divider (--grid-gap, --hairline), as the panes meet one another (HIG Split views: "Prefer the thin divider
+   style"), so the sidebar and the panes sit on one grid; its first row starts on the panes' top line (--pane-top). Its
+   ground is the bars' glass (C1). Until then it floated, inset from the window's edges with rounded corners. */
 @media (min-width: 83.9375rem) {
   body > .bottom-nav {
     align-self: stretch;
-    width: calc(var(--sidebar-w) - var(--sidebar-inset));
-    margin: calc(var(--safe-top) + var(--sidebar-inset)) 0 var(--sidebar-inset) var(--sidebar-inset);
-    padding: var(--space-2);
+    width: var(--sidebar-w);
+    margin: 0;
+    padding: calc(var(--safe-top) + var(--pane-top)) var(--space-2) var(--space-2);
     display: block;
-    border-radius: var(--radius-sidebar);
+    border-radius: 0;
+    border-right: var(--grid-gap) solid var(--hairline);
+    box-shadow: none;
   }
   .bottom-nav ul { grid-template-columns: minmax(0, 1fr); }
   .bottom-nav a { justify-content: start; padding: 0 var(--space-3); }

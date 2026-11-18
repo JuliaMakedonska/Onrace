@@ -22,6 +22,14 @@ Found by the group agents while rolling out; not fixed in step 6. The critique's
 - **Cancel on the sign-in gate goes to Race browse** even when it was opened from Results; over a split view on iPad, returning to the screen under the sheet may read better (flows.md DeadEnd2/4 as drawn).
 - **The selected Spartan row's "Add official result link" strip** keeps its own darker band inside the Selected edge on Results list at 820 and 1440.
 
+## The wide layout pass (2026-11-18)
+
+The full open list, this pass's and the step 6 critique's merged, is `ui/review-layout.html` → Still open. Found in this pass:
+
+- **Tall, narrow map panes** (820; 1440 with a race chosen) fit the pins' width, so the pins sit in a thin band between the Arctic and South America. A static map can't pan or zoom: frame tighter, or the interactive map (deferred).
+- **The tablet's tab bar has its own row** and nothing scrolls under it; iPadOS 26 floats it over the content. Kept for the one top line.
+- **The sidebar is edge to edge**; macOS 26 and iPadOS 26 float it as a glass panel. Kept for one grid with the panes' divider.
+
 ## Examples: Saved races (found 2026-11-10)
 
 What the system lacked when Saved races (`design-system/examples/`) was built only from it, for `research/jtbd.md` → Related job 2 (choose races by where they are; the Multi-Region Season Planner). Nothing here was drawn on the screen: each is left out, and the screen says nothing it can't show.

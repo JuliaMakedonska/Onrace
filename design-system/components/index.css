@@ -658,6 +658,16 @@ body > .bottom-nav a::before {
   box-shadow: inset 0 0 0 var(--border) var(--boundary);
   color: var(--text-secondary);
   font-size: var(--size-proof);
+  /* the frame (Lesson 10 step 6 layout pass, 2026-11-18): the mask is the whole world (map-data.css); a frame is the box
+     of it this view shows whole, centred, at the size that fits its own width and height. --map-s is the whole map's
+     width on screen, --map-cx and --map-cy the frame's centre (fractions of the map). The phone's frame is the crop it
+     has always drawn, so the phone doesn't change; a wide pane fits the pins' box (split-view.css). 100cqw and 100cqh
+     are the content box: the padding is added back, the masks and the pins are laid on the padding box. */
+  --map-box-w: calc(100cqw + var(--map-pad-inline-total));
+  --map-box-h: calc(100cqh + var(--map-pad-inline-total));   /* read only by a pane's fit (split-view.css), where the pane's height is definite */
+  --map-s: calc(var(--map-box-w) / var(--map-phone-fw));
+  --map-cx: var(--map-phone-cx);
+  --map-cy: var(--map-phone-cy);
 }
 .map-placeholder::before, .map-placeholder::after {   /* land, then coastlines and borders; the masks carry shape, tokens carry color */
   content: "";
@@ -665,8 +675,12 @@ body > .bottom-nav a::before {
   inset: 0;
   z-index: var(--z-under);
   pointer-events: none;
-  -webkit-mask-size: 100% auto; mask-size: 100% auto;
-  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: var(--map-s) auto; mask-size: var(--map-s) auto;
+  /* 50% centres the map in the box; the length then moves the frame's centre there. A percentage here is of the box
+     less the map, so the box's own height is never needed (on a phone the map's height comes from flex layout, and
+     100cqh read 0 there in Chrome, 2026-11-18) */
+  -webkit-mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
+  mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
 }
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
@@ -683,10 +697,10 @@ body > .bottom-nav a::before {
   /* the label is centred on its dot unless that would put it past the map's side: then it slides along, stopping
      --space-2 inside the edge, and the dot and the leader stay on the coordinate (Lesson 10 step 4: Berlin, Chamonix and
      Dallas ran past the frame at 200% text). --pin-at is the dot's x in the map; -50% and 100% are the label's own width. */
-  --pin-at: calc(var(--xf) * (100cqw + var(--map-pad-inline-total)));
-  --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(100cqw + var(--map-pad-inline-total) - var(--space-2) - var(--pin-at) - 100%));
+  --pin-at: calc(var(--map-box-w) / 2 + (var(--xf) - var(--map-cx)) * var(--map-s));   /* on the frame: the map's centre plus the pin's distance from the frame's centre */
+  --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(var(--map-box-w) - var(--space-2) - var(--pin-at) - 100%));
   left: var(--pin-at);
-  top: calc(50% + (var(--yf) - 0.5) * (100cqw + var(--map-pad-inline-total)) * var(--map-ratio));
+  top: calc(50% + (var(--yf) - var(--map-cy)) * var(--map-s) * var(--map-ratio));
   transform: translate(var(--pin-shift), calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
   min-width: var(--target);
   height: var(--target);
@@ -739,6 +753,10 @@ body > .bottom-nav a::before {
 .map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: var(--focus-reach); }   /* a plain length: Chrome drops a calc() here (2026-11-08) */
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
+/* loading (layout pass, 2026-11-18): the map's loading pulse, not a finished map: no land, no lines, the skeleton's
+   fill breathing (skeleton.css), as every loading part does */
+.map-placeholder[aria-busy="true"] { background: var(--raised); }
+.map-placeholder[aria-busy="true"]::before, .map-placeholder[aria-busy="true"]::after { content: none; }
 .map-placeholder:has(> .state-message) { background: none; box-shadow: none; }
 .map-placeholder:has(> .state-message)::before, .map-placeholder:has(> .state-message)::after { content: none; }
 .map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }
@@ -1672,16 +1690,21 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   body > .bottom-nav a::before { width: var(--icon-m); height: var(--icon-m); }
 }
 /* Desktop: a macOS sidebar on the left (HIG Sidebars: "appears on the leading side of a view and lets people navigate
-   between areas of your app"), glass like the other bars (C1), floating in from the window's edges; one row per
-   destination, icon then label, starting at the top. */
+   between areas of your app"), one row per destination, icon then label, starting at the top. Layout pass (2026-11-18,
+   DESIGN.md → Width → The wide layout): it stands edge to edge, the window's full height, and meets the first pane at
+   the thin divider (--grid-gap, --hairline), as the panes meet one another (HIG Split views: "Prefer the thin divider
+   style"), so the sidebar and the panes sit on one grid; its first row starts on the panes' top line (--pane-top). Its
+   ground is the bars' glass (C1). Until then it floated, inset from the window's edges with rounded corners. */
 @media (min-width: 83.9375rem) {
   body > .bottom-nav {
     align-self: stretch;
-    width: calc(var(--sidebar-w) - var(--sidebar-inset));
-    margin: calc(var(--safe-top) + var(--sidebar-inset)) 0 var(--sidebar-inset) var(--sidebar-inset);
-    padding: var(--space-2);
+    width: var(--sidebar-w);
+    margin: 0;
+    padding: calc(var(--safe-top) + var(--pane-top)) var(--space-2) var(--space-2);
     display: block;
-    border-radius: var(--radius-sidebar);
+    border-radius: 0;
+    border-right: var(--grid-gap) solid var(--hairline);
+    box-shadow: none;
   }
   .bottom-nav ul { grid-template-columns: minmax(0, 1fr); }
   .bottom-nav a { justify-content: start; padding: 0 var(--space-3); }
@@ -1705,6 +1728,7 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   body > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
   body > .phone-screen > :is(.top-bar, .action-bar), body:has(> .phone-screen) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar's buttons (back, Log result, Save) end where the column ends */
   body > .phone-screen > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }   /* the action bar's button keeps the column's gutter */
+  body > .phone-screen > :is(main, .screen-main) > header { padding-top: calc(var(--safe-top) + var(--pane-top)); }   /* the wide layout's top line (layout pass, 2026-11-18): the large title starts --pane-top below its pane's top edge, as the sidebar's first row does (it sat 8px from the window's top on a desktop) */
 }
 @media (min-width: 83.9375rem) {
   body:has(> .bottom-nav) { flex-direction: row; }
@@ -1780,12 +1804,24 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   }
   .split-view > main > *, .split-view .list-area { grid-column: 1; }
   body > .phone-screen.split-view > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
-  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2); }   /* a pushed screen's bar (Saved races, step 6): the window's width, its back button over the list pane, not at a centred column's edge */
+  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2) calc(100% - var(--pane-w) + var(--space-2)); }   /* a pushed screen's bar (Saved races): its glass the window's width, its back button, title and action over the list pane they belong to (HIG Split views: each column its own bar); over the detail it is that pane's empty bar (layout pass, 2026-11-18; the title sat across the divider) */
   body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* that bar takes its height in the flow: the pane beside the list starts under it, sticks under it, and ends at the screen's foot */
   .split-view .view-toggle { display: none; }   /* both views show at once */
   .split-view :is(.map-area, .split-detail) { grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); }
-  .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: var(--space-4); }
+  /* the map pane (layout pass, 2026-11-18; DESIGN.md → Width → The wide layout): the map fills its pane edge to edge,
+     no frame of its own (the pane's divider is its edge), and frames the pins' box (map-data.css --map-fit-*) at the
+     pane's own shape, never the phone's crop stretched */
+  .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: 0; }
+  .split-view .map-placeholder { border-radius: 0; box-shadow: none; --map-s: min(var(--map-box-w) / var(--map-fit-fw), var(--map-box-h) / var(--map-fit-fh)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
   .split-view .map-area .state-message { display: none; }   /* the list pane carries the screen's state (empty, error); the map beside it stays a map */
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }
+  /* a list with nothing to choose (Results list, Saved races: -empty, -error; layout pass): no pane asks to choose; the screen is one
+     column, centred at --container-max, as a single-column screen. A screen with a map keeps it beside the list */
+  body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > main { display: flex; max-width: var(--container-max); margin-inline: auto; }
+  body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > .top-bar--large { width: auto; padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }
+  .split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) .split-detail { display: none; }
+  .split-view:has(> main[aria-busy="true"], .list-area[aria-busy="true"]) .split-empty { visibility: hidden; }   /* while the list loads, nothing can be chosen yet: the pane waits, without words */
   .split-detail { --split: 1; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
   .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* tablet, Race browse: the map until a race is chosen */
   .split-view:has(.card-link[aria-current="page"]) .map-area { display: none; }   /* then the race in the map's place */
@@ -1797,10 +1833,10 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
 }
 @media (min-width: 83.9375rem) {
-  body > .phone-screen.split-view:has(.map-area) > main { grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr); }   /* list, detail, map: the map takes the rest, never less than --map-min (--bp-desktop is worked out from it) */
-  .split-view:has(.map-area) .map-area { grid-column: 3; }
-  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: flex; }   /* the detail pane is always there; with nothing chosen it says so */
-  .split-view:has(.card-link[aria-current="page"]) .map-area { display: flex; }
+  /* desktop (designer, 2026-11-18; width audit → Decisions): until a race is chosen, two panes, the list and a wide map;
+     choosing one opens the detail pane between them. Results list keeps its two panes and "No result selected" */
+  body > .phone-screen.split-view:has(.map-area):has(.card-link[aria-current="page"]) > main { grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr); }   /* list, detail, map: the map takes the rest, never less than --map-min (--bp-desktop is worked out from it) */
+  .split-view:has(.map-area):has(.card-link[aria-current="page"]) .map-area { grid-column: 3; display: flex; }
   .split-detail > .top-bar { display: none; }   /* the map is beside it: no way back needed */
 }
 

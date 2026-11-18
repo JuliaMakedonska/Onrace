@@ -105,7 +105,7 @@ SV_STAGES = [
     ('Results list, Desktop, 1440: beside the sidebar', '../patterns/split-view.html?result=hyrox-london-2025', 'desktop', 'Results list on a desktop'),
     ('Race browse, Tablet, 820: a chosen race in the map\'s place', '../../wireframes/race-browse.html?race=utmb', 'tablet', 'Race browse on a tablet'),
     ('Race browse, Desktop, 1440: list, detail and map', '../../wireframes/race-browse.html?race=utmb', 'desktop', 'Race browse on a desktop'),
-    ('Race browse, Desktop, nothing chosen: No race selected', '../../wireframes/race-browse.html', 'desktop', 'Race browse on a desktop, no race'),
+    ('Race browse, Desktop, nothing chosen: the list and a wide map', '../../wireframes/race-browse.html', 'desktop', 'Race browse on a desktop, no race'),
 ]
 def SVSTAGE(lab, src, w, title, label=True):
     return ((f'<div class="kit-state"><p class="kit-label">{H.escape(lab)}</p>' if label else f'<div class="kit-state" data-label="{H.escape(lab)}">')

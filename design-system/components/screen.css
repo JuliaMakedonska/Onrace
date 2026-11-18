@@ -57,6 +57,7 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
   body > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
   body > .phone-screen > :is(.top-bar, .action-bar), body:has(> .phone-screen) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar's buttons (back, Log result, Save) end where the column ends */
   body > .phone-screen > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }   /* the action bar's button keeps the column's gutter */
+  body > .phone-screen > :is(main, .screen-main) > header { padding-top: calc(var(--safe-top) + var(--pane-top)); }   /* the wide layout's top line (layout pass, 2026-11-18): the large title starts --pane-top below its pane's top edge, as the sidebar's first row does (it sat 8px from the window's top on a desktop) */
 }
 @media (min-width: 83.9375rem) {
   body:has(> .bottom-nav) { flex-direction: row; }

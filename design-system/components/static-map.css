@@ -21,6 +21,16 @@
   box-shadow: inset 0 0 0 var(--border) var(--boundary);
   color: var(--text-secondary);
   font-size: var(--size-proof);
+  /* the frame (Lesson 10 step 6 layout pass, 2026-11-18): the mask is the whole world (map-data.css); a frame is the box
+     of it this view shows whole, centred, at the size that fits its own width and height. --map-s is the whole map's
+     width on screen, --map-cx and --map-cy the frame's centre (fractions of the map). The phone's frame is the crop it
+     has always drawn, so the phone doesn't change; a wide pane fits the pins' box (split-view.css). 100cqw and 100cqh
+     are the content box: the padding is added back, the masks and the pins are laid on the padding box. */
+  --map-box-w: calc(100cqw + var(--map-pad-inline-total));
+  --map-box-h: calc(100cqh + var(--map-pad-inline-total));   /* read only by a pane's fit (split-view.css), where the pane's height is definite */
+  --map-s: calc(var(--map-box-w) / var(--map-phone-fw));
+  --map-cx: var(--map-phone-cx);
+  --map-cy: var(--map-phone-cy);
 }
 .map-placeholder::before, .map-placeholder::after {   /* land, then coastlines and borders; the masks carry shape, tokens carry color */
   content: "";
@@ -28,8 +38,12 @@
   inset: 0;
   z-index: var(--z-under);
   pointer-events: none;
-  -webkit-mask-size: 100% auto; mask-size: 100% auto;
-  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: var(--map-s) auto; mask-size: var(--map-s) auto;
+  /* 50% centres the map in the box; the length then moves the frame's centre there. A percentage here is of the box
+     less the map, so the box's own height is never needed (on a phone the map's height comes from flex layout, and
+     100cqh read 0 there in Chrome, 2026-11-18) */
+  -webkit-mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
+  mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
 }
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
@@ -46,10 +60,10 @@
   /* the label is centred on its dot unless that would put it past the map's side: then it slides along, stopping
      --space-2 inside the edge, and the dot and the leader stay on the coordinate (Lesson 10 step 4: Berlin, Chamonix and
      Dallas ran past the frame at 200% text). --pin-at is the dot's x in the map; -50% and 100% are the label's own width. */
-  --pin-at: calc(var(--xf) * (100cqw + var(--map-pad-inline-total)));
-  --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(100cqw + var(--map-pad-inline-total) - var(--space-2) - var(--pin-at) - 100%));
+  --pin-at: calc(var(--map-box-w) / 2 + (var(--xf) - var(--map-cx)) * var(--map-s));   /* on the frame: the map's centre plus the pin's distance from the frame's centre */
+  --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(var(--map-box-w) - var(--space-2) - var(--pin-at) - 100%));
   left: var(--pin-at);
-  top: calc(50% + (var(--yf) - 0.5) * (100cqw + var(--map-pad-inline-total)) * var(--map-ratio));
+  top: calc(50% + (var(--yf) - var(--map-cy)) * var(--map-s) * var(--map-ratio));
   transform: translate(var(--pin-shift), calc(var(--dy, calc(var(--pin-h) / -2 - var(--map-pin-dot) / 2 - var(--pin-gap))) - 50%));
   min-width: var(--target);
   height: var(--target);
@@ -102,6 +116,10 @@
 .map-placeholder:has(> .map-pin:is(:focus-visible, .is-focus)) { overflow-clip-margin: var(--focus-reach); }   /* a plain length: Chrome drops a calc() here (2026-11-08) */
 /* an empty or error state in the map panel sits on the page like every state (ContentUnavailableView; designer, 2026-10-22):
    the map frame drops its outline, water and land, and the state has no panel of its own */
+/* loading (layout pass, 2026-11-18): the map's loading pulse, not a finished map: no land, no lines, the skeleton's
+   fill breathing (skeleton.css), as every loading part does */
+.map-placeholder[aria-busy="true"] { background: var(--raised); }
+.map-placeholder[aria-busy="true"]::before, .map-placeholder[aria-busy="true"]::after { content: none; }
 .map-placeholder:has(> .state-message) { background: none; box-shadow: none; }
 .map-placeholder:has(> .state-message)::before, .map-placeholder:has(> .state-message)::after { content: none; }
 .map-placeholder .state-message { justify-items: center; text-align: center; padding: 0; }

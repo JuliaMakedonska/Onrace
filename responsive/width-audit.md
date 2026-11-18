@@ -123,6 +123,8 @@ Everything else (six screens) does not change at either width; it only needs a r
 
 ---
 
+**Revised 2026-11-18 (designer, the layout pass):** Race browse on a desktop is two panes, the list and a wide map, until a race is chosen; choosing one opens the detail pane between the list and the map (three panes). Until then the detail pane stood between them from the start, empty, "No race selected", which left the widest window's middle column with nothing in it and the map with what was left. Results list keeps its two panes and "No result selected": it has no map to give the room to. A list with nothing to choose (Results list empty or failed) is one centred column. The whole wide layout (margins, dividers, the sidebar on the panes' grid, the one top line, the map's frame) is `DESIGN.md` → Width → The wide layout.
+
 ## Open, for the designer (all four settled by the Decisions above, 2026-11-15)
 
 1. Race browse at tablet width: should a selected race replace the map in the trailing pane (recommended above), or open as a third pane that squeezes both?
