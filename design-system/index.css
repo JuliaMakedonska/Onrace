@@ -94,7 +94,7 @@
   --size-title: calc(34 * var(--type-unit));       /* HIG Large Title */
   --size-time: calc(32 * var(--type-unit));        /* the finish time, a display figure */
   --size-time-hero: calc(56 * var(--type-unit));   /* the finish time leading Result detail */
-  --size-time-hero-cap: 22vw;                      /* keeps "10:28:05" inside the 16px gutters at large text sizes */
+  --size-time-hero-cap: 24cqi;                     /* keeps "10:28:05" inside the 16px gutters at large text sizes: 24% of the result's own column (a container, finish-time.css), not the window (22vw until Lesson 10 step 6, 2026-11-18: at 820 and 1440 with 200% text the phone column sits in a wider window, and 22vw outgrew it); about 86px in a phone's 358 column, as 22vw was at 390 */
   --size-day: calc(30 * var(--type-unit));         /* the date day, a display figure */
   --size-initials: calc(30 * var(--type-unit));    /* split: Profile initials, which borrowed --size-day. Same value; an avatar letter and a date figure can now change apart */
   --size-item: calc(17 * var(--type-unit));        /* HIG Headline: item title (race name) */
@@ -243,6 +243,9 @@
   --sidebar-inset: var(--tabbar-gap);   /* the floating sidebar's room from the window's edges, as the tab bar's from the screen's bottom (C1: a glass bar floats) */
   --radius-sidebar: 20px;     /* [?] the floating sidebar's corners (macOS 26 floats it in its window): HIG gives no number */
   --container-max: 42rem;     /* [?] a single-column screen stops growing here and centres (Profile, a detail opened on its own): 672px, UIKit's readable content width at the default text size (HIG Layout: layout guides "restrict the width of text for optimal readability"); Apple's number, not HIG's text */
+  --form-sheet-w: 33.75rem;   /* [?] a sheet from --bp-tablet is a form sheet centred on the screen (Lesson 10 step 6, 2026-11-18; HIG Sheets: "Prefer using the page or form sheet presentation styles in an iPadOS app"): 540px at the default text size, UIKit's form sheet size on iPad; Apple's number, not HIG's text */
+  --form-sheet-h: 38.75rem;   /* [?] the form sheet's height: 620px, the same UIKit size. A sheet sized to its content (.sheet--fit) stops here; a shorter window takes it down to --form-sheet-inset from its edges */
+  --form-sheet-inset: var(--space-7);   /* the least room a form sheet leaves to the window's edges, so the dimmed screen behind it always shows */
   --stack-w: 18rem;           /* [?] a component narrower than this stacks its parts (a container query: it reads the component's own width, the pane, never the window; Lesson 10 step 4): 288px at the default text size, a 320 screen less its gutters, so nothing stacks at the default size on any phone; at 200% text 576px, so a phone-width pane stacks and a tablet's column doesn't. A container query can't read var(): scripts/build_components.py checks the components' number */
   --bp-tablet: 48.8125rem;    /* 781px: a second pane fits beside a phone-width list, 2 × --pane-w + one --grid-gap (width audit → Where behavior changes, 1). Above it: the tab bar at the top, Race browse list + map, Results list list + detail, sheets as form sheets */
   --bp-desktop: 83.9375rem;   /* 1343px (was 88.3125rem, 1413px, until 2026-11-15: three fixed panes left 1366- and 1280-wide laptops on the tablet form): the sidebar plus three panes fits, --sidebar-w + 2 × --pane-w (list, detail) + --map-min (the map, flexible) + three --grid-gap (width audit → Where behavior changes, 2). Above it: the sidebar in place of the tab bar, Race browse list + detail + map */
@@ -1104,7 +1107,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 
 /* ---- design-system/components/screen.css · order 0310 ---- */
 html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
-body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
+body:has(> .phone-screen) { margin: 0 auto; max-width: var(--pane-w); position: relative; overflow: hidden; }   /* --pane-w: the phone's 390 at the default text size, in rem (Lesson 10 step 6, was --screen-w): at 820 or 1440 with 200% text the phone form takes 780, not a 390 strip */
 .phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
 .phone-screen:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }   /* a screen with nothing to focus takes the focus itself, to scroll by keyboard (a loading state): its halo sits inside it, since outside is off the screen (2026-11-08) */
 /* .screen-main: a specimen screen's main in the showcase, which has one page main of its own (step 7) */
@@ -1400,7 +1403,7 @@ body > .bottom-nav a::before {
 /* Log result (round 2, G40): the sheet is the whole screen, resting at the large detent (G13) over Results, which has
    receded under the scrim; its top bar spans it, and only its form scrolls */
 html:has(body > .sheet > .phone-screen) { height: 100%; }
-body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--screen-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
+body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--pane-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
 /* Results receded behind the sheet (step 6, #34; iOS sheets): the presenting screen's top edge, inset and dimmed under
    the scrim, shows in the gap above the sheet, so the sheet reads as a modal over Results */
 body:has(> .sheet > .phone-screen)::before {
@@ -1603,9 +1606,9 @@ fieldset:disabled .row--nav { pointer-events: none; }
 .top-bar :is(.save-btn, .bar-action):is(:active, .is-pressed) { color: var(--accent-ink-pressed); }
 .top-bar .bar-action[hidden] { display: none; }
 .top-bar :is(.save-btn, .bar-action)[aria-busy="true"] { color: var(--text-secondary); }   /* busy: the spinner alone, the label ("Saving…", "Signing in…") visually hidden for screen readers (round 2) */
-.phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action { color: var(--text-primary); }   /* a state brings its own primary (Results list -error): the bar action steps down, so the screen keeps two lights */
-@media (hover: hover) { .phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:hover, .is-hover) { color: var(--text-hover); } }
-.phone-screen:has(.state-message .state-action:not(.secondary)) .top-bar .bar-action:is(:active, .is-pressed) { color: var(--text-pressed); }
+.phone-screen:has(.state-message:not(.split-detail *) .state-action:not(.secondary)) .top-bar .bar-action { color: var(--text-primary); }   /* a state brings its own primary (Results list -error): the bar action steps down, so the screen keeps two lights. One primary per pane (step 5 follow-ups, 2026-11-18): a state in a split view's detail pane (its Try again) is that pane's primary and doesn't step the list's bar action down */
+@media (hover: hover) { .phone-screen:has(.state-message:not(.split-detail *) .state-action:not(.secondary)) .top-bar .bar-action:is(:hover, .is-hover) { color: var(--text-hover); } }
+.phone-screen:has(.state-message:not(.split-detail *) .state-action:not(.secondary)) .top-bar .bar-action:is(:active, .is-pressed) { color: var(--text-pressed); }
 /* the collapsing title (G4, G34, G53): the bar's small title appears once the page's h1 has scrolled away */
 .top-bar[data-collapse] .bar-title { opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
 .top-bar[data-collapse].is-collapsed .bar-title { opacity: 1; }
@@ -1677,6 +1680,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .result h1 { font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); letter-spacing: normal; margin-bottom: var(--space-5); }
 
 /* ---- design-system/components/finish-time.css · order 0630 ---- */
+.result .finish { container-type: inline-size; }   /* the cap reads the column (cqi), not the window (Lesson 10 step 6) */
 .result .finish dd { font-size: min(var(--size-time-hero), var(--size-time-hero-cap)); }
 
 /* ---- design-system/components/skeleton.css · order 0640 ---- */
@@ -2179,6 +2183,17 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .action-sheet .is-destructive { color: var(--error); }
 .action-sheet .action-cancel { font-weight: var(--weight-strong); }   /* the alert clips its edges: the ring sits inside the button, whole */
 
+/* Log result as a form sheet (Lesson 10 step 6, 2026-11-18): from --bp-tablet the sheet is centred on the screen
+   (modal-sheet.css, order 1160), so the action sheet stands at the bottom of the form sheet, in from its edges as on a
+   phone, instead of at the bottom of the window under it. The sheet's box is modal-sheet.css's: --form-sheet-w by
+   --form-sheet-h, at least --form-sheet-inset from the window's edges. The number is tokens.css's --bp-tablet (a media
+   query can't read var(); scripts/build_components.py checks it). */
+@media (min-width: 48.8125rem) {
+  body:has(> .sheet > .phone-screen) > dialog.action-sheet {
+    inset: auto calc((100vw - min(var(--form-sheet-w), 100vw - var(--form-sheet-inset) - var(--form-sheet-inset))) / 2 + var(--space-2)) calc((100vh - min(var(--form-sheet-h), 100vh - var(--form-sheet-inset) - var(--form-sheet-inset))) / 2 + var(--space-2));
+  }
+}
+
 /* ---- design-system/components/skeleton.css · order 1070 ---- */
 /* ---------- skeletons on the grayscale screens: the content's shape, no shimmer ---------- */
 .bar.h1 { width: var(--skel-title-w); height: var(--size-title); margin-bottom: var(--space-4); }
@@ -2320,6 +2335,15 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 
 /* ---- design-system/components/split-view.css · order 1150 ---- */
 .split-detail { display: none; --split: 0; }   /* phone: no pane; split-view.js reads --split to know whether a card opens a pane or a screen */
+/* "No race selected" / "No result selected" (step 5 follow-ups, 2026-11-18): an iOS split view's placeholder, the quiet
+   line alone, no icon: nothing is wrong and nothing is missing, there is only nothing chosen yet (the search glass
+   meant "nothing matched") */
+.split-empty .state-message::before { content: none; }
+.split-empty .state-message h2 { font-weight: var(--weight-regular); color: var(--text-secondary); }
+/* the detail's title in its pane is an h2 (step 5 follow-ups): the screen keeps one h1, the list's large title, and
+   split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look */
+.split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+.split-content .result > h2 { margin-bottom: var(--space-5); }
 @media (min-width: 48.8125rem) {
   body > .phone-screen.split-view { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
   body > .phone-screen.split-view > main {
@@ -2332,6 +2356,8 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   }
   .split-view > main > *, .split-view .list-area { grid-column: 1; }
   body > .phone-screen.split-view > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
+  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2); }   /* a pushed screen's bar (Saved races, step 6): the window's width, its back button over the list pane, not at a centred column's edge */
+  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* that bar takes its height in the flow: the pane beside the list starts under it, sticks under it, and ends at the screen's foot */
   .split-view .view-toggle { display: none; }   /* both views show at once */
   .split-view :is(.map-area, .split-detail) { grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); }
   .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: var(--space-4); }
@@ -2352,4 +2378,57 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: flex; }   /* the detail pane is always there; with nothing chosen it says so */
   .split-view:has(.card-link[aria-current="page"]) .map-area { display: flex; }
   .split-detail > .top-bar { display: none; }   /* the map is beside it: no way back needed */
+}
+
+/* ---- design-system/components/modal-sheet.css · order 1160 ---- */
+/* Form sheets (Lesson 10 step 6, 2026-11-18; HIG Sheets: "Prefer using the page or form sheet presentation styles in an
+   iPadOS app"). On a phone nothing changes. From --bp-tablet every sheet is a form sheet: --form-sheet-w wide, centred on
+   the screen with all four corners rounded, at least --form-sheet-inset from the window's edges, over the dimmed screen
+   it came from. One presentation for the three ways a sheet stands in the product:
+   1. a sheet over its screen (.sheet beside .sheet-backdrop: Filters, Add official result link): --form-sheet-h tall,
+      or as tall as its content (.sheet--fit) up to it; it still rises from below and the scrim fades in;
+   2. a sheet that is the whole page (body > .sheet > .phone-screen: Log result): the same box, the receded screen's
+      edge above it dropped (a form sheet floats, nothing peeks out above it);
+   3. a page that is a full-screen modal on a phone (body.form-sheet: the sign-in gate and the screens pushed inside a
+      sheet): the page itself becomes the form sheet, on its own ground, over the dimmed void (--frame under --scrim).
+   A sheet drawn inside a specimen's phone frame isn't the body's child, so the docs keep it as a phone draws it; the
+   docs show the form sheet in a frame as wide as a tablet. The numbers are tokens.css's --bp-tablet (a media query can't read var(); scripts/build_components.py checks it). */
+@media (min-width: 48.8125rem) {
+  body > .sheet {
+    left: 50%;
+    right: auto;
+    top: 50%;
+    bottom: auto;
+    width: min(var(--form-sheet-w), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    border-radius: var(--radius-sheet);
+    translate: -50% -50%;
+    transform: translateY(100vh);   /* closed: below the window, as a form sheet rises from the bottom edge */
+  }
+  body > .sheet.open { transform: none; }
+  body > .sheet--fit { height: auto; max-height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset)); }
+  body:has(> .sheet > .phone-screen) { max-width: none; display: grid; place-items: center; padding: var(--form-sheet-inset); }
+  body:has(> .sheet > .phone-screen)::before { display: none; }
+  body > .sheet:has(> .phone-screen) { width: min(var(--form-sheet-w), 100%); height: min(var(--form-sheet-h), 100%); margin: 0; translate: none; }
+  html:has(> body.form-sheet) { overflow: hidden; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }   /* overflow: so the page's own overflow clips it to its corners instead of passing to the window */
+  body.form-sheet {
+    width: min(var(--form-sheet-w), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    max-width: none;
+    top: 50%;
+    translate: 0 -50%;
+    border-radius: var(--radius-sheet);
+    box-shadow: var(--float-shadow);
+  }
+}
+
+/* ---- design-system/components/pop-up-select.css · order 1170 ---- */
+/* A menu row in a narrow group (Lesson 10 step 6, 2026-11-18; found on the Filters sheet's Region and Profile's Country
+   and Language at 200% text): the field rows' stacking (grouped-settings-rows.css, order 1100) put the label above the
+   value, and made the menu's chevron a line of its own. Here the label takes the first line and the value and its
+   chevron share the second. The number is tokens.css's --stack-w (scripts/build_components.py checks it). */
+@container (width < 18rem) {
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) > :is(label, .row-label) { flex-basis: 100%; }
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) > select { flex: 0 1 auto; min-width: 0; max-width: calc(100% - var(--icon-s)); }
 }

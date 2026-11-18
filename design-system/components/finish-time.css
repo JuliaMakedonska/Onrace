@@ -27,4 +27,5 @@
 }
 
 /* order 0630 */
+.result .finish { container-type: inline-size; }   /* the cap reads the column (cqi), not the window (Lesson 10 step 6) */
 .result .finish dd { font-size: min(var(--size-time-hero), var(--size-time-hero-cap)); }

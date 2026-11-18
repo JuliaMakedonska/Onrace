@@ -9,7 +9,11 @@
      is aria-busy with the loading page's skeleton (data-split-loading); if it fails (or ?fail=1, the reviewer switch),
      the error page's detail error (data-split-error) shows inside the pane, its Try again retries in place.
    - With nothing chosen the pane shows its .split-empty ("No race selected", "No result selected").
-   - [data-split-close] (Race browse, tablet: "‹ Map") clears the choice. */
+   - [data-split-close] (Race browse, tablet: "‹ Map") clears the choice.
+   - Step 5 follow-ups and step 6 (2026-11-18): the detail's h1 comes in as an h2 (the screen keeps one h1); a pane link
+     with [data-add] (Add official result link) reloads the screen with &add=<key>, so the screen's own sheet opens over
+     the split view as a form sheet, and Cancel and Save come back to the same choice; once shown the pane fires
+     split:shown, so the screen's scripts can bring it up to date (a link just added). */
 (function () {
   var root = document.querySelector('.split-view');
   var pane = root && root.querySelector('.split-detail');
@@ -24,8 +28,21 @@
   function chosen() { return new URLSearchParams(location.search).get(param); }
   function page(url) {
     if (!docs[url]) docs[url] = fetch(url).then(function (r) { if (!r.ok) throw new Error(url + ' ' + r.status); return r.text(); })
-      .then(function (t) { return new DOMParser().parseFromString(t, 'text/html'); });
+      .then(function (t) { return rebase(new DOMParser().parseFromString(t, 'text/html'), url); });
     return docs[url];
+  }
+  function rebase(d, url) {   // the detail page's relative addresses (its photos, its links) are relative to that page, not to the screen showing it (Saved races, in design-system/examples/, takes race-detail.html from wireframes/)
+    var base = new URL(url, location.href);
+    var abs = function (v) { return /^(#|[a-z][a-z0-9+.-]*:)/i.test(v) ? v : new URL(v, base).href; };
+    d.querySelectorAll('[src], [href], [data-src]').forEach(function (el) {
+      ['src', 'href', 'data-src'].forEach(function (a) { if (el.hasAttribute(a)) el.setAttribute(a, abs(el.getAttribute(a))); });
+    });
+    d.querySelectorAll('[srcset], [data-srcset]').forEach(function (el) {
+      ['srcset', 'data-srcset'].forEach(function (a) {
+        if (el.hasAttribute(a)) el.setAttribute(a, el.getAttribute(a).split(',').map(function (x) { var p = x.trim().split(/\s+/); p[0] = abs(p[0]); return p.join(' '); }).join(', '));
+      });
+    });
+    return d;
   }
   function wake(n) {   // an imported part shows, and its photo loads (the detail page keeps its sources in data-* until shown)
     n.hidden = false;
@@ -33,9 +50,18 @@
     n.querySelectorAll('img[data-src]').forEach(function (img) { img.src = img.getAttribute('data-src'); img.removeAttribute('data-src'); });
     return n;
   }
+  function heading(n) {   // the screen keeps one h1 (the list's large title): the detail's title comes in as an h2
+    (n.matches('h1') ? [n] : Array.prototype.slice.call(n.querySelectorAll('h1'))).forEach(function (h) {
+      var h2 = document.createElement('h2');
+      Array.prototype.forEach.call(h.attributes, function (a) { h2.setAttribute(a.name, a.value); });
+      while (h.firstChild) h2.appendChild(h.firstChild);
+      h.replaceWith(h2);
+    });
+    return n;
+  }
   function put(nodes) {
     content.textContent = '';
-    nodes.forEach(function (n) { if (n) content.appendChild(wake(document.importNode(n, true))); });
+    nodes.forEach(function (n) { if (n) content.appendChild(heading(wake(document.importNode(n, true)))); });
   }
   function mark(key) {
     root.querySelectorAll('.card-link, .map-pin').forEach(function (a) {
@@ -63,6 +89,7 @@
     job.then(function (parts) {
       if (current !== token) return;
       pane.removeAttribute('aria-busy'); put(parts); pane.scrollTop = 0; pane.setAttribute('data-split-state', 'shown');
+      pane.dispatchEvent(new CustomEvent('split:shown', { bubbles: true }));   // the screen's own scripts can bring the pane up to date (Results list: a link just added)
     }).catch(function () {
       return page(src.error).then(function (d) {
         if (current !== token) return;
@@ -87,6 +114,12 @@
   }
   root.addEventListener('click', function (e) {
     if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || !split()) return;
+    var add = e.target.closest('.split-content [data-add]');
+    if (add && chosen()) {   // the detail's "Add official result link": the screen's own sheet opens over the split view, as a form sheet
+      e.preventDefault();
+      location.href = location.pathname + '?' + param + '=' + encodeURIComponent(chosen()) + '&add=' + encodeURIComponent(chosen());
+      return;
+    }
     var close = e.target.closest('[data-split-close]');
     if (close) { e.preventDefault(); go(null); return; }
     var a = e.target.closest('.card-link, .map-pin');

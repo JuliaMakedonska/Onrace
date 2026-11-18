@@ -34,3 +34,14 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .action-sheet button:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }
 .action-sheet .is-destructive { color: var(--error); }
 .action-sheet .action-cancel { font-weight: var(--weight-strong); }   /* the alert clips its edges: the ring sits inside the button, whole */
+
+/* Log result as a form sheet (Lesson 10 step 6, 2026-11-18): from --bp-tablet the sheet is centred on the screen
+   (modal-sheet.css, order 1160), so the action sheet stands at the bottom of the form sheet, in from its edges as on a
+   phone, instead of at the bottom of the window under it. The sheet's box is modal-sheet.css's: --form-sheet-w by
+   --form-sheet-h, at least --form-sheet-inset from the window's edges. The number is tokens.css's --bp-tablet (a media
+   query can't read var(); scripts/build_components.py checks it). */
+@media (min-width: 48.8125rem) {
+  body:has(> .sheet > .phone-screen) > dialog.action-sheet {
+    inset: auto calc((100vw - min(var(--form-sheet-w), 100vw - var(--form-sheet-inset) - var(--form-sheet-inset))) / 2 + var(--space-2)) calc((100vh - min(var(--form-sheet-h), 100vh - var(--form-sheet-inset) - var(--form-sheet-inset))) / 2 + var(--space-2));
+  }
+}

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../index.css?v=c9719b4d">
+<link rel="stylesheet" href="../index.css?v=99378403">
 <script src="../tokens/theme.js"></script>
 </head>
 <!-- EXAMPLE: Saved races, base (design-system/examples/README.md). A test of the system with a screen the product
@@ -16,7 +16,7 @@
      product screen: not in the tab bar, the viewer or flows.md. What the system lacked for it is left out, not drawn,
      and listed in design-system/backlog.md → Examples: Saved races. -->
 <body class="onrace">
-  <div class="phone-screen">
+  <div class="phone-screen split-view">
     <header class="top-bar">
       <a class="back" href="../../wireframes/race-browse.html"><span>Discover</span></a>
       <h1 class="bar-title">Saved races</h1>
@@ -38,7 +38,18 @@
         </li>
       </ul>
       </section>
+      <!-- ZONE: detail pane (Lesson 10 step 6, 2026-11-18; the Split view pattern, design-system/patterns/split-view.html).
+           A list whose cards lead to Race detail, for choosing between races: by DESIGN.md → Patterns → Split view, a
+           split view. Not drawn on a phone: a card opens Race detail, its own screen, as before. From the tablet
+           breakpoint the list and the chosen race side by side (no map beside it, so two panes on a desktop too); with
+           nothing chosen, "No race selected" (microcopy.md row 596). The choice rides in the URL (?race=…), its card
+           Selected; split-view.js fills the pane from wireframes/race-detail.html, the one source. -->
+      <section class="split-detail" aria-label="Race detail" data-split-param="race" data-split-source="../../wireframes/race-detail.html" data-split-loading="../../wireframes/race-detail-loading.html" data-split-error="../../wireframes/race-detail-error.html">
+        <div class="split-empty"><div class="state-message"><h2>No race selected</h2></div></div>
+        <div class="split-content" hidden></div>
+      </section>
     </main>
   </div>
+<script src="../patterns/split-view.js"></script>   <!-- the Split view pattern: fills the detail pane from tablet width up (Lesson 10 step 6) -->
 </body>
 </html>

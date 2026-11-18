@@ -4,7 +4,7 @@
 
 /* order 0310 */
 html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
-body:has(> .phone-screen) { margin: 0 auto; max-width: var(--screen-w); position: relative; overflow: hidden; }
+body:has(> .phone-screen) { margin: 0 auto; max-width: var(--pane-w); position: relative; overflow: hidden; }   /* --pane-w: the phone's 390 at the default text size, in rem (Lesson 10 step 6, was --screen-w): at 820 or 1440 with 200% text the phone form takes 780, not a 390 strip */
 .phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
 .phone-screen:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }   /* a screen with nothing to focus takes the focus itself, to scroll by keyboard (a loading state): its halo sits inside it, since outside is off the screen (2026-11-08) */
 /* .screen-main: a specimen screen's main in the showcase, which has one page main of its own (step 7) */

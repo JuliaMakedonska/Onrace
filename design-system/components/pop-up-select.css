@@ -18,3 +18,14 @@
   mask: var(--icon-chevron) center / contain no-repeat;
   pointer-events: none;
 }
+
+/* order 1170 */
+/* A menu row in a narrow group (Lesson 10 step 6, 2026-11-18; found on the Filters sheet's Region and Profile's Country
+   and Language at 200% text): the field rows' stacking (grouped-settings-rows.css, order 1100) put the label above the
+   value, and made the menu's chevron a line of its own. Here the label takes the first line and the value and its
+   chevron share the second. The number is tokens.css's --stack-w (scripts/build_components.py checks it). */
+@container (width < 18rem) {
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) > :is(label, .row-label) { flex-basis: 100%; }
+  .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) > select { flex: 0 1 auto; min-width: 0; max-width: calc(100% - var(--icon-s)); }
+}

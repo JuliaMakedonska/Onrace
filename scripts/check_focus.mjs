@@ -24,7 +24,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const QUIET = process.argv.includes('--quiet');
 const CHROME = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(existsSync);
 if (!CHROME) { console.error('check_focus: Google Chrome not found'); process.exit(2); }
-const PASSES = [[320, 568, 16], [390, 844, 32], [320, 568, 32], [820, 1180, 16], [1440, 900, 16]];   // [width, height, default font size]: 32 is 200% text; 820 and 1440, a tablet and a desktop (Lesson 10 step 3: the top tab bar and the sidebar)
+const PASSES = [[320, 568, 16], [390, 844, 32], [320, 568, 32], [820, 1180, 16], [1440, 900, 16], [820, 1180, 32], [1440, 900, 32]];   // [width, height, default font size]: 32 is 200% text; 820 and 1440, a tablet and a desktop (Lesson 10 step 3: the top tab bar and the sidebar); and both with 200% text (Lesson 10 step 6, 2026-11-18)
 let states = screenStates(ROOT);
 const ONLY = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1].split(',') : null;
 if (ONLY) states = states.filter(s => ONLY.some(o => s.label.includes(o)));
@@ -182,4 +182,4 @@ for (const [w, h, text] of PASSES) {
 ws.close(); cleanup();
 if (noFonts && noFonts === bad.length) { console.log(`check_focus: the fonts did not load on ${noFonts} states (Google Fonts unreachable?): not measured, exit 3`); process.exit(3); }
 if (bad.length) { console.log(`check_focus: FAIL (${bad.length})`); bad.forEach(x => console.log('  ' + x)); process.exit(1); }
-console.log(`check_focus: pass (${walked} states at 320, at 390 and 320 with 200% text, at 820 and at 1440: ${focused} focus stops, each halo whole, map pins included; ${bars} sheet bars, nothing collides)`);
+console.log(`check_focus: pass (${walked} states at 320, at 390 and 320 with 200% text, at 820 and at 1440, and at 820 and 1440 with 200% text: ${focused} focus stops, each halo whole, map pins included; ${bars} sheet bars, nothing collides)`);

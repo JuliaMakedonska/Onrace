@@ -42,7 +42,7 @@ for (const f of readdirSync(W).filter(f => f.endsWith('.html') && f !== 'index.h
 }
 // the Split view (Lesson 10 step 5, 2026-11-17): a chosen race or result, and one whose detail failed, so the pane is
 // measured filled and in its error ('wait': the pane fills from the detail page after load)
-for (const [name, q] of [['race-browse', 'race=utmb'], ['race-browse', 'race=spartan-beast-killington&fail=1'], ['results-list', 'result=spartan-beast-killington-2025'], ['results-list', 'result=valencia-half-2025&fail=1']])
+for (const [name, q] of [['race-browse', 'race=utmb'], ['race-browse', 'race=spartan-beast-killington&fail=1'], ['results-list', 'result=spartan-beast-killington-2025'], ['results-list', 'result=valencia-half-2025&fail=1'], ['results-list', 'result=spartan-beast-killington-2025&add=spartan-beast-killington-2025'], ['results-list', 'result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults']])   // + Lesson 10 step 6: the add sheet opened from the result's pane, a form sheet over the split view, and the pane with the link just added
   states.push({ name, q, act: 'wait', label: name + ' · split view ?' + q });
 states.push({ name: 'profile', q: '', act: 'click:#sign-out', label: 'profile · sign-out alert' });
 states.push({ name: 'log-result', q: 'race_name=Spartan%20Race%20Beast%20%E2%80%94%20Killington', act: 'click:[data-cancel]', label: 'log-result · discard confirm' });
@@ -52,5 +52,8 @@ for (const f of readdirSync(join(ROOT, 'design-system/patterns')).filter(f => f.
 // the examples (Lesson 9 step 6, 2026-11-10): screens built only from the system, measured like a screen
 for (const f of readdirSync(join(ROOT, 'design-system/examples')).filter(f => f.endsWith('.html')).sort())
   states.push({ name: '../design-system/examples/' + f.replace('.html', ''), q: '', act: '', label: 'examples/' + f.replace('.html', '') });
+// Saved races as a split view (Lesson 10 step 6, 2026-11-18): a chosen race, and one whose detail failed
+for (const q of ['race=hyrox-london', 'race=utmb&fail=1'])
+  states.push({ name: '../design-system/examples/saved-races', q, act: 'wait', label: 'examples/saved-races · split view ?' + q });
 return states;
 }

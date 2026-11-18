@@ -129,7 +129,7 @@ Everything else (six screens) does not change at either width; it only needs a r
 2. Results list on arrival at tablet width: select the newest result `[?]`, or a "nothing selected" pane (a new line in `microcopy.md`)?
 3. Three panes on desktop for Race browse, or two panes everywhere and one behavior breakpoint?
 4. Desktop is read as "an iPad app in a bigger window" (HIG → Layout, idiom stays the same). If it should follow macOS instead (sidebar, no tab bar), most of the table changes; nothing in `DESIGN.md` → Native iOS says so today.
-5. Not a product screen, so not in the table: Saved races (`design-system/examples/`) would be a list-and-detail screen too, if it becomes real.
+5. Not a product screen, so not in the table: Saved races (`design-system/examples/`) would be a list-and-detail screen too, if it becomes real. Since Lesson 10 step 6 (2026-11-18) the example is one: a split view, list and Race detail, "No race selected" until one is chosen.
 
 **Revised 2026-11-15 (designer), before step 3:** 1413px left many 13–14-inch laptops on the tablet form. The list and the detail stay `--pane-w`; the map is flexible, never narrower than `--map-min` (20rem [?], 320px, the narrowest screen the map is checked at). `--bp-desktop` = `--sidebar-w` (15rem [?]) + 2 × `--pane-w` + `--map-min` + three dividers = **83.9375rem, 1343px**. A 1440 window and a 1366 one reach it; a 1280 one doesn't. An iPad Pro 13-inch in landscape (1376) now does, so it gets the sidebar (`DESIGN.md` → Width).
 

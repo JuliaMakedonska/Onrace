@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-17T20:14:12+00:00",
+  "generatedAt": "2026-11-18T21:06:16+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -841,7 +841,7 @@
     "rules": [
       {
         "name": "The Two Lights Rule",
-        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the selected segment is `--selected`, a checked checkbox is `--text-primary` (Text 1, C4). The keyboard focus ring is amber (`--focus`, since 2026-11-07): it marks where you are (Color rule 1) and shows only while a keyboard moves focus, so it is transient and doesn't count toward the two.",
+        "body": "The amber appears at most twice on a screen: the current tab, plus the one primary action if the screen has one. In a split view it counts per pane (designer, 2026-11-18): the list's bar action and the detail pane's own primary (its action bar's button, or its Try again) are each their pane's one primary. Race browse at rest has only the tab. Log result has no tab bar and no other amber, so its Save, in the top bar, is the screen's one primary and takes amber text, like a native bar button. Every other active state stays neutral: the active filter chip is a gray capsule, the selected segment is `--selected`, a checked checkbox is `--text-primary` (Text 1, C4). The keyboard focus ring is amber (`--focus`, since 2026-11-07): it marks where you are (Color rule 1) and shows only while a keyboard moves focus, so it is transient and doesn't count toward the two.",
         "section": "colors"
       },
       {

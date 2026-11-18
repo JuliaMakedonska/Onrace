@@ -8,9 +8,19 @@ Nothing open. The five items found on 2026-11-08 and 2026-11-15 (Results list ca
 
 ## Lesson 10 step 5: the Split view (found 2026-11-17)
 
-- **"No race selected" and "No result selected" show the search glass.** The State message's default icon means "nothing matched", not "nothing chosen" (the same mismatch as Saved races' empty state). How to see it: Race browse at 1440, nothing chosen. Needs an icon, or a state message without one, through the system first.
-- **"Add official result link" leaves the pane.** In the detail pane it opens Result detail's own page, where its sheet lives, at the phone's width; the sheet inside the pane would need the sheet as a form sheet (HIG Sheets), not built.
-- **Two `h1`s on a split screen.** The detail pane brings its screen's `h1` beside the list's large title; the pane is a labelled region (`aria-label` Race detail, Result detail), but heading navigation finds two first-level headings.
+Nothing open. The three items found with it (the search glass on "No race selected" and "No result selected", "Add official result link" leaving the pane, two `h1`s on a split screen) were closed on 2026-11-18 (`concept/concept.md` → Step 5 follow-ups): the placeholder is the quiet line alone, the add sheet opens over the split view as a form sheet, and the detail's title comes into its pane as an `h2`.
+
+## Lesson 10 step 6: the rollout (found 2026-11-18)
+
+Found by the group agents while rolling out; not fixed in step 6. The critique's findings are separate (`concept/concept.md` → Step 6).
+
+- **Race browse's card photos load a larger file than they show.** `sizes` says `calc(100vw - 32px)`; at 820 a card's photo is 342px wide and loads the 1026 file. A pane-width `sizes` would fix it (Race detail's photos were fixed in step 6). The pane's Race detail photo carries the detail screen's `sizes`, too large there, never blurry.
+- **Focus after the Filters sheet closes** returns to whatever had focus when it opened; after a click that didn't focus Filters (Safari), that is the page, so focus is lost. Fall back to the Filters button.
+- **The discard action sheet on a tablet** sits at the bottom of Log result's form sheet; HIG draws an iPad action sheet as a popover from its button (Cancel). A popover is a new presentation: the designer's call.
+- **Race picker's ground differs from Log result's** inside the same form sheet: Log result is the sheet glass, Race picker its page's ground (`body.form-sheet` keeps the page's own ground). Already so on a phone, more visible in a fixed sheet.
+- **The confirm alert doesn't widen at 200% text:** "Sign out" wraps to two lines in its button (on a phone too); iOS widens alerts at the accessibility sizes.
+- **Cancel on the sign-in gate goes to Race browse** even when it was opened from Results; over a split view on iPad, returning to the screen under the sheet may read better (flows.md DeadEnd2/4 as drawn).
+- **The selected Spartan row's "Add official result link" strip** keeps its own darker band inside the Selected edge on Results list at 820 and 1440.
 
 ## Examples: Saved races (found 2026-11-10)
 

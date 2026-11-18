@@ -197,7 +197,7 @@ const FORM = `(() => {
   const got = r.height > H / 2 && r.left < 40 ? 'sidebar' : r.top < 80 && Math.abs(r.left + r.width / 2 - W / 2) < 2 ? 'top' : r.bottom > H - 80 && r.width > W / 2 ? 'bottom' : 'nowhere';
   return got === want ? null : 'the tab bar shows as ' + got + ', the width asks for ' + want;
 })()`;
-for (const [w, h, text, only] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [320, 568, 32, 'screens'], [820, 1180, 16, 'screens'], [1440, 900, 16]]) {   // the third pass: 200% text (step 7, #2); the fourth, 320 with 200% text (Lesson 10 step 4: the backlog's defects, fixed, stay fixed); the fourth and fifth: a tablet and a desktop (Lesson 10 step 3: the screens at the viewer's widths, the docs pages at desk width since step 2)
+for (const [w, h, text, only] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [320, 568, 32, 'screens'], [820, 1180, 16, 'screens'], [1440, 900, 16], [820, 1180, 32, 'screens'], [1440, 900, 32, 'screens']]) {   // the third pass: 200% text (step 7, #2); the fourth, 320 with 200% text (Lesson 10 step 4: the backlog's defects, fixed, stay fixed); the fourth and fifth: a tablet and a desktop (Lesson 10 step 3: the screens at the viewer's widths, the docs pages at desk width since step 2); the last two, 820 and 1440 with 200% text (Lesson 10 step 6, 2026-11-18: the breakpoints are in rem, so at 200% text a tablet gets the phone form and a desktop the tablet's)
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   await send('Page.setFontSizes', { fontSizes: { standard: text, fixed: Math.round(text * 13 / 16) } });   // the root size: the kit's type unit is 1rem ÷ 16, so every size doubles
   for (const s of states) {
@@ -232,5 +232,5 @@ if (failures.length) {
   const fontsOnly = failures.every(f => f.includes('(no font loaded at all)'));
   process.exit(fontsOnly ? 3 : 1);
 }
-if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320, 390 at 200% text; the screens also at 320 with 200% text, at 820 and 1440, each tab screen in the form its width asks for; the kit and lesson pages also at 1440)`);
+if (!QUIET) console.log(`check_overflow: pass, no overflow, no wrapped control, every font loaded in ${checked} states (390, 320, 390 at 200% text; the screens also at 320 with 200% text, at 820 and 1440, and at 820 and 1440 with 200% text, each tab screen in the form its width asks for; the kit and lesson pages also at 1440)`);
 else console.log(`check_overflow: pass (${checked} states)`);

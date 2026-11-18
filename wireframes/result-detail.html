@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=c9719b4d">
+<link rel="stylesheet" href="../design-system/index.css?v=99378403">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -196,14 +196,16 @@
      another). Focus moves into it and back to the page's add action on Cancel or Escape; Save is dimmed until there's
      text; an invalid link gets the field error, which replaces the helper (aria-invalid, aria-describedby); a valid one
      goes back to the screen with &linked= and &url= (and, on Results list, ?saved=<race name>). &try=<text> is the
-     reviewer's switch for the error: it types the text in and taps Save. */
+     reviewer's switch for the error: it types the text in and taps Save.
+   - Lesson 10 step 6 (2026-11-18): Results list as a split view: ?result=<slug>&add=<slug> opens the sheet from the
+     result's pane (a form sheet over the split view), Cancel and Save keep ?result=, and the pane, filled after load,
+     takes the new link too (split:shown, from design-system/patterns/split-view.js). */
 (function () {
   var params = new URLSearchParams(location.search);
   var host = function (u) { return new URL(u).hostname.replace(/^www\./, ''); };
   var linked = params.get('linked'), url = params.get('url');
   var okUrl = function (v) { try { return /^https?:$/.test(new URL(v).protocol); } catch (e) { return false; } };
-  var row = linked && okUrl(url) && document.querySelector('[data-no-link="' + linked + '"]');
-  if (row) {
+  function linkRow(row) {
     row.removeAttribute('data-no-link');
     row.querySelectorAll('.proof-label').forEach(function (p) { p.textContent = 'Self-reported · via ' + host(url); });
     row.querySelectorAll('.result-card > .text-link').forEach(function (a) { a.remove(); });
@@ -214,12 +216,15 @@
       var copy = document.createElement('button'); copy.type = 'button'; copy.className = 'copy-link'; copy.setAttribute('data-copy', ''); copy.setAttribute('aria-live', 'polite'); copy.textContent = 'Copy link';
       proof.insertBefore(pu, label); proof.insertBefore(copy, label);
       row.querySelector('.proof-note').textContent = 'Onrace doesn’t verify results. The official result is the evidence.';
-      var bar = document.querySelector('.action-bar[data-result="' + linked + '"] .open-btn');
+      var bar = (row.closest('.split-content') || document).querySelector('.action-bar[data-result="' + linked + '"] .open-btn');
       bar.removeAttribute('data-add'); bar.href = url; bar.textContent = 'Open official result';
       bar.target = '_blank'; bar.rel = 'noopener'; bar.setAttribute('aria-label', 'Open official result on ' + host(url));
       bar.parentNode.querySelector('.action-caption').textContent = 'Opens the official timing site.';
     }
   }
+  var linkAll = function (scope) { if (linked && okUrl(url)) scope.querySelectorAll('[data-no-link="' + linked + '"]').forEach(linkRow); };
+  linkAll(document);
+  document.addEventListener('split:shown', function (e) { linkAll(e.target); });   // Results list in a split view: the result's pane too (Lesson 10 step 6)
   var sheet = document.getElementById('add-link-sheet'), backdrop = document.getElementById('add-link-backdrop');
   var slug = params.get('add');
   var target = slug && document.querySelector('[data-no-link="' + slug + '"]');
@@ -227,6 +232,10 @@
   var form = document.getElementById('add-link-form'), input = document.getElementById('add_url');
   var err = document.getElementById('add_url-error'), hint = document.getElementById('add_url-hint');
   var save = sheet.querySelector('.bar-action'), back = sheet.getAttribute('data-back');
+  if (params.get('result') && back.indexOf('results-list') === 0) {   // opened from a split view's result pane: Cancel and Save come back to that result
+    back += '?result=' + encodeURIComponent(params.get('result'));
+    sheet.querySelector('[data-add-cancel]').href = back;
+  }
   var name = (target.querySelector('h1, h2') || {}).textContent || '';
   function dim() { save.setAttribute('aria-disabled', input.value.trim() ? 'false' : 'true'); }
   function clear() { err.hidden = true; hint.hidden = false; input.removeAttribute('aria-invalid'); input.setAttribute('aria-describedby', 'add_url-hint'); }

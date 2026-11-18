@@ -31,7 +31,7 @@
 /* Log result (round 2, G40): the sheet is the whole screen, resting at the large detent (G13) over Results, which has
    receded under the scrim; its top bar spans it, and only its form scrolls */
 html:has(body > .sheet > .phone-screen) { height: 100%; }
-body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--screen-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
+body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--pane-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
 /* Results receded behind the sheet (step 6, #34; iOS sheets): the presenting screen's top edge, inset and dimmed under
    the scrim, shows in the gap above the sheet, so the sheet reads as a modal over Results */
 body:has(> .sheet > .phone-screen)::before {
@@ -76,3 +76,45 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
    Result detail. It rests as tall as its content, under the large detent, as iOS sizes a sheet to what it holds */
 .sheet--fit { height: auto; max-height: var(--sheet-large); }   /* sized to its content, a custom detent: a one-field sheet sits well under the medium one */
 .sheet--fit > form { flex: none; }   /* it holds its content, nothing grows it */
+
+/* order 1160 */
+/* Form sheets (Lesson 10 step 6, 2026-11-18; HIG Sheets: "Prefer using the page or form sheet presentation styles in an
+   iPadOS app"). On a phone nothing changes. From --bp-tablet every sheet is a form sheet: --form-sheet-w wide, centred on
+   the screen with all four corners rounded, at least --form-sheet-inset from the window's edges, over the dimmed screen
+   it came from. One presentation for the three ways a sheet stands in the product:
+   1. a sheet over its screen (.sheet beside .sheet-backdrop: Filters, Add official result link): --form-sheet-h tall,
+      or as tall as its content (.sheet--fit) up to it; it still rises from below and the scrim fades in;
+   2. a sheet that is the whole page (body > .sheet > .phone-screen: Log result): the same box, the receded screen's
+      edge above it dropped (a form sheet floats, nothing peeks out above it);
+   3. a page that is a full-screen modal on a phone (body.form-sheet: the sign-in gate and the screens pushed inside a
+      sheet): the page itself becomes the form sheet, on its own ground, over the dimmed void (--frame under --scrim).
+   A sheet drawn inside a specimen's phone frame isn't the body's child, so the docs keep it as a phone draws it; the
+   docs show the form sheet in a frame as wide as a tablet. The numbers are tokens.css's --bp-tablet (a media query can't read var(); scripts/build_components.py checks it). */
+@media (min-width: 48.8125rem) {
+  body > .sheet {
+    left: 50%;
+    right: auto;
+    top: 50%;
+    bottom: auto;
+    width: min(var(--form-sheet-w), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    border-radius: var(--radius-sheet);
+    translate: -50% -50%;
+    transform: translateY(100vh);   /* closed: below the window, as a form sheet rises from the bottom edge */
+  }
+  body > .sheet.open { transform: none; }
+  body > .sheet--fit { height: auto; max-height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset)); }
+  body:has(> .sheet > .phone-screen) { max-width: none; display: grid; place-items: center; padding: var(--form-sheet-inset); }
+  body:has(> .sheet > .phone-screen)::before { display: none; }
+  body > .sheet:has(> .phone-screen) { width: min(var(--form-sheet-w), 100%); height: min(var(--form-sheet-h), 100%); margin: 0; translate: none; }
+  html:has(> body.form-sheet) { overflow: hidden; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }   /* overflow: so the page's own overflow clips it to its corners instead of passing to the window */
+  body.form-sheet {
+    width: min(var(--form-sheet-w), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
+    max-width: none;
+    top: 50%;
+    translate: 0 -50%;
+    border-radius: var(--radius-sheet);
+    box-shadow: var(--float-shadow);
+  }
+}

@@ -12,6 +12,15 @@
 
 /* order 1150 */
 .split-detail { display: none; --split: 0; }   /* phone: no pane; split-view.js reads --split to know whether a card opens a pane or a screen */
+/* "No race selected" / "No result selected" (step 5 follow-ups, 2026-11-18): an iOS split view's placeholder, the quiet
+   line alone, no icon: nothing is wrong and nothing is missing, there is only nothing chosen yet (the search glass
+   meant "nothing matched") */
+.split-empty .state-message::before { content: none; }
+.split-empty .state-message h2 { font-weight: var(--weight-regular); color: var(--text-secondary); }
+/* the detail's title in its pane is an h2 (step 5 follow-ups): the screen keeps one h1, the list's large title, and
+   split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look */
+.split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+.split-content .result > h2 { margin-bottom: var(--space-5); }
 @media (min-width: 48.8125rem) {
   body > .phone-screen.split-view { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
   body > .phone-screen.split-view > main {
@@ -24,6 +33,8 @@
   }
   .split-view > main > *, .split-view .list-area { grid-column: 1; }
   body > .phone-screen.split-view > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
+  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2); }   /* a pushed screen's bar (Saved races, step 6): the window's width, its back button over the list pane, not at a centred column's edge */
+  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* that bar takes its height in the flow: the pane beside the list starts under it, sticks under it, and ends at the screen's foot */
   .split-view .view-toggle { display: none; }   /* both views show at once */
   .split-view :is(.map-area, .split-detail) { grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); }
   .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: var(--space-4); }
