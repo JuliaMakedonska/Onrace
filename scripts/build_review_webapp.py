@@ -12,13 +12,13 @@ shots = json.load(open(os.path.join(D, 'shots.json')))
 NOTE = {
   'rb': 'Phone: unchanged. Tablet: the phone’s list, its column capped at --container-max and centred, the tab bar at the bottom (was: list and map side by side, the tab bar at the top). Desktop: the top bar (the wordmark, the destinations, Log result) and the map full bleed under it, the list a floating card (was: the sidebar and two panes).',
   'rb-map': 'The Map view. Phone: unchanged. Tablet: the map fills the screen’s width edge to edge, framed to the races (was: the map was always beside the list).',
-  'rb-chosen': 'A race chosen. Phone and tablet: the list (a card opens Race detail as its own screen). Desktop: the race card beside the list card, Close at its corner, Register its primary; the chosen card and its pin Selected.',
-  'rb-filters': 'The filters. Phone and tablet: the sheet (a form sheet on a tablet), Cancel and Apply. Desktop: a card under the Filters button over the map, Reset and Done, the screen not dimmed.',
+  'rb-chosen': 'A race chosen. Phone and tablet: the list (a card opens Race detail as its own screen). Desktop: the race card beside the list card, the format chip under its title, Close at its corner, Register its primary; the chosen card (scrolled into view) and its pin Selected.',
+  'rb-filters': 'The filters. Phone and tablet: the sheet (a form sheet on a tablet), Cancel and Apply. Desktop: a card under the Filters button over the map, Clear all and Done, the screen not dimmed.',
   'rb-loading': 'Loading. Desktop: the list card’s skeleton and the map’s pulse.',
   'rb-empty': 'No race matches. Desktop: the message inside the list card, the filters and chips over the map, the map without pins.',
   'rb-error': 'The races failed to load. Desktop: the error inside the list card; its Try again steps the top bar’s Log result down to plain text (one primary).',
   'rb-fail': 'A race that fails to load (&fail=1). Desktop: its error inside the race card, Try again there; the list and the map stay.',
-  'rl': 'Results list: its layout waits. Tablet: its two panes above the bottom tab bar, the detail ending above it. Desktop: the top bar in place of the sidebar, its Log result the one primary (the large title’s own hides).',
+  'rl': 'Results list. Tablet: the phone’s one column, capped (the follow-ups). Desktop: its two panes wait for their own pass; the top bar in place of the sidebar, its Log result the one primary (the large title’s own hides).',
   'pr': 'Profile: its layout waits; the new navigation only (the bottom tab bar on a tablet, the top bar on a desktop).',
 }
 def fig(src, cap):
@@ -31,7 +31,16 @@ for s in shots:
     page = next(p for k, p in PAGES if k == base)
     figs = fig(s['key'] + '-before', '<b>Before</b>') + fig(s['key'] + '-after', '<b>After</b>')
     rows.append(f'<section class="rv-pair rv-w{s["w"]}"><h2>{H.escape(s["cap"])} · {s["w"]} <a href="{LIVE}{H.escape(page)}">live ↗</a></h2><p>{H.escape(NOTE[base])}</p><div class="rv-shots">{figs}</div></section>')
-sel = []
+sel = ['<section class="rv-pair"><h2>Follow-ups (2026-11-19)</h2><p>Before is the web app desktop as first shipped, after is with the five follow-ups.</p></section>']
+for key, w, page, cap, note in [
+  ('fu-rl-820', 820, 'results-list.html?result=hyrox-london-2025', 'Results list on a tablet', 'The phone’s one column, capped at --container-max; no split view (the tablet behaves like the phone everywhere). Desktop Results list waits.'),
+  ('fu-filters-1440', 1440, 'race-browse.html', 'The filters card', 'Clear all and Done (was Reset): one wording for one action, its accessible name voice.md’s “Clear all filters”.'),
+  ('fu-chosen-1440', 1440, 'race-browse.html?race=utmb', 'A race chosen far down the list', 'The race card shows the format chip under the title, as the list card does, its facts without a second Sport type; the chosen card, the 7th, scrolled into view in the list card.'),
+  ('fu-empty-1440', 1440, 'race-browse-empty.html', 'No race matches, desktop', '“Remove a filter, or try a wider date range…”: “above” dropped, since the filters sit to the right of the list card.'),
+  ('fu-empty-390', 390, 'race-browse-empty.html', 'No race matches, phone', 'The same line on a phone, where the filters are above.'),
+]:
+    figs = fig(key + '-before', '<b>Before</b>') + fig(key + '-after', '<b>After</b>')
+    sel.append(f'<section class="rv-pair rv-w{w}"><h2>{H.escape(cap)} · {w} <a href="{LIVE}{H.escape(page)}">live ↗</a></h2><p>{H.escape(note)}</p><div class="rv-shots">{figs}</div></section>')
 page = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -70,8 +79,8 @@ page = f'''<!doctype html>
       <li><b>Through the system:</b> <code>tab-bar.css</code>, <code>split-view.css</code>, <code>static-map.css</code>, <code>modal-sheet.css</code>, <code>screen.css</code>, three new tokens; no media query in a screen.</li>
     </ul>
   </header>
-  {''.join(rows)}
   {''.join(sel)}
+  {''.join(rows)}
 </main>
 </body>
 </html>

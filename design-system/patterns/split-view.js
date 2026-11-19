@@ -10,6 +10,7 @@
      the error page's detail error (data-split-error) shows inside the pane, its Try again retries in place.
    - With nothing chosen the pane shows its .split-empty ("No race selected", "No result selected").
    - [data-split-close] (Race browse, tablet: "‹ Map") clears the choice.
+   - A choice that arrives by its address (a link, a reload, Back) scrolls its card into view in the list (2026-11-19).
    - Step 5 follow-ups and step 6 (2026-11-18): the detail's h1 comes in as an h2 (the screen keeps one h1); a pane link
      with [data-add] (Add official result link) reloads the screen with &add=<key>, so the screen's own sheet opens over
      the split view as a form sheet, and Cancel and Save come back to the same choice; once shown the pane fires
@@ -68,6 +69,20 @@
       if (key && keyOf(a) === key) a.setAttribute('aria-current', 'page');
       else if (a.getAttribute('aria-current') === 'page') a.removeAttribute('aria-current');
     });
+  }
+  function reveal() {   // a choice that arrives by its address (a link, a reload, Back): its card scrolled into view in whatever scrolls the list (the desktop's list card, or the screen)
+    var a = root.querySelector('.card-link[aria-current="page"]');
+    if (!a) return;
+    var card = a.closest('.race-card, .result-card') || a, pad = 16;
+    for (var sc = card.parentElement; sc && sc !== document.documentElement; sc = sc.parentElement) {
+      var oy = getComputedStyle(sc).overflowY;
+      if ((oy === 'auto' || oy === 'scroll') && sc.scrollHeight > sc.clientHeight) {
+        var r = card.getBoundingClientRect(), b = sc.getBoundingClientRect();
+        if (r.top < b.top) sc.scrollTop += r.top - b.top - pad;
+        else if (r.bottom > b.bottom) sc.scrollTop += Math.min(r.bottom - b.bottom + pad, r.top - b.top - pad);
+        return;
+      }
+    }
   }
   function show() {
     var key = split() ? chosen() : null;
@@ -136,7 +151,7 @@
     var done = function () { btn.textContent = 'Link copied'; setTimeout(function () { btn.textContent = 'Copy link'; }, 2000); };
     if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
   });
-  window.addEventListener('popstate', show);
+  window.addEventListener('popstate', function () { show(); reveal(); });
   var was = split();
   window.addEventListener('resize', function () { var now = split(); if (now !== was) { was = now; show(); } });
   if (split()) {   // both views show side by side: the List / Map switch is off, so the list view is the one in force
@@ -144,4 +159,5 @@
     if (list) list.click();
   }
   show();
+  reveal();
 })();

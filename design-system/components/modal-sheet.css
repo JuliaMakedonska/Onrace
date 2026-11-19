@@ -122,13 +122,13 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 /* order 1180 */
 /* The filters as a popover card (designer, 2026-11-19, the web app desktop; Komoot's and Strava's filter cards): from
    --bp-desktop a sheet marked .sheet--popover opens as a card under its button over the map, not as a form sheet; it
-   doesn't dim the screen, and its bar says Reset (the card's filters back to none) and Done (apply and close) in place
-   of Cancel and Apply (microcopy rows 600, 601). Escape or a click outside still closes it, as Cancel. Below a desktop it
+   doesn't dim the screen, and its bar says Clear all (the card's filters back to none; its name the dictionary's "Clear all
+   filters") and Done (apply and close) in place of Cancel and Apply (microcopy rows 600, 601). Escape or a click outside still closes it, as Cancel. Below a desktop it
    is the sheet it always was. Where it sits is the screen's layout (split-view.css knows where the cards end). */
-.sheet > .top-bar > .sheet-reset, .sheet .sheet-done-label { display: none; }   /* a phone's and a tablet's sheet: Cancel and Apply (the bar's own button rule sets display, so this names the bar) */
+.sheet > .top-bar > .sheet-clear, .sheet .sheet-done-label { display: none; }   /* a phone's and a tablet's sheet: Cancel and Apply (the bar's own button rule sets display, so this names the bar) */
 @media (min-width: 83.9375rem) {
   body > .sheet--popover > .top-bar > .sheet-cancel, body > .sheet--popover .sheet-apply-label { display: none; }
-  body > .sheet--popover > .top-bar > .sheet-reset { display: flex; }
+  body > .sheet--popover > .top-bar > .sheet-clear { display: flex; }
   body > .sheet--popover .sheet-done-label { display: inline; }
   body > .sheet--popover {
     top: calc(var(--safe-top) + var(--topnav-h) + var(--float-gap) + var(--target) + var(--space-2));

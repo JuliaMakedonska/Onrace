@@ -101,7 +101,7 @@ for _p in PATTERNS:
 # design-system/docs/split-view.html as figures (check_docs_stages compares the two by label).
 SV_STAGES = [
     ('Results list, Phone, 390: the list; a row opens Result detail', '../patterns/split-view.html', 'phone', 'Results list on a small screen'),
-    ('Results list, Tablet, 820: the list and the chosen result', '../patterns/split-view.html?result=hyrox-london-2025', 'tablet', 'Results list on a tablet'),
+    ('Results list, Tablet, 820: the phone\'s list, its column capped', '../patterns/split-view.html?result=hyrox-london-2025', 'tablet', 'Results list on a tablet'),
     ('Results list, Desktop, 1440: beside the sidebar', '../patterns/split-view.html?result=hyrox-london-2025', 'desktop', 'Results list on a desktop'),
     ('Race browse, Tablet, 820: the phone\'s list, its column capped', '../../wireframes/race-browse.html', 'tablet', 'Race browse on a tablet'),
     ('Race browse, Desktop, 1440: the list card and the race card over the map', '../../wireframes/race-browse.html?race=utmb', 'desktop', 'Race browse on a desktop'),

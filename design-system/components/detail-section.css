@@ -6,6 +6,7 @@
 /* ---------- detail screens (Race detail, Result detail) ---------- */
 .race, .result { padding: var(--space-5) var(--space-4) var(--space-7); }
 .race[hidden], .result[hidden] { display: none; }
+.race > .sport-tag { display: none; }   /* the format chip: the desktop's race card shows it, as the list card does (split-view.css); Race detail on its own says it in its facts */
 .race h1, .result h1 { margin: 0 0 var(--space-4); }
 
 /* order 0620 */

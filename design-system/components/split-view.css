@@ -42,40 +42,11 @@
 .card-close:is(:active, .is-pressed) { color: var(--text-pressed); }
 .card-close:is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
 
-/* A list with its detail (Results list, Saved races) from --bp-tablet: the list in a phone-width pane, the detail beside
-   it. (A screen with a map, Race browse, splits only on a desktop, and differently: below.) */
+/* A screen with a map (Race browse) on a tablet is the phone's (designer, 2026-11-19): its column capped at
+   --container-max (screen.css), the List / Map switch kept, the Map view filling the screen's width. A tablet splits no
+   screen (2026-11-19, the follow-ups: the tablet behaves like the phone everywhere): the panes are a desktop's. */
 @media (min-width: 48.8125rem) {
-  body > .phone-screen.split-view:not(:has(.map-area)) { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
-  body > .phone-screen.split-view:not(:has(.map-area)) > main {
-    display: grid;
-    grid-template-columns: var(--pane-w) minmax(0, 1fr);
-    grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
-    align-items: start;
-    max-width: none;
-    margin: 0;
-  }
-  .split-view:not(:has(.map-area)) > main > *, .split-view:not(:has(.map-area)) .list-area { grid-column: 1; }
-  body > .phone-screen.split-view:not(:has(.map-area)) > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
-  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2) calc(100% - var(--pane-w) + var(--space-2)); }   /* a pushed screen's bar (Saved races): its glass the window's width, its back button, title and action over the list pane they belong to (HIG Split views: each column its own bar); over the detail it is that pane's empty bar (layout pass, 2026-11-18) */
-  .split-view:not(:has(.map-area)) .split-detail { --split: 1; grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
-  body:has(> .bottom-nav) .split-view .split-detail { height: calc(100cqh - var(--tabbar-clear)); }   /* on a tablet the tab bar floats at the bottom (2026-11-19): the detail pane ends above it, so its action bar stays clear */
-  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* a pushed screen's bar takes its height in the flow: the pane starts under it and ends at the screen's foot */
-  /* a list with nothing to choose (Results list, Saved races: -empty, -error; layout pass, 2026-11-18): no pane asks to
-     choose; the screen is one column, centred at --container-max */
-  body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > main { display: flex; max-width: var(--container-max); margin-inline: auto; }
-  body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > .top-bar--large { width: auto; padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }
-  .split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) .split-detail { display: none; }
-  .split-view:has(> main[aria-busy="true"], .list-area[aria-busy="true"]) .split-empty { visibility: hidden; }   /* while the list loads, nothing can be chosen yet: the pane waits, without words */
-  .split-empty { flex: 1; display: grid; place-items: center; }
-  .split-empty[hidden], .split-content[hidden] { display: none; }
-  .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
-  .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
-  .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
-  .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
-  /* a screen with a map (Race browse) on a tablet is the phone's (designer, 2026-11-19): its column capped at
-     --container-max (screen.css), the List / Map switch kept, and the Map view filling the screen's width edge to edge,
-     no frame, framed to the pins at its own shape (the width decides: on a tablet the view's height comes from the
-     flex layout, where 100cqh can't be read) */
+  /* the Map view edge to edge, no frame, framed to the pins at its own shape (the width decides: on a tablet the view's height comes from the flex layout, where 100cqh can't be read) */
   .split-view:has(.map-area) .map-area { align-self: center; width: 100vw; padding: 0; }
   .split-view:has(.map-area) .map-placeholder { border-radius: 0; box-shadow: none; --map-s: calc(var(--map-box-w) / var(--map-fit-fw)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
   .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
@@ -89,7 +60,33 @@
    the Filters button and the active filter chips float over the map to the right of the cards, the filters opening in
    a card under them (modal-sheet.css, .sheet--popover). A list with its detail (Results list) keeps its two panes. */
 @media (min-width: 83.9375rem) {
-  body:has(> .bottom-nav) .split-view .split-detail { height: 100cqh; }   /* the top bar replaced the bottom one */
+  /* a list with its detail (Results list, Saved races) on a desktop: the list in a phone-width pane, the detail beside it */
+  body > .phone-screen.split-view:not(:has(.map-area)) { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
+  body > .phone-screen.split-view:not(:has(.map-area)) > main {
+    display: grid;
+    grid-template-columns: var(--pane-w) minmax(0, 1fr);
+    grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
+    align-items: start;
+    max-width: none;
+    margin: 0;
+  }
+  .split-view:not(:has(.map-area)) > main > *, .split-view:not(:has(.map-area)) .list-area { grid-column: 1; }
+  body > .phone-screen.split-view:not(:has(.map-area)) > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
+  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2) calc(100% - var(--pane-w) + var(--space-2)); }   /* a pushed screen's bar (Saved races): its glass the window's width, its back button, title and action over the list pane they belong to (HIG Split views: each column its own bar); over the detail it is that pane's empty bar (layout pass, 2026-11-18) */
+  .split-view:not(:has(.map-area)) .split-detail { --split: 1; grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* a pushed screen's bar takes its height in the flow: the pane starts under it and ends at the screen's foot */
+  /* a list with nothing to choose (Results list, Saved races: -empty, -error; layout pass, 2026-11-18): no pane asks to
+     choose; the screen is one column, centred at --container-max */
+  body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > main { display: flex; max-width: var(--container-max); margin-inline: auto; }
+  body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > .top-bar--large { width: auto; padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }
+  .split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) .split-detail { display: none; }
+  .split-view:has(> main[aria-busy="true"], .list-area[aria-busy="true"]) .split-empty { visibility: hidden; }   /* while the list loads, nothing can be chosen yet: the pane waits, without words */
+  .split-empty { flex: 1; display: grid; place-items: center; }
+  .split-empty[hidden], .split-content[hidden] { display: none; }
+  .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
+  .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
+  .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
   body > .phone-screen.split-view:has(.map-area) {
     container-type: size;   /* also the cards' and the map's containing block */
     display: grid;
@@ -143,4 +140,8 @@
   .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* the race card opens when a race is chosen */
   .split-view:has(.map-area) .split-detail > .top-bar { position: sticky; top: 0; z-index: var(--z-bar); display: flex; justify-content: flex-end; min-height: 0; height: var(--target); margin-bottom: calc(var(--target) * -1); padding: var(--space-2) var(--space-2) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border: 0; }   /* Close floats at the card's corner, over the photo */
   .split-view:not(:has(.map-area)) .split-detail > .top-bar { display: none; }
+  /* the race card shows the format chip under the title, as the list card does (designer, 2026-11-19); its facts then
+     drop their Sport type row, the first, so the format isn't said twice */
+  .split-view:has(.map-area) .split-content .race > .sport-tag { display: inline-flex; margin: calc(var(--space-2) * -1) 0 var(--space-4); }
+  .split-view:has(.map-area) .split-content .race .facts > :is(dt, dd):first-of-type { display: none; }
 }

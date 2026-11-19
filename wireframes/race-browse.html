@@ -32,10 +32,10 @@ window.RACE_CATALOG = [
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=c4207ac8">
+<link rel="stylesheet" href="../design-system/index.css?v=f179a246">
 <script src="../design-system/tokens/theme.js"></script>
-<link rel="preload" as="style" href="../design-system/map-data.css?v=c4207ac8" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=c4207ac8"></noscript>
+<link rel="preload" as="style" href="../design-system/map-data.css?v=f179a246" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=f179a246"></noscript>
 </head>
 <body class="onrace">
 
@@ -273,7 +273,7 @@ window.RACE_CATALOG = [
          sheet's one primary) on the trailing edge. No grabber: the sheet rests at one detent, so it isn't resizable. -->
     <header class="top-bar">
       <button type="button" id="filters-close" class="sheet-cancel">Cancel</button>
-      <button type="button" class="sheet-reset" data-filters-reset>Reset</button>   <!-- the desktop's filters card: Reset and Done in place of Cancel and Apply (2026-11-19; microcopy rows 600, 601) -->
+      <button type="button" class="sheet-clear" data-filters-clear>Clear all<span class="visually-hidden"> filters</span></button>   <!-- the desktop's filters card: Clear all and Done in place of Cancel and Apply (2026-11-19; microcopy rows 600, 601) -->
       <h2 id="filters-sheet-heading" class="bar-title">Filters</h2>
       <button type="submit" id="filters-apply" class="bar-action" form="filters-form"><span class="sheet-apply-label">Apply<span class="visually-hidden"> filters</span></span><span class="sheet-done-label">Done</span></button>
     </header>
@@ -477,7 +477,7 @@ window.RACE_CATALOG = [
       backdrop.classList.add('open');
     });
     filtersBtn.setAttribute('aria-expanded', 'true');
-    (focusables()[0] || closeBtn).focus({ preventScroll: true });   // the first control there is: Cancel in the sheet, Reset in the desktop's card
+    (focusables()[0] || closeBtn).focus({ preventScroll: true });   // the first control there is: Cancel in the sheet, Clear all in the desktop's card
   }
   function closeSheet() {
     sheet.classList.remove('open');
@@ -499,8 +499,8 @@ window.RACE_CATALOG = [
   });
   openBtns.forEach(function (btn) { btn.addEventListener('click', openSheet); });
   closeBtn.addEventListener('click', closeSheet);
-  // Reset (the desktop's filters card, 2026-11-19): the card's filters back to none, the search kept; nothing applies until Done
-  sheet.querySelectorAll('[data-filters-reset]').forEach(function (b) {
+  // Clear all (the desktop's filters card, 2026-11-19): the card's filters back to none, the search kept; nothing applies until Done
+  sheet.querySelectorAll('[data-filters-clear]').forEach(function (b) {
     b.addEventListener('click', function () {
       var p = new URLSearchParams(); if (searchInput.value) p.set('q', searchInput.value);
       writeForm(p);

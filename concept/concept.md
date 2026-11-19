@@ -1610,3 +1610,12 @@ Race browse first, the other screens wait. References: Strava Maps and Komoot (a
 - **States:** loading, the list card's skeleton and the map's pulse; empty and error inside the list card, the map without pins beside them; a failed race inside the race card.
 - **How:** the Split view pattern keeps its behaviour (`split-view.js`: the choice in the URL, the detail from the detail page); a screen with a map takes its desktop form in `split-view.css` (the screen a grid with the cards as its items, `main` laid out through, the map absolute behind them), the map framing in `static-map.css` (a horizontal shift), the popover in `modal-sheet.css`, the top bar in `tab-bar.css`, the screen rows in `screen.css`. The screens changed only in markup (the nav's two links, the sheet's Reset and Done labels, Close in place of "‹ Map"). The overflow check's tab bar test now asks for the bottom bar on a tablet and the top bar on a desktop.
 - **Docs:** the Tab bar's stages (Tablet: at the bottom, as on a phone; Desktop: a top bar), Close on the Top bar's page, Reset and Done in the Modal sheet's specimen, Split view's Race browse stages. Review: `ui/review-webapp.html`.
+
+### Race browse follow-ups (designer brief, 2026-11-19)
+
+- **Results list on a tablet is the phone's:** one column capped at `--container-max`, no split view; the tablet behaves like the phone everywhere (Saved races too). The list-with-detail panes are a desktop's only (`split-view.css`); desktop Results list waits for its own pass.
+- **One wording for one action:** the filters card says **Clear all** (accessible name "Clear all filters", voice.md's dictionary phrase) and **Done**; "Reset" lasted a few hours (`microcopy.md` row 600, then `voice.html`).
+- **The race card shows the format chip** under the title, as the list card does; its facts drop their Sport type row there, so the format isn't said twice. The chip is in Race detail's own page, shown only in the desktop's card (`detail-section.css`, `split-view.css`), so the card and the phone's Race detail stay one source.
+- **A chosen race scrolls into view:** a choice that arrives by its address (a link, a reload, Back) scrolls its card into view in whatever scrolls the list (`split-view.js`).
+- **The empty state drops "above":** "Remove a filter, or try a wider date range, another region, or more sport types." (`microcopy.md` row 25): on a desktop the filters sit to the right of the list card.
+- Review: `ui/review-webapp.html` → Follow-ups.
