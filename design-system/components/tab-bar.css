@@ -54,52 +54,72 @@ body > .bottom-nav a::before {
 .bottom-nav a[data-tab="profile"] { --tab-icon: var(--icon-user); }
 
 /* order 1080 */
-/* The tab bar by width (Lesson 10 step 3, 2026-11-15; responsive/width-audit.md → Decisions, 4): the same three
-   destinations and the same states (current, hover, pressed, keyboard focus, from the same roles on the same glass) in
-   three forms. The numbers are design-system/tokens/tokens.css's --bp-tablet and --bp-desktop, written out because a media
-   query can't read var(); scripts/build_components.py stops the build if they drift apart.
-   Tablet: iPad's tab bar, "near the top of the screen", icon and label "side by side" in regular views (HIG Tab bars):
-   a glass capsule at the top centre, in its own row above the screen's scroll area. */
+/* The tab bar by width (Lesson 10 step 3, 2026-11-15; revised by the designer 2026-11-19, the web app desktop). The
+   numbers are design-system/tokens/tokens.css's --bp-tablet and --bp-desktop, written out because a media query can't
+   read var(); scripts/build_components.py stops the build if they drift apart.
+   Phone and tablet: the floating capsule at the bottom, as on a phone (a tablet behaves like the phone, navigation
+   included); on a tablet it keeps a phone's width, centred, so its three tabs don't spread across the window.
+   (Until 2026-11-19: on a tablet, iPad's tab bar at the top; on a desktop, a macOS sidebar.) */
+.bottom-nav .nav-brand, .bottom-nav .nav-action { display: none; }   /* the desktop's top bar only */
 @media (min-width: 48.8125rem) {
+  body > .bottom-nav { max-width: calc(var(--pane-w) - var(--tabbar-inset) - var(--tabbar-inset)); margin-inline: auto; }
+}
+/* Desktop: a web app's top bar, not macOS (designer, 2026-11-19; Strava and Komoot as references): the logo (Onrace's
+   wordmark, a link home) at the leading edge, the three destinations beside it, icon and label side by side, and Log
+   result, the app's one primary action, at the trailing edge. The bar's glass spans the window, --topnav-h tall, with
+   a hairline under it; the screen starts under it. */
+@media (min-width: 83.9375rem) {
   body > .bottom-nav {
     position: relative;
     order: -1;
     flex: none;
-    align-self: center;
     left: auto;
     right: auto;
     bottom: auto;
-    height: auto;
-    margin-top: calc(var(--safe-top) + var(--tabbar-gap));
-    padding: var(--space-1);
-  }
-  .bottom-nav ul { grid-template-columns: repeat(3, auto); gap: var(--space-1); }
-  .bottom-nav a {
-    grid-auto-flow: column;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-4);
-    font-size: min(var(--size-body), var(--size-bar-max));   /* beside the icon the label has the row's height to itself: the bar's text size, capped as the sheets' bars are */
-  }
-  body > .bottom-nav a::before { width: var(--icon-m); height: var(--icon-m); }
-}
-/* Desktop: a macOS sidebar on the left (HIG Sidebars: "appears on the leading side of a view and lets people navigate
-   between areas of your app"), one row per destination, icon then label, starting at the top. Layout pass (2026-11-18,
-   DESIGN.md → Width → The wide layout): it stands edge to edge, the window's full height, and meets the first pane at
-   the thin divider (--grid-gap, --hairline), as the panes meet one another (HIG Split views: "Prefer the thin divider
-   style"), so the sidebar and the panes sit on one grid; its first row starts on the panes' top line (--pane-top). Its
-   ground is the bars' glass (C1). Until then it floated, inset from the window's edges with rounded corners. */
-@media (min-width: 83.9375rem) {
-  body > .bottom-nav {
-    align-self: stretch;
-    width: var(--sidebar-w);
+    max-width: none;
     margin: 0;
-    padding: calc(var(--safe-top) + var(--pane-top)) var(--space-2) var(--space-2);
-    display: block;
+    height: calc(var(--topnav-h) + var(--safe-top));
+    padding: var(--safe-top) var(--float-gap) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
     border-radius: 0;
-    border-right: var(--grid-gap) solid var(--hairline);
+    border-bottom: var(--grid-gap) solid var(--hairline);
     box-shadow: none;
   }
-  .bottom-nav ul { grid-template-columns: minmax(0, 1fr); }
-  .bottom-nav a { justify-content: start; padding: 0 var(--space-3); }
+  .bottom-nav ul { grid-template-columns: repeat(3, auto); gap: var(--space-1); }
+  .bottom-nav a { grid-auto-flow: column; align-items: center; gap: var(--space-2); padding: 0 var(--space-4); font-size: min(var(--size-body), var(--size-bar-max)); }
+  body > .bottom-nav a::before { width: var(--icon-m); height: var(--icon-m); }
+  .bottom-nav .nav-brand {
+    display: grid;
+    align-items: center;
+    min-height: var(--target);   /* a 44pt target, centred in the bar, so its focus halo has room above and below */
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: var(--size-item);
+    font-weight: var(--weight-display);
+    letter-spacing: var(--tracking-display);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .bottom-nav .nav-brand::before { content: none; }
+  .bottom-nav .nav-action {   /* the one primary: the amber fill, as the screen's primary button (primary-button.css), a capsule as every bar control (C7) */
+    display: flex;
+    margin-left: auto;
+    min-height: var(--target);
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-capsule);
+    background: var(--accent-fill);
+    color: var(--on-accent-fill);
+    font-weight: var(--weight-strong);
+  }
+  .bottom-nav .nav-action::before { content: none; }
+  @media (hover: hover) { .bottom-nav .nav-action:is(:hover, .is-hover) { background: var(--accent-hover); } }
+  .bottom-nav .nav-action:is(:active, .is-pressed) { background: var(--accent-pressed); }
+  .bottom-nav .nav-action:is(:focus-visible, .is-focus) { outline-offset: var(--focus-line); box-shadow: 0 0 0 var(--focus-line) var(--focus-on-accent); }
+  /* one primary: the top bar's Log result is the app's, so Results list's own (its large title's bar action) goes; and
+     a state that brings its own primary (Log your first result, Try again, Change filters) steps it down to the bar's
+     plain text, as it steps a bar action down (top-bar.css) */
+  body:has(> .bottom-nav .nav-action) .top-bar--large .bar-action { display: none; }
+  body:has(.phone-screen .state-message:not(.split-detail *) .state-action:not(.secondary)) > .bottom-nav .nav-action { background: transparent; color: var(--text-primary); }
 }

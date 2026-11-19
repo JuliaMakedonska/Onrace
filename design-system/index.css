@@ -239,7 +239,10 @@
   --col-count-tablet: 2;      /* panes from --bp-tablet up, list + map (Race browse; a chosen race's detail in the map's place), list + Result detail (Results list). Counts panes, not card columns */
   --col-count-desktop: 3;     /* panes from --bp-desktop up, list + detail + map (Race browse); the macOS sidebar beside them is navigation, not a pane */
   --map-min: 20rem;           /* [?] the map pane's narrowest (designer, 2026-11-15): the map takes what the list and the detail leave, never less than 320px, the narrowest screen the map is checked at (check_overflow, 320 wide) */
-  --sidebar-w: 15rem;         /* [?] the desktop sidebar's column, its divider included: 240px (HIG Sidebars gives no width; a macOS sidebar's usual default). Since the layout pass (2026-11-18) it stands edge to edge, full height, and meets the first pane at the thin divider, as the panes meet (HIG Split views); it floated, inset with rounded corners (--sidebar-inset, --radius-sidebar), until then */
+  --sidebar-w: 15rem;         /* [?] retired with the sidebar (2026-11-19: the desktop's top bar took its place); kept as the term --bp-desktop's arithmetic was worked out from. Was: the desktop sidebar's column, its divider included: 240px (HIG Sidebars gives no width; a macOS sidebar's usual default). Since the layout pass (2026-11-18) it stands edge to edge, full height, and meets the first pane at the thin divider, as the panes meet (HIG Split views); it floated, inset with rounded corners (--sidebar-inset, --radius-sidebar), until then */
+  --topnav-h: 3.5rem;         /* [?] the desktop's top bar (designer, 2026-11-19: from --bp-desktop Onrace is a web app, the logo, the three destinations and Log result in one horizontal bar; it replaced the macOS sidebar): 56px at the default text size, in rem so it grows with the text; the full-bleed map starts under it */
+  --float-gap: var(--space-4);  /* a floating card's room from the window's edges and from the card beside it (designer, 2026-11-19; Komoot's Routes and route cards over the map): the phone's gutter */
+  --radius-float: 16px;       /* [?] a floating card's corners over the map (Race browse from --bp-desktop): between the content's 6 and the sheet's 38, as Komoot's and Strava's map cards; no HIG number, the web app's own */
   --pane-top: var(--space-4); /* the wide layout's one top line (layout pass, 2026-11-18; DESIGN.md → Width → The wide layout): from --bp-tablet a pane's first content (the large title, the sidebar's first row) starts this far below the pane's top edge, under the top safe area */
   --container-max: 42rem;     /* [?] a single-column screen stops growing here and centres (Profile, a detail opened on its own): 672px, UIKit's readable content width at the default text size (HIG Layout: layout guides "restrict the width of text for optimal readability"); Apple's number, not HIG's text */
   --form-sheet-w: 33.75rem;   /* [?] a sheet from --bp-tablet is a form sheet centred on the screen (Lesson 10 step 6, 2026-11-18; HIG Sheets: "Prefer using the page or form sheet presentation styles in an iPadOS app"): 540px at the default text size, UIKit's form sheet size on iPad; Apple's number, not HIG's text */
@@ -1243,6 +1246,7 @@ body > .bottom-nav a::before {
   --map-s: calc(var(--map-box-w) / var(--map-phone-fw));
   --map-cx: var(--map-phone-cx);
   --map-cy: var(--map-phone-cy);
+  --map-shift: 0%;   /* how far right of the box's centre the frame sits: 0 everywhere but a desktop, where the cards cover the window's left part (split-view.css); a percentage so it's nothing in any context */
 }
 .map-placeholder::before, .map-placeholder::after {   /* land, then coastlines and borders; the masks carry shape, tokens carry color */
   content: "";
@@ -1254,8 +1258,8 @@ body > .bottom-nav a::before {
   /* 50% centres the map in the box; the length then moves the frame's centre there. A percentage here is of the box
      less the map, so the box's own height is never needed (on a phone the map's height comes from flex layout, and
      100cqh read 0 there in Chrome, 2026-11-18) */
-  -webkit-mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
-  mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
+  -webkit-mask-position: calc(50% + var(--map-shift) + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
+  mask-position: calc(50% + var(--map-shift) + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
 }
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
@@ -1272,7 +1276,7 @@ body > .bottom-nav a::before {
   /* the label is centred on its dot unless that would put it past the map's side: then it slides along, stopping
      --space-2 inside the edge, and the dot and the leader stay on the coordinate (Lesson 10 step 4: Berlin, Chamonix and
      Dallas ran past the frame at 200% text). --pin-at is the dot's x in the map; -50% and 100% are the label's own width. */
-  --pin-at: calc(var(--map-box-w) / 2 + (var(--xf) - var(--map-cx)) * var(--map-s));   /* on the frame: the map's centre plus the pin's distance from the frame's centre */
+  --pin-at: calc(var(--map-box-w) / 2 + var(--map-shift) + (var(--xf) - var(--map-cx)) * var(--map-s));   /* on the frame: the map's centre plus the pin's distance from the frame's centre */
   --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(var(--map-box-w) - var(--space-2) - var(--pin-at) - 100%));
   left: var(--pin-at);
   top: calc(50% + (var(--yf) - var(--map-cy)) * var(--map-s) * var(--map-ratio));
@@ -1321,6 +1325,9 @@ body > .bottom-nav a::before {
 @media (hover: hover) { .map-pin:is(:hover, .is-hover) > span { background: var(--raised-hover); } }   /* the label rests on --raised */
 .map-pin:is(:active, .is-pressed) > span { background: var(--raised-pressed); }
 .map-pin[hidden] { display: none; }
+/* the chosen race's pin (Race browse, a desktop with a race chosen; designer 2026-11-19): Selected, as its card (race-card.css),
+   the --selected fill with a --text-secondary edge; split-view.js marks it aria-current="page" with its card */
+.map-pin[aria-current="page"] > span { background: var(--selected); outline: var(--border) solid var(--text-secondary); outline-offset: calc(var(--border) * -1); }
 /* focus (2026-11-08): the halo follows the label, the shape you see, not the 44pt box round it; while a pin has focus
    the map lets the halo paint past its edge, so a pin by the edge (Berlin at 320) keeps its whole halo */
 .map-pin:is(:focus-visible, .is-focus) { outline: none; }
@@ -2235,59 +2242,80 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .skel-signout .bar { height: var(--grouped-row-min); border-radius: var(--radius-2); }   /* Sign out's grouped row (2026-11-07) */
 
 /* ---- design-system/components/tab-bar.css · order 1080 ---- */
-/* The tab bar by width (Lesson 10 step 3, 2026-11-15; responsive/width-audit.md → Decisions, 4): the same three
-   destinations and the same states (current, hover, pressed, keyboard focus, from the same roles on the same glass) in
-   three forms. The numbers are design-system/tokens/tokens.css's --bp-tablet and --bp-desktop, written out because a media
-   query can't read var(); scripts/build_components.py stops the build if they drift apart.
-   Tablet: iPad's tab bar, "near the top of the screen", icon and label "side by side" in regular views (HIG Tab bars):
-   a glass capsule at the top centre, in its own row above the screen's scroll area. */
+/* The tab bar by width (Lesson 10 step 3, 2026-11-15; revised by the designer 2026-11-19, the web app desktop). The
+   numbers are design-system/tokens/tokens.css's --bp-tablet and --bp-desktop, written out because a media query can't
+   read var(); scripts/build_components.py stops the build if they drift apart.
+   Phone and tablet: the floating capsule at the bottom, as on a phone (a tablet behaves like the phone, navigation
+   included); on a tablet it keeps a phone's width, centred, so its three tabs don't spread across the window.
+   (Until 2026-11-19: on a tablet, iPad's tab bar at the top; on a desktop, a macOS sidebar.) */
+.bottom-nav .nav-brand, .bottom-nav .nav-action { display: none; }   /* the desktop's top bar only */
 @media (min-width: 48.8125rem) {
+  body > .bottom-nav { max-width: calc(var(--pane-w) - var(--tabbar-inset) - var(--tabbar-inset)); margin-inline: auto; }
+}
+/* Desktop: a web app's top bar, not macOS (designer, 2026-11-19; Strava and Komoot as references): the logo (Onrace's
+   wordmark, a link home) at the leading edge, the three destinations beside it, icon and label side by side, and Log
+   result, the app's one primary action, at the trailing edge. The bar's glass spans the window, --topnav-h tall, with
+   a hairline under it; the screen starts under it. */
+@media (min-width: 83.9375rem) {
   body > .bottom-nav {
     position: relative;
     order: -1;
     flex: none;
-    align-self: center;
     left: auto;
     right: auto;
     bottom: auto;
-    height: auto;
-    margin-top: calc(var(--safe-top) + var(--tabbar-gap));
-    padding: var(--space-1);
-  }
-  .bottom-nav ul { grid-template-columns: repeat(3, auto); gap: var(--space-1); }
-  .bottom-nav a {
-    grid-auto-flow: column;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-4);
-    font-size: min(var(--size-body), var(--size-bar-max));   /* beside the icon the label has the row's height to itself: the bar's text size, capped as the sheets' bars are */
-  }
-  body > .bottom-nav a::before { width: var(--icon-m); height: var(--icon-m); }
-}
-/* Desktop: a macOS sidebar on the left (HIG Sidebars: "appears on the leading side of a view and lets people navigate
-   between areas of your app"), one row per destination, icon then label, starting at the top. Layout pass (2026-11-18,
-   DESIGN.md → Width → The wide layout): it stands edge to edge, the window's full height, and meets the first pane at
-   the thin divider (--grid-gap, --hairline), as the panes meet one another (HIG Split views: "Prefer the thin divider
-   style"), so the sidebar and the panes sit on one grid; its first row starts on the panes' top line (--pane-top). Its
-   ground is the bars' glass (C1). Until then it floated, inset from the window's edges with rounded corners. */
-@media (min-width: 83.9375rem) {
-  body > .bottom-nav {
-    align-self: stretch;
-    width: var(--sidebar-w);
+    max-width: none;
     margin: 0;
-    padding: calc(var(--safe-top) + var(--pane-top)) var(--space-2) var(--space-2);
-    display: block;
+    height: calc(var(--topnav-h) + var(--safe-top));
+    padding: var(--safe-top) var(--float-gap) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
     border-radius: 0;
-    border-right: var(--grid-gap) solid var(--hairline);
+    border-bottom: var(--grid-gap) solid var(--hairline);
     box-shadow: none;
   }
-  .bottom-nav ul { grid-template-columns: minmax(0, 1fr); }
-  .bottom-nav a { justify-content: start; padding: 0 var(--space-3); }
+  .bottom-nav ul { grid-template-columns: repeat(3, auto); gap: var(--space-1); }
+  .bottom-nav a { grid-auto-flow: column; align-items: center; gap: var(--space-2); padding: 0 var(--space-4); font-size: min(var(--size-body), var(--size-bar-max)); }
+  body > .bottom-nav a::before { width: var(--icon-m); height: var(--icon-m); }
+  .bottom-nav .nav-brand {
+    display: grid;
+    align-items: center;
+    min-height: var(--target);   /* a 44pt target, centred in the bar, so its focus halo has room above and below */
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: var(--size-item);
+    font-weight: var(--weight-display);
+    letter-spacing: var(--tracking-display);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .bottom-nav .nav-brand::before { content: none; }
+  .bottom-nav .nav-action {   /* the one primary: the amber fill, as the screen's primary button (primary-button.css), a capsule as every bar control (C7) */
+    display: flex;
+    margin-left: auto;
+    min-height: var(--target);
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-capsule);
+    background: var(--accent-fill);
+    color: var(--on-accent-fill);
+    font-weight: var(--weight-strong);
+  }
+  .bottom-nav .nav-action::before { content: none; }
+  @media (hover: hover) { .bottom-nav .nav-action:is(:hover, .is-hover) { background: var(--accent-hover); } }
+  .bottom-nav .nav-action:is(:active, .is-pressed) { background: var(--accent-pressed); }
+  .bottom-nav .nav-action:is(:focus-visible, .is-focus) { outline-offset: var(--focus-line); box-shadow: 0 0 0 var(--focus-line) var(--focus-on-accent); }
+  /* one primary: the top bar's Log result is the app's, so Results list's own (its large title's bar action) goes; and
+     a state that brings its own primary (Log your first result, Try again, Change filters) steps it down to the bar's
+     plain text, as it steps a bar action down (top-bar.css) */
+  body:has(> .bottom-nav .nav-action) .top-bar--large .bar-action { display: none; }
+  body:has(.phone-screen .state-message:not(.split-detail *) .state-action:not(.secondary)) > .bottom-nav .nav-action { background: transparent; color: var(--text-primary); }
 }
 
 /* ---- design-system/components/screen.css · order 1090 ---- */
-/* A tab screen by width (Lesson 10 step 3, 2026-11-15): from --bp-tablet the screen fills the window, the tab bar takes a
-   row above the scroll area (and, from --bp-desktop, a column beside it), and the screen's own column stops growing at
+/* A tab screen by width (Lesson 10 step 3, 2026-11-15; revised 2026-11-19, the web app desktop): from --bp-tablet the
+   screen fills the window and only its column is capped (the tablet breakpoint now only caps the column: the tab bar
+   stays at the bottom, as on a phone); from --bp-desktop the top bar takes a row above the scroll area, and the screen's own column stops growing at
    --container-max and centres, until the panes come (width audit → Decisions). The large title header and its bar
    narrow to that column, so on desktop they never run under the sidebar. The numbers are tokens.css's --bp-tablet and
    --bp-desktop (a media query can't read var(); scripts/build_components.py checks they agree).
@@ -2298,15 +2326,17 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
    on --stack-w), never to the window. A sheet keeps the phone's width until the form sheets come. */
 @media (min-width: 48.8125rem) {
   body:has(> .phone-screen) { max-width: none; }
-  body:has(> .bottom-nav) { display: flex; flex-direction: column; }
-  body:has(> .bottom-nav) > .phone-screen { flex: 1; min-height: 0; min-width: 0; height: auto; padding-bottom: 0; }   /* no tab bar to clear at the bottom */
   body > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
   body > .phone-screen > :is(.top-bar, .action-bar), body:has(> .phone-screen) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar's buttons (back, Log result, Save) end where the column ends */
   body > .phone-screen > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }   /* the action bar's button keeps the column's gutter */
-  body > .phone-screen > :is(main, .screen-main) > header { padding-top: calc(var(--safe-top) + var(--pane-top)); }   /* the wide layout's top line (layout pass, 2026-11-18): the large title starts --pane-top below its pane's top edge, as the sidebar's first row does (it sat 8px from the window's top on a desktop) */
 }
+/* Desktop (designer, 2026-11-19, the web app): the top bar (tab-bar.css) takes a row above the screen, the screen fills
+   the rest; no tab bar to clear at the bottom. A tablet is the phone's: the tab bar floats at the bottom and the screen
+   scrolls under it, its column capped at --container-max */
 @media (min-width: 83.9375rem) {
-  body:has(> .bottom-nav) { flex-direction: row; }
+  body:has(> .bottom-nav) { display: flex; flex-direction: column; }
+  body:has(> .bottom-nav) > .phone-screen { flex: 1; min-height: 0; min-width: 0; height: auto; padding-bottom: 0; }
+  body > .phone-screen > :is(main, .screen-main) > header { padding-top: calc(var(--safe-top) + var(--pane-top)); }   /* the wide layout's top line (layout pass, 2026-11-18): the large title starts --pane-top below the top bar */
 }
 
 /* ---- design-system/components/grouped-settings-rows.css · order 1100 ---- */
@@ -2367,9 +2397,30 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
    split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look */
 .split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .split-content .result > h2 { margin-bottom: var(--space-5); }
+/* the race card's Close (desktop, the web app; designer 2026-11-19): an × at its corner, on the glass of the bars so it
+   reads over the photo; its name, "Close", is visually hidden (microcopy row 599) */
+.card-close {
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  margin-left: auto;
+  border-radius: var(--radius-circle);
+  background: var(--glass-ground);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  color: var(--text-primary);
+}
+.card-close::before { content: ""; width: var(--icon-m); height: var(--icon-m); background: currentColor; -webkit-mask: var(--icon-close) center / contain no-repeat; mask: var(--icon-close) center / contain no-repeat; }
+@media (hover: hover) { .card-close:is(:hover, .is-hover) { color: var(--text-hover); } }
+.card-close:is(:active, .is-pressed) { color: var(--text-pressed); }
+.card-close:is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
+
+/* A list with its detail (Results list, Saved races) from --bp-tablet: the list in a phone-width pane, the detail beside
+   it. (A screen with a map, Race browse, splits only on a desktop, and differently: below.) */
 @media (min-width: 48.8125rem) {
-  body > .phone-screen.split-view { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
-  body > .phone-screen.split-view > main {
+  body > .phone-screen.split-view:not(:has(.map-area)) { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
+  body > .phone-screen.split-view:not(:has(.map-area)) > main {
     display: grid;
     grid-template-columns: var(--pane-w) minmax(0, 1fr);
     grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
@@ -2377,42 +2428,95 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
     max-width: none;
     margin: 0;
   }
-  .split-view > main > *, .split-view .list-area { grid-column: 1; }
-  body > .phone-screen.split-view > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
-  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2) calc(100% - var(--pane-w) + var(--space-2)); }   /* a pushed screen's bar (Saved races): its glass the window's width, its back button, title and action over the list pane they belong to (HIG Split views: each column its own bar); over the detail it is that pane's empty bar (layout pass, 2026-11-18; the title sat across the divider) */
-  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* that bar takes its height in the flow: the pane beside the list starts under it, sticks under it, and ends at the screen's foot */
-  .split-view .view-toggle { display: none; }   /* both views show at once */
-  .split-view :is(.map-area, .split-detail) { grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); }
-  /* the map pane (layout pass, 2026-11-18; DESIGN.md → Width → The wide layout): the map fills its pane edge to edge,
-     no frame of its own (the pane's divider is its edge), and frames the pins' box (map-data.css --map-fit-*) at the
-     pane's own shape, never the phone's crop stretched */
-  .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: 0; }
-  .split-view .map-placeholder { border-radius: 0; box-shadow: none; --map-s: min(var(--map-box-w) / var(--map-fit-fw), var(--map-box-h) / var(--map-fit-fh)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
-  .split-view .map-area .state-message { display: none; }   /* the list pane carries the screen's state (empty, error); the map beside it stays a map */
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }
-  /* a list with nothing to choose (Results list, Saved races: -empty, -error; layout pass): no pane asks to choose; the screen is one
-     column, centred at --container-max, as a single-column screen. A screen with a map keeps it beside the list */
+  .split-view:not(:has(.map-area)) > main > *, .split-view:not(:has(.map-area)) .list-area { grid-column: 1; }
+  body > .phone-screen.split-view:not(:has(.map-area)) > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
+  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2) calc(100% - var(--pane-w) + var(--space-2)); }   /* a pushed screen's bar (Saved races): its glass the window's width, its back button, title and action over the list pane they belong to (HIG Split views: each column its own bar); over the detail it is that pane's empty bar (layout pass, 2026-11-18) */
+  .split-view:not(:has(.map-area)) .split-detail { --split: 1; grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+  body:has(> .bottom-nav) .split-view .split-detail { height: calc(100cqh - var(--tabbar-clear)); }   /* on a tablet the tab bar floats at the bottom (2026-11-19): the detail pane ends above it, so its action bar stays clear */
+  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* a pushed screen's bar takes its height in the flow: the pane starts under it and ends at the screen's foot */
+  /* a list with nothing to choose (Results list, Saved races: -empty, -error; layout pass, 2026-11-18): no pane asks to
+     choose; the screen is one column, centred at --container-max */
   body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > main { display: flex; max-width: var(--container-max); margin-inline: auto; }
   body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > .top-bar--large { width: auto; padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }
   .split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) .split-detail { display: none; }
   .split-view:has(> main[aria-busy="true"], .list-area[aria-busy="true"]) .split-empty { visibility: hidden; }   /* while the list loads, nothing can be chosen yet: the pane waits, without words */
-  .split-detail { --split: 1; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
-  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* tablet, Race browse: the map until a race is chosen */
-  .split-view:has(.card-link[aria-current="page"]) .map-area { display: none; }   /* then the race in the map's place */
   .split-empty { flex: 1; display: grid; place-items: center; }
   .split-empty[hidden], .split-content[hidden] { display: none; }
   .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
   .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
   .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
   .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
+  /* a screen with a map (Race browse) on a tablet is the phone's (designer, 2026-11-19): its column capped at
+     --container-max (screen.css), the List / Map switch kept, and the Map view filling the screen's width edge to edge,
+     no frame, framed to the pins at its own shape (the width decides: on a tablet the view's height comes from the
+     flex layout, where 100cqh can't be read) */
+  .split-view:has(.map-area) .map-area { align-self: center; width: 100vw; padding: 0; }
+  .split-view:has(.map-area) .map-placeholder { border-radius: 0; box-shadow: none; --map-s: calc(var(--map-box-w) / var(--map-fit-fw)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }
 }
+/* Desktop: a web app (designer, 2026-11-19; Strava Maps and Komoot as references). Race browse is the map, full bleed
+   under the top bar, edge to edge, no panes and no frames, framed to the races in the room the cards leave; over it,
+   floating cards (--radius-float, the page's ground, the float shadow, --float-gap from the window's edges and from each
+   other): the list card on the left (the large title, search, the count and the race list, scrolling inside the card),
+   and, once a race is chosen, the race card beside it (Split view's detail: the race's own page, Close at its corner);
+   the Filters button and the active filter chips float over the map to the right of the cards, the filters opening in
+   a card under them (modal-sheet.css, .sheet--popover). A list with its detail (Results list) keeps its two panes. */
 @media (min-width: 83.9375rem) {
-  /* desktop (designer, 2026-11-18; width audit → Decisions): until a race is chosen, two panes, the list and a wide map;
-     choosing one opens the detail pane between them. Results list keeps its two panes and "No result selected" */
-  body > .phone-screen.split-view:has(.map-area):has(.card-link[aria-current="page"]) > main { grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr); }   /* list, detail, map: the map takes the rest, never less than --map-min (--bp-desktop is worked out from it) */
-  .split-view:has(.map-area):has(.card-link[aria-current="page"]) .map-area { grid-column: 3; display: flex; }
-  .split-detail > .top-bar { display: none; }   /* the map is beside it: no way back needed */
+  body:has(> .bottom-nav) .split-view .split-detail { height: 100cqh; }   /* the top bar replaced the bottom one */
+  body > .phone-screen.split-view:has(.map-area) {
+    container-type: size;   /* also the cards' and the map's containing block */
+    display: grid;
+    grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: var(--float-gap);
+    padding: var(--float-gap);
+    overflow: hidden;
+  }
+  .split-view:has(.map-area) > .top-bar--large { display: none; }   /* the title is in the list card */
+  .split-view:has(.map-area) > main { display: contents; }   /* its parts are the cards' */
+  .split-view:has(.map-area)::before {   /* the list card's ground, behind its parts */
+    content: "";
+    grid-column: 1;
+    grid-row: 1 / -1;
+    z-index: var(--z-lift);
+    border-radius: var(--radius-float);
+    background: var(--page);
+    box-shadow: var(--float-shadow);
+  }
+  .split-view:has(.map-area) > main > header { grid-column: 1; grid-row: 1; z-index: var(--z-float); padding: var(--pane-top) var(--space-4) var(--space-3); }
+  .split-view:has(.map-area) > main > .results-row { grid-column: 1; grid-row: 2; z-index: var(--z-float); }
+  .split-view:has(.map-area) .list-area { grid-column: 1; grid-row: 3; z-index: var(--z-float); min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-top: var(--focus-reach);   /* the list scrolls inside the card: room above the first card for its focus halo */ border-radius: 0 0 var(--radius-float) var(--radius-float); }
+  .split-view:has(.map-area) > main > .controls { grid-column: 2 / -1; grid-row: 1; z-index: var(--z-float); align-self: start; justify-self: start; position: static; padding: 0; border: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .split-view:has(.map-area):has(.card-link[aria-current="page"]) > main > .controls { grid-column: 3; }
+  .split-view:has(.map-area) .view-toggle { display: none; }   /* the list and the map show at once */
+  .split-view:has(.map-area) :is(.filters-trigger, .chips-row .chip, .clear-all) { box-shadow: var(--float-shadow); }   /* they float over the map */
+  .split-view:has(.map-area) .control-row .filters-trigger { flex: none; }
+  .split-view:has(.map-area) .map-area, .split-view:has(.map-area) .map-area[hidden] { display: flex; position: absolute; inset: 0; z-index: var(--z-under); align-self: stretch; justify-self: stretch; width: auto; padding: 0; }
+  .split-view:has(.map-area) .map-area .state-message { display: none; }   /* the list card carries the screen's state (empty, error); the map behind it stays a map */
+  .split-view:has(.map-area) .map-placeholder {
+    --map-cover: calc(var(--float-gap) + var(--pane-w) + var(--float-gap));   /* the window's left part the cards cover: the races are framed in what's left */
+    --map-shift: calc(var(--map-cover) / 2);
+    --map-s: min((var(--map-box-w) - var(--map-cover)) / var(--map-fit-fw), var(--map-box-h) / var(--map-fit-fh));
+  }
+  .split-view:has(.map-area):has(.card-link[aria-current="page"]) .map-placeholder { --map-cover: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); }
+  .split-view:has(.map-area) .split-detail {
+    --split: 1;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    z-index: var(--z-float);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: var(--radius-float);
+    background: var(--page);
+    box-shadow: var(--float-shadow);
+  }
+  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* the race card opens when a race is chosen */
+  .split-view:has(.map-area) .split-detail > .top-bar { position: sticky; top: 0; z-index: var(--z-bar); display: flex; justify-content: flex-end; min-height: 0; height: var(--target); margin-bottom: calc(var(--target) * -1); padding: var(--space-2) var(--space-2) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border: 0; }   /* Close floats at the card's corner, over the photo */
+  .split-view:not(:has(.map-area)) .split-detail > .top-bar { display: none; }
 }
 
 /* ---- design-system/components/modal-sheet.css · order 1160 ---- */
@@ -2466,4 +2570,30 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) > :is(label, .row-label) { flex-basis: 100%; }
   .rows .row:not(.row--stacked):has(> :is(label, .row-label) + select:not([multiple])) > select { flex: 0 1 auto; min-width: 0; max-width: calc(100% - var(--icon-s)); }
+}
+
+/* ---- design-system/components/modal-sheet.css · order 1180 ---- */
+/* The filters as a popover card (designer, 2026-11-19, the web app desktop; Komoot's and Strava's filter cards): from
+   --bp-desktop a sheet marked .sheet--popover opens as a card under its button over the map, not as a form sheet; it
+   doesn't dim the screen, and its bar says Reset (the card's filters back to none) and Done (apply and close) in place
+   of Cancel and Apply (microcopy rows 600, 601). Escape or a click outside still closes it, as Cancel. Below a desktop it
+   is the sheet it always was. Where it sits is the screen's layout (split-view.css knows where the cards end). */
+.sheet > .top-bar > .sheet-reset, .sheet .sheet-done-label { display: none; }   /* a phone's and a tablet's sheet: Cancel and Apply (the bar's own button rule sets display, so this names the bar) */
+@media (min-width: 83.9375rem) {
+  body > .sheet--popover > .top-bar > .sheet-cancel, body > .sheet--popover .sheet-apply-label { display: none; }
+  body > .sheet--popover > .top-bar > .sheet-reset { display: flex; }
+  body > .sheet--popover .sheet-done-label { display: inline; }
+  body > .sheet--popover {
+    top: calc(var(--safe-top) + var(--topnav-h) + var(--float-gap) + var(--target) + var(--space-2));
+    left: calc(var(--float-gap) + var(--pane-w) + var(--float-gap));
+    width: var(--pane-w);
+    height: auto;
+    max-height: calc(100% - var(--safe-top) - var(--topnav-h) - var(--float-gap) - var(--target) - var(--space-2) - var(--float-gap));
+    translate: none;
+    transform: translateY(calc(var(--space-2) * -1));   /* closed: a step up, it settles under its button */
+    border-radius: var(--radius-float);
+  }
+  body > .sheet--popover.open { transform: none; }
+  body:has(> .sheet--popover) > .sheet-backdrop { background: transparent; }   /* a popover doesn't dim the screen */
+  body:has(> .sheet--popover):has(.card-link[aria-current="page"]) > .sheet--popover { left: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); }   /* the race card is open: the filters sit beside it */
 }

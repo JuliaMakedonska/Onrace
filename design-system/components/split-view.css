@@ -5,8 +5,9 @@
    Phone: nothing changes; the pane isn't drawn and a chosen card opens its own screen.
    From --bp-tablet: the list is a phone-width pane (--pane-w) on the left, and beside it the map (Race browse) or the
    detail (Results list); on Race browse a chosen race's detail takes the map's place, with "‹ Map" back.
-   From --bp-desktop: Race browse is two panes, the list and a wide map, until a race is chosen, then three, list, detail
-   and map (layout pass, 2026-11-18; until then the detail pane stood empty, "No race selected").
+   From --bp-desktop, Race browse (a screen with a map) is the web app's (designer, 2026-11-19): the full-bleed map with
+   floating cards, the list and the chosen race (below). Until then: on a tablet list + map or detail in the map's
+   place, on a desktop list, detail and map.
    The panes meet at the thin divider (--grid-gap); the list scrolls with the screen, the map and the detail stay put
    beside it at the screen's height and the detail scrolls on its own (HIG Split views). The numbers are tokens.css's
    --bp-tablet and --bp-desktop (a media query can't read var(); scripts/build_components.py checks they agree). */
@@ -22,9 +23,30 @@
    split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look */
 .split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .split-content .result > h2 { margin-bottom: var(--space-5); }
+/* the race card's Close (desktop, the web app; designer 2026-11-19): an × at its corner, on the glass of the bars so it
+   reads over the photo; its name, "Close", is visually hidden (microcopy row 599) */
+.card-close {
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  margin-left: auto;
+  border-radius: var(--radius-circle);
+  background: var(--glass-ground);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  color: var(--text-primary);
+}
+.card-close::before { content: ""; width: var(--icon-m); height: var(--icon-m); background: currentColor; -webkit-mask: var(--icon-close) center / contain no-repeat; mask: var(--icon-close) center / contain no-repeat; }
+@media (hover: hover) { .card-close:is(:hover, .is-hover) { color: var(--text-hover); } }
+.card-close:is(:active, .is-pressed) { color: var(--text-pressed); }
+.card-close:is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
+
+/* A list with its detail (Results list, Saved races) from --bp-tablet: the list in a phone-width pane, the detail beside
+   it. (A screen with a map, Race browse, splits only on a desktop, and differently: below.) */
 @media (min-width: 48.8125rem) {
-  body > .phone-screen.split-view { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
-  body > .phone-screen.split-view > main {
+  body > .phone-screen.split-view:not(:has(.map-area)) { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
+  body > .phone-screen.split-view:not(:has(.map-area)) > main {
     display: grid;
     grid-template-columns: var(--pane-w) minmax(0, 1fr);
     grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
@@ -32,40 +54,93 @@
     max-width: none;
     margin: 0;
   }
-  .split-view > main > *, .split-view .list-area { grid-column: 1; }
-  body > .phone-screen.split-view > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
-  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2) calc(100% - var(--pane-w) + var(--space-2)); }   /* a pushed screen's bar (Saved races): its glass the window's width, its back button, title and action over the list pane they belong to (HIG Split views: each column its own bar); over the detail it is that pane's empty bar (layout pass, 2026-11-18; the title sat across the divider) */
-  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* that bar takes its height in the flow: the pane beside the list starts under it, sticks under it, and ends at the screen's foot */
-  .split-view .view-toggle { display: none; }   /* both views show at once */
-  .split-view :is(.map-area, .split-detail) { grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); }
-  /* the map pane (layout pass, 2026-11-18; DESIGN.md → Width → The wide layout): the map fills its pane edge to edge,
-     no frame of its own (the pane's divider is its edge), and frames the pins' box (map-data.css --map-fit-*) at the
-     pane's own shape, never the phone's crop stretched */
-  .split-view .map-area, .split-view .map-area[hidden] { display: flex; padding: 0; }
-  .split-view .map-placeholder { border-radius: 0; box-shadow: none; --map-s: min(var(--map-box-w) / var(--map-fit-fw), var(--map-box-h) / var(--map-fit-fh)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
-  .split-view .map-area .state-message { display: none; }   /* the list pane carries the screen's state (empty, error); the map beside it stays a map */
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }
-  /* a list with nothing to choose (Results list, Saved races: -empty, -error; layout pass): no pane asks to choose; the screen is one
-     column, centred at --container-max, as a single-column screen. A screen with a map keeps it beside the list */
+  .split-view:not(:has(.map-area)) > main > *, .split-view:not(:has(.map-area)) .list-area { grid-column: 1; }
+  body > .phone-screen.split-view:not(:has(.map-area)) > .top-bar--large { width: var(--pane-w); padding-inline: var(--space-2); }   /* the large title's bar belongs to the list pane */
+  body > .phone-screen.split-view > .top-bar:not(.top-bar--large) { padding-inline: var(--space-2) calc(100% - var(--pane-w) + var(--space-2)); }   /* a pushed screen's bar (Saved races): its glass the window's width, its back button, title and action over the list pane they belong to (HIG Split views: each column its own bar); over the detail it is that pane's empty bar (layout pass, 2026-11-18) */
+  .split-view:not(:has(.map-area)) .split-detail { --split: 1; grid-column: 2; grid-row: 1 / -1; position: sticky; top: 0; height: 100cqh; border-left: var(--grid-gap) solid var(--hairline); display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+  body:has(> .bottom-nav) .split-view .split-detail { height: calc(100cqh - var(--tabbar-clear)); }   /* on a tablet the tab bar floats at the bottom (2026-11-19): the detail pane ends above it, so its action bar stays clear */
+  body > .phone-screen.split-view:has(> .top-bar:not(.top-bar--large)) .split-detail { top: calc(var(--target) + var(--safe-top) + var(--border)); height: calc(100cqh - var(--target) - var(--safe-top) - var(--border)); }   /* a pushed screen's bar takes its height in the flow: the pane starts under it and ends at the screen's foot */
+  /* a list with nothing to choose (Results list, Saved races: -empty, -error; layout pass, 2026-11-18): no pane asks to
+     choose; the screen is one column, centred at --container-max */
   body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > main { display: flex; max-width: var(--container-max); margin-inline: auto; }
   body > .phone-screen.split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) > .top-bar--large { width: auto; padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }
   .split-view:not(:has(.map-area)):has(> main > .state-message, .list-area > .state-message) .split-detail { display: none; }
   .split-view:has(> main[aria-busy="true"], .list-area[aria-busy="true"]) .split-empty { visibility: hidden; }   /* while the list loads, nothing can be chosen yet: the pane waits, without words */
-  .split-detail { --split: 1; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
-  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* tablet, Race browse: the map until a race is chosen */
-  .split-view:has(.card-link[aria-current="page"]) .map-area { display: none; }   /* then the race in the map's place */
   .split-empty { flex: 1; display: grid; place-items: center; }
   .split-empty[hidden], .split-content[hidden] { display: none; }
   .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
   .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
   .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
   .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
+  /* a screen with a map (Race browse) on a tablet is the phone's (designer, 2026-11-19): its column capped at
+     --container-max (screen.css), the List / Map switch kept, and the Map view filling the screen's width edge to edge,
+     no frame, framed to the pins at its own shape (the width decides: on a tablet the view's height comes from the
+     flex layout, where 100cqh can't be read) */
+  .split-view:has(.map-area) .map-area { align-self: center; width: 100vw; padding: 0; }
+  .split-view:has(.map-area) .map-placeholder { border-radius: 0; box-shadow: none; --map-s: calc(var(--map-box-w) / var(--map-fit-fw)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }
 }
+/* Desktop: a web app (designer, 2026-11-19; Strava Maps and Komoot as references). Race browse is the map, full bleed
+   under the top bar, edge to edge, no panes and no frames, framed to the races in the room the cards leave; over it,
+   floating cards (--radius-float, the page's ground, the float shadow, --float-gap from the window's edges and from each
+   other): the list card on the left (the large title, search, the count and the race list, scrolling inside the card),
+   and, once a race is chosen, the race card beside it (Split view's detail: the race's own page, Close at its corner);
+   the Filters button and the active filter chips float over the map to the right of the cards, the filters opening in
+   a card under them (modal-sheet.css, .sheet--popover). A list with its detail (Results list) keeps its two panes. */
 @media (min-width: 83.9375rem) {
-  /* desktop (designer, 2026-11-18; width audit → Decisions): until a race is chosen, two panes, the list and a wide map;
-     choosing one opens the detail pane between them. Results list keeps its two panes and "No result selected" */
-  body > .phone-screen.split-view:has(.map-area):has(.card-link[aria-current="page"]) > main { grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr); }   /* list, detail, map: the map takes the rest, never less than --map-min (--bp-desktop is worked out from it) */
-  .split-view:has(.map-area):has(.card-link[aria-current="page"]) .map-area { grid-column: 3; display: flex; }
-  .split-detail > .top-bar { display: none; }   /* the map is beside it: no way back needed */
+  body:has(> .bottom-nav) .split-view .split-detail { height: 100cqh; }   /* the top bar replaced the bottom one */
+  body > .phone-screen.split-view:has(.map-area) {
+    container-type: size;   /* also the cards' and the map's containing block */
+    display: grid;
+    grid-template-columns: var(--pane-w) var(--pane-w) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: var(--float-gap);
+    padding: var(--float-gap);
+    overflow: hidden;
+  }
+  .split-view:has(.map-area) > .top-bar--large { display: none; }   /* the title is in the list card */
+  .split-view:has(.map-area) > main { display: contents; }   /* its parts are the cards' */
+  .split-view:has(.map-area)::before {   /* the list card's ground, behind its parts */
+    content: "";
+    grid-column: 1;
+    grid-row: 1 / -1;
+    z-index: var(--z-lift);
+    border-radius: var(--radius-float);
+    background: var(--page);
+    box-shadow: var(--float-shadow);
+  }
+  .split-view:has(.map-area) > main > header { grid-column: 1; grid-row: 1; z-index: var(--z-float); padding: var(--pane-top) var(--space-4) var(--space-3); }
+  .split-view:has(.map-area) > main > .results-row { grid-column: 1; grid-row: 2; z-index: var(--z-float); }
+  .split-view:has(.map-area) .list-area { grid-column: 1; grid-row: 3; z-index: var(--z-float); min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-top: var(--focus-reach);   /* the list scrolls inside the card: room above the first card for its focus halo */ border-radius: 0 0 var(--radius-float) var(--radius-float); }
+  .split-view:has(.map-area) > main > .controls { grid-column: 2 / -1; grid-row: 1; z-index: var(--z-float); align-self: start; justify-self: start; position: static; padding: 0; border: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .split-view:has(.map-area):has(.card-link[aria-current="page"]) > main > .controls { grid-column: 3; }
+  .split-view:has(.map-area) .view-toggle { display: none; }   /* the list and the map show at once */
+  .split-view:has(.map-area) :is(.filters-trigger, .chips-row .chip, .clear-all) { box-shadow: var(--float-shadow); }   /* they float over the map */
+  .split-view:has(.map-area) .control-row .filters-trigger { flex: none; }
+  .split-view:has(.map-area) .map-area, .split-view:has(.map-area) .map-area[hidden] { display: flex; position: absolute; inset: 0; z-index: var(--z-under); align-self: stretch; justify-self: stretch; width: auto; padding: 0; }
+  .split-view:has(.map-area) .map-area .state-message { display: none; }   /* the list card carries the screen's state (empty, error); the map behind it stays a map */
+  .split-view:has(.map-area) .map-placeholder {
+    --map-cover: calc(var(--float-gap) + var(--pane-w) + var(--float-gap));   /* the window's left part the cards cover: the races are framed in what's left */
+    --map-shift: calc(var(--map-cover) / 2);
+    --map-s: min((var(--map-box-w) - var(--map-cover)) / var(--map-fit-fw), var(--map-box-h) / var(--map-fit-fh));
+  }
+  .split-view:has(.map-area):has(.card-link[aria-current="page"]) .map-placeholder { --map-cover: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); }
+  .split-view:has(.map-area) .split-detail {
+    --split: 1;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    z-index: var(--z-float);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: var(--radius-float);
+    background: var(--page);
+    box-shadow: var(--float-shadow);
+  }
+  .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* the race card opens when a race is chosen */
+  .split-view:has(.map-area) .split-detail > .top-bar { position: sticky; top: 0; z-index: var(--z-bar); display: flex; justify-content: flex-end; min-height: 0; height: var(--target); margin-bottom: calc(var(--target) * -1); padding: var(--space-2) var(--space-2) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border: 0; }   /* Close floats at the card's corner, over the photo */
+  .split-view:not(:has(.map-area)) .split-detail > .top-bar { display: none; }
 }

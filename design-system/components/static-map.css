@@ -31,6 +31,7 @@
   --map-s: calc(var(--map-box-w) / var(--map-phone-fw));
   --map-cx: var(--map-phone-cx);
   --map-cy: var(--map-phone-cy);
+  --map-shift: 0%;   /* how far right of the box's centre the frame sits: 0 everywhere but a desktop, where the cards cover the window's left part (split-view.css); a percentage so it's nothing in any context */
 }
 .map-placeholder::before, .map-placeholder::after {   /* land, then coastlines and borders; the masks carry shape, tokens carry color */
   content: "";
@@ -42,8 +43,8 @@
   /* 50% centres the map in the box; the length then moves the frame's centre there. A percentage here is of the box
      less the map, so the box's own height is never needed (on a phone the map's height comes from flex layout, and
      100cqh read 0 there in Chrome, 2026-11-18) */
-  -webkit-mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
-  mask-position: calc(50% + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
+  -webkit-mask-position: calc(50% + var(--map-shift) + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
+  mask-position: calc(50% + var(--map-shift) + var(--map-s) * (0.5 - var(--map-cx))) calc(50% + var(--map-s) * var(--map-ratio) * (0.5 - var(--map-cy)));
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
 }
 .map-placeholder::before { background: var(--map-land); -webkit-mask-image: var(--map-land-mask); mask-image: var(--map-land-mask); }
@@ -60,7 +61,7 @@
   /* the label is centred on its dot unless that would put it past the map's side: then it slides along, stopping
      --space-2 inside the edge, and the dot and the leader stay on the coordinate (Lesson 10 step 4: Berlin, Chamonix and
      Dallas ran past the frame at 200% text). --pin-at is the dot's x in the map; -50% and 100% are the label's own width. */
-  --pin-at: calc(var(--map-box-w) / 2 + (var(--xf) - var(--map-cx)) * var(--map-s));   /* on the frame: the map's centre plus the pin's distance from the frame's centre */
+  --pin-at: calc(var(--map-box-w) / 2 + var(--map-shift) + (var(--xf) - var(--map-cx)) * var(--map-s));   /* on the frame: the map's centre plus the pin's distance from the frame's centre */
   --pin-shift: clamp(calc(var(--space-2) - var(--pin-at)), -50%, calc(var(--map-box-w) - var(--space-2) - var(--pin-at) - 100%));
   left: var(--pin-at);
   top: calc(50% + (var(--yf) - var(--map-cy)) * var(--map-s) * var(--map-ratio));
@@ -109,6 +110,9 @@
 @media (hover: hover) { .map-pin:is(:hover, .is-hover) > span { background: var(--raised-hover); } }   /* the label rests on --raised */
 .map-pin:is(:active, .is-pressed) > span { background: var(--raised-pressed); }
 .map-pin[hidden] { display: none; }
+/* the chosen race's pin (Race browse, a desktop with a race chosen; designer 2026-11-19): Selected, as its card (race-card.css),
+   the --selected fill with a --text-secondary edge; split-view.js marks it aria-current="page" with its card */
+.map-pin[aria-current="page"] > span { background: var(--selected); outline: var(--border) solid var(--text-secondary); outline-offset: calc(var(--border) * -1); }
 /* focus (2026-11-08): the halo follows the label, the shape you see, not the 44pt box round it; while a pin has focus
    the map lets the halo paint past its edge, so a pin by the edge (Berlin at 320) keeps its whole halo */
 .map-pin:is(:focus-visible, .is-focus) { outline: none; }

@@ -7,10 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=fab3cc39">
+<link rel="stylesheet" href="../design-system/index.css?v=c4207ac8">
 <script src="../design-system/tokens/theme.js"></script>
-<link rel="preload" as="style" href="../design-system/map-data.css?v=fab3cc39" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=fab3cc39"></noscript>
+<link rel="preload" as="style" href="../design-system/map-data.css?v=c4207ac8" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=c4207ac8"></noscript>
 </head>
 <body class="onrace">
 
@@ -132,7 +132,7 @@
            desktop breakpoint list, detail and map, and with nothing chosen this pane says so. The choice rides in the
            URL (?race=…), its card Selected; split-view.js fills the pane from race-detail.html. -->
       <section class="split-detail" aria-label="Race detail" data-split-param="race" data-split-source="race-detail.html" data-split-loading="race-detail-loading.html" data-split-error="race-detail-error.html">
-        <header class="top-bar"><a class="back" href="race-browse.html" data-split-close><span>Map</span></a></header>
+        <header class="top-bar"><a class="card-close" href="race-browse.html" data-split-close><span class="visually-hidden">Close</span></a></header>
         <div class="split-empty"><div class="state-message"><h2>No race selected</h2></div></div>
         <div class="split-content" hidden></div>
       </section>
@@ -149,6 +149,7 @@
        the 2-tab bar (2026-09-24) and the earlier Discover / Log Result /
        My Results bar. -->
   <nav class="bottom-nav" aria-label="Global navigation">
+    <a class="nav-brand" href="race-browse.html">Onrace</a>   <!-- the desktop top bar's logo, a link home (2026-11-19; microcopy row 602); hidden below a desktop -->
     <ul>
       <li><a href="race-browse.html" aria-current="page" data-tab="discover"><span>Discover</span></a></li>
       <!-- My Results and Profile are owner-only: data-requires-auth sends a
@@ -157,17 +158,19 @@
       <li><a href="results-list-loading.html?run=1" data-requires-auth data-tab="results"><span>Results</span></a></li>
       <li><a href="profile-loading.html?run=1" data-requires-auth data-tab="profile"><span>Profile</span></a></li>
     </ul>
+    <a class="nav-action" href="log-result.html" data-requires-auth>Log result</a>   <!-- the desktop top bar's one primary (row 603); hidden below a desktop -->
   </nav>
 
   <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
 
-  <div id="filters-sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="filters-sheet-heading" hidden>
+  <div id="filters-sheet" class="sheet sheet--popover" role="dialog" aria-modal="true" aria-labelledby="filters-sheet-heading" hidden>
     <!-- ZONE: sheet bar (markup pass, G12; HIG Sheets): Cancel on the leading edge, the title, Apply filters (the
          sheet's one primary) on the trailing edge. No grabber: the sheet rests at one detent, so it isn't resizable. -->
     <header class="top-bar">
-      <button type="button" id="filters-close">Cancel</button>
+      <button type="button" id="filters-close" class="sheet-cancel">Cancel</button>
+      <button type="button" class="sheet-reset" data-filters-reset>Reset</button>   <!-- the desktop's filters card: Reset and Done in place of Cancel and Apply (2026-11-19; microcopy rows 600, 601) -->
       <h2 id="filters-sheet-heading" class="bar-title">Filters</h2>
-      <button type="submit" id="filters-apply" class="bar-action" form="filters-form" aria-label="Apply filters">Apply</button>
+      <button type="submit" id="filters-apply" class="bar-action" form="filters-form"><span class="sheet-apply-label">Apply<span class="visually-hidden"> filters</span></span><span class="sheet-done-label">Done</span></button>
     </header>
     <!-- Options as grouped rows (G20): Region a native menu (G17), the dates native compact pickers (G18), sport
          types rows with a neutral checkmark (G19). -->
@@ -377,7 +380,7 @@
       backdrop.classList.add('open');
     });
     filtersBtn.setAttribute('aria-expanded', 'true');
-    closeBtn.focus({ preventScroll: true });
+    (focusables()[0] || closeBtn).focus({ preventScroll: true });   // the first control there is: Cancel in the sheet, Reset in the desktop's card
   }
   function closeSheet() {
     sheet.classList.remove('open');
@@ -399,6 +402,14 @@
   });
   openBtns.forEach(function (btn) { btn.addEventListener('click', openSheet); });
   closeBtn.addEventListener('click', closeSheet);
+  // Reset (the desktop's filters card, 2026-11-19): the card's filters back to none, the search kept; nothing applies until Done
+  sheet.querySelectorAll('[data-filters-reset]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var p = new URLSearchParams(); if (searchInput.value) p.set('q', searchInput.value);
+      writeForm(p);
+      [fromInput, toInput].forEach(function (i) { i.dispatchEvent(new Event('input', { bubbles: true })); i.dispatchEvent(new Event('change', { bubbles: true })); });
+    });
+  });
   backdrop.addEventListener('click', closeSheet);
   form.addEventListener('submit', function (e) {
     e.preventDefault();

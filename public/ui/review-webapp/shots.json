@@ -1,0 +1,418 @@
+[
+ {
+  "key": "rb-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse"
+ },
+ {
+  "key": "rb-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse"
+ },
+ {
+  "key": "rb-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse"
+ },
+ {
+  "key": "rb-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse"
+ },
+ {
+  "key": "rb-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse"
+ },
+ {
+  "key": "rb-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse"
+ },
+ {
+  "key": "rb-map-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, Map view"
+ },
+ {
+  "key": "rb-map-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, Map view"
+ },
+ {
+  "key": "rb-map-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, Map view"
+ },
+ {
+  "key": "rb-map-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, Map view"
+ },
+ {
+  "key": "rb-chosen-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, a race chosen (?race=utmb)"
+ },
+ {
+  "key": "rb-chosen-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, a race chosen (?race=utmb)"
+ },
+ {
+  "key": "rb-chosen-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, a race chosen (?race=utmb)"
+ },
+ {
+  "key": "rb-chosen-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, a race chosen (?race=utmb)"
+ },
+ {
+  "key": "rb-chosen-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, a race chosen (?race=utmb)"
+ },
+ {
+  "key": "rb-chosen-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, a race chosen (?race=utmb)"
+ },
+ {
+  "key": "rb-filters-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, the filters open"
+ },
+ {
+  "key": "rb-filters-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, the filters open"
+ },
+ {
+  "key": "rb-filters-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, the filters open"
+ },
+ {
+  "key": "rb-filters-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, the filters open"
+ },
+ {
+  "key": "rb-filters-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, the filters open"
+ },
+ {
+  "key": "rb-filters-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, the filters open"
+ },
+ {
+  "key": "rb-loading-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "rb-loading-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "rb-loading-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "rb-loading-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "rb-loading-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "rb-loading-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, loading"
+ },
+ {
+  "key": "rb-empty-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, empty (no race matches)"
+ },
+ {
+  "key": "rb-empty-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, empty (no race matches)"
+ },
+ {
+  "key": "rb-empty-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, empty (no race matches)"
+ },
+ {
+  "key": "rb-empty-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, empty (no race matches)"
+ },
+ {
+  "key": "rb-empty-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, empty (no race matches)"
+ },
+ {
+  "key": "rb-empty-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, empty (no race matches)"
+ },
+ {
+  "key": "rb-error-390",
+  "side": "before",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, error"
+ },
+ {
+  "key": "rb-error-390",
+  "side": "after",
+  "w": 390,
+  "h": 844,
+  "text": 16,
+  "cap": "Race browse, error"
+ },
+ {
+  "key": "rb-error-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, error"
+ },
+ {
+  "key": "rb-error-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, error"
+ },
+ {
+  "key": "rb-error-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, error"
+ },
+ {
+  "key": "rb-error-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, error"
+ },
+ {
+  "key": "rb-fail-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, a race that fails to load"
+ },
+ {
+  "key": "rb-fail-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Race browse, a race that fails to load"
+ },
+ {
+  "key": "rb-fail-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, a race that fails to load"
+ },
+ {
+  "key": "rb-fail-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Race browse, a race that fails to load"
+ },
+ {
+  "key": "rl-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Results list under the new navigation"
+ },
+ {
+  "key": "rl-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Results list under the new navigation"
+ },
+ {
+  "key": "rl-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list under the new navigation"
+ },
+ {
+  "key": "rl-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Results list under the new navigation"
+ },
+ {
+  "key": "pr-820",
+  "side": "before",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Profile under the new navigation"
+ },
+ {
+  "key": "pr-820",
+  "side": "after",
+  "w": 820,
+  "h": 1180,
+  "text": 16,
+  "cap": "Profile under the new navigation"
+ },
+ {
+  "key": "pr-1440",
+  "side": "before",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Profile under the new navigation"
+ },
+ {
+  "key": "pr-1440",
+  "side": "after",
+  "w": 1440,
+  "h": 900,
+  "text": 16,
+  "cap": "Profile under the new navigation"
+ }
+]

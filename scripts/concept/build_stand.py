@@ -414,6 +414,7 @@ ACCENT_OK = [r'^\.btn--primary' + STATE + '$', r'^\.state-action:not\(\.secondar
              r'^(\.(register|open|submit)-btn|:is\(\.register-btn, \.open-btn, \.submit-btn\))' + STATE + '$',   # the grayscale screens' one primary (kit, 2026-10-18)
              r'^\.top-bar (\.(save-btn|bar-action)|:is\(\.save-btn, \.bar-action\))' + STATE + '$',   # the bar action: Save on Log result (kit feedback, 2026-10-19), Log result on Results list (G5), Apply filters on the sheet (G12; markup pass, 2026-10-23)
              r'^\.bottom-nav a\[aria-current="page"\]$',
+             r'^\.bottom-nav \.nav-action' + STATE + '$',   # the desktop top bar's Log result, the app's one primary (designer, 2026-11-19, the web app): where you act
              r'^\.swatch--(accent-(fill|ink|hover|ink-hover|pressed|ink-pressed)|amber-\d+)$']   # the stand's swatches, one per token
 # the accent roles (--accent-fill, --accent-ink, --accent-hover, since Lesson 8 step 4) and their amber primitives, so a
 # class can't reach the amber around its roles (tokens/tokens.css's :root is not a class and isn't read here)
@@ -780,6 +781,9 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('grid-gap', 'Between two panes', 'The 1px thin divider, no gutter', 'HIG Split views: “Prefer the thin divider style”'),
            ('col-count-tablet', 'Panes at the tablet breakpoint', '2: list + map, or list + detail', 'Designer, 2026-11-15: width goes to panes, not card columns'),
            ('col-count-desktop', 'Panes at the desktop breakpoint', '3: list + detail + map (Race browse)', 'Designer, 2026-11-15: three panes on desktop'),
+           ('topnav-h', 'Desktop: the top bar’s height', '56px at the default text size [?]; the full-bleed map starts under it', 'Designer, 2026-11-19: from the desktop breakpoint a web app, the top bar in place of the macOS sidebar'),
+           ('float-gap', 'Desktop: a floating card’s room from the window’s edges and from the card beside it', 'The phone’s gutter, 16px', 'Designer, 2026-11-19: Komoot’s and Strava’s cards over the map'),
+           ('radius-float', 'Desktop: a floating card’s corners over the map', '16px [?]: between the content’s 6 and the sheet’s 38', 'Designer, 2026-11-19: Komoot’s Routes card; no HIG number'),
            ('pane-top', 'The wide layout’s top line: a pane’s first content below its top edge', '16px: the large title and the sidebar’s first row start on it', 'DESIGN.md → Width → The wide layout (layout pass, 2026-11-18): HIG Layout, align content to a consistent grid'),
            ('form-sheet-w', 'A sheet from the tablet breakpoint: a form sheet, centred', '540px at the default text size, UIKit’s form sheet on iPad · [?] Apple’s number, not HIG’s text', 'HIG Sheets: prefer the page or form sheet presentation styles in an iPadOS app (Lesson 10 step 6)'),
            ('form-sheet-h', 'The form sheet’s height; a sheet sized to its content stops here', '620px at the default text size, the same UIKit size · [?]', 'HIG Sheets (Lesson 10 step 6)'),
@@ -1199,6 +1203,8 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-split'), os.path.join(ROOT, 'publi
 shutil.copyfile(os.path.join(ROOT, 'ui/review-split.html'), os.path.join(ROOT, 'public/ui/review-split.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-layout'), os.path.join(ROOT, 'public/ui/review-layout'), dirs_exist_ok=True)   # the wide layout pass (2026-11-18): every screen and state at 390, 820, 1440
 shutil.copyfile(os.path.join(ROOT, 'ui/review-layout.html'), os.path.join(ROOT, 'public/ui/review-layout.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-webapp'), os.path.join(ROOT, 'public/ui/review-webapp'), dirs_exist_ok=True)   # the web app desktop (2026-11-19): Race browse before/after at 390, 820, 1440
+shutil.copyfile(os.path.join(ROOT, 'ui/review-webapp.html'), os.path.join(ROOT, 'public/ui/review-webapp.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)

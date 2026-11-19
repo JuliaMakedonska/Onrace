@@ -187,14 +187,14 @@ await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-m
 const failures = [];
 let checked = 0;
 // Lesson 10 step 3 (2026-11-15): the shell's three forms. Each tab screen must show the form its width asks for, at the
-// breakpoints read from design-system/tokens/tokens.css: the tab bar at the bottom, at the top, or a sidebar on the left.
+// breakpoints read from design-system/tokens/tokens.css: the tab bar at the bottom (a phone, a tablet), or the top bar (a desktop).
 const TOKS = readFileSync(join(ROOT, 'design-system/tokens/tokens.css'), 'utf8');
 const BP = Object.fromEntries([...TOKS.matchAll(/^\s*--(bp-[a-z]+):\s*([^;]+);/gm)].map(m => [m[1], m[2].trim()]));
 const FORM = `(() => {
   const nav = document.querySelector('body > .bottom-nav'); if (!nav || !nav.getClientRects().length) return null;
   const W = innerWidth, H = innerHeight, r = nav.getBoundingClientRect();
-  const want = matchMedia('(min-width: ${BP['bp-desktop']})').matches ? 'sidebar' : matchMedia('(min-width: ${BP['bp-tablet']})').matches ? 'top' : 'bottom';
-  const got = r.height > H / 2 && r.left < 40 ? 'sidebar' : r.top < 80 && Math.abs(r.left + r.width / 2 - W / 2) < 2 ? 'top' : r.bottom > H - 80 && r.width > W / 2 ? 'bottom' : 'nowhere';
+  const want = matchMedia('(min-width: ${BP['bp-desktop']})').matches ? 'top bar' : 'bottom';   // 2026-11-19: a tablet keeps the phone's bottom bar; a desktop is a web app's top bar (was: top on a tablet, a sidebar on a desktop)
+  const got = r.top < 2 && r.left < 2 && r.width > W - 2 ? 'top bar' : r.bottom > H - 80 && Math.abs(r.left + r.width / 2 - W / 2) < 2 ? 'bottom' : 'nowhere';
   return got === want ? null : 'the tab bar shows as ' + got + ', the width asks for ' + want;
 })()`;
 for (const [w, h, text, only] of [[390, 844, 16], [320, 568, 16], [390, 844, 32], [320, 568, 32, 'screens'], [820, 1180, 16, 'screens'], [1440, 900, 16], [820, 1180, 32, 'screens'], [1440, 900, 32, 'screens']]) {   // the third pass: 200% text (step 7, #2); the fourth, 320 with 200% text (Lesson 10 step 4: the backlog's defects, fixed, stay fixed); the fourth and fifth: a tablet and a desktop (Lesson 10 step 3: the screens at the viewer's widths, the docs pages at desk width since step 2); the last two, 820 and 1440 with 200% text (Lesson 10 step 6, 2026-11-18: the breakpoints are in rem, so at 200% text a tablet gets the phone form and a desktop the tablet's)

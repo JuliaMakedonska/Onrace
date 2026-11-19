@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=fab3cc39">
+<link rel="stylesheet" href="../design-system/index.css?v=c4207ac8">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -81,6 +81,7 @@
        is not a tab: it's the header action above, since tabs are for places
        and actions are buttons. -->
   <nav class="bottom-nav" aria-label="Global navigation">
+    <a class="nav-brand" href="race-browse.html">Onrace</a>   <!-- the desktop top bar's logo, a link home (2026-11-19; microcopy row 602); hidden below a desktop -->
     <ul>
       <li><a href="race-browse.html" data-tab="discover"><span>Discover</span></a></li>
       <!-- My Results and Profile are owner-only: data-requires-auth sends a
@@ -91,6 +92,7 @@
       <li><a href="results-list-loading.html?run=1" aria-current="page" data-requires-auth data-tab="results"><span>Results</span></a></li>
       <li><a href="profile-loading.html?run=1" data-requires-auth data-tab="profile"><span>Profile</span></a></li>
     </ul>
+    <a class="nav-action" href="log-result.html" data-requires-auth>Log result</a>   <!-- the desktop top bar's one primary (row 603); hidden below a desktop -->
   </nav>
 
 <script>
