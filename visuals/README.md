@@ -125,3 +125,14 @@ These are the focus values the cards used before as `object-position` (`--photo-
 - **Markup:** `<picture>` with an AVIF and a WebP `<source>`, then `<img class="photo" src="<scene>-1026.jpg" srcset="<scene>-684.jpg 684w, <scene>-1026.jpg 1026w" sizes="calc(100vw - 32px)" width="1026" height="342">`. The `picture` takes no box (`display: contents`). The black-and-white treatment stays in CSS (`--photo-filter`).
 - **Loading:** on Race browse the first three cards load eagerly (the third is the first screen's largest image, `fetchpriority="high"`), the rest lazily. On Race detail only the shown race's photo loads: its sources wait in `data-*` until the page script picks the race.
 
+
+## A tall crop: the sign-in screens' photo half (2026-11-20)
+
+From a desktop the sign-in screens (Sign in / Sign up, Reset password, New password) are a split page, the form on the left and a photo on the right, full height (`DESIGN.md` → Width). The photo half takes one tall crop of an existing scene, made from its retouched master, not a new image:
+
+- **Scene:** hyrox-sled-hall-1 (the lead athlete pushing a sled), from `visuals/incoming/work/run8/ret/hyrox-sled-hall-1.png` (1536 × 1024, round 3's retouch: the shorts swoosh and the shoe stripe gone; round 3 left nothing outside its band on this scene, so a taller crop shows no unchecked mark).
+- **Crop:** 4:5, 820 × 1024 at x 307–1127 of the master, the full height, centred on the lead athlete; the photo half's own shape (720 × 900 on a 1440 × 900 window) is 4:5, and `object-fit: cover` takes what a window's shape leaves.
+- **Sizes:** 820 × 1024 and 614 × 768, `sizes="50vw"`.
+- **Formats:** AVIF (macOS `sips`, `formatOptions 60`, from a lossless PNG), WebP (0.74) and JPEG (0.78) from Chrome's canvas, as the card crops. Weight: 43 / 65 KB AVIF, 44 / 66 KB WebP, 73 / 117 KB JPEG.
+- **Found on the way:** an 819-pixel-wide AVIF from `sips` didn't decode in Chrome (a grey box, its natural width read as 719), so the crop is 820 wide: keep AVIF widths even.
+- **Files:** `hyrox-sled-hall-1-tall-614.{avif,webp,jpg}`, `hyrox-sled-hall-1-tall-820.{avif,webp,jpg}`. Shown in the Podium treatment (`--photo-filter`), the Onrace wordmark over a scrim at its top; never loaded below a desktop (`loading="lazy"` in a box that isn't drawn).

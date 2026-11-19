@@ -19,3 +19,42 @@
 /* order 0890 */
 /* ---------- gates: Sign in / Sign up, Reset password, New password ---------- */
 .gate { padding: var(--space-5) var(--space-4) var(--space-7); }
+
+/* order 1190 */
+/* The sign-in screens by width (designer, 2026-11-20; references: Microsoft Copilot, Dribbble and Midday sign-in on a
+   desktop, Pandora on a tablet). Sign in / Sign up, Reset password and New password are full pages at every width (no
+   longer a form sheet from --bp-tablet). The numbers are tokens.css's --bp-tablet and --bp-desktop (a media query can't
+   read var(); scripts/build_components.py checks it).
+   Tablet: the phone's page, its form centred at --form-w (a phone's width), never stretched; the bar's buttons at the
+   form's edges.
+   Desktop: a split page. The form half on the left: the bar, then the screen's own content (intro, the grouped fields,
+   the links) at --form-w, centred both ways; every state and step keeps its place there. The photo half on the right
+   (.gate-art): a race photo, full height, in the Podium treatment (--photo-filter), the Onrace wordmark over a scrim at
+   its top. Below a desktop, and at 200% text (the breakpoint is in rem), the photo half isn't drawn or loaded. */
+.gate-art { display: none; }
+@media (min-width: 48.8125rem) {
+  body:has(> .phone-screen > .gate) > .phone-screen > .gate { max-width: var(--form-w); }
+  body:has(> .phone-screen > .gate) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--form-w)) / 2); }
+}
+@media (min-width: 83.9375rem) {
+  body:has(> .phone-screen > .gate) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  body:has(> .phone-screen > .gate) > .top-bar { grid-column: 1; grid-row: 1; position: relative; inset: auto; }
+  body:has(> .phone-screen > .gate) > .phone-screen { grid-column: 1; grid-row: 2; height: auto; min-height: 0; padding-top: 0; }
+  body:has(> .phone-screen > .gate) > .phone-screen > .gate { justify-content: center; }
+  .gate-art { display: block; grid-column: 2; grid-row: 1 / -1; position: relative; overflow: hidden; }
+  .gate-art > picture { display: contents; }
+  .gate-art img { display: block; width: 100%; height: 100%; object-fit: cover; filter: var(--photo-filter); }
+  .gate-art::before { content: ""; position: absolute; inset: 0; z-index: var(--z-lift); background: linear-gradient(var(--scrim), transparent); pointer-events: none; }   /* the wordmark's ground: the scrim fading down the photo */
+  .gate-brand {
+    position: absolute;
+    top: var(--space-7);
+    left: var(--space-7);
+    z-index: var(--z-float);
+    font-family: var(--font-display);
+    font-size: var(--size-title);
+    font-weight: var(--weight-display);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+    color: var(--on-photo);
+  }
+}

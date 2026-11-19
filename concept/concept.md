@@ -1619,3 +1619,14 @@ Race browse first, the other screens wait. References: Strava Maps and Komoot (a
 - **A chosen race scrolls into view:** a choice that arrives by its address (a link, a reload, Back) scrolls its card into view in whatever scrolls the list (`split-view.js`).
 - **The empty state drops "above":** "Remove a filter, or try a wider date range, another region, or more sport types." (`microcopy.md` row 25): on a desktop the filters sit to the right of the list card.
 - Review: `ui/review-webapp.html` → Follow-ups.
+
+### The sign-in screens on wide screens (designer brief, 2026-11-20)
+
+References: Microsoft Copilot, Dribbble and Midday sign-in on a desktop; Pandora on a tablet.
+
+- **Full pages, not a form sheet:** Sign in / Sign up, Reset password and New password drop `body.form-sheet` (the form sheet of 2026-11-18); Race picker keeps it, pushed inside Log result's sheet.
+- **Tablet:** the phone's page, the form centred at `--form-w` (new, signed: a phone's width, `--pane-w`), never stretched; the bar's buttons at the form's edges.
+- **Desktop:** a split page, built once in `gate-layout.css`: the form half on the left (the bar, then the screen's own content at `--form-w`, centred both ways; every state and step keeps its place there) and the photo half on the right (`.gate-art`): a tall crop of hyrox-sled-hall-1 (4:5, 820 × 1024 and 614 × 768, AVIF / WebP / JPEG, from round 3's retouched master; `visuals/README.md`), full height in the Podium treatment, the Onrace wordmark (`.gate-brand`, microcopy row 602) over a scrim in `--on-photo` (new role, white in both themes). No new copy.
+- **The photo half hides when there isn't room:** below a desktop, and at 200% text (the breakpoint is in rem), it isn't drawn, and its lazy image isn't loaded.
+- **Found on the way:** an 819-pixel-wide AVIF made by `sips` didn't decode in Chrome; the crop is 820 wide (`visuals/README.md`).
+- **Docs:** the Gate layout specimen at a desktop's width. Review: `ui/review-gate.html`.

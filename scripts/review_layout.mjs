@@ -25,6 +25,8 @@ await send('Page.addScriptToEvaluateOnNewDocument', { source: "try { sessionStor
 const WIDTHS = [[390, 844, 0.75], [820, 1180, 0.5], [1440, 900, 0.5]];   // [width, height, the shot's scale]
 const states = screenStates(AFTER).filter(s => !s.name.startsWith('../design-system/patterns/'))
   .filter(s => !s.name.startsWith('race-browse') || (s.q === '' && (s.act !== 'map' || s.name === 'race-browse')) || s.act === 'wait');
+const ONLY = process.env.ONLY ? process.env.ONLY.split(',') : null;   // a review of some screens only (e.g. ONLY=sign-in,reset-password,new-password for ui/review-gate.html)
+const PICK = ONLY ? states.filter(s => ONLY.some(o => s.label.startsWith(o))) : states;
 // the spec, measured: every failure is [rule, what was found]
 const CHECK = `(() => {
   const f = [], W = innerWidth, H = innerHeight, px = v => parseFloat(v) || 0;
@@ -77,7 +79,7 @@ const CHECK = `(() => {
   return f;
 })()`;
 const out = [];
-for (const [i, s] of states.entries()) for (const [w, h, scale] of WIDTHS) {
+for (const [i, s] of PICK.entries()) for (const [w, h, scale] of WIDTHS) {
   const url = base('after') + s.name + '.html' + (s.q ? '?' + s.q : '');
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url }); await Promise.race([l, sl(8000)]);

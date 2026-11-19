@@ -7,10 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=f179a246">
+<link rel="stylesheet" href="../design-system/index.css?v=1dd88d6b">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
-<body class="onrace form-sheet">
+<body class="onrace">
 
   <!-- ZONE: modal top bar — Cancel + title (_conventions.md § 1, Gates;
        _screens.md → Sign in / Sign up → Chrome). Cancel is flows.md's
@@ -142,6 +142,12 @@
 
     </main>
   </div><!-- /.phone-screen -->
+
+  <aside class="gate-art" aria-hidden="true">   <!-- a desktop's photo half (2026-11-20; DESIGN.md → Width): not drawn or loaded below a desktop -->
+    <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-tall-614.avif 614w, ../visuals/hyrox-sled-hall-1-tall-820.avif 820w" sizes="50vw"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-tall-614.webp 614w, ../visuals/hyrox-sled-hall-1-tall-820.webp 820w" sizes="50vw"><img src="../visuals/hyrox-sled-hall-1-tall-820.jpg" srcset="../visuals/hyrox-sled-hall-1-tall-614.jpg 614w, ../visuals/hyrox-sled-hall-1-tall-820.jpg 820w" sizes="50vw" alt="" width="820" height="1024" loading="lazy"></picture>
+    <span class="gate-brand">Onrace</span>
+  </aside>
+
 
 <script>
 (function () {

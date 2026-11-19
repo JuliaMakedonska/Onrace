@@ -243,6 +243,7 @@
   --topnav-h: 3.5rem;         /* [?] the desktop's top bar (designer, 2026-11-19: from --bp-desktop Onrace is a web app, the logo, the three destinations and Log result in one horizontal bar; it replaced the macOS sidebar): 56px at the default text size, in rem so it grows with the text; the full-bleed map starts under it */
   --float-gap: var(--space-4);  /* a floating card's room from the window's edges and from the card beside it (designer, 2026-11-19; Komoot's Routes and route cards over the map): the phone's gutter */
   --radius-float: 16px;       /* [?] a floating card's corners over the map (Race browse from --bp-desktop): between the content's 6 and the sheet's 38, as Komoot's and Strava's map cards; no HIG number, the web app's own */
+  --form-w: var(--pane-w);    /* a form's column from --bp-tablet (Sign in / Sign up, Reset password, New password; designer 2026-11-20): about a phone's width, so a form is never stretched; the form half of the desktop's split page centres it */
   --pane-top: var(--space-4); /* the wide layout's one top line (layout pass, 2026-11-18; DESIGN.md → Width → The wide layout): from --bp-tablet a pane's first content (the large title, the sidebar's first row) starts this far below the pane's top edge, under the top safe area */
   --container-max: 42rem;     /* [?] a single-column screen stops growing here and centres (Profile, a detail opened on its own): 672px, UIKit's readable content width at the default text size (HIG Layout: layout guides "restrict the width of text for optimal readability"); Apple's number, not HIG's text */
   --form-sheet-w: 33.75rem;   /* [?] a sheet from --bp-tablet is a form sheet centred on the screen (Lesson 10 step 6, 2026-11-18; HIG Sheets: "Prefer using the page or form sheet presentation styles in an iPadOS app"): 540px at the default text size, UIKit's form sheet size on iPad; Apple's number, not HIG's text */
@@ -307,6 +308,7 @@
   /* ---------- accent (Color rule 1: only where you act or where you are) ---------- */
   --accent-fill: var(--amber-78);        /* the primary action's fill: .state-action:not(.secondary), .register-btn, .open-btn, .submit-btn */
   --focus-on-accent: var(--graphite-7);  /* the thin line between the focus ring and an amber fill (designer, 2026-11-10): the page color in dark, so the ring reads as a ring and not as the button grown 2px; the primary button, Try again, Change filters, the action bar's Register and Open */
+  --on-photo: var(--white);   /* the Onrace wordmark over a photo (the sign-in screens' photo half on a desktop, 2026-11-20): light in both themes, since the photo stays dark (--photo-filter) in both, over a --scrim gradient at its top */
   --on-accent-fill: var(--graphite-7);   /* text and icons on the fill. merge: the same primitive as the page (was #131518 written twice). Split as a role: in a light appearance the page turns light, the text on amber stays dark */
   --accent-ink: var(--amber-78);         /* amber as text and icon on a bar: the bar action (.top-bar .save-btn, .bar-action) and the current tab (.bottom-nav a[aria-current="page"]). Split from the fill: amber text on a light bar would need a darker amber, the fill wouldn't. The two inks stay one: they'd change together */
   --accent-hover: var(--amber-83);       /* the fill under the pointer: .state-action, .register-btn, .open-btn, .submit-btn */
@@ -388,6 +390,7 @@
   --scrim: color-mix(in srgb, var(--black) var(--alpha-30), transparent);
   --float-shadow: 0 var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--black) var(--alpha-18), transparent);
   --text-primary: var(--graphite-7);
+  --on-photo: var(--white);   /* the photo stays dark in the light theme too */
   --text-secondary: var(--graphite-39);
   --chip-text: var(--graphite-27);
   --hairline: var(--graphite-87);
@@ -452,6 +455,7 @@
   --boundary: var(--graphite-46);
   --accent-fill: var(--amber-78);
   --focus-on-accent: var(--graphite-7);
+  --on-photo: var(--white);
   --on-accent-fill: var(--graphite-7);
   --accent-ink: var(--amber-78);
   --accent-hover: var(--amber-83);
@@ -2598,4 +2602,43 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   body > .sheet--popover.open { transform: none; }
   body:has(> .sheet--popover) > .sheet-backdrop { background: transparent; }   /* a popover doesn't dim the screen */
   body:has(> .sheet--popover):has(.card-link[aria-current="page"]) > .sheet--popover { left: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); }   /* the race card is open: the filters sit beside it */
+}
+
+/* ---- design-system/components/gate-layout.css · order 1190 ---- */
+/* The sign-in screens by width (designer, 2026-11-20; references: Microsoft Copilot, Dribbble and Midday sign-in on a
+   desktop, Pandora on a tablet). Sign in / Sign up, Reset password and New password are full pages at every width (no
+   longer a form sheet from --bp-tablet). The numbers are tokens.css's --bp-tablet and --bp-desktop (a media query can't
+   read var(); scripts/build_components.py checks it).
+   Tablet: the phone's page, its form centred at --form-w (a phone's width), never stretched; the bar's buttons at the
+   form's edges.
+   Desktop: a split page. The form half on the left: the bar, then the screen's own content (intro, the grouped fields,
+   the links) at --form-w, centred both ways; every state and step keeps its place there. The photo half on the right
+   (.gate-art): a race photo, full height, in the Podium treatment (--photo-filter), the Onrace wordmark over a scrim at
+   its top. Below a desktop, and at 200% text (the breakpoint is in rem), the photo half isn't drawn or loaded. */
+.gate-art { display: none; }
+@media (min-width: 48.8125rem) {
+  body:has(> .phone-screen > .gate) > .phone-screen > .gate { max-width: var(--form-w); }
+  body:has(> .phone-screen > .gate) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--form-w)) / 2); }
+}
+@media (min-width: 83.9375rem) {
+  body:has(> .phone-screen > .gate) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  body:has(> .phone-screen > .gate) > .top-bar { grid-column: 1; grid-row: 1; position: relative; inset: auto; }
+  body:has(> .phone-screen > .gate) > .phone-screen { grid-column: 1; grid-row: 2; height: auto; min-height: 0; padding-top: 0; }
+  body:has(> .phone-screen > .gate) > .phone-screen > .gate { justify-content: center; }
+  .gate-art { display: block; grid-column: 2; grid-row: 1 / -1; position: relative; overflow: hidden; }
+  .gate-art > picture { display: contents; }
+  .gate-art img { display: block; width: 100%; height: 100%; object-fit: cover; filter: var(--photo-filter); }
+  .gate-art::before { content: ""; position: absolute; inset: 0; z-index: var(--z-lift); background: linear-gradient(var(--scrim), transparent); pointer-events: none; }   /* the wordmark's ground: the scrim fading down the photo */
+  .gate-brand {
+    position: absolute;
+    top: var(--space-7);
+    left: var(--space-7);
+    z-index: var(--z-float);
+    font-family: var(--font-display);
+    font-size: var(--size-title);
+    font-weight: var(--weight-display);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+    color: var(--on-photo);
+  }
 }

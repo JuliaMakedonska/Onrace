@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-19T22:22:43+00:00",
+  "generatedAt": "2026-11-19T22:45:11+00:00",
   "title": "Design System: Onrace",
   "extensions": {
     "colorMeta": {
@@ -235,6 +235,22 @@
           "#A2A5A9",
           "#C6C9CE",
           "#ECEFF3"
+        ]
+      },
+      "on-photo": {
+        "role": "neutral",
+        "displayName": "On Photo",
+        "canonical": "#FFFFFF",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#A5A5A5",
+          "#C9C9C9",
+          "#EEEEEE"
         ]
       },
       "on-accent-fill": {
