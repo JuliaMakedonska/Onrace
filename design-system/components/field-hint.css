@@ -3,4 +3,4 @@
    components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
 
 /* order 1030 */
-.group-footer { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); color: var(--text-secondary); }
+.group-footer { margin: var(--space-2) var(--space-4) 0; max-width: var(--measure); font-size: var(--size-proof); color: var(--text-secondary); }

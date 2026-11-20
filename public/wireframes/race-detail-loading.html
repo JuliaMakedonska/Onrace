@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=bfc0110a">
+<link rel="stylesheet" href="../design-system/index.css?v=0e03d48c">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -121,5 +121,14 @@
 })();
 </script>
 
+  <nav class="bottom-nav bottom-nav--pushed" aria-label="Global navigation">   <!-- a pushed screen's top bar: drawn on a desktop only (tab-bar.css; Lesson 10 step 7, 2026-11-20); aria-current="true" marks the section the screen belongs to -->
+    <a class="nav-brand" href="race-browse.html">Onrace</a>
+    <ul>
+      <li><a href="race-browse.html" aria-current="true" data-tab="discover"><span>Discover</span></a></li>
+      <li><a href="results-list-loading.html?run=1" data-tab="results"><span>Results</span></a></li>
+      <li><a href="profile-loading.html?run=1" data-tab="profile"><span>Profile</span></a></li>
+    </ul>
+    <a class="nav-action" href="log-result.html">Log result</a>
+  </nav>
 </body>
 </html>

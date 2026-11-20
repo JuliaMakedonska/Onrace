@@ -7,10 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=bfc0110a">
+<link rel="stylesheet" href="../design-system/index.css?v=0e03d48c">
 <script src="../design-system/tokens/theme.js"></script>
-<link rel="preload" as="style" href="../design-system/map-data.css?v=bfc0110a" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
-<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=bfc0110a"></noscript>
+<script src="../design-system/tokens/desktop.js" defer></script>
+<link rel="preload" as="style" href="../design-system/map-data.css?v=0e03d48c" onload="this.onload=null;this.rel='stylesheet'"><!-- the map's 110 KB of masks: not render-blocking, List is the default view (step 7, #6) -->
+<noscript><link rel="stylesheet" href="../design-system/map-data.css?v=0e03d48c"></noscript>
 </head>
 <body class="onrace" data-state="loading">
 
@@ -177,7 +178,7 @@
 
   <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
 
-  <div id="filters-sheet" class="sheet sheet--popover" role="dialog" aria-modal="true" aria-labelledby="filters-sheet-heading" hidden>
+  <div id="filters-sheet" class="sheet sheet--popover" role="dialog" aria-modal="true" data-popover-modal aria-labelledby="filters-sheet-heading" hidden>
     <!-- ZONE: sheet bar (markup pass, G12; HIG Sheets): Cancel on the leading edge, the title, Apply filters (the
          sheet's one primary) on the trailing edge. No grabber: the sheet rests at one detent, so it isn't resizable. -->
     <header class="top-bar">
@@ -408,7 +409,7 @@
   }
   sheet.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { e.preventDefault(); closeSheet(); return; }
-    if (e.key !== 'Tab') return;
+    if (e.key !== 'Tab' || sheet.getAttribute('aria-modal') === 'false') return;   // a desktop's popover card isn't modal (design-system/tokens/desktop.js): Tab moves on to the screen
     var f = focusables();
     if (!f.length) return;
     if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }

@@ -371,6 +371,8 @@ STAMPED += sorted('design-system/patterns/' + f for f in os.listdir(os.path.join
 STAMPED += sorted('design-system/examples/' + f for f in os.listdir(os.path.join(ROOT, 'design-system/examples')) if f.endswith('.html'))   # Lesson 9 step 6 (2026-11-10): the examples, screens built only from the system
 import subprocess
 # the showcase: arranged by role, each specimen's facts from ui/inventory.md → Showcase map (2026-10-26), before stamping
+# the photos' sizes from the tokens and their slots (Lesson 10 step 7, 2026-11-20), before the screens are stamped and checked
+subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_sizes.py')], check=True)
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_kit_showcase.py')], check=True)
 # the design-system docs (Lesson 9, step 2, 2026-11-04): why.html from concept.md and references.md; the overview and the
 # component pages (written just above) are stamped with the screens
@@ -413,7 +415,7 @@ STATE = r'(:hover|:active|:is\(:hover, \.is-hover\)|:is\(:active, \.is-pressed\)
 ACCENT_OK = [r'^\.btn--primary' + STATE + '$', r'^\.state-action:not\(\.secondary\)' + STATE + '$',
              r'^(\.(register|open|submit)-btn|:is\(\.register-btn, \.open-btn, \.submit-btn\))' + STATE + '$',   # the grayscale screens' one primary (kit, 2026-10-18)
              r'^\.top-bar (\.(save-btn|bar-action)|:is\(\.save-btn, \.bar-action\))' + STATE + '$',   # the bar action: Save on Log result (kit feedback, 2026-10-19), Log result on Results list (G5), Apply filters on the sheet (G12; markup pass, 2026-10-23)
-             r'^\.bottom-nav a\[aria-current="page"\]$',
+             r'^\.bottom-nav a\[aria-current(="page")?\]$',   # where you are: the current tab, or on a desktop's pushed screen its section (aria-current="true", Lesson 10 step 7)
              r'^\.bottom-nav \.nav-action' + STATE + '$',   # the desktop top bar's Log result, the app's one primary (designer, 2026-11-19, the web app): where you act
              r'^\.swatch--(accent-(fill|ink|hover|ink-hover|pressed|ink-pressed)|amber-\d+)$']   # the stand's swatches, one per token
 # the accent roles (--accent-fill, --accent-ink, --accent-hover, since Lesson 8 step 4) and their amber primitives, so a
@@ -708,6 +710,7 @@ PRIM_TABLE = wrap('Color primitives', f'<table class="spec"><thead><tr><th>Primi
 # ---------------------------------------------------------------- type rows
 TYPE_ROWS = [
     ('size-title', 'display', 'Discover', 'Screen title (level 1) · HIG Large Title', 'Hierarchy rule 4 · Taste: Nike Run Club, bold but refined · C3: 38 → 34 (designer, 2026-10-18)'),
+    ('size-title-1', 'display', 'UTMB — Ultra-Trail du Mont-Blanc', 'A detail’s title in its pane · HIG Title 1', 'Lesson 10 step 7: one step under the large title beside it, not two display titles of one size'),
     ('size-time', 'display', '1:18:42', 'Finish time, the loudest thing on the row', 'Attribute a · Hierarchy rule 5'),
     ('size-time-hero', 'display', '1:18:42', 'The finish time leading Result detail, the largest thing on the screen', 'Attribute a: the time is what the screen proves (designer, step 6, #11)'),
     ('size-day', 'display', '27', 'Date day, the first thing read on a race card', 'Attribute b: a calendar, not a poster'),
@@ -718,7 +721,7 @@ TYPE_ROWS = [
     ('size-proof', 'text-2', 'Self-reported · via results.hyrox.com', 'Proof line, month and year under the day', 'Attribute d: proof stated, not stamped'),
     ('size-label', 'label', 'Half marathon', 'Format chip (uppercase by CSS), tab label', 'Decision A: markup keeps the name, CSS uppercases'),
 ]
-TYPE_CLASS = {'size-title': 'type-sample--display type-sample--title', 'size-time': 'type-sample--display type-sample--time', 'size-time-hero': 'type-sample--display type-sample--time-hero',
+TYPE_CLASS = {'size-title': 'type-sample--display type-sample--title', 'size-title-1': 'type-sample--display type-sample--title-1', 'size-time': 'type-sample--display type-sample--time', 'size-time-hero': 'type-sample--display type-sample--time-hero',
               'size-day': 'type-sample--display type-sample--day', 'size-initials': 'type-sample--display type-sample--day', 'size-item': 'type-sample--item', 'size-body': 'type-sample--body',
               'size-meta': 'type-sample--meta', 'size-proof': 'type-sample--proof'}
 def type_sample(kind, text, t):
@@ -780,26 +783,22 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('sheet-large', 'Filters sheet height: the large detent only', 'Full height less the top safe area and the gap', 'G13 · designer, 2026-10-19: large detent only'),
            ('pane-w', 'A phone-width pane: the list in a split view', '390px at the default text size, the width the screens are drawn at; in rem, so it doubles at 200% text', 'Lesson 10 · responsive/width-audit.md: the list keeps its phone width'),
            ('grid-gap', 'Between two panes', 'The 1px thin divider, no gutter', 'HIG Split views: “Prefer the thin divider style”'),
-           ('col-count-tablet', 'Panes at the tablet breakpoint', '2: list + map, or list + detail', 'Designer, 2026-11-15: width goes to panes, not card columns'),
-           ('col-count-desktop', 'Panes at the desktop breakpoint', '3: list + detail + map (Race browse)', 'Designer, 2026-11-15: three panes on desktop'),
            ('topnav-h', 'Desktop: the top bar’s height', '56px at the default text size [?]; the full-bleed map starts under it', 'Designer, 2026-11-19: from the desktop breakpoint a web app, the top bar in place of the macOS sidebar'),
            ('float-gap', 'Desktop: a floating card’s room from the window’s edges and from the card beside it', 'The phone’s gutter, 16px', 'Designer, 2026-11-19: Komoot’s and Strava’s cards over the map'),
            ('radius-float', 'Desktop: a floating card’s corners over the map', '16px [?]: between the content’s 6 and the sheet’s 38', 'Designer, 2026-11-19: Komoot’s Routes card; no HIG number'),
            ('form-w', 'A form’s column from the tablet breakpoint', 'A phone’s width (--pane-w): a form is never stretched; the desktop’s form half centres it', 'Designer, 2026-11-20: Copilot, Dribbble and Midday sign-in; Pandora on a tablet'),
-           ('pane-top', 'The wide layout’s top line: a pane’s first content below its top edge', '16px: the large title and the sidebar’s first row start on it', 'DESIGN.md → Width → The wide layout (layout pass, 2026-11-18): HIG Layout, align content to a consistent grid'),
-           ('form-sheet-w', 'A sheet from the tablet breakpoint: a form sheet, centred', '540px at the default text size, UIKit’s form sheet on iPad · [?] Apple’s number, not HIG’s text', 'HIG Sheets: prefer the page or form sheet presentation styles in an iPadOS app (Lesson 10 step 6)'),
+           ('pane-top', 'The wide layout’s top line: a pane’s first content below its top edge', '16px: the large title and a card’s first line start on it', 'DESIGN.md → Width → The wide layout (layout pass, 2026-11-18): HIG Layout, align content to a consistent grid'),
+           ('form-sheet-w', 'A sheet on a desktop: a form sheet, centred', '540px at the default text size, UIKit’s form sheet on iPad · [?] Apple’s number, not HIG’s text', 'HIG Sheets: prefer the page or form sheet presentation styles in an iPadOS app (Lesson 10 step 6)'),
            ('form-sheet-h', 'The form sheet’s height; a sheet sized to its content stops here', '620px at the default text size, the same UIKit size · [?]', 'HIG Sheets (Lesson 10 step 6)'),
            ('form-sheet-inset', 'The least room a form sheet leaves to the window’s edges', 'The dimmed screen behind it always shows', 'HIG Sheets: a form sheet sits over the screen it came from (Lesson 10 step 6)'),
            ('container-max-wide', 'Desktop: the wide container the list and its detail card centre in', '1200px at the default text size [?]', 'Designer, 2026-11-20: Results list on a desktop; Strava’s activity feed, Komoot'),
            ('thumb-w', 'Desktop: a list row’s photo thumbnail', '64px square [?]', 'Designer, 2026-11-20: Komoot’s routes list'),
            ('container-max', 'A single-column screen stops growing and centres', f'672px at the default text size, UIKit’s readable width · [?] Apple’s number, not HIG’s text', 'HIG Layout: layout guides restrict the width of text'),
            ('stack-w', 'A component narrower than this stacks its parts', '288px at the default text size [?]: a 320 screen less its gutters, so nothing stacks at the default size; 576px at 200% text', 'Lesson 10 step 4: components adapt to their pane (a container query), never the window'),
-           ('bp-tablet', 'Breakpoint 1: a second pane fits beside a phone-width list', '2 × pane + divider = 781px; later at larger text', 'Width audit → Where behavior changes, 1 · HIG Split views: regular width'),
-           ('bp-desktop', 'Breakpoint 2: the sidebar plus three panes fits', 'Sidebar + list + detail + the map at its minimum + 3 dividers = 1343px; later at larger text', 'Width audit → Where behavior changes, 2 · designer, 2026-11-15: the map flexible, so 13–14" laptops reach it'),
-           ('kit-tablet-w', 'Docs only: a stage as wide as a tablet', '820px, an iPad Air 11-inch in portrait: above --bp-tablet', 'Lesson 10 step 3: the viewer’s Tablet width'),
+           ('bp-desktop', 'The one breakpoint: the web app’s two floating cards fit beside the map', 'Gap + list card + gap + race card + gap + the map at its minimum = 16 + 390 + 16 + 390 + 16 + 320 = 1148px; later at larger text', 'Lesson 10 step 7 (designer, 2026-11-20): set by the behavior, not a device, so 1280 and 1366 laptops reach it; one breakpoint, a deliberate deviation from the lesson’s two'),
+           ('kit-tablet-w', 'Docs only: a stage as wide as a tablet', '820px, an iPad Air 11-inch in portrait: below --bp-desktop, the phone’s layout', 'Lesson 10 step 3: the viewer’s Tablet width'),
            ('kit-desktop-w', 'Docs only: a stage as wide as a desktop window', '1440px, a 13-inch laptop’s default: above --bp-desktop', 'Lesson 10 step 3: the viewer’s Desktop width'),
-           ('map-min', 'The map pane’s narrowest', '320px [?]: the narrowest screen the map is checked at', 'Designer, 2026-11-15: list and detail fixed, the map flexible'),
-           ('sidebar-w', 'The desktop sidebar’s column, its inset included', '240px [?]: HIG gives no width', 'HIG Sidebars · designer, 2026-11-15: desktop is macOS'),
+           ('map-min', 'The map’s narrowest beside the desktop’s two cards', '320px [?]: the narrowest screen the map is checked at', 'Designer, 2026-11-15 · a term of --bp-desktop since Lesson 10 step 7'),
            ('sheet-content-top', 'Every sheet: the gap between its top bar and the first group or line', '24px', 'Designer, 2026-11-06: content stuck to the bar · HIG Sheets, inset grouped lists leave 20–35pt'),
            ('sheet-group-gap', 'Every sheet: the gap between two groups', '32px', 'Designer, 2026-11-06 · iOS sections, about 35pt apart'),
            ('grouped-row-min', 'Every grouped row (a sheet, Sign in / Sign up, Reset password, New password, Profile): its height', 'The 44pt target plus 8px: 52px', 'Designer, 2026-11-06 (sheets: rows felt cramped), every group 2026-11-07 (one height everywhere) · HIG: rows at least 44pt'),
@@ -1184,12 +1183,12 @@ print('pairs', len(PAIRS), 'min text ratio', min(cr(tok(f), tok(b)) for _, f, b,
 import subprocess
 subprocess.run([sys.executable, os.path.join(ROOT, 'scripts/build_ui_overview.py')], check=True)
 # the Lesson 08 overview (scripts/build_tokens_overview.py), the workspace rail and every lesson bar: rebuilt with the kit
-for _s in ('scripts/build_tokens_overview.py', 'scripts/build_system_overview.py', 'scripts/lessons_nav.py', 'scripts/build_voice_html.py', 'scripts/build_workspace.py'):
+for _s in ('scripts/build_tokens_overview.py', 'scripts/build_system_overview.py', 'scripts/build_responsive_overview.py', 'scripts/lessons_nav.py', 'scripts/build_voice_html.py', 'scripts/build_workspace.py'):
     subprocess.run([sys.executable, os.path.join(ROOT, _s)], check=True)
 # mirror to public/ (GitHub Pages serves public/). Before the overflow and link checks (Lesson 9 step 1 follow-up,
 # 2026-11-04): both read public/, so a path change must never leave them reading stale pages
 import shutil
-for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.html', 'ui/shell.html', 'design-system/index.css', 'design-system/tokens/theme.js', 'design-system/map-data.css', 'design-system/patterns/split-view.js'] + STAMPED[2:]:   # split-view.js: the Split view pattern's script (Lesson 10 step 5)
+for _f in ['concept/concept.html', 'concept/stand.css', 'concept/specimens.css', 'concept/first-screen.html', 'concept/first-screen.css', 'ui/kit.html', 'ui/shell.html', 'design-system/index.css', 'design-system/tokens/theme.js', 'design-system/tokens/desktop.js', 'design-system/map-data.css', 'design-system/patterns/split-view.js'] + STAMPED[2:]:   # split-view.js: the Split view pattern's script (Lesson 10 step 5)
     if os.path.exists(os.path.join(ROOT, _f)):
         os.makedirs(os.path.dirname(os.path.join(ROOT, 'public', _f)), exist_ok=True)
         shutil.copyfile(os.path.join(ROOT, _f), os.path.join(ROOT, 'public', _f))
@@ -1215,6 +1214,7 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-results'), os.path.join(ROOT, 'pub
 shutil.copyfile(os.path.join(ROOT, 'ui/review-results.html'), os.path.join(ROOT, 'public/ui/review-results.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-forms'), os.path.join(ROOT, 'public/ui/review-forms'), dirs_exist_ok=True)   # forms on a tablet, following iPad (2026-11-20)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-forms.html'), os.path.join(ROOT, 'public/ui/review-forms.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-final'), os.path.join(ROOT, 'public/ui/review-final'), dirs_exist_ok=True)   # Lesson 10 step 7: the final check's before/after, shown on the Lesson 10 overview
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)

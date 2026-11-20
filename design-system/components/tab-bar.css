@@ -18,7 +18,7 @@
   font-weight: var(--weight-strong);
   text-decoration: none;
 }
-.bottom-nav a[aria-current="page"] { color: var(--accent-ink); }
+.bottom-nav a[aria-current] { color: var(--accent-ink); }   /* "page" on a tab screen; "true" on a pushed screen, the section it belongs to (desktop) */
 .bottom-nav a { border-radius: var(--radius-capsule); }   /* a tab's state fill is a capsule inside the capsule bar (iOS 26) */
 @media (hover: hover) { .bottom-nav a:is(:hover, .is-hover) { background: var(--bar-hover); } }   /* on the bar's glass: one level up, two pressed (Lesson 9 step 3) */
 .bottom-nav a:is(:active, .is-pressed) { background: var(--bar-pressed); }
@@ -54,21 +54,21 @@ body > .bottom-nav a::before {
 .bottom-nav a[data-tab="profile"] { --tab-icon: var(--icon-user); }
 
 /* order 1080 */
-/* The tab bar by width (Lesson 10 step 3, 2026-11-15; revised by the designer 2026-11-19, the web app desktop). The
-   numbers are design-system/tokens/tokens.css's --bp-tablet and --bp-desktop, written out because a media query can't
-   read var(); scripts/build_components.py stops the build if they drift apart.
-   Phone and tablet: the floating capsule at the bottom, as on a phone (a tablet behaves like the phone, navigation
-   included); on a tablet it keeps a phone's width, centred, so its three tabs don't spread across the window.
+/* The tab bar by width (Lesson 10 step 3, 2026-11-15; revised by the designer 2026-11-19, the web app desktop; one
+   breakpoint since step 7, 2026-11-20). The number is design-system/tokens/tokens.css's --bp-desktop, written out because
+   a media query can't read var(); scripts/build_components.py stops the build if they drift apart.
+   Below --bp-desktop: the floating capsule at the bottom, as on a phone (a tablet behaves like the phone, navigation
+   included); it keeps a phone's width, centred, so on a tablet its three tabs don't spread across the window (a cap by
+   max-width alone, no query: on a phone it is the bar's own width).
+   From --bp-desktop: the web app's top bar, the logo, the three destinations and Log result, on every page: a tab
+   screen's own bar, and on a pushed screen (Race detail, Result detail and their states, Saved races) the same bar
+   marked .bottom-nav--pushed, which a phone doesn't draw (a pushed screen has no tab bar there); its section is marked
+   aria-current="true" (Lesson 10 step 7, 2026-11-20).
    (Until 2026-11-19: on a tablet, iPad's tab bar at the top; on a desktop, a macOS sidebar.) */
 .bottom-nav .nav-brand, .bottom-nav .nav-action { display: none; }   /* the desktop's top bar only */
-@media (min-width: 48.8125rem) {
-  body > .bottom-nav { max-width: calc(var(--pane-w) - var(--tabbar-inset) - var(--tabbar-inset)); margin-inline: auto; }
-}
-/* Desktop: a web app's top bar, not macOS (designer, 2026-11-19; Strava and Komoot as references): the logo (Onrace's
-   wordmark, a link home) at the leading edge, the three destinations beside it, icon and label side by side, and Log
-   result, the app's one primary action, at the trailing edge. The bar's glass spans the window, --topnav-h tall, with
-   a hairline under it; the screen starts under it. */
-@media (min-width: 83.9375rem) {
+body > .bottom-nav { max-width: calc(var(--pane-w) - var(--tabbar-inset) - var(--tabbar-inset)); margin-inline: auto; }
+body > .bottom-nav--pushed { display: none; }   /* a pushed screen: the top bar is a desktop's only */
+@media (min-width: 71.75rem) {
   body > .bottom-nav {
     position: relative;
     order: -1;

@@ -14,21 +14,24 @@ Nothing open. The three items found with it (the search glass on "No race select
 
 Found by the group agents while rolling out; not fixed in step 6. The critique's findings are separate (`concept/concept.md` → Step 6).
 
-- **Race browse's card photos load a larger file than they show.** `sizes` says `calc(100vw - 32px)`; at 820 a card's photo is 342px wide and loads the 1026 file. A pane-width `sizes` would fix it (Race detail's photos were fixed in step 6). The pane's Race detail photo carries the detail screen's `sizes`, too large there, never blurry.
 - **Focus after the Filters sheet closes** returns to whatever had focus when it opened; after a click that didn't focus Filters (Safari), that is the page, so focus is lost. Fall back to the Filters button.
-- **The discard action sheet on a tablet** sits at the bottom of Log result's form sheet; HIG draws an iPad action sheet as a popover from its button (Cancel). A popover is a new presentation: the designer's call.
-- **Race picker's ground differs from Log result's** inside the same form sheet: Log result is the sheet glass, Race picker its page's ground (`body.form-sheet` keeps the page's own ground). Already so on a phone, more visible in a fixed sheet.
+- **Race picker's ground differs from Log result's** inside the same form sheet: Log result is the sheet glass, Race picker its page's ground (`body.form-sheet` keeps the page's own ground). Since `4493f00` only on a desktop (a tablet has the phone's sheet and page).
 - **The confirm alert doesn't widen at 200% text:** "Sign out" wraps to two lines in its button (on a phone too); iOS widens alerts at the accessibility sizes.
-- **Cancel on the sign-in gate goes to Race browse** even when it was opened from Results; over a split view on iPad, returning to the screen under the sheet may read better (flows.md DeadEnd2/4 as drawn).
-- **The selected Spartan row's "Add official result link" strip** keeps its own darker band inside the Selected edge on Results list at 820 and 1440.
+- **Cancel on the sign-in gate goes to Race browse** even when it was opened from Results. The iPad reason (returning to the split view under the sheet) is gone: the gate is a full page (`d419cf6`) and a tablet has no split view (`7301bda`); the flow question stays (flows.md DeadEnd2/4 as drawn).
+
+Fixed in Lesson 10 step 7 (2026-11-20; `concept/concept.md` → Step 7): the race card photos' `sizes` (now written from the tokens and the slot by `scripts/build_sizes.py`), and the selected row's strip (the row's article is its surface, so the strip is the row's).
+
+Superseded by the current layout (Lesson 10 step 7, 2026-11-20):
+
+- ~~The discard action sheet on a tablet sits at the bottom of Log result's form sheet~~: `4493f00`. On a tablet Log result is the phone's sheet at the window's width and the discard action sheet is the phone's.
 
 ## The wide layout pass (2026-11-18)
 
-The full open list, this pass's and the step 6 critique's merged, is `ui/review-layout.html` → Still open. Found in this pass:
+The full open list, this pass's and the step 6 critique's merged, is `ui/review-layout.html` → Still open (rows the current layout superseded are listed there with their commit). This pass's three items were all superseded on 2026-11-20 (Lesson 10 step 7):
 
-- **Tall, narrow map panes** (820; 1440 with a race chosen) fit the pins' width, so the pins sit in a thin band between the Arctic and South America. A static map can't pan or zoom: frame tighter, or the interactive map (deferred).
-- **The tablet's tab bar has its own row** and nothing scrolls under it; iPadOS 26 floats it over the content. Kept for the one top line.
-- **The sidebar is edge to edge**; macOS 26 and iPadOS 26 float it as a glass panel. Kept for one grid with the panes' divider.
+- ~~Tall, narrow map panes (820; 1440 with a race chosen)~~: `7301bda`. No tall pane is left: a tablet's Map view spans the window, and a desktop's map is full bleed under the floating cards, framed to the races in the room they leave.
+- ~~The tablet's tab bar has its own row~~: `7301bda`. A tablet's tab bar is the phone's, floating at the bottom at a phone's width.
+- ~~The sidebar is edge to edge~~: `7301bda`. The desktop's top bar replaced the sidebar.
 
 ## Examples: Saved races (found 2026-11-10)
 

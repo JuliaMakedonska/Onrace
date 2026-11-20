@@ -73,6 +73,17 @@ Lesson 9 made the kit one design system: one folder, one file the product links,
   - [`backlog.md`](./design-system/backlog.md): what's known to be open, by the lesson that takes it.
 - **Checked on every build** (`python3 scripts/concept/build_stand.py`, through `scripts/ship.sh`): contrast in both themes, signed tokens, no raw values in components, every docs stage identical to its specimen, overflow and keyboard focus on every screen state, and docs that name only tokens, classes and files that exist.
 
+## Responsive
+
+Lesson 10 made every screen work at every width, from one breakpoint.
+
+- **[Lesson 10 overview](https://onrace-five.vercel.app/workspace.html#10)** (`public/responsive-overview.html`, also [on its own](https://onrace-five.vercel.app/responsive-overview.html)): the decisions and their references, the breakpoint, the viewer's width switch, before and after, the deviations, the final check.
+- **One breakpoint, `--bp-desktop` (1148px)**, set by behavior: where Race browse's two floating cards fit beside the map at its narrowest, so a 1280 laptop gets the desktop. A deliberate deviation from the lesson's two: once the tablet became the phone's, the tablet breakpoint changed nothing, and a breakpoint that changes nothing is redundant.
+- **Below it, the phone's layout**, a tablet included: the column capped at `--container-max`, running text at `--measure`, all by `max-width` alone. **From it, a web app**: a top bar on every page, Race browse a full-bleed map with floating cards, Results list a list and a result card, sign-in a split page, sheets as form sheets over the dimmed screen.
+- **Where it lives:** the breakpoint and the widths in `design-system/tokens/tokens.css`; every media query in `design-system/components/` (min-width at the breakpoint only; container queries at `--stack-w`); the list-with-detail in `design-system/patterns/split-view.*`; `design-system/tokens/desktop.js` for what a query can't do; photos' `sizes` from `scripts/build_sizes.py`.
+- **Checked on every build:** one breakpoint (`build_components.py`); no overflow at 320, 390, 820, 1148 and 1440 and at 200% text (`check_overflow.mjs`); whole focus halos (`check_focus.mjs`); every `sizes` from the tokens (`check_kit.py`). The final check: [`ui/review-layout.html`](https://onrace-five.vercel.app/ui/review-layout.html).
+- **[See it in the viewer](https://onrace-five.vercel.app/wireframes/#race-browse?width=desktop)**: Phone 390, Tablet 820, Desktop 1440.
+
 ## Repo structure
 
 This is a living index — update it as folders fill up or their purpose shifts.

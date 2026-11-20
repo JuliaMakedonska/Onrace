@@ -18,7 +18,9 @@ build_stand.py runs it on every build. It fails when:
   design-system/index.css once (the file the product links, so a page can't show another look), a docs page that
   shows the static map doesn't link design-system/map-data.css, or a word on a docs page (its text, aria-label, alt,
   placeholder, title) appears neither in microcopy.md nor in the source docs: DESIGN.md, concept/concept.md,
-  concept/references.md and ui/inventory.md, but not the inventory's own Docs map, whose words must come from the rest.
+  concept/references.md and ui/inventory.md, but not the inventory's own Docs map, whose words must come from the rest;
+- (Lesson 10 step 7) a <picture> on a screen, a pattern or an example has no data-slot, or a `sizes` that isn't the one
+  scripts/build_sizes.py writes from the tokens for its slot.
 """
 import html as H
 import os, re, sys
@@ -139,6 +141,13 @@ for sp in SCREENS + PATTERN_FILES + EXAMPLE_FILES + [p for p in DOC_PAGES if p n
         # :focus-visible; a screen shows a state only when it happens
         for c in sorted(used & {'is-hover', 'is-pressed', 'is-focus'}):
             fails.append(f'{name}: uses the docs-only state stand-in .{c}')
+
+# ---------------------------------------------------------------- the photos' sizes (Lesson 10 step 7, 2026-11-20)
+# A `sizes` is a media condition and a width in a screen's markup: each must be the one scripts/build_sizes.py writes from
+# the tokens for the picture's slot (data-slot), so no page keeps a breakpoint or a slot width of its own.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build_sizes
+fails += build_sizes.problems()
 
 # ---------------------------------------------------------------- design-system first (Lesson 9 step 5, 2026-11-06)
 # design-system/CONTRIBUTING.md: anything new appears first in design-system/, then on a screen. A screen can't use a class

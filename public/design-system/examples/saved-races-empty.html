@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../index.css?v=bfc0110a">
+<link rel="stylesheet" href="../index.css?v=0e03d48c">
 <script src="../tokens/theme.js"></script>
 </head>
 <!-- EXAMPLE: Saved races, empty (design-system/examples/README.md). A test of the system with a screen the product
@@ -39,5 +39,14 @@
     </main>
   </div>
 <script src="../patterns/split-view.js"></script>   <!-- the Split view pattern: the pane beside the list from tablet width up (Lesson 10 step 6) -->
+  <nav class="bottom-nav bottom-nav--pushed" aria-label="Global navigation">   <!-- a pushed screen's top bar: drawn on a desktop only (tab-bar.css; Lesson 10 step 7, 2026-11-20); aria-current="true" marks the section the screen belongs to -->
+    <a class="nav-brand" href="../../wireframes/race-browse.html">Onrace</a>
+    <ul>
+      <li><a href="../../wireframes/race-browse.html" aria-current="true" data-tab="discover"><span>Discover</span></a></li>
+      <li><a href="../../wireframes/results-list-loading.html?run=1" data-tab="results"><span>Results</span></a></li>
+      <li><a href="../../wireframes/profile-loading.html?run=1" data-tab="profile"><span>Profile</span></a></li>
+    </ul>
+    <a class="nav-action" href="../../wireframes/log-result.html">Log result</a>
+  </nav>
 </body>
 </html>

@@ -3,5 +3,5 @@
    components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
 
 /* order 0900 */
-.context { margin: 0 0 var(--space-5); font-size: var(--size-body); color: var(--text-secondary); }
+.context { margin: 0 0 var(--space-5); max-width: var(--measure); font-size: var(--size-body); color: var(--text-secondary); }
 .context[hidden] { display: none; }

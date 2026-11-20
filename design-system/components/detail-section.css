@@ -23,4 +23,4 @@
   line-height: var(--leading-item);
   color: var(--text-primary);
 }
-.about p { margin: 0 0 var(--space-6); font-size: var(--size-body); }
+.about p { margin: 0 0 var(--space-6); max-width: var(--measure); font-size: var(--size-body); }   /* running text stops at --measure in the 672 column (Lesson 10 step 7: 104 characters a line at 820) */

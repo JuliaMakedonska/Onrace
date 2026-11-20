@@ -63,7 +63,7 @@ const COLLECT = (geometry) => `(async () => { await document.fonts.ready;
 async function load(u, geometry) {
   for (let t = 0; t < 3; t++) {
     const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url: u }); await Promise.race([l, sl(8000)]);
-    const r = await ev(COLLECT(geometry));
+    const r = await Promise.race([ev(COLLECT(geometry)), sl(60000).then(() => null)]);   // a page that never answers (a font or frame that never resolves) counts as not settled, never as a hang (Lesson 10 step 7: the build stalled 30 minutes here)
     if (r && r.settled) return r.out;
     await sl(1000);
   }

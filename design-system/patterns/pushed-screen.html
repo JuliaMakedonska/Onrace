@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../index.css?v=bfc0110a">
+<link rel="stylesheet" href="../index.css?v=0e03d48c">
 <script src="../tokens/theme.js"></script>
 </head>
 <!-- PATTERN: Pushed screen (design-system/patterns/README.md). Composed only of existing components: this page links
@@ -15,7 +15,8 @@
      define (scripts/check_kit.py stops the build otherwise).
      Stands on: Race detail, Result detail, Race picker, Reset password, New password: a .top-bar whose .back names
      the screen it returns to, the screen's content under it, and no tab bar. Composed of: Top bar, and the screen's
-     own content. Drawn here as Race picker.
+     own content. Drawn here as Race picker. On a desktop a pushed screen that isn't inside a sheet (Race detail, Result
+     detail) also carries the web app's top bar, .bottom-nav--pushed (the Tab bar's, not drawn below a desktop; Lesson 10 step 7).
      Shown live on design-system/docs/patterns.html and specimens.html → Patterns, in a frame that loads this file. -->
 <body class="onrace">
   <div class="phone-screen">

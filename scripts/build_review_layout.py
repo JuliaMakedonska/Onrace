@@ -37,6 +37,51 @@ NEW = [
   ('Layout pass', 'Every tab screen', '1440', 'The sidebar is edge to edge with a divider; macOS 26 and iPadOS 26 float it as a glass panel. Chosen for one grid with the panes\' thin divider (HIG Split views).', 'any tab screen at 1440', 'Keep, or float the sidebar and the panes together with one gap (tab-bar.css, split-view.css, a gap token).'),
   ('Layout pass', 'Race detail, Result detail on their own; Saved races', '820, 1440', 'A pushed screen at a wide width shows no tab bar or sidebar (the critique\'s rows on Race detail, Result detail and Saved races, unchanged by this pass).', 'race-detail ?race=utmb 1440', 'See the critique rows below.'),
 ]
+# Lesson 10 step 7 (2026-11-20): rows the current layout superseded, re-checked at 390, 820 and 1440 on fresh shots.
+# 7301bda: the tablet is the phone's (no split view, the tab bar at the bottom), the desktop a web app (the top bar
+# replaced the sidebar; Race browse a full-bleed map with floating cards); c62f7d0: Results list on a tablet the
+# phone's, a chosen race scrolled into view; d419cf6: the sign-in screens full pages at every width; 4493f00: forms
+# on a tablet the phone's sheet and page, the desktop Results list a centred container with a detail card.
+SUPERSEDED = {   # critique row: (commit, what supersedes it)
+  2: ('7301bda', 'the chosen race\'s pin is Selected on the desktop\'s map (outlined label); the tablet has no split view'),
+  3: ('c62f7d0', 'a race chosen by its address scrolls its card into view in the list card; the tablet has no split view (7301bda)'),
+  20: ('4493f00', 'the action bar\'s buttons are sized to their text on a desktop, in the result card and on the screen alone'),
+  28: ('d419cf6', 'Sign in / Sign up, Reset password and New password are full pages at every width, no longer form sheets'),
+}
+NARROWED = {     # critique row: (the width still open, why the other width closed)
+  0: ('820', '1440 closed by 7301bda: the desktop\'s filters are a popover card sized to its content, OCR in view'),
+  6: ('1440', '820 closed by 7301bda: no split view on a tablet'),
+  7: ('1440', '820 closed by 7301bda: a tablet is the phone\'s, a pushed screen has no tab bar there. Now: no top bar on a desktop'),
+  9: ('1440', '820 closed by 7301bda: no split view on a tablet'),
+  12: ('1440', '820 closed by 4493f00: on a tablet Log result is the phone\'s sheet at the window\'s width. Now: the top bar and the list vanish too'),
+  14: ('1440', '820 closed by c62f7d0: Results list on a tablet is the phone\'s'),
+  15: ('1440', '820 closed by c62f7d0: Results list on a tablet is the phone\'s'),
+  17: ('1440', '820 closed by c62f7d0: no panes on a tablet'),
+  18: ('1440', '820 closed by c62f7d0: on a tablet the pushed screen is the phone\'s. Now: no top bar on a desktop'),
+  21: ('1440', '820 closed by c62f7d0: no split view on a tablet'),
+  38: ('1440', '820 closed by 7301bda: on a tablet a pushed screen is the phone\'s. Now: no top bar on a desktop'),
+  39: ('1440', '820 closed by c62f7d0: the list-with-detail panes are a desktop\'s'),
+  40: ('1440', '820 closed by c62f7d0: the list-with-detail panes are a desktop\'s'),
+  41: ('1440', '820 closed by c62f7d0: the list-with-detail panes are a desktop\'s'),
+}
+NEW_SUPERSEDED = {   # this pass's own rows (index in NEW): (commit, what supersedes it)
+  0: ('7301bda', 'no tall map pane: the tablet\'s Map view spans the window, the desktop\'s map is full bleed under the cards, framed to the races in the room they leave'),
+  1: ('7301bda', 'the tablet\'s tab bar is the phone\'s, floating at the bottom, a phone\'s width'),
+  2: ('7301bda', 'the desktop\'s top bar replaced the sidebar'),
+}
+NEW_NARROWED = {3: ('1440', '820 closed by 7301bda: a tablet is the phone\'s. Now: a pushed screen on a desktop shows no top bar')}
+FIXED = {   # Lesson 10 step 7's defect table (#), fixed the same day: critique row → the fix
+  0: '#3: Filters is the phone\'s sheet on a tablet, at the window\'s width, every sport type in it',
+  6: '#11: the pane says what it shows in a polite status', 7: '#5: on a desktop race-detail?race= opens Race browse with that race\'s card; the top bar is on every desktop page',
+  9: '#13: the race card\'s title at --size-title-1, one step under the large title', 12: '#6: Log result and Race picker sit over Results list, dimmed',
+  13: '#9: the strip is inside the row, the article its surface', 14: '#9: on the chosen row the pane\'s primary says it once',
+  15: '#10: a result just saved is the one chosen', 17: '#12: a failed detail centred in its pane, as "No result selected"',
+  18: '#5: on a desktop result-detail?result= opens Results list with that result', 21: '#11: the pane\'s headings sit a level under its title (aria-level)',
+  38: '#5: the top bar on every desktop page, Saved races included', 39: '#11: the pane\'s headings sit a level under its title',
+  40: '#11: the pane says what it shows', 41: '#12: one vertical placement, centred', 42: '#8: sizes from the tokens and the slot (scripts/build_sizes.py)',
+  43: '#15: card titles text-wrap: pretty, no short last line (balance broke at "Ultra-")',
+}
+NEW_FIXED = {3: '#5: the top bar on every desktop page'}
 fig = lambda s: (f'<figure class="rv-w{s["w"]}">' + img(f'review-layout/{s["key"]}.webp', s['w'], esc(s['label']) + ' at ' + str(s['w']), os.path.join(ROOT, 'ui'))
                  + f'<figcaption>{s["w"]} · 1:2' + (''.join(f' <span class="rv-bad">{esc(r)}: {esc(t)}</span>' for r, t in s['fails']) or ' <span class="rv-ok">passes the spec</span>') + '</figcaption></figure>')
 groups = {}
@@ -47,7 +92,14 @@ for lab, ss in groups.items():
     href = LIVE + ('design-system/' + page[len('../design-system/'):] if page.startswith('../') else 'wireframes/' + page)
     grid.append(f'<section class="rv-row"><h3>{esc(lab)} <a href="{esc(href)}">live ↗</a></h3><div class="rv-shots">{"".join(fig(s) for s in ss)}</div></section>')
 nfail = sum(1 for s in shots if s['fails'])
-open_rows = [r for i, r in enumerate(rows) if i not in CLOSED]
+def narrow(r, n):   # the width still open, the closed width's reason after it
+    return r[:2] + [f'{n[0]} ({n[1]})'] + r[3:]
+open_rows = [narrow(r, NARROWED[i]) if i in NARROWED else r for i, r in enumerate(rows) if i not in CLOSED and i not in SUPERSEDED and i not in FIXED]
+open_new = [narrow(list(r), NEW_NARROWED[i]) if i in NEW_NARROWED else list(r) for i, r in enumerate(NEW) if i not in NEW_SUPERSEDED and i not in NEW_FIXED]
+fixed = ''.join(f'<li><b>{md(NEW[i][1])}</b> (this pass): {esc(w)}.</li>' for i, w in NEW_FIXED.items()) + ''.join(f'<li><b>{md(rows[i][1])}</b> ({md(rows[i][0])}): {esc(w)}.</li>' for i, w in FIXED.items())
+superseded = (''.join(f'<li><b>{md(NEW[i][1])}, {md(NEW[i][2])}</b> (this pass): {esc(why)}. <code>{c}</code></li>' for i, (c, why) in NEW_SUPERSEDED.items())
+              + ''.join(f'<li><b>{md(rows[i][1])}, {md(rows[i][2])}</b> ({md(rows[i][0])}): {esc(why)}. <code>{c}</code></li>' for i, (c, why) in SUPERSEDED.items())
+              + ''.join(f'<li><b>{md(rows[i][1])}, 820</b> ({md(rows[i][0])}): {esc(n[1])}; 1440 stays open above.</li>' for i, n in NARROWED.items() if n[0] == '1440'))
 tr = lambda r: '<tr>' + ''.join(f'<td>{md(c)}</td>' for c in r) + '</tr>'
 head = '<tr><th>Group</th><th>Screen</th><th>Width</th><th>What\'s wrong</th><th>Evidence</th><th>Suggested fix</th></tr>'
 closed = ''.join(f'<li><b>{md(rows[i][1])}, {md(rows[i][2])}</b> ({md(rows[i][0])}): {esc(why)}.</li>' for i, why in CLOSED.items())
@@ -110,7 +162,13 @@ page = f'''<!doctype html>
   <section>
     <h2>Still open: this pass and the step 6 critique, merged</h2>
     <p>What the self-check can't measure, found by eye and against HIG, then the step 6 critique's rows this pass didn't close (as returned).</p>
-    <div class="rv-table"><table>{head}{''.join(tr(r) for r in NEW)}{''.join(tr(r) for r in open_rows)}</table></div>
+    <div class="rv-table"><table>{head}{''.join(tr(r) for r in open_new)}{''.join(tr(r) for r in open_rows)}</table></div>
+    <h3>Superseded by the current layout (Lesson 10 step 7, 2026-11-20)</h3>
+    <p>Re-checked on fresh shots at 390, 820 and 1440 against the layout since <code>7301bda</code> (the tablet the phone's, the desktop a web app), <code>c62f7d0</code>, <code>d419cf6</code> and <code>4493f00</code>. A row closed at one width only stays in the table above with the width still open.</p>
+    <ul>{superseded}</ul>
+    <h3>Fixed in step 7 ({len(FIXED) + len(NEW_FIXED)} rows)</h3>
+    <p>The step 7 defect table, decided by the designer and fixed on 2026-11-20 (<code>concept/concept.md</code> → Lesson 10 → Step 7). The shots below are the fixed state.</p>
+    <ul>{fixed}</ul>
     <h3>Closed by this pass ({len(CLOSED)} of the critique's {len(rows)} rows)</h3>
     <ul>{closed}</ul>
   </section>
@@ -127,4 +185,4 @@ page = f'''<!doctype html>
 </html>
 '''
 open(os.path.join(ROOT, 'ui/review-layout.html'), 'w').write(page)
-print(f'review-layout: {len(groups)} states, {len(shots)} shots, {nfail} failing; {len(open_rows) + len(NEW)} open, {len(CLOSED)} closed')
+print(f'review-layout: {len(groups)} states, {len(shots)} shots, {nfail} failing; {len(open_rows) + len(open_new)} open, {len(FIXED) + len(NEW_FIXED)} fixed, {len(CLOSED)} closed')

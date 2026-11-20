@@ -31,4 +31,4 @@
   -webkit-mask: var(--icon-error) center / contain no-repeat;
   mask: var(--icon-error) center / contain no-repeat;
 }
-.inline-error p, .form-alert p { margin: var(--space-1) 0 0; font-size: var(--size-meta); color: var(--text-primary); }
+.inline-error p, .form-alert p { margin: var(--space-1) 0 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-primary); }

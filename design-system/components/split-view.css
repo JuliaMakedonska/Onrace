@@ -2,15 +2,13 @@
    Not a component of its own: the layout of the Split view pattern (design-system/patterns/split-view.html), which
    puts existing components side by side. A screen marks its scroll area .split-view and adds a .split-detail pane;
    design-system/patterns/split-view.js fills the pane from the detail screen's own page.
-   Phone: nothing changes; the pane isn't drawn and a chosen card opens its own screen.
-   From --bp-tablet: the list is a phone-width pane (--pane-w) on the left, and beside it the map (Race browse) or the
-   detail (Results list); on Race browse a chosen race's detail takes the map's place, with "‹ Map" back.
+   Below --bp-desktop (a phone, and a tablet, which behaves like the phone): nothing changes; the pane isn't drawn and a
+   chosen card opens its own screen.
    From --bp-desktop, Race browse (a screen with a map) is the web app's (designer, 2026-11-19): the full-bleed map with
-   floating cards, the list and the chosen race (below). Until then: on a tablet list + map or detail in the map's
-   place, on a desktop list, detail and map.
-   The panes meet at the thin divider (--grid-gap); the list scrolls with the screen, the map and the detail stay put
-   beside it at the screen's height and the detail scrolls on its own (HIG Split views). The numbers are tokens.css's
-   --bp-tablet and --bp-desktop (a media query can't read var(); scripts/build_components.py checks they agree). */
+   floating cards, the list and the chosen race; Results list (and Saved races) a centred container, the list and the
+   chosen result's card (2026-11-20). Until 2026-11-19 a tablet split too (list + map, or the detail in the map's place).
+   The number is tokens.css's --bp-desktop, the one breakpoint (a media query can't read var(); scripts/build_components.py
+   checks they agree). */
 
 /* order 1150 */
 .split-detail { display: none; --split: 0; }   /* phone: no pane; split-view.js reads --split to know whether a card opens a pane or a screen */
@@ -20,8 +18,9 @@
 .split-empty .state-message::before { content: none; }
 .split-empty .state-message h2 { font-weight: var(--weight-regular); color: var(--text-secondary); }
 /* the detail's title in its pane is an h2 (step 5 follow-ups): the screen keeps one h1, the list's large title, and
-   split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look */
-.split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+   split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look one step down, --size-title-1,
+   so it doesn't stand beside the large title at the same size (Lesson 10 step 7) */
+.split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title-1); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .split-content .result > h2 { margin-bottom: var(--space-5); }
 /* the race card's Close (desktop, the web app; designer 2026-11-19): an × at its corner, on the glass of the bars so it
    reads over the photo; its name, "Close", is visually hidden (microcopy row 599) */
@@ -42,29 +41,12 @@
 .card-close:is(:active, .is-pressed) { color: var(--text-pressed); }
 .card-close:is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
 
-/* A screen with a map (Race browse) on a tablet is the phone's (designer, 2026-11-19): its column capped at
-   --container-max (screen.css), the List / Map switch kept, the Map view filling the screen's width. A tablet splits no
-   screen (2026-11-19, the follow-ups: the tablet behaves like the phone everywhere): the panes are a desktop's. */
-@media (min-width: 48.8125rem) {
-  /* the Map view edge to edge, no frame, framed to the pins at its own shape (the width decides: on a tablet the view's height comes from the flex layout, where 100cqh can't be read) */
-  .split-view:has(.map-area) .map-area { align-self: center; width: 100vw; padding: 0; }
-  .split-view:has(.map-area) .map-placeholder { border-radius: 0; box-shadow: none; --map-s: calc(var(--map-box-w) / var(--map-fit-fw)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }
-}
-/* Desktop: a web app (designer, 2026-11-19; Strava Maps and Komoot as references). Race browse is the map, full bleed
-   under the top bar, edge to edge, no panes and no frames, framed to the races in the room the cards leave; over it,
-   floating cards (--radius-float, the page's ground, the float shadow, --float-gap from the window's edges and from each
-   other): the list card on the left (the large title, search, the count and the race list, scrolling inside the card),
-   and, once a race is chosen, the race card beside it (Split view's detail: the race's own page, Close at its corner);
-   the Filters button and the active filter chips float over the map to the right of the cards, the filters opening in
-   a card under them (modal-sheet.css, .sheet--popover). A list with its detail (Results list) keeps its two panes. */
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   /* a list with its detail (Results list, Saved races) on a desktop: the list in a phone-width pane, the detail beside it */
   body > .phone-screen.split-view:not(:has(.map-area)) { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
   body > .phone-screen.split-view:not(:has(.map-area)) > main {
     display: grid;
-    grid-template-columns: var(--pane-w) minmax(0, 1fr);
+    grid-template-columns: minmax(var(--pane-w), 2fr) minmax(0, 3fr);   /* the list two parts, the detail three (Lesson 10 step 7: a 358px list in a 1200 container wrapped names on two or three lines beside the times); never narrower than a phone-width pane */
     grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
     align-items: start;
     max-width: none;
@@ -84,6 +66,7 @@
   .split-empty { flex: 1; display: grid; place-items: center; }
   .split-empty[hidden], .split-content[hidden] { display: none; }
   .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .split-content:has(> .state-message) { justify-content: center; }   /* a failed detail sits where "No result selected" sat, centred in its pane, as on its own screen (Lesson 10 step 7: it was pinned to the top, so the pane's message jumped 400px) */
   .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
   .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
   .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
@@ -116,8 +99,14 @@
   .split-view:has(.map-area) :is(.filters-trigger, .chips-row .chip, .clear-all) { box-shadow: var(--float-shadow); }   /* they float over the map */
   .split-view:has(.map-area) .control-row .filters-trigger { flex: none; }
   .split-view:has(.map-area) .map-area, .split-view:has(.map-area) .map-area[hidden] { display: flex; position: absolute; inset: 0; z-index: var(--z-under); align-self: stretch; justify-self: stretch; width: auto; padding: 0; }
-  .split-view:has(.map-area) .map-area .state-message { display: none; }   /* the list card carries the screen's state (empty, error); the map behind it stays a map */
+  .split-view:has(.map-area) .map-area .state-message { display: none; }
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank screen */
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }   /* the list card carries the screen's state (empty, error); the map behind it stays a map */
   .split-view:has(.map-area) .map-placeholder {
+    border-radius: 0;   /* full bleed under the cards, no frame (until 2026-11-20 also a tablet's Map view, which is now the phone's) */
+    box-shadow: none;
+    --map-cx: var(--map-fit-cx);   /* framed to the races (build_map.py), not the phone's crop */
+    --map-cy: var(--map-fit-cy);
     --map-cover: calc(var(--float-gap) + var(--pane-w) + var(--float-gap));   /* the window's left part the cards cover: the races are framed in what's left */
     --map-shift: calc(var(--map-cover) / 2);
     --map-s: min((var(--map-box-w) - var(--map-cover)) / var(--map-fit-fw), var(--map-box-h) / var(--map-fit-fh));

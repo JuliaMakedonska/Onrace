@@ -57,6 +57,7 @@ h3.stand-label { font-weight: var(--weight-strong); }   /* a heading used as a l
 .type-sample { color: var(--text-primary); }
 .type-sample--display { font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .type-sample--title { font-size: var(--size-title); }
+.type-sample--title-1 { font-size: var(--size-title-1); }
 .type-sample--time { font-size: var(--size-time); }
 .type-sample--time-hero { font-size: var(--size-time-hero); }
 .type-sample--day { font-size: var(--size-day); }

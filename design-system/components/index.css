@@ -14,6 +14,7 @@
   line-height: var(--leading-body);
   accent-color: var(--text-primary);   /* C4: system-drawn controls tint neutral */
 }
+.onrace p { text-wrap: pretty; }   /* running text: no word alone on its last line (Lesson 10 step 7, /impeccable audit: "you.", "evidence." at 390) */
 .onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
 .onrace ::selection { background: var(--text-primary); color: var(--page); }
 /* states (Lesson 9 step 3): .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and
@@ -244,6 +245,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
   font-weight: var(--weight-strong);
   line-height: var(--leading-item);
   color: var(--text-primary);
+  text-wrap: pretty;   /* no short last line: "UTMB — Ultra-Trail du / Mont-Blanc", not "…du Mont- / Blanc" (Lesson 10 step 7; balance broke it at "Ultra- / Trail") */
 }
 .race-card .card-meta { display: contents; }
 .race-card .sport-tag { grid-area: meta; justify-self: start; margin-bottom: var(--space-1); }
@@ -381,7 +383,7 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
   font-weight: var(--weight-strong);
   text-decoration: none;
 }
-.bottom-nav a[aria-current="page"] { color: var(--accent-ink); }
+.bottom-nav a[aria-current] { color: var(--accent-ink); }   /* "page" on a tab screen; "true" on a pushed screen, the section it belongs to (desktop) */
 .bottom-nav a { border-radius: var(--radius-capsule); }   /* a tab's state fill is a capsule inside the capsule bar (iOS 26) */
 @media (hover: hover) { .bottom-nav a:is(:hover, .is-hover) { background: var(--bar-hover); } }   /* on the bar's glass: one level up, two pressed (Lesson 9 step 3) */
 .bottom-nav a:is(:active, .is-pressed) { background: var(--bar-pressed); }
@@ -531,13 +533,13 @@ picture:has(> .photo) { display: contents; }   /* the responsive photo's wrapper
 
 /* ---- design-system/components/screen.css · order 0310 ---- */
 html:has(body > .phone-screen), body:has(> .phone-screen) { height: 100%; }
-body:has(> .phone-screen) { margin: 0 auto; max-width: var(--pane-w); position: relative; overflow: hidden; }   /* --pane-w: the phone's 390 at the default text size, in rem (Lesson 10 step 6, was --screen-w): at 820 or 1440 with 200% text the phone form takes 780, not a 390 strip */
+body:has(> .phone-screen) { margin: 0; position: relative; overflow: hidden; }   /* the screen fills the window at every width (Lesson 10 step 7, 2026-11-20: until then capped at --pane-w below --bp-tablet); its column is capped instead (below) */
 .phone-screen { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--tabbar-clear); }   /* content runs under the glass tab bar; the last item can still scroll clear of it */
 .phone-screen:is(:focus-visible, .is-focus) { outline-offset: calc(var(--focus-ring) * -1); }   /* a screen with nothing to focus takes the focus itself, to scroll by keyboard (a loading state): its halo sits inside it, since outside is off the screen (2026-11-08) */
 /* .screen-main: a specimen screen's main in the showcase, which has one page main of its own (step 7) */
 .phone-screen :is(main, .screen-main) { display: flex; flex-direction: column; min-height: 100%; }
 /* drill-downs and modals (every screen without a tab bar) */
-body:not(:has(> .bottom-nav)) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
+body:not(:has(> .bottom-nav:not(.bottom-nav--pushed))) > .phone-screen { padding-bottom: 0; }   /* no tab bar to clear */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) { display: flex; flex-direction: column; }   /* top bar + main fill the screen exactly, no stray scroll */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) > .top-bar { flex: none; }   /* the bar keeps its height when the page is taller than the screen: at 200% text it was squeezed to its 44pt minimum and its back link ran past its top edge (2026-11-08) */
 .phone-screen:has(> .top-bar:not(.top-bar--large)) > :is(main, .screen-main) { flex: 1 0 auto; min-height: 0; }
@@ -789,8 +791,9 @@ body > .bottom-nav a::before {
 /* a result without an official result link (2026-11-06, concept.md → The official result link becomes optional): the
    row keeps its one link into Result detail, and "Add official result link" sits under it on the same surface, a text
    link of its own, since a link can't hold another. The proof line above it says the link is missing and wraps if it must */
+.result-card:has(> .text-link) { border-radius: var(--radius-2); background: var(--surface); }   /* the row's surface is the article's, so the link's strip spans the row (Lesson 10 step 7: it hung under the row as a 176px tab, an L-shaped card) */
 .result-card:has(> .text-link) > .card-link { border-radius: var(--radius-2) var(--radius-2) 0 0; padding-bottom: var(--space-2); }
-.result-card > .text-link { margin: 0; padding: 0 var(--space-4) var(--space-2); border-radius: 0 0 var(--radius-2) var(--radius-2); background: var(--surface); }
+.result-card > .text-link { margin: 0; padding: 0 var(--space-4) var(--space-2); }
 
 /* ---- design-system/components/order-label.css · order 0410 ---- */
 .results-order { margin-left: var(--space-2); padding-left: var(--space-2); border-left: var(--border) solid var(--hairline); color: var(--text-secondary); }
@@ -849,7 +852,7 @@ body > .bottom-nav a::before {
 /* Log result (round 2, G40): the sheet is the whole screen, resting at the large detent (G13) over Results, which has
    receded under the scrim; its top bar spans it, and only its form scrolls */
 html:has(body > .sheet > .phone-screen) { height: 100%; }
-body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--pane-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
+body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
 /* Results receded behind the sheet (step 6, #34; iOS sheets): the presenting screen's top edge, inset and dimmed under
    the scrim, shows in the gap above the sheet, so the sheet reads as a modal over Results */
 body:has(> .sheet > .phone-screen)::before {
@@ -864,13 +867,13 @@ body:has(> .sheet > .phone-screen)::before {
 }
 body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
 .sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; border-radius: inherit; }   /* its inside halo (screen.css) follows the sheet's corners */
-.sheet > .phone-screen > main { padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* the sheet's spacing (2026-11-06): clear of the bar, the bottom safe area kept */
+.sheet > .phone-screen > main { width: 100%; max-width: var(--container-max); margin-inline: auto; padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* the form capped at --container-max, centred, by max-width alone: on a tablet the sheet spans the window and its form doesn't (2026-11-20; a query until step 7) */   /* the sheet's spacing (2026-11-06): clear of the bar, the bottom safe area kept */
 .sheet, .phone-screen { scrollbar-color: var(--boundary) transparent; scrollbar-width: thin; }
 /* the Filters sheet (markup pass, 2026-10-23): Cancel, the title and Apply filters in a top bar (G12); options as grouped
    rows (G20), as Profile's: Region a native menu (G17), the dates native compact pickers (G18), sport types rows with a
    neutral checkmark (G19, C4). No grabber: the sheet rests at one detent, so it isn't resizable (HIG Sheets) */
 .sheet:has(> .top-bar) { padding: 0; overflow: hidden; }
-.sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }
+.sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--sheet-content-top) max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* on a tablet the sheet spans the window and its rows keep the column's width (Filters, Lesson 10 step 7), as Log result's form */
 .sheet .group { margin: 0 0 var(--sheet-group-gap); padding: 0; border: 0; min-width: 0; }
 .sheet .group:not(:has(~ .group)) { margin-bottom: 0; }   /* the last group: the content's bottom padding is the space below it, so a short sheet has no empty band */
 /* a sheet's rows: the grouped rows' one height (grouped-settings-rows.css, --grouped-row-min; 2026-11-07) */
@@ -1143,7 +1146,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   line-height: var(--leading-item);
   color: var(--text-primary);
 }
-.about p { margin: 0 0 var(--space-6); font-size: var(--size-body); }
+.about p { margin: 0 0 var(--space-6); max-width: var(--measure); font-size: var(--size-body); }   /* running text stops at --measure in the 672 column (Lesson 10 step 7: 104 characters a line at 820) */
 
 /* ---- design-system/components/official-race-website-link.css · order 0660 ---- */
 .official p { margin: calc((var(--target) - var(--size-body) * var(--leading-box)) / -2) 0 var(--space-6); font-size: var(--size-body); }   /* the 44pt link keeps the line where it was */
@@ -1206,7 +1209,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* states: .text-link's, below */
 
 /* ---- design-system/components/proof-url-and-note.css · order 0750 ---- */
-.proof-note { font-size: var(--size-proof); color: var(--text-secondary); }
+.proof-note { max-width: var(--measure); font-size: var(--size-proof); color: var(--text-secondary); }
 
 /* ---- design-system/components/sticky-action-bar.css · order 0760 ---- */
 /* ---------- sticky action bar: one primary link + its caption ---------- */
@@ -1341,7 +1344,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
   -webkit-mask: var(--icon-error) center / contain no-repeat;
   mask: var(--icon-error) center / contain no-repeat;
 }
-.inline-error p, .form-alert p { margin: var(--space-1) 0 0; font-size: var(--size-meta); color: var(--text-primary); }
+.inline-error p, .form-alert p { margin: var(--space-1) 0 0; max-width: var(--measure); font-size: var(--size-meta); color: var(--text-primary); }
 
 /* ---- design-system/components/form-alert.css · order 0820 ---- */
 .form-alert .alert-link {   /* 44pt target (G62): padding extends the hit area, equal negative margins keep the line */
@@ -1366,13 +1369,13 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* ---- design-system/components/form-intro.css · order 0840 ---- */
 /* ---------- forms: grouped rows (round 2), errors under their row ---------- */
 .sheet-form { padding: var(--space-4) 0 var(--space-7); }   /* in its sheet (round 2, G40): the sheet's main has the gutter */
-.form-intro { margin: 0 0 var(--space-4); font-size: var(--size-meta); color: var(--text-secondary); }
+.form-intro { margin: 0 0 var(--space-4); max-width: var(--measure); font-size: var(--size-meta); color: var(--text-secondary); }
 
 /* ---- design-system/components/locked-form.css · order 0850 ---- */
 .gate fieldset, fieldset.locked { margin: 0; padding: 0; border: 0; min-width: 0; }
 
 /* ---- design-system/components/field-error.css · order 0860 ---- */
-.field-error { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); font-weight: var(--weight-regular); line-height: var(--leading-body); color: var(--error); }
+.field-error { margin: var(--space-2) var(--space-4) 0; max-width: var(--measure); font-size: var(--size-proof); font-weight: var(--weight-regular); line-height: var(--leading-body); color: var(--error); }
 .field-error[hidden] { display: none; }
 .field-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
 .field-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }   /* Profile's Try again, after the line */
@@ -1399,14 +1402,14 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 
 /* ---- design-system/components/list-intro.css · order 0880 ---- */
 /* ---------- Race picker: the list intro (a pushed screen since 2026-10-24; its top bar, search and cards are with their components) ---------- */
-.list-intro { margin: 0 0 var(--space-3); font-size: var(--size-meta); color: var(--text-secondary); }
+.list-intro { margin: 0 0 var(--space-3); max-width: var(--measure); font-size: var(--size-meta); color: var(--text-secondary); }
 
 /* ---- design-system/components/gate-layout.css · order 0890 ---- */
 /* ---------- gates: Sign in / Sign up, Reset password, New password ---------- */
 .gate { padding: var(--space-5) var(--space-4) var(--space-7); }
 
 /* ---- design-system/components/gate-intro.css · order 0900 ---- */
-.context { margin: 0 0 var(--space-5); font-size: var(--size-body); color: var(--text-secondary); }
+.context { margin: 0 0 var(--space-5); max-width: var(--measure); font-size: var(--size-body); color: var(--text-secondary); }
 .context[hidden] { display: none; }
 
 /* ---- design-system/components/segmented-control.css · order 0910 ---- */
@@ -1422,7 +1425,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 /* disabled: base.css */
 
 /* ---- design-system/components/form-note.css · order 0940 ---- */
-.form-note, .sent-note { margin: var(--space-3) 0 0; text-align: left; font-size: var(--size-meta); color: var(--text-secondary); }   /* left, with the form and the footers (step 6, #30): centred only made sense under the old full-width button */
+.form-note, .sent-note { margin: var(--space-3) 0 0; max-width: var(--measure); text-align: left; font-size: var(--size-meta); color: var(--text-secondary); }   /* left, with the form and the footers (step 6, #30): centred only made sense under the old full-width button */
 
 /* ---- design-system/components/status-line.css · order 0950 ---- */
 .reset-done {
@@ -1436,9 +1439,9 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 
 /* ---- design-system/components/check-inbox-block.css · order 0960 ---- */
 .inbox-heading { margin: 0 0 var(--space-2); font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }
-.inbox-line { margin: 0 0 var(--space-6); font-size: var(--size-body); color: var(--text-primary); }
+.inbox-line { margin: 0 0 var(--space-6); max-width: var(--measure); font-size: var(--size-body); color: var(--text-primary); }
 .addr { font-weight: var(--weight-strong); overflow-wrap: anywhere; }
-.expiry-note { margin: var(--space-7) 0 0; text-align: left; font-size: var(--size-proof); color: var(--text-secondary); }   /* left, with the heading and body above it (step 6, #30) */
+.expiry-note { margin: var(--space-7) 0 0; max-width: var(--measure); text-align: left; font-size: var(--size-proof); color: var(--text-secondary); }   /* left, with the heading and body above it (step 6, #30) */
 
 /* ---- design-system/components/identity-block.css · order 0970 ---- */
 /* ---------- Profile: identity, grouped rows, Sign out, the confirm alert ---------- */
@@ -1535,7 +1538,7 @@ body:has(> .top-bar) > .phone-screen { padding-top: calc(var(--target) + var(--s
 .row-note[hidden] { display: none; }
 
 /* ---- design-system/components/field-hint.css · order 1030 ---- */
-.group-footer { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); color: var(--text-secondary); }
+.group-footer { margin: var(--space-2) var(--space-4) 0; max-width: var(--measure); font-size: var(--size-proof); color: var(--text-secondary); }
 
 /* ---- design-system/components/sign-out-button.css · order 1040 ---- */
 /* Sign out is a grouped row (designer, 2026-11-07; as iOS Settings): its own group, one row in a div.rows (not a list: one action, so screen readers don't hear a list of one), so it takes the
@@ -1634,11 +1637,11 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 /* Log result as a form sheet (Lesson 10 step 6, 2026-11-18): from --bp-desktop the sheet is centred on the screen
    (modal-sheet.css, order 1160), so the action sheet stands at the bottom of the form sheet, in from its edges as on a
    phone, instead of at the bottom of the window under it. The sheet's box is modal-sheet.css's: --form-sheet-w by
-   --form-sheet-h, at least --form-sheet-inset from the window's edges. The number is tokens.css's --bp-tablet (a media
+   --form-sheet-h, at least --form-sheet-inset from the window's edges. The number is tokens.css's --bp-desktop (a media
    query can't read var(); scripts/build_components.py checks it). Since 2026-11-20 from --bp-desktop only: on a tablet Log
    result is the phone's sheet at the window's width, and the action sheet stands as on a phone, --screen-w wide,
    centred at the window's bottom. */
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   body:has(> .sheet > .phone-screen) > dialog.action-sheet {
     inset: auto calc((100vw - min(var(--form-sheet-w), 100vw - var(--form-sheet-inset) - var(--form-sheet-inset))) / 2 + var(--space-2)) calc((100vh - min(var(--form-sheet-h), 100vh - var(--form-sheet-inset) - var(--form-sheet-inset))) / 2 + var(--space-2));
   }
@@ -1668,21 +1671,21 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .skel-signout .bar { height: var(--grouped-row-min); border-radius: var(--radius-2); }   /* Sign out's grouped row (2026-11-07) */
 
 /* ---- design-system/components/tab-bar.css · order 1080 ---- */
-/* The tab bar by width (Lesson 10 step 3, 2026-11-15; revised by the designer 2026-11-19, the web app desktop). The
-   numbers are design-system/tokens/tokens.css's --bp-tablet and --bp-desktop, written out because a media query can't
-   read var(); scripts/build_components.py stops the build if they drift apart.
-   Phone and tablet: the floating capsule at the bottom, as on a phone (a tablet behaves like the phone, navigation
-   included); on a tablet it keeps a phone's width, centred, so its three tabs don't spread across the window.
+/* The tab bar by width (Lesson 10 step 3, 2026-11-15; revised by the designer 2026-11-19, the web app desktop; one
+   breakpoint since step 7, 2026-11-20). The number is design-system/tokens/tokens.css's --bp-desktop, written out because
+   a media query can't read var(); scripts/build_components.py stops the build if they drift apart.
+   Below --bp-desktop: the floating capsule at the bottom, as on a phone (a tablet behaves like the phone, navigation
+   included); it keeps a phone's width, centred, so on a tablet its three tabs don't spread across the window (a cap by
+   max-width alone, no query: on a phone it is the bar's own width).
+   From --bp-desktop: the web app's top bar, the logo, the three destinations and Log result, on every page: a tab
+   screen's own bar, and on a pushed screen (Race detail, Result detail and their states, Saved races) the same bar
+   marked .bottom-nav--pushed, which a phone doesn't draw (a pushed screen has no tab bar there); its section is marked
+   aria-current="true" (Lesson 10 step 7, 2026-11-20).
    (Until 2026-11-19: on a tablet, iPad's tab bar at the top; on a desktop, a macOS sidebar.) */
 .bottom-nav .nav-brand, .bottom-nav .nav-action { display: none; }   /* the desktop's top bar only */
-@media (min-width: 48.8125rem) {
-  body > .bottom-nav { max-width: calc(var(--pane-w) - var(--tabbar-inset) - var(--tabbar-inset)); margin-inline: auto; }
-}
-/* Desktop: a web app's top bar, not macOS (designer, 2026-11-19; Strava and Komoot as references): the logo (Onrace's
-   wordmark, a link home) at the leading edge, the three destinations beside it, icon and label side by side, and Log
-   result, the app's one primary action, at the trailing edge. The bar's glass spans the window, --topnav-h tall, with
-   a hairline under it; the screen starts under it. */
-@media (min-width: 83.9375rem) {
+body > .bottom-nav { max-width: calc(var(--pane-w) - var(--tabbar-inset) - var(--tabbar-inset)); margin-inline: auto; }
+body > .bottom-nav--pushed { display: none; }   /* a pushed screen: the top bar is a desktop's only */
+@media (min-width: 71.75rem) {
   body > .bottom-nav {
     position: relative;
     order: -1;
@@ -1740,30 +1743,21 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 }
 
 /* ---- design-system/components/screen.css · order 1090 ---- */
-/* A tab screen by width (Lesson 10 step 3, 2026-11-15; revised 2026-11-19, the web app desktop): from --bp-tablet the
-   screen fills the window and only its column is capped (the tablet breakpoint now only caps the column: the tab bar
-   stays at the bottom, as on a phone); from --bp-desktop the top bar takes a row above the scroll area, and the screen's own column stops growing at
-   --container-max and centres, until the panes come (width audit → Decisions). The large title header and its bar
-   narrow to that column, so on desktop they never run under the sidebar. The numbers are tokens.css's --bp-tablet and
-   --bp-desktop (a media query can't read var(); scripts/build_components.py checks they agree).
-   Step 4 (2026-11-17): every single-column screen does the same, the drill-downs (Race detail, Result detail, Race
-   picker) and the sign-in screens too: the screen fills the window, its column stops at --container-max and centres,
-   and its bars (the top bar, the action bar) keep their glass the window's width with their buttons at the column's
-   edges. What sits in the column (cards, rows, the large title) adapts to the column's own width (container queries
-   on --stack-w), never to the window. A sheet keeps the phone's width until the form sheets come.
-   The top bar on a tablet (designer, 2026-11-20, following iPad): it spans the screen, back at its leading edge, the
-   action (Save) at its trailing edge, the title centred, as on a phone; only the content under it is capped. On a
-   desktop the bar's buttons still end where the column ends (below). */
-@media (min-width: 48.8125rem) {
-  body:has(> .phone-screen) { max-width: none; }
-  body > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
-  body > .phone-screen > form.search { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* Race picker's search under its bar lines up with the column it searches (2026-11-20) */
-  body > .phone-screen > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }   /* the action bar's button keeps the column's gutter */
-}
+/* A screen by width (Lesson 10 step 3, 2026-11-15; revised 2026-11-19, the web app desktop; one breakpoint since step 7,
+   2026-11-20). Below --bp-desktop every width is the phone's, a tablet included: the screen fills the window and only
+   its column is capped, at --container-max, centred, by max-width alone: no query, since on a phone the cap is wider
+   than the screen and changes nothing (Lesson 10 step 7: a breakpoint that changes nothing is redundant; --bp-tablet
+   did only this and is gone). The bars (the top bar, the action bar) keep their glass the window's width with their
+   buttons at the bar's edges, as iPad's; what sits in the column (cards, rows, the large title) adapts to the column's
+   own width (container queries on --stack-w), never to the window. From --bp-desktop the top bar takes a row above
+   the screen (below). The number is tokens.css's --bp-desktop (a media query can't read var(); scripts/build_components.py checks they agree). */
+body > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
+body > .phone-screen > form.search { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* Race picker's search under its bar lines up with the column it searches (2026-11-20) */
+body > .phone-screen > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }   /* the action bar's button keeps the column's gutter */
 /* Desktop (designer, 2026-11-19, the web app): the top bar (tab-bar.css) takes a row above the screen, the screen fills
    the rest; no tab bar to clear at the bottom. A tablet is the phone's: the tab bar floats at the bottom and the screen
    scrolls under it, its column capped at --container-max */
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   body > .phone-screen > .top-bar, body:has(> .phone-screen) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar's buttons (back, Log result, Save) end where the column ends */
   body:has(> .bottom-nav) { display: flex; flex-direction: column; }
   body:has(> .bottom-nav) > .phone-screen { flex: 1; min-height: 0; min-width: 0; height: auto; padding-bottom: 0; }
@@ -1801,10 +1795,10 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 
 /* ---- design-system/components/result-row.css · order 1120 ---- */
 /* Selected (Lesson 10 step 4, 2026-11-17): the race card's selected state (race-card.css), on the row whose result shows
-   in the pane beside the list: aria-current="page" on its link, the --selected fill on the whole row (its "Add official
-   result link" part too); hover and press leave it as it is. Until 2026-11-20 a hairline --text-secondary edge went round it. */
+   in the pane beside the list: aria-current="page" on its link, the --selected fill on the whole row (the article, so its
+   "Add official result link" strip too); hover and press leave it as it is. Until 2026-11-20 a hairline --text-secondary edge went round it. */
 .result-card:has(> .card-link[aria-current="page"]) { border-radius: var(--radius-2); }   /* the quiet fill alone (designer, 2026-11-20): no edge, so nothing on the row reads as a focus ring; the amber ring is keyboard focus only */
-.result-card:has(> .card-link[aria-current="page"]) > :is(.card-link, .text-link) { background: var(--selected); }
+.result-card:has(> .card-link[aria-current="page"]), .result-card:has(> .card-link[aria-current="page"]) > .card-link { background: var(--selected); }
 .result-card:has(> .card-link[aria-current="page"]) .sport-tag { background: var(--raised-pressed); }
 
 /* ---- design-system/components/detail-header-and-facts.css · order 1130 ---- */
@@ -1825,8 +1819,9 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .split-empty .state-message::before { content: none; }
 .split-empty .state-message h2 { font-weight: var(--weight-regular); color: var(--text-secondary); }
 /* the detail's title in its pane is an h2 (step 5 follow-ups): the screen keeps one h1, the list's large title, and
-   split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look */
-.split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+   split-view.js turns the detail page's h1 into an h2 as it brings it in; it keeps the h1's look one step down, --size-title-1,
+   so it doesn't stand beside the large title at the same size (Lesson 10 step 7) */
+.split-content .race > h2 { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: var(--size-title-1); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
 .split-content .result > h2 { margin-bottom: var(--space-5); }
 /* the race card's Close (desktop, the web app; designer 2026-11-19): an × at its corner, on the glass of the bars so it
    reads over the photo; its name, "Close", is visually hidden (microcopy row 599) */
@@ -1847,29 +1842,12 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 .card-close:is(:active, .is-pressed) { color: var(--text-pressed); }
 .card-close:is(:focus-visible, .is-focus) { outline: var(--focus-ring) solid var(--focus); outline-offset: var(--focus-gap); }
 
-/* A screen with a map (Race browse) on a tablet is the phone's (designer, 2026-11-19): its column capped at
-   --container-max (screen.css), the List / Map switch kept, the Map view filling the screen's width. A tablet splits no
-   screen (2026-11-19, the follow-ups: the tablet behaves like the phone everywhere): the panes are a desktop's. */
-@media (min-width: 48.8125rem) {
-  /* the Map view edge to edge, no frame, framed to the pins at its own shape (the width decides: on a tablet the view's height comes from the flex layout, where 100cqh can't be read) */
-  .split-view:has(.map-area) .map-area { align-self: center; width: 100vw; padding: 0; }
-  .split-view:has(.map-area) .map-placeholder { border-radius: 0; box-shadow: none; --map-s: calc(var(--map-box-w) / var(--map-fit-fw)); --map-cx: var(--map-fit-cx); --map-cy: var(--map-fit-cy); }
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank pane */
-  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }
-}
-/* Desktop: a web app (designer, 2026-11-19; Strava Maps and Komoot as references). Race browse is the map, full bleed
-   under the top bar, edge to edge, no panes and no frames, framed to the races in the room the cards leave; over it,
-   floating cards (--radius-float, the page's ground, the float shadow, --float-gap from the window's edges and from each
-   other): the list card on the left (the large title, search, the count and the race list, scrolling inside the card),
-   and, once a race is chosen, the race card beside it (Split view's detail: the race's own page, Close at its corner);
-   the Filters button and the active filter chips float over the map to the right of the cards, the filters opening in
-   a card under them (modal-sheet.css, .sheet--popover). A list with its detail (Results list) keeps its two panes. */
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   /* a list with its detail (Results list, Saved races) on a desktop: the list in a phone-width pane, the detail beside it */
   body > .phone-screen.split-view:not(:has(.map-area)) { container-type: size; }   /* the panes beside the list take the screen's height (100cqh) */
   body > .phone-screen.split-view:not(:has(.map-area)) > main {
     display: grid;
-    grid-template-columns: var(--pane-w) minmax(0, 1fr);
+    grid-template-columns: minmax(var(--pane-w), 2fr) minmax(0, 3fr);   /* the list two parts, the detail three (Lesson 10 step 7: a 358px list in a 1200 container wrapped names on two or three lines beside the times); never narrower than a phone-width pane */
     grid-template-rows: repeat(9, auto) 1fr;   /* the list's parts take the auto rows; the last row takes what the panes beside them add, so the list's parts never spread apart */
     align-items: start;
     max-width: none;
@@ -1889,6 +1867,7 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   .split-empty { flex: 1; display: grid; place-items: center; }
   .split-empty[hidden], .split-content[hidden] { display: none; }
   .split-content { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .split-content:has(> .state-message) { justify-content: center; }   /* a failed detail sits where "No result selected" sat, centred in its pane, as on its own screen (Lesson 10 step 7: it was pinned to the top, so the pane's message jumped 400px) */
   .split-content > .action-bar { position: sticky; bottom: 0; z-index: var(--z-bar); margin-top: auto; }   /* the detail's action bar, as on its own screen */
   .split-content > :not(.action-bar) { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* a wide detail pane (Results list on a desktop) keeps a single-column screen's column */
   .split-content > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }
@@ -1921,8 +1900,14 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   .split-view:has(.map-area) :is(.filters-trigger, .chips-row .chip, .clear-all) { box-shadow: var(--float-shadow); }   /* they float over the map */
   .split-view:has(.map-area) .control-row .filters-trigger { flex: none; }
   .split-view:has(.map-area) .map-area, .split-view:has(.map-area) .map-area[hidden] { display: flex; position: absolute; inset: 0; z-index: var(--z-under); align-self: stretch; justify-self: stretch; width: auto; padding: 0; }
-  .split-view:has(.map-area) .map-area .state-message { display: none; }   /* the list card carries the screen's state (empty, error); the map behind it stays a map */
+  .split-view:has(.map-area) .map-area .state-message { display: none; }
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"]) { background: var(--map-water); }   /* -empty, -error: the map, without pins, not a blank screen */
+  .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::before, .split-view .map-placeholder:has(> .state-message):not([aria-busy="true"])::after { content: ""; }   /* the list card carries the screen's state (empty, error); the map behind it stays a map */
   .split-view:has(.map-area) .map-placeholder {
+    border-radius: 0;   /* full bleed under the cards, no frame (until 2026-11-20 also a tablet's Map view, which is now the phone's) */
+    box-shadow: none;
+    --map-cx: var(--map-fit-cx);   /* framed to the races (build_map.py), not the phone's crop */
+    --map-cy: var(--map-fit-cy);
     --map-cover: calc(var(--float-gap) + var(--pane-w) + var(--float-gap));   /* the window's left part the cards cover: the races are framed in what's left */
     --map-shift: calc(var(--map-cover) / 2);
     --map-s: min((var(--map-box-w) - var(--map-cover)) / var(--map-fit-fw), var(--map-box-h) / var(--map-fit-fh));
@@ -1974,21 +1959,29 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
 
 /* ---- design-system/components/modal-sheet.css · order 1160 ---- */
 /* Form sheets (Lesson 10 step 6, 2026-11-18; HIG Sheets: "Prefer using the page or form sheet presentation styles in an
-   iPadOS app"). On a phone nothing changes. From --bp-tablet every sheet is a form sheet: --form-sheet-w wide, centred on
-   the screen with all four corners rounded, at least --form-sheet-inset from the window's edges, over the dimmed screen
-   it came from. One presentation for the three ways a sheet stands in the product:
-   1. a sheet over its screen (.sheet beside .sheet-backdrop: Filters, Add official result link): --form-sheet-h tall,
-      or as tall as its content (.sheet--fit) up to it; it still rises from below and the scrim fades in;
+   iPadOS app"). Below --bp-desktop nothing changes: a phone's sheet, and a tablet's, which is the phone's at the
+   window's width, its form capped at --container-max (2026-11-20, following iPad; Filters too since step 7). From
+   --bp-desktop every sheet is a form sheet: --form-sheet-w wide, centred on the screen with all four corners rounded, at
+   least --form-sheet-inset from the window's edges, over the dimmed screen it came from. One presentation for the three
+   ways a sheet stands in the product:
+   1. a sheet over its screen (.sheet beside .sheet-backdrop: Add official result link): --form-sheet-h tall, or as tall
+      as its content (.sheet--fit) up to it; it still rises from below and the scrim fades in (Filters is a popover
+      card on a desktop, below);
    2. a sheet that is the whole page (body > .sheet > .phone-screen: Log result): the same box, the receded screen's
       edge above it dropped (a form sheet floats, nothing peeks out above it);
-   3. a page that is a full-screen modal on a phone (body.form-sheet: the screens pushed inside a sheet): the page
-      itself becomes the form sheet, on its own ground, over the dimmed void (--frame under --scrim).
-   Since 2026-11-20 (designer, following iPad) cases 2 and 3 are form sheets only from --bp-desktop; on a tablet they are
-   the phone's at the window's width, the form at --container-max. Case 1 stays a form sheet from --bp-tablet.
+   3. a page that is a full-screen modal on a phone (body.form-sheet: Race picker, pushed inside Log result's sheet):
+      its screen becomes the form sheet, on the page's own ground.
+   The presenting screen (Lesson 10 step 7, 2026-11-20): cases 2 and 3 are pages of their own, so the screen under them
+   is drawn by .sheet-presenter, an inert iframe of Results list (Log result's home in flows.md) that
+   design-system/tokens/desktop.js loads from --bp-desktop only, dimmed by the scrim, as the add sheet (case 1) sits
+   over its own dimmed Results list. Without it (it hasn't loaded, or a page has none) the sheet floats on the dimmed
+   void (--frame under --scrim), as until step 7.
    A sheet drawn inside a specimen's phone frame isn't the body's child, so the docs keep it as a phone draws it; the
-   docs show the form sheet in a frame as wide as a tablet. The numbers are tokens.css's --bp-tablet (a media query can't read var(); scripts/build_components.py checks it). */
-@media (min-width: 48.8125rem) {
-  body > .sheet {
+   docs show the form sheet in a frame as wide as a desktop. The number is tokens.css's --bp-desktop (a media query
+   can't read var(); scripts/build_components.py checks it). */
+body > .sheet-presenter { display: none; }   /* a phone's and a tablet's: the sheet is the phone's, nothing under it shows */
+@media (min-width: 71.75rem) {
+  body > .sheet:not(:has(> .phone-screen)) {
     left: 50%;
     right: auto;
     top: 50%;
@@ -1999,30 +1992,30 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
     translate: -50% -50%;
     transform: translateY(100vh);   /* closed: below the window, as a form sheet rises from the bottom edge */
   }
-  body > .sheet.open { transform: none; }
+  body > .sheet:not(:has(> .phone-screen)).open { transform: none; }
   body > .sheet--fit { height: auto; max-height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset)); }
-  /* a tablet (designer, 2026-11-20, following iPad: a form is never squeezed to a phone's width): Log result is the
-     phone's sheet at the window's width, its bar across it (Cancel and Save at its edges, the title centred), its form
-     at --container-max, centred; a full-screen modal page (Race picker) is the page at the window's width (screen.css) */
-  body:has(> .sheet > .phone-screen) { max-width: none; }
-  body > .sheet:has(> .phone-screen) { width: auto; translate: none; border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; }
-  .sheet > .phone-screen > main { width: 100%; max-width: var(--container-max); margin-inline: auto; }
-}
-/* a desktop: the form sheet (cases 2 and 3 above), as from --bp-tablet until 2026-11-20 */
-@media (min-width: 83.9375rem) {
-  body:has(> .sheet > .phone-screen) { max-width: none; display: grid; place-items: center; padding: var(--form-sheet-inset); }
+  /* case 2: the page is the sheet's ground, the sheet centred on it */
+  body:has(> .sheet > .phone-screen) { display: grid; place-items: center; padding: var(--form-sheet-inset); }
   body:has(> .sheet > .phone-screen)::before { display: none; }
   body > .sheet:has(> .phone-screen) { width: min(var(--form-sheet-w), 100%); height: min(var(--form-sheet-h), 100%); margin: 0; translate: none; border-radius: var(--radius-sheet); }
-  html:has(> body.form-sheet) { overflow: hidden; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }   /* overflow: so the page's own overflow clips it to its corners instead of passing to the window */
-  body.form-sheet {
-    width: min(var(--form-sheet-w), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
-    height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
-    max-width: none;
-    top: 50%;
-    translate: 0 -50%;
+  .sheet > .phone-screen > main { max-width: none; }
+  /* case 3: the page's screen is the sheet, centred on the dimmed void */
+  html:has(> body.form-sheet) { overflow: hidden; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
+  body.form-sheet { height: 100%; display: grid; place-items: center; padding: var(--form-sheet-inset); background: none; }
+  body.form-sheet::before { display: none; }
+  body.form-sheet > .phone-screen {
+    position: relative;
+    width: min(var(--form-sheet-w), 100%);
+    height: min(var(--form-sheet-h), 100%);
     border-radius: var(--radius-sheet);
+    background: var(--page);
     box-shadow: var(--float-shadow);
   }
+  body.form-sheet > .phone-screen > :is(main, .screen-main), body.form-sheet > .phone-screen > form.search { max-width: none; }
+  /* the presenting screen under cases 2 and 3: Results list, inert, dimmed by the scrim over it */
+  body > .sheet-presenter { display: block; position: fixed; inset: 0; z-index: var(--z-under); width: 100%; height: 100%; border: 0; }
+  body:has(> .sheet-presenter[src]) { background: none; }
+  body:has(> .sheet-presenter[src])::before { content: ""; display: block; position: fixed; inset: 0; height: auto; border-radius: 0; z-index: auto; background: var(--scrim); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 
 /* ---- design-system/components/pop-up-select.css · order 1170 ---- */
@@ -2042,8 +2035,8 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
    doesn't dim the screen, and its bar says Clear all (the card's filters back to none; its name the dictionary's "Clear all
    filters") and Done (apply and close) in place of Cancel and Apply (microcopy rows 600, 601). Escape or a click outside still closes it, as Cancel. Below a desktop it
    is the sheet it always was. Where it sits is the screen's layout (split-view.css knows where the cards end). */
-.sheet > .top-bar > .sheet-clear, .sheet .sheet-done-label { display: none; }   /* a phone's and a tablet's sheet: Cancel and Apply (the bar's own button rule sets display, so this names the bar) */
-@media (min-width: 83.9375rem) {
+.sheet > .top-bar > .sheet-clear, .sheet .sheet-done-label { display: none; }   /* below a desktop, the sheet: Cancel and Apply (the bar's own button rule sets display, so this names the bar) */
+@media (min-width: 71.75rem) {
   body > .sheet--popover > .top-bar > .sheet-cancel, body > .sheet--popover .sheet-apply-label { display: none; }
   body > .sheet--popover > .top-bar > .sheet-clear { display: flex; }
   body > .sheet--popover .sheet-done-label { display: inline; }
@@ -2059,14 +2052,14 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
   }
   body > .sheet--popover.open { transform: none; }
   body:has(> .sheet--popover) > .sheet-backdrop { background: transparent; }   /* a popover doesn't dim the screen */
-  body:has(> .sheet--popover):has(.card-link[aria-current="page"]) > .sheet--popover { left: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); }   /* the race card is open: the filters sit beside it */
+  body:has(> .sheet--popover):has(.card-link[aria-current="page"]) > .sheet--popover { left: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); width: min(var(--pane-w), 100% - var(--float-gap) - var(--pane-w) - var(--float-gap) - var(--pane-w) - var(--float-gap) - var(--float-gap)); }   /* at --bp-desktop itself the map's room is --map-min: the card takes it, less a gap, never past the window (Lesson 10 step 7) */   /* the race card is open: the filters sit beside it */
 }
 
 /* ---- design-system/components/gate-layout.css · order 1190 ---- */
 /* The sign-in screens by width (designer, 2026-11-20; references: Microsoft Copilot, Dribbble and Midday sign-in on a
    desktop, Pandora on a tablet). Sign in / Sign up, Reset password and New password are full pages at every width (no
-   longer a form sheet from --bp-tablet). The numbers are tokens.css's --bp-tablet and --bp-desktop (a media query can't
-   read var(); scripts/build_components.py checks it).
+   longer a form sheet). The number is tokens.css's --bp-desktop, the one breakpoint (a media query can't read var();
+   scripts/build_components.py checks it).
    Tablet (revised 2026-11-20, designer: following iPad): the phone's page at the window's width. The top bar spans the
    screen, back at its leading edge, the action at its trailing edge, the title centred (screen.css); the content
    (intro, the grouped rows, field errors, links) takes the readable width, --container-max, centred, the grouped rows
@@ -2077,7 +2070,7 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
    (.gate-art): a race photo, full height, in the Podium treatment (--photo-filter), the Onrace wordmark over a scrim at
    its top. Below a desktop, and at 200% text (the breakpoint is in rem), the photo half isn't drawn or loaded. */
 .gate-art { display: none; }
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   body:has(> .phone-screen > .gate) > .phone-screen > .gate { max-width: var(--form-w); }
   body:has(> .phone-screen > .gate) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--form-w)) / 2); }
   body:has(> .phone-screen > .gate) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
@@ -2108,16 +2101,19 @@ dialog.action-sheet::backdrop { background: var(--scrim); }
    below a desktop it isn't drawn or loaded (loading="lazy" in a box that isn't drawn). The number is tokens.css's
    --bp-desktop (a media query can't read var(); scripts/build_components.py checks it). */
 .result-card .card-link > picture { display: none; }
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   .result-card .card-link { grid-template-columns: var(--thumb-w) minmax(0, 1fr); column-gap: var(--space-3); }
   .result-card .card-link > picture { display: contents; }
   .result-card .card-link > picture > .photo { grid-column: 1; grid-row: 1 / span 3; align-self: start; width: var(--thumb-w); height: var(--thumb-w); object-fit: cover; border-radius: var(--radius-1); filter: var(--photo-filter); }
   .result-card .card-link > :not(picture) { grid-column: 2; }
+  /* the chosen row's "Add official result link" is the card's primary beside it (split view): said once (Lesson 10 step 7) */
+  .split-view .result-card:has(> .card-link[aria-current="page"]) > .text-link { display: none; }
+  .split-view .result-card:has(> .card-link[aria-current="page"]) > .card-link { border-radius: var(--radius-2); padding-bottom: var(--space-4); }
 }
 
 /* ---- design-system/components/primary-button.css · order 1210 ---- */
 /* Buttons on a desktop (designer, 2026-11-20): sized to their text at the standard control height (--target), never
    stretched across a card or a column; in a bar they centre. The number is tokens.css's --bp-desktop. */
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   .register-btn, .open-btn, .submit-btn { width: fit-content; max-width: 100%; margin-inline: auto; }
 }

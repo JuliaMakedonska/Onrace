@@ -33,7 +33,7 @@ const PICK = ONLY ? states.filter(s => ONLY.some(o => s.label.startsWith(o))) : 
 // the spec, measured: every failure is [rule, what was found]
 const CHECK = `(() => {
   const f = [], W = innerWidth, H = innerHeight, px = v => parseFloat(v) || 0;
-  const wide = matchMedia('(min-width: 48.8125rem)').matches, desk = matchMedia('(min-width: 83.9375rem)').matches;
+  const desk = matchMedia('(min-width: ' + getComputedStyle(document.documentElement).getPropertyValue('--bp-desktop').trim() + ')').matches;   // the one breakpoint (Lesson 10 step 7), read from the tokens
   const vis = el => el && el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden';
   const rem = px(getComputedStyle(document.documentElement).fontSize);
   const cmax = 42 * rem, cmaxWide = 75 * rem, paneTop = 16 * rem / 16;
@@ -73,7 +73,7 @@ const CHECK = `(() => {
   // gutters: the list keeps the phone's
   if (split) { const la = sv.querySelector('.list-area'); if (vis(la) && Math.abs(px(getComputedStyle(la).paddingLeft) - rem) > 1) f.push(['gutter', 'the list pane gutter is ' + getComputedStyle(la).paddingLeft]); }
   // a form sheet: centred
-  const fs = [...document.querySelectorAll('body > .sheet')].find(vis) || (document.body.classList.contains('form-sheet') ? document.body : null);
+  const fs = [...document.querySelectorAll('body > .sheet')].find(vis) || (document.body.classList.contains('form-sheet') ? document.querySelector('body.form-sheet > .phone-screen') : null);
   if (fs) { const r = fs.getBoundingClientRect(); if (Math.abs(r.left + r.width / 2 - W / 2) > 2) f.push(['sheet', 'the form sheet is off centre by ' + Math.round(r.left + r.width / 2 - W / 2)]); }
   return f;
 })()`;
@@ -83,6 +83,7 @@ for (const [i, s] of PICK.entries()) for (const [w, h] of WIDTHS) {
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url }); await Promise.race([l, sl(8000)]);
   await ev(`document.fonts.ready.then(() => true)`); await sl(250);
+  await ev(`new Promise(r => { const f = document.querySelector('iframe.sheet-presenter[src]'); if (!f) return r(1); setTimeout(() => r(1), 5000); const done = () => setTimeout(() => r(1), 600); if (f.contentDocument && f.contentDocument.readyState === 'complete' && f.contentWindow.location.href !== 'about:blank') done(); else f.addEventListener('load', done, { once: true }); })`);   // the screen under a desktop's form sheet (Lesson 10 step 7)
   if (s.act === 'map') await ev(`document.querySelector('.view-btn[data-view="map"]')?.click()`);
   if (s.act === 'sheet') await ev(`document.querySelector('.filters-trigger')?.click()`);
   if (s.act.startsWith('click:')) await ev(`document.querySelector(${JSON.stringify(s.act.slice(6))})?.click()`);

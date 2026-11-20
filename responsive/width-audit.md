@@ -133,6 +133,8 @@ Everything else (six screens) does not change at either width; it only needs a r
 
 **Revised 2026-11-20 (designer; Strava's activity feed, Komoot):** Results list on a desktop is a centred container at `--container-max-wide` under the top bar, the list with photo thumbnails and the result as a card (photo band, a stats row, actions at its foot sized to their text), not panes across the window. `DESIGN.md` → Width → Results list on a desktop.
 
+**Revised 2026-11-20 (designer, Lesson 10 step 7): one breakpoint.** `--bp-desktop` is set by the web app's behavior, not a device: 71.75rem (1148px), where the list card and the race card fit beside the map at `--map-min` (16 + 390 + 16 + 390 + 16 + 320), so a 1280 or 1366 laptop window gets the desktop (at 1280 it got a phone's column until then). The tablet breakpoint is gone: since the tablet became the phone's it only capped what `max-width` caps at any width, and by the lesson's own rule a breakpoint that changes nothing is redundant (a deliberate deviation from the lesson's two). Everything below 1148 is the phone's, a tablet included; Filters is the phone's sheet there. On a desktop the top bar is on every page (pushed screens too), Race detail and Result detail open in Race browse and Results list, and Log result and Race picker sit over Results list dimmed. `concept/concept.md` → Lesson 10 → Step 7.
+
 ## Open, for the designer (all four settled by the Decisions above, 2026-11-15)
 
 1. Race browse at tablet width: should a selected race replace the map in the trailing pane (recommended above), or open as a third pane that squeezes both?

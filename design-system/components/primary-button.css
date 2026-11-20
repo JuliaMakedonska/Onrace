@@ -81,6 +81,6 @@
 /* order 1210 */
 /* Buttons on a desktop (designer, 2026-11-20): sized to their text at the standard control height (--target), never
    stretched across a card or a column; in a bar they centre. The number is tokens.css's --bp-desktop. */
-@media (min-width: 83.9375rem) {
+@media (min-width: 71.75rem) {
   .register-btn, .open-btn, .submit-btn { width: fit-content; max-width: 100%; margin-inline: auto; }
 }

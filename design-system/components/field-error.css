@@ -11,7 +11,7 @@
    stays. Profile's "Couldn't save" is the same footnote, with its Try again link. */
 
 /* order 0860 */
-.field-error { margin: var(--space-2) var(--space-4) 0; font-size: var(--size-proof); font-weight: var(--weight-regular); line-height: var(--leading-body); color: var(--error); }
+.field-error { margin: var(--space-2) var(--space-4) 0; max-width: var(--measure); font-size: var(--size-proof); font-weight: var(--weight-regular); line-height: var(--leading-body); color: var(--error); }
 .field-error[hidden] { display: none; }
 .field-error::before { width: var(--icon-s); height: var(--icon-s); margin-right: var(--space-1); }
 .field-error a { margin-left: var(--space-1); font-weight: var(--weight-strong); }   /* Profile's Try again, after the line */

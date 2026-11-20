@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@800&family=Hanken+Grotesk:wght@400;600&display=swap">
-<link rel="stylesheet" href="../design-system/index.css?v=bfc0110a">
+<link rel="stylesheet" href="../design-system/index.css?v=0e03d48c">
 <script src="../design-system/tokens/theme.js"></script>
 </head>
 <body class="onrace">
@@ -144,7 +144,7 @@
   </div><!-- /.phone-screen -->
 
   <aside class="gate-art" aria-hidden="true">   <!-- a desktop's photo half (2026-11-20; DESIGN.md → Width): not drawn or loaded below a desktop -->
-    <picture><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-tall-614.avif 614w, ../visuals/hyrox-sled-hall-1-tall-820.avif 820w" sizes="50vw"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-tall-614.webp 614w, ../visuals/hyrox-sled-hall-1-tall-820.webp 820w" sizes="50vw"><img src="../visuals/hyrox-sled-hall-1-tall-820.jpg" srcset="../visuals/hyrox-sled-hall-1-tall-614.jpg 614w, ../visuals/hyrox-sled-hall-1-tall-820.jpg 820w" sizes="50vw" alt="" width="820" height="1024" loading="lazy"></picture>
+    <picture data-slot="gate-art"><source type="image/avif" srcset="../visuals/hyrox-sled-hall-1-tall-614.avif 614w, ../visuals/hyrox-sled-hall-1-tall-820.avif 820w" sizes="50vw"><source type="image/webp" srcset="../visuals/hyrox-sled-hall-1-tall-614.webp 614w, ../visuals/hyrox-sled-hall-1-tall-820.webp 820w" sizes="50vw"><img src="../visuals/hyrox-sled-hall-1-tall-820.jpg" srcset="../visuals/hyrox-sled-hall-1-tall-614.jpg 614w, ../visuals/hyrox-sled-hall-1-tall-820.jpg 820w" sizes="50vw" alt="" width="820" height="1024" loading="lazy"></picture>
     <span class="gate-brand">Onrace</span>
   </aside>
 
@@ -256,8 +256,8 @@
     window.location.href = 'sign-in-sign-up-loading.html?run=1' + (q ? '&' + q.slice(1) : '') +
       (typed ? '&email=' + encodeURIComponent(typed) : '');
   });
-  // Escape leaves as the bar's leading button does (Cancel, or ‹ Sign in on a screen pushed inside the gate): from
-  // --bp-tablet the gate is a form sheet, and a sheet takes Escape as Cancel (Lesson 10 step 6, 2026-11-18)
+  // Escape leaves as the bar's leading button does (Cancel, or ‹ Sign in on a screen pushed inside the gate): the gate
+  // is a modal task, and a modal takes Escape as Cancel (Lesson 10 step 6, 2026-11-18; a form sheet until 2026-11-20)
   document.addEventListener('keydown', function (e) { if (e.key !== 'Escape' || e.defaultPrevented) return; var lead = document.querySelector('.top-bar > :is(.close, .back)'); if (lead) lead.click(); });
 })();
 </script>

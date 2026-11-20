@@ -34,6 +34,7 @@
   font-weight: var(--weight-strong);
   line-height: var(--leading-item);
   color: var(--text-primary);
+  text-wrap: pretty;   /* no short last line: "UTMB — Ultra-Trail du / Mont-Blanc", not "…du Mont- / Blanc" (Lesson 10 step 7; balance broke it at "Ultra- / Trail") */
 }
 .race-card .card-meta { display: contents; }
 .race-card .sport-tag { grid-area: meta; justify-self: start; margin-bottom: var(--space-1); }

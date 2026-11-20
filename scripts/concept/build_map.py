@@ -35,7 +35,7 @@ def project(lon, lat):
     return x, y
 # Two frames, each a box on the map that a map view shows whole, centred, scaled to fit (static-map.css):
 # the phone's: the crop the phone has always drawn (lon -110..25 across the screen's width, centred on 43°N), so a phone
-# doesn't change; the wide one (a map pane from --bp-tablet): the box round the pins, widened by a margin so the
+# doesn't change; the wide one (the desktop's full-bleed map from --bp-desktop): the box round the pins, widened by a margin so the
 # continents that hold them show whole (North America from its west coast, Europe to the Black Sea), never cut at a pin.
 PHONE = (-110.0, 25.0, 43.0)                   # lon from, lon to, centre latitude
 FIT_MARGIN_LON, FIT_MARGIN_LAT = 28.0, 12.0

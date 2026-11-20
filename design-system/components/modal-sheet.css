@@ -31,7 +31,7 @@
 /* Log result (round 2, G40): the sheet is the whole screen, resting at the large detent (G13) over Results, which has
    receded under the scrim; its top bar spans it, and only its form scrolls */
 html:has(body > .sheet > .phone-screen) { height: 100%; }
-body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0 auto; max-width: var(--pane-w); overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
+body:has(> .sheet > .phone-screen) { position: relative; height: 100%; margin: 0; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
 /* Results receded behind the sheet (step 6, #34; iOS sheets): the presenting screen's top edge, inset and dimmed under
    the scrim, shows in the gap above the sheet, so the sheet reads as a modal over Results */
 body:has(> .sheet > .phone-screen)::before {
@@ -46,13 +46,13 @@ body:has(> .sheet > .phone-screen)::before {
 }
 body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: auto; flex: 1; min-height: 0; height: auto; margin-top: calc(var(--safe-top) + var(--sheet-gap-top)); padding: 0; overflow: hidden; transform: none; transition: none; }
 .sheet > .phone-screen { flex: 1; min-height: 0; height: auto; padding-bottom: 0; border-radius: inherit; }   /* its inside halo (screen.css) follows the sheet's corners */
-.sheet > .phone-screen > main { padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* the sheet's spacing (2026-11-06): clear of the bar, the bottom safe area kept */
+.sheet > .phone-screen > main { width: 100%; max-width: var(--container-max); margin-inline: auto; padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* the form capped at --container-max, centred, by max-width alone: on a tablet the sheet spans the window and its form doesn't (2026-11-20; a query until step 7) */   /* the sheet's spacing (2026-11-06): clear of the bar, the bottom safe area kept */
 .sheet, .phone-screen { scrollbar-color: var(--boundary) transparent; scrollbar-width: thin; }
 /* the Filters sheet (markup pass, 2026-10-23): Cancel, the title and Apply filters in a top bar (G12); options as grouped
    rows (G20), as Profile's: Region a native menu (G17), the dates native compact pickers (G18), sport types rows with a
    neutral checkmark (G19, C4). No grabber: the sheet rests at one detent, so it isn't resizable (HIG Sheets) */
 .sheet:has(> .top-bar) { padding: 0; overflow: hidden; }
-.sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--sheet-content-top) var(--space-4) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }
+.sheet > form { flex: 1; min-height: 0; overflow-y: auto; padding: var(--sheet-content-top) max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)) calc(var(--sheet-content-bottom) + var(--safe-bottom)); }   /* on a tablet the sheet spans the window and its rows keep the column's width (Filters, Lesson 10 step 7), as Log result's form */
 .sheet .group { margin: 0 0 var(--sheet-group-gap); padding: 0; border: 0; min-width: 0; }
 .sheet .group:not(:has(~ .group)) { margin-bottom: 0; }   /* the last group: the content's bottom padding is the space below it, so a short sheet has no empty band */
 /* a sheet's rows: the grouped rows' one height (grouped-settings-rows.css, --grouped-row-min; 2026-11-07) */
@@ -79,21 +79,29 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
 
 /* order 1160 */
 /* Form sheets (Lesson 10 step 6, 2026-11-18; HIG Sheets: "Prefer using the page or form sheet presentation styles in an
-   iPadOS app"). On a phone nothing changes. From --bp-tablet every sheet is a form sheet: --form-sheet-w wide, centred on
-   the screen with all four corners rounded, at least --form-sheet-inset from the window's edges, over the dimmed screen
-   it came from. One presentation for the three ways a sheet stands in the product:
-   1. a sheet over its screen (.sheet beside .sheet-backdrop: Filters, Add official result link): --form-sheet-h tall,
-      or as tall as its content (.sheet--fit) up to it; it still rises from below and the scrim fades in;
+   iPadOS app"). Below --bp-desktop nothing changes: a phone's sheet, and a tablet's, which is the phone's at the
+   window's width, its form capped at --container-max (2026-11-20, following iPad; Filters too since step 7). From
+   --bp-desktop every sheet is a form sheet: --form-sheet-w wide, centred on the screen with all four corners rounded, at
+   least --form-sheet-inset from the window's edges, over the dimmed screen it came from. One presentation for the three
+   ways a sheet stands in the product:
+   1. a sheet over its screen (.sheet beside .sheet-backdrop: Add official result link): --form-sheet-h tall, or as tall
+      as its content (.sheet--fit) up to it; it still rises from below and the scrim fades in (Filters is a popover
+      card on a desktop, below);
    2. a sheet that is the whole page (body > .sheet > .phone-screen: Log result): the same box, the receded screen's
       edge above it dropped (a form sheet floats, nothing peeks out above it);
-   3. a page that is a full-screen modal on a phone (body.form-sheet: the screens pushed inside a sheet): the page
-      itself becomes the form sheet, on its own ground, over the dimmed void (--frame under --scrim).
-   Since 2026-11-20 (designer, following iPad) cases 2 and 3 are form sheets only from --bp-desktop; on a tablet they are
-   the phone's at the window's width, the form at --container-max. Case 1 stays a form sheet from --bp-tablet.
+   3. a page that is a full-screen modal on a phone (body.form-sheet: Race picker, pushed inside Log result's sheet):
+      its screen becomes the form sheet, on the page's own ground.
+   The presenting screen (Lesson 10 step 7, 2026-11-20): cases 2 and 3 are pages of their own, so the screen under them
+   is drawn by .sheet-presenter, an inert iframe of Results list (Log result's home in flows.md) that
+   design-system/tokens/desktop.js loads from --bp-desktop only, dimmed by the scrim, as the add sheet (case 1) sits
+   over its own dimmed Results list. Without it (it hasn't loaded, or a page has none) the sheet floats on the dimmed
+   void (--frame under --scrim), as until step 7.
    A sheet drawn inside a specimen's phone frame isn't the body's child, so the docs keep it as a phone draws it; the
-   docs show the form sheet in a frame as wide as a tablet. The numbers are tokens.css's --bp-tablet (a media query can't read var(); scripts/build_components.py checks it). */
-@media (min-width: 48.8125rem) {
-  body > .sheet {
+   docs show the form sheet in a frame as wide as a desktop. The number is tokens.css's --bp-desktop (a media query
+   can't read var(); scripts/build_components.py checks it). */
+body > .sheet-presenter { display: none; }   /* a phone's and a tablet's: the sheet is the phone's, nothing under it shows */
+@media (min-width: 71.75rem) {
+  body > .sheet:not(:has(> .phone-screen)) {
     left: 50%;
     right: auto;
     top: 50%;
@@ -104,30 +112,30 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
     translate: -50% -50%;
     transform: translateY(100vh);   /* closed: below the window, as a form sheet rises from the bottom edge */
   }
-  body > .sheet.open { transform: none; }
+  body > .sheet:not(:has(> .phone-screen)).open { transform: none; }
   body > .sheet--fit { height: auto; max-height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset)); }
-  /* a tablet (designer, 2026-11-20, following iPad: a form is never squeezed to a phone's width): Log result is the
-     phone's sheet at the window's width, its bar across it (Cancel and Save at its edges, the title centred), its form
-     at --container-max, centred; a full-screen modal page (Race picker) is the page at the window's width (screen.css) */
-  body:has(> .sheet > .phone-screen) { max-width: none; }
-  body > .sheet:has(> .phone-screen) { width: auto; translate: none; border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; }
-  .sheet > .phone-screen > main { width: 100%; max-width: var(--container-max); margin-inline: auto; }
-}
-/* a desktop: the form sheet (cases 2 and 3 above), as from --bp-tablet until 2026-11-20 */
-@media (min-width: 83.9375rem) {
-  body:has(> .sheet > .phone-screen) { max-width: none; display: grid; place-items: center; padding: var(--form-sheet-inset); }
+  /* case 2: the page is the sheet's ground, the sheet centred on it */
+  body:has(> .sheet > .phone-screen) { display: grid; place-items: center; padding: var(--form-sheet-inset); }
   body:has(> .sheet > .phone-screen)::before { display: none; }
   body > .sheet:has(> .phone-screen) { width: min(var(--form-sheet-w), 100%); height: min(var(--form-sheet-h), 100%); margin: 0; translate: none; border-radius: var(--radius-sheet); }
-  html:has(> body.form-sheet) { overflow: hidden; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }   /* overflow: so the page's own overflow clips it to its corners instead of passing to the window */
-  body.form-sheet {
-    width: min(var(--form-sheet-w), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
-    height: min(var(--form-sheet-h), 100% - var(--form-sheet-inset) - var(--form-sheet-inset));
-    max-width: none;
-    top: 50%;
-    translate: 0 -50%;
+  .sheet > .phone-screen > main { max-width: none; }
+  /* case 3: the page's screen is the sheet, centred on the dimmed void */
+  html:has(> body.form-sheet) { overflow: hidden; background: linear-gradient(var(--scrim), var(--scrim)) var(--frame); }
+  body.form-sheet { height: 100%; display: grid; place-items: center; padding: var(--form-sheet-inset); background: none; }
+  body.form-sheet::before { display: none; }
+  body.form-sheet > .phone-screen {
+    position: relative;
+    width: min(var(--form-sheet-w), 100%);
+    height: min(var(--form-sheet-h), 100%);
     border-radius: var(--radius-sheet);
+    background: var(--page);
     box-shadow: var(--float-shadow);
   }
+  body.form-sheet > .phone-screen > :is(main, .screen-main), body.form-sheet > .phone-screen > form.search { max-width: none; }
+  /* the presenting screen under cases 2 and 3: Results list, inert, dimmed by the scrim over it */
+  body > .sheet-presenter { display: block; position: fixed; inset: 0; z-index: var(--z-under); width: 100%; height: 100%; border: 0; }
+  body:has(> .sheet-presenter[src]) { background: none; }
+  body:has(> .sheet-presenter[src])::before { content: ""; display: block; position: fixed; inset: 0; height: auto; border-radius: 0; z-index: auto; background: var(--scrim); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 
 /* order 1180 */
@@ -136,8 +144,8 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
    doesn't dim the screen, and its bar says Clear all (the card's filters back to none; its name the dictionary's "Clear all
    filters") and Done (apply and close) in place of Cancel and Apply (microcopy rows 600, 601). Escape or a click outside still closes it, as Cancel. Below a desktop it
    is the sheet it always was. Where it sits is the screen's layout (split-view.css knows where the cards end). */
-.sheet > .top-bar > .sheet-clear, .sheet .sheet-done-label { display: none; }   /* a phone's and a tablet's sheet: Cancel and Apply (the bar's own button rule sets display, so this names the bar) */
-@media (min-width: 83.9375rem) {
+.sheet > .top-bar > .sheet-clear, .sheet .sheet-done-label { display: none; }   /* below a desktop, the sheet: Cancel and Apply (the bar's own button rule sets display, so this names the bar) */
+@media (min-width: 71.75rem) {
   body > .sheet--popover > .top-bar > .sheet-cancel, body > .sheet--popover .sheet-apply-label { display: none; }
   body > .sheet--popover > .top-bar > .sheet-clear { display: flex; }
   body > .sheet--popover .sheet-done-label { display: inline; }
@@ -153,5 +161,5 @@ body > .sheet:has(> .phone-screen) { position: relative; inset: auto; z-index: a
   }
   body > .sheet--popover.open { transform: none; }
   body:has(> .sheet--popover) > .sheet-backdrop { background: transparent; }   /* a popover doesn't dim the screen */
-  body:has(> .sheet--popover):has(.card-link[aria-current="page"]) > .sheet--popover { left: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); }   /* the race card is open: the filters sit beside it */
+  body:has(> .sheet--popover):has(.card-link[aria-current="page"]) > .sheet--popover { left: calc(var(--float-gap) + var(--pane-w) + var(--float-gap) + var(--pane-w) + var(--float-gap)); width: min(var(--pane-w), 100% - var(--float-gap) - var(--pane-w) - var(--float-gap) - var(--pane-w) - var(--float-gap) - var(--float-gap)); }   /* at --bp-desktop itself the map's room is --map-min: the card takes it, less a gap, never past the window (Lesson 10 step 7) */   /* the race card is open: the filters sit beside it */
 }

@@ -14,6 +14,7 @@
   line-height: var(--leading-body);
   accent-color: var(--text-primary);   /* C4: system-drawn controls tint neutral */
 }
+.onrace p { text-wrap: pretty; }   /* running text: no word alone on its last line (Lesson 10 step 7, /impeccable audit: "you.", "evidence." at 390) */
 .onrace strong, .onrace b { font-weight: var(--weight-strong); }   /* the type scale has no 700: Hanken loads 400 and 600 only */
 .onrace ::selection { background: var(--text-primary); color: var(--page); }
 /* states (Lesson 9 step 3): .is-hover, .is-pressed and .is-focus are the docs' still stand-ins for :hover, :active and

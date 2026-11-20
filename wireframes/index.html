@@ -350,7 +350,7 @@
     transform-origin: top left;
   }
   /* Phone / Tablet / Desktop (Lesson 10 step 3, 2026-11-15): the same device, wider. Tablet: an iPad Air 11-inch in
-     portrait, 820×1180 pt, above --bp-tablet (781) and below --bp-desktop (1343), with iPad's 24pt status bar and a
+     portrait, 820×1180 pt, below --bp-desktop (1148; the one breakpoint since Lesson 10 step 7), so the phone's layout, with iPad's 24pt status bar and a
      shorter home strip. Desktop: a 1440×900 browser window (a 13-inch laptop's default), above --bp-desktop, with a
      window bar instead of a status bar and no home strip. The iframe is the page's viewport, so the page's own media
      queries pick the form. */
@@ -511,8 +511,8 @@
 
     <div class="device-col" id="device-col">
       <!-- The device toolbar: the screen's states (links: each state has its own address) and the width switch
-           (Phone 390×844, Tablet 820×1180 an iPad Air 11-inch in portrait, between --bp-tablet 781 and --bp-desktop
-           1343, Desktop 1440×900 a 13-inch laptop's window; Solar Linear icons). Arrow keys move between the
+           (Phone 390×844, Tablet 820×1180 an iPad Air 11-inch in portrait, below --bp-desktop 1148 (the one breakpoint),
+           Desktop 1440×900 a 13-inch laptop's window; Solar Linear icons). Arrow keys move between the
            width buttons, Tab and Enter work as on any button. -->
       <div class="device-toolbar" id="device-toolbar">
         <ul class="seg state-seg" id="state-seg" aria-label="States"></ul>

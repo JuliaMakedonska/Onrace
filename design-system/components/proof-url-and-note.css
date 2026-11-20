@@ -7,4 +7,4 @@
 .proof-url { font-size: var(--size-body); color: var(--text-primary); overflow-wrap: break-word; }   /* breaks at the <wbr> after / . - in the markup, never mid-word (step 6, #10) */
 
 /* order 0750 */
-.proof-note { font-size: var(--size-proof); color: var(--text-secondary); }
+.proof-note { max-width: var(--measure); font-size: var(--size-proof); color: var(--text-secondary); }

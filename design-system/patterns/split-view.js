@@ -1,6 +1,6 @@
 /* Split view (Lesson 10 step 5, 2026-11-17): the behaviour of design-system/patterns/split-view.html, used by Race browse
    and Results list. The layout is design-system/components/split-view.css; this script only fills the detail pane.
-   - Whether the screen is split is the CSS's answer (--split on .split-detail: 0 on a phone, 1 from --bp-tablet), so
+   - Whether the screen is split is the CSS's answer (--split on .split-detail: 0 below --bp-desktop, 1 from it), so
      the breakpoints live in one place and a phone keeps its flow: a card opens its own screen, as before.
    - Split, choosing a card (or a map pin) puts its key in the URL (?race=… or ?result=…, pushState, so a choice can be
      linked and Back goes back), marks its card Selected (aria-current="page") and shows the detail in the pane.
@@ -14,7 +14,10 @@
    - Step 5 follow-ups and step 6 (2026-11-18): the detail's h1 comes in as an h2 (the screen keeps one h1); a pane link
      with [data-add] (Add official result link) reloads the screen with &add=<key>, so the screen's own sheet opens over
      the split view as a form sheet, and Cancel and Save come back to the same choice; once shown the pane fires
-     split:shown, so the screen's scripts can bring it up to date (a link just added). */
+     split:shown, so the screen's scripts can bring it up to date (a link just added).
+   - Lesson 10 step 7 (2026-11-20): a result just saved (?saved=<its name>, from Log result) is the one chosen; the pane
+     says what it shows in a polite status (the detail's title, or its error's heading), and its imported headings sit
+     a level under the title (aria-level), so the outline isn't flat. */
 (function () {
   var root = document.querySelector('.split-view');
   var pane = root && root.querySelector('.split-detail');
@@ -51,7 +54,10 @@
     n.querySelectorAll('img[data-src]').forEach(function (img) { img.src = img.getAttribute('data-src'); img.removeAttribute('data-src'); });
     return n;
   }
-  function heading(n) {   // the screen keeps one h1 (the list's large title): the detail's title comes in as an h2
+  function heading(n) {   // the screen keeps one h1 (the list's large title): the detail's title comes in as an h2, and its sections under it
+    (n.matches('h2, h3') ? [n] : []).concat(Array.prototype.slice.call(n.querySelectorAll('h2, h3'))).forEach(function (h) {
+      h.setAttribute('aria-level', String(+h.tagName.charAt(1) + 1));   // the look stays the tag's; the outline moves down a level
+    });
     (n.matches('h1') ? [n] : Array.prototype.slice.call(n.querySelectorAll('h1'))).forEach(function (h) {
       var h2 = document.createElement('h2');
       Array.prototype.forEach.call(h.attributes, function (a) { h2.setAttribute(a.name, a.value); });
@@ -60,9 +66,16 @@
     });
     return n;
   }
+  var status = document.createElement('p');   // what the pane shows, said once it shows (no words of its own: the detail's title or its error's heading)
+  status.className = 'visually-hidden'; status.setAttribute('role', 'status');
+  pane.appendChild(status);
   function put(nodes) {
     content.textContent = '';
     nodes.forEach(function (n) { if (n) content.appendChild(heading(wake(document.importNode(n, true)))); });
+  }
+  function say() {
+    var h = content.querySelector('h2');
+    status.textContent = h ? h.textContent.replace(/\s+/g, ' ').trim() : '';
   }
   function mark(key) {
     root.querySelectorAll('.card-link, .map-pin').forEach(function (a) {
@@ -84,12 +97,24 @@
       }
     }
   }
+  function justSaved() {   // ?saved=<the result's name>: Log result has just saved it; on a split screen it's the one chosen
+    var name = new URLSearchParams(location.search).get('saved');
+    if (!name || chosen() || !split()) return;
+    var a = Array.prototype.find.call(root.querySelectorAll('.card-link'), function (l) {
+      var h = l.querySelector('h2'); return h && h.textContent.replace(/\s+/g, ' ').trim() === name.trim();
+    });
+    var key = a && keyOf(a);
+    if (!key) return;
+    var u = new URLSearchParams(location.search); u.set(param, key);
+    history.replaceState(null, '', location.pathname + '?' + u.toString());
+  }
   function show() {
+    justSaved();
     var key = split() ? chosen() : null;
     mark(key);
     empty.hidden = !!key; content.hidden = !key;
     var token = current = {};
-    if (!key) { content.textContent = ''; pane.removeAttribute('aria-busy'); pane.setAttribute('data-split-state', 'empty'); return; }
+    if (!key) { content.textContent = ''; status.textContent = ''; pane.removeAttribute('aria-busy'); pane.setAttribute('data-split-state', 'empty'); return; }
     pane.setAttribute('aria-busy', 'true'); pane.setAttribute('data-split-state', 'loading');   // data-split-state: what the pane shows, for the docs' stage check to wait on
     if (src.loading) page(src.loading).then(function (d) {
       if (current !== token || !pane.hasAttribute('aria-busy')) return;
@@ -103,12 +128,12 @@
     });
     job.then(function (parts) {
       if (current !== token) return;
-      pane.removeAttribute('aria-busy'); put(parts); pane.scrollTop = 0; pane.setAttribute('data-split-state', 'shown');
+      pane.removeAttribute('aria-busy'); put(parts); pane.scrollTop = 0; pane.setAttribute('data-split-state', 'shown'); say();
       pane.dispatchEvent(new CustomEvent('split:shown', { bubbles: true }));   // the screen's own scripts can bring the pane up to date (Results list: a link just added)
     }).catch(function () {
       return page(src.error).then(function (d) {
         if (current !== token) return;
-        pane.removeAttribute('aria-busy'); put([d.querySelector('.state-message[data-cause="detail"]')]); pane.setAttribute('data-split-state', 'error');
+        pane.removeAttribute('aria-busy'); put([d.querySelector('.state-message[data-cause="detail"]')]); pane.setAttribute('data-split-state', 'error'); say();
         content.querySelectorAll('[data-retry]').forEach(function (a) {
           a.addEventListener('click', function (e) {
             e.preventDefault();

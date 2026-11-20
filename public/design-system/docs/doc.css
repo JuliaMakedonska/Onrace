@@ -12,7 +12,7 @@
 :root {
   --radius-3: 12px;        /* a stage's corners */
   --kit-stage-h: 600px;    /* stage for the sheet, the map and the alert */
-  --kit-tablet-w: 820px;   /* a stage as wide as a tablet (an iPad Air 11-inch in portrait), above --bp-tablet: the viewer's Tablet width (Lesson 10 step 3) */
+  --kit-tablet-w: 820px;   /* a stage as wide as a tablet (an iPad Air 11-inch in portrait), below --bp-desktop, so the phone's layout: the viewer's Tablet width (Lesson 10 step 3) */
   --kit-desktop-w: 1440px; /* a stage as wide as a desktop window (a 13-inch laptop's default), above --bp-desktop: the viewer's Desktop width */
 }
 .kit-frame {   /* one 390px screen-wide strip of the product, on the page ground */
