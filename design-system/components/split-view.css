@@ -140,6 +140,27 @@
   .split-view:has(.map-area):not(:has(.card-link[aria-current="page"])) .split-detail { display: none; }   /* the race card opens when a race is chosen */
   .split-view:has(.map-area) .split-detail > .top-bar { position: sticky; top: 0; z-index: var(--z-bar); display: flex; justify-content: flex-end; min-height: 0; height: var(--target); margin-bottom: calc(var(--target) * -1); padding: var(--space-2) var(--space-2) 0; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border: 0; }   /* Close floats at the card's corner, over the photo */
   .split-view:not(:has(.map-area)) .split-detail > .top-bar { display: none; }
+  /* a list with its detail on a desktop (designer, 2026-11-20; references: Strava's activity feed, Komoot): a centred
+     container under the top bar, --container-max-wide, not panes across the window; the list on the left (its rows
+     with a photo thumbnail, result-row.css), the detail a card on the right, at the screen's height, filling its column.
+     The card: the race's photo band on top (3:1, the Podium treatment), the name, a stats row (the finish time the
+     biggest figure, the race date, the sport type), the official result link and the proof, then the actions at its
+     foot, sized to their text (primary-button.css), the caption beside them. "No result selected" is its empty state. */
+  body > .phone-screen.split-view:not(:has(.map-area)) > main { max-width: var(--container-max-wide); margin-inline: auto; column-gap: var(--space-6); }
+  body > .phone-screen.split-view:not(:has(.map-area)) > .top-bar--large { width: auto; padding-inline: max(var(--space-2), (100% - var(--container-max-wide)) / 2); }
+  .split-view:not(:has(.map-area)) .split-detail { top: var(--space-4); height: calc(100cqh - var(--space-4) - var(--space-4)); margin-block: var(--space-4); border-left: 0; border-radius: var(--radius-2); background: var(--surface); }
+  .split-view:not(:has(.map-area)) .split-content > :not(.action-bar) { max-width: none; }
+  .split-view:not(:has(.map-area)) .split-content .result { display: flex; flex-wrap: wrap; align-items: flex-end; column-gap: var(--space-7); padding: var(--space-4) var(--space-5) var(--space-5); }   /* a wrapping row, not a grid: the photo's own width never sizes the stats row's columns */
+  .split-view:not(:has(.map-area)) .split-content .result > :not(.finish, .facts) { flex: 0 0 100%; }
+  .split-view:not(:has(.map-area)) .split-content .result > picture { display: contents; }
+  .split-view:not(:has(.map-area)) .split-content .result > picture > .photo { margin-bottom: var(--space-5); }
+  .split-view:not(:has(.map-area)) .split-content .result > .finish { flex: none; margin: 0; container-type: normal; }   /* sized by its figure here: as a container its width would come from outside, and a flex row gives it none; its cap (24cqi) then reads the screen */
+  .split-view:not(:has(.map-area)) .split-content .result > .facts { flex: 1 1 0; min-width: 0; grid-template-columns: none; grid-auto-flow: column; grid-template-rows: auto auto; justify-content: start; gap: var(--space-1) var(--space-7); margin: 0; }
+  .split-view:not(:has(.map-area)) .split-content .result > .facts > :is(dt, dd) { grid-column: auto; margin-top: 0; }
+  .split-view:not(:has(.map-area)) .split-content .result > .proof { margin-top: var(--space-6); }
+  .split-view:not(:has(.map-area)) .split-content > .action-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); padding: var(--space-4) var(--space-5); background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; border-top: var(--border) solid var(--hairline); }
+  .split-view:not(:has(.map-area)) .split-content > .action-bar :is(.open-btn, .register-btn) { margin-inline: 0; border-radius: var(--radius-2); }
+  .split-view:not(:has(.map-area)) .split-content > .action-bar .action-caption { margin: 0; text-align: left; }
   /* the race card shows the format chip under the title, as the list card does (designer, 2026-11-19); its facts then
      drop their Sport type row, the first, so the format isn't said twice */
   .split-view:has(.map-area) .split-content .race > .sport-tag { display: inline-flex; margin: calc(var(--space-2) * -1) 0 var(--space-4); }

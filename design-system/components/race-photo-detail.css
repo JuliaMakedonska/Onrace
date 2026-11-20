@@ -3,7 +3,8 @@
    components/index.css by its number, which is the order of ui/kit.css before the split (components/README.md). */
 
 /* order 0710 */
-.race > picture > .photo {   /* Race detail: the race's photo, the card's band at full content width: the same pre-cropped 3:1 file as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
+.result > picture { display: none; }   /* a result's photo band shows only in the desktop's result card (split-view.css, 2026-11-20); Result detail on its own keeps the finish time first */
+:is(.race, .result) > picture > .photo {   /* Race detail: the race's photo, the card's band at full content width: the same pre-cropped 3:1 file as its card, so it shows exactly the band retouched in round 3 (visuals/README.md) */
   display: block;
   width: 100%;
   height: auto;

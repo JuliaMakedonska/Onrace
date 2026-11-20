@@ -50,17 +50,21 @@ body:has(> .phone-screen)::before {   /* G6: the scroll edge under the status ba
    picker) and the sign-in screens too: the screen fills the window, its column stops at --container-max and centres,
    and its bars (the top bar, the action bar) keep their glass the window's width with their buttons at the column's
    edges. What sits in the column (cards, rows, the large title) adapts to the column's own width (container queries
-   on --stack-w), never to the window. A sheet keeps the phone's width until the form sheets come. */
+   on --stack-w), never to the window. A sheet keeps the phone's width until the form sheets come.
+   The top bar on a tablet (designer, 2026-11-20, following iPad): it spans the screen, back at its leading edge, the
+   action (Save) at its trailing edge, the title centred, as on a phone; only the content under it is capped. On a
+   desktop the bar's buttons still end where the column ends (below). */
 @media (min-width: 48.8125rem) {
   body:has(> .phone-screen) { max-width: none; }
   body > .phone-screen > :is(main, .screen-main) { width: 100%; max-width: var(--container-max); margin-inline: auto; }
-  body > .phone-screen > :is(.top-bar, .action-bar), body:has(> .phone-screen) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar's buttons (back, Log result, Save) end where the column ends */
+  body > .phone-screen > form.search { width: 100%; max-width: var(--container-max); margin-inline: auto; }   /* Race picker's search under its bar lines up with the column it searches (2026-11-20) */
   body > .phone-screen > .action-bar { padding-inline: max(var(--space-4), (100% - var(--container-max)) / 2 + var(--space-4)); }   /* the action bar's button keeps the column's gutter */
 }
 /* Desktop (designer, 2026-11-19, the web app): the top bar (tab-bar.css) takes a row above the screen, the screen fills
    the rest; no tab bar to clear at the bottom. A tablet is the phone's: the tab bar floats at the bottom and the screen
    scrolls under it, its column capped at --container-max */
 @media (min-width: 83.9375rem) {
+  body > .phone-screen > .top-bar, body:has(> .phone-screen) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--container-max)) / 2); }   /* the bar's buttons (back, Log result, Save) end where the column ends */
   body:has(> .bottom-nav) { display: flex; flex-direction: column; }
   body:has(> .bottom-nav) > .phone-screen { flex: 1; min-height: 0; min-width: 0; height: auto; padding-bottom: 0; }
   body > .phone-screen > :is(main, .screen-main) > header { padding-top: calc(var(--safe-top) + var(--pane-top)); }   /* the wide layout's top line (layout pass, 2026-11-18): the large title starts --pane-top below the top bar */

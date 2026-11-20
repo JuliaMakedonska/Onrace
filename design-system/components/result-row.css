@@ -56,7 +56,20 @@
 /* order 1120 */
 /* Selected (Lesson 10 step 4, 2026-11-17): the race card's selected state (race-card.css), on the row whose result shows
    in the pane beside the list: aria-current="page" on its link, the --selected fill on the whole row (its "Add official
-   result link" part too) and a hairline --text-secondary edge round it; hover and press leave it as it is. */
-.result-card:has(> .card-link[aria-current="page"]) { border-radius: var(--radius-2); outline: var(--border) solid var(--text-secondary); outline-offset: calc(var(--border) * -1); }
+   result link" part too); hover and press leave it as it is. Until 2026-11-20 a hairline --text-secondary edge went round it. */
+.result-card:has(> .card-link[aria-current="page"]) { border-radius: var(--radius-2); }   /* the quiet fill alone (designer, 2026-11-20): no edge, so nothing on the row reads as a focus ring; the amber ring is keyboard focus only */
 .result-card:has(> .card-link[aria-current="page"]) > :is(.card-link, .text-link) { background: var(--selected); }
 .result-card:has(> .card-link[aria-current="page"]) .sport-tag { background: var(--raised-pressed); }
+
+/* order 1200 */
+/* A row's photo thumbnail (designer, 2026-11-20; Komoot's routes list): from --bp-desktop the row shows its race's photo
+   (or, for a result entered by hand, its format's) as a --thumb-w square at its leading edge, the Podium treatment;
+   below a desktop it isn't drawn or loaded (loading="lazy" in a box that isn't drawn). The number is tokens.css's
+   --bp-desktop (a media query can't read var(); scripts/build_components.py checks it). */
+.result-card .card-link > picture { display: none; }
+@media (min-width: 83.9375rem) {
+  .result-card .card-link { grid-template-columns: var(--thumb-w) minmax(0, 1fr); column-gap: var(--space-3); }
+  .result-card .card-link > picture { display: contents; }
+  .result-card .card-link > picture > .photo { grid-column: 1; grid-row: 1 / span 3; align-self: start; width: var(--thumb-w); height: var(--thumb-w); object-fit: cover; border-radius: var(--radius-1); filter: var(--photo-filter); }
+  .result-card .card-link > :not(picture) { grid-column: 2; }
+}

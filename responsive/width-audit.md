@@ -129,6 +129,10 @@ Everything else (six screens) does not change at either width; it only needs a r
 
 **Revised 2026-11-20 (designer; Microsoft Copilot, Dribbble and Midday sign-in, Pandora on a tablet):** Sign in / Sign up, Reset password and New password are full pages at every width, not a form sheet over the app (the form sheet of 2026-11-18 is gone from them). Tablet: the phone's page, the form centred at `--form-w`. Desktop: a split page, the form half on the left (every state and step in its place) and a race photo full height on the right with the Onrace wordmark. `DESIGN.md` → Width → The sign-in screens by width.
 
+**Revised 2026-11-20 (designer, following iPad):** forms on a tablet aren't squeezed to a phone's width. The top bar spans the screen (back or Cancel leading, Save trailing, the title centred), the content takes `--container-max`, centred, the grouped rows filling it, the type the phone's. Sign in / Sign up, Reset password, New password, Profile (already so), Log result and Race picker (the phone's sheet and page at the window's width, no longer a form sheet on a tablet). Desktop unchanged. `DESIGN.md` → Width → Forms on a tablet.
+
+**Revised 2026-11-20 (designer; Strava's activity feed, Komoot):** Results list on a desktop is a centred container at `--container-max-wide` under the top bar, the list with photo thumbnails and the result as a card (photo band, a stats row, actions at its foot sized to their text), not panes across the window. `DESIGN.md` → Width → Results list on a desktop.
+
 ## Open, for the designer (all four settled by the Decisions above, 2026-11-15)
 
 1. Race browse at tablet width: should a selected race replace the map in the trailing pane (recommended above), or open as a third pane that squeezes both?

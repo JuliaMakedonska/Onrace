@@ -1630,3 +1630,29 @@ References: Microsoft Copilot, Dribbble and Midday sign-in on a desktop; Pandora
 - **The photo half hides when there isn't room:** below a desktop, and at 200% text (the breakpoint is in rem), it isn't drawn, and its lazy image isn't loaded.
 - **Found on the way:** an 819-pixel-wide AVIF made by `sips` didn't decode in Chrome; the crop is 820 wide (`visuals/README.md`).
 - **Docs:** the Gate layout specimen at a desktop's width. Review: `ui/review-gate.html`.
+
+### Results list on a desktop, redone (designer brief, 2026-11-20)
+
+The desktop Results list was broken: too much empty space, stretched or oversized buttons, no photos, a selected row outlined like a focus ring. References: Strava's activity feed (a card with the title, a row of stats, a big photo) and Komoot (a list with thumbnails, the detail as a card with its photo on top and its actions at the bottom).
+
+- **A centred container** at `--container-max-wide` (new, 75rem [?], signed) under the top bar: the list on the left, the result a card on the right at the screen's height (`split-view.css`, a list with its detail on a desktop; Saved races follows it).
+- **Thumbnails:** each row shows its race's photo as a `--thumb-w` square (new, 4rem [?]) on a desktop (`result-row.css`); not drawn or loaded below.
+- **The card:** the race's photo band (3:1, the Podium treatment; in Result detail's own page, shown only in the card), the name, a Strava-style stats row (the finish time the biggest figure, the race date, the sport type), the official result link with Copy link, the proof line and its note, the actions at its foot sized to their text with the caption beside them; "No result selected" its empty state.
+- **Photos:** a result linked to a catalog race takes that race's photo; one entered by hand takes its format's (Valencia: the marathon photo). No grey placeholders.
+- **Buttons on a desktop are sized to their text** at `--target` everywhere (`primary-button.css`); the top bar's Log result is a normal button (the primary button's corners); a tab screen's collapsing title bar goes on a desktop (the top bar names the tab; on Results list it overlapped the card once the list scrolled).
+- **Selected row:** the quiet `--selected` fill alone, no edge (the edge read as a focus ring); amber is keyboard focus only.
+- **Found on the way:** the stats row as a grid let the photo's own width size its columns, and the finish time's container query collapsed it in a flex row; the card is a wrapping flex row and the finish time sizes itself.
+- Tablet and phone unchanged. Review: `ui/review-results.html`.
+
+### Forms on a tablet, following iPad (designer brief, 2026-11-20)
+
+On a tablet the forms were too narrow: New password, the other sign-in screens and Log result squeezed the form, and even the top bar, to a phone's width (`--form-w`, or the 540 form sheet) in the middle of the screen. Follow iPad:
+
+- **The top bar spans the screen:** back or Cancel at the leading edge, Save at the trailing edge, the title centred. `screen.css` no longer pulls a bar's buttons in to the column on a tablet; on a desktop it still does. So Race detail's and Result detail's bars span a tablet's screen too: one rule for every bar.
+- **The content takes the readable width,** `--container-max`, centred; the grouped rows fill it. The sign-in screens take `screen.css`'s column; `gate-layout.css` narrows them to `--form-w` only on a desktop, in the split page.
+- **Log result and Race picker:** the phone's sheet and page at the window's width, its form at `--container-max` (`modal-sheet.css`); a form sheet from `--bp-desktop` only, as before there. The discard action sheet stands as on a phone (`action-sheet.css`). Race picker's search lines up with its list (`screen.css`).
+- **Type stays the phone's:** iPad gives more room, not bigger text. No size changed at any width.
+- **Profile** already followed the rule (its column at `--container-max`): unchanged.
+- **Desktop unchanged:** 54 shots of these screens and Race detail and Result detail at 1440, taken with the old CSS and with the new one, are byte-identical. The only exceptions are three loading states, where the spinner was caught at another frame.
+- **The review pages compare at one scale:** a 390 and an 820 shot used to be drawn at different factors (0.75 and 0.5, then each shrunk to fit). Now every shot is taken 1:1 and drawn at 1:2 by its width and height, with the scale labelled and each shot linking to its 1:1 file (`scripts/review_scale.py`). The 1:2 holds on `ui/review-forms.html`, `ui/review-gate.html`, `ui/review-results.html`, `ui/review-layout.html` and `ui/review-webapp.html`.
+- Review: `ui/review-forms.html`, every state of every form screen at 390, and at 820 before and after.

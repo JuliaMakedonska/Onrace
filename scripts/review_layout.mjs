@@ -22,7 +22,10 @@ const ev = async x => (await send('Runtime.evaluate', { expression: x, returnByV
 await send('Page.enable');
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
 await send('Page.addScriptToEvaluateOnNewDocument', { source: "try { sessionStorage.setItem('onrace-signed-in', '1'); } catch (e) {}" });
-const WIDTHS = [[390, 844, 0.75], [820, 1180, 0.5], [1440, 900, 0.5]];   // [width, height, the shot's scale]
+// [width, height]. Every shot 1:1 (one CSS pixel, one image pixel; 2026-11-20, so 390 and 820 compare honestly); the
+// review pages show them all at one scale (scripts/review_scale.py). WIDTHS=390,820 takes some widths only.
+const ALLW = [[390, 844], [820, 1180], [1440, 900]];
+const WIDTHS = process.env.WIDTHS ? ALLW.filter(([w]) => process.env.WIDTHS.split(',').includes(String(w))) : ALLW;
 const states = screenStates(AFTER).filter(s => !s.name.startsWith('../design-system/patterns/'))
   .filter(s => !s.name.startsWith('race-browse') || (s.q === '' && (s.act !== 'map' || s.name === 'race-browse')) || s.act === 'wait');
 const ONLY = process.env.ONLY ? process.env.ONLY.split(',') : null;   // a review of some screens only (e.g. ONLY=sign-in,reset-password,new-password for ui/review-gate.html)
@@ -33,29 +36,25 @@ const CHECK = `(() => {
   const wide = matchMedia('(min-width: 48.8125rem)').matches, desk = matchMedia('(min-width: 83.9375rem)').matches;
   const vis = el => el && el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden';
   const rem = px(getComputedStyle(document.documentElement).fontSize);
-  const cmax = 42 * rem, paneTop = 16 * rem / 16;
+  const cmax = 42 * rem, cmaxWide = 75 * rem, paneTop = 16 * rem / 16;
   const se = document.scrollingElement, ps = document.querySelector('body > .phone-screen, .sheet > .phone-screen');
   if (se.scrollWidth > W + 1) f.push(['cropped', 'the page scrolls sideways (' + se.scrollWidth + ' > ' + W + ')']);
   if (ps && ps.scrollWidth > ps.clientWidth + 1) f.push(['cropped', 'the screen scrolls sideways (' + ps.scrollWidth + ' > ' + ps.clientWidth + ')']);
   document.querySelectorAll('.map-placeholder').forEach(m => { if (!vis(m)) return; const r = m.getBoundingClientRect();
     m.querySelectorAll('.map-pin').forEach(p => { if (!vis(p)) return; const q = p.querySelector('span').getBoundingClientRect();
       if (q.left < r.left - 1 || q.right > r.right + 1 || q.top < r.top - 1 || q.bottom > r.bottom + 1) f.push(['cropped', 'the ' + p.textContent.trim() + ' pin is cut by the map']); }); });
-  if (!wide) return f;
+  if (!desk) return f;   // a tablet is the phone's since 2026-11-19: the wide spec is a desktop's
   const sv = document.querySelector('.split-view'), main = sv && sv.querySelector(':scope > main');
   const split = main && getComputedStyle(main).display === 'grid';
-  // one top line: the panes beside the list start where the list's pane starts
-  if (split) { const top = main.getBoundingClientRect().top;
-    sv.querySelectorAll('.map-area, .split-detail').forEach(p => { if (vis(p) && Math.abs(p.getBoundingClientRect().top - top) > 1 && !sv.querySelector(':scope > .top-bar:not(.top-bar--large)'))
-      f.push(['top edge', (p.classList.contains('map-area') ? 'the map' : 'the detail') + ' pane starts at ' + Math.round(p.getBoundingClientRect().top) + ', the list at ' + Math.round(top)]); }); }
+  // one top line (2026-11-20): a list with its detail: the detail card starts --space-4 under the screen's top; a map screen's cards are its grid's
+  if (split && !sv.querySelector('.map-area')) { const top = sv.getBoundingClientRect().top;
+    sv.querySelectorAll('.split-detail').forEach(p => { if (vis(p) && Math.abs(p.getBoundingClientRect().top - top - rem) > 1)
+      f.push(['top edge', 'the detail card starts at ' + Math.round(p.getBoundingClientRect().top) + ', the screen at ' + Math.round(top)]); }); }
   const hd = document.querySelector('body > .phone-screen > main > header');
   if (hd && vis(hd)) { const pt = px(getComputedStyle(hd).paddingTop); if (Math.abs(pt - paneTop) > 1) f.push(['top edge', 'the large title starts ' + pt + 'px below its pane, not --pane-top (' + paneTop + ')']); }
-  // the sidebar on the panes' grid
+  // the top bar (2026-11-19, the web app desktop): at the window's top, its full width
   const nav = document.querySelector('body > .bottom-nav');
-  if (desk && nav && vis(nav)) { const r = nav.getBoundingClientRect(), cs = getComputedStyle(nav);
-    if (r.left > 1 || r.top > 1 || Math.abs(r.bottom - H) > 1) f.push(['grid', 'the sidebar is inset (' + Math.round(r.left) + ', ' + Math.round(r.top) + ')']);
-    if (px(cs.borderRightWidth) < 1) f.push(['grid', 'the sidebar has no divider']);
-    if (hd && vis(hd)) { const a = nav.querySelector('a').getBoundingClientRect().top, b = hd.getBoundingClientRect().top + px(getComputedStyle(hd).paddingTop);
-      if (Math.abs(a - b) > 2) f.push(['top edge', 'the sidebar first row at ' + Math.round(a) + ', the title at ' + Math.round(b)]); } }
+  if (nav && vis(nav)) { const r = nav.getBoundingClientRect(); if (r.top > 1 || r.left > 1 || Math.abs(r.width - W) > 1) f.push(['grid', 'the top bar is not at the window\'s top, full width']); }
   // no frame inside a pane; no blank map
   if (split) sv.querySelectorAll('.map-placeholder').forEach(m => { if (!vis(m)) return; const cs = getComputedStyle(m);
     if (px(cs.borderTopLeftRadius) > 0 || cs.boxShadow !== 'none') f.push(['frame', 'the map has a frame of its own inside its pane']);
@@ -70,7 +69,7 @@ const CHECK = `(() => {
   // nothing stretched past --container-max
   const col = document.querySelector('body > .phone-screen > main');
   if (col && !split && col.getBoundingClientRect().width > cmax + 1) f.push(['too wide', 'the column is ' + Math.round(col.getBoundingClientRect().width) + 'px, past --container-max (' + cmax + ')']);
-  document.querySelectorAll('.split-content > :not(.action-bar)').forEach(e => { if (vis(e) && e.getBoundingClientRect().width > cmax + 1) f.push(['too wide', 'the detail is ' + Math.round(e.getBoundingClientRect().width) + 'px in its pane']); });
+  document.querySelectorAll('.split-view:not(:has(.map-area)) > main').forEach(e => { if (vis(e) && e.getBoundingClientRect().width > cmaxWide + 1) f.push(['too wide', 'the container is ' + Math.round(e.getBoundingClientRect().width) + 'px, past --container-max-wide']); });
   // gutters: the list keeps the phone's
   if (split) { const la = sv.querySelector('.list-area'); if (vis(la) && Math.abs(px(getComputedStyle(la).paddingLeft) - rem) > 1) f.push(['gutter', 'the list pane gutter is ' + getComputedStyle(la).paddingLeft]); }
   // a form sheet: centred
@@ -79,7 +78,7 @@ const CHECK = `(() => {
   return f;
 })()`;
 const out = [];
-for (const [i, s] of PICK.entries()) for (const [w, h, scale] of WIDTHS) {
+for (const [i, s] of PICK.entries()) for (const [w, h] of WIDTHS) {
   const url = base('after') + s.name + '.html' + (s.q ? '?' + s.q : '');
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false });
   const l = new Promise(r => wait.push({ m: 'Page.loadEventFired', r })); await send('Page.navigate', { url }); await Promise.race([l, sl(8000)]);
@@ -90,7 +89,7 @@ for (const [i, s] of PICK.entries()) for (const [w, h, scale] of WIDTHS) {
   await sl(s.act === 'wait' || /race=|result=/.test(s.q) ? 1200 : s.act ? 500 : 150);
   const fails = await ev(CHECK) || [];
   const key = String(i).padStart(3, '0') + '-' + (s.label.replace(/^\.\.\/design-system\//, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') ).slice(0, 90) + '-' + w;
-  const r = await send('Page.captureScreenshot', { format: 'webp', quality: 70, clip: { x: 0, y: 0, width: w, height: h, scale } });
+  const r = await send('Page.captureScreenshot', { format: 'webp', quality: 70, clip: { x: 0, y: 0, width: w, height: h, scale: 1 } });
   writeFileSync(join(OUT, key + '.webp'), Buffer.from(r.result.data, 'base64'));
   out.push({ label: s.label, name: s.name, q: s.q, act: s.act, w, h, key, fails });
 }

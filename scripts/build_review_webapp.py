@@ -3,7 +3,8 @@ app (Strava Maps and Komoot as references), Race browse first.
 
 Reads ui/review-webapp/shots.json, written by  node scripts/review_webapp.mjs <before-tree>. Not part of the build.
 """
-import os, json, html as H
+import os, re, json, html as H
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from review_scale import img, CSS as SCALE_CSS, LABEL as SCALE_LABEL
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 D = os.path.join(ROOT, 'ui/review-webapp')
 LIVE = 'https://onrace-five.vercel.app/wireframes/'
@@ -21,15 +22,15 @@ NOTE = {
   'rl': 'Results list. Tablet: the phone’s one column, capped (the follow-ups). Desktop: its two panes wait for their own pass; the top bar in place of the sidebar, its Log result the one primary (the large title’s own hides).',
   'pr': 'Profile: its layout waits; the new navigation only (the bottom tab bar on a tablet, the top bar on a desktop).',
 }
-def fig(src, cap):
-    return f'<figure><img src="review-webapp/{src}.webp" alt="{H.escape(cap)}" loading="lazy"><figcaption>{cap}</figcaption></figure>'
+def fig(src, cap, w):
+    return f'<figure>{img(f"review-webapp/{src}.webp", w, H.escape(re.sub("<[^>]+>", "", cap)) + " at " + str(w), os.path.join(ROOT, "ui"))}<figcaption>{cap} · {w} · 1:2</figcaption></figure>'
 rows, seen = [], []
 for s in shots:
     if s['key'] in seen: continue
     seen.append(s['key'])
     base = s['key'].rsplit('-', 1)[0]
     page = next(p for k, p in PAGES if k == base)
-    figs = fig(s['key'] + '-before', '<b>Before</b>') + fig(s['key'] + '-after', '<b>After</b>')
+    figs = fig(s['key'] + '-before', '<b>Before</b>', s['w']) + fig(s['key'] + '-after', '<b>After</b>', s['w'])
     rows.append(f'<section class="rv-pair rv-w{s["w"]}"><h2>{H.escape(s["cap"])} · {s["w"]} <a href="{LIVE}{H.escape(page)}">live ↗</a></h2><p>{H.escape(NOTE[base])}</p><div class="rv-shots">{figs}</div></section>')
 sel = ['<section class="rv-pair"><h2>Follow-ups (2026-11-19)</h2><p>Before is the web app desktop as first shipped, after is with the five follow-ups.</p></section>']
 for key, w, page, cap, note in [
@@ -39,7 +40,7 @@ for key, w, page, cap, note in [
   ('fu-empty-1440', 1440, 'race-browse-empty.html', 'No race matches, desktop', '“Remove a filter, or try a wider date range…”: “above” dropped, since the filters sit to the right of the list card.'),
   ('fu-empty-390', 390, 'race-browse-empty.html', 'No race matches, phone', 'The same line on a phone, where the filters are above.'),
 ]:
-    figs = fig(key + '-before', '<b>Before</b>') + fig(key + '-after', '<b>After</b>')
+    figs = fig(key + '-before', '<b>Before</b>', w) + fig(key + '-after', '<b>After</b>', w)
     sel.append(f'<section class="rv-pair rv-w{w}"><h2>{H.escape(cap)} · {w} <a href="{LIVE}{H.escape(page)}">live ↗</a></h2><p>{H.escape(note)}</p><div class="rv-shots">{figs}</div></section>')
 page = f'''<!doctype html>
 <html lang="en">
@@ -62,10 +63,9 @@ page = f'''<!doctype html>
   .rv-pair h2 {{ margin: 0; font-family: var(--font-text); font-size: var(--size-item); font-weight: var(--weight-strong); line-height: var(--leading-item); }}
   .rv-shots {{ display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-start; }}
   .rv-shots figure {{ margin: 0; display: grid; gap: var(--space-1); max-width: 100%; }}
+{SCALE_CSS}
   .rv-shots figcaption {{ font-size: var(--size-proof); color: var(--text-secondary); }}
   .rv-shots img {{ display: block; max-width: 100%; height: auto; border-radius: var(--radius-2); box-shadow: 0 0 0 var(--border) var(--hairline); }}
-  .rv-w820 .rv-shots figure {{ flex: 1 1 calc(var(--screen-w) / 2); }}
-  .rv-w1440 .rv-shots figure {{ flex: 1 1 var(--screen-w); }}
 </style>
 </head>
 <body class="onrace">
@@ -73,6 +73,7 @@ page = f'''<!doctype html>
   <header class="rv-head">
     <h1>Web app desktop</h1>
     <p>2026-11-19, a new direction, Race browse first (the other screens wait). References: Strava Maps and Komoot, a routes list and a route’s detail as floating cards over a full-bleed map. Before is the commit before, after is this one; dark; every Race browse state at 390, 820 and 1440, then Results list and Profile under the new navigation.</p>
+    <p class="rv-scale">{SCALE_LABEL}</p>
     <ul>
       <li><b>Tablet</b> behaves like the phone, navigation included: the tab bar at the bottom, the List / Map switch, the column capped at <code>--container-max</code>, the Map view edge to edge. The tablet breakpoint now only caps the column, a deliberate deviation from the width audit.</li>
       <li><b>Desktop</b> is a web app, not macOS: a top bar (Onrace, Discover, Results, Profile, Log result), the map full bleed under it, the list and the chosen race as floating cards, the filters floating over the map.</li>

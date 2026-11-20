@@ -86,7 +86,7 @@ Single-screen blocks, by screen.
 - **Race photo, detail** (`.race > .photo`, step 5): the race card’s file and focus class, 3:1 at full content width (358 × 119 at 390), outer 6px radius. Shows exactly the round-3 band (`visuals/README.md`). Photo: yes. Skeleton: `.race .bar.photo`.
 
 **Results list**
-- **Result row** (`article.result-card`: name, finish time, format chip, date, proof line; with no official result link yet, an "Add official result link" text link under the row's link, on the same surface, opening the add sheet: 2026-11-06). Native: [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables). Gaps: G22 K, G23 K.
+- **Result row** (`article.result-card`: name, finish time, format chip, date, proof line; with no official result link yet, an "Add official result link" text link under the row's link, on the same surface, opening the add sheet: 2026-11-06). Native: [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables). Gaps: G22 K, G23 K. From `--bp-desktop` (2026-11-20) a photo thumbnail at its leading edge (`--thumb-w`; the race's photo, or its format's); Selected is the `--selected` fill alone, no edge.
 - **Order label** (`.results-order`, "Newest first").
 
 **Log result**

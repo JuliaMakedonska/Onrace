@@ -5,6 +5,7 @@ step 6 critique (ui/review-layout/critique-step6.md, as returned, unchanged) mer
 Not part of the build.  Usage: node scripts/review_layout.mjs && python3 scripts/build_review_layout.py
 """
 import os, re, json, html as H
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from review_scale import img, CSS as SCALE_CSS, LABEL as SCALE_LABEL
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 D = os.path.join(ROOT, 'ui/review-layout')
 shots = json.load(open(os.path.join(D, 'shots.json')))
@@ -36,8 +37,8 @@ NEW = [
   ('Layout pass', 'Every tab screen', '1440', 'The sidebar is edge to edge with a divider; macOS 26 and iPadOS 26 float it as a glass panel. Chosen for one grid with the panes\' thin divider (HIG Split views).', 'any tab screen at 1440', 'Keep, or float the sidebar and the panes together with one gap (tab-bar.css, split-view.css, a gap token).'),
   ('Layout pass', 'Race detail, Result detail on their own; Saved races', '820, 1440', 'A pushed screen at a wide width shows no tab bar or sidebar (the critique\'s rows on Race detail, Result detail and Saved races, unchanged by this pass).', 'race-detail ?race=utmb 1440', 'See the critique rows below.'),
 ]
-fig = lambda s: (f'<figure class="rv-w{s["w"]}"><img src="review-layout/{s["key"]}.webp" alt="{esc(s["label"])} at {s["w"]}" loading="lazy">'
-                 f'<figcaption>{s["w"]}' + (''.join(f' <span class="rv-bad">{esc(r)}: {esc(t)}</span>' for r, t in s['fails']) or ' <span class="rv-ok">passes the spec</span>') + '</figcaption></figure>')
+fig = lambda s: (f'<figure class="rv-w{s["w"]}">' + img(f'review-layout/{s["key"]}.webp', s['w'], esc(s['label']) + ' at ' + str(s['w']), os.path.join(ROOT, 'ui'))
+                 + f'<figcaption>{s["w"]} · 1:2' + (''.join(f' <span class="rv-bad">{esc(r)}: {esc(t)}</span>' for r, t in s['fails']) or ' <span class="rv-ok">passes the spec</span>') + '</figcaption></figure>')
 groups = {}
 for s in shots: groups.setdefault(s['label'], []).append(s)
 grid = []
@@ -73,6 +74,7 @@ page = f'''<!doctype html>
   .rv-shots {{ display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-start; }}
   .rv-shots figure {{ margin: 0; display: grid; gap: var(--space-1); max-width: 100%; }}
   .rv-shots img {{ display: block; max-width: 100%; height: auto; border-radius: var(--radius-2); box-shadow: 0 0 0 var(--border) var(--hairline); }}
+{SCALE_CSS}
   .rv-shots figcaption {{ font-size: var(--size-proof); color: var(--text-secondary); max-width: var(--measure); }}
   .rv-ok {{ color: var(--text-secondary); }}
   .rv-bad {{ display: block; color: var(--error); }}
@@ -103,6 +105,7 @@ page = f'''<!doctype html>
   <section>
     <h2>Self-check</h2>
     <p>{len(shots)} shots ({len(groups)} states × 3 widths), measured in headless Chrome by <code>scripts/review_layout.mjs</code>: aligned top edges (panes, the large title, the sidebar's first row), the sidebar on the grid, no frame inside a pane, the map edge to edge, no blank or empty pane without a reason, no sideways scroll or pin cut by its map, nothing past <code>--container-max</code>, the list pane's gutter, form sheets centred. <b>{nfail} with a failure.</b></p>
+    <p class="rv-scale">{SCALE_LABEL}</p>
   </section>
   <section>
     <h2>Still open: this pass and the step 6 critique, merged</h2>

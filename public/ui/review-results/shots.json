@@ -1,0 +1,362 @@
+[
+ {
+  "label": "results-list-empty",
+  "name": "results-list-empty",
+  "q": "",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "000-results-list-empty-390",
+  "fails": []
+ },
+ {
+  "label": "results-list-empty",
+  "name": "results-list-empty",
+  "q": "",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "000-results-list-empty-820",
+  "fails": []
+ },
+ {
+  "label": "results-list-empty",
+  "name": "results-list-empty",
+  "q": "",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "000-results-list-empty-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list-error",
+  "name": "results-list-error",
+  "q": "",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "001-results-list-error-390",
+  "fails": []
+ },
+ {
+  "label": "results-list-error",
+  "name": "results-list-error",
+  "q": "",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "001-results-list-error-820",
+  "fails": []
+ },
+ {
+  "label": "results-list-error",
+  "name": "results-list-error",
+  "q": "",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "001-results-list-error-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list-loading",
+  "name": "results-list-loading",
+  "q": "",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "002-results-list-loading-390",
+  "fails": []
+ },
+ {
+  "label": "results-list-loading",
+  "name": "results-list-loading",
+  "q": "",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "002-results-list-loading-820",
+  "fails": []
+ },
+ {
+  "label": "results-list-loading",
+  "name": "results-list-loading",
+  "q": "",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "002-results-list-loading-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list",
+  "name": "results-list",
+  "q": "",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "003-results-list-390",
+  "fails": []
+ },
+ {
+  "label": "results-list",
+  "name": "results-list",
+  "q": "",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "003-results-list-820",
+  "fails": []
+ },
+ {
+  "label": "results-list",
+  "name": "results-list",
+  "q": "",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "003-results-list-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington",
+  "name": "results-list",
+  "q": "saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "004-results-list-saved-Spartan-20Race-20Beast-20-E2-80-94-20Killington-390",
+  "fails": []
+ },
+ {
+  "label": "results-list?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington",
+  "name": "results-list",
+  "q": "saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "004-results-list-saved-Spartan-20Race-20Beast-20-E2-80-94-20Killington-820",
+  "fails": []
+ },
+ {
+  "label": "results-list?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington",
+  "name": "results-list",
+  "q": "saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "004-results-list-saved-Spartan-20Race-20Beast-20-E2-80-94-20Killington-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list?add=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "add=spartan-beast-killington-2025",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "005-results-list-add-spartan-beast-killington-2025-390",
+  "fails": []
+ },
+ {
+  "label": "results-list?add=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "add=spartan-beast-killington-2025",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "005-results-list-add-spartan-beast-killington-2025-820",
+  "fails": []
+ },
+ {
+  "label": "results-list?add=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "add=spartan-beast-killington-2025",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "005-results-list-add-spartan-beast-killington-2025-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list?add=spartan-beast-killington-2025&try=athlinks",
+  "name": "results-list",
+  "q": "add=spartan-beast-killington-2025&try=athlinks",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "006-results-list-add-spartan-beast-killington-2025-try-athlinks-390",
+  "fails": []
+ },
+ {
+  "label": "results-list?add=spartan-beast-killington-2025&try=athlinks",
+  "name": "results-list",
+  "q": "add=spartan-beast-killington-2025&try=athlinks",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "006-results-list-add-spartan-beast-killington-2025-try-athlinks-820",
+  "fails": []
+ },
+ {
+  "label": "results-list?add=spartan-beast-killington-2025&try=athlinks",
+  "name": "results-list",
+  "q": "add=spartan-beast-killington-2025&try=athlinks",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "006-results-list-add-spartan-beast-killington-2025-try-athlinks-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "name": "results-list",
+  "q": "saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "act": "",
+  "w": 390,
+  "h": 844,
+  "key": "007-results-list-saved-Spartan-20Race-20Beast-20-E2-80-94-20Killington-linked-spartan-beast-ki-390",
+  "fails": []
+ },
+ {
+  "label": "results-list?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "name": "results-list",
+  "q": "saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "act": "",
+  "w": 820,
+  "h": 1180,
+  "key": "007-results-list-saved-Spartan-20Race-20Beast-20-E2-80-94-20Killington-linked-spartan-beast-ki-820",
+  "fails": []
+ },
+ {
+  "label": "results-list?saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "name": "results-list",
+  "q": "saved=Spartan%20Race%20Beast%20%E2%80%94%20Killington&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "act": "",
+  "w": 1440,
+  "h": 900,
+  "key": "007-results-list-saved-Spartan-20Race-20Beast-20-E2-80-94-20Killington-linked-spartan-beast-ki-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025",
+  "act": "wait",
+  "w": 390,
+  "h": 844,
+  "key": "008-results-list-split-view-result-spartan-beast-killington-2025-390",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025",
+  "act": "wait",
+  "w": 820,
+  "h": 1180,
+  "key": "008-results-list-split-view-result-spartan-beast-killington-2025-820",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025",
+  "act": "wait",
+  "w": 1440,
+  "h": 900,
+  "key": "008-results-list-split-view-result-spartan-beast-killington-2025-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=valencia-half-2025&fail=1",
+  "name": "results-list",
+  "q": "result=valencia-half-2025&fail=1",
+  "act": "wait",
+  "w": 390,
+  "h": 844,
+  "key": "009-results-list-split-view-result-valencia-half-2025-fail-1-390",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=valencia-half-2025&fail=1",
+  "name": "results-list",
+  "q": "result=valencia-half-2025&fail=1",
+  "act": "wait",
+  "w": 820,
+  "h": 1180,
+  "key": "009-results-list-split-view-result-valencia-half-2025-fail-1-820",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=valencia-half-2025&fail=1",
+  "name": "results-list",
+  "q": "result=valencia-half-2025&fail=1",
+  "act": "wait",
+  "w": 1440,
+  "h": 900,
+  "key": "009-results-list-split-view-result-valencia-half-2025-fail-1-1440",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "act": "wait",
+  "w": 390,
+  "h": 844,
+  "key": "010-results-list-split-view-result-spartan-beast-killington-2025-add-spartan-beast-killington--390",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "act": "wait",
+  "w": 820,
+  "h": 1180,
+  "key": "010-results-list-split-view-result-spartan-beast-killington-2025-add-spartan-beast-killington--820",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025&add=spartan-beast-killington-2025",
+  "act": "wait",
+  "w": 1440,
+  "h": 900,
+  "key": "010-results-list-split-view-result-spartan-beast-killington-2025-add-spartan-beast-killington--1440",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "act": "wait",
+  "w": 390,
+  "h": 844,
+  "key": "011-results-list-split-view-result-spartan-beast-killington-2025-linked-spartan-beast-killingt-390",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "act": "wait",
+  "w": 820,
+  "h": 1180,
+  "key": "011-results-list-split-view-result-spartan-beast-killington-2025-linked-spartan-beast-killingt-820",
+  "fails": []
+ },
+ {
+  "label": "results-list · split view ?result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "name": "results-list",
+  "q": "result=spartan-beast-killington-2025&linked=spartan-beast-killington-2025&url=https%3A%2F%2Fwww.athlinks.com%2Fevent%2Fspartan-race-beast-killington-2025%2Fresults",
+  "act": "wait",
+  "w": 1440,
+  "h": 900,
+  "key": "011-results-list-split-view-result-spartan-beast-killington-2025-linked-spartan-beast-killingt-1440",
+  "fails": []
+ }
+]

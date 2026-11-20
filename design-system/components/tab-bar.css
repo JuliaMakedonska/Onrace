@@ -103,12 +103,13 @@ body > .bottom-nav a::before {
     text-decoration: none;
   }
   .bottom-nav .nav-brand::before { content: none; }
-  .bottom-nav .nav-action {   /* the one primary: the amber fill, as the screen's primary button (primary-button.css), a capsule as every bar control (C7) */
+  .bottom-nav .nav-action {   /* the one primary: the amber fill, as the screen's primary button (primary-button.css), its size and corners too (2026-11-20) */
     display: flex;
     margin-left: auto;
+    align-items: center;
     min-height: var(--target);
-    padding: 0 var(--space-5);
-    border-radius: var(--radius-capsule);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-2);   /* a normal button (designer, 2026-11-20), the primary button's corners, not an oversized pill */
     background: var(--accent-fill);
     color: var(--on-accent-fill);
     font-weight: var(--weight-strong);
@@ -120,6 +121,6 @@ body > .bottom-nav a::before {
   /* one primary: the top bar's Log result is the app's, so Results list's own (its large title's bar action) goes; and
      a state that brings its own primary (Log your first result, Try again, Change filters) steps it down to the bar's
      plain text, as it steps a bar action down (top-bar.css) */
-  body:has(> .bottom-nav .nav-action) .top-bar--large .bar-action { display: none; }
+  body:has(> .bottom-nav .nav-action) .top-bar--large { display: none; }   /* the top bar names the tab and holds Log result, so a tab screen's collapsing title bar (and Results list's own Log result in it) goes (2026-11-20; until then only its Log result hid) */
   body:has(.phone-screen .state-message:not(.split-detail *) .state-action:not(.secondary)) > .bottom-nav .nav-action { background: transparent; color: var(--text-primary); }
 }

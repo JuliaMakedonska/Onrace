@@ -790,6 +790,8 @@ METRICS = [('chip-height', 'Format chip height', 'Metadata stays small beside th
            ('form-sheet-w', 'A sheet from the tablet breakpoint: a form sheet, centred', '540px at the default text size, UIKit’s form sheet on iPad · [?] Apple’s number, not HIG’s text', 'HIG Sheets: prefer the page or form sheet presentation styles in an iPadOS app (Lesson 10 step 6)'),
            ('form-sheet-h', 'The form sheet’s height; a sheet sized to its content stops here', '620px at the default text size, the same UIKit size · [?]', 'HIG Sheets (Lesson 10 step 6)'),
            ('form-sheet-inset', 'The least room a form sheet leaves to the window’s edges', 'The dimmed screen behind it always shows', 'HIG Sheets: a form sheet sits over the screen it came from (Lesson 10 step 6)'),
+           ('container-max-wide', 'Desktop: the wide container the list and its detail card centre in', '1200px at the default text size [?]', 'Designer, 2026-11-20: Results list on a desktop; Strava’s activity feed, Komoot'),
+           ('thumb-w', 'Desktop: a list row’s photo thumbnail', '64px square [?]', 'Designer, 2026-11-20: Komoot’s routes list'),
            ('container-max', 'A single-column screen stops growing and centres', f'672px at the default text size, UIKit’s readable width · [?] Apple’s number, not HIG’s text', 'HIG Layout: layout guides restrict the width of text'),
            ('stack-w', 'A component narrower than this stacks its parts', '288px at the default text size [?]: a 320 screen less its gutters, so nothing stacks at the default size; 576px at 200% text', 'Lesson 10 step 4: components adapt to their pane (a container query), never the window'),
            ('bp-tablet', 'Breakpoint 1: a second pane fits beside a phone-width list', '2 × pane + divider = 781px; later at larger text', 'Width audit → Where behavior changes, 1 · HIG Split views: regular width'),
@@ -1209,6 +1211,10 @@ shutil.copytree(os.path.join(ROOT, 'ui/review-webapp'), os.path.join(ROOT, 'publ
 shutil.copyfile(os.path.join(ROOT, 'ui/review-webapp.html'), os.path.join(ROOT, 'public/ui/review-webapp.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-gate'), os.path.join(ROOT, 'public/ui/review-gate'), dirs_exist_ok=True)   # the sign-in screens on wide screens (2026-11-20)
 shutil.copyfile(os.path.join(ROOT, 'ui/review-gate.html'), os.path.join(ROOT, 'public/ui/review-gate.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-results'), os.path.join(ROOT, 'public/ui/review-results'), dirs_exist_ok=True)   # Results list on a desktop, redone (2026-11-20)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-results.html'), os.path.join(ROOT, 'public/ui/review-results.html'))
+shutil.copytree(os.path.join(ROOT, 'ui/review-forms'), os.path.join(ROOT, 'public/ui/review-forms'), dirs_exist_ok=True)   # forms on a tablet, following iPad (2026-11-20)
+shutil.copyfile(os.path.join(ROOT, 'ui/review-forms.html'), os.path.join(ROOT, 'public/ui/review-forms.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states'), os.path.join(ROOT, 'public/ui/review-states'), dirs_exist_ok=True)   # Lesson 9 step 3: the component states, before/after
 shutil.copyfile(os.path.join(ROOT, 'ui/review-states.html'), os.path.join(ROOT, 'public/ui/review-states.html'))
 shutil.copytree(os.path.join(ROOT, 'ui/review-states-2'), os.path.join(ROOT, 'public/ui/review-states-2'), dirs_exist_ok=True)   # the Step 3 follow-ups, before/after (2026-11-06)

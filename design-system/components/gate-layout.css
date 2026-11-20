@@ -25,18 +25,19 @@
    desktop, Pandora on a tablet). Sign in / Sign up, Reset password and New password are full pages at every width (no
    longer a form sheet from --bp-tablet). The numbers are tokens.css's --bp-tablet and --bp-desktop (a media query can't
    read var(); scripts/build_components.py checks it).
-   Tablet: the phone's page, its form centred at --form-w (a phone's width), never stretched; the bar's buttons at the
-   form's edges.
+   Tablet (revised 2026-11-20, designer: following iPad): the phone's page at the window's width. The top bar spans the
+   screen, back at its leading edge, the action at its trailing edge, the title centred (screen.css); the content
+   (intro, the grouped rows, field errors, links) takes the readable width, --container-max, centred, the grouped rows
+   filling it (screen.css's column rule); type as on the phone. It was the form at --form-w with the bar's buttons at the
+   form's edges (2026-11-20, morning).
    Desktop: a split page. The form half on the left: the bar, then the screen's own content (intro, the grouped fields,
    the links) at --form-w, centred both ways; every state and step keeps its place there. The photo half on the right
    (.gate-art): a race photo, full height, in the Podium treatment (--photo-filter), the Onrace wordmark over a scrim at
    its top. Below a desktop, and at 200% text (the breakpoint is in rem), the photo half isn't drawn or loaded. */
 .gate-art { display: none; }
-@media (min-width: 48.8125rem) {
+@media (min-width: 83.9375rem) {
   body:has(> .phone-screen > .gate) > .phone-screen > .gate { max-width: var(--form-w); }
   body:has(> .phone-screen > .gate) > .top-bar { padding-inline: max(var(--space-2), (100% - var(--form-w)) / 2); }
-}
-@media (min-width: 83.9375rem) {
   body:has(> .phone-screen > .gate) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
   body:has(> .phone-screen > .gate) > .top-bar { grid-column: 1; grid-row: 1; position: relative; inset: auto; }
   body:has(> .phone-screen > .gate) > .phone-screen { grid-column: 1; grid-row: 2; height: auto; min-height: 0; padding-top: 0; }

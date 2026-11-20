@@ -3,12 +3,13 @@ password and New password at 390, 820 and 1440, side by side.
 Usage: ONLY=sign-in,reset-password,new-password node scripts/review_layout.mjs ui/review-gate && python3 scripts/build_review_gate.py
 """
 import os, json, html as H
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from review_scale import img, CSS as SCALE_CSS, LABEL as SCALE_LABEL
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 shots = json.load(open(os.path.join(ROOT, 'ui/review-gate/shots.json')))
 LIVE = 'https://onrace-five.vercel.app/wireframes/'
 groups = {}
 for s in shots: groups.setdefault(s['label'], []).append(s)
-fig = lambda s: (f'<figure><img src="review-gate/{s["key"]}.webp" alt="{H.escape(s["label"])} at {s["w"]}" loading="lazy"><figcaption>{s["w"]}'
+fig = lambda s: ('<figure>' + img('review-gate/' + s['key'] + '.webp', s['w'], H.escape(s['label']) + ' at ' + str(s['w']), os.path.join(ROOT, 'ui')) + '<figcaption>' + str(s['w']) + ' · 1:2'
                  + ''.join(f' <span class="rv-bad">{H.escape(r)}: {H.escape(t)}</span>' for r, t in s['fails']) + '</figcaption></figure>')
 rows = ''.join(f'<section class="rv-row"><h2>{H.escape(lab)} <a href="{LIVE}{H.escape(ss[0]["name"] + ".html" + ("?" + ss[0]["q"] if ss[0]["q"] else ""))}">live ↗</a></h2><div class="rv-shots">{"".join(fig(s) for s in ss)}</div></section>' for lab, ss in groups.items())
 nfail = sum(1 for s in shots if s['fails'])
@@ -33,6 +34,7 @@ page = f'''<!doctype html>
   .rv-shots {{ display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-start; }}
   .rv-shots figure {{ margin: 0; display: grid; gap: var(--space-1); max-width: 100%; }}
   .rv-shots img {{ display: block; max-width: 100%; height: auto; border-radius: var(--radius-2); box-shadow: 0 0 0 var(--border) var(--hairline); }}
+{SCALE_CSS}
   .rv-shots figcaption {{ font-size: var(--size-proof); color: var(--text-secondary); }}
   .rv-bad {{ display: block; color: var(--error); }}
 </style>
@@ -42,6 +44,7 @@ page = f'''<!doctype html>
   <header>
     <h1>Sign-in screens</h1>
     <p>2026-11-20. Sign in / Sign up, Reset password and New password on wide screens. References: Microsoft Copilot, Dribbble and Midday sign-in (desktop), Pandora (tablet). Dark; every state at 390, 820 and 1440 ({len(groups)} states, {len(shots)} shots; {nfail} with a layout failure in the self-check).</p>
+    <p class="rv-scale">{SCALE_LABEL}</p>
     <ul>
       <li><b>Phone:</b> unchanged.</li>
       <li><b>Tablet:</b> the phone's page, the form centred at <code>--form-w</code>, a phone's width; no longer a form sheet.</li>
